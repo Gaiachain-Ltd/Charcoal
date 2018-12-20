@@ -1,0 +1,37 @@
+diff -ruN qzxing-master/src/QZXing.h qzxing-master2/src/QZXing.h
+--- qzxing-master/src/QZXing.h	2016-08-11 18:21:10.000000000 +0300
++++ qzxing-master2/src/QZXing.h	2016-09-16 15:24:07.819509489 +0300
+@@ -13,7 +13,7 @@
+ #include <QQmlEngine>
+ #endif
+ 
+-#include <qzxingimageprovider.h>
++#include <QZXingImageProvider.h>
+ 
+ // forward declaration
+ namespace zxing {
+diff -ruN qzxing-master/src/zxing/zxing/ZXing.h qzxing-master2/src/zxing/zxing/ZXing.h
+--- qzxing-master/src/zxing/zxing/ZXing.h	2016-08-11 18:21:10.000000000 +0300
++++ qzxing-master2/src/zxing/zxing/ZXing.h	2016-09-16 15:24:45.903841146 +0300
+@@ -46,17 +46,17 @@
+ 
+ #else
+ 
+-//#include <cmath>
++#include <cmath>
+ 
+-#include <math.h>
++//#include <math.h>
+ 
+ 
+ namespace zxing {
+ inline bool isnan_z(float v) {
+-    return isnan(v);
++    return std::isnan(v);
+ }
+ inline bool isnan_z(double v) {
+-    return isnan(v);
++    return std::isnan(v);
+ }
+ inline float nan() {return std::numeric_limits<float>::quiet_NaN();}
+ }
