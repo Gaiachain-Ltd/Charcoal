@@ -46,9 +46,25 @@ DESTDIR = $$BUILD_DIR/bin
 include(platforms/android/android.pri)
 
 ## Modules
-include(../milo/mbarcodescanner/mbarcodescanner.pri)
 include(../milo/mconfig/mconfig.pri)
-include(../milo/mcrypto/mcrypto.pri)
 include(../milo/mlog/mlog.pri)
-include(../milo/mrestapi/mrestapi.pri)
-include(../milo/mscripts/mscripts.pri)
+#include(../milo/mscripts/mscripts.pri) # TO_DO was is das?
+#include(../milo/mbarcodescanner/mbarcodescanner.pri) # TO_DO disabling it until QR code implementation
+#include(../milo/mcrypto/mcrypto.pri)  # TO_DO disabling it until potential database encryption implementation
+#include(../milo/mrestapi/mrestapi.pri) # TO_DO disabling it until client server implementation
+
+DISTFILES += \
+    platforms/android/android/AndroidManifest.xml \
+    platforms/android/android/gradle/wrapper/gradle-wrapper.jar \
+    platforms/android/android/gradlew \
+    platforms/android/android/res/values/libs.xml \
+    platforms/android/android/build.gradle \
+    platforms/android/android/gradle/wrapper/gradle-wrapper.properties \
+    platforms/android/android/gradlew.bat \
+    platforms/android/android/AndroidManifest.xml \
+    platforms/android/android/gradle/wrapper/gradle-wrapper.jar \
+    platforms/android/android/gradlew \
+    platforms/android/android/res/values/libs.xml \
+    platforms/android/android/build.gradle \
+    platforms/android/android/gradle/wrapper/gradle-wrapper.properties \
+    platforms/android/android/gradlew.bat
