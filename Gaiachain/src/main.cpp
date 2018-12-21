@@ -26,8 +26,9 @@ SOFTWARE.
   TEMPLATE main.cpp by Milo Solutions. Copyright 2016
 */
 
-#include <QCoreApplication>
+#include <QGuiApplication>
 #include <QLoggingCategory>
+#include <QQmlApplicationEngine>
 
 // Prepare logging categories. Modify these to your needs
 //Q_DECLARE_LOGGING_CATEGORY(core) // already declared in MLog header
@@ -40,7 +41,7 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
 int main(int argc, char *argv[]) {
     //MiloLog::instance();
     // Set up basic application data. Modify this to your needs
-    QCoreApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
     app.setApplicationVersion(AppVersion);
     app.setOrganizationName("Milo Solutions");
     app.setOrganizationDomain("milosolutions.com");
@@ -52,6 +53,9 @@ int main(int argc, char *argv[]) {
                  << "\nVersion:" << app.applicationVersion()
                  << "\nSHA:" << GitCommit
                  << "\nBuild date:" << BuildDate;
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
 
     return app.exec();
 }
