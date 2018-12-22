@@ -11,6 +11,7 @@ class EventModel : public QAbstractListModel
 public:
     enum ModelRole {
         EventId = Qt::UserRole +1,
+        ShipmentId, //Foreign key
         Company,
         LogId,
         ArrivalDateTime,
@@ -29,6 +30,7 @@ public:
 private:
     const QHash<int, QByteArray> m_roleNames = {
         { EventId, "id" },
+        { ShipmentId, "shipmentId" },
         { Company, "company" },
         { LogId, "logId"},
         { ArrivalDateTime, "arrivalDateTime"},

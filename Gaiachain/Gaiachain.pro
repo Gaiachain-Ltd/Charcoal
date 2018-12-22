@@ -22,14 +22,21 @@ HEADERS += \
     src/models/eventmodel.h \
     src/helpers/utility.h \
     src/controllers/maincontroller.h \
-    src/controllers/datamanager.h
+    src/controllers/datamanager.h \
+    src/models/commodityproxymodel.h \
+    src/common/enums.h \
+    src/models/daterangeproxymodel.h \
+    src/models/commoditydaterangeproxymodel.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
     src/models/eventmodel.cpp \
     src/helpers/utility.cpp \
     src/controllers/maincontroller.cpp \
-    src/controllers/datamanager.cpp
+    src/controllers/datamanager.cpp \
+    src/models/commodityproxymodel.cpp \
+    src/models/daterangeproxymodel.cpp \
+    src/models/commoditydaterangeproxymodel.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

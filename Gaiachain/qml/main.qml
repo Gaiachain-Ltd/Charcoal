@@ -34,42 +34,47 @@ ApplicationWindow
 
         pushEnter: Transition {
             PropertyAnimation {
-                property: "opacity"
-                from: 0
-                to:1
+                property: "x"
+                from: -mainWindow.width
+                to: 0
                 duration: 2000
+                easing.type: Easing.OutCubic
             }
         }
         pushExit: Transition {
             PropertyAnimation {
-                property: "opacity"
-                from: 1
-                to:0
+                property: "x"
+                from: 0
+                to: mainWindow.width
                 duration: 2000
+                easing.type: Easing.OutCubic
             }
         }
         popEnter: Transition {
             PropertyAnimation {
-                property: "opacity"
-                from: 0
-                to:1
+                property: "x"
+                from: -mainWindow.width
+                to: 0
                 duration: 2000
+                easing.type: Easing.OutCubic
             }
         }
         popExit: Transition {
             PropertyAnimation {
-                property: "opacity"
-                from: 1
-                to:0
+                property: "x"
+                from: 0
+                to: mainWindow.width
                 duration: 2000
+                easing.type: Easing.OutCubic
             }
         }
     }
 
+    property var tmpItem
     footer: RegisterBar {
         height: 100
         onBarClicked: {
-            stackView.pop()
+            tmpItem = stackView.pop()
         }
     }
 }
