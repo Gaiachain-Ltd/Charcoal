@@ -26,7 +26,8 @@ HEADERS += \
     src/models/commodityproxymodel.h \
     src/common/enums.h \
     src/models/daterangeproxymodel.h \
-    src/models/commoditydaterangeproxymodel.h
+    src/models/commoditydaterangeproxymodel.h \
+    src/common/globals.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \

@@ -2,6 +2,8 @@
 
 #include <QDateTime>
 
+#include "../common/enums.h"
+
 EventModel::EventModel(QObject *parent)
     : QAbstractListModel(parent)
 {
@@ -20,7 +22,7 @@ bool EventModel::setData(const QModelIndex &index, const QVariant &value, int ro
         return false;
 
     int shiftedIndex = role - static_cast<int>(ModelRole::EventId);
-    m_data.values(index.row())[shiftedIndex] = value;
+    m_data[index.row()][shiftedIndex] = value;
 
     emit dataChanged(index, index, {role});
 
@@ -30,13 +32,52 @@ bool EventModel::setData(const QModelIndex &index, const QVariant &value, int ro
 QVariant EventModel::data(const QModelIndex &index, int role) const
 {
     if (role < Qt::UserRole || role >= ModelRole::LastRole)
-        return QVariant();
+        return {};
+
+    if (index.row() < 0 || index.row() > m_data.count())
+        return {};
 
     int shiftedIndex = role - static_cast<int>(ModelRole::EventId);
-    return m_data.values(index.row())[shiftedIndex];
+    auto values = m_data[index.row()];
+
+    if (0 <= shiftedIndex && shiftedIndex < values.count())
+        return values[shiftedIndex];
+
+    assert(false);
+    return {};
 }
 
 QHash<int, QByteArray> EventModel::roleNames() const
 {
     return m_roleNames;
+}
+
+void EventModel::appendData(const Gaia::ModelData &inData)
+{
+    int modelCount = rowCount();
+    int newDataCount = inData.count();
+
+    beginInsertRows(QModelIndex(), modelCount, modelCount + newDataCount);
+
+    int newIndex = modelCount;
+    for (const auto &dataRow : inData) {
+        QVariantList rowToInsert;
+        int currentRole = EventId;
+        for (const auto &data : dataRow) {
+            if (currentRole == LastRole)
+                break;
+
+            rowToInsert.append(data);
+            ++currentRole;
+        }
+
+        while (currentRole != LastRole) {
+            rowToInsert.append(QVariant());
+            ++currentRole;
+        }
+
+        m_data.insert(newIndex++, rowToInsert);
+    }
+
+    endInsertRows();
 }

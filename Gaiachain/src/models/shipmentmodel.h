@@ -2,7 +2,9 @@
 #define SHIPMENTMODEL_H
 
 #include <QAbstractListModel>
-#include <QMultiHash>
+#include <QHash>
+
+#include "../common/globals.h"
 
 class ShipmentModel : public QAbstractListModel
 {
@@ -22,13 +24,15 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
+    void appendData(const Gaia::ModelData &inData);
+
 private:
     const QHash<int, QByteArray> m_roleNames = {
         { ShipmentId, "id" },
         { Commodity, "commodity"}
     };
 
-    QMultiHash<int, QVariant> m_data;
+    QHash<int, QVariantList> m_data;
 };
 
 #endif // SHIPMENTMODEL_H

@@ -70,11 +70,10 @@ ApplicationWindow
         }
     }
 
-    property var tmpItem
     footer: RegisterBar {
         height: 100
         onBarClicked: {
-            tmpItem = stackView.pop()
+            stackView.pop()
         }
     }
 }

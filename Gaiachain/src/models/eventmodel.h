@@ -2,7 +2,9 @@
 #define EVENTMODEL_H
 
 #include <QAbstractListModel>
-#include <QMultiHash>
+#include <QHash>
+
+#include "../common/globals.h"
 
 class EventModel : public QAbstractListModel
 {
@@ -27,6 +29,8 @@ public:
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
+    void appendData(const Gaia::ModelData &inData);
+
 private:
     const QHash<int, QByteArray> m_roleNames = {
         { EventId, "id" },
@@ -38,7 +42,7 @@ private:
     };
     // TO_DO add gps and others
 
-    QMultiHash<int, QVariant> m_data;
+    QHash<int, QVariantList> m_data;
 };
 
 #endif // EVENTMODEL_H

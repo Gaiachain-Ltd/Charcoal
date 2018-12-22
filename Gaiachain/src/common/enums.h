@@ -9,7 +9,8 @@ namespace Enums {
     enum class CommodityType {
         Timber = 0,
         Charcoal,
-        Cocoa
+        Cocoa,
+        Count
     };
     Q_ENUM_NS(CommodityType)
 }
