@@ -20,7 +20,7 @@ Item {
                 anchors.centerIn: parent
                 text: "Click me!"
                 font.pixelSize: 50
-                font.capitalization: true
+                font.capitalization: Font.AllUppercase
             }
 
             MouseArea {
