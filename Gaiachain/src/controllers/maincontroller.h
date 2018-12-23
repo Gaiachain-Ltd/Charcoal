@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "datamanager.h"
+#include "pagemanager.h"
 
 class QQmlApplicationEngine;
 
@@ -21,6 +22,7 @@ public slots:
 
 private:
     DataManager m_dataManager;
+    PageManager m_pageManager;
 };
 
 #endif // MAINCONTROLLER_H

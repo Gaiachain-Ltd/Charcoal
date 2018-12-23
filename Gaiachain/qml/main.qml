@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick 2.11
 import QtQuick.Controls 2.4
 import QtQuick.Window 2.2
 
@@ -8,74 +8,27 @@ ApplicationWindow
     visible: true
     width: Screen.desktopAvailableWidth
     height: Screen.desktopAvailableHeight
+
     color: "white"
 
-    property var colors: ["violet", "gray", "pink", "magenta"]
+    function s(num) {
+        return utility.scaleByDpi(num)
+    }
 
-    Component {
-        id: page
-        Rectangle {
-            color: colors[stackView.depth % colors.length]
-        }
+    function sr(num) {
+        return utility.scaleRoundByDpi(num)
     }
 
     header: NavigationHeader {
-        height: 150
-        onHeaderClicked: {
-            if (stackView.depth % 2) {
-                stackView.push("testComponents/CommodityRangeTestPage.qml")
-            } else {
-                stackView.push(page)
-            }
-        }
+        height: s(150)
     }
 
-    StackView {
-        id: stackView
+    MainStackView {
+        id: mainStackView
         anchors.fill: parent
-
-        initialItem: page
-
-        pushEnter: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: mainWindow.width
-                to: 0
-                duration: 350
-            }
-        }
-        pushExit: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: 0
-                to: -mainWindow.width
-                duration: 350
-            }
-        }
-        popEnter: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: -mainWindow.width
-                to: 0
-                duration: 350
-            }
-        }
-        popExit: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: 0
-                to: mainWindow.width
-                duration: 350
-            }
-        }
     }
 
     footer: RegisterBar {
-        height: 100
-        onBarClicked: {
-            if (stackView.depth > 0) {
-                stackView.pop()
-            }
-        }
+        height: s(100)
     }
 }

@@ -18,6 +18,20 @@ namespace Enums {
     {
         return ::qHash(static_cast<int>(key), seed);
     }
+
+    enum class Page {
+        CalendarEvents = 0,
+        CalendarMonth,
+        Calendar,
+        EventDetails,
+        LanguageChosing,
+        Login,
+        ResourceChosing,
+        ShipmentDetails,
+        ViewType,
+        Count
+    };
+    Q_ENUM_NS(Page)
 }
 
 

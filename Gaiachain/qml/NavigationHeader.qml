@@ -1,6 +1,7 @@
-import QtQuick 2.5
-import QtQuick.Layouts 1.5
+import QtQuick 2.11
+import QtQuick.Layouts 1.11
 
+// TO_DO consider using Toolbar
 Item {
     signal headerClicked()
 
@@ -27,10 +28,5 @@ Item {
             Layout.fillHeight: true
             color: "blue"
         }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: headerClicked()
     }
 }

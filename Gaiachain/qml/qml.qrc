@@ -4,5 +4,20 @@
         <file>RegisterBar.qml</file>
         <file>NavigationHeader.qml</file>
         <file>testComponents/CommodityRangeTestPage.qml</file>
+        <file>pages/LanguageChosingPage.qml</file>
+        <file>pages/LoginPage.qml</file>
+        <file>pages/ResourceChosingPage.qml</file>
+        <file>pages/ViewTypePage.qml</file>
+        <file>pages/CalendarPage.qml</file>
+        <file>pages/CalendarMonthPage.qml</file>
+        <file>pages/CalendarEventsPage.qml</file>
+        <file>pages/ShipmentDetailsPage.qml</file>
+        <file>pages/EventDetailsPage.qml</file>
+        <file>pages/BasePage.qml</file>
+        <file>items/ImageButton.qml</file>
+        <file>items/ImageCheckbox.qml</file>
+        <file>items/TextImageButton.qml</file>
+        <file>items/CalendarMonthItem.qml</file>
+        <file>MainStackView.qml</file>
     </qresource>
 </RCC>

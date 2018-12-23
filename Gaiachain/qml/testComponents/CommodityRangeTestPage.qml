@@ -1,6 +1,6 @@
-import QtQuick 2.5
+import QtQuick 2.11
 
-import com.gaiachain.models 1.0
+import com.gaiachain.enums 1.0
 
 Item {
     Column {

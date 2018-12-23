@@ -26,7 +26,8 @@ HEADERS += \
     src/models/commodityproxymodel.h \
     src/common/enums.h \
     src/models/commoditydaterangeproxymodel.h \
-    src/common/globals.h
+    src/common/globals.h \
+    src/controllers/pagemanager.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -35,7 +36,8 @@ SOURCES += src/main.cpp \
     src/controllers/maincontroller.cpp \
     src/controllers/datamanager.cpp \
     src/models/commodityproxymodel.cpp \
-    src/models/commoditydaterangeproxymodel.cpp
+    src/models/commoditydaterangeproxymodel.cpp \
+    src/controllers/pagemanager.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \
