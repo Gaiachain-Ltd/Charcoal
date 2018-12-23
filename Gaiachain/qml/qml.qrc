@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>RegisterBar.qml</file>
         <file>NavigationHeader.qml</file>
+        <file>testComponents/CommodityRangeTestPage.qml</file>
     </qresource>
 </RCC>

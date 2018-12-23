@@ -57,10 +57,10 @@ int main(int argc, char *argv[]) {
                  << "\nBuild date:" << BuildDate;
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
-
     MainController mc;
     mc.setupQMLContext(engine);
+
+    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
 
     return app.exec();
 }

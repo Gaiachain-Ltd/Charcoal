@@ -22,7 +22,11 @@ ApplicationWindow
     header: NavigationHeader {
         height: 150
         onHeaderClicked: {
-            stackView.push(page)
+            if (stackView.depth % 2) {
+                stackView.push("testComponents/CommodityRangeTestPage.qml")
+            } else {
+                stackView.push(page)
+            }
         }
     }
 
@@ -35,19 +39,17 @@ ApplicationWindow
         pushEnter: Transition {
             PropertyAnimation {
                 property: "x"
-                from: -mainWindow.width
+                from: mainWindow.width
                 to: 0
-                duration: 2000
-                easing.type: Easing.OutCubic
+                duration: 350
             }
         }
         pushExit: Transition {
             PropertyAnimation {
                 property: "x"
                 from: 0
-                to: mainWindow.width
-                duration: 2000
-                easing.type: Easing.OutCubic
+                to: -mainWindow.width
+                duration: 350
             }
         }
         popEnter: Transition {
@@ -55,8 +57,7 @@ ApplicationWindow
                 property: "x"
                 from: -mainWindow.width
                 to: 0
-                duration: 2000
-                easing.type: Easing.OutCubic
+                duration: 350
             }
         }
         popExit: Transition {
@@ -64,8 +65,7 @@ ApplicationWindow
                 property: "x"
                 from: 0
                 to: mainWindow.width
-                duration: 2000
-                easing.type: Easing.OutCubic
+                duration: 350
             }
         }
     }
@@ -73,7 +73,9 @@ ApplicationWindow
     footer: RegisterBar {
         height: 100
         onBarClicked: {
-            stackView.pop()
+            if (stackView.depth > 0) {
+                stackView.pop()
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-#include "commoditydaterangeproxymodel.h"
+﻿#include "commoditydaterangeproxymodel.h"
 
 #include "commodityproxymodel.h"
 #include "eventmodel.h"
@@ -13,22 +13,31 @@ CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
 {
     m_commodityProxyModel = commodityProxyModel;
+    connect(m_commodityProxyModel, &CommodityProxyModel::commodityTypeChanged, this, &CommodityDateRangeProxyModel::invalidateFilter);
 }
+
+#include <QDebug>
 
 void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime end)
 {
     m_startDateTime = start;
     m_endDateTime = end;
+
+    qDebug() << "Start end dates" << start << end;
+    invalidateFilter();
 }
 
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    Q_UNUSED(sourceParent)
+    if (sourceRow < 0 || sourceRow > sourceModel()->rowCount())
+        return false;
 
-    auto index = sourceModel()->index(sourceRow, 0);
+    auto index = sourceModel()->index(sourceRow, 0, sourceParent);
 
     auto arrivalDateTime = sourceModel()->data(index, EventModel::ArrivalDateTime).toDateTime();
     auto departureDateTime = sourceModel()->data(index, EventModel::DepartureDateTime).toDateTime();
+
+    qDebug() << "Arrival/Departure" << arrivalDateTime << departureDateTime;
 
     if (isInDateTimeRange(arrivalDateTime) || isInDateTimeRange(departureDateTime)) {
         auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();
