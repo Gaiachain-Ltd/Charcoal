@@ -13,6 +13,12 @@ namespace Enums {
         Count
     };
     Q_ENUM_NS(CommodityType)
+
+    inline uint qHash(CommodityType key, uint seed)
+    {
+        return ::qHash(static_cast<int>(key), seed);
+    }
 }
+
 
 #endif // ENUMS_H

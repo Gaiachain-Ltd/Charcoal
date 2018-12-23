@@ -14,17 +14,20 @@ class CommodityDateRangeProxyModel : public QSortFilterProxyModel
 public:
     explicit CommodityDateRangeProxyModel(QObject *parent = nullptr);
 
-    void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
-
     Q_INVOKABLE void setDateTimeRange(QDateTime start, QDateTime end);
-    Q_INVOKABLE void setCommodityType(Enums::CommodityType filterType);
+
+    void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
 
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
 
 private:
     CommodityProxyModel *m_commodityProxyModel = nullptr;
 
+    QDateTime m_startDateTime;
+    QDateTime m_endDateTime;
+
     bool commodityProxyModelContainsId(int shipmentId) const; //TO_DO make it faster
+    inline bool isInDateTimeRange(QDateTime &dt) const;
 };
 
 #endif // COMMODITYDATERANGEPROXYMODEL_H

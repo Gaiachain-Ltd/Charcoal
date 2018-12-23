@@ -1,6 +1,5 @@
 #include "commoditydaterangeproxymodel.h"
 
-#include "daterangeproxymodel.h"
 #include "commodityproxymodel.h"
 #include "eventmodel.h"
 #include "shipmentmodel.h"
@@ -18,23 +17,25 @@ void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *c
 
 void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime end)
 {
-    dynamic_cast<DateRangeProxyModel*>(sourceModel())->setDateTimeRange(start, end);
-}
-
-void CommodityDateRangeProxyModel::setCommodityType(Enums::CommodityType filterType)
-{
-    assert(m_commodityProxyModel != nullptr);
-
-    m_commodityProxyModel->setCommodityType(filterType);
+    m_startDateTime = start;
+    m_endDateTime = end;
 }
 
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     Q_UNUSED(sourceParent)
 
-    auto shipmentId = sourceModel()->data(sourceModel()->index(sourceRow, 0), EventModel::ShipmentId).toInt();
+    auto index = sourceModel()->index(sourceRow, 0);
 
-    return commodityProxyModelContainsId(shipmentId);
+    auto arrivalDateTime = sourceModel()->data(index, EventModel::ArrivalDateTime).toDateTime();
+    auto departureDateTime = sourceModel()->data(index, EventModel::DepartureDateTime).toDateTime();
+
+    if (isInDateTimeRange(arrivalDateTime) || isInDateTimeRange(departureDateTime)) {
+        auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();
+        return commodityProxyModelContainsId(shipmentId);
+    }
+
+    return false;
 }
 
 bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId) const
@@ -52,3 +53,9 @@ bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId)
 
     return false;
 }
+
+bool CommodityDateRangeProxyModel::isInDateTimeRange(QDateTime &dt) const
+{
+    return m_startDateTime <= dt && dt <= m_endDateTime;
+}
+

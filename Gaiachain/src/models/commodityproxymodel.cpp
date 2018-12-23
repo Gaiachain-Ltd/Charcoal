@@ -8,9 +8,13 @@ CommodityProxyModel::CommodityProxyModel(QObject *parent)
 
 }
 
-void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType)
+void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool enable)
 {
-    m_commodityFilterType = filterType;
+    if (enable) {
+        m_enabledCommodites.insert(filterType);
+    } else {
+        m_enabledCommodites.remove(filterType);
+    }
 }
 
 bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -19,5 +23,5 @@ bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sou
 
     auto commodityType = sourceModel()->data(sourceModel()->index(sourceRow, 0), ShipmentModel::Commodity).value<Enums::CommodityType>();
 
-    return commodityType == m_commodityFilterType;
+    return m_enabledCommodites.contains(commodityType);
 }

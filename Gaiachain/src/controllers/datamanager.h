@@ -8,7 +8,6 @@
 #include "../models/shipmentmodel.h"
 
 #include "../models/commodityproxymodel.h"
-#include "../models/daterangeproxymodel.h"
 #include "../models/commoditydaterangeproxymodel.h"
 
 class QQmlApplicationEngine;
@@ -33,7 +32,6 @@ private:
     ShipmentModel m_shipmentModel;
 
     CommodityProxyModel m_commodityProxyModel;
-    DateRangeProxyModel m_dateRangeProxyModel;
     CommodityDateRangeProxyModel m_commodityDateRangeProxyModel;
 };
 

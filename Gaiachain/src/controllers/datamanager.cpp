@@ -16,12 +16,12 @@ DataManager::DataManager(QObject *parent)
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("commodityRangeProxy"), &m_commodityDateRangeProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("commodityProxy"), &m_commodityProxyModel);
 }
 
 void DataManager::setupModels()
 {
     m_commodityProxyModel.setSourceModel(&m_shipmentModel);
-    m_dateRangeProxyModel.setSourceModel(&m_eventModel);
 
     m_commodityDateRangeProxyModel.setSourceModel(&m_eventModel);
     m_commodityDateRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
