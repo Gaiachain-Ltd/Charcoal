@@ -16,7 +16,6 @@ public:
     void setupQmlContext(QQmlApplicationEngine &engine);
 
     Q_INVOKABLE void enterPage(Enums::Page page);
-
     Q_INVOKABLE void popPage();
     Q_INVOKABLE void goToInitialPage();
 

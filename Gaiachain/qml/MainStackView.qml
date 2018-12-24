@@ -4,6 +4,10 @@ import QtQuick.Controls 2.4
 Item {
     property alias depth: stackView.depth
     property string initialPage: "qrc:/pages/ResourceChosingPage.qml"
+    property int windowWidth: parent.width
+
+    property bool headerVisible: true
+    property bool footerVisible: true
 
     function pop() {
         stackView.pop()
@@ -35,10 +39,17 @@ Item {
 
         initialItem: initialPage
 
+        onCurrentItemChanged: {
+            if (currentItem !== null)
+                headerVisible = currentItem.headerVisible
+            if (currentItem !== null)
+                footerVisible = currentItem.footerVisible
+        }
+
         pushEnter: Transition {
             PropertyAnimation {
                 property: "x"
-                from: ApplicationWindow.window.width
+                from: windowWidth
                 to: 0
                 duration: 350
             }
@@ -47,14 +58,14 @@ Item {
             PropertyAnimation {
                 property: "x"
                 from: 0
-                to: -ApplicationWindow.window.width
+                to: -windowWidth
                 duration: 350
             }
         }
         popEnter: Transition {
             PropertyAnimation {
                 property: "x"
-                from: -ApplicationWindow.window.width
+                from: -windowWidth
                 to: 0
                 duration: 350
             }
@@ -63,7 +74,7 @@ Item {
             PropertyAnimation {
                 property: "x"
                 from: 0
-                to: ApplicationWindow.window.width
+                to: windowWidth
                 duration: 350
             }
         }

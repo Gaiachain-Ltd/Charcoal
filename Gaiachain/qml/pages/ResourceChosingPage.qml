@@ -3,6 +3,7 @@ import QtQuick 2.11
 import com.gaiachain.enums 1.0
 
 BasePage {
+    headerVisible: false
 
     Rectangle {
         anchors.centerIn: parent

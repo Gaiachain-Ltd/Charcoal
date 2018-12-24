@@ -5,9 +5,10 @@ import QtQuick.Window 2.2
 ApplicationWindow
 {
     id: mainWindow
-    visible: true
+
     width: Screen.desktopAvailableWidth
     height: Screen.desktopAvailableHeight
+    visible: true
 
     color: "white"
 
@@ -20,6 +21,7 @@ ApplicationWindow
     }
 
     header: NavigationHeader {
+        visible: mainStackView.headerVisible
         height: s(150)
     }
 
@@ -29,6 +31,7 @@ ApplicationWindow
     }
 
     footer: RegisterBar {
+        visible: mainStackView.footerVisible
         height: s(100)
     }
 }
