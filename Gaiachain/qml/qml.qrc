@@ -19,5 +19,6 @@
         <file>items/TextImageButton.qml</file>
         <file>items/CalendarMonthItem.qml</file>
         <file>MainStackView.qml</file>
+        <file>items/ImageItem.qml</file>
     </qresource>
 </RCC>

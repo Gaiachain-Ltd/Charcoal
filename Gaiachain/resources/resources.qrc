@@ -1,4 +1,11 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/ui">
+        <file alias="back">ui/back.svg</file>
+        <file alias="calendar">ui/calendar.svg</file>
+        <file alias="map">ui/map.svg</file>
+        <file alias="home">ui/home.svg</file>
+        <file alias="timber">ui/timber.svg</file>
+        <file alias="charcoal">ui/charcoal.svg</file>
+        <file alias="cocoa">ui/cocoa.svg</file>
     </qresource>
 </RCC>

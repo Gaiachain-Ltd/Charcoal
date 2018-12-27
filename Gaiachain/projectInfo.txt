@@ -1,0 +1,85 @@
+// Put here some project info that may be useful when implementing.
+
+Dziękuję.
+3:15 PM
+To po kolei
+3:17 PM
+Założenie jest takie, że towar, w tym przypadku drewno jest transportowane od producenta, poprzez magazyn, tartak aż do portu, skąd jest eksportowane.
+3:18 PM
+W każdym z tych 4 miejsc pracownik musi takie zdarzenie zarejestrować, czyli kiedy transport przyjeżdża i wyjeżdża.
+3:19 PM
+Do tego ma appkę i jest zalogowany np. jako pracownik tartaku. Z GPS-a jest zczytywana lokalizacja, data i czas z zegarka w telefonie.
+3:19 PM
+Automatycznie zliczany jest czas przejazdu, czas przechowywania itd.
+New Messages
+3:21 PM
+Każda bala drewna ma swoje id z kodem QR, który jest skanowany przez pracownika. I w zasadzie do tego ogranicza się rola pracownika. Ma sczytać kod QR i "kliknąć OK".
+3:21 PM
+Przynajmniej w PoC tak będzie,
+3:22 PM
+Dane odnośnie miejsca poza GPS-em są zapisane w profilu użytkownika, który jest zalogowany np. jako tartak. Automatycznie też dodawana jest nazwa firmy na podstawie zalogownego użytkownika.
+
+
+Blockchain, a w zasadzie supply chain ma temu zapobiec.
+3:28 PM
+@esawicki na problem neta trzeba by zaradzić, ale na potrzeby PoC, temat olewamy. Zakładamy, że net jest zawsze.
+3:29 PM
+Appka ma być transparentna, więc nawet niezalogowany użytkownik może przeglądać co skąd idzie itd., czyli krótko mówiąc, może zobaczyć, co jest zapisane w supply chainie.
+3:30 PM
+I teraz nasz PoC. Co i po co.
+3:31 PM
+Nie iwem, czy pisałem, ale przypomnę jakby co. Kacper jest w tej spółce, więc to jest projekt wewnętrzny tak na 50%. PoC robimy po to, żeby udowodnić nasze kompetencje, że potrafimy temat ogarnąć.
+3:32 PM
+Dlatego musimy się postarać.
+3:33 PM
+Hyperledger Sawtooth, na którym to ma stać, ogarnia Paweł Drozd. On to konfiguruje i robi do tego back-end webu. Jakbyście mieli pytania techniczne, to do niego.
+3:33 PM
+Co do samej appki, to potrzebujemy jej działającej na jednym urządzeniu.
+3:34 PM
+Olewamy responsywność, itd. Robimy pod konkretny model telefonu i koniec.
+3:35 PM
+Najważniejsze jest, aby appka potrafiła zapisywać dane do supply chaina i je z niego zczytywać.
+3:36 PM
+
+Druga strona, to zalogowany użytkownik, który oprócz przeglądania wszystkiego, co może niezalogowany, będzie mógł wprowadzać dane tak, jak opisałem to wcześniej, czyli np. zalogowany jako tartak, skanuje kod QR itd.
+
+Paweł Góra
+3:40 PM
+1
+Potrzebujemy 4 użytkowników: producent, log park, tartak i eksporter. Każdy z nich, po zeskanowaniu kodu QR będzie zapisywał informacje w innych miejscach.
+3:41 PM
+Na potrzeby PoC nie będziemy tworzyć nazw użytkowników, haseł itd. Po prostu w miejscu, gdzie się wpisuje nazwę użytkownika będzie dropdown, z 4 w/w użytkownikami.
+3:42 PM
+A jak klikniemy "skip login", to aplikacja przejdzie w stan niezalogowanego użytkownika.
+3:43 PM
+Na potrzeby PoC możemy też darować sobie widoki mapy.
+New Messages
+3:44 PM
+Niech będzie tylko kalendarz, a po wybraniu transportu niech będzie od razu timeline i to koniec drogi. Jak się uda mapę zrobić, to będzie nice, ale nie jest to konieczne.
+3:45 PM
+Nie dajemy też plików.
+3:45 PM
+Przygotuję Wam taki "obcięty" prototyp, żeby nie było wątpliwości.
+3:45 PM
+To chyba wstępnie tyle.
+3:46 PM
+@esawicki @mhudziak Macie jakieś pytania do tego, co napisałem?
+Dlatego będziemy potrzebowali "wejścia" bez logowania i z możliwością przeglądania transportów.
+
+---------
+1. Footer i Header się przesuwają przy przejściach pomiędzy stronami. Czy tak powinno być?
+Z mojej perspektywy wydaje się być to nieco mylące przy używaniu. Nie lepiej by było zmieniać to co się zmienia czyli wyłączanie "środek"?
+2. Jaka jest rola strony wyboru towaru (Timber/Charcoal/Cocoa)?
+Przechodząc do kalendarza mogę wyświetlić wszystkie trzy towary, więc jaki był sens wyboru przykładowo drewna, skoro ostatecznie nie ma różnic w funkcjonalności?
+Może chodzi o wybór towaru do skanowania i wtedy kalendarz/mapa jest wyłącznie do podglądu pozostałych towarów.
+Jeśli tak to czy nie lepiej przenieść tą stronę przed skanowanie kodu QR a u góry w headerze wyświetlać główne logo?
+3. Na dole widoku kalendarza są trzy obrazki, czy to są checkboxy? Do czego ma służyć "...", bo aktualnie zaznaczają się wszyskie typy towarów?
+Wydaje mi się że klikanie w obrazki byłoby bardziej intuicyjne.
+4. Przydałby się splashcreen, bo nie wiem czy brałeś go pod uwagę (w invision go nie widziałem).
+
+1.Szczerze mówiąc nie zastanawiałem się jeszcze nad tym, ale Twoja sugestia, żeby były statyczne, ma sens. Co prawda w międzyczasie w nagłówku doszły breadcrumpsy, więc pewnie tylko footer by został nieruchomy. Pomyślę nad tym. Inna sprawa, to nie wiem, czy InVision ma mozliwość pokazania statycznego headera i footera.
+2.Skanowanie towaru uzależnione jest od zalogowanego użytkownika i tego, jakiej placówki jest pracownikiem. Czyli pracownik tartaku nie będzie mógł sobie zeskanować zbioru kakao. Wybór surowca na początku jest po to, żeby od czegoś zacząć. Późniejsza możliwość przełączania między surowcami służy temu, aby nie było potrzeby cofania się aż do ekranu wyboru surowca. Ponaddto można sobie na jednej mapie te surowce zestawić. Chciałem, żeby to było funkcjonalne i przejrzyste, a żeby zawrzeć te 2 cechy, czasem musi być jeden, dwa ekrany więcej 
+3.I tak, i nie  "..." włącza/wyłącza możliwość zaznaczenia kilku surowców. Mój pomysł. Stwierdziłem, że z jednej strony ciekawą opcją będzie możliwość pokazania różnych surowców "w kupie", a z drugiej strony, dobrze, żeby surowce można było przełączać, bez potrzeby "odklikiwania" właśnie włączonego.
+4.W sumie takie rzeczy na razie pomijałem, bo wolałem się skupić na funkcjonalności, ale dorobię.
+
+

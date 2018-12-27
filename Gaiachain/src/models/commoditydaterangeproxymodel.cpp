@@ -37,7 +37,7 @@ bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelI
     auto arrivalDateTime = sourceModel()->data(index, EventModel::ArrivalDateTime).toDateTime();
     auto departureDateTime = sourceModel()->data(index, EventModel::DepartureDateTime).toDateTime();
 
-    qDebug() << "Arrival/Departure" << arrivalDateTime << departureDateTime;
+    //qDebug() << "Arrival/Departure" << arrivalDateTime << departureDateTime;
 
     if (isInDateTimeRange(arrivalDateTime) || isInDateTimeRange(departureDateTime)) {
         auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();

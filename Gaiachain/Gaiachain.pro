@@ -3,7 +3,7 @@
 #
 ## (c) Milo Solutions, 2016
 
-QT = core gui qml quick
+QT = core gui qml quick svg
 
 include(../version.pri)
 
