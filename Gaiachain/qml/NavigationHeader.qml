@@ -1,32 +1,51 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
+import "items" as Items
+
 // TO_DO consider using Toolbar
 Item {
     signal headerClicked()
 
-    Rectangle {
-        id: background
-        anchors.fill: parent
-        color: "white"
-    }
-
     RowLayout {
         anchors.fill: parent
-        Rectangle {
-            Layout.preferredWidth: 50
+
+        //spacer
+        Item {
+            Layout.preferredWidth: s(20)
             Layout.fillHeight: true
-            color: "red"
         }
-        Rectangle {
-            Layout.fillWidth: true
+
+        Items.ImageButton {
             Layout.fillHeight: true
-            color: "green"
+            Layout.preferredWidth: height
+
+            source: "qrc:/ui/back"
         }
-        Rectangle {
-            Layout.preferredWidth: 50
+
+        Items.ImageItem {
             Layout.fillHeight: true
-            color: "blue"
+            Layout.alignment: Qt.AlignHCenter
+
+            buttonWidth: height
+
+            imageUrl: "qrc:/ui/timber"
+            text: qsTr("Timber") //TO_DO set proper text
+            textFont.pixelSize: s(60)
+            textFont.capitalization: Font.AllUppercase
+        }
+
+        Items.ImageButton {
+            Layout.fillHeight: true
+            Layout.preferredWidth: height
+
+            source: "qrc:/ui/home"
+        }
+
+        //spacer
+        Item {
+            Layout.preferredWidth: s(20)
+            Layout.fillHeight: true
         }
     }
 }

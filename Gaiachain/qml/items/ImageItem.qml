@@ -4,39 +4,45 @@ import QtQuick.Layouts 1.11
 Item {
     id: top
 
-    property string imageUrl: undefined
-    property string imageText: ""
+    implicitHeight: mainLayout.implicitHeight
+    implicitWidth: mainLayout.implicitWidth
+
+    property alias imageUrl: image.source
+
+    // Use it to set image sizes.
+    property real buttonWidth: -1.0
+    property real buttonHeight: -1.0
+
+    property alias text: text.text
+    property alias textFont: text.font
+    property alias spacing: mainLayout.spacing
 
     RowLayout {
-        anchors.fill: parent
+        id: mainLayout
 
-        Item {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-        }
+        anchors.centerIn: parent
+        width: parent.width
+        height: parent.height
 
-        Image {
-            id: innerImage
-            Layout.fillHeight: true
+        SvgImage {
+            id: image
 
-            source: top.imageUrl
-            sourceSize.width: s(150)
-            sourceSize.height: s(150)
+            Layout.fillWidth: top.buttonWidth < 0.0 ? true : false
+            Layout.fillHeight: top.buttonHeight < 0.0 ? true : false
+
+            Layout.preferredWidth: top.buttonWidth > 0.0 ? top.buttonWidth : implicitWidth
+            Layout.preferredHeight: top.buttonHeight > 0.0 ? top.buttonHeight : implicitHeight
+
             fillMode: Image.PreserveAspectFit
         }
 
         Text {
+            id: text
+
             Layout.fillHeight: true
 
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: s(50)
-            text: top.imageText
-        }
-
-        Item {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
         }
     }
 

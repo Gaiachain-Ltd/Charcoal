@@ -20,5 +20,7 @@
         <file>items/CalendarMonthItem.qml</file>
         <file>MainStackView.qml</file>
         <file>items/ImageItem.qml</file>
+        <file>items/SvgImage.qml</file>
+        <file>items/ShadowedImageButton.qml</file>
     </qresource>
 </RCC>

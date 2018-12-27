@@ -23,41 +23,66 @@ BasePage {
         }
 
         Items.ImageItem {
-            Layout.fillWidth: true
             Layout.preferredHeight: s(150)
+//            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+
+            buttonWidth: height
+
             imageUrl: "qrc:/ui/cocoa"
-            imageText: "Gaiachain"
+            text: "Gaiachain"
+            textFont.pixelSize: s(40)
+
+            Rectangle {
+                anchors.fill: parent
+                color: "red"
+                opacity: 0.4
+            }
         }
 
         RowLayout {
             id: buttonLayout
             Layout.fillWidth: true
-            property real preferredH: s(200)
-            Layout.preferredHeight: preferredH
+            property real buttonHeight: s(150)
+            Layout.preferredHeight: buttonHeight
 
             spacing: s(20)
 
             Item {
                 Layout.fillWidth: true
-                Layout.preferredHeight: buttonLayout.preferredH
+                Layout.preferredHeight: buttonLayout.buttonHeight
             }
 
             Items.TextImageButton {
-                Layout.preferredHeight: buttonLayout.preferredH
-                Layout.preferredWidth: Layout.preferredHeight
-                buttonSource: "qrc:/ui/timber"
-                bottomText: qsTr("Timber")
+                Layout.preferredWidth: buttonLayout.buttonHeight
+
+                buttonHeight: width
+
+                source: "qrc:/ui/timber"
+                text: qsTr("Timber")
+                textFont.pixelSize: s(30)
+
                 onButtonClicked: {
                     // TO_DO Set timber user
                     top.enterViewTypePage()
                 }
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: "green"
+                    opacity: 0.5
+                }
             }
 
             Items.TextImageButton {
-                Layout.preferredHeight: buttonLayout.preferredH
-                Layout.preferredWidth: Layout.preferredHeight
-                buttonSource: "qrc:/ui/charcoal"
-                bottomText: qsTr("Charcoal")
+                Layout.preferredWidth: buttonLayout.buttonHeight
+
+                buttonHeight: width
+
+                source: "qrc:/ui/charcoal"
+                text: qsTr("Charcoal")
+                textFont.pixelSize: s(30)
+
                 onButtonClicked: {
                     // TO_DO Set charcoal user
                     top.enterViewTypePage()
@@ -65,10 +90,14 @@ BasePage {
             }
 
             Items.TextImageButton {
-                Layout.preferredHeight: buttonLayout.preferredH
-                Layout.preferredWidth: Layout.preferredHeight
-                buttonSource: "qrc:/ui/cocoa"
-                bottomText: qsTr("Cocoa")
+                Layout.preferredWidth: buttonLayout.buttonHeight
+
+                buttonHeight: width
+
+                source: "qrc:/ui/cocoa"
+                text: qsTr("Cocoa")
+                textFont.pixelSize: s(30)
+
                 onButtonClicked: {
                     // TO_DO Set cocoa user
                     top.enterViewTypePage()
@@ -77,7 +106,7 @@ BasePage {
 
             Item {
                 Layout.fillWidth: true
-                Layout.preferredHeight: buttonLayout.preferredH
+                Layout.preferredHeight: buttonLayout.buttonHeight
             }
         }
 
