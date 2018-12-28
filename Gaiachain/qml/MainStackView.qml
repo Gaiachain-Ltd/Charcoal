@@ -19,18 +19,9 @@ Item {
 
     Connections {
         target: pageManager
-        onPush: {
-            stackView.push(url)
-        }
-
-        onPop: {
-            stackView.pop()
-        }
-
-        onGoToInitial: {
-            stackView.clear()
-            stackView.push(initialPage, StackView.Immediate)
-        }
+        onPush: stackView.push(url)
+        onPop: stackView.pop()
+        onGoToInitial: stackView.pop(null)
     }
 
     StackView {

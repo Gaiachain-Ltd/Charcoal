@@ -5,6 +5,7 @@ import QtQuick 2.11
 QtObject {
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
+    readonly property color textGreenColor: "green"
 
     // RegisterBar
     readonly property color registerBarBackgroundColor: "black"

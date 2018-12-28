@@ -2,10 +2,22 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 // TO_DO consider using Toolbar
 Item {
     signal headerClicked()
+
+    property var currentResource: Enums.CommodityType.Timber //TO_DO set proper text after user set
+
+    function getResourceName(res) {
+        if (res === Enums.CommodityType.Timber) return Strings.timber
+        if (res === Enums.CommodityType.Charcoal) return Strings.charcoal
+        if (res === Enums.CommodityType.Cocoa) return Strings.cocoa
+
+        console.warn("Invalid resource type!")
+        return Strings.timber
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -20,18 +32,24 @@ Item {
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
+            inset: s(20)
+
             source: Style.backImgUrl
+
+            onClicked: pageManager.pop()
         }
 
         ImageItem {
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignHCenter
 
-            buttonWidth: height
+            buttonWidth: height * 0.8
 
             imageUrl: Style.timberImgUrl
-            text: Strings.timber //TO_DO set proper text
-            textFont.pixelSize: s(60)
+
+            text: getResourceName(currentResource)
+            textColor: Style.textGreenColor
+            textFont.pixelSize: s(50)
             textFont.capitalization: Font.AllUppercase
         }
 
@@ -39,7 +57,11 @@ Item {
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
+            inset: s(20)
+
             source: Style.homeImgUrl
+
+            onClicked: pageManager.goToInitial()
         }
 
         //spacer
