@@ -9,6 +9,8 @@ QtObject {
     readonly property color textGreenColor: "green"
 
     // Sizes
+    readonly property real footerHeight: 150
+    readonly property real headerHeight: 150
 
     // RegisterBar
     readonly property color registerBarBackgroundColor: "black"

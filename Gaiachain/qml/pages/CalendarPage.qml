@@ -11,8 +11,6 @@ import "../items" as Items
 BasePage {
     id: top
 
-    bottomToolbarVisible: true
-
     property int currentYear: 2018
     property int lowestYear: currentYear
     property int currentMonth: Calendar.December

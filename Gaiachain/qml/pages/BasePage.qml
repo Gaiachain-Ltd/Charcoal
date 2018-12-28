@@ -2,11 +2,14 @@ import QtQuick 2.11
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.11
 
+import "../items" as Items
+
+import com.gaiachain.style 1.0
+
 Item {
     id: top
     property bool footerVisible: true
     property bool headerVisible: true
-    property bool bottomToolbarVisible: false
 
     property color backgroundColor: "white"
 
@@ -16,6 +19,12 @@ Item {
         anchors.fill: parent
 
         spacing: 0
+
+        Items.NavigationHeader {
+            Layout.fillWidth: true
+            Layout.preferredHeight: s(Style.headerHeight)
+            visible: top.headerVisible
+        }
 
         Item {
             id: pageContent
@@ -29,30 +38,10 @@ Item {
             }
         }
 
-        ToolBar {
-            id: toolbar
-
+        Items.Footer {
             Layout.fillWidth: true
-            visible: bottomToolbarVisible
-            position: ToolBar.Footer
-
-            RowLayout {
-                anchors.fill: parent
-                ToolButton {
-                    text: qsTr("‹")
-                }
-                Label {
-                    Layout.fillWidth: true
-
-                    text: "Title"
-                    elide: Label.ElideRight
-                    horizontalAlignment: Qt.AlignHCenter
-                    verticalAlignment: Qt.AlignVCenter
-                }
-                ToolButton {
-                    text: qsTr("⋮")
-                }
-            }
+            Layout.preferredHeight: s(Style.footerHeight)
+            visible: top.footerVisible
         }
     }
 }

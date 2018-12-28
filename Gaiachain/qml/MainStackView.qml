@@ -9,9 +9,6 @@ Item {
     property string initialPage: "qrc:/pages/ResourceChosingPage.qml"
     property int windowWidth: parent.width
 
-    property bool headerVisible: true
-    property bool footerVisible: true
-
     function pop() {
         stackView.pop()
     }
@@ -33,18 +30,6 @@ Item {
 
         initialItem: initialPage
 
-        Component.onCompleted: {
-            //TO_DO temporarly enter calendar on start
-            pageManager.enterPage(Enums.Page.ViewType, {})
-            pageManager.enterPage(Enums.Page.Calendar, {})
-        }
-
-        onCurrentItemChanged: {
-            if (currentItem !== null)
-                headerVisible = currentItem.headerVisible
-            if (currentItem !== null)
-                footerVisible = currentItem.footerVisible
-        }
 
         pushEnter: Transition {
             PropertyAnimation {
@@ -81,6 +66,12 @@ Item {
                 duration: Style.animationDuration
                 easing.type: Style.animationEasing
             }
+        }
+
+        Component.onCompleted: {
+            //TO_DO temporarly enter calendar on start
+            pageManager.enterPage(Enums.Page.ViewType, {})
+            pageManager.enterPage(Enums.Page.Calendar, {})
         }
     }
 }

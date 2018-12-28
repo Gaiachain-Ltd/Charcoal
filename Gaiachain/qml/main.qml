@@ -22,18 +22,8 @@ ApplicationWindow
         return utility.scaleRoundByDpi(num)
     }
 
-    header: Items.NavigationHeader {
-        visible: mainStackView.headerVisible
-        height: s(150)
-    }
-
     MainStackView {
         id: mainStackView
         anchors.fill: parent
-    }
-
-    footer: Items.RegisterBar {
-        visible: mainStackView.footerVisible
-        height: s(100)
     }
 }

@@ -13,6 +13,13 @@ Item {
 
     property string title: getMonthName(currentMonth)
     property bool titleClickable: false
+    property alias titleFont: titleText.font
+
+    property int internalMargins: 0
+    property int titleCalendarSpacing: 0
+    property int bottomSpacing: 0
+
+    property alias dayFont: grid.font
 
     signal titleClicked()
     signal dateClicked(date d)
@@ -40,7 +47,12 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
+        anchors.margins: top.internalMargins
+        spacing: 0
+
         Text {
+            id: titleText
+
             Layout.fillWidth: true
             text: top.title
 
@@ -49,6 +61,11 @@ Item {
                 enabled: top.titleClickable
                 onClicked: top.titleClicked()
             }
+        }
+
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: top.titleCalendarSpacing
         }
 
         MonthGrid {
@@ -86,6 +103,11 @@ Item {
                     color: currentMonth ? "gray" : "transparent"
                 }
             }
+        }
+
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: top.bottomSpacing
         }
     }
 }
