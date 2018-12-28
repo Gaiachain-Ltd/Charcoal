@@ -1,4 +1,5 @@
 import QtQuick 2.11
+import QtQuick.Layouts 1.11
 
 import Qt.labs.calendar 1.0
 
@@ -20,26 +21,41 @@ BasePage {
                               })
     }
 
-    Items.CalendarMonthItem {
+    ColumnLayout {
         anchors.fill: parent
+        anchors.margins: s(40)
+        spacing: s(100)
 
-        currentMonth: top.currentMonth
-        currentYear: top.currentYear
+        Text {
+            Layout.fillWidth: true
+            text: "<- " + monthItem.getMonthName(top.currentMonth) + " " + top.currentYear
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
 
-        title: "<- " + getMonthName(currentMonth) + " " + currentYear
-        titleClickable: true
-        titleFont {
-            pixelSize: s(50)
-            bold: true
+            font.bold: true
+            font.pixelSize: s(50)
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: pageManager.pop()
+            }
         }
 
-        internalMargins: s(50)
-        titleCalendarSpacing: s(100)
-        bottomSpacing: s(100)
+        Items.CalendarMonthItem {
+            id: monthItem
 
-        dayFont.pixelSize: s(35)
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
-        onTitleClicked: pageManager.pop()
-        onDateClicked: top.enterCalendarEventsPage(d)
+            currentMonth: top.currentMonth
+            currentYear: top.currentYear
+
+            bottomSpacing: s(100)
+
+            dayFont.pixelSize: s(35)
+
+            onDateClicked: top.enterCalendarEventsPage(d)
+        }
     }
+
 }

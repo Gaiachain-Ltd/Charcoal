@@ -11,14 +11,7 @@ Item {
     property int currentMonth: Calendar.December
     property int currentYear: 2018
 
-    property string title: getMonthName(currentMonth)
-    property bool titleClickable: false
-    property alias titleFont: titleText.font
-
-    property int internalMargins: 0
-    property int titleCalendarSpacing: 0
     property int bottomSpacing: 0
-
     property alias dayFont: grid.font
 
     signal titleClicked()
@@ -46,27 +39,8 @@ Item {
     }
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: top.internalMargins
+        anchors.fill: parent        
         spacing: 0
-
-        Text {
-            id: titleText
-
-            Layout.fillWidth: true
-            text: top.title
-
-            MouseArea {
-                anchors.fill: parent
-                enabled: top.titleClickable
-                onClicked: top.titleClicked()
-            }
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: top.titleCalendarSpacing
-        }
 
         MonthGrid {
             id: grid

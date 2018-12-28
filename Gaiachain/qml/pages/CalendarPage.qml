@@ -106,16 +106,31 @@ BasePage {
 
                 property var cYear: year
 
-                Items.CalendarMonthItem {
+                ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: s(30)
 
-                    currentMonth: month
-                    currentYear: year
+                    spacing: s(20)
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: enterCalendarMonthPage(month, year)
+                    Text {
+                        Layout.fillWidth: true
+                        text: monthItem.getMonthName(month)
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignLeft
+                    }
+
+                    Items.CalendarMonthItem {
+                        id: monthItem
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+
+                        currentMonth: month
+                        currentYear: year
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: enterCalendarMonthPage(month, year)
+                        }
                     }
                 }
             }
