@@ -10,7 +10,7 @@ Item {
 
     property color backgroundColor: "white"
 
-    default property alias content: pageContent.children
+    default property alias content: pageContent.data
 
     ColumnLayout {
         anchors.fill: parent

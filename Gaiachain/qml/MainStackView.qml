@@ -22,7 +22,7 @@ Item {
 
     Connections {
         target: pageManager
-        onPush: stackView.push(url)
+        onPush: stackView.push(url, properites)
         onPop: stackView.pop()
         onGoToInitial: stackView.pop(null)
     }
@@ -35,8 +35,8 @@ Item {
 
         Component.onCompleted: {
             //TO_DO temporarly enter calendar on start
-            pageManager.enterPage(Enums.Page.ViewType)
-            pageManager.enterPage(Enums.Page.Calendar)
+            pageManager.enterPage(Enums.Page.ViewType, {})
+            pageManager.enterPage(Enums.Page.Calendar, {})
         }
 
         onCurrentItemChanged: {

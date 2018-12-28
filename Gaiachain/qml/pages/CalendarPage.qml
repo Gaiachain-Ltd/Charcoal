@@ -1,4 +1,4 @@
-import QtQuick 2.11
+import QtQuick 2.12
 import QtQuick.Layouts 1.11
 import QtQml.Models 2.12
 
@@ -14,6 +14,7 @@ BasePage {
     bottomToolbarVisible: true
 
     property int currentYear: 2018
+    property int lowestYear: currentYear
     property int currentMonth: Calendar.December
 
     readonly property var monthModel: [
@@ -23,6 +24,7 @@ BasePage {
         Calendar.October, Calendar.November, Calendar.December
     ]
 
+    // TO_DO fix model order
     function addYear(newYear, lastMonth) {
         var endMonth = lastMonth === undefined ? Calendar.December : lastMonth
         for (var i=0; i < monthModel.length; ++i) {
@@ -36,11 +38,18 @@ BasePage {
         }
     }
 
+    ListModel { //Add model in cpp T0_DO
+        id: datesModel
+        Component.onCompleted: {
+            addYear(currentYear, currentMonth)
+            grid.positionViewAtEnd()
+        }
+    }
 
-//    ListModel {
-//        id: datesModel
-//        Component.onCompleted: addYear(currentYear, currentMonth)
-//    }
+    function enterCalendarMonthPage(month, year) {
+        console.log("Month/Year", month, year)
+        pageManager.enterPage(Enums.Page.CalendarMonth, {"currentMonth": month, "currentYear": year})
+    }
 
     ColumnLayout {
         anchors {
@@ -62,13 +71,40 @@ BasePage {
         }
 
         GridView {
+            id: grid
             Layout.fillHeight: true
             Layout.fillWidth: true
 
+            clip: true
+
+            cellHeight: parent.height / 2
+            cellWidth: parent.width / 2
+
             model: datesModel
-            delegate: Items.CalendarMonthItem {
-                currentMonth: month
-                currentYear: year
+
+            onAtYBeginningChanged: {
+                if (atYBeginning) {
+                    lowestYear = lowestYear - 1
+                    top.addYear(lowestYear)
+                }
+            }
+
+            delegate: Item {
+                width: GridView.view.cellWidth
+                height: GridView.view.cellHeight
+
+                Items.CalendarMonthItem {
+                    anchors.fill: parent
+                    anchors.margins: s(30)
+
+                    currentMonth: month
+                    currentYear: year
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: enterCalendarMonthPage(month, year)
+                    }
+                }
             }
         }
     }

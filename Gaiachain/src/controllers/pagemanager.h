@@ -15,12 +15,12 @@ public:
 
     void setupQmlContext(QQmlApplicationEngine &engine);
 
-    Q_INVOKABLE void enterPage(Enums::Page page);
+    Q_INVOKABLE void enterPage(Enums::Page page, const QVariant &properites);
     Q_INVOKABLE void popPage();
     Q_INVOKABLE void goToInitialPage();
 
 signals:
-    void push(const QString &url);
+    void push(const QString &url, const QVariant &properites);
     void pop();
     void goToInitial();
 

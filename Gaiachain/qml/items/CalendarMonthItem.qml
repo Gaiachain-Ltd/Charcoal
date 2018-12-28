@@ -6,8 +6,16 @@ import Qt.labs.calendar 1.0
 import com.gaiachain.style 1.0
 
 Item {
+    id: top
+
     property int currentMonth: Calendar.December
     property int currentYear: 2018
+
+    property string title: getMonthName(currentMonth)
+    property bool titleClickable: false
+
+    signal titleClicked()
+    signal dateClicked(date d)
 
     function getMonthName(month) {
         switch(month) {
@@ -34,7 +42,13 @@ Item {
         anchors.fill: parent
         Text {
             Layout.fillWidth: true
-            text: getMonthName(currentMonth)
+            text: top.title
+
+            MouseArea {
+                anchors.fill: parent
+                enabled: top.titleClickable
+                onClicked: top.titleClicked()
+            }
         }
 
         MonthGrid {
@@ -47,6 +61,8 @@ Item {
             year: currentYear
             locale: Qt.locale("en_GB")
             font.pixelSize: s(25)
+
+            onClicked: dateClicked(date)
 
             delegate: Column {
                 property bool currentMonth: model.month === grid.month

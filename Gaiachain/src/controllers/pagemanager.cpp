@@ -15,7 +15,7 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("pageManager"), this);
 }
 
-void PageManager::enterPage(Enums::Page page)
+void PageManager::enterPage(Enums::Page page, const QVariant &properites)
 {
     const QString pageStr = Utility::enumToQString<Enums::Page>(page, "Page");
     QString pageUrl = m_pagePrefix + pageStr + QStringLiteral("Page.qml");
@@ -23,7 +23,7 @@ void PageManager::enterPage(Enums::Page page)
     qDebug() << "Enter page" << pageUrl;
     // TO_DO Add checking of page url correctness
 
-    emit push(pageUrl);
+    emit push(pageUrl, properites);
 }
 
 void PageManager::popPage()

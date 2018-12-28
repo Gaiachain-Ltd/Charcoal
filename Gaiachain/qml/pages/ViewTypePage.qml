@@ -10,7 +10,7 @@ BasePage {
     id: top
 
     function enterCalendarPage() {
-        pageManager.enterPage(Enums.Page.Calendar)
+        pageManager.enterPage(Enums.Page.Calendar, {})
     }
 
     function enterMapPage() {
