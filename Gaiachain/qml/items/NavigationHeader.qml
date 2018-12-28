@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
-import "items" as Items
+import com.gaiachain.style 1.0
 
 // TO_DO consider using Toolbar
 Item {
@@ -16,30 +16,30 @@ Item {
             Layout.fillHeight: true
         }
 
-        Items.ImageButton {
+        ImageButton {
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
-            source: "qrc:/ui/back"
+            source: Style.backImgUrl
         }
 
-        Items.ImageItem {
+        ImageItem {
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignHCenter
 
             buttonWidth: height
 
-            imageUrl: "qrc:/ui/timber"
-            text: qsTr("Timber") //TO_DO set proper text
+            imageUrl: Style.timberImgUrl
+            text: Strings.timber //TO_DO set proper text
             textFont.pixelSize: s(60)
             textFont.capitalization: Font.AllUppercase
         }
 
-        Items.ImageButton {
+        ImageButton {
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
-            source: "qrc:/ui/home"
+            source: Style.homeImgUrl
         }
 
         //spacer

@@ -2,6 +2,7 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
 import com.gaiachain.enums 1.0
+import com.gaiachain.style 1.0
 
 import "../items" as Items
 
@@ -24,20 +25,13 @@ BasePage {
 
         Items.ImageItem {
             Layout.preferredHeight: s(150)
-//            Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
 
             buttonWidth: height
 
-            imageUrl: "qrc:/ui/cocoa"
-            text: "Gaiachain"
+            imageUrl: Style.cocoaImgUrl
+            text: Strings.gaiachain
             textFont.pixelSize: s(40)
-
-            Rectangle {
-                anchors.fill: parent
-                color: "red"
-                opacity: 0.4
-            }
         }
 
         RowLayout {
@@ -58,19 +52,13 @@ BasePage {
 
                 buttonHeight: width
 
-                source: "qrc:/ui/timber"
-                text: qsTr("Timber")
+                source: Style.timberImgUrl
+                text: Strings.timber
                 textFont.pixelSize: s(30)
 
                 onButtonClicked: {
                     // TO_DO Set timber user
                     top.enterViewTypePage()
-                }
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: "green"
-                    opacity: 0.5
                 }
             }
 
@@ -79,8 +67,8 @@ BasePage {
 
                 buttonHeight: width
 
-                source: "qrc:/ui/charcoal"
-                text: qsTr("Charcoal")
+                source: Style.charcoalImgUrl
+                text: Strings.charcoal
                 textFont.pixelSize: s(30)
 
                 onButtonClicked: {
@@ -94,8 +82,8 @@ BasePage {
 
                 buttonHeight: width
 
-                source: "qrc:/ui/cocoa"
-                text: qsTr("Cocoa")
+                source: Style.cocoaImgUrl
+                text: Strings.cocoa
                 textFont.pixelSize: s(30)
 
                 onButtonClicked: {

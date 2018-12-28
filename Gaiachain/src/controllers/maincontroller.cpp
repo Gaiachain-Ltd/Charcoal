@@ -21,6 +21,9 @@ void MainController::setupQMLContext(QQmlApplicationEngine &engine)
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
 
+    qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
+    qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
+
     m_pageManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);
 }

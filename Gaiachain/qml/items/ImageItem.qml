@@ -1,6 +1,8 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
+import com.gaiachain.style 1.0
+
 Item {
     id: top
 
@@ -14,6 +16,7 @@ Item {
     property real buttonHeight: -1.0
 
     property alias text: text.text
+    property alias textColor: text.color
     property alias textFont: text.font
     property alias spacing: mainLayout.spacing
 
@@ -43,6 +46,8 @@ Item {
 
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
+
+            color: Style.textPrimaryColor
         }
     }
 

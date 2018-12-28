@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>RegisterBar.qml</file>
-        <file>NavigationHeader.qml</file>
         <file>testComponents/CommodityRangeTestPage.qml</file>
         <file>pages/LanguageChosingPage.qml</file>
         <file>pages/LoginPage.qml</file>
@@ -14,6 +12,8 @@
         <file>pages/ShipmentDetailsPage.qml</file>
         <file>pages/EventDetailsPage.qml</file>
         <file>pages/BasePage.qml</file>
+        <file>items/RegisterBar.qml</file>
+        <file>items/NavigationHeader.qml</file>
         <file>items/ImageButton.qml</file>
         <file>items/ImageCheckbox.qml</file>
         <file>items/TextImageButton.qml</file>
@@ -22,5 +22,7 @@
         <file>items/ImageItem.qml</file>
         <file>items/SvgImage.qml</file>
         <file>items/ShadowedImageButton.qml</file>
+        <file>GaiaStrings.qml</file>
+        <file>GaiaStyle.qml</file>
     </qresource>
 </RCC>

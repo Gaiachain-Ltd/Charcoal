@@ -2,6 +2,8 @@ import QtQuick 2.11
 import QtQuick.Controls 2.4
 import QtQuick.Window 2.2
 
+import "./items" as Items
+
 ApplicationWindow
 {
     id: mainWindow
@@ -20,7 +22,7 @@ ApplicationWindow
         return utility.scaleRoundByDpi(num)
     }
 
-    header: NavigationHeader {
+    header: Items.NavigationHeader {
         visible: mainStackView.headerVisible
         height: s(150)
     }
@@ -30,7 +32,7 @@ ApplicationWindow
         anchors.fill: parent
     }
 
-    footer: RegisterBar {
+    footer: Items.RegisterBar {
         visible: mainStackView.footerVisible
         height: s(100)
     }
