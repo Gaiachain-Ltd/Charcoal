@@ -10,7 +10,7 @@ namespace Enums {
         Timber = 0,
         Charcoal,
         Cocoa,
-        Count
+        CommodityCount
     };
     Q_ENUM_NS(CommodityType)
 
@@ -29,7 +29,7 @@ namespace Enums {
         ResourceChosing,
         ShipmentDetails,
         ViewType,
-        Count
+        PageCount
     };
     Q_ENUM_NS(Page)
 }

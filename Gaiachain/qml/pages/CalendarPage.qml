@@ -24,24 +24,29 @@ BasePage {
         Calendar.October, Calendar.November, Calendar.December
     ]
 
-    // TO_DO fix model order
-    function addYear(newYear, lastMonth) {
+    function addYear(lastMonth) {
         var endMonth = lastMonth === undefined ? Calendar.December : lastMonth
-        for (var i=0; i < monthModel.length; ++i) {
-            datesModel.append({
-                                  "month": monthModel[i],
-                                  "year": newYear
-                              })
+        var blockInsert = true // Block insert until lastMonth is found
+        for (var i = monthModel.length-1; i >= 0; --i) {
+            if (blockInsert) {
+                if (monthModel[i] === endMonth) {
+                    blockInsert = false
+                } else {
+                    continue
+                }
+            }
 
-            if (monthModel[i] === lastMonth)
-                break
+            datesModel.insert(0, { "month": monthModel[i], "year": lowestYear })
         }
+
+        --lowestYear
     }
 
     ListModel { //Add model in cpp T0_DO
         id: datesModel
         Component.onCompleted: {
-            addYear(currentYear, currentMonth)
+            addYear(currentMonth)
+            addYear()
             grid.positionViewAtEnd()
         }
     }
@@ -60,6 +65,7 @@ BasePage {
         spacing: s(40)
 
         Text {
+            id: yearText
             Layout.fillWidth: true
 
             verticalAlignment: Text.AlignVCenter
@@ -84,14 +90,23 @@ BasePage {
 
             onAtYBeginningChanged: {
                 if (atYBeginning) {
-                    lowestYear = lowestYear - 1
-                    top.addYear(lowestYear)
+                    // Add next year if we're at the begining
+                    addYear()
+                    grid.positionViewAtIndex(monthModel.length, GridView.Beginning)
                 }
             }
+
+            onContentYChanged: {
+                // Update curent year based on item at (contentX, contentY) position
+                top.currentYear = itemAt(contentX, contentY).cYear
+            }
+
 
             delegate: Item {
                 width: GridView.view.cellWidth
                 height: GridView.view.cellHeight
+
+                property var cYear: year
 
                 Items.CalendarMonthItem {
                     anchors.fill: parent

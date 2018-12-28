@@ -33,7 +33,7 @@ void DataManager::populateModels()
     Gaia::ModelData eventData;
 
     // Populate shipment data
-    int ctCount = static_cast<int>(Enums::CommodityType::Count);
+    int ctCount = static_cast<int>(Enums::CommodityType::CommodityCount);
     int shipmentCount = 100;
     for (int i = 0; i < shipmentCount; ++i) {
         shipmentData.append({i, i%ctCount});
