@@ -62,6 +62,7 @@ DESTDIR = $$BUILD_DIR/bin
 
 ## Platforms
 include(platforms/android/android.pri)
+include(platforms/linux/linux.pri)
 
 ## Modules
 include(../milo/mconfig/mconfig.pri)

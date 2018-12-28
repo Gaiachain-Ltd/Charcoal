@@ -29,6 +29,7 @@ SOFTWARE.
 #include <QGuiApplication>
 #include <QLoggingCategory>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include "../src/controllers/maincontroller.h"
 
@@ -50,15 +51,21 @@ int main(int argc, char *argv[]) {
     app.setApplicationName("Gaiachain");
     //logger()->enableLogToFile(app.applicationName());
     qCInfo(coreMain) << "\nName:" << app.applicationName()
-                 << "\nOrganisation:" << app.organizationName()
-                 << "\nDomain:" << app.organizationDomain()
-                 << "\nVersion:" << app.applicationVersion()
-                 << "\nSHA:" << GitCommit
-                 << "\nBuild date:" << BuildDate;
+                     << "\nOrganisation:" << app.organizationName()
+                     << "\nDomain:" << app.organizationDomain()
+                     << "\nVersion:" << app.applicationVersion()
+                     << "\nSHA:" << GitCommit
+                     << "\nBuild date:" << BuildDate;
 
     QQmlApplicationEngine engine;
     MainController mc;
     mc.setupQMLContext(engine);
+
+#ifdef DESKTOP_TESTS
+    engine.rootContext()->setContextProperty("isDesktop", true);
+#else
+    engine.rootContext()->setContextProperty("isDesktop", false);
+#endif
 
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
 
