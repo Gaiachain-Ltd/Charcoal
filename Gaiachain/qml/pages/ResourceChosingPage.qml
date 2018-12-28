@@ -23,6 +23,7 @@ BasePage {
             Layout.preferredHeight: s(20)
         }
 
+        // Logo
         Items.ImageItem {
             Layout.preferredHeight: s(150)
             Layout.alignment: Qt.AlignHCenter

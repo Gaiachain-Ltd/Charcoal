@@ -34,8 +34,6 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: {
-            // TO_DO handle registration request
-        }
+        onClicked: console.log("TO_DO: Implement registration request!")
     }
 }

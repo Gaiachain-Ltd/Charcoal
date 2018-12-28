@@ -6,6 +6,7 @@ Item {
     id: top
     property bool footerVisible: true
     property bool headerVisible: true
+    property bool bottomToolbarVisible: false
 
     property color backgroundColor: "white"
 
@@ -30,7 +31,9 @@ Item {
 
         ToolBar {
             id: toolbar
+
             Layout.fillWidth: true
+            visible: bottomToolbarVisible
             position: ToolBar.Footer
 
             RowLayout {
