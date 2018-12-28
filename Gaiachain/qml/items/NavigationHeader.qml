@@ -11,12 +11,15 @@ Item {
     property var currentResource: Enums.CommodityType.Timber //TO_DO set proper text after user set
 
     function getResourceName(res) {
-        if (res === Enums.CommodityType.Timber) return Strings.timber
-        if (res === Enums.CommodityType.Charcoal) return Strings.charcoal
-        if (res === Enums.CommodityType.Cocoa) return Strings.cocoa
+        switch(res) {
+        case Enums.CommodityType.Timber: return Strings.timber
+        case Enums.CommodityType.Charcoal: return Strings.charcoal
+        case Enums.CommodityType.Cocoa: return Strings.cocoa
+        default:
+            console.warn("Invalid resource type!")
+        }
 
-        console.warn("Invalid resource type!")
-        return Strings.timber
+        return Strings.timber + "!" // Add "!" if invalid
     }
 
     RowLayout {

@@ -5,7 +5,6 @@ import com.gaiachain.style 1.0
 
 // TO_DO consider using Toolbar
 Item {
-
     signal barClicked()
 
     Rectangle {

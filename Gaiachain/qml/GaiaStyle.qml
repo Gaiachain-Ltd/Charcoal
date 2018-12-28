@@ -25,4 +25,8 @@ QtObject {
     readonly property url homeImgUrl: "qrc:/ui/home"
 
     readonly property url registerImgUrl: "qrc:/ui/map"
+
+    // Other
+    readonly property int animationDuration: 300
+    readonly property int animationEasing: Easing.Linear
 }

@@ -1,6 +1,9 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
 
+import com.gaiachain.enums 1.0
+import com.gaiachain.style 1.0
+
 Item {
     property alias depth: stackView.depth
     property string initialPage: "qrc:/pages/ResourceChosingPage.qml"
@@ -30,6 +33,12 @@ Item {
 
         initialItem: initialPage
 
+        Component.onCompleted: {
+            //TO_DO temporarly enter calendar on start
+            pageManager.enterPage(Enums.Page.ViewType)
+            pageManager.enterPage(Enums.Page.Calendar)
+        }
+
         onCurrentItemChanged: {
             if (currentItem !== null)
                 headerVisible = currentItem.headerVisible
@@ -42,7 +51,8 @@ Item {
                 property: "x"
                 from: windowWidth
                 to: 0
-                duration: 350
+                duration: Style.animationDuration
+                easing.type: Style.animationEasing
             }
         }
         pushExit: Transition {
@@ -50,7 +60,8 @@ Item {
                 property: "x"
                 from: 0
                 to: -windowWidth
-                duration: 350
+                duration: Style.animationDuration
+                easing.type: Style.animationEasing
             }
         }
         popEnter: Transition {
@@ -58,7 +69,8 @@ Item {
                 property: "x"
                 from: -windowWidth
                 to: 0
-                duration: 350
+                duration: Style.animationDuration
+                easing.type: Style.animationEasing
             }
         }
         popExit: Transition {
@@ -66,7 +78,8 @@ Item {
                 property: "x"
                 from: 0
                 to: windowWidth
-                duration: 350
+                duration: Style.animationDuration
+                easing.type: Style.animationEasing
             }
         }
     }
