@@ -36,13 +36,13 @@ Item {
 
             delegate: Column {
                 property bool currentMonth: model.month === grid.month
-                Text {
+                BasicText {
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignTop
-                    opacity: currentMonth ? 1 : 0.2
                     text: model.day
+                    verticalAlignment: Text.AlignTop
+
+                    opacity: currentMonth ? 1 : 0.2
                     font: grid.font
                 }
 
@@ -58,10 +58,7 @@ Item {
             }
         }
 
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: top.bottomSpacing
-        }
+        LayoutSpacer { spacerHeight: top.bottomSpacing }
     }
 }
 

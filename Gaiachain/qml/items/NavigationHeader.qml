@@ -25,11 +25,7 @@ Item {
     RowLayout {
         anchors.fill: parent
 
-        //spacer
-        Item {
-            Layout.preferredWidth: s(20)
-            Layout.fillHeight: true
-        }
+        LayoutSpacer { spacerWidth: s(20) }
 
         ImageButton {
             Layout.fillHeight: true
@@ -67,10 +63,6 @@ Item {
             onClicked: pageManager.goToInitial()
         }
 
-        //spacer
-        Item {
-            Layout.preferredWidth: s(20)
-            Layout.fillHeight: true
-        }
+        LayoutSpacer { spacerWidth: s(20) }
     }
 }

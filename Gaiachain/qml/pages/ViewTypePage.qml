@@ -17,51 +17,43 @@ BasePage {
         console.log("TO_DO LATER: Implement map page!")
     }
 
-    RowLayout {
-        id: buttonLayout
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-        }
+    ColumnLayout {
+        anchors.fill: parent
 
-        property real buttonHeight: s(150)
-        height: buttonHeight
-
-        spacing: s(20)
-
-        Item {
+        RowLayout {
+            id: buttonLayout
             Layout.fillWidth: true
-            Layout.preferredHeight: buttonLayout.buttonHeight
+            property real buttonHeight: s(150)
+            Layout.preferredHeight: buttonHeight
+
+            spacing: s(20)
+
+            Items.LayoutSpacer { spacerHeight: buttonLayout.buttonHeight }
+            Items.TextImageButton {
+                Layout.preferredWidth: buttonLayout.buttonHeight
+
+                buttonHeight: width
+
+                source: Style.calendarImgUrl
+                text: Strings.calendar
+                textFont.pixelSize: s(30)
+
+                onButtonClicked: top.enterCalendarPage()
+            }
+
+            Items.TextImageButton {
+                Layout.preferredWidth: buttonLayout.buttonHeight
+
+                buttonHeight: width
+
+                source: Style.mapImgUrl
+                text: Strings.map
+                textFont.pixelSize: s(30)
+
+                onButtonClicked: top.enterMapPage()
+            }
+            Items.LayoutSpacer { spacerHeight: buttonLayout.buttonHeight }
         }
-
-        Items.TextImageButton {
-            Layout.preferredWidth: buttonLayout.buttonHeight
-
-            buttonHeight: width
-
-            source: Style.calendarImgUrl
-            text: Strings.calendar
-            textFont.pixelSize: s(30)
-
-            onButtonClicked: top.enterCalendarPage()
-        }
-
-        Items.TextImageButton {
-            Layout.preferredWidth: buttonLayout.buttonHeight
-
-            buttonHeight: width
-
-            source: Style.mapImgUrl
-            text: Strings.map
-            textFont.pixelSize: s(30)
-
-            onButtonClicked: top.enterMapPage()
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: buttonLayout.buttonHeight
-        }
+        Items.LayoutSpacer {}
     }
 }

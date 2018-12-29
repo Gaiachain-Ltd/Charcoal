@@ -11,7 +11,7 @@ import "../items" as Items
 BasePage {
     id: top
 
-    property int currentYear: 2018
+    property int currentYear: 2018 //TO_DO set current year and month to current one
     property int lowestYear: currentYear
     property int currentMonth: Calendar.December
 
@@ -62,14 +62,14 @@ BasePage {
 
         spacing: s(40)
 
-        Text {
+        Items.BasicText {
             id: yearText
+
             Layout.fillWidth: true
 
-            verticalAlignment: Text.AlignVCenter
+            text: currentYear
             horizontalAlignment: Text.AlignLeft
 
-            text: currentYear
             font.pixelSize: s(60)
             font.bold: true
         }
@@ -112,10 +112,10 @@ BasePage {
 
                     spacing: s(20)
 
-                    Text {
+                    Items.BasicText {
                         Layout.fillWidth: true
+
                         text: getMonthName(month)
-                        verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignLeft
                     }
 

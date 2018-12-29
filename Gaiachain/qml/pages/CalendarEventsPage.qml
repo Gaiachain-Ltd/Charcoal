@@ -5,6 +5,8 @@ import Qt.labs.calendar 1.0
 
 import com.gaiachain.style 1.0
 
+import "../items" as Items
+
 BasePage {
     id: top
 
@@ -38,10 +40,10 @@ BasePage {
         anchors.margins: s(40)
         spacing: s(50)
 
-        Text {
+        Items.BasicText {
             Layout.fillWidth: true
+
             text: "<- " + top.getMonthName(top.currentMonth) + " " + top.currentYear
-            verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
 
             font.bold: true
@@ -90,12 +92,7 @@ BasePage {
                             font.pixelSize: s(40)
                         }
                     }
-
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                    }
-
+                    Items.LayoutSpacer {}
                     Rectangle {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
                         Layout.preferredHeight: s(20)
@@ -113,6 +110,7 @@ BasePage {
         }
 
         ListView {
+            //TO_DO
             Layout.fillWidth: true
             Layout.fillHeight: true
         }

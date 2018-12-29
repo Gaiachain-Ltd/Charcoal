@@ -8,7 +8,10 @@ QtObject {
     readonly property color textSecondaryColor: "white"
     readonly property color textGreenColor: "green"
 
-    // Sizes
+    // Text
+    readonly property real pixelSize: 40
+
+    // Components sizes
     readonly property real footerHeight: 150
     readonly property real headerHeight: 150
 

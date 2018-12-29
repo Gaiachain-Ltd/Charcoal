@@ -22,10 +22,10 @@ BasePage {
         anchors.margins: s(40)
         spacing: s(100)
 
-        Text {
+        Items.BasicText {
             Layout.fillWidth: true
+
             text: "<- " + top.getMonthName(top.currentMonth) + " " + top.currentYear
-            verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
 
             font.bold: true
@@ -44,7 +44,7 @@ BasePage {
             currentMonth: top.currentMonth
             currentYear: top.currentYear
 
-            bottomSpacing: s(100)
+            bottomSpacing: s(120)
 
             dayFont.pixelSize: s(35)
 

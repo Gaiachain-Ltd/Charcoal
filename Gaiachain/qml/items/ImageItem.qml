@@ -39,15 +39,9 @@ Item {
             fillMode: Image.PreserveAspectFit
         }
 
-        Text {
+        BasicText {
             id: text
-
             Layout.fillHeight: true
-
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-
-            color: Style.textPrimaryColor
         }
     }
 

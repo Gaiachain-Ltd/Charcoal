@@ -17,12 +17,7 @@ BasePage {
     ColumnLayout {
         anchors.fill: parent
 
-        // spacer
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: s(20)
-        }
-
+        Items.LayoutSpacer { spacerHeight: s(20) }
         // Logo
         Items.ImageItem {
             Layout.preferredHeight: s(150)
@@ -43,11 +38,7 @@ BasePage {
 
             spacing: s(20)
 
-            Item {
-                Layout.fillWidth: true
-                Layout.preferredHeight: buttonLayout.buttonHeight
-            }
-
+            Items.LayoutSpacer { spacerHeight: buttonLayout.buttonHeight }
             Items.TextImageButton {
                 Layout.preferredWidth: buttonLayout.buttonHeight
 
@@ -92,17 +83,9 @@ BasePage {
                     top.enterViewTypePage()
                 }
             }
-
-            Item {
-                Layout.fillWidth: true
-                Layout.preferredHeight: buttonLayout.buttonHeight
-            }
+            Items.LayoutSpacer { spacerHeight: buttonLayout.buttonHeight }
         }
 
-        // spacer
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
+        Items.LayoutSpacer {}
     }
 }

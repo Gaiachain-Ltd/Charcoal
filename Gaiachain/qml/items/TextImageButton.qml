@@ -45,13 +45,9 @@ Item {
             onClicked: top.buttonClicked()
         }
 
-        Text {
+        BasicText {
             id: text
-
             Layout.fillWidth: true
-
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
         }
     }
 }
