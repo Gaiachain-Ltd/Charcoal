@@ -14,11 +14,7 @@ BasePage {
     property int currentYear: 2018
 
     function enterCalendarEventsPage(date) {
-        pageManager.enterPage(Enums.Page.CalendarEvents, {
-                                  "currentDay" : date.getDay(),
-                                  "currentMonth" : date.getMonth(),
-                                  "currentYear" : date.getFullYear()
-                              })
+        pageManager.enterPage(Enums.Page.CalendarEvents, {"currentDate" : date})
     }
 
     ColumnLayout {
@@ -28,7 +24,7 @@ BasePage {
 
         Text {
             Layout.fillWidth: true
-            text: "<- " + monthItem.getMonthName(top.currentMonth) + " " + top.currentYear
+            text: "<- " + top.getMonthName(top.currentMonth) + " " + top.currentYear
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
 
@@ -42,8 +38,6 @@ BasePage {
         }
 
         Items.CalendarMonthItem {
-            id: monthItem
-
             Layout.fillHeight: true
             Layout.fillWidth: true
 

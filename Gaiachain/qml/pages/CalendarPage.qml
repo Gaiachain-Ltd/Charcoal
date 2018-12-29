@@ -40,7 +40,7 @@ BasePage {
         --lowestYear
     }
 
-    ListModel { //Add model in cpp T0_DO
+    ListModel {
         id: datesModel
         Component.onCompleted: {
             addYear(currentMonth)
@@ -114,13 +114,12 @@ BasePage {
 
                     Text {
                         Layout.fillWidth: true
-                        text: monthItem.getMonthName(month)
+                        text: getMonthName(month)
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignLeft
                     }
 
                     Items.CalendarMonthItem {
-                        id: monthItem
                         Layout.fillHeight: true
                         Layout.fillWidth: true
 

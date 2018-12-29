@@ -17,27 +17,6 @@ Item {
     signal titleClicked()
     signal dateClicked(date d)
 
-    function getMonthName(month) {
-        switch(month) {
-        case Calendar.January:return Strings.january
-        case Calendar.February: return Strings.february
-        case Calendar.March: return Strings.march
-        case Calendar.April: return Strings.april
-        case Calendar.May: return Strings.may
-        case Calendar.June: return Strings.june
-        case Calendar.July: return Strings.july
-        case Calendar.August: return Strings.august
-        case Calendar.September: return Strings.september
-        case Calendar.October: return Strings.october
-        case Calendar.November: return Strings.november
-        case Calendar.December: return Strings.december
-        default:
-            console.warn("CalendarMonthItem: Invalid month provided!")
-        }
-
-        return Strings.january +"!" // Add "!" if invalid
-    }
-
     ColumnLayout {
         anchors.fill: parent        
         spacing: 0
