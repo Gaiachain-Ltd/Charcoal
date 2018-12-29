@@ -1,11 +1,32 @@
 <RCC>
-    <qresource prefix="/ui">
-        <file alias="back">ui/back.svg</file>
-        <file alias="calendar">ui/calendar.svg</file>
-        <file alias="map">ui/map.svg</file>
-        <file alias="home">ui/home.svg</file>
-        <file alias="timber">ui/timber.svg</file>
-        <file alias="charcoal">ui/charcoal.svg</file>
-        <file alias="cocoa">ui/cocoa.svg</file>
-    </qresource>
+<qresource prefix="/ui">
+    <file alias="add_black">ui/add-icon-black.svg</file>
+    <file alias="add_green">ui/add-icon.svg</file>
+    <file alias="right_arrow">ui/arrow.svg</file>
+    <file alias="back">ui/back-icon.svg</file>
+    <file alias="calendar">ui/calendar-icon.svg</file>
+    <file alias="cancel">ui/cancel-icon.svg</file>
+    <file alias="details">ui/details-icon.svg</file>
+    <file alias="edit">ui/edit-icon.svg</file>
+    <file alias="export">ui/export-icon.svg</file>
+    <file alias="gaia_logo">ui/gaiachain-logo-black.svg</file>
+    <file alias="gaia_black">ui/gaia-icon.svg</file>
+    <file alias="gaia_color">ui/gaia-color-icon.svg</file>
+    <file alias="home">ui/home-icon.svg</file>
+    <file alias="keyboard">ui/keyboard-icon.svg</file>
+    <file alias="key">ui/key-icon.svg</file>
+    <file alias="list">ui/list-icon.svg</file>
+    <file alias="login">ui/login-icon.svg</file>
+    <file alias="log_park">ui/log-park-icon.svg</file>
+    <file alias="mini_calendar">ui/mini-calendar-icon.svg</file>
+    <file alias="mini_edit">ui/mini-edit-icon.svg</file>
+    <file alias="mini_list">ui/mini-list-icon.svg</file>
+    <file alias="ok">ui/ok-icon.svg</file>
+    <file alias="qr_code">ui/QR-code-icon.svg</file>
+    <file alias="sawmill">ui/sawmill-icon.svg</file>
+    <file alias="skip-arrow">ui/skip-arrow.svg</file>
+    <file alias="timber">ui/timber-icon.svg</file>
+    <file alias="mini_timber">ui/timber-mini-icon.svg</file>
+    <file alias="timeline">ui/timeline-icon.svg</file>
+</qresource>
 </RCC>

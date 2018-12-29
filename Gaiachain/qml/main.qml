@@ -8,8 +8,8 @@ ApplicationWindow
 {
     id: mainWindow
 
-    width: isDesktop ? 300 : Screen.desktopAvailableWidth
-    height: isDesktop ? 500 : Screen.desktopAvailableHeight
+    width: isDesktop ? 480 : Screen.desktopAvailableWidth
+    height: isDesktop ? 854 : Screen.desktopAvailableHeight
     visible: true
 
     color: "white"
