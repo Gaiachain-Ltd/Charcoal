@@ -24,6 +24,7 @@ namespace Enums {
         CalendarMonth,
         Calendar,
         EventDetails,
+        EventsList,
         LanguageChosing,
         Login,
         ResourceChosing,

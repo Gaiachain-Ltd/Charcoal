@@ -81,8 +81,8 @@ BasePage {
 
             clip: true
 
-            cellHeight: parent.height / 2
-            cellWidth: parent.width / 2
+            cellHeight: height / 2
+            cellWidth: width / 2
 
             model: datesModel
 

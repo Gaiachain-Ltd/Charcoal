@@ -11,6 +11,7 @@
         <file>pages/CalendarEventsPage.qml</file>
         <file>pages/ShipmentDetailsPage.qml</file>
         <file>pages/EventDetailsPage.qml</file>
+        <file>pages/EventsListPage.qml</file>
         <file>pages/BasePage.qml</file>
         <file>items/Footer.qml</file>
         <file>items/NavigationHeader.qml</file>
@@ -26,5 +27,6 @@
         <file>GaiaStyle.qml</file>
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
+        <file>items/EventsListView.qml</file>
     </qresource>
 </RCC>

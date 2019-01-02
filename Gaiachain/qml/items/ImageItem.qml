@@ -20,6 +20,8 @@ Item {
     property alias textFont: text.font
     property alias spacing: mainLayout.spacing
 
+    property alias layoutDirection: mainLayout.layoutDirection
+
     RowLayout {
         id: mainLayout
 
