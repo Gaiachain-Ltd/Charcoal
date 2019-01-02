@@ -69,6 +69,8 @@ BasePage {
             model: daysModel
 
             orientation: ListView.Horizontal
+            clip: true
+
             delegate: Item {
                 id: delegate
                 height: ListView.view.height
@@ -109,10 +111,27 @@ BasePage {
             }
         }
 
-        ListView {
-            //TO_DO
+        Items.EventsListView {
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            delegateHeight: s(100)
+            backgroundColor: "#FFF5F5F5"
+
+            viewModel: ListModel { //TO_DO
+                ListElement {
+                    name: "Apple"
+                    cost: 2.45
+                }
+                ListElement {
+                    name: "Orange"
+                    cost: 3.25
+                }
+                ListElement {
+                    name: "Banana"
+                    cost: 1.95
+                }
+            }
         }
     }
 }

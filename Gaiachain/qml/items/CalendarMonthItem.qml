@@ -18,7 +18,7 @@ Item {
     signal dateClicked(date d)
 
     ColumnLayout {
-        anchors.fill: parent        
+        anchors.fill: parent
         spacing: 0
 
         MonthGrid {

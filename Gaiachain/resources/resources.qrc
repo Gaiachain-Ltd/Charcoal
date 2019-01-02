@@ -24,7 +24,7 @@
     <file alias="ok">ui/ok-icon.svg</file>
     <file alias="qr_code">ui/QR-code-icon.svg</file>
     <file alias="sawmill">ui/sawmill-icon.svg</file>
-    <file alias="skip-arrow">ui/skip-arrow.svg</file>
+    <file alias="skip_arrow">ui/skip-arrow.svg</file>
     <file alias="timber">ui/timber-icon.svg</file>
     <file alias="mini_timber">ui/timber-mini-icon.svg</file>
     <file alias="timeline">ui/timeline-icon.svg</file>

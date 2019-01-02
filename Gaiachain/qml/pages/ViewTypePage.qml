@@ -13,6 +13,10 @@ BasePage {
         pageManager.enterPage(Enums.Page.Calendar, {})
     }
 
+    function enterEventsListPage() {
+        pageManager.enterPage(Enums.Page.EventsList, {})
+    }
+
     function enterMapPage() {
         console.log("TO_DO LATER: Implement map page!")
     }
@@ -33,6 +37,8 @@ BasePage {
                 Layout.preferredWidth: buttonLayout.buttonHeight
 
                 buttonHeight: width
+                buttonPadding: s(22)
+                buttonBackgroundColor: "#FF5AB400"
 
                 source: Style.calendarImgUrl
                 text: Strings.calendar
@@ -45,12 +51,14 @@ BasePage {
                 Layout.preferredWidth: buttonLayout.buttonHeight
 
                 buttonHeight: width
+                buttonPadding: s(22)
+                buttonBackgroundColor: "#FF5AB400"
 
-                source: Style.mapImgUrl
-                text: Strings.map
+                source: Style.listImgUrl
+                text: Strings.list
                 textFont.pixelSize: s(30)
 
-                onButtonClicked: top.enterMapPage()
+                onButtonClicked: top.enterEventsListPage()
             }
             Items.LayoutSpacer { spacerHeight: buttonLayout.buttonHeight }
         }

@@ -31,8 +31,8 @@ Item {
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
-            inset: s(20)
-
+            padding: s(40)
+            fillMode: Image.PreserveAspectFit
             source: Style.backImgUrl
 
             onClicked: pageManager.pop()
@@ -56,8 +56,8 @@ Item {
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
-            inset: s(20)
-
+            padding: s(40)
+            fillMode: Image.PreserveAspectFit
             source: Style.homeImgUrl
 
             onClicked: pageManager.goToInitial()

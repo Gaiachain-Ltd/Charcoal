@@ -9,12 +9,12 @@ Utility *Utility::instance()
     return &u;
 }
 
-qreal Utility::scaleByDpi(qreal num)
+qreal Utility::scaleByDpi(qreal num) const
 {
     return num * m_dpiScale;
 }
 
-qreal Utility::scaleRoundByDpi(qreal num)
+qreal Utility::scaleRoundByDpi(qreal num) const
 {
     if (num < 0 && num >= -5) {
         const qreal res = qRound(scaleByDpi(num));
@@ -25,6 +25,23 @@ qreal Utility::scaleRoundByDpi(qreal num)
     } else {
         return scaleByDpi(num);
     }
+}
+
+qreal Utility::proportionalWidth(qreal val) const
+{
+    qreal prop = clamp(val, 0.0, m_refWidth) / m_refWidth;
+    return prop * m_refWidth;
+}
+
+qreal Utility::proportionalHeight(qreal val) const
+{
+    qreal prop = clamp(val, 0.0, m_refHeight) / m_refHeight;
+    return prop * m_refHeight;
+}
+
+qreal Utility::clamp(qreal v, qreal min, qreal max) const
+{
+    return qMin(max, qMax(min, v));
 }
 
 Utility::Utility()
@@ -47,3 +64,4 @@ qreal Utility::setupDpiScale()
 
     return dpiScale;
 }
+
