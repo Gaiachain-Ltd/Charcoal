@@ -22,47 +22,85 @@ Item {
         return Strings.timber + "!" // Add "!" if invalid
     }
 
-    RowLayout {
+    ColumnLayout {
         anchors.fill: parent
 
-        LayoutSpacer { spacerWidth: s(20) }
-
-        ImageButton {
+        RowLayout {
             Layout.fillHeight: true
-            Layout.preferredWidth: height
+            Layout.fillWidth: true
 
-            padding: s(40)
-            fillMode: Image.PreserveAspectFit
-            source: Style.backImgUrl
+            LayoutSpacer { spacerWidth: s(20) }
 
-            onClicked: pageManager.pop()
+            ImageButton {
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
+
+                padding: s(40)
+                fillMode: Image.PreserveAspectFit
+                source: Style.backImgUrl
+
+                onClicked: pageManager.pop()
+            }
+
+            LayoutSpacer { spacerWidth: s(10) }
+
+            ListView {
+                Layout.fillHeight: true
+                orientation: ListView.Vertical
+
+                interactive: false
+
+                model: ListModel {
+                    ListElement {
+                        sourceUrl: Style.miniCalendarImgUrl
+                    }
+                    ListElement {
+                        sourceUrl: Style.timelineImgUrl
+                    }
+                    ListElement {
+                        sourceUrl: Style.detailsImgUrl
+                    }
+                }
+
+                delegate: Item {
+                    height: ListView.height
+                    width: delegateLayout.childrenRect.width
+
+                    RowLayout {
+                        id: delegateLayout
+                        anchors.fill: parent
+
+                        ImageButton {
+                            Layout.fillHeight: true
+                            Layout.preferredWidth: height
+
+                            padding: s(30)
+                            fillMode: Image.PreserveAspectFit
+                            source: Style.homeImgUrl
+
+                            onClicked: callback()
+                        }
+
+                        SvgImage {
+                            visible: (ListView.view.count - 1) !== index
+                            Layout.fillHeight: true
+                            Layout.preferredWidth: s(20)
+
+                            fillMode: Image.PreserveAspectFit
+                            source: Style.rightArrowImgUrl
+                        }
+                    }
+                }
+            }
         }
 
-        ImageItem {
-            Layout.fillHeight: true
-            Layout.alignment: Qt.AlignHCenter
+        BasicText {
+            Layout.fillWidth: true
 
-            buttonWidth: height * 0.8
-
-            imageUrl: Style.timberImgUrl
-
+            color: Style.textGreenColor
+            verticalAlignment: Text.AlignTop
+            font.capitalization: Font.AllUppercase
             text: getResourceName(currentResource)
-            textColor: Style.textGreenColor
-            textFont.pixelSize: s(50)
-            textFont.capitalization: Font.AllUppercase
         }
-
-        ImageButton {
-            Layout.fillHeight: true
-            Layout.preferredWidth: height
-
-            padding: s(40)
-            fillMode: Image.PreserveAspectFit
-            source: Style.homeImgUrl
-
-            onClicked: pageManager.goToInitial()
-        }
-
-        LayoutSpacer { spacerWidth: s(20) }
     }
 }
