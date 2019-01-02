@@ -8,6 +8,9 @@ QtObject {
     readonly property color textSecondaryColor: "white"
     readonly property color textGreenColor: "green"
 
+    readonly property real listEventsDelegateRelativeHeight: 390
+    readonly property color listEventsDelegateBottomLineColor: "#FFCCCCCC"
+
     // Text
     readonly property real pixelSize: 40
 
