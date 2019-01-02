@@ -11,6 +11,7 @@ QtObject {
 
     readonly property string calendar: qsTr("Calendar")
     readonly property string map: qsTr("Map")
+    readonly property string list: qsTr("List")
 
     readonly property string registerRequest: qsTr("Please register")
 

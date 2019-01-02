@@ -14,7 +14,7 @@ variables:
     JAVA_HOME: "/home/tools/jdk8"
 
 .common: &common
-  allow_failure: false
+  allow_failure: true
   before_script:
     - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
     - mkdir -p $OUT_PACKAGES_DIR

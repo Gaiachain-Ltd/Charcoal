@@ -6,7 +6,7 @@ import com.gaiachain.style 1.0
 
 Item {
     property alias depth: stackView.depth
-    property string initialPage: "qrc:/pages/ResourceChosingPage.qml"
+    property string initialPage: "qrc:/pages/ViewTypePage.qml"
     property int windowWidth: parent.width
 
     function pop() {
@@ -68,10 +68,7 @@ Item {
         }
 
         Component.onCompleted: {
-            //TO_DO temporarly enter calendar on start
-            pageManager.enterPage(Enums.Page.ViewType)
-            pageManager.enterPage(Enums.Page.Calendar)
-            pageManager.enterPage(Enums.Page.CalendarMonth, {"currentMonth": 4, "currentYear": 2017})
+            pageManager.enterPage(Enums.Page.Calendar, {})
         }
     }
 }

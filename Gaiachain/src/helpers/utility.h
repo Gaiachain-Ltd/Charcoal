@@ -22,8 +22,14 @@ public:
         return QString(enumerator.valueToKey(static_cast<int>(value)));
     }
 
-    Q_INVOKABLE qreal scaleByDpi(qreal num);
-    Q_INVOKABLE qreal scaleRoundByDpi(qreal num);
+    Q_INVOKABLE qreal scaleByDpi(qreal num) const;
+    Q_INVOKABLE qreal scaleRoundByDpi(qreal num) const;
+
+    // Scale proportionaly to refWidth/refHeight
+    Q_INVOKABLE qreal proportionalWidth(qreal val) const;
+    Q_INVOKABLE qreal proportionalHeight(qreal val) const;
+
+    Q_INVOKABLE qreal clamp(qreal v, qreal min, qreal max) const;
 
 private:
     Utility();
@@ -31,6 +37,9 @@ private:
     qreal setupDpiScale();
 
     qreal m_dpiScale;
+
+    qreal m_refWidth = 480;
+    qreal m_refHeight = 854;
 };
 
 #endif // UTILITY_H

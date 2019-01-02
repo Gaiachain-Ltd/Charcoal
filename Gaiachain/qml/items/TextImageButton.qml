@@ -10,6 +10,10 @@ Item {
     implicitWidth: mainLayout.implicitWidth
 
     property alias source: shadowedButton.source
+    property alias buttonInset: shadowedButton.inset
+    property alias buttonPadding: shadowedButton.padding
+    property alias buttonBackgroundColor: shadowedButton.backgroundColor
+
     property alias shadowColor: shadowedButton.shadowColor
     property alias shadowHorizontalOffset: shadowedButton.shadowHorizontalOffset
     property alias shadowVericalOffset: shadowedButton.shadowVerticalOffset
