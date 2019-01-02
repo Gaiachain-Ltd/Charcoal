@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.11
 import Qt.labs.calendar 1.0
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 import "../items" as Items
 
@@ -15,7 +16,11 @@ BasePage {
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
-    // Mont should be 0-indexed
+    function enterEventDetailsPage(data) {
+        pageManager.enterPage(Enums.Page.EventDetails , data)
+    }
+
+    // Month should be 0-indexed
     function daysInMonth (year, month) {
         return new Date(year, month + 1, 0).getDate();
     }
@@ -40,14 +45,16 @@ BasePage {
         anchors.margins: s(40)
         spacing: s(50)
 
-        Items.BasicText {
+        Items.ImageItem {
             Layout.fillWidth: true
 
-            text: "<- " + top.getMonthName(top.currentMonth) + " " + top.currentYear
-            horizontalAlignment: Text.AlignLeft
+            buttonHeight: s(30)
+            buttonWidth: s(30)
+            imageUrl: Style.backBlackImgUrl
 
-            font.bold: true
-            font.pixelSize: s(50)
+            text: top.getMonthName(top.currentMonth) + " " + top.currentYear
+            textFont.bold: true
+            textFont.pixelSize: s(50)
 
             MouseArea {
                 anchors.fill: parent
@@ -117,6 +124,8 @@ BasePage {
 
             delegateHeight: s(100)
             backgroundColor: "#FFF5F5F5"
+
+            onDelegateClicked: top.enterEventDetailsPage(data)
 
             viewModel: ListModel { //TO_DO
                 ListElement {
