@@ -2,6 +2,7 @@
 #define PAGEMANAGER_H
 
 #include <QObject>
+#include <QJsonObject>
 
 #include "../common/enums.h"
 
@@ -15,7 +16,7 @@ public:
 
     void setupQmlContext(QQmlApplicationEngine &engine);
 
-    Q_INVOKABLE void enterPage(Enums::Page page, const QVariant &properites);
+    Q_INVOKABLE void enterPage(Enums::Page page, QJsonObject properites = QJsonObject());
     Q_INVOKABLE void popPage();
     Q_INVOKABLE void goToInitialPage();
 

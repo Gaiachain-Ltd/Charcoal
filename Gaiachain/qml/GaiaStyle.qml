@@ -7,12 +7,14 @@ QtObject {
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
     readonly property color textGreenColor: "green"
+    readonly property color buttonGreenColor: "#96c354"
 
     // Text
     readonly property real pixelSize: 40
+    readonly property real bigPixelSize: 60
 
     // Components sizes
-    readonly property real footerHeight: 150
+    readonly property real footerHeight: 180
     readonly property real headerHeight: 150
 
     // RegisterBar
@@ -30,6 +32,12 @@ QtObject {
     readonly property url homeImgUrl: "qrc:/ui/home"
 
     readonly property url registerImgUrl: "qrc:/ui/map"
+
+    readonly property url buttonAddGreen: "qrc:/ui/add_green"
+    readonly property url buttonAddBlack: "qrc:/ui/add_black"
+
+    // button
+    readonly property int buttonHeight: 120
 
     // Other
     readonly property int animationDuration: 300

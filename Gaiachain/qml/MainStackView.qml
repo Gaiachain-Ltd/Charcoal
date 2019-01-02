@@ -30,7 +30,6 @@ Item {
 
         initialItem: initialPage
 
-
         pushEnter: Transition {
             PropertyAnimation {
                 property: "x"
@@ -70,8 +69,8 @@ Item {
 
         Component.onCompleted: {
             //TO_DO temporarly enter calendar on start
-            pageManager.enterPage(Enums.Page.ViewType, {})
-            pageManager.enterPage(Enums.Page.Calendar, {})
+            pageManager.enterPage(Enums.Page.ViewType)
+            pageManager.enterPage(Enums.Page.Calendar)
             pageManager.enterPage(Enums.Page.CalendarMonth, {"currentMonth": 4, "currentYear": 2017})
         }
     }

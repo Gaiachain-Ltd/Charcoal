@@ -1,6 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
+import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
 // TO_DO consider using Toolbar
@@ -13,26 +14,27 @@ Item {
         color: Style.registerBarBackgroundColor
     }
 
-    ImageItem {
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-            horizontalCenter: parent.horizontalCenter
+    Rectangle
+    {
+        anchors.centerIn: parent
+
+        color: page === Enums.Page.QrScanner ? Style.buttonGreenColor : "transparent"
+        width: s(Style.buttonHeight)
+        height: width
+        radius: s(20)
+
+        ImageButton
+        {
+            anchors.centerIn: parent
+            width: parent.width * 0.8
+            height: width
+
+            source: page === Enums.Page.QrScanner ? Style.buttonAddBlack : Style.buttonAddGreen
+
+            onClicked: {
+                if (page !== Enums.Page.QrScanner)
+                    pageManager.enterPage(Enums.Page.QrScanner)
+            }
         }
-
-        buttonWidth: height
-
-        imageUrl: Style.registerImgUrl
-
-        text: Strings.registerRequest
-        textColor: Style.textSecondaryColor
-        textFont.pixelSize: s(30)
-
-        spacing: s(40)
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: console.log("TO_DO: Implement registration request!")
     }
 }

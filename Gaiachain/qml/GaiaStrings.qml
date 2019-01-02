@@ -26,4 +26,6 @@ QtObject {
     readonly property string october: qsTr("October")
     readonly property string november: qsTr("November")
     readonly property string december: qsTr("December")
+
+    readonly property string scanning: qsTr("Scanning...")
 }

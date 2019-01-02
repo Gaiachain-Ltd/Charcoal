@@ -26,5 +26,6 @@
         <file>GaiaStyle.qml</file>
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
+        <file>pages/QrScannerPage.qml</file>
     </qresource>
 </RCC>

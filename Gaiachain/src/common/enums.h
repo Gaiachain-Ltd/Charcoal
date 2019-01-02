@@ -29,7 +29,9 @@ namespace Enums {
         ResourceChosing,
         ShipmentDetails,
         ViewType,
-        PageCount
+        QrScanner,
+        PageCount,
+        InvalidPage
     };
     Q_ENUM_NS(Page)
 }
