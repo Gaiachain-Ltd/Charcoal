@@ -32,6 +32,7 @@ QtObject {
 
     readonly property url cancelImgUrl: "qrc:/ui/cancel"
     readonly property url detailsImgUrl: "qrc:/ui/details"
+    readonly property url detailsGreenImgUrl: "qrc:/ui/details_green"
     readonly property url editlImgUrl: "qrc:/ui/edit"
     readonly property url exportImgUrl: "qrc:/ui/export"
     readonly property url logoImgUrl: "qrc:/ui/gaia_logo"
@@ -46,17 +47,22 @@ QtObject {
     readonly property url loginImgUrl: "qrc:/ui/login"
     readonly property url logParkImgUrl: "qrc:/ui/log_park"
     readonly property url miniCalendarImgUrl: "qrc:/ui/mini_calendar"
+    readonly property url miniCalendarGreenImgUrl: "qrc:/ui/mini_calendar_green"
     readonly property url miniEditImgUrl: "qrc:/ui/mini_edit"
 
     readonly property url miniListImgUrl: "qrc:/ui/mini_list"
+    readonly property url miniListGreenImgUrl: "qrc:/ui/mini_list_green"
     readonly property url okImgUrl: "qrc:/ui/ok"
     readonly property url qrCodeImgUrl: "qrc:/ui/qr_code"
+    readonly property url qrCodeGreenImgUrl: "qrc:/ui/qr_code_green"
     readonly property url sawmillImgUrl: "qrc:/ui/sawmill"
     readonly property url skipArrowImgUrl: "qrc:/ui/skip_arrow"
 
     readonly property url timberImgUrl: "qrc:/ui/timber"
     readonly property url miniTimberImgUrl: "qrc:/ui/mini_timber"
+    readonly property url miniTimberGreenImgUrl: "qrc:/ui/mini_timber_green"
     readonly property url timelineImgUrl: "qrc:/ui/timeline"
+    readonly property url timelineGreenImgUrl: "qrc:/ui/timeline_green"
 
     // Other
     readonly property int animationDuration: 300

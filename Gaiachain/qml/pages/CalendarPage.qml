@@ -58,7 +58,7 @@ BasePage {
     ColumnLayout {
         anchors {
             fill: parent
-            margins: s(40)
+            margins: s(30)
         }
 
         spacing: s(40)

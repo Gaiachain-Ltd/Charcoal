@@ -6,6 +6,8 @@ import com.gaiachain.enums 1.0
 
 // TO_DO consider using Toolbar
 Item {
+    id: top
+
     signal headerClicked()
 
     property var currentResource: Enums.CommodityType.Timber //TO_DO set proper text after user set
@@ -22,6 +24,36 @@ Item {
         return Strings.timber + "!" // Add "!" if invalid
     }
 
+    function getResourceUrl(res) {
+        switch (res) {
+        case Enums.CommodityType.Timber: return Style.miniTimberGreenImgUrl
+            //case Enums.CommodityType.Charcoal: return Style.charcoalImgUrl
+            //case Enums.CommodityType.Cocoa: return Style.cocoaImgUrl
+        default:
+            console.warn("Invalid resource type. Return empty url!")
+        }
+
+        return ""
+    }
+
+    function sectionToUrl(section) {
+        switch(section) {
+        case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource)
+        case Enums.PageSections.CalendarSection: return Style.miniCalendarGreenImgUrl
+        case Enums.PageSections.EventsListSection: return Style.miniListGreenImgUrl
+        case Enums.PageSections.EventsDetailsSection: return Style.detailsGreenImgUrl
+        case Enums.PageSections.ShipmentDetailsSection: return Style.timelineGreenImgUrl
+        case Enums.PageSections.QRSection: return Style.qrCodeGreenImgUrl
+
+        case Enums.PageSections.DefaultSection: return ""
+
+        default:
+            console.warn("Invalid section!")
+        }
+
+        return ""
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -35,7 +67,7 @@ Item {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
 
-                padding: s(40)
+                padding: s(30)
                 fillMode: Image.PreserveAspectFit
                 source: Style.backImgUrl
 
@@ -44,51 +76,63 @@ Item {
 
             LayoutSpacer { spacerWidth: s(10) }
 
+            ImageButton {
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
+
+                padding: s(30)
+                fillMode: Image.PreserveAspectFit
+                source: Style.homeImgUrl
+
+                onClicked: pageManager.goToInitialPage()
+            }
+
+
             ListView {
                 Layout.fillHeight: true
-                orientation: ListView.Vertical
+                Layout.fillWidth: true
 
+                orientation: ListView.Horizontal
                 interactive: false
 
-                model: ListModel {
-                    ListElement {
-                        sourceUrl: "qrc:/ui/mini_calendar"
-                    }
-                    ListElement {
-                        sourceUrl: "qrc:/ui/timeline"
-                    }
-                    ListElement {
-                        sourceUrl: "qrc:/ui/details"
-                    }
+                model: sectionsModel
+
+                onCountChanged: {
+                    console.log("Current sections num", count)
                 }
 
                 delegate: Item {
-                    height: ListView.height
+                    height: ListView.view.height
                     width: delegateLayout.childrenRect.width
 
                     RowLayout {
                         id: delegateLayout
-                        anchors.fill: parent
-
-                        ImageButton {
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: height
-
-                            padding: s(30)
-                            fillMode: Image.PreserveAspectFit
-                            source: Style.homeImgUrl
-
-                            onClicked: callback()
-                        }
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
 
                         SvgImage {
-                            //visible: (ListView.view.count - 1) !== index
                             Layout.fillHeight: true
                             Layout.preferredWidth: s(20)
 
                             fillMode: Image.PreserveAspectFit
                             source: Style.rightArrowImgUrl
                         }
+
+                        ImageButton {
+                            Layout.fillHeight: true
+                            Layout.preferredWidth: height
+
+                            fillMode: Image.PreserveAspectFit
+                            source: sectionToUrl(id)
+                            onSourceChanged: {
+                                console.log("Current source", source)
+                            }
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        console.log("Id/sectionName", id, sectionName)
                     }
                 }
             }

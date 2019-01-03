@@ -43,7 +43,7 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
     if (0 <= shiftedIndex && shiftedIndex < values.count())
         return values[shiftedIndex];
 
-    assert(false);
+    Q_ASSERT(false);
     return {};
 }
 

@@ -6,7 +6,6 @@ import com.gaiachain.style 1.0
 
 Item {
     property alias depth: stackView.depth
-    property string initialPage: "qrc:/pages/ViewTypePage.qml"
     property int windowWidth: parent.width
 
     function pop() {
@@ -28,7 +27,7 @@ Item {
         id: stackView
         anchors.fill: parent
 
-        initialItem: initialPage
+        initialItem: pageManager.getInitialPageUrl()
 
         pushEnter: Transition {
             PropertyAnimation {
