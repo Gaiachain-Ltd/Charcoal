@@ -11,6 +11,7 @@ variables:
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
     ANDROID_TARGET_PLATFORM: "android-23"
     JAVA_HOME: "/home/tools/jdk8"
+    PROJECT_NAME: "Gaiachain"
 
 .common: &common
   allow_failure: true
@@ -35,7 +36,7 @@ android_build:
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/android-build
     - cd $CI_PROJECT_DIR
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$CI_PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
     - cp -f android-build/build/outputs/apk/android-build-release.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 # Linux
