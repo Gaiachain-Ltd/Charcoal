@@ -30,6 +30,7 @@ android_build:
   stage: build
   variables:
     PACKAGE_NAME: "name_$CI_COMMIT_REF_NAME.apk"
+    BUILD_TYPE: "release"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
@@ -39,8 +40,8 @@ android_build:
     - ls -la
     - cd Gaiachain
     - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release
-    - cp -f Gaiachain/android-build/build/outputs/apk/android-build-release.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --$BUILD_TYPE
+    - cp -f Gaiachain/android-build/build/outputs/apk/android-build-$BUILD_TYPE-unsigned.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 # Linux
 linux_build:
