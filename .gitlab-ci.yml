@@ -39,7 +39,7 @@ android_build:
     - ls -la
     - cd Gaiachain
     - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release
     - cp -f Gaiachain/android-build/build/outputs/apk/android-build-release.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 # Linux
