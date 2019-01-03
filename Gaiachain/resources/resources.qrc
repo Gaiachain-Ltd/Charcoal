@@ -4,6 +4,7 @@
     <file alias="add_green">ui/add-icon.svg</file>
     <file alias="right_arrow">ui/arrow.svg</file>
     <file alias="back">ui/back-icon.svg</file>
+    <file alias="back_black">ui/back-icon-black.svg</file>
     <file alias="calendar">ui/calendar-icon.svg</file>
     <file alias="cancel">ui/cancel-icon.svg</file>
     <file alias="details">ui/details-icon.svg</file>

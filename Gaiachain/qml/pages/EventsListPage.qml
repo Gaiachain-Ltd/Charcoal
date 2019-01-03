@@ -1,11 +1,21 @@
 import QtQuick 2.11
 
+import com.gaiachain.enums 1.0
+
 import "../items" as Items
 
 BasePage {
+    id: top
+
+    function enterEventDetailsPage(data) {
+        pageManager.enterPage(Enums.Page.EventDetails , data)
+    }
+
     Items.EventsListView {
         anchors.fill: parent
-        anchors.margins: s(40)
+        delegateHeight: s(100)
+
+        onDelegateClicked: top.enterEventDetailsPage(data)
 
         viewModel: ListModel { //TO_DO
             ListElement {

@@ -18,6 +18,8 @@ Item {
     property alias text: text.text
     property alias textColor: text.color
     property alias textFont: text.font
+    property alias textWrap: text.wrapMode
+
     property alias spacing: mainLayout.spacing
 
     property alias layoutDirection: mainLayout.layoutDirection

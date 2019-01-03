@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.11
 import Qt.labs.calendar 1.0
 
 import com.gaiachain.enums 1.0
+import com.gaiachain.style 1.0
 
 import "../items" as Items
 
@@ -22,14 +23,16 @@ BasePage {
         anchors.margins: s(40)
         spacing: s(100)
 
-        Items.BasicText {
+        Items.ImageItem {
             Layout.fillWidth: true
 
-            text: "<- " + top.getMonthName(top.currentMonth) + " " + top.currentYear
-            horizontalAlignment: Text.AlignLeft
+            buttonHeight: s(30)
+            buttonWidth: s(30)
+            imageUrl: Style.backBlackImgUrl
 
-            font.bold: true
-            font.pixelSize: s(50)
+            text: top.getMonthName(top.currentMonth) + " " + top.currentYear
+            textFont.bold: true
+            textFont.pixelSize: s(50)
 
             MouseArea {
                 anchors.fill: parent
