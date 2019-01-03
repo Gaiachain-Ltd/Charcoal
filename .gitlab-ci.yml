@@ -30,15 +30,18 @@ android_build:
   stage: build
   variables:
     PACKAGE_NAME: "name_$CI_COMMIT_REF_NAME.apk"
+    BUILD_TYPE: "release"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
     - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/android-build
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
     - cd $CI_PROJECT_DIR
     - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
-    - cp -f android-build/build/outputs/apk/android-build-release.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - cd Gaiachain
+    - ls -la
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --$BUILD_TYPE
+    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-unsigned.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 # Linux
 linux_build:
@@ -69,7 +72,7 @@ upload_job:
     - APK_PACKAGES=*.apk
     - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"_"$PACKAGE"; done
     - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -t $SEAFILE_API_TOKEN; done
-    - $CI_PROJECT_DIR/milo/mscripts/mattermost-notification.sh
+    - $CI_PROJECT_DIR/milo/mscripts/others/mattermost-notification.sh
 
 cleanup:
   <<: *common
