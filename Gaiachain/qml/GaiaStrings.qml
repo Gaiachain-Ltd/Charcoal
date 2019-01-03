@@ -29,4 +29,6 @@ QtObject {
     readonly property string december: qsTr("December")
 
     readonly property string scanning: qsTr("Scanning...")
+
+    readonly property string id: qsTr("ID")
 }

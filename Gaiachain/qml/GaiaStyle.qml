@@ -10,7 +10,14 @@ QtObject {
     readonly property color buttonGreenColor: "#96c354"
 
     readonly property real listEventsDelegateRelativeHeight: 390
-    readonly property color listEventsDelegateBottomLineColor: "#FFCCCCCC"
+    readonly property color listEventsDelegateBottomLineColor: greyButtonColor
+    readonly property color greyButtonColor: "#ffcccccc"
+
+    // mrgins
+    readonly property int bigMargin: 45
+    readonly property int normalMargin: 30
+    readonly property int smallMargin: 15
+
 
     // Text
     readonly property real pixelSize: 40
@@ -63,7 +70,7 @@ QtObject {
     readonly property url buttonAddBlack: "qrc:/ui/add_black"
 
     // button
-    readonly property int buttonHeight: 120
+    readonly property int buttonHeight: 90
 
     // Other
     readonly property int animationDuration: 300

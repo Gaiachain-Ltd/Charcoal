@@ -16,18 +16,31 @@ Item {
 
     ImageButton
     {
+        anchors {
+            left: parent.left
+            leftMargin: s(Style.bigMargin)
+            verticalCenter: parent.verticalCenter
+        }
+
+        source:  Style.gaiaColorImgUrl
+        fillMode: Image.PreserveAspectFit
+
+        onClicked: {
+            console.log("Not implemented yet!")
+        }
+    }
+
+    ImageButton
+    {
         anchors.centerIn: parent
 
         backgroundColor: page === Enums.Page.QrScanner ? Style.buttonGreenColor : "transparent"
         source: page === Enums.Page.QrScanner ? Style.buttonAddBlack : Style.buttonAddGreen
         fillMode: Image.PreserveAspectFit
-        width: s(Style.buttonHeight)
-        height: width
 
         onClicked: {
             if (page !== Enums.Page.QrScanner)
                 pageManager.enterPage(Enums.Page.QrScanner)
         }
-
     }
 }

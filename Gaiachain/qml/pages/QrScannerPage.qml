@@ -13,6 +13,12 @@ BasePage {
 
     property string scannedId: ""
 
+    Connections
+    {
+        target: pageManager
+        onPop: camera.stop()
+    }
+
     ColumnLayout
     {
         anchors.fill: parent
@@ -39,7 +45,6 @@ BasePage {
 
             Item
             {
-                id: rectContainer
                 anchors {
                     top: parent.top
                     topMargin: videoOutput.height * 0.25
@@ -49,16 +54,116 @@ BasePage {
                 width: videoOutput.width * 0.6
                 height: width
 
+                readonly property int borderHeight: sr(10)
+                readonly property int borderWidth: width * 0.25
+
+                // top - left
                 Rectangle
                 {
-                    anchors.fill: parent
-                    border.width: 10
-                    border.color: "white"
-                    color: "transparent"
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                    }
+
+                    width: parent.borderWidth
+                    height: parent.borderHeight
+                }
+                Rectangle
+                {
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                    }
+
+                    height: parent.borderWidth
+                    width: parent.borderHeight
+                }
+
+                // top - right
+                Rectangle
+                {
+                    anchors {
+                        right: parent.right
+                        top: parent.top
+                    }
+
+                    width: parent.borderWidth
+                    height: parent.borderHeight
+                }
+                Rectangle
+                {
+                    anchors {
+                        right: parent.right
+                        top: parent.top
+                    }
+
+                    height: parent.borderWidth
+                    width: parent.borderHeight
+                }
+
+                // bottom - left
+                Rectangle
+                {
+                    anchors {
+                        left: parent.left
+                        bottom: parent.bottom
+                    }
+
+                    width: parent.borderWidth
+                    height: parent.borderHeight
+                }
+                Rectangle
+                {
+                    anchors {
+                        left: parent.left
+                        bottom: parent.bottom
+                    }
+
+                    height: parent.borderWidth
+                    width: parent.borderHeight
+                }
+
+                // bottom - right
+                Rectangle
+                {
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+
+                    width: parent.borderWidth
+                    height: parent.borderHeight
+                }
+                Rectangle
+                {
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+
+                    height: parent.borderWidth
+                    width: parent.borderHeight
                 }
             }
 
+            Items.ImageButton
+            {
+                onClicked: pageManager.back()
 
+                backgroundColor: "#99000000"
+                source: Style.cancelImgUrl
+
+                fillMode: Image.PreserveAspectFit
+
+                padding: s(Style.smallMargin) * 1.5
+
+                anchors {
+                    top: parent.top
+                    topMargin: s(Style.bigMargin)
+                    right: parent.right
+                    rightMargin: s(Style.bigMargin)
+                }
+            }
 
             QZXingFilter {
                 id: zxingFilter
@@ -86,33 +191,51 @@ BasePage {
             {
                 anchors {
                     fill: parent
-                    leftMargin: s(30)
-                    rightMargin: s(30)
-                    topMargin: s(15)
-                    bottomMargin: s(15)
+                    leftMargin: s(Style.normalMargin)
+                    rightMargin: s(Style.normalMargin)
+                    topMargin: s(Style.smallMargin)
+                    bottomMargin: s(Style.smallMargin)
                 }
-                spacing: s(30)
+                spacing: s(Style.bigMargin)
 
                 Items.BasicText
                 {
-                    text: scannedId.length === 0 ? Strings.scanning : scannedId
+                    text: scannedId.length === 0 ? Strings.scanning : String("%1: <b>%2</b>").arg(Strings.id).arg(scannedId)
                     horizontalAlignment: Text.AlignLeft
                     font.pixelSize: s(Style.bigPixelSize)
+                    textFormat: Text.RichText
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
 
-                Rectangle
+                Items.ImageButton
                 {
-                    color: "grey"
+                    onClicked: console.warn("Input by keyboard not implemented!")
+
+                    fillMode: Image.PreserveAspectFit
+
+                    backgroundColor: Style.greyButtonColor
+                    source: Style.keyboardImgUrl
+
+                    padding: s(Style.smallMargin)
+
                     Layout.preferredWidth: s(Style.buttonHeight)
                     Layout.preferredHeight: s(Style.buttonHeight)
                 }
 
-                Rectangle
+                Items.ImageButton
                 {
-                    color: "grey"
-                    opacity: 0.5
+                    onClicked: console.warn("Accepting code not implemented!")
+
+                    fillMode: Image.PreserveAspectFit
+
+                    enabled: scannedId.length > 0
+
+                    backgroundColor: enabled ? Style.greyButtonColor : "#E6E6E6"
+                    source: Style.loginImgUrl
+
+                    padding: s(Style.smallMargin)
+
                     Layout.preferredWidth: s(Style.buttonHeight)
                     Layout.preferredHeight: s(Style.buttonHeight)
                 }

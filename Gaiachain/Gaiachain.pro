@@ -81,7 +81,6 @@ include(platforms/linux/linux.pri)
 include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)
 #include(../milo/mscripts/mscripts.pri) # TO_DO was is das?
-#include(../milo/mbarcodescanner/mbarcodescanner.pri)
 #include(../milo/mcrypto/mcrypto.pri)  # TO_DO disabling it until potential database encryption implementation
 #include(../milo/mrestapi/mrestapi.pri) # TO_DO disabling it until client server implementation
 

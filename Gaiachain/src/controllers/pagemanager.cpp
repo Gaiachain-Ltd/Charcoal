@@ -8,6 +8,7 @@
 
 PageManager::PageManager(QObject *parent) : QObject(parent)
 {
+    connect(this, &PageManager::back, this, &PageManager::pop, Qt::DirectConnection);
 }
 
 void PageManager::setupQmlContext(QQmlApplicationEngine &engine)

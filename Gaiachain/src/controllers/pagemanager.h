@@ -23,6 +23,7 @@ public:
 signals:
     void push(const QString &url, const QVariant &properites);
     void pop();
+    void back(); // it's same as pop()
     void goToInitial();
 
 private:
