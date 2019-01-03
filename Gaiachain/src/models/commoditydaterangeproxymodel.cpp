@@ -49,7 +49,7 @@ bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId) const
 {
-    assert(m_commodityProxyModel != nullptr);
+    Q_ASSERT(m_commodityProxyModel != nullptr);
 
     const int rowCount = m_commodityProxyModel->rowCount();
 
