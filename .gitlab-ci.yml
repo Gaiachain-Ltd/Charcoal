@@ -37,6 +37,8 @@ android_build:
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/android-build
     - cd $CI_PROJECT_DIR
     - ls -la
+    - cd Gaiachain
+    - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
     - cp -f android-build/build/outputs/apk/android-build-release.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
