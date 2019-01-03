@@ -71,6 +71,8 @@ int main(int argc, char *argv[]) {
 #ifdef Q_OS_ANDROID
     const int splashScreenTimeMs = 2000;
     QTimer::singleShot(splashScreenTimeMs, [&engine]() { engine.load(QUrl(QStringLiteral("qrc:///main.qml"))); } );
+#else
+    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
 #endif
 
     return app.exec();
