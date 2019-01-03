@@ -52,13 +52,13 @@ Item {
 
                 model: ListModel {
                     ListElement {
-                        sourceUrl: Style.miniCalendarImgUrl
+                        sourceUrl: "qrc:/ui/mini_calendar"
                     }
                     ListElement {
-                        sourceUrl: Style.timelineImgUrl
+                        sourceUrl: "qrc:/ui/timeline"
                     }
                     ListElement {
-                        sourceUrl: Style.detailsImgUrl
+                        sourceUrl: "qrc:/ui/details"
                     }
                 }
 
@@ -82,7 +82,7 @@ Item {
                         }
 
                         SvgImage {
-                            visible: (ListView.view.count - 1) !== index
+                            //visible: (ListView.view.count - 1) !== index
                             Layout.fillHeight: true
                             Layout.preferredWidth: s(20)
 
