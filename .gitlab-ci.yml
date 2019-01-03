@@ -34,7 +34,7 @@ android_build:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
     - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/android-build
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
     - cd $CI_PROJECT_DIR
     - ls -la
     - cd Gaiachain
