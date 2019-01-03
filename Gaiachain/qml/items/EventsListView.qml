@@ -1,4 +1,5 @@
 import QtQuick 2.11
+import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 
@@ -8,6 +9,8 @@ Item {
     property alias viewModel: mainView.model
     property alias delegateHeight: mainView.delegateHeight
     property alias backgroundColor: background.color
+
+    signal delegateClicked(var data)
 
     Rectangle {
         id: background
@@ -25,23 +28,62 @@ Item {
         property real delegateHeight: s(50)
 
         delegate: Item {
-            height: ListView.view.delegateHeight
-            width: ListView.view.width
+            height: Math.max(ListView.view.delegateHeight, mainLayout.childrenRect.height)
+            width: utility.proportionalWidth(Style.listEventsDelegateRelativeHeight)
 
-            ImageItem {
-                anchors.fill: parent
-                imageUrl: Style.backImgUrl
-                text: "TEST"
-                layoutDirection: Qt.RightToLeft
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            ColumnLayout {
+                id: mainLayout
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+
+                RowLayout {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    spacing: s(30)
+
+                    BasicText {
+                        id: text
+
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+
+                        bottomPadding: s(25)
+                        topPadding: s(25)
+
+                        horizontalAlignment: Text.AlignLeft
+
+                        wrapMode: Text.WordWrap
+                        elide: Text.ElideNone
+                        text: "TEST fjhjkf ffjdkf d gfldf jdlfkljfkl d f fd fklklfds"
+                    }
+
+                    SvgImage {
+                        id: image
+
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: s(20)
+
+                        fillMode: Image.PreserveAspectFit
+                        source: Style.rightArrowImgUrl
+                    }
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: sr(1)
+
+                    color: Style.listEventsDelegateBottomLineColor
+                }
             }
 
-            Rectangle {
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                height: sr(1)
-                width: utility.proportionalWidth(390)
-                color: "#FFCCCCCC"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: delegateClicked({"idx": index})
             }
         }
     }
