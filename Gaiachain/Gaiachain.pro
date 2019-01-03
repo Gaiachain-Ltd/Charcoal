@@ -3,19 +3,28 @@
 #
 ## (c) Milo Solutions, 2016
 
+QT += core gui qml quick svg
+
 exists(../local.pri) {
     include(../local.pri)
 }
 
-QT = core gui qml quick svg
-
 include(../version.pri)
+
+# qzxing
+CONFIG += qzxing_qml
+CONFIG += qzxing_multimedia
+QZXING_PATH=$$PWD/3rdparty/qzxing
+
+include($$QZXING_PATH/QZXing.pri)
+
+INCLUDEPATH += $$QZXING_PATH
 
 # Warning! QStringBuilder can crash your app! See last point here:
 # https://www.kdab.com/uncovering-32-qt-best-practices-compile-time-clazy/
 # !!!
 DEFINES *= QT_USE_QSTRINGBUILDER
-QMAKE_CXXFLAGS += -Werror
+#QMAKE_CXXFLAGS += -Werror
 
 TEMPLATE = app
 CONFIG += c++14
@@ -72,7 +81,7 @@ include(platforms/linux/linux.pri)
 include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)
 #include(../milo/mscripts/mscripts.pri) # TO_DO was is das?
-include(../milo/mbarcodescanner/mbarcodescanner.pri)
+#include(../milo/mbarcodescanner/mbarcodescanner.pri)
 #include(../milo/mcrypto/mcrypto.pri)  # TO_DO disabling it until potential database encryption implementation
 #include(../milo/mrestapi/mrestapi.pri) # TO_DO disabling it until client server implementation
 

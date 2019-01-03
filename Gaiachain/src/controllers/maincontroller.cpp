@@ -6,6 +6,8 @@
 #include "../common/enums.h"
 #include "../helpers/utility.h"
 
+#include <QZXing>
+
 MainController::MainController(QObject *parent)
     : QObject(parent)
 {
@@ -26,5 +28,12 @@ void MainController::setupQMLContext(QQmlApplicationEngine &engine)
 
     m_pageManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);
+
+    setupQZXing(engine);
 }
 
+void MainController::setupQZXing(QQmlApplicationEngine &engine)
+{
+    QZXing::registerQMLTypes();
+    QZXing::registerQMLImageProvider(engine);
+}

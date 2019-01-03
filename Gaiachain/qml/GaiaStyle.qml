@@ -14,7 +14,7 @@ QtObject {
     readonly property real bigPixelSize: 60
 
     // Components sizes
-    readonly property real footerHeight: 180
+    readonly property real footerHeight: 150
     readonly property real headerHeight: 150
 
     // RegisterBar

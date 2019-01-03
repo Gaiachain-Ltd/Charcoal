@@ -14,27 +14,20 @@ Item {
         color: Style.registerBarBackgroundColor
     }
 
-    Rectangle
+    ImageButton
     {
         anchors.centerIn: parent
 
-        color: page === Enums.Page.QrScanner ? Style.buttonGreenColor : "transparent"
+        backgroundColor: page === Enums.Page.QrScanner ? Style.buttonGreenColor : "transparent"
+        source: page === Enums.Page.QrScanner ? Style.buttonAddBlack : Style.buttonAddGreen
+        fillMode: Image.PreserveAspectFit
         width: s(Style.buttonHeight)
         height: width
-        radius: s(20)
 
-        ImageButton
-        {
-            anchors.centerIn: parent
-            width: parent.width * 0.8
-            height: width
-
-            source: page === Enums.Page.QrScanner ? Style.buttonAddBlack : Style.buttonAddGreen
-
-            onClicked: {
-                if (page !== Enums.Page.QrScanner)
-                    pageManager.enterPage(Enums.Page.QrScanner)
-            }
+        onClicked: {
+            if (page !== Enums.Page.QrScanner)
+                pageManager.enterPage(Enums.Page.QrScanner)
         }
+
     }
 }

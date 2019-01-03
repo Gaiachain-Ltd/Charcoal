@@ -65,3 +65,7 @@ qreal Utility::setupDpiScale()
     return dpiScale;
 }
 
+int Utility::parseInt(const QString &num) const
+{
+    return num.toInt();
+}
