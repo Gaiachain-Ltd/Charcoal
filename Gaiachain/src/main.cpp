@@ -30,6 +30,7 @@ SOFTWARE.
 #include <QLoggingCategory>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QTimer>
 
 #include "../src/controllers/maincontroller.h"
 
@@ -67,7 +68,12 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("isDesktop", false);
 #endif
 
+#ifdef Q_OS_ANDROID
+    const int splashScreenTimeMs = 2000;
+    QTimer::singleShot(splashScreenTimeMs, [&engine]() { engine.load(QUrl(QStringLiteral("qrc:///main.qml"))); } );
+#else
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
+#endif
 
     return app.exec();
 }

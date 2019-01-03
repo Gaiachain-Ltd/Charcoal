@@ -9,6 +9,9 @@ QtObject {
     readonly property color textGreenColor: "green"
     readonly property color buttonGreenColor: "#96c354"
 
+    readonly property real listEventsDelegateRelativeHeight: 390
+    readonly property color listEventsDelegateBottomLineColor: "#FFCCCCCC"
+
     // Text
     readonly property real pixelSize: 40
     readonly property real bigPixelSize: 60
@@ -25,6 +28,7 @@ QtObject {
     readonly property url greenAddImgUrl: "qrc:/ui/add_green"
     readonly property url rightArrowImgUrl: "qrc:/ui/right_arrow"
     readonly property url backImgUrl: "qrc:/ui/back"
+    readonly property url backBlackImgUrl: "qrc:/ui/back_black"
     readonly property url calendarImgUrl: "qrc:/ui/calendar"
 
     readonly property url cancelImgUrl: "qrc:/ui/cancel"

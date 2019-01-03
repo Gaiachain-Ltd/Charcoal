@@ -11,9 +11,10 @@ import "../items" as Items
 BasePage {
     id: top
 
-    property int currentYear: 2018 //TO_DO set current year and month to current one
+    property date currentDate: new Date()
+    property int currentYear: currentDate.getFullYear()
     property int lowestYear: currentYear
-    property int currentMonth: Calendar.December
+    property int currentMonth: monthModel[currentDate.getMonth()]
 
     readonly property var monthModel: [
         Calendar.January, Calendar.February, Calendar.March,
