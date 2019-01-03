@@ -42,10 +42,10 @@ android_build:
 linux_build:
   <<: *common
   tags:
-    - LinuxServer
+    - LinuxDesktop
   stage: build
   variables:
-    QT_PATH: "/home/tools/Qt/5.8/gcc_64/"
+    QT_PATH: "/home/tools/Qt-OpenSource/5.10.1/gcc_64"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH/bin/qmake
@@ -72,7 +72,7 @@ upload_job:
 cleanup:
   <<: *common
   tags:
-    - LinuxServer
+    - LinuxDesktop
     - LinuxAndroid
   stage: cleanup
   when: always
