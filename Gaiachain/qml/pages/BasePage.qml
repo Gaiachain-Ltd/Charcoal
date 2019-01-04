@@ -6,12 +6,15 @@ import Qt.labs.calendar 1.0
 
 import "../items" as Items
 
+import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
 Item {
     id: top
     property bool footerVisible: true
     property bool headerVisible: true
+
+    property int page: Enums.Page.InvalidPage
 
     property color backgroundColor: "white"
 
@@ -39,6 +42,7 @@ Item {
     }
 
     ColumnLayout {
+        id:  columnLayout
         anchors.fill: parent
 
         spacing: 0

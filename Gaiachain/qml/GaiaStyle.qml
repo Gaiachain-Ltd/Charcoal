@@ -7,12 +7,21 @@ QtObject {
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
     readonly property color textGreenColor: "green"
+    readonly property color buttonGreenColor: "#96c354"
 
     readonly property real listEventsDelegateRelativeHeight: 390
-    readonly property color listEventsDelegateBottomLineColor: "#FFCCCCCC"
+    readonly property color listEventsDelegateBottomLineColor: greyButtonColor
+    readonly property color greyButtonColor: "#ffcccccc"
+
+    // mrgins
+    readonly property int bigMargin: 45
+    readonly property int normalMargin: 30
+    readonly property int smallMargin: 15
+
 
     // Text
     readonly property real pixelSize: 40
+    readonly property real bigPixelSize: 60
 
     // Components sizes
     readonly property real footerHeight: 150
@@ -56,6 +65,12 @@ QtObject {
     readonly property url timberImgUrl: "qrc:/ui/timber"
     readonly property url miniTimberImgUrl: "qrc:/ui/mini_timber"
     readonly property url timelineImgUrl: "qrc:/ui/timeline"
+
+    readonly property url buttonAddGreen: "qrc:/ui/add_green"
+    readonly property url buttonAddBlack: "qrc:/ui/add_black"
+
+    // button
+    readonly property int buttonHeight: 90
 
     // Other
     readonly property int animationDuration: 300

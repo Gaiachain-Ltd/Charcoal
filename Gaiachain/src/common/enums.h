@@ -20,6 +20,7 @@ namespace Enums {
     }
 
     enum class Page {
+        InvalidPage = -1,
         CalendarEvents = 0,
         CalendarMonth,
         Calendar,
@@ -30,6 +31,7 @@ namespace Enums {
         ResourceChosing,
         ShipmentDetails,
         ViewType,
+        QrScanner,
         PageCount
     };
     Q_ENUM_NS(Page)

@@ -3,12 +3,12 @@
 TEMPLATE = subdirs
 
 # Add new test cases here:
-SUBDIRS += \
-	../milo/mrestapi/tst_mrestapi \
-	../milo/mlog/tst_mlog \
-	../milo/mcrypto/tst_mcrypto \
-	../milo/mconfig/tst_mconfig \
-    tst_project
+#SUBDIRS += \
+#	../milo/mrestapi/tst_mrestapi \
+#	../milo/mlog/tst_mlog \
+#	../milo/mcrypto/tst_mcrypto \
+#	../milo/mconfig/tst_mconfig \
+#    tst_project
 
 
 # Please use convenience includes:
