@@ -77,7 +77,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: Style.backImgUrl
 
-                onClicked: pageManager.pop()
+                onClicked: pageManager.popPage()
             }
 
             LayoutSpacer {}
@@ -137,7 +137,7 @@ Item {
                             backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
 
                             onClicked: {
-                                pageManager.pop() // TO_DO
+                                pageManager.popPage() // TO_DO
                             }
                         }
                     }

@@ -58,7 +58,7 @@ BasePage {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: pageManager.pop()
+                onClicked: pageManager.popPage()
             }
         }
 

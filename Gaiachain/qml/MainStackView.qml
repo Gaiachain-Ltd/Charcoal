@@ -8,19 +8,16 @@ Item {
     property alias depth: stackView.depth
     property int windowWidth: parent.width
 
-    function pop() {
-        stackView.pop()
-    }
-
-    function push(page) {
-        stackView.push(page)
-    }
-
     Connections {
         target: pageManager
         onPush: stackView.push(url, properites)
         onPop: stackView.pop()
         onGoToInitial: stackView.pop(null)
+        onGoBackToPage: {
+            stackView.pop(stackView.find(function(item) {
+                  return item.page === backPage
+              }));
+        }
     }
 
     StackView {
