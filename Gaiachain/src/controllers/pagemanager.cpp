@@ -32,6 +32,7 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
 void PageManager::enterPage(const Enums::Page page, QJsonObject properites)
 {
     qDebug() << "Print stack on enter" << m_pageStack;
+    qDebug() <<properites;
 
     if (m_pageStack.contains(page)) {
         qWarning() << "Page" << page << "is already on the stack. Going back to page.";

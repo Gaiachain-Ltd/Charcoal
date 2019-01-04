@@ -30,7 +30,7 @@ signals:
     void goToInitial(bool immediate = false) const;
 
 signals:
-    // Signals below should only be used only by StackView!!!
+    // Signals below should only be used by StackView!!!
     void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject()) const;
     void stackViewPop() const;
     void stackViewBackToInitial(const bool immediate = false) const;

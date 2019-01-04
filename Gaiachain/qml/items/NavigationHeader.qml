@@ -67,6 +67,8 @@ Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
+            spacing: 0
+
             ImageButton {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
@@ -93,24 +95,25 @@ Item {
 
             ListView {
                 Layout.fillHeight: true
-                Layout.preferredWidth: sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth))
+                Layout.preferredWidth: sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth)) + s(Style.headerButtonsPadding)
 
                 orientation: ListView.Horizontal
                 interactive: false
+                spacing: 0
 
                 model: sectionsModel
 
                 delegate: Item {
                     id: delegateId
                     height: ListView.view.height
-                    width: s(Style.headerArrowWidth) + height
+                    width: s(Style.headerArrowWidth) + height + (delegateId.isLast ? s(Style.headerButtonsPadding) : 0)
 
                     property bool isLast: (ListView.view.count - 1) === index
 
                     RowLayout {
                         anchors.fill: parent
 
-                        spacing: 0
+                        spacing: delegateId.isLast ?  s(Style.headerButtonsPadding) : 0
 
                         SvgImage {
                             Layout.fillHeight: true
@@ -127,7 +130,6 @@ Item {
                             Layout.fillWidth: true
 
                             padding: s(Style.headerButtonsPadding)
-                            inset: s(6)
 
                             fillMode: Image.PreserveAspectFit
                             source: sectionToUrl(id, !delegateId.isLast)

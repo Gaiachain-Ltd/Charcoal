@@ -69,3 +69,20 @@ int Utility::parseInt(const QString &num) const
 {
     return num.toInt();
 }
+
+QDate Utility::convertDateString(const QString &dateStr, const QString &dateFormat) const
+{
+    QString format;
+    if (dateFormat.isEmpty() || dateFormat.isNull()) {
+        format = defaultDateFormat();
+    } else {
+        format = dateFormat;
+    }
+
+    return QDate::fromString(dateStr, format);
+}
+
+QString Utility::defaultDateFormat() const
+{
+    return m_dateFormat;
+}

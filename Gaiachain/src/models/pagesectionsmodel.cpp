@@ -58,7 +58,7 @@ void PageSectionsModel::pagePushed(const Enums::Page page)
     if (newSection == Enums::PageSections::DefaultSection)
         return;
 
-    // First section is special because it is removed after new one
+    // First section is special because it is removed after new section is pushed
     if (m_isInitialSection) {
         m_isInitialSection = false;
         m_data.pop_back();
@@ -75,6 +75,9 @@ void PageSectionsModel::pagePushed(const Enums::Page page)
 void PageSectionsModel::pagePopped(const Enums::Page currentTopPage)
 {
     Enums::PageSections topSection = m_pageToSection[currentTopPage];
+    //Skip default section as it is not influencing sections.
+    if (topSection == Enums::PageSections::DefaultSection)
+        return;
 
     int shiftedIndex = getShiftedIndex(ModelRole::SectionId);
     Enums::PageSections currentSection = m_data.last()[shiftedIndex].value<Enums::PageSections>();
