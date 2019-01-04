@@ -9,6 +9,7 @@
 PageManager::PageManager(QObject *parent) : QObject(parent)
 {
     connect(this, &PageManager::back, this, &PageManager::pop, Qt::DirectConnection);
+
     m_pageStack.push_back(m_initialPage);
     m_pageSectionsModel.stackReset(m_initialPage);
 }
@@ -38,16 +39,18 @@ void PageManager::enterPage(Enums::Page page, QJsonObject properites)
         return;
     }
 
+    if (page == Enums::Page::QRScanner)
+        goToInitialPage(true);
+
     m_pageStack.push_back(page);
     m_pageSectionsModel.pagePushed(page);
+    properites.insert(QStringLiteral("page"), static_cast<int>(page));
 
     // TO_DO Add checking of page url correctness
     QString pageUrl = pageToQString(page);
-    qDebug() << "Enter page" << pageUrl;
+    qDebug() << "Entered page" << pageUrl;
 
-    properites.insert(QStringLiteral("page"), static_cast<int>(page));
-
-    emit push(pageUrl, properites);
+    emit push(pageToQString(page), properites);
 }
 
 void PageManager::popPage()
@@ -67,13 +70,13 @@ void PageManager::popPage()
     emit pop();
 }
 
-void PageManager::goToInitialPage()
+void PageManager::goToInitialPage(bool immediate)
 {
     m_pageStack.clear();
     m_pageStack.push_back(m_initialPage);
     m_pageSectionsModel.stackReset(m_initialPage);
 
-    emit goToInitial();
+    emit goToInitial(immediate);
 }
 
 bool PageManager::backTo(Enums::Page backPage)
@@ -95,6 +98,12 @@ bool PageManager::backTo(Enums::Page backPage)
     emit goBackToPage(backPage);
 
     return true;
+}
+
+bool PageManager::backToSection(Enums::PageSections section)
+{
+    Enums::Page page = m_pageSectionsModel.getPageForSection(section);
+    return backTo(page);
 }
 
 QString PageManager::getInitialPageUrl() const

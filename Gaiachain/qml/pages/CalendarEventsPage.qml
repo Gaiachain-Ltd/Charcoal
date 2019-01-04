@@ -17,7 +17,7 @@ BasePage {
     property int currentYear: currentDate.getFullYear()
 
     function enterEventDetailsPage(data) {
-        pageManager.enterPage(Enums.Page.EventDetails , data)
+        pageManager.enterPage(Enums.Page.EventDetails, data)
     }
 
     // Month should be 0-indexed

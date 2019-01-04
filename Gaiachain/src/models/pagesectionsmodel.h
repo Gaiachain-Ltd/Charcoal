@@ -30,6 +30,8 @@ public:
     void pagePopped(Enums::Page currentTopPage);
     void stackReset(Enums::Page initialPage);
 
+    Enums::Page getPageForSection(Enums::PageSections section);
+
 signals:
 
 public slots:
@@ -48,15 +50,27 @@ private:
         {Enums::Page::EventsList, Enums::PageSections::EventsListSection},
         {Enums::Page::ShipmentDetails, Enums::PageSections::ShipmentDetailsSection},
         {Enums::Page::ViewType, Enums::PageSections::ViewTypeSection},
-        {Enums::Page::QRScanning, Enums::PageSections::QRSection},
+        {Enums::Page::QRScanner, Enums::PageSections::QRSection},
 
-        {Enums::Page::LanguageChosing, Enums::PageSections::DefaultSection},
-        {Enums::Page::Login, Enums::PageSections::DefaultSection},
-        {Enums::Page::ResourceChosing, Enums::PageSections::DefaultSection}
+        {Enums::Page::LanguageChosing, Enums::PageSections::DefaultSection}, // TO_DO_later
+        {Enums::Page::Login, Enums::PageSections::DefaultSection}, // TO_DO_later
+        {Enums::Page::ResourceChosing, Enums::PageSections::DefaultSection} // TO_DO_later
+    };
+
+    const QHash<Enums::PageSections, Enums::Page> m_sectionToFirstPage = {
+        {Enums::PageSections::DefaultSection, Enums::Page::ViewType}, // TO_DO_later
+        {Enums::PageSections::ViewTypeSection, Enums::Page::ViewType},
+        {Enums::PageSections::CalendarSection, Enums::Page::Calendar},
+        {Enums::PageSections::EventsListSection, Enums::Page::EventsList},
+        {Enums::PageSections::EventsDetailsSection, Enums::Page::EventDetails},
+        {Enums::PageSections::ShipmentDetailsSection, Enums::Page::ShipmentDetails},
+        {Enums::PageSections::QRSection, Enums::Page::QRScanner}
     };
 
     Gaia::ModelData m_data;
     const int m_maxDepth = 3;
+    Enums::PageSections m_initialSection;
+    bool m_isInitialSection = false;
 
     int getShiftedIndex(ModelRole role) const;
 };

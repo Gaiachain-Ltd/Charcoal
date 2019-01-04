@@ -67,8 +67,6 @@ Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            spacing: 0
-
             ImageButton {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
@@ -98,8 +96,7 @@ Item {
                 Layout.preferredWidth: sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth))
 
                 orientation: ListView.Horizontal
-                interactive: true
-                spacing: 0
+                interactive: false
 
                 model: sectionsModel
 
@@ -136,9 +133,7 @@ Item {
                             source: sectionToUrl(id, !delegateId.isLast)
                             backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
 
-                            onClicked: {
-                                pageManager.popPage() // TO_DO
-                            }
+                            onClicked: pageManager.backToSection(id)
                         }
                     }
                 }

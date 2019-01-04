@@ -52,7 +52,7 @@ BasePage {
 
             Items.ImageButton
             {
-                onClicked: pageManager.back()
+                onClicked: pageManager.popPage() //TO_DO utilize back()
 
                 backgroundColor: "#99000000"
                 source: Style.cancelImgUrl

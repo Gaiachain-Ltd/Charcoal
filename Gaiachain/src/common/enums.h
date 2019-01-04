@@ -6,6 +6,11 @@
 namespace Enums {
     Q_NAMESPACE
 
+    template<typename T>
+    inline uint qH(T key, uint seed) {
+        return ::qHash(static_cast<int>(key), seed);
+    }
+
     enum class CommodityType {
         Timber = 0,
         Charcoal,
@@ -14,11 +19,7 @@ namespace Enums {
         CommodityCount
     };
     Q_ENUM_NS(CommodityType)
-
-    inline uint qHash(CommodityType key, uint seed)
-    {
-        return ::qHash(static_cast<int>(key), seed);
-    }
+    inline uint qHash(CommodityType key, uint seed) {return qH<CommodityType>(key, seed);}
 
     enum class Page {
         InvalidPage = -1,
@@ -32,16 +33,12 @@ namespace Enums {
         ResourceChosing,
         ShipmentDetails,
         ViewType,
-        QrScanner,
+        QRScanner,
 
         PageCount
     };
     Q_ENUM_NS(Page)
-
-    inline uint qHash(Page key, uint seed)
-    {
-        return ::qHash(static_cast<int>(key), seed);
-    }
+    inline uint qHash(Page key, uint seed) {return qH<Page>(key, seed);}
 
     enum class PageSections {
         DefaultSection = -1,
@@ -55,6 +52,7 @@ namespace Enums {
         PageSectionsCount
     };
     Q_ENUM_NS(PageSections)
+    inline uint qHash(PageSections key, uint seed) { return qH<PageSections>(key, seed);}
 }
 
 

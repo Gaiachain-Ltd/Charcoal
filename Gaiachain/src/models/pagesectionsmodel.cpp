@@ -58,6 +58,11 @@ void PageSectionsModel::pagePushed(Enums::Page page)
     if (newSection == Enums::PageSections::DefaultSection)
         return;
 
+    // First section is special because it is removed after new one
+    if (m_isInitialSection) {
+        m_isInitialSection = false;
+        m_data.pop_back();
+    }
 
     if (currentSection != newSection) {
         if (m_data.count() >= m_maxDepth)
@@ -78,19 +83,37 @@ void PageSectionsModel::pagePopped(Enums::Page currentTopPage)
     Enums::PageSections currentSection = m_data.last()[shiftedIndex].value<Enums::PageSections>();
 
     if (currentSection != topSection) {
-        if (m_data.count() > 1)
-            m_data.pop_back();
+        m_data.pop_back();
+        if (m_data.empty()) {
+            m_isInitialSection = true;
+            QVariantList rowToInsert;
+            rowToInsert.append({static_cast<int>(m_initialSection),
+                                Utility::enumToQString<Enums::PageSections>(m_initialSection, "PageSections")});
+            m_data.push_back(rowToInsert);
+        }
     }
 }
 
 void PageSectionsModel::stackReset(Enums::Page initialPage)
 {
     m_data.clear();
+    m_isInitialSection = true;
+    m_initialSection = m_pageToSection[initialPage];
 
     QVariantList rowToInsert;
-    rowToInsert.append({static_cast<int>(m_pageToSection[initialPage]),
-                       Utility::enumToQString<Enums::PageSections>(m_pageToSection[initialPage], "PageSections")});
+    rowToInsert.append({static_cast<int>(m_initialSection),
+                       Utility::enumToQString<Enums::PageSections>(m_initialSection, "PageSections")});
     m_data.push_back(rowToInsert);
+}
+
+Enums::Page PageSectionsModel::getPageForSection(Enums::PageSections section)
+{
+    if (!m_sectionToFirstPage.contains(section)) {
+        qWarning() << "Section" << section << "is invalid!";
+        return Enums::Page::ViewType;
+    }
+
+    return m_sectionToFirstPage[section];
 }
 
 int PageSectionsModel::getShiftedIndex(PageSectionsModel::ModelRole role) const

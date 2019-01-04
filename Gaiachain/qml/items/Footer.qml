@@ -34,13 +34,13 @@ Item {
     {
         anchors.centerIn: parent
 
-        backgroundColor: page === Enums.Page.QrScanner ? Style.buttonGreenColor : "transparent"
-        source: page === Enums.Page.QrScanner ? Style.buttonAddBlack : Style.buttonAddGreen
+        backgroundColor: page === Enums.Page.QRScanner ? Style.buttonGreenColor : "transparent"
+        source: page === Enums.Page.QRScanner ? Style.buttonAddBlack : Style.buttonAddGreen
         fillMode: Image.PreserveAspectFit
 
         onClicked: {
-            if (page !== Enums.Page.QrScanner)
-                pageManager.enterPage(Enums.Page.QrScanner)
+            if (page !== Enums.Page.QRScanner)
+                pageManager.enterPage(Enums.Page.QRScanner)
         }
     }
 }

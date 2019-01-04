@@ -51,7 +51,10 @@ BasePage {
 
             dayFont.pixelSize: s(35)
 
-            onDateClicked: top.enterCalendarEventsPage(d)
+            onDateClicked: {
+                console.log("Current date", d)
+                top.enterCalendarEventsPage(d)
+            }
         }
     }
 

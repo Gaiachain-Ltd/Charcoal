@@ -21,8 +21,9 @@ public:
 
     Q_INVOKABLE void enterPage(Enums::Page page, QJsonObject properites = QJsonObject());
     Q_INVOKABLE void popPage();
-    Q_INVOKABLE void goToInitialPage();
+    Q_INVOKABLE void goToInitialPage(bool immediate = false);
     Q_INVOKABLE bool backTo(Enums::Page backPage);
+    Q_INVOKABLE bool backToSection(Enums::PageSections section);
 
     Q_INVOKABLE QString getInitialPageUrl() const;
 
@@ -32,7 +33,7 @@ signals:
     void pop() const;
     void back(); // it's same as pop()
     void goBackToPage(Enums::Page backPage);
-    void goToInitial() const;
+    void goToInitial(bool immediate = false) const;
 
 private:
     const QString m_pagePrefix = "qrc:/pages/";
