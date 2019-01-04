@@ -21,16 +21,16 @@ public:
     explicit PageSectionsModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, const int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
     Q_INVOKABLE int maxSectionsDepth() const;
 
-    void pagePushed(Enums::Page page);
-    void pagePopped(Enums::Page currentTopPage);
-    void stackReset(Enums::Page initialPage);
+    void pagePushed(const Enums::Page page);
+    void pagePopped(const Enums::Page currentTopPage);
+    void stackReset(const Enums::Page initialPage);
 
-    Enums::Page getPageForSection(Enums::PageSections section);
+    Enums::Page getPageForSection(const Enums::PageSections section) const;
 
 signals:
 
@@ -58,7 +58,7 @@ private:
     };
 
     const QHash<Enums::PageSections, Enums::Page> m_sectionToFirstPage = {
-        {Enums::PageSections::DefaultSection, Enums::Page::ViewType}, // TO_DO_later
+        {Enums::PageSections::DefaultSection, Enums::Page::ViewType}, // TO_DO_later for default section
         {Enums::PageSections::ViewTypeSection, Enums::Page::ViewType},
         {Enums::PageSections::CalendarSection, Enums::Page::Calendar},
         {Enums::PageSections::EventsListSection, Enums::Page::EventsList},
@@ -72,7 +72,8 @@ private:
     Enums::PageSections m_initialSection;
     bool m_isInitialSection = false;
 
-    int getShiftedIndex(ModelRole role) const;
+    int getShiftedIndex(const ModelRole role) const;
+    void pushBackData(const Enums::PageSections section);
 };
 
 #endif // PAGESECTIONSMODEL_H

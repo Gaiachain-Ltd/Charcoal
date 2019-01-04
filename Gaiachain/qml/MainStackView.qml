@@ -10,13 +10,14 @@ Item {
 
     Connections {
         target: pageManager
-        onPush: stackView.push(url, properites)
-        onPop: stackView.pop()
-        onGoToInitial: {
+
+        onStackViewPush: stackView.push(url, properites)
+        onStackViewPop: stackView.pop()
+        onStackViewBackToInitial: {
             var mode = immediate ? StackView.Immediate : StackView.Transition
             stackView.pop(null, mode)
         }
-        onGoBackToPage: {
+        onStackViewBackToPage: {
             stackView.pop(stackView.find(function(item) {
                   return item.page === backPage
               }));
@@ -67,7 +68,7 @@ Item {
         }
 
         Component.onCompleted: {
-            pageManager.enterPage(Enums.Page.Calendar)
+            pageManager.push(Enums.Page.Calendar)
         }
     }
 }

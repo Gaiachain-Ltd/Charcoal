@@ -75,7 +75,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: Style.backImgUrl
 
-                onClicked: pageManager.popPage()
+                onClicked: pageManager.back()
             }
 
             LayoutSpacer {}
@@ -88,7 +88,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: Style.homeImgUrl
 
-                onClicked: pageManager.goToInitialPage()
+                onClicked: pageManager.goToInitial()
             }
 
             ListView {

@@ -8,7 +8,7 @@
 
 PageManager::PageManager(QObject *parent) : QObject(parent)
 {
-    connect(this, &PageManager::back, this, &PageManager::pop, Qt::DirectConnection);
+    prepareConnections();
 
     m_pageStack.push_back(m_initialPage);
     m_pageSectionsModel.stackReset(m_initialPage);
@@ -29,13 +29,13 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
  * \param page
  * \param properites
  */
-void PageManager::enterPage(Enums::Page page, QJsonObject properites)
+void PageManager::enterPage(const Enums::Page page, QJsonObject properites)
 {
     qDebug() << "Print stack on enter" << m_pageStack;
 
     if (m_pageStack.contains(page)) {
         qWarning() << "Page" << page << "is already on the stack. Going back to page.";
-        backTo(page);
+        backToPage(page);
         return;
     }
 
@@ -50,7 +50,7 @@ void PageManager::enterPage(Enums::Page page, QJsonObject properites)
     QString pageUrl = pageToQString(page);
     qDebug() << "Entered page" << pageUrl;
 
-    emit push(pageToQString(page), properites);
+    emit stackViewPush(pageToQString(page), properites);
 }
 
 void PageManager::popPage()
@@ -58,28 +58,32 @@ void PageManager::popPage()
     qDebug() << "Print stack on pop" << m_pageStack;
 
     if (m_pageStack.isEmpty()) {
-        qWarning() << "Popping empty stack! Aborting.";
+        qWarning() << "Popping empty stack! Aborting!";
         return;
     }
+
+    // Prohibit from clearing stack by pop
+    if (m_pageStack.count() == 1)
+        return;
 
     auto poppedPage = m_pageStack.takeLast();
     m_pageSectionsModel.pagePopped(m_pageStack.last());
 
     qDebug() << "Popped page" << pageToQString(poppedPage);
 
-    emit pop();
+    emit stackViewPop();
 }
 
-void PageManager::goToInitialPage(bool immediate)
+void PageManager::goToInitialPage(const bool immediate)
 {
     m_pageStack.clear();
     m_pageStack.push_back(m_initialPage);
     m_pageSectionsModel.stackReset(m_initialPage);
 
-    emit goToInitial(immediate);
+    emit stackViewBackToInitial(immediate);
 }
 
-bool PageManager::backTo(Enums::Page backPage)
+bool PageManager::backToPage(const Enums::Page backPage)
 {
     if (!m_pageStack.contains(backPage)) {
         qWarning() << "Page" << backPage << "is not on the stack. Returning.";
@@ -95,15 +99,26 @@ bool PageManager::backTo(Enums::Page backPage)
 
     qDebug() << "Going back to page" << pageToQString(backPage);
 
-    emit goBackToPage(backPage);
+    emit stackViewBackToPage(backPage);
 
     return true;
 }
 
-bool PageManager::backToSection(Enums::PageSections section)
+void PageManager::prepareConnections()
+{
+    connect(this, &PageManager::push, this, &PageManager::enterPage, Qt::DirectConnection);
+    connect(this, &PageManager::pop, this, &PageManager::popPage, Qt::DirectConnection);
+    connect(this, &PageManager::back, this, &PageManager::pop, Qt::DirectConnection);
+
+    connect(this, &PageManager::backTo, this, &PageManager::backToPage, Qt::DirectConnection);
+    connect(this, &PageManager::backToSection, this, &PageManager::backToFirstSectionPage, Qt::DirectConnection);
+    connect(this, &PageManager::goToInitial, this, &PageManager::goToInitialPage, Qt::DirectConnection);
+}
+
+bool PageManager::backToFirstSectionPage(const Enums::PageSections section)
 {
     Enums::Page page = m_pageSectionsModel.getPageForSection(section);
-    return backTo(page);
+    return backToPage(page);
 }
 
 QString PageManager::getInitialPageUrl() const
@@ -111,7 +126,7 @@ QString PageManager::getInitialPageUrl() const
     return pageToQString(m_initialPage);
 }
 
-QString PageManager::pageToQString(Enums::Page p) const
+QString PageManager::pageToQString(const Enums::Page p) const
 {
     const QString pageStr = Utility::enumToQString<Enums::Page>(p, "Page");
     return m_pagePrefix + pageStr + QStringLiteral("Page.qml");

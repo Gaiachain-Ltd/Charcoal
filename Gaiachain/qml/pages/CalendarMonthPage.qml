@@ -15,7 +15,7 @@ BasePage {
     property int currentYear: 2018
 
     function enterCalendarEventsPage(date) {
-        pageManager.enterPage(Enums.Page.CalendarEvents, {"currentDate" : date})
+        pageManager.push(Enums.Page.CalendarEvents, {"currentDate" : date})
     }
 
     ColumnLayout {
@@ -36,7 +36,7 @@ BasePage {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: pageManager.popPage()
+                onClicked: pageManager.back()
             }
         }
 

@@ -40,7 +40,7 @@ Item {
 
         onClicked: {
             if (page !== Enums.Page.QRScanner)
-                pageManager.enterPage(Enums.Page.QRScanner)
+                pageManager.push(Enums.Page.QRScanner)
         }
     }
 }

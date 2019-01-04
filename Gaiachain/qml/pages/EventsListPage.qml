@@ -8,7 +8,7 @@ BasePage {
     id: top
 
     function enterEventDetailsPage(data) {
-        pageManager.enterPage(Enums.Page.EventDetails, data)
+        pageManager.push(Enums.Page.EventDetails, data)
     }
 
     Items.EventsListView {

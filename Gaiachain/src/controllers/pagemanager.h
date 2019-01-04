@@ -19,30 +19,39 @@ public:
 
     void setupQmlContext(QQmlApplicationEngine &engine);
 
-    Q_INVOKABLE void enterPage(Enums::Page page, QJsonObject properites = QJsonObject());
-    Q_INVOKABLE void popPage();
-    Q_INVOKABLE void goToInitialPage(bool immediate = false);
-    Q_INVOKABLE bool backTo(Enums::Page backPage);
-    Q_INVOKABLE bool backToSection(Enums::PageSections section);
-
     Q_INVOKABLE QString getInitialPageUrl() const;
 
 signals:
-    // DO NOT EMIT THOSE SIGNALS IN QML. USE ABOVE FUNCTIONS!
-    void push(const QString &url, const QVariant &properites) const;
+    void push(const Enums::Page page, const QJsonObject properites = QJsonObject()) const;
     void pop() const;
-    void back(); // it's same as pop()
-    void goBackToPage(Enums::Page backPage);
+    void back() const; // it's same as pop()
+    void backTo(const Enums::Page backPage) const;
+    void backToSection(const Enums::PageSections section) const;
     void goToInitial(bool immediate = false) const;
 
+signals:
+    // Signals below should only be used only by StackView!!!
+    void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject()) const;
+    void stackViewPop() const;
+    void stackViewBackToInitial(const bool immediate = false) const;
+    void stackViewBackToPage(const Enums::Page backPage) const;
+
+private slots:
+    void enterPage(const Enums::Page page, QJsonObject properites = QJsonObject());
+    void popPage();
+    bool backToPage(const Enums::Page backPage);
+    bool backToFirstSectionPage(const Enums::PageSections section);
+    void goToInitialPage(const bool immediate = false);
+
 private:
-    const QString m_pagePrefix = "qrc:/pages/";
+    const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
     const Enums::Page m_initialPage = Enums::Page::ViewType;
 
     QVector<Enums::Page> m_pageStack;
     PageSectionsModel m_pageSectionsModel;
 
-    QString pageToQString(Enums::Page p) const;
+    void prepareConnections();
+    QString pageToQString(const Enums::Page p) const;
 };
 
 #endif // PAGEMANAGER_H
