@@ -43,107 +43,11 @@ BasePage {
                 autoOrientation: true
             }
 
-            Item
+            Items.ItemBorder
             {
-                anchors {
-                    top: parent.top
-                    topMargin: videoOutput.height * 0.25
-                    left: parent.left
-                    leftMargin: videoOutput.width * 0.2
-                }
-                width: videoOutput.width * 0.6
+                anchors.centerIn: parent
+                width: Math.min(videoOutput.width, videoOutput.height) * 0.6
                 height: width
-
-                readonly property int borderHeight: sr(10)
-                readonly property int borderWidth: width * 0.25
-
-                // top - left
-                Rectangle
-                {
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                    }
-
-                    width: parent.borderWidth
-                    height: parent.borderHeight
-                }
-                Rectangle
-                {
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                    }
-
-                    height: parent.borderWidth
-                    width: parent.borderHeight
-                }
-
-                // top - right
-                Rectangle
-                {
-                    anchors {
-                        right: parent.right
-                        top: parent.top
-                    }
-
-                    width: parent.borderWidth
-                    height: parent.borderHeight
-                }
-                Rectangle
-                {
-                    anchors {
-                        right: parent.right
-                        top: parent.top
-                    }
-
-                    height: parent.borderWidth
-                    width: parent.borderHeight
-                }
-
-                // bottom - left
-                Rectangle
-                {
-                    anchors {
-                        left: parent.left
-                        bottom: parent.bottom
-                    }
-
-                    width: parent.borderWidth
-                    height: parent.borderHeight
-                }
-                Rectangle
-                {
-                    anchors {
-                        left: parent.left
-                        bottom: parent.bottom
-                    }
-
-                    height: parent.borderWidth
-                    width: parent.borderHeight
-                }
-
-                // bottom - right
-                Rectangle
-                {
-                    anchors {
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
-
-                    width: parent.borderWidth
-                    height: parent.borderHeight
-                }
-                Rectangle
-                {
-                    anchors {
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
-
-                    height: parent.borderWidth
-                    width: parent.borderHeight
-                }
             }
 
             Items.ImageButton

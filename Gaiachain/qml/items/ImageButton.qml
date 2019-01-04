@@ -23,8 +23,8 @@ Button {
 
     property real inset: 0
 
-    width: s(Style.buttonHeight)
-    height: width
+    implicitWidth: s(Style.buttonHeight)
+    implicitHeight: width
 
     leftInset: inset
     rightInset: inset
