@@ -28,5 +28,7 @@
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
         <file>items/EventsListView.qml</file>
+        <file>pages/QrScannerPage.qml</file>
+        <file>items/ItemBorder.qml</file>
     </qresource>
 </RCC>

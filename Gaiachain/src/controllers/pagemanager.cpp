@@ -8,6 +8,7 @@
 
 PageManager::PageManager(QObject *parent) : QObject(parent)
 {
+    connect(this, &PageManager::back, this, &PageManager::pop, Qt::DirectConnection);
     m_pageStack.push_back(m_initialPage);
     m_pageSectionsModel.stackReset(m_initialPage);
 }

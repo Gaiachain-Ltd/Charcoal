@@ -14,12 +14,14 @@ namespace Enums {
         CommodityCount
     };
     Q_ENUM_NS(CommodityType)
+
     inline uint qHash(CommodityType key, uint seed)
     {
         return ::qHash(static_cast<int>(key), seed);
     }
 
     enum class Page {
+        InvalidPage = -1,
         CalendarEvents = 0,
         CalendarMonth,
         Calendar,
@@ -30,11 +32,12 @@ namespace Enums {
         ResourceChosing,
         ShipmentDetails,
         ViewType,
-        QRScanning,
+        QrScanner,
 
         PageCount
     };
     Q_ENUM_NS(Page)
+
     inline uint qHash(Page key, uint seed)
     {
         return ::qHash(static_cast<int>(key), seed);

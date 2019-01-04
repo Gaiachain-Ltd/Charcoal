@@ -31,6 +31,8 @@ public:
 
     Q_INVOKABLE qreal clamp(qreal v, qreal min, qreal max) const;
 
+    Q_INVOKABLE int parseInt(const QString &num) const;
+
 private:
     Utility();
 

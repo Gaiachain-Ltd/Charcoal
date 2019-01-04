@@ -30,6 +30,7 @@ signals:
     // DO NOT EMIT THOSE SIGNALS IN QML. USE ABOVE FUNCTIONS!
     void push(const QString &url, const QVariant &properites) const;
     void pop() const;
+    void back(); // it's same as pop()
     void goBackToPage(Enums::Page backPage);
     void goToInitial() const;
 

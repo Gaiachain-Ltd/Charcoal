@@ -23,6 +23,8 @@ public slots:
 private:
     DataManager m_dataManager;
     PageManager m_pageManager;
+
+    void setupQZXing(QQmlApplicationEngine &engine);
 };
 
 #endif // MAINCONTROLLER_H
