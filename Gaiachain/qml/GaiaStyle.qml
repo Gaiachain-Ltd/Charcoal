@@ -12,12 +12,16 @@ QtObject {
     readonly property color listEventsDelegateBottomLineColor: "#FFCCCCCC"
 
     readonly property color buttonBackColor: "#FF5AB400"
+
     // Text
     readonly property real pixelSize: 40
 
     // Components sizes
-    readonly property real footerHeight: 150
-    readonly property real headerHeight: 180
+    readonly property int footerHeight: 150
+
+    readonly property int headerHeight: 180
+    readonly property int headerArrowWidth: 20
+    readonly property int headerButtonsPadding: 20
 
     // RegisterBar
     readonly property color registerBarBackgroundColor: "black"

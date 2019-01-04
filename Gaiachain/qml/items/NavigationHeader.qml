@@ -24,9 +24,9 @@ Item {
         return Strings.timber + "!" // Add "!" if invalid
     }
 
-    function getResourceUrl(res) {
+    function getResourceUrl(res, green) {
         switch (res) {
-        case Enums.CommodityType.Timber: return Style.miniTimberGreenImgUrl
+        case Enums.CommodityType.Timber: return green ? Style.miniTimberGreenImgUrl : Style.miniTimberImgUrl
             //case Enums.CommodityType.Charcoal: return Style.charcoalImgUrl
             //case Enums.CommodityType.Cocoa: return Style.cocoaImgUrl
         default:
@@ -36,14 +36,14 @@ Item {
         return ""
     }
 
-    function sectionToUrl(section) {
+    function sectionToUrl(section, green) {
         switch(section) {
-        case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource)
-        case Enums.PageSections.CalendarSection: return Style.miniCalendarGreenImgUrl
-        case Enums.PageSections.EventsListSection: return Style.miniListGreenImgUrl
-        case Enums.PageSections.EventsDetailsSection: return Style.detailsGreenImgUrl
-        case Enums.PageSections.ShipmentDetailsSection: return Style.timelineGreenImgUrl
-        case Enums.PageSections.QRSection: return Style.qrCodeGreenImgUrl
+        case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource, green)
+        case Enums.PageSections.CalendarSection: return green ? Style.miniCalendarGreenImgUrl : Style.miniCalendarImgUrl
+        case Enums.PageSections.EventsListSection: return green ? Style.miniListGreenImgUrl : Style.miniListImgUrl
+        case Enums.PageSections.EventsDetailsSection: return green ? Style.detailsGreenImgUrl : Style.detailsImgUrl
+        case Enums.PageSections.ShipmentDetailsSection: return green ? Style.timelineGreenImgUrl : Style.timelineImgUrl
+        case Enums.PageSections.QRSection: return green ? Style.qrCodeGreenImgUrl : Style.qrCodeImgUrl
 
         case Enums.PageSections.DefaultSection: return ""
 
@@ -55,84 +55,91 @@ Item {
     }
 
     ColumnLayout {
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            leftMargin: s(40)
+            rightMargin: s(40)
+            topMargin: s(10)
+            bottomMargin: s(10)
+        }
 
         RowLayout {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            LayoutSpacer { spacerWidth: s(20) }
+            spacing: 0
 
             ImageButton {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
 
-                padding: s(30)
+                padding: s(Style.headerButtonsPadding)
                 fillMode: Image.PreserveAspectFit
                 source: Style.backImgUrl
 
                 onClicked: pageManager.pop()
             }
 
-            LayoutSpacer { spacerWidth: s(10) }
+            LayoutSpacer {}
 
             ImageButton {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
 
-                padding: s(30)
+                padding: s(Style.headerButtonsPadding)
                 fillMode: Image.PreserveAspectFit
                 source: Style.homeImgUrl
 
                 onClicked: pageManager.goToInitialPage()
             }
 
-
             ListView {
                 Layout.fillHeight: true
-                Layout.fillWidth: true
+                Layout.preferredWidth: sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth))
 
                 orientation: ListView.Horizontal
-                interactive: false
+                interactive: true
+                spacing: 0
 
                 model: sectionsModel
 
-                onCountChanged: {
-                    console.log("Current sections num", count)
-                }
-
                 delegate: Item {
+                    id: delegateId
                     height: ListView.view.height
-                    width: delegateLayout.childrenRect.width
+                    width: s(Style.headerArrowWidth) + height
+
+                    property bool isLast: (ListView.view.count - 1) === index
 
                     RowLayout {
-                        id: delegateLayout
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
+                        anchors.fill: parent
+
+                        spacing: 0
 
                         SvgImage {
                             Layout.fillHeight: true
-                            Layout.preferredWidth: s(20)
+                            Layout.preferredWidth: s(Style.headerArrowWidth)
 
                             fillMode: Image.PreserveAspectFit
                             source: Style.rightArrowImgUrl
                         }
 
                         ImageButton {
+                            // From delegate size and arrow size, image button will have squere shape.
+                            // Do not set width: height, to force square shape as it leads to "holes" between arrow and button.
                             Layout.fillHeight: true
-                            Layout.preferredWidth: height
+                            Layout.fillWidth: true
+
+                            padding: s(Style.headerButtonsPadding)
+                            inset: s(6)
 
                             fillMode: Image.PreserveAspectFit
-                            source: sectionToUrl(id)
-                            onSourceChanged: {
-                                console.log("Current source", source)
+                            source: sectionToUrl(id, !delegateId.isLast)
+                            backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
+
+                            onClicked: {
+                                pageManager.pop() // TO_DO
                             }
                         }
-                    }
-
-                    Component.onCompleted: {
-                        console.log("Id/sectionName", id, sectionName)
                     }
                 }
             }

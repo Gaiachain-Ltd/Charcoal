@@ -24,6 +24,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
+    Q_INVOKABLE int maxSectionsDepth() const;
+
     void pagePushed(Enums::Page page);
     void pagePopped(Enums::Page currentTopPage);
     void stackReset(Enums::Page initialPage);
@@ -54,6 +56,7 @@ private:
     };
 
     Gaia::ModelData m_data;
+    const int m_maxDepth = 3;
 
     int getShiftedIndex(ModelRole role) const;
 };

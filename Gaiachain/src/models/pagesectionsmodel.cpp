@@ -1,5 +1,7 @@
 #include "pagesectionsmodel.h"
 
+#include <QDebug>
+
 #include "../helpers/utility.h"
 
 PageSectionsModel::PageSectionsModel(QObject *parent)
@@ -41,6 +43,11 @@ QHash<int, QByteArray> PageSectionsModel::roleNames() const
     return m_roleNames;
 }
 
+int PageSectionsModel::maxSectionsDepth() const
+{
+    return m_maxDepth;
+}
+
 void PageSectionsModel::pagePushed(Enums::Page page)
 {
     Enums::PageSections newSection = m_pageToSection[page];
@@ -51,7 +58,11 @@ void PageSectionsModel::pagePushed(Enums::Page page)
     if (newSection == Enums::PageSections::DefaultSection)
         return;
 
+
     if (currentSection != newSection) {
+        if (m_data.count() >= m_maxDepth)
+            qWarning() << "Page not pushed! Maximum depth of sections exceeded! Fix this!";
+
         QVariantList rowToInsert;
         rowToInsert.append({static_cast<int>(newSection),
                             Utility::enumToQString<Enums::PageSections>(newSection, "PageSections")});
