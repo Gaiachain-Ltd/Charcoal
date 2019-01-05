@@ -13,4 +13,10 @@ Item {
 
     Layout.preferredHeight: spacerHeight !== undefined ? spacerHeight : implicitHeight
     Layout.preferredWidth: spacerWidth !== undefined ? spacerWidth : implicitWidth
+
+    Rectangle {
+        anchors.fill: parent
+        color: "violet"
+        opacity: 0.5
+    }
 }

@@ -30,5 +30,6 @@
         <file>items/EventsListView.qml</file>
         <file>pages/QrScannerPage.qml</file>
         <file>items/ItemBorder.qml</file>
+        <file>items/ShipmentDetailsDelegate.qml</file>
     </qresource>
 </RCC>
