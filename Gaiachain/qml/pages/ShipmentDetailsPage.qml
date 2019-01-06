@@ -86,7 +86,10 @@ BasePage {
         id: mainFlickable
 
         anchors.fill: parent
-        anchors.margins: s(10)
+        anchors.leftMargin: s(100)
+        anchors.rightMargin: s(100)
+        anchors.topMargin: s(30)
+        anchors.bottomMargin: s(30)
 
         clip: true
         flickableDirection: Flickable.VerticalFlick
@@ -101,31 +104,34 @@ BasePage {
             id: mainRowLayout
             width: parent.width
             layoutDirection: Qt.RightToLeft
+            spacing: s(20)
 
             // From right to left:
             /// 1. Right-hand side delagtes
             ColumnLayout {
                 Layout.fillHeight: false
-                Layout.preferredWidth: 0.5 * parent.width
-                spacing: 0
+                Layout.preferredWidth: 0.65 * parent.width
+                spacing: s(50)
 
                 Repeater {
                     id: shipmentRep
                     model: shipmentModel
-                    delegate: Items.ShipmentDetailsDelegate {}
+                    delegate: Items.ShipmentDetailsDelegate {
+                        spacing: s(50)
+                    }
                 }
             }
 
             /// 2. Middle tree lines.
             Canvas {
                 Layout.fillHeight: true
-                Layout.preferredWidth: 0.3 * parent.width
+                Layout.preferredWidth: 0.15 * parent.width
 
                 property color backColor: "yellow"
                 property color linesColor: "green"
-                property int lineWidth: s(9)
-                property int ringRadius: s(12)
-                property int ringThick: sr(5)
+                property int lineWidth: s(10)
+                property int ringRadius: s(20)
+                property int ringThick: sr(7)
 
                 onPaint: {
                     var ctx = getContext("2d")
@@ -218,7 +224,7 @@ BasePage {
                     model: mainFlickable.mids
                     delegate: Items.SvgImage {
                         width: parent.width
-                        height: Math.min(s(70), width)
+                        height: Math.min(s(140), width)
                         y: modelData.midYPos - height / 2
 
                         fillMode: Image.PreserveAspectFit
