@@ -1,4 +1,4 @@
-#include "LoginRequest.h"
+#include "loginrequest.h"
 
 #include <QJsonObject>
 #include <QLoggingCategory>

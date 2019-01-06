@@ -1,10 +1,10 @@
-#include "Session.h"
+#include "session.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(session, "core.session")
 
-#include "RestAPIClient.h"
-#include "LoginRequest.h"
+#include "restapiclient.h"
+#include "loginrequest.h"
 
 Session::Session(QObject *parent)
     : QObject(parent)

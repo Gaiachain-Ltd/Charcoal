@@ -6,7 +6,7 @@
 #include "datamanager.h"
 #include "pagemanager.h"
 
-#include "../rest/Session.h"
+#include "../rest/session.h"
 
 class QQmlApplicationEngine;
 

@@ -1,4 +1,4 @@
-#include "RestAPIClient.h"
+#include "restapiclient.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(mrbrequest, "request")

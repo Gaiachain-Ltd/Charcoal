@@ -2,7 +2,7 @@
 #define SESSION_H
 
 #include <QObject>
-#include "RestAPIClient.h"
+#include "restapiclient.h"
 
 class Session : public QObject
 {

@@ -41,10 +41,10 @@ HEADERS += \
     src/models/commoditydaterangeproxymodel.h \
     src/common/globals.h \
     src/controllers/pagemanager.h \
-    src/rest/BaseRequest.h \
-    src/rest/LoginRequest.h \
-    src/rest/RestAPIClient.h \
-    src/rest/Session.h
+    src/rest/baserequest.h \
+    src/rest/loginrequest.h \
+    src/rest/restapiclient.h \
+    src/rest/session.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -55,10 +55,10 @@ SOURCES += src/main.cpp \
     src/models/commodityproxymodel.cpp \
     src/models/commoditydaterangeproxymodel.cpp \
     src/controllers/pagemanager.cpp \
-    src/rest/BaseRequest.cpp \
-    src/rest/LoginRequest.cpp \
-    src/rest/RestAPIClient.cpp \
-    src/rest/Session.cpp
+    src/rest/baserequest.cpp \
+    src/rest/loginrequest.cpp \
+    src/rest/restapiclient.cpp \
+    src/rest/session.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

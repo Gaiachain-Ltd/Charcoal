@@ -1,7 +1,7 @@
 #ifndef LOGINREQUEST_H
 #define LOGINREQUEST_H
 
-#include "BaseRequest.h"
+#include "baserequest.h"
 
 #include <QObject>
 
