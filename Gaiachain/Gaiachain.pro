@@ -40,7 +40,11 @@ HEADERS += \
     src/common/enums.h \
     src/models/commoditydaterangeproxymodel.h \
     src/common/globals.h \
-    src/controllers/pagemanager.h
+    src/controllers/pagemanager.h \
+    src/rest/BaseRequest.h \
+    src/rest/LoginRequest.h \
+    src/rest/RestAPIClient.h \
+    src/rest/Session.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -50,7 +54,11 @@ SOURCES += src/main.cpp \
     src/controllers/datamanager.cpp \
     src/models/commodityproxymodel.cpp \
     src/models/commoditydaterangeproxymodel.cpp \
-    src/controllers/pagemanager.cpp
+    src/controllers/pagemanager.cpp \
+    src/rest/BaseRequest.cpp \
+    src/rest/LoginRequest.cpp \
+    src/rest/RestAPIClient.cpp \
+    src/rest/Session.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \
@@ -82,7 +90,7 @@ include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)
 #include(../milo/mscripts/mscripts.pri) # TO_DO was is das?
 #include(../milo/mcrypto/mcrypto.pri)  # TO_DO disabling it until potential database encryption implementation
-#include(../milo/mrestapi/mrestapi.pri) # TO_DO disabling it until client server implementation
+include(../milo/mrestapi/mrestapi.pri)
 
 DISTFILES += \
     platforms/android/android/AndroidManifest.xml \

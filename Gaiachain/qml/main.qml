@@ -24,6 +24,9 @@ ApplicationWindow
 
     MainStackView {
         id: mainStackView
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            bottomMargin: Qt.inputMethod.keyboardRectangle.y > 0 ? Qt.inputMethod.keyboardRectangle.height : 0
+        }
     }
 }
