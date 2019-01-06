@@ -39,6 +39,10 @@ BasePage {
                 ListElement {
                     title: "Banana"
                     contentText: "Logs 3"
+                },
+                ListElement {
+                    title: "Kiwi"
+                    contentText: "Logs 4"
                 }
             ]
         }
@@ -99,10 +103,11 @@ BasePage {
             layoutDirection: Qt.RightToLeft
 
             // From right to left:
-            // TO_DO 1.Views
+            /// 1. Right-hand side delagtes
             ColumnLayout {
-                Layout.fillHeight: true
+                Layout.fillHeight: false
                 Layout.preferredWidth: 0.5 * parent.width
+                spacing: 0
 
                 Repeater {
                     id: shipmentRep
@@ -111,80 +116,103 @@ BasePage {
                 }
             }
 
-            // TO_DO 2. Canvas
+            /// 2. Middle tree lines.
             Canvas {
                 Layout.fillHeight: true
-                Layout.preferredWidth: 0.25 * parent.width
+                Layout.preferredWidth: 0.3 * parent.width
+
+                property color backColor: "yellow"
+                property color linesColor: "green"
+                property int lineWidth: s(9)
+                property int ringRadius: s(12)
+                property int ringThick: sr(5)
 
                 onPaint: {
                     var ctx = getContext("2d")
 
-                    ctx.fillStyle = "white"
-                    ctx.fillRect(0,0,width ,height)
+                    //TO_DO add backColor
+                    //TO_DO refactor delegates and finish them
+                    //TO_DO Probably part of I and II could be shared
 
-                    ctx.lineWidth = 5;
-                    ctx.strokeStyle = "green"
+                    ctx.lineWidth = lineWidth
+                    ctx.strokeStyle = linesColor
 
-                    var lastMax = 0
-                    var lineLen = width/3
+                    var lineLen = width / 2 - ringRadius / 2 // subtract circle radius. Otherwise circle will be cut
+                    var referenceX = width
                     var midPoints = [{}]
+
+                    /// I. Draw first level of tree (right-hand side).
                     for (var i = 0; i < shipmentRep.count; ++i) {
                         var child = shipmentRep.itemAt(i)
-                        var yMidPos = shipmentRep.itemAt(i).midYPos
-                        console.log("XXX")
+                        var yMidPos = child.midYPos
+
+                        var min = 1000000
+                        var max = 0
                         for (var j = 0; j < yMidPos.length; ++j) {
-                            console.log("CUrrent Y", lastMax + yMidPos[j])
+                            var yMidLocal = mapFromItem(mainRowLayout, 0, yMidPos[j]).y
+                            min = Math.min(min, yMidLocal)
+                            max = Math.max(max, yMidLocal)
+
                             ctx.beginPath()
-                            ctx.moveTo(width, lastMax + yMidPos[j])
-                            ctx.lineTo((width - lineLen), lastMax + yMidPos[j])
-                            ctx.lineTo((width - lineLen), lastMax + (child.maxYPos - child.minYPos)/2 + child.minYPos)
+                            ctx.moveTo(referenceX, yMidLocal)
+                            ctx.lineTo((referenceX - lineLen), yMidLocal)
+
+                            // Draw line between points
+                            if (j !== (yMidPos.length - 1))
+                                ctx.lineTo((referenceX - lineLen), mapFromItem(mainRowLayout, 0, yMidPos[j+1]).y)
+
                             ctx.stroke()
                         }
-                        midPoints.push({"type" : child.shipmentType, "midYPos" : lastMax + (child.maxYPos - child.minYPos)/2 + child.minYPos})
-                        lastMax = lastMax + child.maxYPos
+
+                        // Push middle of min middle and max middle of current type for example `forestry`.
+                        midPoints.push({"type" : child.shipmentType, "midYPos" : (max - min)/2 + min})
                     }
+                    referenceX = referenceX - lineLen
 
+                    /// II. Draw second level of tree (left-hand side).
                     for (i = 0; i < midPoints.length; ++i) {
-                        ctx.beginPath()
-                        ctx.moveTo(width - 2 * lineLen, midPoints[i].midYPos)
-                        ctx.lineTo((width - lineLen), midPoints[i].midYPos)
+                        var yMid = midPoints[i].midYPos
 
-                        // TO_DO add circle drawing
+                        ctx.beginPath()
+                        ctx.moveTo(referenceX - lineLen, yMid)
+                        ctx.lineTo(referenceX, yMid)
+
                         if (i !== (midPoints.length - 1)) {
-                            ctx.moveTo(width - 2 * lineLen, midPoints[i].midYPos)
-                            ctx.lineTo(width - 2 * lineLen, midPoints[i+1].midYPos)
+                            ctx.moveTo(referenceX - lineLen, yMid)
+                            ctx.lineTo(referenceX - lineLen, midPoints[i+1].midYPos)
                         }
                         ctx.stroke()
                     }
+                    referenceX = referenceX - lineLen
 
                     var cX = -1
                     var cY = -1
+                    /// III. Draw circles on the lines at image positions.
                     for (i = 0; i < midPoints.length; ++i) {
-                        cX = width - 2 * lineLen
+                        cX = referenceX
                         cY = midPoints[i].midYPos
 
                         ctx.beginPath();
-                        ctx.fillStyle = "green"
+                        ctx.fillStyle = linesColor
                         ctx.moveTo(cX, cY);
-                        ctx.arc(cX, cY, 10, 0, Math.PI * 2, false);
+                        ctx.arc(cX, cY, ringRadius, 0, Math.PI * 2, false);
                         ctx.fill();
 
                         ctx.beginPath();
-                        ctx.fillStyle = "white"
+                        ctx.fillStyle = backColor
                         ctx.moveTo(cX, cY);
-                        ctx.arc(cX, cY, 7, 0, Math.PI * 2, false);
+                        ctx.arc(cX, cY, ringRadius - ringThick, 0, Math.PI * 2, false);
                         ctx.fill();
                     }
 
-                    mainFlickable.mids = midPoints
+                    mainFlickable.mids = midPoints // Set mid point to be used as images model
                 }
             }
 
-            // TO_DO 3. Images
+            /// 3. Left-hand size images
             Item {
-                id:imagesComp
                 Layout.fillHeight: true
-                Layout.preferredWidth: 0.25 * parent.width
+                Layout.preferredWidth: 0.2 * parent.width
 
                 Repeater {
                     model: mainFlickable.mids

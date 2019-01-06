@@ -5,33 +5,22 @@ import com.gaiachain.style 1.0
 
 ColumnLayout {
     id: top
-    width: parent.width
+    Layout.fillHeight: false
+//    width: parent.width
 
     property string shipmentType: type
+    spacing: s(5)
+    property int bottomItemHeight: s(70)
 
-    function getArrayOfSize(s){
-        var a = []
-        for (var i=0; i < s; ++i) {
-            a.push(i *100 + 50)
-            if ((i *100 + 50) < minYPos) {
-                minYPos = (i *100 + 50)
-            }
+    property var midYPos: []// getArrayOfSize(attributes.count)
 
-            if ((i *100 + 50) > maxYPos) {
-                maxYPos = (i *100 + 50)
-            }
+//    property var delegatesHeights: getArrayOfSize(attributes.count)
+
+    onYChanged: {
+        console.log("Y changed parent !!!", title, y)
+        for (var i = 0; i < rep.count; ++i) {
+            rep.itemAt(i).updateMidYPosTEST();
         }
-
-        return a
-    }
-
-    property var midYPos: getArrayOfSize(attributes.count)
-    property real minYPos: 100000
-    property real maxYPos: 0
-    function updateMidYPos(idx, y, h) {
-        var point = mapFromGlobal(0, 0);
-        midYPos[idx] = point.y + y + h/2
-
     }
 
     Repeater {
@@ -39,25 +28,54 @@ ColumnLayout {
         model: attributes
 
         delegate: RowLayout {
-            Layout.fillWidth: true
+            id: delegateId
+            Layout.fillHeight: false
+//            Layout.fillWidth: true
 
-            //onYChanged: updateMidYPos(index, y, height)
-            //Component.onCompleted:  updateMidYPos(index, y, height)
+            function updateMidYPosTEST() {
+                updateMidYPos(index, y, height)
+            }
+            function updateMidYPos(idx, y, h) {
+//                console.log("hhh", h)
+//                delegatesHeights[idx] = h
+
+                console.log("Y changed !!!", title, y)
+                midYPos[idx] = mapToItem(mainRowLayout, 0, h / 2).y
+                console.log("Pos", title, idx, y, h/2, midYPos[idx])
+            }
+
+            onYChanged: updateMidYPos(index, y, height)
+            Component.onCompleted: updateMidYPos(index, y, height)
 
             ColumnLayout {
                 Layout.fillWidth: true
+                spacing: 0
                 BasicText {
                     Layout.fillWidth: true
+                    Layout.preferredHeight: s(100)
                     text: title
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "red"
+                        opacity: 0.6
+                    }
                 }
                 BasicText {
                     Layout.fillWidth: true
+                    Layout.preferredHeight: s(100)
                     text: contentText
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "green"
+                        opacity: 0.6
+                    }
                 }
             }
 
             ImageButton {
-                Layout.preferredWidth: s(50)
+                Layout.preferredWidth: s(70)
                 Layout.fillHeight: true
 
                 fillMode: Image.PreserveAspectFit
@@ -68,6 +86,6 @@ ColumnLayout {
 
     Item {
         width: parent.width
-        height: s(50)
+        height: bottomItemHeight
     }
 }
