@@ -6,6 +6,7 @@ import com.gaiachain.style 1.0
 ColumnLayout {
     id: top
     width: parent.width
+
     property string shipmentType: type
 
     function getArrayOfSize(s){

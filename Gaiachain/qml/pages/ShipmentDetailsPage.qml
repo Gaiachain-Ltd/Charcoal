@@ -8,6 +8,20 @@ import "../items" as Items
 BasePage {
     id: top
 
+    property var imgUrls: [Style.timberImgUrl, Style.logParkImgUrl, Style.sawmillImgUrl, Style.exportImgUrl]
+    function typeToUrl(shipmentType) {
+        switch(shipmentType) {
+        case "forestery": return Style.timberImgUrl
+        case "logpark": return Style.logParkImgUrl
+        case "sawmill": return Style.sawmillImgUrl
+        case "export": return Style.exportImgUrl
+        default:
+            console.log("Wrong type of shipment:", shipmentType)
+        }
+
+        return ""
+    }
+
     ListModel {
         id: shipmentModel
 
@@ -77,25 +91,18 @@ BasePage {
         contentWidth: width
         contentHeight: mainRowLayout.implicitHeight
 
+        property var mids: [{}]
+
         RowLayout {
             id: mainRowLayout
             width: parent.width
             layoutDirection: Qt.RightToLeft
 
-            function arrayContains(array, idx) {
-                for (var i = 0; i < array.count; ++i) {
-                    if (array[i].index === idx)
-                        return i
-                }
-
-                return -1
-            }
-
             // From right to left:
             // TO_DO 1.Views
             ColumnLayout {
                 Layout.fillHeight: true
-                Layout.preferredWidth: utility.proportionalWidth(0.5 * parent.width, parent.width)
+                Layout.preferredWidth: 0.5 * parent.width
 
                 Repeater {
                     id: shipmentRep
@@ -104,11 +111,10 @@ BasePage {
                 }
             }
 
-            property var mids: []
             // TO_DO 2. Canvas
             Canvas {
                 Layout.fillHeight: true
-                Layout.preferredWidth: utility.proportionalWidth(0.25 * parent.width, parent.width)
+                Layout.preferredWidth: 0.25 * parent.width
 
                 onPaint: {
                     var ctx = getContext("2d")
@@ -121,6 +127,7 @@ BasePage {
 
                     var lastMax = 0
                     var lineLen = width/3
+                    var midPoints = [{}]
                     for (var i = 0; i < shipmentRep.count; ++i) {
                         var child = shipmentRep.itemAt(i)
                         var yMidPos = shipmentRep.itemAt(i).midYPos
@@ -133,28 +140,28 @@ BasePage {
                             ctx.lineTo((width - lineLen), lastMax + (child.maxYPos - child.minYPos)/2 + child.minYPos)
                             ctx.stroke()
                         }
-                        mainRowLayout.mids.push(lastMax + (child.maxYPos - child.minYPos)/2 + child.minYPos)
+                        midPoints.push({"type" : child.shipmentType, "midYPos" : lastMax + (child.maxYPos - child.minYPos)/2 + child.minYPos})
                         lastMax = lastMax + child.maxYPos
                     }
 
-                    for (i = 0; i < mainRowLayout.mids.length; ++i) {
+                    for (i = 0; i < midPoints.length; ++i) {
                         ctx.beginPath()
-                        ctx.moveTo(width - 2 * lineLen, mainRowLayout.mids[i])
-                        ctx.lineTo((width - lineLen), mainRowLayout.mids[i])
+                        ctx.moveTo(width - 2 * lineLen, midPoints[i].midYPos)
+                        ctx.lineTo((width - lineLen), midPoints[i].midYPos)
 
                         // TO_DO add circle drawing
-                        if (i !== (mainRowLayout.mids.length - 1)) {
-                            ctx.moveTo(width - 2 * lineLen, mainRowLayout.mids[i])
-                            ctx.lineTo(width - 2 * lineLen, mainRowLayout.mids[i+1])
+                        if (i !== (midPoints.length - 1)) {
+                            ctx.moveTo(width - 2 * lineLen, midPoints[i].midYPos)
+                            ctx.lineTo(width - 2 * lineLen, midPoints[i+1].midYPos)
                         }
                         ctx.stroke()
                     }
 
                     var cX = -1
                     var cY = -1
-                    for (i = 0; i < mainRowLayout.mids.length; ++i) {
+                    for (i = 0; i < midPoints.length; ++i) {
                         cX = width - 2 * lineLen
-                        cY = mainRowLayout.mids[i]
+                        cY = midPoints[i].midYPos
 
                         ctx.beginPath();
                         ctx.fillStyle = "green"
@@ -168,56 +175,28 @@ BasePage {
                         ctx.arc(cX, cY, 7, 0, Math.PI * 2, false);
                         ctx.fill();
                     }
+
+                    mainFlickable.mids = midPoints
                 }
             }
 
             // TO_DO 3. Images
             Item {
+                id:imagesComp
                 Layout.fillHeight: true
-                Layout.preferredWidth: utility.proportionalWidth(0.25 * parent.width, parent.width)
+                Layout.preferredWidth: 0.25 * parent.width
 
-                property var imgUrls: [Style.timberImgUrl, Style.logParkImgUrl, Style.sawmillImgUrl, Style.exportImgUrl]
-                ListView {
-                    interactive: false
-                    model: mainRowLayout.mids
+                Repeater {
+                    model: mainFlickable.mids
                     delegate: Items.SvgImage {
-                        y: modelData
                         width: parent.width
-                        height: s(50)
+                        height: Math.min(s(70), width)
+                        y: modelData.midYPos - height / 2
 
                         fillMode: Image.PreserveAspectFit
-                        source: imgUrls[index]
+                        source: typeToUrl(modelData.type)
                     }
                 }
-
-
-                //                Items.SvgImage {
-                //                    y: mainRowLayout.mids[1]
-                //                    width: parent.width
-                //                    height: s(50)
-
-                //                    fillMode: Image.PreserveAspectFit
-                //                    source: Style.logParkImgUrl
-                //                }
-
-                //                Items.SvgImage {
-                //                    y: mainRowLayout.mids[2]
-                //                    width: parent.width
-                //                    height: s(50)
-
-                //                    fillMode: Image.PreserveAspectFit
-                //                    source: Style.sawmillImgUrl
-                //                }
-
-                //                Items.SvgImage {
-                //                    y: mainRowLayout.mids[3]
-                //                    width: parent.width
-                //                    height: s(50)
-
-                //                    fillMode: Image.PreserveAspectFit
-                //                    source: Style.exportImgUrl
-                //                }
-
             }
         }
     }
