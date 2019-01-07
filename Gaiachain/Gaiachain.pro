@@ -14,11 +14,11 @@ include(../version.pri)
 # qzxing
 CONFIG += qzxing_qml
 CONFIG += qzxing_multimedia
-QZXING_PATH=$$PWD/qzxing
-
-include($$QZXING_PATH/QZXing.pri)
+QZXING_PATH=$$PWD/3rdparty/qzxing
 
 INCLUDEPATH += $$QZXING_PATH
+include($$QZXING_PATH/QZXing.pri)
+
 
 # Warning! QStringBuilder can crash your app! See last point here:
 # https://www.kdab.com/uncovering-32-qt-best-practices-compile-time-clazy/
