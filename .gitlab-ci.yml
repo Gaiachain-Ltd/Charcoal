@@ -7,7 +7,7 @@ stages:
 variables:
     QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.0/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
-    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk"
+    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r15c"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
     ANDROID_TARGET_PLATFORM: "android-23"
     JAVA_HOME: "/home/tools/jdk8"
@@ -29,7 +29,7 @@ android_build:
     - LinuxAndroid
   stage: build
   variables:
-    PACKAGE_NAME: "name_$CI_COMMIT_REF_NAME.apk"
+    PACKAGE_NAME: "name_$CI_COMMIT_REF_SLUG.apk"
     BUILD_TYPE: "release"
   script:
     - cd $CI_PROJECT_DIR
