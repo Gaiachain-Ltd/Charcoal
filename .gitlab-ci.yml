@@ -9,7 +9,7 @@ variables:
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
     ANDROID_NDK_ROOT: "/home/tools/android/android-ndk"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
-    ANDROID_TARGET_PLATFORM: "android-22"
+    ANDROID_TARGET_PLATFORM: "android-23"
     JAVA_HOME: "/home/tools/jdk8"
     PROJECT_NAME: "Gaiachain"
 
@@ -30,7 +30,7 @@ android_build:
   stage: build
   variables:
     PACKAGE_NAME: "name_$CI_COMMIT_REF_NAME.apk"
-    BUILD_TYPE: "debug"
+    BUILD_TYPE: "release"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
