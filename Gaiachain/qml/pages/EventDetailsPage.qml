@@ -126,7 +126,7 @@ BasePage {
 
                 padding: s(22)
 
-                onClicked: console.warn("Accepting code not implemented!")
+                onClicked: console.warn("Show ok popup!!")
             }
         }
     }
