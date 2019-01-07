@@ -30,7 +30,7 @@ android_build:
   stage: build
   variables:
     PACKAGE_NAME: "name_$CI_COMMIT_REF_NAME.apk"
-    BUILD_TYPE: "release"
+    BUILD_TYPE: "debug"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
