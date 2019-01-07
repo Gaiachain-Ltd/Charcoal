@@ -68,7 +68,7 @@ Item {
         }
 
         Component.onCompleted: {
-            pageManager.push(Enums.Page.Calendar)
+            pageManager.push(Enums.Page.Login)
         }
     }
 }

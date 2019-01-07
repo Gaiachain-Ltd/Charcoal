@@ -36,6 +36,8 @@ public:
     Q_INVOKABLE QDate convertDateString(const QString &dateStr, const QString &dateFormat = QString()) const;
     Q_INVOKABLE QString defaultDateFormat() const;
 
+    Q_INVOKABLE bool validateEmail(const QString &email) const;
+
 private:
     Utility();
 
@@ -46,6 +48,7 @@ private:
     qreal m_refHeight = 854;
 
     QString m_dateFormat = QStringLiteral("yyyy/MM/dd");
+    QRegExp m_emailRegex;
 };
 
 #endif // UTILITY_H

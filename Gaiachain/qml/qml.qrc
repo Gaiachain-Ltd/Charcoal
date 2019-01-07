@@ -27,6 +27,7 @@
         <file>items/BasicText.qml</file>
         <file>items/EventsListView.qml</file>
         <file>items/ItemBorder.qml</file>
+        <file>items/GenericInput.qml</file>
         <file>MainStackView.qml</file>
         <file>GaiaStrings.qml</file>
         <file>GaiaStyle.qml</file>

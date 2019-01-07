@@ -6,6 +6,8 @@
 #include "datamanager.h"
 #include "pagemanager.h"
 
+#include "../rest/session.h"
+
 class QQmlApplicationEngine;
 
 class MainController : public QObject
@@ -23,6 +25,7 @@ public slots:
 private:
     DataManager m_dataManager;
     PageManager m_pageManager;
+    Session m_session;
 
     void setupQZXing(QQmlApplicationEngine &engine);
 };

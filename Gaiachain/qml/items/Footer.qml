@@ -22,7 +22,10 @@ Item {
             verticalCenter: parent.verticalCenter
         }
 
-        source:  Style.gaiaColorImgUrl
+        readonly property bool isActive: page !== Enums.Page.QrScanner
+
+        backgroundColor: isActive ? Style.buttonGreenColor : "transparent"
+        source: isActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
         fillMode: Image.PreserveAspectFit
 
         onClicked: {
@@ -34,13 +37,17 @@ Item {
     {
         anchors.centerIn: parent
 
-        backgroundColor: page === Enums.Page.QRScanner ? Style.buttonGreenColor : "transparent"
-        source: page === Enums.Page.QRScanner ? Style.buttonAddBlack : Style.buttonAddGreen
+        readonly property bool isActive: page === Enums.Page.QRScanner
+
+        backgroundColor: isActive ? Style.buttonGreenColor : "transparent"
+        source: isActive ? Style.buttonAddBlack : Style.buttonAddGreen
+
+        visible: page !== Enums.Page.Login
         fillMode: Image.PreserveAspectFit
 
         onClicked: {
-            if (page !== Enums.Page.QRScanner)
-                pageManager.push(Enums.Page.QRScanner)
+            if (!isActive)
+                pageManager.enterPage(Enums.Page.QRScanner)
         }
     }
 }
