@@ -73,7 +73,6 @@ upload_job:
     - APK_PACKAGES=*.apk
     - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"_"$PACKAGE"; done
     - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -t $SEAFILE_API_TOKEN; done
-#    - $CI_PROJECT_DIR/milo/mscripts/others/mattermost-notification.sh TO_DO is this needed?
 
 cleanup:
   <<: *common
