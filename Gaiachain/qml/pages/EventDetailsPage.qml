@@ -6,10 +6,14 @@ import com.gaiachain.style 1.0
 import "../items" as Items
 
 BasePage {
+    id: top
+    property bool readOnly: true
+
     ColumnLayout {
         anchors {
             fill: parent
             margins: s(Style.bigMargin)
+            bottomMargin: 0
         }
 
         Flickable {
@@ -63,16 +67,15 @@ BasePage {
                     Items.ImageButton {
                         Layout.preferredHeight: implicitWidth * 0.7
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                        visible: !top.readOnly
 
                         source: Style.miniEditImgUrl
                         padding: s(10)
 
-                        backgroundRadius: s(15)
+                        backgroundRadius: s(Style.smallMargin)
                         backgroundColor: Style.buttonGreyColor
 
-                        onClicked: {
-                            console.log("Show popup!")
-                        }
+                        onClicked: pageManager.back()
                     }
                     Items.LayoutSpacer {}
                 }
@@ -83,6 +86,47 @@ BasePage {
                     titleText: (Strings.dateTimeDeparture + ":")
                     contentText: "Harvest Inc."
                 }
+            }
+        }
+
+        RowLayout
+        {
+            Layout.fillWidth: true
+            Layout.fillHeight: false
+            Layout.preferredHeight: s(Style.footerHeight)
+            visible: !top.readOnly
+
+            spacing: s(Style.bigMargin)
+
+            Items.LayoutSpacer{}
+            Items.ImageButton
+            {
+                Layout.preferredWidth: s(Style.buttonHeight)
+                Layout.preferredHeight: s(Style.buttonHeight)
+
+                fillMode: Image.PreserveAspectFit
+
+                backgroundColor: Style.buttonGreyColor
+                source: Style.cancelImgUrl
+
+                padding: s(22)
+
+                onClicked: console.warn("Show cancel popup!")
+            }
+
+            Items.ImageButton
+            {
+                Layout.preferredWidth: s(Style.buttonHeight)
+                Layout.preferredHeight: s(Style.buttonHeight)
+
+                fillMode: Image.PreserveAspectFit
+
+                backgroundColor: Style.buttonGreyColor
+                source: Style.okImgUrl
+
+                padding: s(22)
+
+                onClicked: console.warn("Accepting code not implemented!")
             }
         }
     }

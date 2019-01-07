@@ -11,6 +11,10 @@ import "../items" as Items
 BasePage {
     id: top
 
+    function enterEventDetailsPage() {
+        pageManager.push(Enums.Page.EventDetails, {"readOnly": false})
+    }
+
     property string scannedId: ""
 
     Connections
@@ -22,7 +26,6 @@ BasePage {
     ColumnLayout
     {
         anchors.fill: parent
-
         spacing: 0
 
         Item {
@@ -129,7 +132,7 @@ BasePage {
 
                 Items.ImageButton
                 {
-                    onClicked: console.warn("Accepting code not implemented!")
+                    onClicked: top.enterEventDetailsPage()
 
                     fillMode: Image.PreserveAspectFit
 
