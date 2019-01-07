@@ -29,7 +29,7 @@ android_build:
     - LinuxAndroid
   stage: build
   variables:
-    PACKAGE_NAME: "name_$CI_COMMIT_REF_SLUG.apk"
+    PACKAGE_NAME: "$PROJECT_NAME_$CI_COMMIT_REF_SLUG.apk"
     BUILD_TYPE: "release"
   script:
     - cd $CI_PROJECT_DIR
