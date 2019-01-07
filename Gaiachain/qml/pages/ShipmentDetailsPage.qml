@@ -133,7 +133,7 @@ BasePage {
                 Layout.preferredWidth: 0.2 * parent.availableWidth
 
                 property color backColor: Style.pageBaseBackgroundColor
-                property color linesColor: "#FF5AB400"
+                property color linesColor: Style.buttonBackColor
                 property int lineWidth: s(8)
                 property int ringRadius: s(16)
                 property int ringThick: sr(6)
