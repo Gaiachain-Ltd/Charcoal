@@ -7,7 +7,7 @@ stages:
 variables:
     QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.0/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
-    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk"
+    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r15c"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
     ANDROID_TARGET_PLATFORM: "android-23"
     JAVA_HOME: "/home/tools/jdk8"
@@ -29,11 +29,12 @@ android_build:
     - LinuxAndroid
   stage: build
   variables:
-    PACKAGE_NAME: "name_$CI_COMMIT_REF_NAME.apk"
+    PACKAGE_NAME: "$PROJECT_NAME_$CI_COMMIT_REF_SLUG.apk"
     BUILD_TYPE: "release"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
+    - cat Makefile
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
     - cd $CI_PROJECT_DIR
@@ -72,7 +73,6 @@ upload_job:
     - APK_PACKAGES=*.apk
     - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"_"$PACKAGE"; done
     - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -t $SEAFILE_API_TOKEN; done
-#    - $CI_PROJECT_DIR/milo/mscripts/others/mattermost-notification.sh TO_DO is this needed?
 
 cleanup:
   <<: *common
