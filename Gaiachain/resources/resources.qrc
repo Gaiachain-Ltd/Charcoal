@@ -10,6 +10,7 @@
     <file alias="details">ui/details-icon.svg</file>
     <file alias="details_green">ui/details-icon-green.svg</file>
     <file alias="edit">ui/edit-icon.svg</file>
+    <file alias="mini_edit">ui/mini-edit-icon.svg</file>
     <file alias="export">ui/export-icon.svg</file>
     <file alias="gaia_logo">ui/gaiachain-logo-black.svg</file>
     <file alias="gaia_black">ui/gaia-icon.svg</file>
