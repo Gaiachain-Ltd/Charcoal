@@ -22,7 +22,7 @@ QtObject {
     readonly property int bigMargin: 45
     readonly property int normalMargin: 30
     readonly property int smallMargin: 15
-    readonly property int tinyMargin: 15
+    readonly property int tinyMargin: 10
 
     // image
     readonly property int imageSize: 30

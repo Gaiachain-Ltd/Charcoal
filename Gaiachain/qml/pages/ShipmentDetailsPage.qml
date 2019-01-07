@@ -87,11 +87,13 @@ BasePage {
     Flickable {
         id: mainFlickable
 
-        anchors.fill: parent
-        anchors.leftMargin: s(50)
-        anchors.rightMargin: s(50)
-        anchors.topMargin: s(30)
-        anchors.bottomMargin: s(10)
+        anchors {
+            fill: parent
+            leftMargin: s(Style.bigMargin)
+            rightMargin: s(Style.bigMargin)
+            topMargin: s(Style.normalMargin)
+            bottomMargin: s(Style.tinyMargin)
+        }
 
         clip: true
         flickableDirection: Flickable.VerticalFlick
