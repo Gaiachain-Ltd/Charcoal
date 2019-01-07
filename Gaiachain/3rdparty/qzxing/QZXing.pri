@@ -21,7 +21,8 @@ DEFINES += QZXING_LIBRARY \
         DISABLE_LIBRARY_FEATURES
 		 
 INCLUDEPATH  += $$PWD \
-                $$PWD/zxing
+                $$PWD/zxing \
+                $$PWD/zxing/zxing
 
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
