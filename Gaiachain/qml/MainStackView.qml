@@ -71,7 +71,7 @@ Item {
         }
 
         Component.onCompleted: {
-            pageManager.push(Enums.Page.EventDetails, {}, true)
+            pageManager.push(Enums.Page.Login, {}, true)
         }
     }
 }
