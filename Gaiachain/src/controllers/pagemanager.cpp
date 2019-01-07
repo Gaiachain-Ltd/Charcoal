@@ -43,8 +43,12 @@ void PageManager::enterPage(const Enums::Page page, QJsonObject properites, cons
     if (page == Enums::Page::QRScanner)
         goToInitialPage(true);
 
+    bool isEditSection = false;
+    if (page == Enums::Page::EventDetails)
+        isEditSection = !properites.value("readOnly").toBool();
+
     m_pageStack.push_back(page);
-    m_pageSectionsModel.pagePushed(page);
+    m_pageSectionsModel.pagePushed(page, isEditSection);
     properites.insert(QStringLiteral("page"), static_cast<int>(page));
 
     // TO_DO Add checking of page url correctness

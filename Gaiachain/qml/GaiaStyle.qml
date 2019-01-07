@@ -51,7 +51,8 @@ QtObject {
     readonly property url cancelImgUrl: "qrc:/ui/cancel"
     readonly property url detailsImgUrl: "qrc:/ui/details"
     readonly property url detailsGreenImgUrl: "qrc:/ui/details_green"
-    readonly property url editlImgUrl: "qrc:/ui/edit"
+    readonly property url editImgUrl: "qrc:/ui/edit"
+    readonly property url editGreenImgUrl: "qrc:/ui/edit_green"
     readonly property url exportImgUrl: "qrc:/ui/export"
     readonly property url logoImgUrl: "qrc:/ui/gaia_logo"
 
