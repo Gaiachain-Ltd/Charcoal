@@ -27,8 +27,8 @@ public:
     Q_INVOKABLE qreal scaleRoundByDpi(qreal num) const;
 
     // Scale proportionaly to refWidth/refHeight
-    Q_INVOKABLE qreal proportionalWidth(qreal val) const;
-    Q_INVOKABLE qreal proportionalHeight(qreal val) const;
+    Q_INVOKABLE qreal proportionalWidth(qreal val, qreal refWidth = -1.0) const;
+    Q_INVOKABLE qreal proportionalHeight(qreal val, qreal refHeight = -1.0) const;
 
     Q_INVOKABLE qreal clamp(qreal v, qreal min, qreal max) const;
 

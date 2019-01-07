@@ -53,6 +53,26 @@ namespace Enums {
     };
     Q_ENUM_NS(PageSections)
     inline uint qHash(PageSections key, uint seed) { return qH<PageSections>(key, seed);}
+
+    enum class UserType {
+        Producer,
+        LogParkWorker,
+        SawmillWorker,
+        Exporter,
+
+        UserTypeCount
+    };
+    Q_ENUM_NS(UserType)
+
+    enum class PlaceType {
+        Forestery,
+        LogPark,
+        Sawmill,
+        Export,
+
+        PlaceTypeCount
+    };
+    Q_ENUM_NS(PlaceType)
 }
 
 

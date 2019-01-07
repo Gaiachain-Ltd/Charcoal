@@ -27,16 +27,22 @@ qreal Utility::scaleRoundByDpi(qreal num) const
     }
 }
 
-qreal Utility::proportionalWidth(qreal val) const
+qreal Utility::proportionalWidth(qreal val, qreal refWidth) const
 {
-    qreal prop = clamp(val, 0.0, m_refWidth) / m_refWidth;
-    return prop * m_refWidth;
+    if (refWidth < 0.0)
+        refWidth = m_refWidth;
+
+    qreal prop = clamp(val, 0.0, refWidth) / refWidth;
+    return prop * refWidth;
 }
 
-qreal Utility::proportionalHeight(qreal val) const
+qreal Utility::proportionalHeight(qreal val, qreal refHeight) const
 {
-    qreal prop = clamp(val, 0.0, m_refHeight) / m_refHeight;
-    return prop * m_refHeight;
+    if (refHeight < 0.0)
+        refHeight = m_refHeight;
+
+    qreal prop = clamp(val, 0.0, refHeight) / refHeight;
+    return prop * refHeight;
 }
 
 qreal Utility::clamp(qreal v, qreal min, qreal max) const

@@ -35,4 +35,6 @@ QtObject {
     readonly property string scanning: qsTr("Scanning...")
 
     readonly property string id: qsTr("ID")
+
+    readonly property string batch: qsTr("Batch")
 }
