@@ -85,12 +85,12 @@ QtObject {
     readonly property url buttonAddGreen: "qrc:/ui/add_green"
     readonly property url buttonAddBlack: "qrc:/ui/add_black"
 
-    // input
-    readonly property int inputHeight: buttonHeight
-
     // button
     readonly property int buttonHeight: 90
     readonly property int smallButtonHeight: 40
+
+    // input
+    readonly property int inputHeight: buttonHeight
 
     // Other
     readonly property int animationDuration: 300

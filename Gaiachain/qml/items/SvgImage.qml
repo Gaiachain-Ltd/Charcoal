@@ -1,7 +1,6 @@
 import QtQuick 2.11
 
 Image {
-
     fillMode: Image.PreserveAspectFit
 
     function getPreserveAspectSize(sourceWidth, sourceHeight, fillMode) {

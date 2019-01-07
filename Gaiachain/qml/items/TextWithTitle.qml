@@ -18,6 +18,10 @@ Item {
         id: mainColumn
 
         anchors.centerIn: parent
+        width: parent.width
+        height: parent.height
+
+        spacing: sr(3)
 
         BasicText {
             id: title
@@ -34,25 +38,11 @@ Item {
             id: content
 
             Layout.fillWidth: true
-            Layout.preferredWidth: mainColumn.width
             Layout.preferredHeight: top.contentHeight > 0 ? top.contentHeight : implicitHeight
 
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
             maximumLineCount: 10
-
-
-            Rectangle {
-                anchors.fill: parent
-                opacity: 0.5
-                color: "black"
-            }
         }
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        opacity: 0.5
-        color: "red"
     }
 }

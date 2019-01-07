@@ -9,10 +9,11 @@ BasePage {
     ColumnLayout {
         anchors {
             fill: parent
-            margins: s(Style.normalMargin)
+            margins: s(Style.bigMargin)
         }
 
         Flickable {
+            id: flickableId
             Layout.fillHeight: true
             Layout.fillWidth: true
 
@@ -21,77 +22,68 @@ BasePage {
             boundsBehavior: Flickable.OvershootBounds
 
             contentWidth: width
-            contentHeight: mainLayout.implicitHeight
+            contentHeight: contentLayout.implicitHeight
 
-            ColumnLayout {
-                id: mainLayout
+            Column {
+                id: contentLayout
                 spacing: s(Style.normalMargin)
 
                 Items.TextWithTitle {
-                    Layout.fillWidth: true
+                    width: flickableId.contentWidth
 
-                    titleText: "Company name:"
-                    contentText: "Harvest Inc."
+                    titleText: (Strings.companyName + ":")
+                    contentText: "Harvest Inc." //TO_DO content texts are temporary
                 }
 
                 Items.TextWithTitle {
-                    Layout.fillWidth: true
+                    width: flickableId.contentWidth
 
-                    titleText: "Location of harvest (GPS point):"
+                    titleText: (Strings.gpsHarvestLocation + ":")
                     contentText: "Harvest Inc. Location of harvest (GPS point): Location of harvest (GPS point):"
                 }
 
                 Items.TextWithTitle {
-                    Layout.fillWidth: true
+                    width: flickableId.contentWidth
 
-                    titleText: "Date of harvest:"
+                    titleText: (Strings.harvestDate + ":")
                     contentText: "Harvest Inc."
                 }
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    width: flickableId.contentWidth
+
                     Items.TextWithTitle {
                         id: logTextId
-                        Layout.fillWidth: true
+                        Layout.preferredWidth: parent.width * 0.75
 
-                        titleText: "Log ID:"
+                        titleText: (Strings.logID + ":")
                         contentText: "Harvest Inc."
                     }
-
+                    Items.LayoutSpacer {}
                     Items.ImageButton {
-                        Layout.preferredWidth: s(Style.smallButtonHeight)
-                        Layout.preferredHeight: Math.min(s(Style.smallButtonHeight), logTextId.implicitHeight)
+                        Layout.preferredHeight: implicitWidth * 0.7
+                        Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+
                         source: Style.miniEditImgUrl
+                        padding: s(10)
+
+                        backgroundRadius: s(15)
+                        backgroundColor: Style.buttonGreyColor
+
+                        onClicked: {
+                            console.log("Show popup!")
+                        }
                     }
+                    Items.LayoutSpacer {}
                 }
 
                 Items.TextWithTitle {
-                    Layout.fillWidth: true
+                    width: flickableId.contentWidth
 
-                    titleText: "Date and time of departure:"
-                    contentText: "Harvest Inc."
-                }
-
-                Items.TextWithTitle {
-                    Layout.fillWidth: true
-
-                    titleText: "Date and time of departure:"
-                    contentText: "Harvest Inc."
-                }
-
-                Items.TextWithTitle {
-                    Layout.fillWidth: true
-
-                    titleText: "Date and time of departure:"
+                    titleText: (Strings.dateTimeDeparture + ":")
                     contentText: "Harvest Inc."
                 }
             }
-
         }
-
-
-
-
     }
-
 }
