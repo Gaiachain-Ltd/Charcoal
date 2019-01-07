@@ -45,7 +45,7 @@ FocusScope
                 margins: s(Style.normalMargin)
             }
 
-            spacing: s(Style.tinyMargin)
+            spacing: s(Style.smallMargin)
 
             SvgImage {
                 id: image

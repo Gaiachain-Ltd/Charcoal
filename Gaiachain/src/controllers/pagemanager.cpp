@@ -6,7 +6,7 @@
 
 #include "../helpers/utility.h"
 
-PageManager::PageManager(QObject *parent) : QObject(parent)
+PageManager::PageManager(QObject *parent) : AbstractManager(parent)
 {
     prepareConnections();
 
@@ -32,7 +32,7 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
 void PageManager::enterPage(const Enums::Page page, QJsonObject properites, const bool immediate)
 {
     qDebug() << "Print stack on enter" << m_pageStack;
-    qDebug() << properites;
+    qDebug() << "Page properties:" << properites;
 
     if (m_pageStack.contains(page)) {
         qWarning() << "Page" << page << "is already on the stack. Going back to page.";

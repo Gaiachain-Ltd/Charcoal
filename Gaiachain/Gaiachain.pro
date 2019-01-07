@@ -45,7 +45,10 @@ HEADERS += \
     src/rest/baserequest.h \
     src/rest/loginrequest.h \
     src/rest/restapiclient.h \
-    src/rest/session.h
+    src/controllers/sessionmanager.h \
+    src/controllers/usermanager.h \
+    src/controllers/overlaymanager.h \
+    src/controllers/abstractmanager.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -60,7 +63,10 @@ SOURCES += src/main.cpp \
     src/rest/baserequest.cpp \
     src/rest/loginrequest.cpp \
     src/rest/restapiclient.cpp \
-    src/rest/session.cpp
+    src/controllers/sessionmanager.cpp \
+    src/controllers/usermanager.cpp \
+    src/controllers/overlaymanager.cpp \
+    src/controllers/abstractmanager.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

@@ -1,17 +1,15 @@
 #ifndef PAGEMANAGER_H
 #define PAGEMANAGER_H
 
-#include <QObject>
 #include <QVector>
 #include <QJsonObject>
 
+#include "abstractmanager.h"
 #include "../models/pagesectionsmodel.h"
-
 #include "../common/enums.h"
 
-class QQmlApplicationEngine;
 
-class PageManager : public QObject
+class PageManager : public AbstractManager
 {
     Q_OBJECT
 public:

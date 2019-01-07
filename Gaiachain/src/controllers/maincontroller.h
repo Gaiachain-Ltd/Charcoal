@@ -5,8 +5,9 @@
 
 #include "datamanager.h"
 #include "pagemanager.h"
-
-#include "../rest/session.h"
+#include "usermanager.h"
+#include "overlaymanager.h"
+#include "sessionmanager.h"
 
 class QQmlApplicationEngine;
 
@@ -25,7 +26,9 @@ public slots:
 private:
     DataManager m_dataManager;
     PageManager m_pageManager;
-    Session m_session;
+    UserManager m_userManager;
+    OverlayManager m_overlayManager;
+    SessionManager m_sessionManager;
 
     void setupQZXing(QQmlApplicationEngine &engine);
 };

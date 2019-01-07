@@ -12,7 +12,6 @@ BasePage {
 
     headerVisible: false
 
-
     Column
     {
         anchors.fill: parent
@@ -62,6 +61,9 @@ BasePage {
                     Layout.preferredHeight: s(Style.inputHeight)
                     Layout.alignment: Qt.AlignHCenter
 
+                    source: Style.emailImgUrl
+                    showImage: true
+
                     placeholderText: Strings.emailAddress
 
                     nextInput: passwordInput
@@ -108,7 +110,7 @@ BasePage {
                         width: s(Style.buttonHeight) * 2.5
 
                         onClicked: {
-                            restSession.login(loginInput.text, passwordInput.text)
+                            sessionManager.login(loginInput.text, passwordInput.text)
                         }
                     }
 
@@ -134,5 +136,11 @@ BasePage {
                 }
             }
         }
+    }
+
+    Items.WaitOverlay
+    {
+        anchors.fill: parent
+        visible: overlay.loginRequest
     }
 }

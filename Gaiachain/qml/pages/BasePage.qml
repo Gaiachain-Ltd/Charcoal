@@ -16,7 +16,7 @@ Item {
 
     property int page: Enums.Page.InvalidPage
 
-    property color backgroundColor: "white"
+    property color backgroundColor: Style.backgroundColor
 
     default property alias content: pageContent.data
 

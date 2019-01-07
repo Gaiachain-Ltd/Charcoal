@@ -1,8 +1,7 @@
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 
-#include <QObject>
-#include <QQmlApplicationEngine>
+#include "abstractmanager.h"
 
 #include "../models/eventmodel.h"
 #include "../models/shipmentmodel.h"
@@ -10,9 +9,7 @@
 #include "../models/commodityproxymodel.h"
 #include "../models/commoditydaterangeproxymodel.h"
 
-class QQmlApplicationEngine;
-
-class DataManager : public QObject
+class DataManager : public AbstractManager
 {
     Q_OBJECT
 public:

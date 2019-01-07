@@ -11,6 +11,7 @@
 MainController::MainController(QObject *parent)
     : QObject(parent)
 {
+    m_sessionManager.setOverlayManager(&m_overlayManager);
 }
 
 void MainController::setupQMLContext(QQmlApplicationEngine &engine)
@@ -23,13 +24,15 @@ void MainController::setupQMLContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::PageSections>("PageSections");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
-    engine.rootContext()->setContextProperty(QStringLiteral("restSession"), &m_session);
 
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
 
     m_pageManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);
+    m_userManager.setupQmlContext(engine);
+    m_overlayManager.setupQmlContext(engine);
+    m_sessionManager.setupQmlContext(engine);
 
     setupQZXing(engine);
 }
