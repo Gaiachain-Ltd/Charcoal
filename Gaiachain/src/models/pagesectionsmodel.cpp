@@ -52,11 +52,11 @@ void PageSectionsModel::pagePushed(const Enums::Page page)
 {
     Enums::PageSections newSection = m_pageToSection[page];
 
-    int shiftedIndex = getShiftedIndex(ModelRole::SectionId);
-    Enums::PageSections currentSection = m_data.last()[shiftedIndex].value<Enums::PageSections>();
-
     if (newSection == Enums::PageSections::DefaultSection)
         return;
+
+    int shiftedIndex = getShiftedIndex(ModelRole::SectionId);
+    Enums::PageSections currentSection = m_data.last()[shiftedIndex].value<Enums::PageSections>();
 
     // First section is special because it is removed after new section is pushed
     if (m_isInitialSection) {

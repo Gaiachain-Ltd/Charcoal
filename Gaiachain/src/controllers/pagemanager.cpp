@@ -29,10 +29,10 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
  * \param page
  * \param properites
  */
-void PageManager::enterPage(const Enums::Page page, QJsonObject properites)
+void PageManager::enterPage(const Enums::Page page, QJsonObject properites, const bool immediate)
 {
     qDebug() << "Print stack on enter" << m_pageStack;
-    qDebug() <<properites;
+    qDebug() << properites;
 
     if (m_pageStack.contains(page)) {
         qWarning() << "Page" << page << "is already on the stack. Going back to page.";
@@ -51,7 +51,7 @@ void PageManager::enterPage(const Enums::Page page, QJsonObject properites)
     QString pageUrl = pageToQString(page);
     qDebug() << "Entered page" << pageUrl;
 
-    emit stackViewPush(pageToQString(page), properites);
+    emit stackViewPush(pageToQString(page), properites, immediate);
 }
 
 void PageManager::popPage()

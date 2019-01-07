@@ -128,7 +128,7 @@ BasePage {
                         width: s(Style.buttonHeight) * 3.25
 
                         onClicked: {
-                            pageManager.enterPage(Enums.Page.ViewType)
+                            pageManager.back()
                         }
                     }
                 }

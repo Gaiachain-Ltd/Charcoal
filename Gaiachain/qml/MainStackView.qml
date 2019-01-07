@@ -11,7 +11,10 @@ Item {
     Connections {
         target: pageManager
 
-        onStackViewPush: stackView.push(url, properites)
+        onStackViewPush: {
+            var mode = immediate ? StackView.Immediate : StackView.Transition
+            stackView.push(url, properites, mode)
+        }
         onStackViewPop: stackView.pop()
         onStackViewBackToInitial: {
             var mode = immediate ? StackView.Immediate : StackView.Transition
@@ -68,7 +71,7 @@ Item {
         }
 
         Component.onCompleted: {
-            pageManager.push(Enums.Page.Login)
+            pageManager.push(Enums.Page.Login, {}, true)
         }
     }
 }

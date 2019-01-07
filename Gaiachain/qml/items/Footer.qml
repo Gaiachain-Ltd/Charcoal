@@ -47,7 +47,7 @@ Item {
 
         onClicked: {
             if (!isActive)
-                pageManager.enterPage(Enums.Page.QRScanner)
+                pageManager.push(Enums.Page.QRScanner)
         }
     }
 }

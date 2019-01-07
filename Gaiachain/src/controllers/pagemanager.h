@@ -22,7 +22,7 @@ public:
     Q_INVOKABLE QString getInitialPageUrl() const;
 
 signals:
-    void push(const Enums::Page page, const QJsonObject properites = QJsonObject()) const;
+    void push(const Enums::Page page, const QJsonObject properites = QJsonObject(), const bool immediate = false) const;
     void pop() const;
     void back() const; // it's same as pop()
     void backTo(const Enums::Page backPage) const;
@@ -31,13 +31,13 @@ signals:
 
 signals:
     // Signals below should only be used by StackView!!!
-    void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject()) const;
+    void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject(), const bool immediate = false) const;
     void stackViewPop() const;
     void stackViewBackToInitial(const bool immediate = false) const;
     void stackViewBackToPage(const Enums::Page backPage) const;
 
 private slots:
-    void enterPage(const Enums::Page page, QJsonObject properites = QJsonObject());
+    void enterPage(const Enums::Page page, QJsonObject properites = QJsonObject(), const bool immediate = false);
     void popPage();
     bool backToPage(const Enums::Page backPage);
     bool backToFirstSectionPage(const Enums::PageSections section);
