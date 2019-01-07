@@ -13,11 +13,13 @@ QtObject {
     readonly property color listEventsDelegateBottomLineColor: greyButtonColor
     readonly property color greyButtonColor: "#ffcccccc"
 
-    // mrgins
+    readonly property color pageBaseBackgroundColor: "white"
+    readonly property color registerBarBackgroundColor: "black"
+
+    // Margins
     readonly property int bigMargin: 45
     readonly property int normalMargin: 30
     readonly property int smallMargin: 15
-
 
     // Text
     readonly property real pixelSize: 40
@@ -26,9 +28,6 @@ QtObject {
     // Components sizes
     readonly property real footerHeight: 150
     readonly property real headerHeight: 150
-
-    // RegisterBar
-    readonly property color registerBarBackgroundColor: "black"
 
     // urls
     readonly property url blackAddImgUrl: "qrc:/ui/add_black"
@@ -71,6 +70,7 @@ QtObject {
 
     // button
     readonly property int buttonHeight: 90
+    readonly property int smallButtonHeight: 40
 
     // Other
     readonly property int animationDuration: 300

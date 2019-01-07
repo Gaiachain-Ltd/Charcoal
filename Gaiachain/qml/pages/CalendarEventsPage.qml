@@ -16,8 +16,8 @@ BasePage {
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
-    function enterEventDetailsPage(data) {
-        pageManager.enterPage(Enums.Page.EventDetails , data)
+    function enterShipmentDetailsPage(data) {
+        pageManager.enterPage(Enums.Page.ShipmentDetails, data)
     }
 
     // Month should be 0-indexed
@@ -125,7 +125,7 @@ BasePage {
             delegateHeight: s(100)
             backgroundColor: "#FFF5F5F5"
 
-            onDelegateClicked: top.enterEventDetailsPage(data)
+            onDelegateClicked: top.enterShipmentDetailsPage(data)
 
             viewModel: ListModel { //TO_DO
                 ListElement {

@@ -17,7 +17,7 @@ Item {
     property int page: Enums.Page.InvalidPage
     property var attachedStackView: StackView.view
 
-    property color backgroundColor: "white"
+    property color backgroundColor: Style.pageBaseBackgroundColor
 
     default property alias content: pageContent.data
 
@@ -40,10 +40,6 @@ Item {
         }
 
         return Strings.january +"!" // Add "!" if invalid
-    }
-
-    Component.onCompleted: {
-        console.log("View size", StackView.view.width)
     }
 
     ColumnLayout {

@@ -2,16 +2,21 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 ColumnLayout {
     id: top
 
     Layout.fillHeight: false
 
-    property string shipmentType: type
+    property string placeType: type
     property var midYPos: []
 
-    onYChanged: {        
+    function enterEventDetailsPage() {
+        pageManager.enterPage(Enums.Page.EventDetails)
+    }
+
+    onYChanged: {
         for (var i = 0; i < rep.count; ++i)
             rep.itemAt(i).updateMidYPos()
     }
@@ -20,44 +25,67 @@ ColumnLayout {
         id: rep
         model: attributes
 
-        delegate: RowLayout {
+        delegate: Item {
             id: delegateId
-            Layout.fillHeight: false
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: mainLayout.implicitHeight
 
             function updateMidYPos() {
-                updateMidYPosInternal(index, height)
+                midYPos[index] = mapToItem(mainRowLayout, 0, mainLayout.height / 2).y
             }
 
-            function updateMidYPosInternal(idx, h) {
-                midYPos[idx] = mapToItem(mainRowLayout, 0, h / 2).y                
-            }
+            onYChanged: updateMidYPos()
+            Component.onCompleted: updateMidYPos()
 
-            onYChanged: updateMidYPosInternal(index, height)
-            Component.onCompleted: updateMidYPosInternal(index, height)
+            RowLayout {
+                id: mainLayout
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 0
-                BasicText {
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                ColumnLayout {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: s(100)
-                    horizontalAlignment: Text.AlignLeft
-                    text: title
+                    spacing: 0
+                    BasicText {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: s(70)
+                        horizontalAlignment: Text.AlignLeft
+                        text: title
+                    }
+                    BasicText {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: s(70)
+                        horizontalAlignment: Text.AlignLeft
+                        font.bold: true
+                        text: Strings.batch + " " + index
+                    }
+                    BasicText {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: s(70)
+                        horizontalAlignment: Text.AlignLeft
+                        text: contentText
+                    }
                 }
-                BasicText {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: s(100)
-                    horizontalAlignment: Text.AlignLeft
-                    text: contentText
+
+                ImageButton {
+                    Layout.preferredWidth: s(Style.smallButtonHeight)
+                    Layout.fillHeight: true
+
+                    fillMode: Image.PreserveAspectFit
+                    source: Style.rightArrowImgUrl
                 }
             }
 
-            ImageButton {
-                Layout.preferredWidth: s(60)
-                Layout.fillHeight: true
+            Rectangle {
+                anchors.fill: parent
+                color: "violet"
+                opacity: 0.7
+            }
 
-                fillMode: Image.PreserveAspectFit
-                source: Style.rightArrowImgUrl
+            MouseArea {
+                anchors.fill: parent
+                onClicked: enterEventDetailsPage()
             }
         }
     }

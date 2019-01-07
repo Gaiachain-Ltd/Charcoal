@@ -68,7 +68,7 @@ Item {
         }
 
         Component.onCompleted: {
-            pageManager.enterPage(Enums.Page.ShipmentDetails)
+            //pageManager.enterPage(Enums.Page.ShipmentDetails)
         }
     }
 }

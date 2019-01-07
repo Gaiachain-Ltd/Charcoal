@@ -35,6 +35,26 @@ namespace Enums {
         PageCount
     };
     Q_ENUM_NS(Page)
+
+    enum class UserType {
+        Producer,
+        LogParkWorker,
+        SawmillWorker,
+        Exporter,
+
+        UserTypeCount
+    };
+    Q_ENUM_NS(UserType)
+
+    enum class PlaceType {
+        Forestery,
+        LogPark,
+        Sawmill,
+        Export,
+
+        PlaceTypeCount
+    };
+    Q_ENUM_NS(PlaceType)
 }
 
 

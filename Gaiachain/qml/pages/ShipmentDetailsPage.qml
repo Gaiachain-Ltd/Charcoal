@@ -2,13 +2,14 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 import "../items" as Items
 
 BasePage {
     id: top
 
-    property var imgUrls: [Style.timberImgUrl, Style.logParkImgUrl, Style.sawmillImgUrl, Style.exportImgUrl]
+    // TO_DO change below to enums when model will be used
     function typeToUrl(shipmentType) {
         switch(shipmentType) {
         case "forestery": return Style.timberImgUrl
@@ -22,6 +23,7 @@ BasePage {
         return ""
     }
 
+    //TO_DO change it to proxy model with all data about shipment
     ListModel {
         id: shipmentModel
 
@@ -86,10 +88,10 @@ BasePage {
         id: mainFlickable
 
         anchors.fill: parent
-        anchors.leftMargin: s(100)
-        anchors.rightMargin: s(100)
+        anchors.leftMargin: s(50)
+        anchors.rightMargin: s(50)
         anchors.topMargin: s(30)
-        anchors.bottomMargin: s(30)
+        anchors.bottomMargin: s(10)
 
         clip: true
         flickableDirection: Flickable.VerticalFlick
@@ -98,26 +100,29 @@ BasePage {
         contentWidth: width
         contentHeight: mainRowLayout.implicitHeight
 
-        property var mids: [{}]
+        property var imagesModel
 
         RowLayout {
             id: mainRowLayout
             width: parent.width
             layoutDirection: Qt.RightToLeft
-            spacing: s(20)
+            spacing: s(10)
+
+            property int childCount: 2
+            property int availableWidth: width - mainRowLayout.spacing * childCount
 
             // From right to left:
             /// 1. Right-hand side delagtes
             ColumnLayout {
                 Layout.fillHeight: false
-                Layout.preferredWidth: 0.65 * parent.width
-                spacing: s(50)
+                Layout.preferredWidth: 0.5 * parent.availableWidth
+                spacing: s(Style.bigMargin)
 
                 Repeater {
                     id: shipmentRep
                     model: shipmentModel
                     delegate: Items.ShipmentDetailsDelegate {
-                        spacing: s(50)
+                        spacing: s(Style.bigMargin)
                     }
                 }
             }
@@ -125,110 +130,124 @@ BasePage {
             /// 2. Middle tree lines.
             Canvas {
                 Layout.fillHeight: true
-                Layout.preferredWidth: 0.15 * parent.width
+                Layout.preferredWidth: 0.2 * parent.availableWidth
 
-                property color backColor: "yellow"
-                property color linesColor: "green"
-                property int lineWidth: s(10)
-                property int ringRadius: s(20)
-                property int ringThick: sr(7)
+                property color backColor: Style.pageBaseBackgroundColor
+                property color linesColor: "#FF5AB400"
+                property int lineWidth: s(8)
+                property int ringRadius: s(16)
+                property int ringThick: sr(6)
+
+                function drawTreeLevel(ctx2d, referenceX, yMidPos, lineLen) {
+                    var containerLen = yMidPos.length
+                    if (containerLen === 0)
+                        return {"minY" : -1, "maxY" : -1}
+
+                    var min = 1000000
+                    var max = 0
+
+                    //var yMidLocal = mapFromItem(mainRowLayout, 0, yMidPos[0]).y
+                    var yMidLocal =  yMidPos[0]
+                    for (var j = 0; j < containerLen; ++j) {
+                        min = Math.min(min, yMidLocal)
+                        max = Math.max(max, yMidLocal)
+
+                        ctx2d.beginPath()
+                        ctx2d.moveTo(referenceX, yMidLocal)
+                        ctx2d.lineTo((referenceX - lineLen), yMidLocal)
+
+                        // Draw line between points except last point as there is no next one.
+                        if (j !== (containerLen - 1)) {
+                            //yMidLocal =  mapFromItem(mainRowLayout, 0, yMidPos[j+1]).y
+                            yMidLocal =  yMidPos[j+1]
+                            ctx2d.lineTo((referenceX - lineLen), yMidLocal)
+                        }
+
+                        ctx2d.stroke()
+                    }
+
+                    return {"minY" : min, "maxY" : max}
+                }
+
+                function drawRing(ctx2d, referenceX, yMidPos) {
+                    var cX = -1
+                    var cY = -1
+
+                    for (var i = 0; i < yMidPos.length; ++i) {
+                        cX = referenceX
+                        cY = yMidPos[i]
+
+                        ctx2d.beginPath();
+                        ctx2d.fillStyle = linesColor
+                        ctx2d.moveTo(cX, cY);
+                        ctx2d.arc(cX, cY, ringRadius, 0, Math.PI * 2, false);
+                        ctx2d.fill();
+
+                        ctx2d.beginPath();
+                        ctx2d.fillStyle = backColor
+                        ctx2d.moveTo(cX, cY);
+                        ctx2d.arc(cX, cY, ringRadius - ringThick, 0, Math.PI * 2, false);
+                        ctx2d.fill();
+                    }
+                }
 
                 onPaint: {
                     var ctx = getContext("2d")
 
-                    //TO_DO add backColor
-                    //TO_DO refactor delegates and finish them
-                    //TO_DO Probably part of I and II could be shared
+                    ctx.fillStyle = backColor
+                    ctx.fillRect(0, 0, width, height)
 
                     ctx.lineWidth = lineWidth
                     ctx.strokeStyle = linesColor
 
-                    var lineLen = width / 2 - ringRadius / 2 // subtract circle radius. Otherwise circle will be cut
+                    var lineLen = width / 2 - ringRadius / 2 // subtract ring radius. Otherwise circle will be cut
                     var referenceX = width
-                    var midPoints = [{}]
+                    var midPoints = []
+                    var placeTypes = []
 
                     /// I. Draw first level of tree (right-hand side).
                     for (var i = 0; i < shipmentRep.count; ++i) {
                         var child = shipmentRep.itemAt(i)
                         var yMidPos = child.midYPos
+                        for (var j = 0; j < yMidPos.lenght; ++j)
+                            yMidPos[j] = mapFromItem(mainRowLayout, 0, yMidPos[j]).y
 
-                        var min = 1000000
-                        var max = 0
-                        for (var j = 0; j < yMidPos.length; ++j) {
-                            var yMidLocal = mapFromItem(mainRowLayout, 0, yMidPos[j]).y
-                            min = Math.min(min, yMidLocal)
-                            max = Math.max(max, yMidLocal)
+                        var minMax = drawTreeLevel(ctx, referenceX, yMidPos, lineLen)
 
-                            ctx.beginPath()
-                            ctx.moveTo(referenceX, yMidLocal)
-                            ctx.lineTo((referenceX - lineLen), yMidLocal)
-
-                            // Draw line between points
-                            if (j !== (yMidPos.length - 1))
-                                ctx.lineTo((referenceX - lineLen), mapFromItem(mainRowLayout, 0, yMidPos[j+1]).y)
-
-                            ctx.stroke()
-                        }
-
-                        // Push middle of min middle and max middle of current type for example `forestry`.
-                        midPoints.push({"type" : child.shipmentType, "midYPos" : (max - min)/2 + min})
+                        placeTypes.push(child.placeType)
+                        midPoints.push((minMax.maxY - minMax.minY)/2 + minMax.minY)
                     }
                     referenceX = referenceX - lineLen
 
                     /// II. Draw second level of tree (left-hand side).
-                    for (i = 0; i < midPoints.length; ++i) {
-                        var yMid = midPoints[i].midYPos
-
-                        ctx.beginPath()
-                        ctx.moveTo(referenceX - lineLen, yMid)
-                        ctx.lineTo(referenceX, yMid)
-
-                        if (i !== (midPoints.length - 1)) {
-                            ctx.moveTo(referenceX - lineLen, yMid)
-                            ctx.lineTo(referenceX - lineLen, midPoints[i+1].midYPos)
-                        }
-                        ctx.stroke()
-                    }
+                    drawTreeLevel(ctx, referenceX, midPoints, lineLen)
                     referenceX = referenceX - lineLen
 
-                    var cX = -1
-                    var cY = -1
                     /// III. Draw circles on the lines at image positions.
-                    for (i = 0; i < midPoints.length; ++i) {
-                        cX = referenceX
-                        cY = midPoints[i].midYPos
+                    drawRing(ctx, referenceX, midPoints)
 
-                        ctx.beginPath();
-                        ctx.fillStyle = linesColor
-                        ctx.moveTo(cX, cY);
-                        ctx.arc(cX, cY, ringRadius, 0, Math.PI * 2, false);
-                        ctx.fill();
+                    var imgModel = []
+                    for (i = 0; i < midPoints.length; ++i)
+                        imgModel.push({"placeType" : placeTypes[i], "imageMidYPos" : midPoints[i]})
 
-                        ctx.beginPath();
-                        ctx.fillStyle = backColor
-                        ctx.moveTo(cX, cY);
-                        ctx.arc(cX, cY, ringRadius - ringThick, 0, Math.PI * 2, false);
-                        ctx.fill();
-                    }
-
-                    mainFlickable.mids = midPoints // Set mid point to be used as images model
+                    mainFlickable.imagesModel = imgModel
                 }
             }
 
             /// 3. Left-hand size images
             Item {
                 Layout.fillHeight: true
-                Layout.preferredWidth: 0.2 * parent.width
+                Layout.preferredWidth: 0.3 * parent.availableWidth
 
                 Repeater {
-                    model: mainFlickable.mids
+                    model: mainFlickable.imagesModel
                     delegate: Items.SvgImage {
                         width: parent.width
-                        height: Math.min(s(140), width)
-                        y: modelData.midYPos - height / 2
+                        height: s(100)
+                        y: modelData.imageMidYPos - height / 2
 
                         fillMode: Image.PreserveAspectFit
-                        source: typeToUrl(modelData.type)
+                        source: typeToUrl(modelData.placeType)
                     }
                 }
             }
