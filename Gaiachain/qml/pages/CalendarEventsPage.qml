@@ -11,13 +11,14 @@ import "../items" as Items
 BasePage {
     id: top
 
-    property date currentDate
+    property string currentDateStr
+    property date currentDate: utility.convertDateString(currentDateStr, utility.defaultDateFormat())
     property int currentDay: currentDate.getDate()
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
     function enterEventDetailsPage(data) {
-        pageManager.enterPage(Enums.Page.EventDetails , data)
+        pageManager.push(Enums.Page.EventDetails, data)
     }
 
     // Month should be 0-indexed
@@ -41,9 +42,11 @@ BasePage {
     }
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: s(40)
-        spacing: s(50)
+        anchors {
+            fill: parent
+            margins: s(30)
+        }
+        spacing: s(30)
 
         Items.ImageItem {
             Layout.fillWidth: true
@@ -58,7 +61,7 @@ BasePage {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: pageManager.pop()
+                onClicked: pageManager.back()
             }
         }
 

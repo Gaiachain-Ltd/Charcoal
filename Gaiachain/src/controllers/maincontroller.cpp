@@ -20,6 +20,7 @@ void MainController::setupQMLContext(QQmlApplicationEngine &engine)
                                      "Enums", "Cannot create namespace Enums in QML");
     qRegisterMetaType<Enums::CommodityType>("CommodityType");
     qRegisterMetaType<Enums::Page>("Page");
+    qRegisterMetaType<Enums::PageSections>("PageSections");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
     engine.rootContext()->setContextProperty(QStringLiteral("restSession"), &m_session);

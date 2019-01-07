@@ -29,8 +29,7 @@ Item {
         source: image
         horizontalOffset: -s(10)
         verticalOffset: s(10)
-        radius: 8.0
-        samples: 17
+        samples: 33
         color: "#80000000"
     }
 }

@@ -52,21 +52,22 @@ BasePage {
 
     function enterCalendarMonthPage(month, year) {
         console.log("Month/Year", month, year)
-        pageManager.enterPage(Enums.Page.CalendarMonth, {"currentMonth": month, "currentYear": year})
+        pageManager.push(Enums.Page.CalendarMonth, {"currentMonth": month, "currentYear": year})
     }
 
     ColumnLayout {
         anchors {
             fill: parent
-            margins: s(40)
+            margins: s(20)
         }
 
-        spacing: s(40)
+        spacing: s(20)
 
         Items.BasicText {
             id: yearText
 
             Layout.fillWidth: true
+            Layout.leftMargin: s(20)
 
             text: currentYear
             horizontalAlignment: Text.AlignLeft
@@ -100,7 +101,6 @@ BasePage {
                 top.currentYear = itemAt(contentX, contentY).cYear
             }
 
-
             delegate: Item {
                 width: GridView.view.cellWidth
                 height: GridView.view.cellHeight
@@ -109,7 +109,7 @@ BasePage {
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: s(30)
+                    anchors.margins: s(20)
 
                     spacing: s(20)
 

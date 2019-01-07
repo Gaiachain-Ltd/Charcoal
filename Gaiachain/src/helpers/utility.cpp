@@ -78,3 +78,20 @@ bool Utility::validateEmail(const QString &email) const
 {
     return m_emailRegex.exactMatch(email);
 }
+
+QDate Utility::convertDateString(const QString &dateStr, const QString &dateFormat) const
+{
+    QString format;
+    if (dateFormat.isEmpty() || dateFormat.isNull()) {
+        format = defaultDateFormat();
+    } else {
+        format = dateFormat;
+    }
+
+    return QDate::fromString(dateStr, format);
+}
+
+QString Utility::defaultDateFormat() const
+{
+    return m_dateFormat;
+}

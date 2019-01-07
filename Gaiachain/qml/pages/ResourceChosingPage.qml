@@ -11,7 +11,7 @@ BasePage {
     headerVisible: false
 
     function enterViewTypePage() {
-        pageManager.enterPage(Enums.Page.ViewType)
+        pageManager.push(Enums.Page.ViewType)
     }
 
     ColumnLayout {

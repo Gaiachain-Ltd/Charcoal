@@ -37,7 +37,7 @@ Item {
     {
         anchors.centerIn: parent
 
-        readonly property bool isActive: page === Enums.Page.QrScanner
+        readonly property bool isActive: page === Enums.Page.QRScanner
 
         backgroundColor: isActive ? Style.buttonGreenColor : "transparent"
         source: isActive ? Style.buttonAddBlack : Style.buttonAddGreen
@@ -47,7 +47,7 @@ Item {
 
         onClicked: {
             if (!isActive)
-                pageManager.enterPage(Enums.Page.QrScanner)
+                pageManager.push(Enums.Page.QRScanner)
         }
     }
 }
