@@ -13,23 +13,24 @@
         <file>pages/EventDetailsPage.qml</file>
         <file>pages/EventsListPage.qml</file>
         <file>pages/BasePage.qml</file>
+        <file>pages/QRScannerPage.qml</file>
         <file>items/Footer.qml</file>
         <file>items/NavigationHeader.qml</file>
         <file>items/ImageButton.qml</file>
         <file>items/ImageCheckbox.qml</file>
         <file>items/TextImageButton.qml</file>
         <file>items/CalendarMonthItem.qml</file>
-        <file>MainStackView.qml</file>
         <file>items/ImageItem.qml</file>
         <file>items/SvgImage.qml</file>
         <file>items/ShadowedImageButton.qml</file>
-        <file>GaiaStrings.qml</file>
-        <file>GaiaStyle.qml</file>
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
         <file>items/EventsListView.qml</file>
-        <file>pages/QrScannerPage.qml</file>
         <file>items/ItemBorder.qml</file>
+        <file>items/GenericInput.qml</file>
         <file>items/ShipmentDetailsDelegate.qml</file>
+        <file>MainStackView.qml</file>
+        <file>GaiaStrings.qml</file>
+        <file>GaiaStyle.qml</file>
     </qresource>
 </RCC>

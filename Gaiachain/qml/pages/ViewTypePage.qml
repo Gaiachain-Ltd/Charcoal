@@ -10,11 +10,11 @@ BasePage {
     id: top
 
     function enterCalendarPage() {
-        pageManager.enterPage(Enums.Page.Calendar, {})
+        pageManager.push(Enums.Page.Calendar)
     }
 
     function enterEventsListPage() {
-        pageManager.enterPage(Enums.Page.EventsList, {})
+        pageManager.push(Enums.Page.EventsList)
     }
 
     function enterMapPage() {
@@ -38,7 +38,10 @@ BasePage {
 
                 buttonHeight: width
                 buttonPadding: s(22)
-                buttonBackgroundColor: "#FF5AB400"
+                buttonBackgroundColor: Style.buttonBackColor
+
+                shadowHorizontalOffset: s(5)
+                shadowVericalOffset: s(15)
 
                 source: Style.calendarImgUrl
                 text: Strings.calendar
@@ -52,7 +55,10 @@ BasePage {
 
                 buttonHeight: width
                 buttonPadding: s(22)
-                buttonBackgroundColor: "#FF5AB400"
+                buttonBackgroundColor: Style.buttonBackColor
+
+                shadowHorizontalOffset: s(5)
+                shadowVericalOffset: s(15)
 
                 source: Style.listImgUrl
                 text: Strings.list

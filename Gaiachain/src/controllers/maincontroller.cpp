@@ -20,8 +20,10 @@ void MainController::setupQMLContext(QQmlApplicationEngine &engine)
                                      "Enums", "Cannot create namespace Enums in QML");
     qRegisterMetaType<Enums::CommodityType>("CommodityType");
     qRegisterMetaType<Enums::Page>("Page");
+    qRegisterMetaType<Enums::PageSections>("PageSections");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
+    engine.rootContext()->setContextProperty(QStringLiteral("restSession"), &m_session);
 
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");

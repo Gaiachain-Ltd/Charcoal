@@ -8,7 +8,7 @@ BasePage {
     id: top
 
     function enterShipmentDetailsPage(data) {
-        pageManager.enterPage(Enums.Page.ShipmentDetails , data)
+        pageManager.push(Enums.Page.ShipmentDetails , data)
     }
 
     Items.EventsListView {

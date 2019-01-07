@@ -13,7 +13,7 @@ ColumnLayout {
     property var midYPos: []
 
     function enterEventDetailsPage() {
-        pageManager.enterPage(Enums.Page.EventDetails)
+        pageManager.push(Enums.Page.EventDetails)
     }
 
     onYChanged: {
@@ -72,15 +72,11 @@ ColumnLayout {
                     Layout.preferredWidth: s(Style.smallButtonHeight)
                     Layout.fillHeight: true
 
+                    imageSize: s(Style.smallButtonHeight)
+
                     fillMode: Image.PreserveAspectFit
                     source: Style.rightArrowImgUrl
                 }
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                color: "violet"
-                opacity: 0.7
             }
 
             MouseArea {

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QMetaEnum>
+#include <QDate>
 
 #include "../common/enums.h"
 
@@ -32,6 +33,10 @@ public:
     Q_INVOKABLE qreal clamp(qreal v, qreal min, qreal max) const;
 
     Q_INVOKABLE int parseInt(const QString &num) const;
+    Q_INVOKABLE QDate convertDateString(const QString &dateStr, const QString &dateFormat = QString()) const;
+    Q_INVOKABLE QString defaultDateFormat() const;
+
+    Q_INVOKABLE bool validateEmail(const QString &email) const;
 
 private:
     Utility();
@@ -39,9 +44,11 @@ private:
     qreal setupDpiScale();
 
     qreal m_dpiScale;
-
     qreal m_refWidth = 480;
     qreal m_refHeight = 854;
+
+    QString m_dateFormat = QStringLiteral("yyyy/MM/dd");
+    QRegExp m_emailRegex;
 };
 
 #endif // UTILITY_H

@@ -6,29 +6,32 @@ import com.gaiachain.style 1.0
 
 Item {
     property alias depth: stackView.depth
-    property string initialPage: "qrc:/pages/ViewTypePage.qml"
     property int windowWidth: parent.width
-
-    function pop() {
-        stackView.pop()
-    }
-
-    function push(page) {
-        stackView.push(page)
-    }
 
     Connections {
         target: pageManager
-        onPush: stackView.push(url, properites)
-        onPop: stackView.pop()
-        onGoToInitial: stackView.pop(null)
+
+        onStackViewPush: {
+            var mode = immediate ? StackView.Immediate : StackView.Transition
+            stackView.push(url, properites, mode)
+        }
+        onStackViewPop: stackView.pop()
+        onStackViewBackToInitial: {
+            var mode = immediate ? StackView.Immediate : StackView.Transition
+            stackView.pop(null, mode)
+        }
+        onStackViewBackToPage: {
+            stackView.pop(stackView.find(function(item) {
+                  return item.page === backPage
+              }));
+        }
     }
 
     StackView {
         id: stackView
         anchors.fill: parent
 
-        initialItem: initialPage
+        initialItem: pageManager.getInitialPageUrl()
 
         pushEnter: Transition {
             PropertyAnimation {
@@ -68,7 +71,7 @@ Item {
         }
 
         Component.onCompleted: {
-            //pageManager.enterPage(Enums.Page.ShipmentDetails)
+            pageManager.push(Enums.Page.Login, {}, true)
         }
     }
 }

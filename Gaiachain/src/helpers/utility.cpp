@@ -52,6 +52,10 @@ qreal Utility::clamp(qreal v, qreal min, qreal max) const
 
 Utility::Utility()
 {
+    m_emailRegex = QRegExp(QStringLiteral("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b"));
+    m_emailRegex.setCaseSensitivity(Qt::CaseInsensitive);
+    m_emailRegex.setPatternSyntax(QRegExp::RegExp);
+
     m_dpiScale = setupDpiScale();
 }
 
@@ -74,4 +78,26 @@ qreal Utility::setupDpiScale()
 int Utility::parseInt(const QString &num) const
 {
     return num.toInt();
+}
+
+bool Utility::validateEmail(const QString &email) const
+{
+    return m_emailRegex.exactMatch(email);
+}
+
+QDate Utility::convertDateString(const QString &dateStr, const QString &dateFormat) const
+{
+    QString format;
+    if (dateFormat.isEmpty() || dateFormat.isNull()) {
+        format = defaultDateFormat();
+    } else {
+        format = dateFormat;
+    }
+
+    return QDate::fromString(dateStr, format);
+}
+
+QString Utility::defaultDateFormat() const
+{
+    return m_dateFormat;
 }

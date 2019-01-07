@@ -4,6 +4,8 @@
 #include <QVector>
 #include <QObject>
 
+#define SERVER_ADDRESS QStringLiteral("https://beta.gaiachain.io/api/v1")
+
 namespace Gaia {
     using ModelData = QVector<QVariantList>;
 }

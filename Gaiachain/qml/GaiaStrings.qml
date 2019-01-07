@@ -14,6 +14,10 @@ QtObject {
     readonly property string list: qsTr("List")
 
     readonly property string registerRequest: qsTr("Please register")
+    readonly property string login: qsTr("Login")
+    readonly property string skipLogin: qsTr("Skip login")
+    readonly property string emailAddress: qsTr("Email address")
+    readonly property string password: qsTr("Password")
 
     readonly property string january: qsTr("January")
     readonly property string february: qsTr("February")

@@ -1,6 +1,9 @@
 import QtQuick 2.11
 
 Image {
+
+    fillMode: Image.PreserveAspectFit
+
     function getPreserveAspectSize(sourceWidth, sourceHeight, fillMode) {
         if (fillMode !== Image.PreserveAspectCrop && fillMode !== Image.PreserveAspectFit) {
             console.warn("SvgImage:getPreserveAspectSize: unsupported fillMode!");

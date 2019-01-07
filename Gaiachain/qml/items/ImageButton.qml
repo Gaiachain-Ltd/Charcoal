@@ -7,6 +7,7 @@ Button {
     id: top
 
     property alias source: image.source
+    property alias imageSize: image.height
     /* (just not to google it each time)
         Image.Stretch - the image is scaled to fit
         Image.PreserveAspectFit - the image is scaled uniformly to fit without cropping
@@ -21,18 +22,39 @@ Button {
     property alias backgroundColor: backRect.color
     property alias backgroundRadius: backRect.radius
 
+    property alias textColor: buttonTextItem.color
+    property alias textFont: buttonTextItem.font
+
     property real inset: 0
 
     implicitWidth: s(Style.buttonHeight)
-    implicitHeight: width
+    implicitHeight: s(Style.buttonHeight)
 
     leftInset: inset
     rightInset: inset
     topInset: inset
     bottomInset: inset
 
-    contentItem: SvgImage {
-        id: image
+    contentItem: Item {
+        id: innerItem
+        Row {
+            id: row
+            anchors.centerIn: parent
+            spacing: top.text !== "" && top.source !== "" ? s(Style.smallMargin) : 0
+            BasicText {
+                id: buttonTextItem
+                text: top.text
+                visible: text.length > 0
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            SvgImage {
+                id: image
+                height: innerItem.height
+                width: height
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        }
     }
 
     background: Rectangle {
