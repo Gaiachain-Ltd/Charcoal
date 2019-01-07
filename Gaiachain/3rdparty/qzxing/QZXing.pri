@@ -22,7 +22,8 @@ DEFINES += QZXING_LIBRARY \
 		 
 INCLUDEPATH  += $$PWD \
                 $$PWD/zxing \
-                $$PWD/zxing/zxing
+                $$PWD/zxing/zxing \
+                $$PWD/zxing/zxing\common
 
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
