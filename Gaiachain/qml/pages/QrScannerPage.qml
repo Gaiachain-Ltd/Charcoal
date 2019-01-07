@@ -118,7 +118,7 @@ BasePage {
 
                     fillMode: Image.PreserveAspectFit
 
-                    backgroundColor: Style.greyButtonColor
+                    backgroundColor: Style.buttonGreyColor
                     source: Style.keyboardImgUrl
 
                     padding: s(Style.smallMargin)
@@ -135,7 +135,7 @@ BasePage {
 
                     enabled: scannedId.length > 0
 
-                    backgroundColor: enabled ? Style.greyButtonColor : "#E6E6E6"
+                    backgroundColor: enabled ? Style.buttonGreyColor : "#E6E6E6"
                     source: Style.loginImgUrl
 
                     padding: s(Style.smallMargin)

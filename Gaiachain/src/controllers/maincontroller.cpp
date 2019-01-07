@@ -22,6 +22,7 @@ void MainController::setupQMLContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::Page>("Page");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
+    engine.rootContext()->setContextProperty(QStringLiteral("restSession"), &m_session);
 
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");

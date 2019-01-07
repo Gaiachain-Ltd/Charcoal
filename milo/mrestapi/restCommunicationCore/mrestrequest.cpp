@@ -256,7 +256,7 @@ void MRestRequest::onReplyError(QNetworkReply::NetworkError code)
         mRequestTimer->stop();
         mLastError = reply->errorString();
         qCCritical(crequest) << mLastError;
-        emit replyError(mLastError);
+        emit replyError(mLastError, code);
 
         if (code == QNetworkReply::TimeoutError) {
             retry();

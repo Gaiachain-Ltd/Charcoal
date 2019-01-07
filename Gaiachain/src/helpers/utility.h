@@ -33,6 +33,8 @@ public:
 
     Q_INVOKABLE int parseInt(const QString &num) const;
 
+    Q_INVOKABLE bool validateEmail(const QString &email) const;
+
 private:
     Utility();
 
@@ -42,6 +44,8 @@ private:
 
     qreal m_refWidth = 480;
     qreal m_refHeight = 854;
+
+    QRegExp m_emailRegex;
 };
 
 #endif // UTILITY_H
