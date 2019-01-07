@@ -30,7 +30,7 @@ android_build:
   stage: build
   variables:
     BUILD_TYPE: "debug"
-    PACKAGE_NAME: "Gaiachain_$CI_COMMIT_REF_SLUG_$BUILD_TYPE.apk"
+    PACKAGE_NAME: "Gaiachain_$CI_COMMIT_REF_SLUG.apk"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
