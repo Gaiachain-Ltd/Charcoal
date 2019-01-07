@@ -5,7 +5,7 @@ stages:
 
 #Global variables
 variables:
-    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.10.1/android_armv7"
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.0/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
     ANDROID_NDK_ROOT: "/home/tools/android/android-ndk"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
