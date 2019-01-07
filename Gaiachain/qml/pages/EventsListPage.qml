@@ -7,15 +7,15 @@ import "../items" as Items
 BasePage {
     id: top
 
-    function enterEventDetailsPage(data) {
-        pageManager.push(Enums.Page.EventDetails, data)
+    function enterShipmentDetailsPage(data) {
+        pageManager.push(Enums.Page.ShipmentDetails , data)
     }
 
     Items.EventsListView {
         anchors.fill: parent
         delegateHeight: s(100)
 
-        onDelegateClicked: top.enterEventDetailsPage(data)
+        onDelegateClicked: top.enterShipmentDetailsPage(data)
 
         viewModel: ListModel { //TO_DO
             ListElement {
