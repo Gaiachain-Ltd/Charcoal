@@ -34,6 +34,7 @@ android_build:
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
+    - cat Makefile
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
     - cd $CI_PROJECT_DIR
