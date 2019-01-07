@@ -14,7 +14,7 @@ include(../version.pri)
 # qzxing
 CONFIG += qzxing_qml
 CONFIG += qzxing_multimedia
-QZXING_PATH=$$PWD/3rdparty/qzxing
+QZXING_PATH=$$PWD/qzxing
 
 include($$QZXING_PATH/QZXing.pri)
 
