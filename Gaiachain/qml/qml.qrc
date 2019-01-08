@@ -32,5 +32,6 @@
         <file>MainStackView.qml</file>
         <file>GaiaStrings.qml</file>
         <file>GaiaStyle.qml</file>
+        <file>items/TextWithTitle.qml</file>
     </qresource>
 </RCC>

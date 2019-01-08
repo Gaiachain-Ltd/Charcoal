@@ -51,7 +51,8 @@ QtObject {
     readonly property url cancelImgUrl: "qrc:/ui/cancel"
     readonly property url detailsImgUrl: "qrc:/ui/details"
     readonly property url detailsGreenImgUrl: "qrc:/ui/details_green"
-    readonly property url editlImgUrl: "qrc:/ui/edit"
+    readonly property url editImgUrl: "qrc:/ui/edit"
+    readonly property url editGreenImgUrl: "qrc:/ui/edit_green"
     readonly property url exportImgUrl: "qrc:/ui/export"
     readonly property url logoImgUrl: "qrc:/ui/gaia_logo"
 
@@ -85,12 +86,12 @@ QtObject {
     readonly property url buttonAddGreen: "qrc:/ui/add_green"
     readonly property url buttonAddBlack: "qrc:/ui/add_black"
 
-    // input
-    readonly property int inputHeight: buttonHeight
-
     // button
     readonly property int buttonHeight: 90
     readonly property int smallButtonHeight: 40
+
+    // input
+    readonly property int inputHeight: buttonHeight
 
     // Other
     readonly property int animationDuration: 300
