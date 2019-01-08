@@ -35,6 +35,7 @@ namespace Enums {
         ShipmentDetails,
         ViewType,
         QRScanner,
+
         InformationPopup,
 
         PageCount
@@ -48,7 +49,7 @@ namespace Enums {
         CalendarSection,
         EditableEventDetailsSection,
         EventsListSection,
-        EventsDetailsSection,
+        EventDetailsSection,
         ShipmentDetailsSection,
         QRSection,
 

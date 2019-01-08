@@ -13,7 +13,7 @@ ColumnLayout {
     property var midYPos: []
 
     function enterEventDetailsPage() {
-        pageManager.enter(Enums.Page.EventDetails, {"readOnly": true})
+        pageManager.enter(Enums.Page.EventDetails)
     }
 
     onYChanged: {

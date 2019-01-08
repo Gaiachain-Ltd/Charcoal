@@ -40,16 +40,16 @@ Item {
         switch(section) {
         case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource, green)
         case Enums.PageSections.CalendarSection: return green ? Style.miniCalendarGreenImgUrl : Style.miniCalendarImgUrl
-        case Enums.PageSections.EditableEventsDetailsSection: return green ? Style.editGreenImgUrl : Style.editImgUrl
+        case Enums.PageSections.EditableEventDetailsSection: return green ? Style.editGreenImgUrl : Style.editImgUrl
         case Enums.PageSections.EventsListSection: return green ? Style.miniListGreenImgUrl : Style.miniListImgUrl
-        case Enums.PageSections.EventsDetailsSection: return green ? Style.detailsGreenImgUrl : Style.detailsImgUrl
+        case Enums.PageSections.EventDetailsSection: return green ? Style.detailsGreenImgUrl : Style.detailsImgUrl
         case Enums.PageSections.ShipmentDetailsSection: return green ? Style.timelineGreenImgUrl : Style.timelineImgUrl
         case Enums.PageSections.QRSection: return green ? Style.qrCodeGreenImgUrl : Style.qrCodeImgUrl
 
         case Enums.PageSections.DefaultSection: return ""
 
         default:
-            console.warn("Invalid section!")
+            console.warn("Invalid section!", section)
         }
 
         return ""

@@ -23,7 +23,7 @@ BasePage {
     id: top
 
     function enterEventDetailsPage() {
-        pageManager.enter(Enums.Page.EventDetails, {"readOnly": false})
+        pageManager.enter(Enums.Page.EditableEventDetails)
     }
 
     property string scannedId: ""

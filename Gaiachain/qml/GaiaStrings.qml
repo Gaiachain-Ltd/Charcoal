@@ -48,5 +48,9 @@ QtObject {
     readonly property string close: qsTr("Close")
     readonly property string logout: qsTr("Logout")
     readonly property string cancel: qsTr("Cancel")
+    readonly property string exit: qsTr("Exit")
+    readonly property string save: qsTr("Save")
+    readonly property string saveQuestion: qsTr("Do you want to save your changes?")
+    readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
     readonly property string logoutQuestion: qsTr("Do you want to logout?")
 }

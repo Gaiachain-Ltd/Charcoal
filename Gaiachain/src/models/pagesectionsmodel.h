@@ -48,7 +48,7 @@ private:
         {Enums::Page::CalendarMonth, Enums::PageSections::CalendarSection},
         {Enums::Page::Calendar, Enums::PageSections::CalendarSection},
         {Enums::Page::EditableEventDetails, Enums::PageSections::EditableEventDetailsSection},
-        {Enums::Page::EventDetails, Enums::PageSections::EventsDetailsSection},
+        {Enums::Page::EventDetails, Enums::PageSections::EventDetailsSection},
         {Enums::Page::EventsList, Enums::PageSections::EventsListSection},
         {Enums::Page::ShipmentDetails, Enums::PageSections::ShipmentDetailsSection},
         {Enums::Page::ViewType, Enums::PageSections::ViewTypeSection},
@@ -66,7 +66,7 @@ private:
         {Enums::PageSections::CalendarSection, Enums::Page::Calendar},
         {Enums::PageSections::EditableEventDetailsSection, Enums::Page::EditableEventDetails},
         {Enums::PageSections::EventsListSection, Enums::Page::EventsList},
-        {Enums::PageSections::EventsDetailsSection, Enums::Page::EventDetails},
+        {Enums::PageSections::EventDetailsSection, Enums::Page::EventDetails},
         {Enums::PageSections::ShipmentDetailsSection, Enums::Page::ShipmentDetails},
         {Enums::PageSections::QRSection, Enums::Page::QRScanner}
     };
