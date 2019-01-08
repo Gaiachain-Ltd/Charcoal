@@ -15,6 +15,7 @@ public:
     enum ModelRole {
         SectionId = Qt::UserRole + 1,
         SectionName,
+        EditSection,
         LastRole
     }; //!!! Add new roles at the end
 
@@ -26,7 +27,7 @@ public:
 
     Q_INVOKABLE int maxSectionsDepth() const;
 
-    void pagePushed(const Enums::Page page);
+    void pagePushed(const Enums::Page page, const bool isEdit = false);
     void pagePopped(const Enums::Page currentTopPage);
     void stackReset(const Enums::Page initialPage);
 
@@ -39,7 +40,8 @@ public slots:
 private:
     const QHash<int, QByteArray> m_roleNames = {
         { SectionId, "id" },
-        { SectionName, "sectionName" }
+        { SectionName, "sectionName" },
+        { EditSection, "editSection" }
     };
 
     const QHash<Enums::Page, Enums::PageSections> m_pageToSection = {
@@ -74,7 +76,7 @@ private:
     bool m_isInitialSection = false;
 
     int getShiftedIndex(const ModelRole role) const;
-    void pushBackData(const Enums::PageSections section);
+    void pushBackData(const Enums::PageSections section, const bool isEdit = false);
 };
 
 #endif // PAGESECTIONSMODEL_H

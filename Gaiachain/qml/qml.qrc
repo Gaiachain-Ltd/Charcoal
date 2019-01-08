@@ -34,5 +34,6 @@
         <file>GaiaStyle.qml</file>
         <file>items/WaitOverlay.qml</file>
         <file>pages/InformationPopup.qml</file>
+        <file>items/TextWithTitle.qml</file>
     </qresource>
 </RCC>

@@ -36,7 +36,11 @@ Item {
         return ""
     }
 
-    function sectionToUrl(section, green) {
+    function sectionToUrl(section, green, editSection) {
+        if (editSection) {
+            return green ? Style.editGreenImgUrl : Style.editImgUrl
+        }
+
         switch(section) {
         case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource, green)
         case Enums.PageSections.CalendarSection: return green ? Style.miniCalendarGreenImgUrl : Style.miniCalendarImgUrl
@@ -132,7 +136,7 @@ Item {
                             padding: s(Style.headerButtonsPadding)
 
                             fillMode: Image.PreserveAspectFit
-                            source: sectionToUrl(id, !delegateId.isLast)
+                            source: sectionToUrl(id, !delegateId.isLast, editSection)
                             backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
 
                             onClicked: pageManager.backToSection(id)
