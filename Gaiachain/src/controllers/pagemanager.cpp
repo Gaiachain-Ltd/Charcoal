@@ -145,10 +145,8 @@ QString PageManager::getInitialPageUrl() const
 QString PageManager::pageToQString(const Enums::Page p) const
 {
     const QString pageStr = Utility::enumToQString<Enums::Page>(p, "Page");
-    if (pageStr.contains(QStringLiteral("Popup"))) {
-        return m_pagePrefix + pageStr + QStringLiteral(".qml");
-    } else {
-        return m_pagePrefix + pageStr + QStringLiteral("Page.qml");
-    }
-
+    const QString pathPrefix = m_pagePrefix + pageStr;
+    return pageStr.contains(QStringLiteral("Popup"))
+           ? pathPrefix + QStringLiteral(".qml")
+           : pathPrefix + QStringLiteral("Page.qml");
 }
