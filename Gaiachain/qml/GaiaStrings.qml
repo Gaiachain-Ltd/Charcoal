@@ -32,7 +32,9 @@ QtObject {
     readonly property string november: qsTr("November")
     readonly property string december: qsTr("December")
 
-    readonly property string scanning: qsTr("Scanning...")
+    // QR
+    readonly property string scanning: qsTr("Scanning")
+    readonly property string scanFailed: qsTr("Scan failed")
 
     readonly property string id: qsTr("ID")
     readonly property string batch: qsTr("Batch")

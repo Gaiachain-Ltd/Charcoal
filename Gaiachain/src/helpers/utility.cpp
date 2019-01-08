@@ -3,6 +3,8 @@
 #include <QGuiApplication>
 #include <QScreen>
 
+#include "../common/globals.h"
+
 Utility *Utility::instance()
 {
     static Utility u;
@@ -78,6 +80,13 @@ qreal Utility::setupDpiScale()
 int Utility::parseInt(const QString &num) const
 {
     return num.toInt();
+}
+
+bool Utility::validateId(const QString &id) const
+{
+    bool ok;
+    id.toInt(&ok);
+    return ok && id.length() == QR_CODE_LENGTH;
 }
 
 bool Utility::validateEmail(const QString &email) const

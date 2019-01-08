@@ -26,7 +26,22 @@ BasePage {
         pageManager.push(Enums.Page.EventDetails, {"readOnly": false})
     }
 
+    function previewCapturedImage(result) {
+        photoPreview.source = result.url
+        photoPreview.visible = true
+        camera.stop()
+    }
+
+    function retry() {
+        camera.start()
+        error = false
+        photoPreview.source = ""
+        photoPreview.visible = false
+        scannedId = ""
+    }
+
     property string scannedId: ""
+    property bool error: false
 
     Connections
     {
@@ -57,29 +72,70 @@ BasePage {
                 autoOrientation: true
             }
 
+            Image {
+                id: photoPreview
+                anchors.fill: parent
+            }
+
             Items.ItemBorder
             {
+                id: scanBorder
                 anchors.centerIn: parent
                 width: Math.min(videoOutput.width, videoOutput.height) * 0.6
                 height: width
+
+                error: top.error
+                finished: scannedId.length > 0
             }
 
-            Items.ImageButton
-            {
-                onClicked: pageManager.back()
-
-                backgroundColor: Style.backgroundShadowColor
-                source: Style.cancelImgUrl
-
-                fillMode: Image.PreserveAspectFit
-
-                padding: s(Style.smallMargin) * 1.5
-
+            Row {
+                id: buttonRow
                 anchors {
                     top: parent.top
                     topMargin: s(Style.bigMargin)
                     right: parent.right
                     rightMargin: s(Style.bigMargin)
+                }
+
+                spacing: s(Style.bigMargin)
+                layoutDirection: Qt.RightToLeft
+
+                Items.ImageButton
+                {
+                    onClicked: pageManager.back()
+
+                    backgroundColor: Style.backgroundShadowColor
+                    source: Style.cancelImgUrl
+
+                    padding: s(Style.smallMargin) * 1.5
+                }
+
+                Items.ImageButton
+                {
+                    onClicked: retry()
+
+                    backgroundColor: Style.backgroundShadowColor
+                    source: Style.relaodImgUrl
+
+                    padding: s(Style.smallMargin) * 1.5
+                    visible: error || scannedId.length > 0
+                }
+            }
+
+            Items.ImageButton
+            {
+                text: Strings.logID
+                backgroundColor: Style.backgroundShadowColor
+                textColor: Style.textSecondaryColor
+                showIcon: false
+
+                width: textWidth + s(Style.bigMargin)
+                height: s(Style.buttonHeight) * 0.75
+
+                anchors {
+                    verticalCenter: buttonRow.verticalCenter
+                    left: parent.left
+                    leftMargin: s(Style.bigMargin)
                 }
             }
 
@@ -89,12 +145,14 @@ BasePage {
                     enabledDecoders: QZXing.DecoderFormat_QR_CODE
 
                     onTagFound:  {
-                        if (scannedId.length === 0) {
-                            if (utility.parseInt(tag) > 0) {
+                        if (scannedId.length == 0) {
+                            if (utility.validateId(tag)) {
                                 scannedId = tag
                             } else {
+                                error = true
                                 console.warn("Wrong code content!", tag)
                             }
+                            cameraContainer.grabToImage(previewCapturedImage);
                         }
                     }
                 }
@@ -118,7 +176,17 @@ BasePage {
 
                 Items.BasicText
                 {
-                    text: scannedId.length === 0 ? Strings.scanning : String("%1: <b>%2</b>").arg(Strings.id).arg(scannedId)
+                    text: {
+                        if (error) {
+                            return Strings.scanFailed
+                        } else if (scannedId.length == 0) {
+                            return Strings.scanning + "..."
+                        } else {
+                            return String("%1: <b>%2</b>").arg(Strings.id).arg(scannedId)
+                        }
+                    }
+
+                    color: error ? Style.textPrimaryColor : Style.textPrimaryColor
                     horizontalAlignment: Text.AlignLeft
                     font.pixelSize: s(Style.bigPixelSize)
                     textFormat: Text.RichText

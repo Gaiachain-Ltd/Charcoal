@@ -36,5 +36,6 @@
         <file alias="timeline_green">ui/timeline-icon-green.svg</file>
         <file alias="email">ui/email-icon.svg</file>
         <file alias="spinner">ui/loader.svg</file>
+        <file alias="reload">ui/reload-icon.svg</file>
     </qresource>
 </RCC>

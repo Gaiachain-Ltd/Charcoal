@@ -7,6 +7,7 @@ QtObject {
     readonly property color backgroundColor: "white"
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
+    readonly property color textErrorColor: "white"
     readonly property color textGreyColor: "#999999"
     readonly property color textGreenColor: "green"
     readonly property color buttonGreenColor: "#96c354"
@@ -51,6 +52,7 @@ QtObject {
     readonly property url calendarImgUrl: "qrc:/ui/calendar"
 
     readonly property url cancelImgUrl: "qrc:/ui/cancel"
+    readonly property url relaodImgUrl: "qrc:/ui/reload"
     readonly property url detailsImgUrl: "qrc:/ui/details"
     readonly property url detailsGreenImgUrl: "qrc:/ui/details_green"
     readonly property url editImgUrl: "qrc:/ui/edit"
@@ -90,6 +92,11 @@ QtObject {
     readonly property url buttonAddBlack: "qrc:/ui/add_black"
 
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"
+
+    // camera
+    readonly property color normalBorderColor: "white"
+    readonly property color errorBorderColor: "red"
+    readonly property color finishedBorderColor: buttonGreenColor
 
     // input
     readonly property int inputHeight: buttonHeight
