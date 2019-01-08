@@ -20,6 +20,11 @@ void SessionManager::setOverlayManager(OverlayManager *manager)
     m_overlayManager = manager;
 }
 
+void SessionManager::displayErrorPopup(const QString &errorMessage)
+{
+    emit displayError(errorMessage, QString() , tr("Close"));
+}
+
 void SessionManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("sessionManager"), this);
@@ -31,19 +36,18 @@ void SessionManager::login(const QString &email, const QString &password)
 
     m_overlayManager->setLoginRequest(true);
 
-    auto finishLambda = [=]() {
-        // do something with data
-        this->m_overlayManager->setLoginRequest(false);
+    auto finishLambda = [&](const QJsonDocument &reply) {
+        emit loginFinished(reply);
+        m_overlayManager->setLoginRequest(false);
     };
 
-    connect(request.data(), &LoginRequest::finished, finishLambda);
-    connect(request.data(), &LoginRequest::replyError, finishLambda);
+    auto errorLambda = [&]() {
+        m_overlayManager->setLoginRequest(false);
+        displayErrorPopup(tr("Login failed. Try again."));
+    };
+
+    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
+    connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     m_client.send(request);
-}
-
-void SessionManager::connectFinishingLambda(QSharedPointer<BaseRequest> &sharedPointer, std::function<void()> &lambda)
-{
-    connect(sharedPointer.data(), &BaseRequest::finished, lambda);
-    connect(sharedPointer.data(), &BaseRequest::replyError, lambda);
 }

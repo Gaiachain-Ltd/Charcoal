@@ -33,5 +33,6 @@
         <file>GaiaStrings.qml</file>
         <file>GaiaStyle.qml</file>
         <file>items/WaitOverlay.qml</file>
+        <file>pages/InformationPopup.qml</file>
     </qresource>
 </RCC>

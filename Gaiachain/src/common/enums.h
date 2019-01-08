@@ -34,6 +34,7 @@ namespace Enums {
         ShipmentDetails,
         ViewType,
         QRScanner,
+        InformationPopup,
 
         PageCount
     };

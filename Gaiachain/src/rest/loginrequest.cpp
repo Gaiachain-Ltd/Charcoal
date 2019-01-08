@@ -16,7 +16,6 @@ LoginRequest::LoginRequest(const QString &email, const QString &password)
         mRequestDocument.setObject(object);
 
         mType = Type::Post;
-        connect(this, &LoginRequest::replyError, this, &LoginRequest::onError);
 
     } else {
         qCDebug(requestLogin) << "Error: missing login info"
@@ -26,11 +25,5 @@ LoginRequest::LoginRequest(const QString &email, const QString &password)
 
 void LoginRequest::parse()
 {
-//    const QJsonObject object(mReplyDocument.object());
-}
-
-void LoginRequest::onError(const QString &error, const int errorCode)
-{
-    Q_UNUSED(error)
-    Q_UNUSED(errorCode)
+    emit requestFinished(mReplyDocument);
 }

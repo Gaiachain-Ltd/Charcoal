@@ -3,6 +3,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QDebug>
+
 OverlayManager::OverlayManager(QObject *parent)
     : AbstractManager(parent)
 {
@@ -14,7 +16,7 @@ void OverlayManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("overlay"), this);
 }
 
-bool OverlayManager::loginRequest() const
+bool OverlayManager::getLoginRequest() const
 {
     return m_loginRequest;
 }

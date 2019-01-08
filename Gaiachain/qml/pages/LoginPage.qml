@@ -12,6 +12,14 @@ BasePage {
 
     headerVisible: false
 
+    Connections
+    {
+        target: sessionManager
+        onLoginFinished: {
+            pageManager.back()
+        }
+    }
+
     Column
     {
         anchors.fill: parent

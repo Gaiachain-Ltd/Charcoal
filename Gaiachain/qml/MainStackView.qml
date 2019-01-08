@@ -12,19 +12,28 @@ Item {
         target: pageManager
 
         onStackViewPush: {
-            var mode = immediate ? StackView.Immediate : StackView.Transition
-            stackView.push(url, properites, mode)
+            var showPervPage = false
+            if (properites.isPopup)
+                showPervPage = true
+            stackView.push(url, properites, getMode(immediate))
+            if (showPervPage && stackView.depth > 1)
+                stackView.get(stackView.depth - 2).visible = true
         }
-        onStackViewPop: stackView.pop()
+        onStackViewPop: {
+            stackView.pop(getMode(immediate))
+        }
         onStackViewBackToInitial: {
-            var mode = immediate ? StackView.Immediate : StackView.Transition
-            stackView.pop(null, mode)
+            stackView.pop(null, getMode(immediate))
         }
         onStackViewBackToPage: {
             stackView.pop(stackView.find(function(item) {
                   return item.page === backPage
               }));
         }
+    }
+
+    function getMode(isImmediate) {
+        return isImmediate ? StackView.Immediate : StackView.Transition
     }
 
     StackView {

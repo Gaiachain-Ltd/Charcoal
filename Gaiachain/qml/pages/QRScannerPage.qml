@@ -8,6 +8,17 @@ import com.gaiachain.style 1.0
 
 import "../items" as Items
 
+/*
+        Jak zeskanuje poprawny kod, to ramka zrobi się zielona (#96c354),
+        a jak błędny, to czerwona (ff0000) i pojawi się napis "Scan failed",
+        tak jak jest teraz, tylko czerwony.
+
+        Oprócz tej zmiany w obydwu przypadkach (poprawny i niepoprawny kod)
+        kamera zrobi zdjęcie zeskanowanego kodu i je wyświetli,
+        a obok przycisku [ x ] (anuluj/zamknij),
+        pojawi się nowa ikona do ponownego odpalenia trybu skanowania.
+  */
+
 BasePage {
     id: top
 
@@ -54,7 +65,7 @@ BasePage {
             {
                 onClicked: pageManager.back()
 
-                backgroundColor: "#99000000"
+                backgroundColor: Style.backgroundShadowColor
                 source: Style.cancelImgUrl
 
                 fillMode: Image.PreserveAspectFit

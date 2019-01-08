@@ -10,6 +10,9 @@ public:
     explicit UserManager(QObject *parent = nullptr);
 
     void setupQmlContext(QQmlApplicationEngine &engine);
+
+public slots:
+    void parseLoginData(const QJsonDocument &doc);
 };
 
 #endif // USERMANAGER_H

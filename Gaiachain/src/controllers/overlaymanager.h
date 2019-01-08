@@ -6,13 +6,13 @@
 class OverlayManager : public AbstractManager
 {
     Q_OBJECT
-    Q_PROPERTY(bool loginRequest READ loginRequest WRITE setLoginRequest NOTIFY loginRequestChanged)
+    Q_PROPERTY(bool loginRequest READ getLoginRequest WRITE setLoginRequest NOTIFY loginRequestChanged)
 public:
     explicit OverlayManager(QObject *parent = nullptr);
 
     void setupQmlContext(QQmlApplicationEngine &engine);
 
-    bool loginRequest() const;
+    bool getLoginRequest() const;
     void setLoginRequest(const bool enable);
 
 signals:

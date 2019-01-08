@@ -12,6 +12,11 @@ MainController::MainController(QObject *parent)
     : QObject(parent)
 {
     m_sessionManager.setOverlayManager(&m_overlayManager);
+    auto enterPopup = [&](const QString &text, const QString &button1, const QString &button2) {
+        m_pageManager.enterPopup(text, button1, button2);
+    };
+    connect(&m_sessionManager, &SessionManager::displayError, enterPopup);
+    connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
 }
 
 void MainController::setupQMLContext(QQmlApplicationEngine &engine)

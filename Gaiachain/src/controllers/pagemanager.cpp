@@ -54,7 +54,18 @@ void PageManager::enterPage(const Enums::Page page, QJsonObject properites, cons
     emit stackViewPush(pageToQString(page), properites, immediate);
 }
 
-void PageManager::popPage()
+void PageManager::enterPopup(const QString &text, const QString &acceptButtonString, const QString &rejectButtonString)
+{
+    QJsonObject obj;
+    obj.insert(QStringLiteral("text"), text);
+    obj.insert(QStringLiteral("acceptButtonText"), acceptButtonString);
+    obj.insert(QStringLiteral("rejectButtonText"), rejectButtonString);
+    obj.insert(QStringLiteral("isPopup"), true);
+
+    emit stackViewPush(pageToQString(Enums::Page::InformationPopup), obj, true);
+}
+
+void PageManager::popPage(const bool immediate)
 {
     qDebug() << "Print stack on pop" << m_pageStack;
 
@@ -72,7 +83,7 @@ void PageManager::popPage()
 
     qDebug() << "Popped page" << pageToQString(poppedPage);
 
-    emit stackViewPop();
+    emit stackViewPop(immediate);
 }
 
 void PageManager::goToInitialPage(const bool immediate)
@@ -130,5 +141,10 @@ QString PageManager::getInitialPageUrl() const
 QString PageManager::pageToQString(const Enums::Page p) const
 {
     const QString pageStr = Utility::enumToQString<Enums::Page>(p, "Page");
-    return m_pagePrefix + pageStr + QStringLiteral("Page.qml");
+    if (pageStr.contains(QStringLiteral("Popup"))) {
+        return m_pagePrefix + pageStr + QStringLiteral(".qml");
+    } else {
+        return m_pagePrefix + pageStr + QStringLiteral("Page.qml");
+    }
+
 }

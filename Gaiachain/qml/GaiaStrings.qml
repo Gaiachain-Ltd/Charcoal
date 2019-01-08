@@ -37,4 +37,7 @@ QtObject {
     readonly property string id: qsTr("ID")
 
     readonly property string batch: qsTr("Batch")
+
+    // popup
+    readonly property string close: qsTr("Close")
 }
