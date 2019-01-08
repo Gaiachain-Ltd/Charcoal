@@ -10,6 +10,9 @@ public:
     explicit BaseRequest(const QString &method);
     void setMethod(const QString &apiMethodPath);
 
+signals:
+    void requestFinished(const QJsonDocument &doc) const;
+
 protected:
     QString mApiMethod;
 };

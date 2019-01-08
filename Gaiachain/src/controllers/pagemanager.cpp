@@ -6,7 +6,7 @@
 
 #include "../helpers/utility.h"
 
-PageManager::PageManager(QObject *parent) : QObject(parent)
+PageManager::PageManager(QObject *parent) : AbstractManager(parent)
 {
     prepareConnections();
 
@@ -32,7 +32,7 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
 void PageManager::enterPage(const Enums::Page page, QJsonObject properites, const bool immediate)
 {
     qDebug() << "Print stack on enter" << m_pageStack;
-    qDebug() << properites;
+    qDebug() << "Page properties:" << properites;
 
     if (m_pageStack.contains(page)) {
         qWarning() << "Page" << page << "is already on the stack. Going back to page.";
@@ -58,7 +58,18 @@ void PageManager::enterPage(const Enums::Page page, QJsonObject properites, cons
     emit stackViewPush(pageToQString(page), properites, immediate);
 }
 
-void PageManager::popPage()
+void PageManager::enterPopup(const QString &text, const QString &acceptButtonString, const QString &rejectButtonString)
+{
+    QJsonObject obj;
+    obj.insert(QStringLiteral("text"), text);
+    obj.insert(QStringLiteral("acceptButtonText"), acceptButtonString);
+    obj.insert(QStringLiteral("rejectButtonText"), rejectButtonString);
+    obj.insert(QStringLiteral("isPopup"), true);
+
+    emit stackViewPush(pageToQString(Enums::Page::InformationPopup), obj, true);
+}
+
+void PageManager::popPage(const bool immediate)
 {
     qDebug() << "Print stack on pop" << m_pageStack;
 
@@ -76,7 +87,7 @@ void PageManager::popPage()
 
     qDebug() << "Popped page" << pageToQString(poppedPage);
 
-    emit stackViewPop();
+    emit stackViewPop(immediate);
 }
 
 void PageManager::goToInitialPage(const bool immediate)
@@ -134,5 +145,8 @@ QString PageManager::getInitialPageUrl() const
 QString PageManager::pageToQString(const Enums::Page p) const
 {
     const QString pageStr = Utility::enumToQString<Enums::Page>(p, "Page");
-    return m_pagePrefix + pageStr + QStringLiteral("Page.qml");
+    const QString pathPrefix = m_pagePrefix + pageStr;
+    return pageStr.contains(QStringLiteral("Popup"))
+           ? pathPrefix + QStringLiteral(".qml")
+           : pathPrefix + QStringLiteral("Page.qml");
 }

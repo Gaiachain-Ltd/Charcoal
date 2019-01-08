@@ -50,7 +50,7 @@ FocusScope
             SvgImage {
                 id: image
                 Layout.fillHeight: true
-                Layout.preferredWidth: height
+                Layout.preferredWidth: row.height
                 Layout.alignment: Qt.AlignVCenter
                 visible: false
             }

@@ -7,7 +7,7 @@
 #include "../common/globals.h"
 
 DataManager::DataManager(QObject *parent)
-    : QObject(parent)
+    : AbstractManager(parent)
 {
     setupModels();
     populateModels();

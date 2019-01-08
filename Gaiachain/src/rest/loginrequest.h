@@ -11,9 +11,6 @@ class LoginRequest : public BaseRequest
 public:
     LoginRequest(const QString &email, const QString &password);
 
-private slots:
-    void onError(const QString &error, const int errorCode);
-
 protected:
     virtual void parse() override final;
 };

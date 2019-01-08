@@ -4,6 +4,7 @@ import QtQuick 2.11
 
 QtObject {
     // Colors
+    readonly property color backgroundColor: "white"
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
     readonly property color textGreyColor: "#999999"
@@ -11,6 +12,7 @@ QtObject {
     readonly property color buttonGreenColor: "#96c354"
     readonly property color buttonBlackGreyColor: "#666666"
     readonly property color buttonGreyColor: "#cccccc"
+    readonly property color backgroundShadowColor: "#99000000"
 
     readonly property real listEventsDelegateRelativeHeight: 390
     readonly property color listEventsDelegateBottomLineColor: buttonGreyColor
@@ -61,6 +63,7 @@ QtObject {
     readonly property url homeImgUrl: "qrc:/ui/home"
     readonly property url keyboardImgUrl: "qrc:/ui/keyboard"
     readonly property url keyImgUrl: "qrc:/ui/key"
+    readonly property url emailImgUrl: "qrc:/ui/email"
 
     readonly property url listImgUrl: "qrc:/ui/list"
     readonly property url loginImgUrl: "qrc:/ui/login"
@@ -86,9 +89,15 @@ QtObject {
     readonly property url buttonAddGreen: "qrc:/ui/add_green"
     readonly property url buttonAddBlack: "qrc:/ui/add_black"
 
+    readonly property url spinnerImgUrl: "qrc:/ui/spinner"
+
+    // input
+    readonly property int inputHeight: buttonHeight
+
     // button
     readonly property int buttonHeight: 90
     readonly property int smallButtonHeight: 40
+    readonly property int buttonRadius: 20
 
     // input
     readonly property int inputHeight: buttonHeight

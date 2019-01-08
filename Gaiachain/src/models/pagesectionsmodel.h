@@ -56,7 +56,8 @@ private:
 
         {Enums::Page::LanguageChosing, Enums::PageSections::DefaultSection}, // TO_DO_later
         {Enums::Page::Login, Enums::PageSections::DefaultSection}, // TO_DO_later
-        {Enums::Page::ResourceChosing, Enums::PageSections::DefaultSection} // TO_DO_later
+        {Enums::Page::ResourceChosing, Enums::PageSections::DefaultSection}, // TO_DO_later
+        {Enums::Page::InformationPopup, Enums::PageSections::DefaultSection} // TO_DO_later
     };
 
     const QHash<Enums::PageSections, Enums::Page> m_sectionToFirstPage = {

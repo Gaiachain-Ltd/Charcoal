@@ -33,17 +33,20 @@ SOFTWARE.
 #include <QTimer>
 
 #include "../src/controllers/maincontroller.h"
+#include "../milo/mlog/mlog.h"
 
 // Prepare logging categories. Modify these to your needs
 //Q_DECLARE_LOGGING_CATEGORY(core) // already declared in MLog header
 Q_LOGGING_CATEGORY(coreMain, "core.main")
+
 
 /*!
   Main routine. Remember to update the application name and initialise logger
   class, if present.
   */
 int main(int argc, char *argv[]) {
-    //MiloLog::instance();
+
+    MLog::instance();
     // Set up basic application data. Modify this to your needs
     QGuiApplication app(argc, argv);
     app.setApplicationVersion(AppVersion);
@@ -60,7 +63,7 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
     MainController mc;
-    mc.setupQMLContext(engine);
+    mc.setupQmlContext(engine);
 
 #ifdef DESKTOP_TESTS
     engine.rootContext()->setContextProperty("isDesktop", true);

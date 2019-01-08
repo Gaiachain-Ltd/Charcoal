@@ -18,6 +18,7 @@ Button {
         Image.Pad - the image is not transformed
     */
     property alias fillMode: image.fillMode
+    property alias showIcon: image.visible
 
     property alias backgroundColor: backRect.color
     property alias backgroundRadius: backRect.radius
@@ -60,6 +61,6 @@ Button {
     background: Rectangle {
         id: backRect
         color: "transparent"
-        radius: s(20)
+        radius: s(Style.buttonRadius)
     }
 }

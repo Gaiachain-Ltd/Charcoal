@@ -42,4 +42,7 @@ QtObject {
     readonly property string harvestDate: qsTr("Date of harvest")
     readonly property string logID: qsTr("Log ID")
     readonly property string dateTimeDeparture: qsTr("Date and time of departure")
+
+    // popup
+    readonly property string close: qsTr("Close")
 }
