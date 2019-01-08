@@ -48,7 +48,7 @@ int PageSectionsModel::maxSectionsDepth() const
     return m_maxDepth;
 }
 
-void PageSectionsModel::pagePushed(const Enums::Page page, const bool isEdit)
+void PageSectionsModel::pagePushed(const Enums::Page page)
 {
     Enums::PageSections newSection = m_pageToSection[page];
 
@@ -56,16 +56,12 @@ void PageSectionsModel::pagePushed(const Enums::Page page, const bool isEdit)
         return;
 
     // First section is special because it is removed after new section is pushed
-    if (m_isHomeSection) {
+    if (page == m_homePage) {
+       m_isHomeSection = true;
+   } else if (m_isHomeSection) {
         m_isHomeSection = false;
         m_data.pop_back();
-        qDebug() << "Sections is home section" << m_data;
-    } else if (page == m_homePage) {
-        m_isHomeSection = true;
-        qDebug() << "Sections is home page" << m_data;
     }
-    qDebug() << "Sections" << m_data;
-
 
     bool pushData = false;
     if (m_data.isEmpty()) {
@@ -79,7 +75,7 @@ void PageSectionsModel::pagePushed(const Enums::Page page, const bool isEdit)
         if (m_data.count() >= m_maxDepth)
             qWarning() << "Page not pushed! Maximum depth of sections exceeded! Fix this!";
 
-        pushBackData(newSection, isEdit);
+        pushBackData(newSection);
     }
 }
 
@@ -130,11 +126,10 @@ int PageSectionsModel::getShiftedIndex(const ModelRole role) const
     return static_cast<int>(role) - static_cast<int>(ModelRole::SectionId);
 }
 
-void PageSectionsModel::pushBackData(const Enums::PageSections section, const bool isEdit)
+void PageSectionsModel::pushBackData(const Enums::PageSections section)
 {
     QVariantList rowToInsert;
     rowToInsert.append({static_cast<int>(section),
-                       Utility::enumToQString<Enums::PageSections>(section, "PageSections"),
-                       isEdit});
+                       Utility::enumToQString<Enums::PageSections>(section, "PageSections")});
     m_data.push_back(rowToInsert);
 }

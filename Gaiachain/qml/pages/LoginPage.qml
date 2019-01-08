@@ -14,7 +14,7 @@ BasePage {
     headerVisible: false
 
     function enterViewTypePage() {
-        pageManager.push(Enums.Page.ViewType)
+        pageManager.enter(Enums.Page.ViewType)
     }
 
     Connections

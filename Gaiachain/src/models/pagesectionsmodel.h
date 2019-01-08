@@ -27,7 +27,7 @@ public:
 
     Q_INVOKABLE int maxSectionsDepth() const;
 
-    void pagePushed(const Enums::Page page, const bool isEdit = false);
+    void pagePushed(const Enums::Page page);
     void pagePopped(const Enums::Page currentTopPage);
     void stackReset(const Enums::Page homePage);
 
@@ -40,14 +40,14 @@ public slots:
 private:
     const QHash<int, QByteArray> m_roleNames = {
         { SectionId, "id" },
-        { SectionName, "sectionName" },
-        { EditSection, "editSection" }
+        { SectionName, "sectionName" }
     };
 
     const QHash<Enums::Page, Enums::PageSections> m_pageToSection = {
         {Enums::Page::CalendarEvents, Enums::PageSections::CalendarSection},
         {Enums::Page::CalendarMonth, Enums::PageSections::CalendarSection},
         {Enums::Page::Calendar, Enums::PageSections::CalendarSection},
+        {Enums::Page::EditableEventDetails, Enums::PageSections::EditableEventDetailsSection},
         {Enums::Page::EventDetails, Enums::PageSections::EventsDetailsSection},
         {Enums::Page::EventsList, Enums::PageSections::EventsListSection},
         {Enums::Page::ShipmentDetails, Enums::PageSections::ShipmentDetailsSection},
@@ -64,20 +64,22 @@ private:
         {Enums::PageSections::DefaultSection, Enums::Page::ViewType}, // TO_DO_later for default section
         {Enums::PageSections::ViewTypeSection, Enums::Page::ViewType},
         {Enums::PageSections::CalendarSection, Enums::Page::Calendar},
+        {Enums::PageSections::EditableEventDetailsSection, Enums::Page::EditableEventDetails},
         {Enums::PageSections::EventsListSection, Enums::Page::EventsList},
         {Enums::PageSections::EventsDetailsSection, Enums::Page::EventDetails},
         {Enums::PageSections::ShipmentDetailsSection, Enums::Page::ShipmentDetails},
         {Enums::PageSections::QRSection, Enums::Page::QRScanner}
     };
 
-    Gaia::ModelData m_data;
     const int m_maxDepth = 3;
-    Enums::Page m_homePage;
-    Enums::PageSections m_homeSection;
     bool m_isHomeSection = false;
 
+    Gaia::ModelData m_data;
+    Enums::Page m_homePage;
+    Enums::PageSections m_homeSection;
+
     int getShiftedIndex(const ModelRole role) const;
-    void pushBackData(const Enums::PageSections section, const bool isEdit = false);
+    void pushBackData(const Enums::PageSections section);
 };
 
 #endif // PAGESECTIONSMODEL_H

@@ -1,4 +1,4 @@
-#ifndef PAGEMANAGER_H
+﻿#ifndef PAGEMANAGER_H
 #define PAGEMANAGER_H
 
 #include <QVector>
@@ -21,26 +21,23 @@ public:
     Q_INVOKABLE Enums::Page homePage() const;
     Q_INVOKABLE bool isOnHomePage() const;
 
-    Q_INVOKABLE void enterPopup(const Enums::Page page, QJsonObject properites = QJsonObject());
-
-signals:
-    void push(const Enums::Page page, const QJsonObject properites = QJsonObject(), const bool immediate = false) const;
-    void pop(const bool immediate = false) const;
-    void back(const bool immediate = false) const; // it's same as pop()
-    void backTo(const Enums::Page backPage, const bool immediate = false) const;
-    void backToSection(const Enums::PageSections section) const;
-
 signals:
     // Signals below should only be used by StackView!!!
     void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject(), const bool immediate = false) const;
     void stackViewPop(const bool immediate = false) const;
     void stackViewBackToPage(const Enums::Page backPage, const bool immediate = false) const;
 
-private slots:
-    void enterPage(const Enums::Page page, QJsonObject properites = QJsonObject(), const bool immediate = false);
-    void popPage(const bool immediate = false);
-    bool backToPage(const Enums::Page backPage, const bool immediate = false);
-    bool backToFirstSectionPage(const Enums::PageSections section);
+public slots:
+    // Page managment
+    void enter(const Enums::Page page, QJsonObject properites = QJsonObject(), const bool immediate = false);
+    void back(const bool immediate = false);
+    bool backTo(const Enums::Page backPage, const bool immediate = false);
+    void backToAndEnter(const Enums::Page backPage, const Enums::Page page, QJsonObject properites = QJsonObject(),
+                            const bool backImmediate = false, const bool enterImmediate = false);
+    bool backToSection(const Enums::PageSections section);
+
+    // Popup managment
+    void enterPopup(const Enums::Page page, QJsonObject properites = QJsonObject());
 
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
