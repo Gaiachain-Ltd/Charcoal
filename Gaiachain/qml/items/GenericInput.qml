@@ -12,6 +12,7 @@ FocusScope
     property alias input: inputItem
 
     property alias showImage: image.visible
+    property alias background: rect
 
     property alias placeholderText: placeholder.text
     property alias placeholder: placeholder
@@ -29,6 +30,7 @@ FocusScope
 
     Rectangle
     {
+        id: rect
         anchors.fill: parent
         radius: s(Style.smallMargin)
         border {

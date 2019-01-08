@@ -22,19 +22,18 @@ Item {
             verticalCenter: parent.verticalCenter
         }
 
-        readonly property bool isActive: page !== Enums.Page.QrScanner
-
-        backgroundColor: isActive ? Style.buttonGreenColor : "transparent"
-        source: isActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
+        backgroundColor: !addButton.isActive ? Style.buttonGreenColor : "transparent"
+        source: !addButton.isActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
         fillMode: Image.PreserveAspectFit
 
         onClicked: {
-            console.log("Not implemented yet!")
+            pageManager.goToInitial();
         }
     }
 
     ImageButton
     {
+        id: addButton
         anchors.centerIn: parent
 
         readonly property bool isActive: page === Enums.Page.QRScanner

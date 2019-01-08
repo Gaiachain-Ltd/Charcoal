@@ -17,6 +17,8 @@ Item {
     property int page: Enums.Page.InvalidPage
     property var attachedStackView: StackView.view
 
+    readonly property bool keyboardVisible: Qt.inputMethod.keyboardRectangle.y > 0 ? Qt.inputMethod.keyboardRectangle.height - s(Style.footerHeight) : 0
+
     property color backgroundColor: Style.pageBaseBackgroundColor
 
     default property alias content: pageContent.data

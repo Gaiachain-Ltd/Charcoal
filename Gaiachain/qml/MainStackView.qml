@@ -81,6 +81,7 @@ Item {
 
         Component.onCompleted: {
 //            pageManager.push(Enums.Page.Login, {}, true)
+            pageManager.push(Enums.Page.QRScanner)
         }
     }
 }

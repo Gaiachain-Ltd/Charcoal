@@ -35,6 +35,7 @@ QtObject {
     // QR
     readonly property string scanning: qsTr("Scanning")
     readonly property string scanFailed: qsTr("Scan failed")
+    readonly property string typeId: qsTr("Type ID")
 
     readonly property string id: qsTr("ID")
     readonly property string batch: qsTr("Batch")

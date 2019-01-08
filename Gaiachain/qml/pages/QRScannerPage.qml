@@ -29,11 +29,10 @@ BasePage {
     function previewCapturedImage(result) {
         photoPreview.source = result.url
         photoPreview.visible = true
-        camera.stop()
     }
 
     function retry() {
-        camera.start()
+        scanInput.visible = false
         error = false
         photoPreview.source = ""
         photoPreview.visible = false
@@ -174,34 +173,53 @@ BasePage {
                 }
                 spacing: s(Style.bigMargin)
 
-                Items.BasicText
+                Item
                 {
-                    text: {
-                        if (error) {
-                            return Strings.scanFailed
-                        } else if (scannedId.length == 0) {
-                            return Strings.scanning + "..."
-                        } else {
-                            return String("%1: <b>%2</b>").arg(Strings.id).arg(scannedId)
-                        }
-                    }
-
-                    color: error ? Style.textPrimaryColor : Style.textPrimaryColor
-                    horizontalAlignment: Text.AlignLeft
-                    font.pixelSize: s(Style.bigPixelSize)
-                    textFormat: Text.RichText
                     Layout.fillHeight: true
                     Layout.fillWidth: true
+
+                    Items.GenericInput
+                    {
+                        id: scanInput
+                        background.border.width: 0
+                        anchors.fill: parent
+                        visible: false
+                        placeholderText: Strings.typeId + "..."
+                    }
+
+                    Items.BasicText
+                    {
+                        id: scanLabel
+                        visible: !scanInput.visible
+                        anchors.fill: parent
+                        text: {
+                            if (error) {
+                                return Strings.scanFailed
+                            } else if (scannedId.length == 0) {
+                                return Strings.scanning + "..."
+                            } else {
+                                return String("%1: <b>%2</b>").arg(Strings.id).arg(scannedId)
+                            }
+                        }
+
+                        color: error ? Style.textErrorColor : Style.textPrimaryColor
+                        horizontalAlignment: Text.AlignLeft
+                        font.pixelSize: s(Style.bigPixelSize)
+                        textFormat: Text.RichText
+                    }
                 }
 
                 Items.ImageButton
                 {
-                    onClicked: console.warn("Input by keyboard not implemented!")
+                    onClicked: {
+                        scanInput.visible = true
+                        scanInput.focus = true
+                    }
 
                     fillMode: Image.PreserveAspectFit
 
                     backgroundColor: Style.buttonGreyColor
-                    source: Style.keyboardImgUrl
+                    source: scanInput.visible ? Style.qrCodeImgUrl : Style.keyboardImgUrl
 
                     padding: s(Style.smallMargin)
 
