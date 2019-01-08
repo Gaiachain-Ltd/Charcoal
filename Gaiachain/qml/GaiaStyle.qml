@@ -99,9 +99,6 @@ QtObject {
     readonly property int smallButtonHeight: 40
     readonly property int buttonRadius: 20
 
-    // input
-    readonly property int inputHeight: buttonHeight
-
     // Other
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
