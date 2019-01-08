@@ -55,6 +55,7 @@ QtObject {
     readonly property url detailsGreenImgUrl: "qrc:/ui/details_green"
     readonly property url editImgUrl: "qrc:/ui/edit"
     readonly property url editGreenImgUrl: "qrc:/ui/edit_green"
+    readonly property url exitToLoginImgUrl: "qrc:/ui/exit_to_login"
     readonly property url exportImgUrl: "qrc:/ui/export"
     readonly property url logoImgUrl: "qrc:/ui/gaia_logo"
 
@@ -67,6 +68,7 @@ QtObject {
 
     readonly property url listImgUrl: "qrc:/ui/list"
     readonly property url loginImgUrl: "qrc:/ui/login"
+    readonly property url logoutImgUrl: "qrc:/ui/logout"
     readonly property url logParkImgUrl: "qrc:/ui/log_park"
     readonly property url miniCalendarImgUrl: "qrc:/ui/mini_calendar"
     readonly property url miniCalendarGreenImgUrl: "qrc:/ui/mini_calendar_green"

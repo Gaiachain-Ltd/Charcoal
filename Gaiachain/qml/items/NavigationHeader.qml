@@ -79,9 +79,26 @@ Item {
 
                 padding: s(Style.headerButtonsPadding)
                 fillMode: Image.PreserveAspectFit
-                source: Style.backImgUrl
 
-                onClicked: pageManager.back()
+                // do not change `!=` to `!==`. It is here on purpose!
+                property bool isLoggedUser: userManager.userType != Enums.UserType.NotLoggedUser
+                property bool isOnHomePage: pageManager.isOnHomePage()
+                source: {
+                    if (!isOnHomePage) return Style.backImgUrl
+
+                    return isLoggedUser ? Style.logoutImgUrl : Style.exitToLoginImgUrl
+                }
+
+                onClicked: {
+                    if (isLoggedUser && isOnHomePage) {
+                        pageManager.enterPopup(Enums.Page.InformationPopup, {
+                                                   "text" : "Do you want to logout?",
+                                                   "acceptButtonText": "Logout",
+                                                   "rejectButtonText": "Cancel"})
+                    } else {
+                        pageManager.back()
+                    }
+                }
             }
 
             LayoutSpacer {}
@@ -94,7 +111,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: Style.homeImgUrl
 
-                onClicked: pageManager.goToInitial()
+                onClicked: pageManager.backTo(pageManager.homePage())
             }
 
             ListView {

@@ -11,7 +11,7 @@ PageManager::PageManager(QObject *parent) : AbstractManager(parent)
     prepareConnections();
 
     m_pageStack.push_back(m_initialPage);
-    m_pageSectionsModel.stackReset(m_initialPage);
+    m_pageSectionsModel.stackReset(m_homePage);
 }
 
 void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -41,7 +41,7 @@ void PageManager::enterPage(const Enums::Page page, QJsonObject properites, cons
     }
 
     if (page == Enums::Page::QRScanner)
-        goToInitialPage(true);
+        backToPage(m_homePage);
 
     bool isEditSection = false;
     if (page == Enums::Page::EventDetails)
@@ -58,15 +58,12 @@ void PageManager::enterPage(const Enums::Page page, QJsonObject properites, cons
     emit stackViewPush(pageToQString(page), properites, immediate);
 }
 
-void PageManager::enterPopup(const QString &text, const QString &acceptButtonString, const QString &rejectButtonString)
+void PageManager::enterPopup(const Enums::Page page, QJsonObject properites)
 {
-    QJsonObject obj;
-    obj.insert(QStringLiteral("text"), text);
-    obj.insert(QStringLiteral("acceptButtonText"), acceptButtonString);
-    obj.insert(QStringLiteral("rejectButtonText"), rejectButtonString);
-    obj.insert(QStringLiteral("isPopup"), true);
+    if (!properites.contains("isPopup"))
+        properites.insert(QStringLiteral("isPopup"), true);
 
-    emit stackViewPush(pageToQString(Enums::Page::InformationPopup), obj, true);
+    enterPage(page, properites, true);
 }
 
 void PageManager::popPage(const bool immediate)
@@ -90,16 +87,7 @@ void PageManager::popPage(const bool immediate)
     emit stackViewPop(immediate);
 }
 
-void PageManager::goToInitialPage(const bool immediate)
-{
-    m_pageStack.clear();
-    m_pageStack.push_back(m_initialPage);
-    m_pageSectionsModel.stackReset(m_initialPage);
-
-    emit stackViewBackToInitial(immediate);
-}
-
-bool PageManager::backToPage(const Enums::Page backPage)
+bool PageManager::backToPage(const Enums::Page backPage, const bool immediate)
 {
     if (!m_pageStack.contains(backPage)) {
         qWarning() << "Page" << backPage << "is not on the stack. Returning.";
@@ -115,7 +103,7 @@ bool PageManager::backToPage(const Enums::Page backPage)
 
     qDebug() << "Going back to page" << pageToQString(backPage);
 
-    emit stackViewBackToPage(backPage);
+    emit stackViewBackToPage(backPage, immediate);
 
     return true;
 }
@@ -128,7 +116,6 @@ void PageManager::prepareConnections()
 
     connect(this, &PageManager::backTo, this, &PageManager::backToPage, Qt::DirectConnection);
     connect(this, &PageManager::backToSection, this, &PageManager::backToFirstSectionPage, Qt::DirectConnection);
-    connect(this, &PageManager::goToInitial, this, &PageManager::goToInitialPage, Qt::DirectConnection);
 }
 
 bool PageManager::backToFirstSectionPage(const Enums::PageSections section)
@@ -140,6 +127,16 @@ bool PageManager::backToFirstSectionPage(const Enums::PageSections section)
 QString PageManager::getInitialPageUrl() const
 {
     return pageToQString(m_initialPage);
+}
+
+Enums::Page PageManager::homePage() const
+{
+    return m_homePage;
+}
+
+bool PageManager::isOnHomePage() const
+{
+    return m_pageStack.last() == m_homePage;
 }
 
 QString PageManager::pageToQString(const Enums::Page p) const

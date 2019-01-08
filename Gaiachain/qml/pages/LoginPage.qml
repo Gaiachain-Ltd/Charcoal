@@ -8,16 +8,19 @@ import com.gaiachain.style 1.0
 import "../items" as Items
 
 BasePage {
+    id: top
     page: Enums.Page.Login
 
     headerVisible: false
 
+    function enterViewTypePage() {
+        pageManager.push(Enums.Page.ViewType)
+    }
+
     Connections
     {
         target: sessionManager
-        onLoginFinished: {
-            pageManager.back()
-        }
+        onLoginFinished: enterViewTypePage()
     }
 
     Column
@@ -72,6 +75,7 @@ BasePage {
                     source: Style.emailImgUrl
                     showImage: true
 
+                    text: "producer@gaiachain.com" //TO_DO remove it in production
                     placeholderText: Strings.emailAddress
 
                     nextInput: passwordInput
@@ -88,6 +92,7 @@ BasePage {
                     showImage: true
                     isPassword: true
 
+                    text: "test1234" //TO_DO remove it in production
                     placeholderText: Strings.password
 
                     onMoveToNextInput: loginButton.clicked()
@@ -138,7 +143,8 @@ BasePage {
                         width: s(Style.buttonHeight) * 3.25
 
                         onClicked: {
-                            pageManager.back()
+                            userManager.userType = Enums.UserType.NotLoggedUser
+                            top.enterViewTypePage()
                         }
                     }
                 }

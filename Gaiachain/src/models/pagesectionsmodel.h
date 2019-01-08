@@ -29,7 +29,7 @@ public:
 
     void pagePushed(const Enums::Page page, const bool isEdit = false);
     void pagePopped(const Enums::Page currentTopPage);
-    void stackReset(const Enums::Page initialPage);
+    void stackReset(const Enums::Page homePage);
 
     Enums::Page getPageForSection(const Enums::PageSections section) const;
 
@@ -72,8 +72,9 @@ private:
 
     Gaia::ModelData m_data;
     const int m_maxDepth = 3;
-    Enums::PageSections m_initialSection;
-    bool m_isInitialSection = false;
+    Enums::Page m_homePage;
+    Enums::PageSections m_homeSection;
+    bool m_isHomeSection = false;
 
     int getShiftedIndex(const ModelRole role) const;
     void pushBackData(const Enums::PageSections section, const bool isEdit = false);
