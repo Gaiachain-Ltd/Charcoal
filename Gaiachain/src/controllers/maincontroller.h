@@ -1,23 +1,19 @@
 #ifndef MAINCONTROLLER_H
 #define MAINCONTROLLER_H
 
-#include <QObject>
-
 #include "datamanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
 #include "overlaymanager.h"
 #include "sessionmanager.h"
 
-class QQmlApplicationEngine;
-
-class MainController : public QObject
+class MainController : public AbstractManager
 {
     Q_OBJECT
 public:
     explicit MainController(QObject *parent = nullptr);
 
-    void setupQMLContext(QQmlApplicationEngine &engine);
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
 signals:
 

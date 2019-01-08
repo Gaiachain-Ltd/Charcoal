@@ -14,7 +14,7 @@ public:
     explicit SessionManager(QObject *parent = nullptr);
 
     void setOverlayManager(OverlayManager *manager);
-    void setupQmlContext(QQmlApplicationEngine &engine);
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
     Q_INVOKABLE void login(const QString &email, const QString &password);
 

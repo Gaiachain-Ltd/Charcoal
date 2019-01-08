@@ -9,7 +9,7 @@
 #include <QZXing>
 
 MainController::MainController(QObject *parent)
-    : QObject(parent)
+    : AbstractManager(parent)
 {
     m_sessionManager.setOverlayManager(&m_overlayManager);
     auto enterPopup = [&](const QString &text, const QString &button1, const QString &button2) {
@@ -19,7 +19,7 @@ MainController::MainController(QObject *parent)
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
 }
 
-void MainController::setupQMLContext(QQmlApplicationEngine &engine)
+void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 {
     //Register namespace for enums first
     qmlRegisterUncreatableMetaObject(Enums::staticMetaObject, "com.gaiachain.enums", 1, 0,

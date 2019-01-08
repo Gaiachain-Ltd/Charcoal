@@ -15,7 +15,7 @@ class PageManager : public AbstractManager
 public:
     explicit PageManager(QObject *parent = nullptr);
 
-    void setupQmlContext(QQmlApplicationEngine &engine);
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
     Q_INVOKABLE QString getInitialPageUrl() const;
 

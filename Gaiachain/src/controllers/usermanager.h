@@ -9,7 +9,7 @@ class UserManager : public AbstractManager
 public:
     explicit UserManager(QObject *parent = nullptr);
 
-    void setupQmlContext(QQmlApplicationEngine &engine);
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
 public slots:
     void parseLoginData(const QJsonDocument &doc);

@@ -12,11 +12,11 @@ Item {
         target: pageManager
 
         onStackViewPush: {
-            var showPervPage = false
+            var keepPrevPageVisible = false
             if (properites.isPopup)
-                showPervPage = true
+                keepPrevPageVisible = true
             stackView.push(url, properites, getMode(immediate))
-            if (showPervPage && stackView.depth > 1)
+            if (keepPrevPageVisible && stackView.depth > 1)
                 stackView.get(stackView.depth - 2).visible = true
         }
         onStackViewPop: {

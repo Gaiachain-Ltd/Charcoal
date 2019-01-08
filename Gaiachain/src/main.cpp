@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
     MainController mc;
-    mc.setupQMLContext(engine);
+    mc.setupQmlContext(engine);
 
 #ifdef DESKTOP_TESTS
     engine.rootContext()->setContextProperty("isDesktop", true);

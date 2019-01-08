@@ -10,7 +10,7 @@ class OverlayManager : public AbstractManager
 public:
     explicit OverlayManager(QObject *parent = nullptr);
 
-    void setupQmlContext(QQmlApplicationEngine &engine);
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
     bool getLoginRequest() const;
     void setLoginRequest(const bool enable);

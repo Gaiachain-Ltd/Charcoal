@@ -15,7 +15,7 @@ class DataManager : public AbstractManager
 public:
     explicit DataManager(QObject *parent = nullptr);
 
-    void setupQmlContext(QQmlApplicationEngine &engine);
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
 signals:
 
