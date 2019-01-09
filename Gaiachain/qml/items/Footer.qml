@@ -41,12 +41,16 @@ Item {
         backgroundColor: isActive ? Style.buttonGreenColor : "transparent"
         source: isActive ? Style.buttonAddBlack : Style.buttonAddGreen
 
-        visible: page !== Enums.Page.Login
+        visible: page !== Enums.Page.Login && userManager.loggedIn
         fillMode: Image.PreserveAspectFit
 
         onClicked: {
-            if (!isActive)
-                pageManager.push(Enums.Page.QRScanner)
+            if (!isActive) {
+                pageManager.backToAndEnter(pageManager.homePage(),
+                                           Enums.Page.QRScanner,
+                                           {},
+                                           true)
+            }
         }
     }
 }

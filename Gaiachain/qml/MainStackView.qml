@@ -22,13 +22,10 @@ Item {
         onStackViewPop: {
             stackView.pop(getMode(immediate))
         }
-        onStackViewBackToInitial: {
-            stackView.pop(null, getMode(immediate))
-        }
         onStackViewBackToPage: {
             stackView.pop(stackView.find(function(item) {
                   return item.page === backPage
-              }));
+              }), getMode(immediate));
         }
     }
 
@@ -77,11 +74,6 @@ Item {
                 duration: Style.animationDuration
                 easing.type: Style.animationEasing
             }
-        }
-
-        Component.onCompleted: {
-//            pageManager.push(Enums.Page.Login, {}, true)
-            pageManager.push(Enums.Page.QRScanner)
         }
     }
 }

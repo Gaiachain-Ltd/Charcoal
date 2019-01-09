@@ -111,7 +111,10 @@ BasePage {
 
                 padding: s(22)
 
-                onClicked: console.warn("Show cancel popup!")
+                onClicked: pageManager.enterPopup(Enums.Page.InformationPopup, {
+                                                      "text" : Strings.exitWithoutSaveQuestion,
+                                                      "acceptButtonText": Strings.exit,
+                                                      "rejectButtonText": Strings.cancel})
             }
 
             Items.ImageButton
@@ -126,7 +129,10 @@ BasePage {
 
                 padding: s(22)
 
-                onClicked: console.warn("Show ok popup!!")
+                onClicked: pageManager.enterPopup(Enums.Page.InformationPopup, {
+                                                      "text" : Strings.saveQuestion,
+                                                      "acceptButtonText": Strings.save,
+                                                      "rejectButtonText": Strings.cancel})
             }
         }
     }

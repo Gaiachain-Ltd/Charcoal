@@ -36,23 +36,20 @@ Item {
         return ""
     }
 
-    function sectionToUrl(section, green, editSection) {
-        if (editSection) {
-            return green ? Style.editGreenImgUrl : Style.editImgUrl
-        }
-
+    function sectionToUrl(section, green) {
         switch(section) {
         case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource, green)
         case Enums.PageSections.CalendarSection: return green ? Style.miniCalendarGreenImgUrl : Style.miniCalendarImgUrl
+        case Enums.PageSections.EditableEventDetailsSection: return green ? Style.editGreenImgUrl : Style.editImgUrl
         case Enums.PageSections.EventsListSection: return green ? Style.miniListGreenImgUrl : Style.miniListImgUrl
-        case Enums.PageSections.EventsDetailsSection: return green ? Style.detailsGreenImgUrl : Style.detailsImgUrl
+        case Enums.PageSections.EventDetailsSection: return green ? Style.detailsGreenImgUrl : Style.detailsImgUrl
         case Enums.PageSections.ShipmentDetailsSection: return green ? Style.timelineGreenImgUrl : Style.timelineImgUrl
         case Enums.PageSections.QRSection: return green ? Style.qrCodeGreenImgUrl : Style.qrCodeImgUrl
 
         case Enums.PageSections.DefaultSection: return ""
 
         default:
-            console.warn("Invalid section!")
+            console.warn("Invalid section!", section)
         }
 
         return ""
@@ -79,13 +76,26 @@ Item {
 
                 padding: s(Style.headerButtonsPadding)
                 fillMode: Image.PreserveAspectFit
-                source: Style.backImgUrl
 
-                onClicked: pageManager.back()
+                property bool isOnHomePage: pageManager.isOnHomePage()
+                source: {
+                    if (!isOnHomePage) return Style.backImgUrl
+
+                    return userManager.loggedIn ? Style.logoutImgUrl : Style.exitToLoginImgUrl
+                }
+
+                onClicked: {
+                    if (userManager.loggedIn && isOnHomePage) {
+                        pageManager.enterPopup(Enums.Page.InformationPopup, {
+                                                   "text" : Strings.logoutQuestion,
+                                                   "acceptButtonText": Strings.logout,
+                                                   "rejectButtonText": Strings.cancel})
+                    } else {
+                        pageManager.back()
+                    }
+                }
             }
-
             LayoutSpacer {}
-
             ImageButton {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
@@ -94,7 +104,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: Style.homeImgUrl
 
-                onClicked: pageManager.goToInitial()
+                onClicked: pageManager.backTo(pageManager.homePage())
             }
 
             ListView {
@@ -136,7 +146,7 @@ Item {
                             padding: s(Style.headerButtonsPadding)
 
                             fillMode: Image.PreserveAspectFit
-                            source: sectionToUrl(id, !delegateId.isLast, editSection)
+                            source: sectionToUrl(id, !delegateId.isLast)
                             backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
 
                             onClicked: pageManager.backToSection(id)

@@ -40,6 +40,7 @@ QtObject {
     readonly property string id: qsTr("ID")
     readonly property string batch: qsTr("Batch")
 
+    // Event Details Page
     readonly property string companyName: qsTr("Company name")
     readonly property string gpsHarvestLocation: qsTr("Location of harvest (GPS point)")
     readonly property string harvestDate: qsTr("Date of harvest")
@@ -48,4 +49,11 @@ QtObject {
 
     // popup
     readonly property string close: qsTr("Close")
+    readonly property string logout: qsTr("Logout")
+    readonly property string cancel: qsTr("Cancel")
+    readonly property string exit: qsTr("Exit")
+    readonly property string save: qsTr("Save")
+    readonly property string saveQuestion: qsTr("Do you want to save your changes?")
+    readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
+    readonly property string logoutQuestion: qsTr("Do you want to logout?")
 }

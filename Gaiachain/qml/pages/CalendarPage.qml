@@ -52,7 +52,7 @@ BasePage {
 
     function enterCalendarMonthPage(month, year) {
         console.log("Month/Year", month, year)
-        pageManager.push(Enums.Page.CalendarMonth, {"currentMonth": month, "currentYear": year})
+        pageManager.enter(Enums.Page.CalendarMonth, {"currentMonth": month, "currentYear": year})
     }
 
     ColumnLayout {
