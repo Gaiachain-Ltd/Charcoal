@@ -31,6 +31,33 @@ BasePage {
         photoPreview.visible = true
     }
 
+    function parseScannedId(id) {
+        if (scannedId.length == 0) {
+            if (utility.validateId(id)) {
+                scannedId = id
+            } else {
+                error = true
+                console.warn("Wrong code content!", id)
+            }
+            grabImageOfCamera()
+        }
+    }
+
+    function grabImageOfCamera() {
+        cameraContainer.grabToImage(previewCapturedImage)
+    }
+
+    function parseInputId() {
+        if (scanInput.text.length > 0) {
+            parseScannedId(scanInput.text)
+        } else {
+            retry()
+        }
+        scanInput.visible = false
+        scanInput.focus = false
+        Qt.inputMethod.hide()
+    }
+
     function retry() {
         scanInput.visible = false
         error = false
@@ -144,15 +171,7 @@ BasePage {
                     enabledDecoders: QZXing.DecoderFormat_QR_CODE
 
                     onTagFound:  {
-                        if (scannedId.length == 0) {
-                            if (utility.validateId(tag)) {
-                                scannedId = tag
-                            } else {
-                                error = true
-                                console.warn("Wrong code content!", tag)
-                            }
-                            cameraContainer.grabToImage(previewCapturedImage);
-                        }
+                        parseScannedId(tag)
                     }
                 }
             }
@@ -181,16 +200,29 @@ BasePage {
                     Items.GenericInput
                     {
                         id: scanInput
+                        onVisibleChanged: {
+                            scanInput.text = ""
+                        }
+
                         background.border.width: 0
                         anchors.fill: parent
                         visible: false
                         placeholderText: Strings.typeId + "..."
+
+                        additionalInputMethodHints: Qt.ImhDigitsOnly
+                        input.maximumLength: utility.getScannedIdLength()
+                        input.validator : RegExpValidator { regExp : /[0-9]+/ }
+
+                        onMoveToNextInput: {
+                            parseScannedId()
+                        }
                     }
 
                     Items.BasicText
                     {
                         id: scanLabel
                         visible: !scanInput.visible
+
                         anchors.fill: parent
                         text: {
                             if (error) {
@@ -212,13 +244,20 @@ BasePage {
                 Items.ImageButton
                 {
                     onClicked: {
-                        scanInput.visible = true
-                        scanInput.focus = true
+                        if (scanInput.visible) {
+                            parseInputId()
+                        } else {
+                            scanInput.visible = true
+                            scanInput.focus = true
+                            grabImageOfCamera()
+                        }
                     }
 
                     fillMode: Image.PreserveAspectFit
 
-                    backgroundColor: Style.buttonGreyColor
+                    enabled: !error && scannedId.length == 0
+
+                    backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: scanInput.visible ? Style.qrCodeImgUrl : Style.keyboardImgUrl
 
                     padding: s(Style.smallMargin)
@@ -235,7 +274,7 @@ BasePage {
 
                     enabled: scannedId.length > 0
 
-                    backgroundColor: enabled ? Style.buttonGreyColor : "#E6E6E6"
+                    backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: Style.loginImgUrl
 
                     padding: s(Style.smallMargin)

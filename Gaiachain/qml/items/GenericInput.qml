@@ -19,6 +19,8 @@ FocusScope
 
     property bool isPassword: false
 
+    property int additionalInputMethodHints: 0
+
     property Item nextInput: null
 
     signal moveToNextInput()
@@ -69,7 +71,7 @@ FocusScope
                 font.pixelSize: s(Style.pixelSize-5)
                 echoMode: isPassword ? TextInput.Password : TextInput.Normal
 
-                inputMethodHints: Qt.ImhNoPredictiveText
+                inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
 
                 Keys.onReturnPressed: moveToNextInput()
                 Keys.onEnterPressed: moveToNextInput()
