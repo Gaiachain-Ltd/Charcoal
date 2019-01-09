@@ -60,6 +60,14 @@ void PageManager::enterPopup(const Enums::Page page, QJsonObject properites)
     enter(page, properites, true);
 }
 
+void PageManager::sendAction(Enums::PopupAction action)
+{
+    // Pop popup first
+    back(true);
+
+    emit popupAction(action);
+}
+
 void PageManager::back(const bool immediate)
 {
     qDebug() << "Print stack on pop" << m_pageStack;

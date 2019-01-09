@@ -20,8 +20,19 @@ MainController::MainController(QObject *parent)
 
         m_pageManager.enterPopup(Enums::Page::InformationPopup, obj);
     };
-    connect(&m_sessionManager, &SessionManager::displayError, enterInformationPopup);
+    connect(&m_sessionManager, &SessionManager::displayError, this, enterInformationPopup);
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
+
+    connect(&m_pageManager, &PageManager::popupAction, this, [&](Enums::PopupAction action){
+        switch (action) {
+        case Enums::PopupAction::Accept:
+            qDebug() << "Implement accept action!";
+            break;
+        case Enums::PopupAction::Cancel:
+        default:
+            break;
+        }
+    });
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
@@ -34,6 +45,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::PageSections>("PageSections");
     qRegisterMetaType<Enums::UserType>("UserType");
     qRegisterMetaType<Enums::PlaceType>("PlaceType");
+    qRegisterMetaType<Enums::PopupAction>("PopupAction");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
 

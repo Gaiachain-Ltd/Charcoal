@@ -2,12 +2,29 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.1
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 import "../items" as Items
 
 BasePage {
     id: top
     property bool readOnly: true
+
+    Connections {
+        target: pageManager
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.Save:
+                console.log("Save action to implement")
+                break
+            case Enums.PopupAction.Exit:
+                pageManager.backTo(pageManager.homePage())
+                break
+            case Enums.PopupAction.Cancel:
+            default:
+            }
+        }
+    }
 
     ColumnLayout {
         anchors {
@@ -114,7 +131,9 @@ BasePage {
                 onClicked: pageManager.enterPopup(Enums.Page.InformationPopup, {
                                                       "text" : Strings.exitWithoutSaveQuestion,
                                                       "acceptButtonText": Strings.exit,
-                                                      "rejectButtonText": Strings.cancel})
+                                                      "rejectButtonText": Strings.cancel,
+                                                      "acceptButtonType": Enums.PopupAction.Exit
+                                                  })
             }
 
             Items.ImageButton
@@ -132,7 +151,9 @@ BasePage {
                 onClicked: pageManager.enterPopup(Enums.Page.InformationPopup, {
                                                       "text" : Strings.saveQuestion,
                                                       "acceptButtonText": Strings.save,
-                                                      "rejectButtonText": Strings.cancel})
+                                                      "rejectButtonText": Strings.cancel,
+                                                      "acceptButtonType": Enums.PopupAction.Save
+                                                  })
             }
         }
     }

@@ -22,6 +22,9 @@ public:
     Q_INVOKABLE bool isOnHomePage() const;
 
 signals:
+    void popupAction(Enums::PopupAction action);
+
+signals:
     // Signals below should only be used by StackView!!!
     void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject(), const bool immediate = false) const;
     void stackViewPop(const bool immediate = false) const;
@@ -38,6 +41,7 @@ public slots:
 
     // Popup managment
     void enterPopup(const Enums::Page page, QJsonObject properites = QJsonObject());
+    void sendAction(Enums::PopupAction action);
 
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");

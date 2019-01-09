@@ -75,7 +75,7 @@ BasePage {
                     source: Style.emailImgUrl
                     showImage: true
 
-                    text: "producer@gaiachain.com" //TO_DO remove it in production
+                    text: "producer@gaiachain.io" //TO_DO remove it in production
                     placeholderText: Strings.emailAddress
 
                     nextInput: passwordInput

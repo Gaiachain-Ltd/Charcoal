@@ -82,6 +82,17 @@ namespace Enums {
     Q_ENUM_NS(PlaceType)
     inline uint qHash(PlaceType key, uint seed) { return qH<PlaceType>(key, seed);}
 
+    enum class PopupAction {
+        InvalidPopupAction = -1,
+        Accept,
+        Cancel,
+        Save,
+        Exit,
+
+        PopupActionCount
+    };
+    Q_ENUM_NS(PopupAction)
+    inline uint qHash(PopupAction key, uint seed) { return qH<PopupAction>(key, seed);}
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 
