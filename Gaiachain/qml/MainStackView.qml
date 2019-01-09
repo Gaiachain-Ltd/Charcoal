@@ -15,6 +15,7 @@ Item {
             var keepPrevPageVisible = false
             if (properites.isPopup)
                 keepPrevPageVisible = true
+
             stackView.push(url, properites, getMode(immediate))
             if (keepPrevPageVisible && stackView.depth > 1)
                 stackView.get(stackView.depth - 2).visible = true
@@ -38,6 +39,10 @@ Item {
         anchors.fill: parent
 
         initialItem: pageManager.getInitialPageUrl()
+
+        onDepthChanged: {
+            console.log("Current depth", depth)
+        }
 
         pushEnter: Transition {
             PropertyAnimation {
@@ -76,8 +81,6 @@ Item {
             }
         }
 
-        Component.onCompleted: {
-            //pageManager.enter(Enums.Page.EditableEventDetails)
-        }
+
     }
 }

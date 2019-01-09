@@ -21,6 +21,27 @@ BasePage {
     {
         target: sessionManager
         onLoginFinished: enterViewTypePage()
+        onDisplayError: {
+            pageManager.enterPopup(Enums.Popup.Information, {
+                                       "text" : Strings.loginErrorInfo,
+                                       "acceptButtonText": Strings.close
+                                   })
+        }
+    }
+
+    Connections {
+        target: pageManager
+        // When using popup always add checking if I'm on top
+        enabled: pageManager.isOnTop(page)
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.Accept:
+                console.log("Accept action to implement!")
+                break
+            default:
+                break
+            }
+        }
     }
 
     Column

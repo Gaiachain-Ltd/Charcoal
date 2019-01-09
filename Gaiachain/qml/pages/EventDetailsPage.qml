@@ -12,6 +12,8 @@ BasePage {
 
     Connections {
         target: pageManager
+        // When using popup always add checking if I'm on top
+        enabled: pageManager.isOnTop(page)
         onPopupAction: {
             switch(action) {
             case Enums.PopupAction.Save:
@@ -128,12 +130,12 @@ BasePage {
 
                 padding: s(22)
 
-                onClicked: pageManager.enterPopup(Enums.Page.InformationPopup, {
+                onClicked: pageManager.enterPopup(Enums.Popup.Information, {
                                                       "text" : Strings.exitWithoutSaveQuestion,
                                                       "acceptButtonText": Strings.exit,
                                                       "rejectButtonText": Strings.cancel,
                                                       "acceptButtonType": Enums.PopupAction.Exit
-                                                  })
+                                                  }, true)
             }
 
             Items.ImageButton
@@ -148,7 +150,7 @@ BasePage {
 
                 padding: s(22)
 
-                onClicked: pageManager.enterPopup(Enums.Page.InformationPopup, {
+                onClicked: pageManager.enterPopup(Enums.Popup.Information, {
                                                       "text" : Strings.saveQuestion,
                                                       "acceptButtonText": Strings.save,
                                                       "rejectButtonText": Strings.cancel,

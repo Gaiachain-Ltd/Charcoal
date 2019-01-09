@@ -12,6 +12,22 @@ Item {
 
     property var currentResource: Enums.CommodityType.Timber //TO_DO set proper text after user set
 
+    Connections {
+        target: pageManager
+        // When using popup always add checking if I'm on top
+        enabled: pageManager.isOnTop(page)
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.Logout:
+                userManager.logOut()
+                pageManager.back()
+                break
+            case Enums.PopupAction.Cancel:
+            default:
+            }
+        }
+    }
+
     function getResourceName(res) {
         switch(res) {
         case Enums.CommodityType.Timber: return Strings.timber
@@ -86,10 +102,12 @@ Item {
 
                 onClicked: {
                     if (userManager.loggedIn && isOnHomePage) {
-                        pageManager.enterPopup(Enums.Page.InformationPopup, {
+                        pageManager.enterPopup(Enums.Popup.Information, {
                                                    "text" : Strings.logoutQuestion,
                                                    "acceptButtonText": Strings.logout,
-                                                   "rejectButtonText": Strings.cancel})
+                                                   "rejectButtonText": Strings.cancel,
+                                                   "acceptButtonType": Enums.PopupAction.Logout
+                                               })
                     } else {
                         pageManager.back()
                     }
