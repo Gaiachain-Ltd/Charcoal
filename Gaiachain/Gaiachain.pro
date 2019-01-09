@@ -48,7 +48,9 @@ HEADERS += \
     src/controllers/sessionmanager.h \
     src/controllers/usermanager.h \
     src/controllers/overlaymanager.h \
-    src/controllers/abstractmanager.h
+    src/controllers/abstractmanager.h \
+    src/common/tags.h \
+    src/rest/entitiesrequest.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -66,7 +68,8 @@ SOURCES += src/main.cpp \
     src/controllers/sessionmanager.cpp \
     src/controllers/usermanager.cpp \
     src/controllers/overlaymanager.cpp \
-    src/controllers/abstractmanager.cpp
+    src/controllers/abstractmanager.cpp \
+    src/rest/entitiesrequest.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

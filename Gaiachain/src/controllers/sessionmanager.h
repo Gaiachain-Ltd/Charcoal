@@ -6,6 +6,7 @@
 #include "../rest/baserequest.h"
 
 class OverlayManager;
+class UserManager;
 
 class SessionManager : public AbstractManager
 {
@@ -17,10 +18,15 @@ public:
     virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
     Q_INVOKABLE void login(const QString &email, const QString &password);
+    Q_INVOKABLE void getEntities();
+
+public slots:
+    void onTokenChanged(const QString &token);
 
 private:
     OverlayManager *m_overlayManager;
     RestAPIClient m_client;
+    QString m_token;
 
     void displayErrorPopup(const QString &errorMessage);
 

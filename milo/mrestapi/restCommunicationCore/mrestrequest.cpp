@@ -184,6 +184,7 @@ void MRestRequest::send()
     mReplyData.clear();
     QNetworkRequest request(mUrl);
     request.setOriginatingObject(this);
+    customizeRequest(request);
 
     switch (mType) {
     case Type::None:
@@ -217,6 +218,11 @@ void MRestRequest::send()
     connect(mActiveReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
             this, &MRestRequest::onReplyError);
     mRequestTimer->start();
+}
+
+void MRestRequest::customizeRequest(QNetworkRequest &request)
+{
+    Q_UNUSED(request)
 }
 
 /*!

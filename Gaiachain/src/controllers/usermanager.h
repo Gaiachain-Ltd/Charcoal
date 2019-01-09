@@ -28,6 +28,7 @@ public slots:
 signals:
     void userTypeChanged(Enums::UserType userType) const;    
     void loggedInChanged(bool loggedIn) const;
+    void tokenChanged(const QString &token) const;
 
 private:
     Enums::UserType m_userType = Enums::UserType::NotLoggedUser;

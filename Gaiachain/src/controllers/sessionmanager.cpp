@@ -8,6 +8,7 @@ Q_LOGGING_CATEGORY(session, "session")
 
 #include "overlaymanager.h"
 #include "../rest/loginrequest.h"
+#include "../rest/entitiesrequest.h"
 
 SessionManager::SessionManager(QObject *parent)
     : AbstractManager(parent)
@@ -30,6 +31,11 @@ void SessionManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("sessionManager"), this);
 }
 
+void SessionManager::onTokenChanged(const QString &token)
+{
+    m_token = token;
+}
+
 void SessionManager::login(const QString &email, const QString &password)
 {
     auto request = QSharedPointer<LoginRequest>::create(email, password);
@@ -47,6 +53,19 @@ void SessionManager::login(const QString &email, const QString &password)
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
+    connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+    m_client.send(request);
+}
+
+void SessionManager::getEntities()
+{
+    auto request = QSharedPointer<EntitiesRequest>::create(m_token);
+
+    auto errorLambda = [&](const QString &msgs, const int errorCode) {
+        qDebug() << "--------- ENTITITEES_ERROR" << errorCode << msgs;
+    };
+
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     m_client.send(request);

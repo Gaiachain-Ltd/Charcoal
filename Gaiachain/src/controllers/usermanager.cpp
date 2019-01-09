@@ -5,6 +5,9 @@
 
 #include <QDebug>
 #include <QJsonDocument>
+#include <QJsonObject>
+
+#include "../common/tags.h"
 
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
@@ -29,9 +32,11 @@ Enums::UserType UserManager::getUserType() const
 
 void UserManager::parseLoginData(const QJsonDocument &doc)
 {
-    setUserType(Enums::UserType::Producer);
+    const QJsonObject obj = doc.object();
+    emit tokenChanged(obj.value(Tags::token).toString());
+    const QString &role = obj.value(Tags::role).toString();
 
-    qDebug() << "------ RECEIVED LOGIN DATA" << doc;
+    setUserType(Enums::UserTypeStruct::userTypeFromString(role));
 }
 
 void UserManager::setLoggedIn()

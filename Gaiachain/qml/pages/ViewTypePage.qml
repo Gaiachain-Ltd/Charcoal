@@ -10,7 +10,8 @@ BasePage {
     id: top
 
     function enterCalendarPage() {
-        pageManager.enter(Enums.Page.Calendar)
+        sessionManager.getEntities()
+//        pageManager.enter(Enums.Page.Calendar)
     }
 
     function enterEventsListPage() {

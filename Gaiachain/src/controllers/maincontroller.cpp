@@ -11,7 +11,13 @@
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
+    setupConnections();
+}
+
+void MainController::setupConnections()
+{
     m_sessionManager.setOverlayManager(&m_overlayManager);
+    connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &SessionManager::onTokenChanged);
     auto enterInformationPopup = [&](const QString &text, const QString &acceptButtonString, const QString &rejectButtonString) {
         QJsonObject obj;
         obj.insert(QStringLiteral("text"), text);
