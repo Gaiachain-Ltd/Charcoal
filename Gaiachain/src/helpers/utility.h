@@ -36,7 +36,10 @@ public:
     Q_INVOKABLE QDate convertDateString(const QString &dateStr, const QString &dateFormat = QString()) const;
     Q_INVOKABLE QString defaultDateFormat() const;
 
+    Q_INVOKABLE bool validateId(const QString &id) const;
     Q_INVOKABLE bool validateEmail(const QString &email) const;
+
+    Q_INVOKABLE int getScannedIdLength() const;
 
 private:
     Utility();

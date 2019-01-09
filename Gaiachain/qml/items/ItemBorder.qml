@@ -1,8 +1,23 @@
-import QtQuick 2.0
+import QtQuick 2.11
+
+import com.gaiachain.style 1.0
 
 Item {    
+    id: top
     readonly property int borderHeight: sr(10)
     readonly property int borderWidth: width * 0.25
+
+    property bool error: false
+    property bool finished: false
+    property color borderColor: {
+        if (error) {
+            return Style.errorBorderColor
+        } else if (finished) {
+            return Style.finishedBorderColor
+        } else {
+            return Style.normalBorderColor
+        }
+    }
 
     Repeater
     {
@@ -10,11 +25,13 @@ Item {
         anchors.fill: parent
         Rectangle {
             id: rect
+
+            color: borderColor
+
             // 0-1 = top-left
             // 2-3 = top-right
             // 4-5 = bottom-left
             // 6-7 = bottom-right
-
             readonly property bool isLeft: index <= 1 || index === 4 || index === 5
             readonly property bool isTop: index <= 3
             anchors {
