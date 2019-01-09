@@ -20,7 +20,7 @@ Item {
             switch(action) {
             case Enums.PopupAction.Logout:
                 userManager.logOut()
-                pageManager.back()
+                pageManager.backTo(Enums.Page.Login) //TO_DO immediate generates bug
                 break
             case Enums.PopupAction.Cancel:
             default:
