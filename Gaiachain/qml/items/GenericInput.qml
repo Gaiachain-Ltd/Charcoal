@@ -12,11 +12,14 @@ FocusScope
     property alias input: inputItem
 
     property alias showImage: image.visible
+    property alias background: rect
 
     property alias placeholderText: placeholder.text
     property alias placeholder: placeholder
 
     property bool isPassword: false
+
+    property int additionalInputMethodHints: 0
 
     property Item nextInput: null
 
@@ -29,6 +32,7 @@ FocusScope
 
     Rectangle
     {
+        id: rect
         anchors.fill: parent
         radius: s(Style.smallMargin)
         border {
@@ -67,7 +71,7 @@ FocusScope
                 font.pixelSize: s(Style.pixelSize-5)
                 echoMode: isPassword ? TextInput.Password : TextInput.Normal
 
-                inputMethodHints: Qt.ImhNoPredictiveText
+                inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
 
                 Keys.onReturnPressed: moveToNextInput()
                 Keys.onEnterPressed: moveToNextInput()
