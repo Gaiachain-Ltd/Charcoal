@@ -27,25 +27,29 @@ BasePage {
         RowLayout {
             id: buttonLayout
             Layout.fillWidth: true
+            property real margin: s(Style.bigMargin) * 1.5
             property real buttonHeight: s(150)
             Layout.preferredHeight: buttonHeight
+            Layout.topMargin: margin
+            Layout.leftMargin: margin
 
-            spacing: s(20)
+            spacing: margin
 
-            Items.LayoutSpacer { spacerHeight: buttonLayout.buttonHeight }
             Items.TextImageButton {
                 Layout.preferredWidth: buttonLayout.buttonHeight
 
                 buttonHeight: width
-                buttonPadding: s(22)
+                buttonPadding: s(Style.normalMargin) * 1.1
                 buttonBackgroundColor: Style.buttonBackColor
 
-                shadowHorizontalOffset: s(5)
+                shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)
 
                 source: Style.calendarImgUrl
                 text: Strings.calendar
                 textFont.pixelSize: s(30)
+
+                spacing: s(Style.normalMargin)
 
                 onButtonClicked: top.enterCalendarPage()
             }
@@ -54,15 +58,17 @@ BasePage {
                 Layout.preferredWidth: buttonLayout.buttonHeight
 
                 buttonHeight: width
-                buttonPadding: s(22)
+                buttonPadding: s(Style.normalMargin) * 1.1
                 buttonBackgroundColor: Style.buttonBackColor
 
-                shadowHorizontalOffset: s(5)
+                shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)
 
                 source: Style.listImgUrl
                 text: Strings.list
                 textFont.pixelSize: s(30)
+
+                spacing: s(Style.normalMargin)
 
                 onButtonClicked: top.enterEventsListPage()
             }

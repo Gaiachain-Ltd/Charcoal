@@ -1,6 +1,8 @@
 import QtQuick 2.11
 import QtGraphicalEffects 1.0
 
+import com.gaiachain.style 1.0
+
 Item {
     id: top
 
@@ -19,6 +21,8 @@ Item {
         id: image
         anchors.fill: parent
 
+        backgroundRadius: s(Style.bigButtonRadius)
+
         onClicked: top.clicked()
     }
 
@@ -29,7 +33,8 @@ Item {
         source: image
         horizontalOffset: -s(10)
         verticalOffset: s(10)
-        samples: 33
-        color: "#80000000"
+        samples: 17
+        radius: 8
+        color: "#50000000"
     }
 }

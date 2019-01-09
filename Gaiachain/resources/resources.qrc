@@ -40,5 +40,12 @@
         <file alias="timeline">ui/timeline-icon.svg</file>
         <file alias="timeline_green">ui/timeline-icon-green.svg</file>
         <file alias="reload">ui/reload-icon.svg</file>
+        <file alias="edit_green">ui/edit-icon-green.svg</file>
+        <file alias="right_arrow_light">ui/arrow-light.svg</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file>fonts/Montserrat-Medium.ttf</file>
+        <file>fonts/Lato-Regular.ttf</file>
+        <file>fonts/Lato-Bold.ttf</file>
     </qresource>
 </RCC>

@@ -65,14 +65,15 @@ Item {
         }
 
         RowLayout {
+            id: topRow
             Layout.fillHeight: true
             Layout.fillWidth: true
 
             spacing: 0
 
             ImageButton {
-                Layout.fillHeight: true
-                Layout.preferredWidth: height
+                Layout.preferredHeight: s(Style.buttonHeight)
+                Layout.preferredWidth: s(Style.buttonHeight)
 
                 padding: s(Style.headerButtonsPadding)
                 fillMode: Image.PreserveAspectFit
@@ -95,10 +96,13 @@ Item {
                     }
                 }
             }
+
             LayoutSpacer {}
+
             ImageButton {
-                Layout.fillHeight: true
-                Layout.preferredWidth: height
+                Layout.preferredHeight: s(Style.buttonHeight)
+                Layout.preferredWidth: s(Style.buttonHeight)
+
 
                 padding: s(Style.headerButtonsPadding)
                 fillMode: Image.PreserveAspectFit
@@ -109,7 +113,7 @@ Item {
 
             ListView {
                 Layout.fillHeight: true
-                Layout.preferredWidth: sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth)) + s(Style.headerButtonsPadding)
+                Layout.preferredWidth: Math.max(sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth)) + s(Style.headerButtonsPadding), topRow.width * 0.5 + height)
 
                 orientation: ListView.Horizontal
                 interactive: false
@@ -127,14 +131,14 @@ Item {
                     RowLayout {
                         anchors.fill: parent
 
-                        spacing: delegateId.isLast ?  s(Style.headerButtonsPadding) : 0
+                        spacing: delegateId.isLast ?  s(Style.headerButtonsPadding) : s(Style.smallMargin)
 
                         SvgImage {
-                            Layout.fillHeight: true
+                            Layout.preferredHeight: s(Style.headerArrowWidth) * 1.5
                             Layout.preferredWidth: s(Style.headerArrowWidth)
 
                             fillMode: Image.PreserveAspectFit
-                            source: Style.rightArrowImgUrl
+                            source: Style.rightArrowLightImgUrl
                         }
 
                         ImageButton {
@@ -161,7 +165,11 @@ Item {
 
             color: Style.textGreenColor
             verticalAlignment: Text.AlignTop
-            font.capitalization: Font.AllUppercase
+            font {
+                capitalization: Font.AllUppercase
+                family: Style.secondaryFontFamily
+                letterSpacing: s(Style.pixelSize) * 0.1
+            }
             text: getResourceName(currentResource)
         }
     }
