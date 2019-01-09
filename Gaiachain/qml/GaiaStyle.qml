@@ -7,11 +7,13 @@ QtObject {
     readonly property color backgroundColor: "white"
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
+    readonly property color textErrorColor: "red"
     readonly property color textGreyColor: "#999999"
     readonly property color textGreenColor: "green"
     readonly property color buttonGreenColor: "#96c354"
     readonly property color buttonBlackGreyColor: "#666666"
     readonly property color buttonGreyColor: "#cccccc"
+    readonly property color disabledButtonGreyColor: "#E6E6E6"
     readonly property color backgroundShadowColor: "#99000000"
 
     readonly property real listEventsDelegateRelativeHeight: 390
@@ -51,6 +53,7 @@ QtObject {
     readonly property url calendarImgUrl: "qrc:/ui/calendar"
 
     readonly property url cancelImgUrl: "qrc:/ui/cancel"
+    readonly property url relaodImgUrl: "qrc:/ui/reload"
     readonly property url detailsImgUrl: "qrc:/ui/details"
     readonly property url detailsGreenImgUrl: "qrc:/ui/details_green"
     readonly property url editImgUrl: "qrc:/ui/edit"
@@ -92,6 +95,11 @@ QtObject {
     readonly property url buttonAddBlack: "qrc:/ui/add_black"
 
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"
+
+    // camera
+    readonly property color normalBorderColor: "white"
+    readonly property color errorBorderColor: "red"
+    readonly property color finishedBorderColor: buttonGreenColor
 
     // input
     readonly property int inputHeight: buttonHeight

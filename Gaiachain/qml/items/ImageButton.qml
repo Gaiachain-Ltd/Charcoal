@@ -25,6 +25,7 @@ Button {
 
     property alias textColor: buttonTextItem.color
     property alias textFont: buttonTextItem.font
+    readonly property int textWidth: buttonTextItem.paintedWidth
 
     property real inset: 0
 
