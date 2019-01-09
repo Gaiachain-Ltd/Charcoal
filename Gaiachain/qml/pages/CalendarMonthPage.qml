@@ -15,7 +15,7 @@ BasePage {
     property int currentYear: 2018
 
     function enterCalendarEventsPage(date) {
-        pageManager.push(Enums.Page.CalendarEvents, {"currentDateStr" : Qt.formatDate(date, utility.defaultDateFormat())})
+        pageManager.enter(Enums.Page.CalendarEvents, {"currentDateStr" : Qt.formatDate(date, utility.defaultDateFormat())})
     }
 
     ColumnLayout {

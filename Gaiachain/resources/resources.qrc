@@ -10,6 +10,8 @@
         <file alias="details">ui/details-icon.svg</file>
         <file alias="details_green">ui/details-icon-green.svg</file>
         <file alias="edit">ui/edit-icon.svg</file>
+        <file alias="email">ui/email-icon.svg</file>
+        <file alias="exit_to_login">ui/login-screen-icon.svg</file>
         <file alias="export">ui/export-icon.svg</file>
         <file alias="gaia_logo">ui/gaiachain-logo-black.svg</file>
         <file alias="gaia_black">ui/gaia-icon.svg</file>
@@ -19,9 +21,11 @@
         <file alias="key">ui/key-icon.svg</file>
         <file alias="list">ui/list-icon.svg</file>
         <file alias="login">ui/login-icon.svg</file>
+        <file alias="logout">ui/logout-screen-icon.svg</file>
         <file alias="log_park">ui/log-park-icon.svg</file>
         <file alias="mini_calendar">ui/mini-calendar-icon.svg</file>
         <file alias="mini_calendar_green">ui/mini-calendar-icon-green.svg</file>
+        <file alias="mini_edit">ui/mini-edit-icon.svg</file>
         <file alias="mini_list">ui/mini-list-icon.svg</file>
         <file alias="mini_list_green">ui/mini-list-icon-green.svg</file>
         <file alias="ok">ui/ok-icon.svg</file>
@@ -29,12 +33,11 @@
         <file alias="qr_code_green">ui/QR-code-icon-green.svg</file>
         <file alias="sawmill">ui/sawmill-icon.svg</file>
         <file alias="skip_arrow">ui/skip-arrow.svg</file>
+        <file alias="spinner">ui/loader.svg</file>
         <file alias="timber">ui/timber-icon.svg</file>
         <file alias="mini_timber">ui/timber-mini-icon.svg</file>
         <file alias="mini_timber_green">ui/timber-mini-icon-green.svg</file>
         <file alias="timeline">ui/timeline-icon.svg</file>
         <file alias="timeline_green">ui/timeline-icon-green.svg</file>
-        <file alias="email">ui/email-icon.svg</file>
-        <file alias="spinner">ui/loader.svg</file>
     </qresource>
 </RCC>

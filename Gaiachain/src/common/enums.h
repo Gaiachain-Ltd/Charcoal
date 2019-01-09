@@ -26,6 +26,7 @@ namespace Enums {
         CalendarEvents = 0,
         CalendarMonth,
         Calendar,
+        EditableEventDetails,
         EventDetails,
         EventsList,
         LanguageChosing,
@@ -34,6 +35,7 @@ namespace Enums {
         ShipmentDetails,
         ViewType,
         QRScanner,
+
         InformationPopup,
 
         PageCount
@@ -45,8 +47,9 @@ namespace Enums {
         DefaultSection = -1,
         ViewTypeSection = 0,
         CalendarSection,
+        EditableEventDetailsSection,
         EventsListSection,
-        EventsDetailsSection,
+        EventDetailsSection,
         ShipmentDetailsSection,
         QRSection,
 
@@ -56,6 +59,7 @@ namespace Enums {
     inline uint qHash(PageSections key, uint seed) { return qH<PageSections>(key, seed);}
 
     enum class UserType {
+        NotLoggedUser = -1,
         Producer,
         LogParkWorker,
         SawmillWorker,
@@ -64,8 +68,10 @@ namespace Enums {
         UserTypeCount
     };
     Q_ENUM_NS(UserType)
+    inline uint qHash(UserType key, uint seed) { return qH<UserType>(key, seed);}
 
     enum class PlaceType {
+        InvalidPlace = -1,
         Forestery,
         LogPark,
         Sawmill,
@@ -74,6 +80,9 @@ namespace Enums {
         PlaceTypeCount
     };
     Q_ENUM_NS(PlaceType)
+    inline uint qHash(PlaceType key, uint seed) { return qH<PlaceType>(key, seed);}
+
+    // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 
 

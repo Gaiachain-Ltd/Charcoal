@@ -39,7 +39,7 @@ Item
     {
         id: rect
         anchors.centerIn: parent
-        width: parent.width * 0.5
+        width: parent.width * 0.8
         height: contentColumn.height
 
         color: Style.pageBaseBackgroundColor
@@ -56,18 +56,21 @@ Item
 
             Items.BasicText
             {
-                text: top.text
-                width: parent.width * 0.95
-                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width * 0.6
+                topPadding: s(Style.normalMargin)
+                bottomPadding: s(Style.normalMargin)
+
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                height: paintedHeight * 2
+                text: top.text
             }
 
             Rectangle
             {
-                height: sr(1)
-                width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
+                height: sr(3)
+                width: parent.width
+
                 color: Style.buttonGreyColor
             }
 
@@ -79,11 +82,14 @@ Item
                 Items.ImageButton
                 {
                     id: acceptButton
-                    text: top.acceptButtonText
-                    backgroundColor: Style.pageBaseBackgroundColor
-                    visible: text != ""
+
                     width: parent.width * (rejectButton.visible ? 0.5 : 1)
                     height: parent.height
+                    visible: text != ""
+
+                    text: top.acceptButtonText
+
+                    backgroundColor: Style.pageBaseBackgroundColor
                     showIcon: false
 
                     onClicked: acceptHandler()
@@ -91,20 +97,24 @@ Item
 
                 Rectangle
                 {
-                    width: sr(1)
+                    width: sr(3)
                     height: parent.height
+                    visible: acceptButton.visible && rejectButton.visible
+
                     color: Style.buttonGreyColor
-                    visible: !acceptButton.visible || !rejectButton.visible
                 }
 
                 Items.ImageButton
                 {
                     id: rejectButton
-                    text: top.rejectButtonText || Strings.close
-                    visible: text != ""
-                    backgroundColor: Style.pageBaseBackgroundColor
+
                     width: parent.width * (acceptButton.visible ? 0.5 : 1)
                     height: parent.height
+                    visible: text != ""
+
+                    text: top.rejectButtonText || Strings.close
+
+                    backgroundColor: Style.pageBaseBackgroundColor
                     showIcon: false
 
                     onClicked: cancelHandler()

@@ -48,27 +48,34 @@ int PageSectionsModel::maxSectionsDepth() const
     return m_maxDepth;
 }
 
-void PageSectionsModel::pagePushed(const Enums::Page page, const bool isEdit)
+void PageSectionsModel::pagePushed(const Enums::Page page)
 {
     Enums::PageSections newSection = m_pageToSection[page];
 
     if (newSection == Enums::PageSections::DefaultSection)
         return;
 
-    int shiftedIndex = getShiftedIndex(ModelRole::SectionId);
-    Enums::PageSections currentSection = m_data.last()[shiftedIndex].value<Enums::PageSections>();
-
     // First section is special because it is removed after new section is pushed
-    if (m_isInitialSection) {
-        m_isInitialSection = false;
+    if (page == m_homePage) {
+       m_isHomeSection = true;
+   } else if (m_isHomeSection) {
+        m_isHomeSection = false;
         m_data.pop_back();
     }
 
-    if (currentSection != newSection) {
+    bool pushData = false;
+    if (m_data.isEmpty()) {
+        pushData = true;
+    } else {
+        int shiftedIndex = getShiftedIndex(ModelRole::SectionId);
+        pushData = m_data.last()[shiftedIndex].value<Enums::PageSections>() != newSection;
+    }
+
+    if (pushData) {
         if (m_data.count() >= m_maxDepth)
             qWarning() << "Page not pushed! Maximum depth of sections exceeded! Fix this!";
 
-        pushBackData(newSection, isEdit);
+        pushBackData(newSection);
     }
 }
 
@@ -79,25 +86,29 @@ void PageSectionsModel::pagePopped(const Enums::Page currentTopPage)
     if (topSection == Enums::PageSections::DefaultSection)
         return;
 
+    if (currentTopPage == m_homePage)
+        m_isHomeSection = true;
+
     int shiftedIndex = getShiftedIndex(ModelRole::SectionId);
     Enums::PageSections currentSection = m_data.last()[shiftedIndex].value<Enums::PageSections>();
 
     if (currentSection != topSection) {
         m_data.pop_back();
         if (m_data.empty()) {
-            m_isInitialSection = true;
-            pushBackData(m_initialSection);
+            m_isHomeSection = true;
+            pushBackData(m_homeSection);
         }
     }
 }
 
-void PageSectionsModel::stackReset(Enums::Page initialPage)
+void PageSectionsModel::stackReset(Enums::Page homePage)
 {
     m_data.clear();
-    m_isInitialSection = true;
-    m_initialSection = m_pageToSection[initialPage];
+    m_isHomeSection = false;
+    m_homePage = homePage;
+    m_homeSection = m_pageToSection[homePage];
 
-    pushBackData(m_initialSection);
+    pushBackData(m_homeSection);
 }
 
 Enums::Page PageSectionsModel::getPageForSection(const Enums::PageSections section) const
@@ -115,11 +126,10 @@ int PageSectionsModel::getShiftedIndex(const ModelRole role) const
     return static_cast<int>(role) - static_cast<int>(ModelRole::SectionId);
 }
 
-void PageSectionsModel::pushBackData(const Enums::PageSections section, const bool isEdit)
+void PageSectionsModel::pushBackData(const Enums::PageSections section)
 {
     QVariantList rowToInsert;
     rowToInsert.append({static_cast<int>(section),
-                       Utility::enumToQString<Enums::PageSections>(section, "PageSections"),
-                       isEdit});
+                       Utility::enumToQString<Enums::PageSections>(section, "PageSections")});
     m_data.push_back(rowToInsert);
 }

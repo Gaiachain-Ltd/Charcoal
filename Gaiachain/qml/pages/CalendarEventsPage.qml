@@ -18,7 +18,7 @@ BasePage {
     property int currentYear: currentDate.getFullYear()
 
     function enterShipmentDetailsPage(data) {
-        pageManager.push(Enums.Page.ShipmentDetails, data)
+        pageManager.enter(Enums.Page.ShipmentDetails, data)
     }
 
     // Month should be 0-indexed
