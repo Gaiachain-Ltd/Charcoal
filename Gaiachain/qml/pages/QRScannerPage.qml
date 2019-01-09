@@ -73,7 +73,7 @@ BasePage {
     Connections
     {
         target: pageManager
-        onPop: camera.stop()
+        onStackViewPop: camera.stop()
     }
 
     ColumnLayout

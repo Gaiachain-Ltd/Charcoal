@@ -22,12 +22,15 @@ Item {
             verticalCenter: parent.verticalCenter
         }
 
-        backgroundColor: !addButton.isActive ? Style.buttonGreenColor : "transparent"
-        source: !addButton.isActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
+        readonly property bool isActive: !addButton.isActive
+
+        backgroundColor: isActive ? Style.buttonGreenColor : "transparent"
+        source: isActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
         fillMode: Image.PreserveAspectFit
 
         onClicked: {
-            pageManager.goToInitial();
+            if (!isActive)
+                pageManager.backTo(pageManager.homePage());
         }
     }
 
