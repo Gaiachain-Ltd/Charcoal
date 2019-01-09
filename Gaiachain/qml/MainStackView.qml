@@ -40,10 +40,6 @@ Item {
 
         initialItem: pageManager.getInitialPageUrl()
 
-        onDepthChanged: {
-            console.log("Current depth", depth)
-        }
-
         pushEnter: Transition {
             PropertyAnimation {
                 property: "x"
@@ -80,7 +76,5 @@ Item {
                 easing.type: Style.animationEasing
             }
         }
-
-
     }
 }
