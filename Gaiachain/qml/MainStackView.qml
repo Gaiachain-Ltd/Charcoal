@@ -75,5 +75,9 @@ Item {
                 easing.type: Style.animationEasing
             }
         }
+
+        Component.onCompleted: {
+            pageManager.enter(Enums.Page.CalendarMonth)
+        }
     }
 }

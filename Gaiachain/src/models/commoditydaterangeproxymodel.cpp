@@ -4,6 +4,8 @@
 #include "eventmodel.h"
 #include "shipmentmodel.h"
 
+#include <QDebug>
+
 CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
@@ -16,8 +18,6 @@ void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *c
     connect(m_commodityProxyModel, &CommodityProxyModel::commodityTypeChanged, this, &CommodityDateRangeProxyModel::invalidateFilter);
 }
 
-#include <QDebug>
-
 void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime end)
 {
     m_startDateTime = start;
@@ -25,6 +25,20 @@ void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime e
 
     qDebug() << "Start end dates" << start << end;
     invalidateFilter();
+}
+
+bool CommodityDateRangeProxyModel::isEventToday(QDate date)
+{
+    for (int i = 0; i < rowCount(); ++i) {
+        auto index = sourceModel()->index(i, 0);
+        auto arrival = data(index, EventModel::ArrivalDateTime).toDate();
+        auto departure = data(index, EventModel::DepartureDateTime).toDate();
+
+        if (date == arrival || date == departure)
+            return true;
+    }
+
+    return false;
 }
 
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -37,14 +51,24 @@ bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelI
     auto arrivalDateTime = sourceModel()->data(index, EventModel::ArrivalDateTime).toDateTime();
     auto departureDateTime = sourceModel()->data(index, EventModel::DepartureDateTime).toDateTime();
 
-    //qDebug() << "Arrival/Departure" << arrivalDateTime << departureDateTime;
-
+    bool containsId = false;
     if (isInDateTimeRange(arrivalDateTime) || isInDateTimeRange(departureDateTime)) {
         auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();
-        return commodityProxyModelContainsId(shipmentId);
+        containsId = commodityProxyModelContainsId(shipmentId);
     }
 
-    return false;
+    if (containsId) {
+        qDebug() << "Contains Arrival/Departure" << arrivalDateTime << departureDateTime;
+    }
+
+    return containsId;
+}
+
+bool CommodityDateRangeProxyModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
+{
+    Q_UNUSED(source_left)
+    Q_UNUSED(source_right)
+    //TO_DO sort by date (arrival and departure)
 }
 
 bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId) const
@@ -65,6 +89,6 @@ bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId)
 
 bool CommodityDateRangeProxyModel::isInDateTimeRange(QDateTime &dt) const
 {
-    return m_startDateTime <= dt && dt <= m_endDateTime;
+    return m_startDateTime <= dt && dt < m_endDateTime;
 }
 

@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.11
 import Qt.labs.calendar 1.0
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 Item {
     id: top
@@ -16,6 +17,15 @@ Item {
 
     signal titleClicked()
     signal dateClicked(date d)
+
+    // Month should be 0-indexed
+    function getNextMonth (date, year, month) {
+        if (date.getMonth() === 11) {
+            return new Date(date.getFullYear() + 1, 0, 1);
+        } else {
+            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -53,12 +63,32 @@ Item {
                     height: width
                     radius: width / 2
 
-                    color: currentMonth ? "gray" : "transparent"
+                    color: {
+                        var delegateDate = new Date(model.year, model.month, model.day)
+                        var isEventToday = commodityRangeProxy.isEventToday(delegateDate)
+                        var color = "gray"
+                        if (commodityProxy.commodityEnabled(Enums.CommodityType.Timber))
+                            color = "green"
+
+                        console.log("Is event today", isEventToday, delegateDate)
+
+                        return currentMonth ? color : "transparent"
+                    }
                 }
             }
         }
 
         LayoutSpacer { spacerHeight: top.bottomSpacing }
+    }
+
+    Component.onCompleted: {
+        var startDate = new Date(currentYear, currentMonth, 1)
+        var endDate = getNextMonth(startDate)
+
+        console.log("Current start/end date", startDate, endDate)
+        commodityProxy.setCommodityType(Enums.CommodityType.Timber)
+        commodityRangeProxy.setDateTimeRange(startDate, endDate)
+
     }
 }
 

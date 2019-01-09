@@ -15,10 +15,13 @@ public:
     explicit CommodityDateRangeProxyModel(QObject *parent = nullptr);
 
     Q_INVOKABLE void setDateTimeRange(QDateTime start, QDateTime end);
+    Q_INVOKABLE bool isEventToday(QDate date);
 
     void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
 
+protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const Q_DECL_OVERRIDE;
 
 private:
     CommodityProxyModel *m_commodityProxyModel = nullptr;

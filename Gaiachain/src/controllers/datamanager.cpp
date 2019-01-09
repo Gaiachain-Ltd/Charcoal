@@ -27,6 +27,7 @@ void DataManager::setupModels()
     m_commodityDateRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 }
 
+#include <QDebug>
 void DataManager::populateModels()
 {
     Gaia::ModelData shipmentData;
@@ -41,11 +42,16 @@ void DataManager::populateModels()
     m_shipmentModel.appendData(shipmentData);
 
     //Populate events data
-    int eventCount = 300;
+    int eventCount = 100;
     QStringList comapnyNames{"Milo", "Solutions", "XentCorp", "YOLOCorp"};
-    QDateTime startDate(QDate(2016,1,1));
-    QDateTime endDate(QDate(2020,1,1));
+    QDateTime startDate(QDate(2018,1,1));
+    QDateTime endDate(QDate(2019,1,1));
     auto dateDiff = startDate.daysTo(endDate);
+
+
+    QDateTime startTestRange(QDate(2018,12,1));
+    QDateTime endTestRange(QDate(2019,1,1));
+    int countTest = 0;
 
     for (int i = 0; i < eventCount; ++i) {
         int shipmentId = rand() % shipmentCount;
@@ -54,6 +60,13 @@ void DataManager::populateModels()
 
         QDateTime arrivalDateTime = startDate.addDays(daysElapsed);
         QDateTime departureDateTime = arrivalDateTime.addDays(rand() % 15 + 1);
+
+        if (arrivalDateTime >= startTestRange && arrivalDateTime < endTestRange)
+            ++countTest;
+
+        if (departureDateTime >= startTestRange && departureDateTime < endTestRange)
+            ++countTest;
+
         eventData.append({i,
                           shipmentId,
                           companyName,
@@ -62,6 +75,8 @@ void DataManager::populateModels()
                           departureDateTime
                          });
     }
+
+    qDebug() << "Count between dates:" << startTestRange << endTestRange <<  countTest;
 
     m_eventModel.appendData(eventData);
 }
