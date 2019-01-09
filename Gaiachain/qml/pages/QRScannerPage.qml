@@ -214,7 +214,7 @@ BasePage {
                         input.validator : RegExpValidator { regExp : /[0-9]+/ }
 
                         onMoveToNextInput: {
-                            parseScannedId()
+                            parseInputId()
                         }
                     }
 
