@@ -21,7 +21,7 @@ BasePage {
     {
         target: sessionManager
         onLoginFinished: enterViewTypePage()
-        onDisplayError: {
+        onDisplayLoginError: {
             pageManager.enterPopup(Enums.Popup.Information, {
                                        "text" : Strings.loginErrorInfo,
                                        "acceptButtonText": Strings.close
