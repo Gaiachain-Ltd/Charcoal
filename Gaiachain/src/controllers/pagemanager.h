@@ -7,7 +7,7 @@
 #include "abstractmanager.h"
 #include "../models/pagesectionsmodel.h"
 #include "../common/enums.h"
-
+#include "../helpers/utility.h"
 
 class PageManager : public AbstractManager
 {
@@ -20,6 +20,10 @@ public:
     Q_INVOKABLE QString getInitialPageUrl() const;
     Q_INVOKABLE Enums::Page homePage() const;
     Q_INVOKABLE bool isOnHomePage() const;
+    Q_INVOKABLE bool isOnTop(Enums::Page page) const;
+
+signals:
+    void popupAction(Enums::PopupAction action);
 
 signals:
     // Signals below should only be used by StackView!!!
@@ -37,7 +41,9 @@ public slots:
     bool backToSection(const Enums::PageSections section);
 
     // Popup managment
-    void enterPopup(const Enums::Page page, QJsonObject properites = QJsonObject());
+    // Use enterPopup only on QML side to handle strings and don't mess sendAction signal receivers!
+    void enterPopup(const Enums::Popup popup, QJsonObject properites = QJsonObject(), const bool immediate = true);
+    void sendAction(Enums::PopupAction action);
 
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
@@ -45,10 +51,24 @@ private:
     const Enums::Page m_homePage = Enums::Page::ViewType;
 
     QVector<Enums::Page> m_pageStack;
+    QVector<Enums::Popup> m_popupStack;
     PageSectionsModel m_pageSectionsModel;
 
     void prepareConnections();
-    QString pageToQString(const Enums::Page p) const;
+
+    template<typename T>
+    QString pageToQString(const T p, const char* enumName) const {
+        const QString pageStr = Utility::enumToQString<T>(p, enumName);
+        return  m_pagePrefix + pageStr + enumName + QStringLiteral(".qml");
+    }
+
+    QString pageToQString(Enums::Page p) const {
+        return pageToQString<Enums::Page>(p, "Page");
+    }
+
+    QString pageToQString(Enums::Popup p) const {
+        return pageToQString<Enums::Popup>(p, "Popup");
+    }
 };
 
 #endif // PAGEMANAGER_H

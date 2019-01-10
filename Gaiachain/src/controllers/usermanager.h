@@ -17,6 +17,8 @@ public:
     Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
     Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
 
+    Q_INVOKABLE void logOut();
+
     bool loggedIn() const;
 
     Enums::UserType getUserType() const;
@@ -26,7 +28,7 @@ public slots:
     void parseLoginData(const QJsonDocument &doc);
 
 signals:
-    void userTypeChanged(Enums::UserType userType) const;    
+    void userTypeChanged(Enums::UserType userType) const;
     void loggedInChanged(bool loggedIn) const;
 
 private:
