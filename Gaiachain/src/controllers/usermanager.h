@@ -8,14 +8,12 @@
 class UserManager : public AbstractManager
 {
     Q_OBJECT
-
+    Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
+    Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
 public:
     explicit UserManager(QObject *parent = nullptr);
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
-
-    Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
-    Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
 
     Q_INVOKABLE void logOut();
 
