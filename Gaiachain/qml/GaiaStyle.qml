@@ -16,7 +16,6 @@ Item {
     readonly property color disabledButtonGreyColor: "#E6E6E6"
     readonly property color backgroundShadowColor: "#99000000"
 
-    readonly property real listEventsDelegateRelativeHeight: 390
     readonly property color listEventsDelegateBottomLineColor: buttonGreyColor
 
     readonly property color pageBaseBackgroundColor: "white"

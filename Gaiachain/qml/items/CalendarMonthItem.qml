@@ -16,6 +16,8 @@ Item {
 
     property int daySpacing: 0
 
+    property color circleColor: Style.textGreenColor
+
     signal titleClicked()
     signal dateClicked(date d)
 
@@ -33,6 +35,7 @@ Item {
             year: currentYear
             locale: Qt.locale("en_GB")
             font.pixelSize: s(25)
+            font.family: Style.primaryFontFamily
 
             onClicked: dateClicked(date)
 
@@ -56,7 +59,7 @@ Item {
                     height: width
                     radius: width * 0.5
 
-                    color: currentMonth ? Style.buttonGreenColor : "transparent"
+                    color: currentMonth ? circleColor : "transparent"
                 }
             }
         }

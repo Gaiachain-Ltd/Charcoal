@@ -3,7 +3,7 @@
 #
 ## (c) Milo Solutions, 2016
 
-QT += core gui qml quick svg androidextras
+QT += core gui qml quick svg
 
 exists(../local.pri) {
     include(../local.pri)
@@ -81,10 +81,10 @@ OTHER_FILES += \
     ../.gitlab-ci.yml
 
 android {
+    QT += androidextras
     INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/include
 
     SSL_LIB = $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/lib
-
     ANDROID_EXTRA_LIBS += $$SSL_LIB/libcrypto.so $$SSL_LIB/libssl.so
 }
 
