@@ -4,6 +4,7 @@
 #include <QLatin1String>
 
 namespace Tags {
+    const QLatin1String id = QLatin1String("id");
     const QLatin1String token = QLatin1String("token");
     const QLatin1String role = QLatin1String("role");
     const QLatin1String email = QLatin1String("email");

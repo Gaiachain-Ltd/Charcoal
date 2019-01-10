@@ -66,6 +66,11 @@ void SessionManager::getEntities()
         qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
     };
 
+    auto finishLambda = [&](const QString &id) {
+        getEntityData(id);
+    };
+
+    connect(request.data(), &EntityRequest::checkEntity, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     m_client.send(request);
@@ -73,6 +78,8 @@ void SessionManager::getEntities()
 
 void SessionManager::getEntityData(const QString &id)
 {
+
+    qDebug() << "--------- ENTITY_DATA" << id<< m_token;
     auto request = QSharedPointer<EntityRequest>::create(m_token, id);
 
     auto errorLambda = [&](const QString &msgs, const int errorCode) {
