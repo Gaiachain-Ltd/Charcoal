@@ -8,9 +8,18 @@
 
 #include <QZXing>
 
+#include <QtAndroidExtras/QtAndroid>
+
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
+    // check for permissions before opening scanner page to load camera faster
+    // TO_DO user it only after login
+    const QString cameraPermission = QStringLiteral("android.permission.CAMERA");
+    if (QtAndroid::checkPermission(cameraPermission) == QtAndroid::PermissionResult::Denied) {
+        auto permissionCallback = [](const QtAndroid::PermissionResultMap &) {};
+        QtAndroid::requestPermissions(QStringList() << cameraPermission, permissionCallback);
+    }
     m_sessionManager.setOverlayManager(&m_overlayManager);
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
 }

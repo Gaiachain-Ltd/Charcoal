@@ -3,7 +3,7 @@
 #
 ## (c) Milo Solutions, 2016
 
-QT += core gui qml quick svg
+QT += core gui qml quick svg androidextras
 
 exists(../local.pri) {
     include(../local.pri)
@@ -84,12 +84,8 @@ android {
     INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/include
 
     SSL_LIB = $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/lib
-#    LIBS += -lc -ldl
 
-#    ANDROID_NDK_PLATFORM=android-23
     ANDROID_EXTRA_LIBS += $$SSL_LIB/libcrypto.so $$SSL_LIB/libssl.so
-
-#    LIBS += -L$$SSL_LIB -lcrypto -lssl
 }
 
 ## Put all build files into build directory
