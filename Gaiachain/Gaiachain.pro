@@ -83,13 +83,13 @@ OTHER_FILES += \
 android {
     INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/include
 
-    SSLLIB = $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/lib
-    LIBS += -lc -ldl
+    SSL_LIB = $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/lib
+#    LIBS += -lc -ldl
 
-    ANDROID_NDK_PLATFORM=android-23
-    ANDROID_EXTRA_LIBS = $$SSLLIB/libcrypto.so $$SSLLIB/libssl.so
+#    ANDROID_NDK_PLATFORM=android-23
+    ANDROID_EXTRA_LIBS += $$SSL_LIB/libcrypto.so $$SSL_LIB/libssl.so
 
-    LIBS += -L$$SSLLIB -lcrypto -lssl
+#    LIBS += -L$$SSL_LIB -lcrypto -lssl
 }
 
 ## Put all build files into build directory
