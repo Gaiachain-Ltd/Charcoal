@@ -50,7 +50,7 @@ HEADERS += \
     src/controllers/overlaymanager.h \
     src/controllers/abstractmanager.h \
     src/common/tags.h \
-    src/rest/entitiesrequest.h
+    src/rest/entityrequest.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -69,7 +69,7 @@ SOURCES += src/main.cpp \
     src/controllers/usermanager.cpp \
     src/controllers/overlaymanager.cpp \
     src/controllers/abstractmanager.cpp \
-    src/rest/entitiesrequest.cpp
+    src/rest/entityrequest.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

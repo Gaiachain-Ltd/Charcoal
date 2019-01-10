@@ -19,6 +19,7 @@ public:
 
     Q_INVOKABLE void login(const QString &email, const QString &password);
     Q_INVOKABLE void getEntities();
+    Q_INVOKABLE void getEntityData(const QString &id);
 
 public slots:
     void onTokenChanged(const QString &token);

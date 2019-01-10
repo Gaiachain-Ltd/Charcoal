@@ -1,4 +1,4 @@
-#include "entitiesrequest.h"
+#include "entityrequest.h"
 
 #include <QJsonObject>
 #include <QLoggingCategory>
@@ -7,8 +7,9 @@
 #include "../common/tags.h"
 
 #define ADDRESS QStringLiteral("/entities/")
+#define ADDRESS_DATA QStringLiteral("%1%2/").arg(ADDRESS)
 
-EntitiesRequest::EntitiesRequest(const QString &token)
+EntityRequest::EntityRequest(const QString &token)
     : BaseRequest(ADDRESS, token)
 {
     if (!token.isEmpty()) {
@@ -18,7 +19,7 @@ EntitiesRequest::EntitiesRequest(const QString &token)
     }
 }
 
-EntitiesRequest::EntitiesRequest(const QString &token, const int count, const QString &type)
+EntityRequest::EntityRequest(const QString &token, const int count, const QString &type)
     : BaseRequest(ADDRESS, token)
 {
     if (!token.isEmpty() && count > 0 && !type.isEmpty()) {
@@ -30,12 +31,21 @@ EntitiesRequest::EntitiesRequest(const QString &token, const int count, const QS
         mType = Type::Post;
 
     } else {
-        qCritical() << "Error: missing entities POST info"
-                                 << count << type.length();
+        qCritical() << "Error: missing entities POST info" << count << type.length();
     }
 }
 
-void EntitiesRequest::parse()
+EntityRequest::EntityRequest(const QString &token, const QString &id)
+    : BaseRequest(ADDRESS_DATA.arg(id))
+{
+    if (!token.isEmpty() && !id.isEmpty()) {
+        mType = Type::Get;
+    } else {
+        qCritical() << "Error: missing entity GET info" << id;
+    }
+}
+
+void EntityRequest::parse()
 {
     qDebug() << "-------- ENTITITES" << mReplyDocument;
 }

@@ -8,7 +8,7 @@ Q_LOGGING_CATEGORY(session, "session")
 
 #include "overlaymanager.h"
 #include "../rest/loginrequest.h"
-#include "../rest/entitiesrequest.h"
+#include "../rest/entityrequest.h"
 
 SessionManager::SessionManager(QObject *parent)
     : AbstractManager(parent)
@@ -60,10 +60,23 @@ void SessionManager::login(const QString &email, const QString &password)
 
 void SessionManager::getEntities()
 {
-    auto request = QSharedPointer<EntitiesRequest>::create(m_token);
+    auto request = QSharedPointer<EntityRequest>::create(m_token);
 
     auto errorLambda = [&](const QString &msgs, const int errorCode) {
-        qDebug() << "--------- ENTITITEES_ERROR" << errorCode << msgs;
+        qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
+    };
+
+    connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+    m_client.send(request);
+}
+
+void SessionManager::getEntityData(const QString &id)
+{
+    auto request = QSharedPointer<EntityRequest>::create(m_token, id);
+
+    auto errorLambda = [&](const QString &msgs, const int errorCode) {
+        qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
     };
 
     connect(request.data(), &BaseRequest::replyError, errorLambda);
