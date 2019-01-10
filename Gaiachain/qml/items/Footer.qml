@@ -41,7 +41,7 @@ Item {
         backgroundColor: isAddButtonActive ? Style.buttonGreenColor : "transparent"
         source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
 
-        visible: page !== Enums.Page.Login// && userManager.loggedIn
+        visible: page !== Enums.Page.Login && userManager.loggedIn
 
         onClicked: {
             if (!isAddButtonActive) {
