@@ -16,7 +16,7 @@ void OverlayManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("overlay"), this);
 }
 
-bool OverlayManager::getLoginRequest() const
+bool OverlayManager::loginRequest() const
 {
     return m_loginRequest;
 }

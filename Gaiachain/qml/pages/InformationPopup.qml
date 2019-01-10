@@ -12,15 +12,18 @@ Item
     property bool isPopup: true
 
     property string text: ""
+
     property string acceptButtonText: ""
+    property int acceptButtonType: Enums.PopupAction.Accept
     property string rejectButtonText: ""
+    property int rejectButtonType: Enums.PopupAction.Cancel
 
     function cancelHandler() {
-        pageManager.back(true)
+        pageManager.sendAction(rejectButtonType)
     }
 
     function acceptHandler() {
-        console.log("Empty function called!")
+        pageManager.sendAction(acceptButtonType)
     }
 
     Rectangle

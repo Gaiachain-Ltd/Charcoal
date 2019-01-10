@@ -12,15 +12,6 @@ MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
     m_sessionManager.setOverlayManager(&m_overlayManager);
-    auto enterInformationPopup = [&](const QString &text, const QString &acceptButtonString, const QString &rejectButtonString) {
-        QJsonObject obj;
-        obj.insert(QStringLiteral("text"), text);
-        obj.insert(QStringLiteral("acceptButtonText"), acceptButtonString);
-        obj.insert(QStringLiteral("rejectButtonText"), rejectButtonString);
-
-        m_pageManager.enterPopup(Enums::Page::InformationPopup, obj);
-    };
-    connect(&m_sessionManager, &SessionManager::displayError, enterInformationPopup);
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
 }
 
@@ -34,6 +25,8 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::PageSections>("PageSections");
     qRegisterMetaType<Enums::UserType>("UserType");
     qRegisterMetaType<Enums::PlaceType>("PlaceType");
+    qRegisterMetaType<Enums::Popup>("Popup");
+    qRegisterMetaType<Enums::PopupAction>("PopupAction");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
 

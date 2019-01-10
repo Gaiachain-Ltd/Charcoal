@@ -4,8 +4,6 @@
 #include <QQmlContext>
 #include <QDebug>
 
-#include "../helpers/utility.h"
-
 PageManager::PageManager(QObject *parent) : AbstractManager(parent)
 {
     m_pageStack.push_back(m_initialPage);
@@ -29,8 +27,15 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
  */
 void PageManager::enter(const Enums::Page page, QJsonObject properites, const bool immediate)
 {
-    qDebug() << "Print stack on enter" << m_pageStack;
-    qDebug() << "Enter page:" << page << "properites:" << properites;
+    qDebug() << "Print PAGE stack on enter" << m_pageStack;
+    qDebug() << "Enter PAGE:" << page << "properites:" << properites;
+
+    if (!m_popupStack.isEmpty()) {
+        qWarning() << "Popup stack not empty:" <<  m_popupStack
+                   << ". Returning as page cannot be pushed over popup!";
+        return;
+    }
+
 
     if (m_pageStack.contains(page)) {
         qWarning() << "Page" << page << "is already on the stack. Going back to page.";
@@ -46,24 +51,40 @@ void PageManager::enter(const Enums::Page page, QJsonObject properites, const bo
     emit stackViewPush(pageToQString(page), properites, immediate);
 }
 
-void PageManager::enterPopup(const Enums::Page page, QJsonObject properites)
+void PageManager::enterPopup(const Enums::Popup popup, QJsonObject properites, const bool immediate)
 {
-    bool isPopup = Utility::enumToQString<Enums::Page>(page, "Page").contains(QStringLiteral("Popup"));
-    if (!isPopup) {
-        qWarning() << "Entering non popup:" <<  page << "Returning!";
-        return;
-    }
+    qDebug() << "Print POPUPS stack on enter" << m_pageStack;
+    qDebug() << "Enter POPUP:" << popup << "properites:" << properites;
 
-    if (!properites.contains("isPopup"))
-        properites.insert(QStringLiteral("isPopup"), true);
+    properites.insert(QStringLiteral("isPopup"), true);
+    m_popupStack.push_back(popup);
 
-    enter(page, properites, true);
+    emit stackViewPush(pageToQString(popup), properites, immediate);
+}
+
+void PageManager::sendAction(Enums::PopupAction action)
+{
+    // Pop popup first
+    back(true);
+
+    emit popupAction(action);
 }
 
 void PageManager::back(const bool immediate)
 {
-    qDebug() << "Print stack on pop" << m_pageStack;
+    qDebug() << "Print PAGE stack on pop" << m_pageStack;
+    qDebug() << "Print POPUP stack on pop" << m_popupStack;
 
+    // ************** HANDLE popups first
+    if (!m_popupStack.isEmpty()) {
+        auto poppedPopup = m_popupStack.takeLast();
+        qDebug() << "Popped popup" << pageToQString(poppedPopup);
+        emit stackViewPop(immediate);
+
+        return;
+    }
+
+    // ************** HANDLE pages next
     if (m_pageStack.isEmpty()) {
         qWarning() << "Popping empty stack! Aborting!";
         return;
@@ -83,6 +104,11 @@ void PageManager::back(const bool immediate)
 
 bool PageManager::backTo(const Enums::Page backPage, const bool immediate)
 {
+    // ***************** HANDLE popups first
+    if (!m_popupStack.isEmpty())
+        m_popupStack.clear();
+
+    // ***************** HANDLE pages next
     if (!m_pageStack.contains(backPage)) {
         qWarning() << "Page" << backPage << "is not on the stack. Returning.";
         return false;
@@ -127,14 +153,10 @@ Enums::Page PageManager::homePage() const
 
 bool PageManager::isOnHomePage() const
 {
-    return m_pageStack.last() == m_homePage;
+    return isOnTop(m_homePage);
 }
 
-QString PageManager::pageToQString(const Enums::Page p) const
+bool PageManager::isOnTop(Enums::Page page) const
 {
-    const QString pageStr = Utility::enumToQString<Enums::Page>(p, "Page");
-    const QString pathPrefix = m_pagePrefix + pageStr;
-    return pageStr.contains(QStringLiteral("Popup"))
-           ? pathPrefix + QStringLiteral(".qml")
-           : pathPrefix + QStringLiteral("Page.qml");
+    return m_pageStack.last() == page;
 }

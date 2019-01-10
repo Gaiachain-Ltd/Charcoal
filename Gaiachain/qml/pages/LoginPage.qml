@@ -1,4 +1,4 @@
-import QtQuick 2.11
+﻿import QtQuick 2.11
 
 import QtQuick.Layouts 1.11
 
@@ -21,6 +21,33 @@ BasePage {
     {
         target: sessionManager
         onLoginFinished: enterViewTypePage()
+        onDisplayLoginError: {
+            // If someone send displayLoginError when not in login screen, ignore it and print warning
+            if (!pageManager.isOnTop(page)) {
+                console.warn("displayLoginError send when LoginPage is not on the top! Returning.")
+                return
+            }
+
+            pageManager.enterPopup(Enums.Popup.Information, {
+                                       "text" : Strings.loginErrorInfo,
+                                       "acceptButtonText": Strings.close
+                                   })
+        }
+    }
+
+    Connections {
+        target: pageManager
+        // When using popup always add checking if I'm on top
+        enabled: pageManager.isOnTop(page)
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.Accept:
+                console.log("Accept action to implement!")
+                break
+            default:
+                break
+            }
+        }
     }
 
     Column

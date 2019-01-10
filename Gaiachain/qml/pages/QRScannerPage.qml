@@ -273,7 +273,7 @@ BasePage {
 
                     fillMode: Image.PreserveAspectFit
 
-                    //enabled: scannedId.length > 0
+                    enabled: scannedId.length > 0
 
                     backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: Style.loginImgUrl
