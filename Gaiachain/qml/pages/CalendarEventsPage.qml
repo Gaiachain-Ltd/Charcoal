@@ -31,7 +31,7 @@ BasePage {
         daysModel.clear()
 
         for (var i=1; i <= daysCount; ++i)
-            daysModel.append({"day": i})
+            daysModel.append({"day": i, "isWeekend": utility.isWeekend(new Date(currentDate.getFullYear(), currentDate.getMonth(), i))})
 
         // TO_DO fix postioing at start
         daysView.positionViewAtIndex(currentDate.getDate() - 1, ListView.Contain)
@@ -44,12 +44,13 @@ BasePage {
     ColumnLayout {
         anchors {
             fill: parent
-            margins: s(30)
+            topMargin: s(Style.bigMargin)
         }
-        spacing: s(30)
+        spacing: s(Style.bigMargin)
 
         Items.ImageItem {
             Layout.fillWidth: true
+            Layout.leftMargin: s(Style.normalMargin)
 
             buttonHeight: s(30)
             buttonWidth: s(30)
@@ -74,7 +75,7 @@ BasePage {
             onSelectedDayChanged: positionViewAtIndex(selectedDay-1, ListView.Contain)
 
             Layout.fillWidth: true
-            Layout.preferredHeight: s(100)
+            Layout.preferredHeight: s(Style.bigMargin) * 3
 
             model: daysModel
 
@@ -90,27 +91,27 @@ BasePage {
 
                 ColumnLayout {
                     anchors.fill: parent
+                    spacing: 0
                     Rectangle {
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-                        Layout.preferredHeight: parent.width
-                        Layout.preferredWidth: parent.width
-                        radius: width / 2
-                        color: delegate.isSelected ? "gray" : "transparent"
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.preferredHeight: parent.width * 0.7
+                        Layout.preferredWidth: parent.width * 0.7
+                        radius: width * 0.5
+                        color: delegate.isSelected ? Style.buttonBlackGreyColor : "transparent"
 
-                        Text {
+                        Items.BasicText {
                             anchors.centerIn: parent
                             text: day
                             color: delegate.isSelected ? "white" : "black"
-                            font.pixelSize: s(40)
+                            opacity: isWeekend ? 0.3 : 1
                         }
                     }
-                    Items.LayoutSpacer {}
                     Rectangle {
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+                        Layout.alignment: Qt.AlignHCenter
                         Layout.preferredHeight: s(20)
                         Layout.preferredWidth: s(20)
-                        radius: width / 2
-                        color: "green"
+                        radius: width * 0.5
+                        color: Style.buttonGreenColor
                     }
                 }
 

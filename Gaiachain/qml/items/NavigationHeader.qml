@@ -58,11 +58,13 @@ Item {
     ColumnLayout {
         anchors {
             fill: parent
-            leftMargin: s(40)
-            rightMargin: s(40)
-            topMargin: s(10)
-            bottomMargin: s(10)
+            leftMargin: s(Style.bigMargin)
+            rightMargin: s(Style.bigMargin)
+            topMargin: s(Style.smallMargin)
+            bottomMargin: s(Style.smallMargin)
         }
+
+        spacing: 0
 
         RowLayout {
             id: topRow
@@ -72,11 +74,9 @@ Item {
             spacing: 0
 
             ImageButton {
-                Layout.preferredHeight: s(Style.buttonHeight)
-                Layout.preferredWidth: s(Style.buttonHeight)
-
-                padding: s(Style.headerButtonsPadding)
-                fillMode: Image.PreserveAspectFit
+                Layout.preferredHeight: s(Style.buttonHeight) * 0.9
+                Layout.preferredWidth: s(Style.buttonHeight) * 0.9
+                Layout.alignment: Qt.AlignVCenter
 
                 property bool isOnHomePage: pageManager.isOnHomePage()
                 source: {
@@ -103,17 +103,16 @@ Item {
                 Layout.preferredHeight: s(Style.buttonHeight)
                 Layout.preferredWidth: s(Style.buttonHeight)
 
-
-                padding: s(Style.headerButtonsPadding)
-                fillMode: Image.PreserveAspectFit
+                Layout.alignment: Qt.AlignVCenter
                 source: Style.homeImgUrl
 
                 onClicked: pageManager.backTo(pageManager.homePage())
             }
 
             ListView {
+                id: buttonList
                 Layout.fillHeight: true
-                Layout.preferredWidth: Math.max(sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth)) + s(Style.headerButtonsPadding), topRow.width * 0.5 + height)
+                Layout.preferredWidth: Math.max(sectionsModel.maxSectionsDepth() * (topRow.height + s(Style.headerArrowWidth)), topRow.width * 0.5 + delegateWidth * 0.8)
 
                 orientation: ListView.Horizontal
                 interactive: false
@@ -121,35 +120,37 @@ Item {
 
                 model: sectionsModel
 
+                readonly property int delegateWidth: s(Style.headerArrowWidth) + topRow.height
+
                 delegate: Item {
                     id: delegateId
                     height: ListView.view.height
-                    width: s(Style.headerArrowWidth) + height + (delegateId.isLast ? s(Style.headerButtonsPadding) : 0)
+                    width: buttonList.delegateWidth + (delegateId.isLast ? imageButton.padding : 0)
 
                     property bool isLast: (ListView.view.count - 1) === index
 
                     RowLayout {
                         anchors.fill: parent
 
-                        spacing: delegateId.isLast ?  s(Style.headerButtonsPadding) : s(Style.smallMargin)
+                        spacing: delegateId.isLast ? imageButton.padding : s(Style.smallMargin)
 
                         SvgImage {
-                            Layout.preferredHeight: s(Style.headerArrowWidth) * 1.5
+                            Layout.preferredHeight: s(Style.headerArrowHeight)
                             Layout.preferredWidth: s(Style.headerArrowWidth)
 
-                            fillMode: Image.PreserveAspectFit
                             source: Style.rightArrowLightImgUrl
                         }
 
                         ImageButton {
+                            id: imageButton
                             // From delegate size and arrow size, image button will have squere shape.
                             // Do not set width: height, to force square shape as it leads to "holes" between arrow and button.
                             Layout.fillHeight: true
                             Layout.fillWidth: true
 
-                            padding: s(Style.headerButtonsPadding)
+                            padding: s(Style.normalMargin)
+                            inset: s(Style.tinyMargin) * 0.5
 
-                            fillMode: Image.PreserveAspectFit
                             source: sectionToUrl(id, !delegateId.isLast)
                             backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
 
@@ -166,6 +167,7 @@ Item {
             color: Style.textGreenColor
             verticalAlignment: Text.AlignTop
             font {
+                pixelSize: s(Style.headerTitlePixelSize)
                 capitalization: Font.AllUppercase
                 family: Style.secondaryFontFamily
                 letterSpacing: s(Style.pixelSize) * 0.1

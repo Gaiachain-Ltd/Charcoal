@@ -115,7 +115,6 @@ BasePage {
                         imageSize: s(Style.imageSize)
 
                         fillMode: Image.PreserveAspectFit
-                        textFont.pixelSize: s(Style.pixelSize)
 
                         enabled: loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text)
                         opacity: enabled ? 1 : 0.5
@@ -138,7 +137,6 @@ BasePage {
                         fillMode: Image.PreserveAspectFit
 
                         imageSize: s(Style.imageSize)
-                        textFont.pixelSize: s(Style.pixelSize)
 
                         width: s(Style.buttonHeight) * 3.25
 

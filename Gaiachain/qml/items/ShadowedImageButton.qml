@@ -33,8 +33,8 @@ Item {
         source: image
         horizontalOffset: -s(10)
         verticalOffset: s(10)
-        samples: 17
-        radius: 8
+        samples: radius * 2 + 1
+        radius: 16
         color: "#50000000"
     }
 }

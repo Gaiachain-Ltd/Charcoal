@@ -28,7 +28,7 @@ BasePage {
             id: buttonLayout
             Layout.fillWidth: true
             property real margin: s(Style.bigMargin) * 1.5
-            property real buttonHeight: s(150)
+            property real buttonHeight: s(175)
             Layout.preferredHeight: buttonHeight
             Layout.topMargin: margin
             Layout.leftMargin: margin
@@ -47,7 +47,6 @@ BasePage {
 
                 source: Style.calendarImgUrl
                 text: Strings.calendar
-                textFont.pixelSize: s(30)
 
                 spacing: s(Style.normalMargin)
 
@@ -66,7 +65,6 @@ BasePage {
 
                 source: Style.listImgUrl
                 text: Strings.list
-                textFont.pixelSize: s(30)
 
                 spacing: s(Style.normalMargin)
 

@@ -99,6 +99,12 @@ BasePage {
                 autoOrientation: true
             }
 
+            Rectangle
+            {
+                anchors.fill: parent
+                color: Style.textGreyColor
+            }
+
             Image {
                 id: photoPreview
                 anchors.fill: parent
@@ -154,6 +160,7 @@ BasePage {
                 backgroundColor: Style.backgroundShadowColor
                 textColor: Style.textSecondaryColor
                 showIcon: false
+                textFont.bold: true
 
                 width: textWidth + s(Style.bigMargin) * 1.75
                 height: s(Style.buttonHeight) * 0.75
@@ -253,7 +260,7 @@ BasePage {
                         }
                     }
 
-                    fillMode: Image.PreserveAspectFit
+                    padding: s(Style.smallMargin) * 1.25
 
                     enabled: !error && scannedId.length == 0
 
@@ -270,7 +277,9 @@ BasePage {
 
                     fillMode: Image.PreserveAspectFit
 
-                    //enabled: scannedId.length > 0
+                    padding: s(Style.smallMargin) * 1.75
+
+                    enabled: scannedId.length > 0
 
                     backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: Style.loginImgUrl

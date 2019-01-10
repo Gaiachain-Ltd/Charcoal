@@ -49,6 +49,7 @@ Button {
                 id: buttonTextItem
                 text: top.text
                 visible: text.length > 0
+                font.pixelSize: s(Style.buttonPixelSize)
                 anchors.verticalCenter: parent.verticalCenter
             }
 

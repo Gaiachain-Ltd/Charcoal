@@ -22,16 +22,24 @@ Item {
     ListView {
         id: mainView
 
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            topMargin: mainView.spacing
+        }
         clip: true
 
         property real delegateHeight: s(50)
 
+        spacing: s(Style.normalMargin)
+
         delegate: Item {
+            id: delegate
             height: Math.max(ListView.view.delegateHeight, mainLayout.childrenRect.height)
             width: utility.proportionalWidth(Style.listEventsDelegateRelativeHeight)
 
             anchors.horizontalCenter: parent.horizontalCenter
+
+            readonly property bool isLast: (ListView.view.count - 1) === index
 
             ColumnLayout {
                 id: mainLayout
@@ -39,6 +47,8 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
+
+                spacing: mainView.spacing
 
                 RowLayout {
                     Layout.fillHeight: true
@@ -76,6 +86,8 @@ Item {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: sr(1)
+
+                    visible: !delegate.isLast
 
                     color: Style.listEventsDelegateBottomLineColor
                 }

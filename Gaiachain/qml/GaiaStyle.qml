@@ -34,18 +34,20 @@ Item {
     readonly property color buttonBackColor: textGreenColor
 
     // Text
-    readonly property real pixelSize: 40
+    readonly property real pixelSize: 42
     readonly property real bigPixelSize: 60
+    readonly property real headerTitlePixelSize: pixelSize + 3
+    readonly property real buttonPixelSize: pixelSize + 3
 
     // font
     readonly property string primaryFontFamily: "Lato"
     readonly property string secondaryFontFamily: "Montserrat"
 
     // Components sizes
-    readonly property int footerHeight: 150
-    readonly property int headerHeight: 160
-    readonly property int headerArrowWidth: 15
-    readonly property int headerButtonsPadding: 20
+    readonly property int footerHeight: 165
+    readonly property int headerHeight: 205
+    readonly property int headerArrowWidth: 20
+    readonly property int headerArrowHeight: headerArrowWidth * 1.5
 
     // urls
     readonly property url blackAddImgUrl: "qrc:/ui/add_black"
@@ -109,7 +111,7 @@ Item {
     readonly property int inputHeight: buttonHeight
 
     // button
-    readonly property int buttonHeight: 100
+    readonly property int buttonHeight: 105
     readonly property int smallButtonHeight: 40
     readonly property int buttonRadius: 20
     readonly property int bigButtonRadius: 28
