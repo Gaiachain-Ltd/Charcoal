@@ -148,7 +148,7 @@ Item {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
 
-                            padding: s(Style.normalMargin)
+                            padding: s(Style.normalMargin) * 0.75
                             inset: s(Style.tinyMargin) * 0.5
 
                             source: sectionToUrl(id, !delegateId.isLast)
