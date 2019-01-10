@@ -2,6 +2,7 @@
 
 #include <QGuiApplication>
 #include <QScreen>
+#include <QDebug>
 
 #include "../common/globals.h"
 
@@ -75,6 +76,12 @@ qreal Utility::setupDpiScale()
 #endif
 
     return dpiScale;
+}
+
+bool Utility::isWeekend(const QDate &date) const
+{
+    const int day = date.dayOfWeek();
+    return day == 6 || day == 7;
 }
 
 int Utility::parseInt(const QString &num) const

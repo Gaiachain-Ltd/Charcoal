@@ -99,6 +99,12 @@ BasePage {
                 autoOrientation: true
             }
 
+            Rectangle
+            {
+                anchors.fill: parent
+                color: Style.textGreyColor
+            }
+
             Image {
                 id: photoPreview
                 anchors.fill: parent
@@ -134,7 +140,7 @@ BasePage {
                     backgroundColor: Style.backgroundShadowColor
                     source: Style.cancelImgUrl
 
-                    padding: s(Style.smallMargin) * 1.5
+                    padding: s(Style.smallMargin) * 2
                 }
 
                 Items.ImageButton
@@ -144,7 +150,6 @@ BasePage {
                     backgroundColor: Style.backgroundShadowColor
                     source: Style.relaodImgUrl
 
-                    padding: s(Style.smallMargin) * 1.5
                     visible: error || scannedId.length > 0
                 }
             }
@@ -155,8 +160,9 @@ BasePage {
                 backgroundColor: Style.backgroundShadowColor
                 textColor: Style.textSecondaryColor
                 showIcon: false
+                textFont.bold: true
 
-                width: textWidth + s(Style.bigMargin)
+                width: textWidth + s(Style.bigMargin) * 1.75
                 height: s(Style.buttonHeight) * 0.75
 
                 anchors {
@@ -237,7 +243,7 @@ BasePage {
 
                         color: error ? Style.textErrorColor : Style.textPrimaryColor
                         horizontalAlignment: Text.AlignLeft
-                        font.pixelSize: s(Style.bigPixelSize)
+                        font.pixelSize: s(Style.pixelSize)
                         textFormat: Text.RichText
                     }
                 }
@@ -254,14 +260,12 @@ BasePage {
                         }
                     }
 
-                    fillMode: Image.PreserveAspectFit
+                    padding: s(Style.smallMargin) * 1.25
 
                     enabled: !error && scannedId.length == 0
 
                     backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: scanInput.visible ? Style.qrCodeImgUrl : Style.keyboardImgUrl
-
-                    padding: s(Style.smallMargin)
 
                     Layout.preferredWidth: s(Style.buttonHeight)
                     Layout.preferredHeight: s(Style.buttonHeight)
@@ -273,12 +277,12 @@ BasePage {
 
                     fillMode: Image.PreserveAspectFit
 
+                    padding: s(Style.smallMargin) * 1.75
+
                     enabled: scannedId.length > 0
 
                     backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: Style.loginImgUrl
-
-                    padding: s(Style.smallMargin)
 
                     Layout.preferredWidth: s(Style.buttonHeight)
                     Layout.preferredHeight: s(Style.buttonHeight)

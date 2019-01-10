@@ -41,6 +41,8 @@ public:
 
     Q_INVOKABLE int getScannedIdLength() const;
 
+    Q_INVOKABLE bool isWeekend(const QDate &date) const;
+
 private:
     Utility();
 

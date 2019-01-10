@@ -49,7 +49,7 @@ BasePage {
 
             Column {
                 id: contentLayout
-                spacing: s(Style.normalMargin)
+                spacing: s(Style.bigMargin)
 
                 Items.TextWithTitle {
                     width: flickableId.contentWidth

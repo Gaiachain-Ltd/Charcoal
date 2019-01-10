@@ -92,7 +92,6 @@ BasePage {
             leftMargin: s(Style.bigMargin)
             rightMargin: s(Style.bigMargin)
             topMargin: s(Style.normalMargin)
-            bottomMargin: s(Style.tinyMargin)
         }
 
         clip: true
@@ -118,6 +117,7 @@ BasePage {
             ColumnLayout {
                 Layout.fillHeight: false
                 Layout.preferredWidth: 0.5 * parent.availableWidth
+                Layout.leftMargin: s(Style.tinyMargin)
                 spacing: s(Style.bigMargin)
 
                 Repeater {
@@ -137,8 +137,8 @@ BasePage {
                 property color backColor: Style.pageBaseBackgroundColor
                 property color linesColor: Style.buttonBackColor
                 property int lineWidth: s(8)
-                property int ringRadius: s(16)
-                property int ringThick: sr(6)
+                property int ringRadius: s(14)
+                property int ringThick: sr(3)
 
                 function drawTreeLevel(ctx2d, referenceX, yMidPos, lineLen) {
                     var containerLen = yMidPos.length
@@ -247,6 +247,7 @@ BasePage {
                         width: parent.width
                         height: s(100)
                         y: modelData.imageMidYPos - height / 2
+                        anchors.horizontalCenter: parent.horizontalCenter
 
                         fillMode: Image.PreserveAspectFit
                         source: typeToUrl(modelData.placeType)
