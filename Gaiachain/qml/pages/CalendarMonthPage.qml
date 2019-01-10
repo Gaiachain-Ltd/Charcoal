@@ -47,6 +47,8 @@ BasePage {
             currentMonth: top.currentMonth
             currentYear: top.currentYear
 
+            daySpacing: s(Style.tinyMargin)
+
             bottomSpacing: s(120)
 
             dayFont.pixelSize: s(35)

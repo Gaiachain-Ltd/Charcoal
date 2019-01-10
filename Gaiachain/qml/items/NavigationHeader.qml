@@ -12,6 +12,22 @@ Item {
 
     property var currentResource: Enums.CommodityType.Timber //TO_DO set proper text after user set
 
+    Connections {
+        target: pageManager
+        // When using popup always add checking if I'm on top
+        enabled: pageManager.isOnTop(page)
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.Logout:
+                userManager.logOut()
+                pageManager.backTo(Enums.Page.Login) //TO_DO immediate generates bug
+                break
+            case Enums.PopupAction.Cancel:
+            default:
+            }
+        }
+    }
+
     function getResourceName(res) {
         switch(res) {
         case Enums.CommodityType.Timber: return Strings.timber
@@ -58,24 +74,25 @@ Item {
     ColumnLayout {
         anchors {
             fill: parent
-            leftMargin: s(40)
-            rightMargin: s(40)
-            topMargin: s(10)
-            bottomMargin: s(10)
+            leftMargin: s(Style.bigMargin)
+            rightMargin: s(Style.bigMargin)
+            topMargin: s(Style.smallMargin)
+            bottomMargin: s(Style.smallMargin)
         }
 
+        spacing: 0
+
         RowLayout {
+            id: topRow
             Layout.fillHeight: true
             Layout.fillWidth: true
 
             spacing: 0
 
             ImageButton {
-                Layout.fillHeight: true
-                Layout.preferredWidth: height
-
-                padding: s(Style.headerButtonsPadding)
-                fillMode: Image.PreserveAspectFit
+                Layout.preferredHeight: s(Style.buttonHeight) * 0.9
+                Layout.preferredWidth: s(Style.buttonHeight) * 0.9
+                Layout.alignment: Qt.AlignVCenter
 
                 property bool isOnHomePage: pageManager.isOnHomePage()
                 source: {
@@ -86,30 +103,34 @@ Item {
 
                 onClicked: {
                     if (userManager.loggedIn && isOnHomePage) {
-                        pageManager.enterPopup(Enums.Page.InformationPopup, {
+                        pageManager.enterPopup(Enums.Popup.Information, {
                                                    "text" : Strings.logoutQuestion,
                                                    "acceptButtonText": Strings.logout,
-                                                   "rejectButtonText": Strings.cancel})
+                                                   "rejectButtonText": Strings.cancel,
+                                                   "acceptButtonType": Enums.PopupAction.Logout
+                                               })
                     } else {
                         pageManager.back()
                     }
                 }
             }
-            LayoutSpacer {}
-            ImageButton {
-                Layout.fillHeight: true
-                Layout.preferredWidth: height
 
-                padding: s(Style.headerButtonsPadding)
-                fillMode: Image.PreserveAspectFit
+            LayoutSpacer {}
+
+            ImageButton {
+                Layout.preferredHeight: s(Style.buttonHeight)
+                Layout.preferredWidth: s(Style.buttonHeight)
+
+                Layout.alignment: Qt.AlignVCenter
                 source: Style.homeImgUrl
 
                 onClicked: pageManager.backTo(pageManager.homePage())
             }
 
             ListView {
+                id: buttonList
                 Layout.fillHeight: true
-                Layout.preferredWidth: sectionsModel.maxSectionsDepth() * (height + s(Style.headerArrowWidth)) + s(Style.headerButtonsPadding)
+                Layout.preferredWidth: Math.max(sectionsModel.maxSectionsDepth() * (topRow.height + s(Style.headerArrowWidth)), topRow.width * 0.5 + delegateWidth * 0.8)
 
                 orientation: ListView.Horizontal
                 interactive: false
@@ -117,35 +138,37 @@ Item {
 
                 model: sectionsModel
 
+                readonly property int delegateWidth: s(Style.headerArrowWidth) + topRow.height
+
                 delegate: Item {
                     id: delegateId
                     height: ListView.view.height
-                    width: s(Style.headerArrowWidth) + height + (delegateId.isLast ? s(Style.headerButtonsPadding) : 0)
+                    width: buttonList.delegateWidth + (delegateId.isLast ? imageButton.padding : 0)
 
                     property bool isLast: (ListView.view.count - 1) === index
 
                     RowLayout {
                         anchors.fill: parent
 
-                        spacing: delegateId.isLast ?  s(Style.headerButtonsPadding) : 0
+                        spacing: delegateId.isLast ? imageButton.padding : s(Style.smallMargin)
 
                         SvgImage {
-                            Layout.fillHeight: true
+                            Layout.preferredHeight: s(Style.headerArrowHeight)
                             Layout.preferredWidth: s(Style.headerArrowWidth)
 
-                            fillMode: Image.PreserveAspectFit
-                            source: Style.rightArrowImgUrl
+                            source: Style.rightArrowLightImgUrl
                         }
 
                         ImageButton {
+                            id: imageButton
                             // From delegate size and arrow size, image button will have squere shape.
                             // Do not set width: height, to force square shape as it leads to "holes" between arrow and button.
                             Layout.fillHeight: true
                             Layout.fillWidth: true
 
-                            padding: s(Style.headerButtonsPadding)
+                            padding: s(Style.normalMargin) * 0.75
+                            inset: s(Style.tinyMargin) * 0.5
 
-                            fillMode: Image.PreserveAspectFit
                             source: sectionToUrl(id, !delegateId.isLast)
                             backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
 
@@ -161,7 +184,12 @@ Item {
 
             color: Style.textGreenColor
             verticalAlignment: Text.AlignTop
-            font.capitalization: Font.AllUppercase
+            font {
+                pixelSize: s(Style.headerTitlePixelSize)
+                capitalization: Font.AllUppercase
+                family: Style.secondaryFontFamily
+                letterSpacing: s(Style.pixelSize) * 0.1
+            }
             text: getResourceName(currentResource)
         }
     }

@@ -72,7 +72,7 @@ ColumnLayout {
                     Layout.preferredWidth: s(Style.smallButtonHeight)
                     Layout.fillHeight: true
 
-                    imageSize: s(Style.smallButtonHeight)
+                    imageSize: s(Style.headerArrowHeight)
 
                     fillMode: Image.PreserveAspectFit
                     source: Style.rightArrowImgUrl

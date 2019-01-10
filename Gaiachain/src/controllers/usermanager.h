@@ -8,14 +8,14 @@
 class UserManager : public AbstractManager
 {
     Q_OBJECT
-
+    Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
+    Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
 public:
     explicit UserManager(QObject *parent = nullptr);
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
-    Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
-    Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
+    Q_INVOKABLE void logOut();
 
     bool loggedIn() const;
 
@@ -26,7 +26,7 @@ public slots:
     void parseLoginData(const QJsonDocument &doc);
 
 signals:
-    void userTypeChanged(Enums::UserType userType) const;    
+    void userTypeChanged(Enums::UserType userType) const;
     void loggedInChanged(bool loggedIn) const;
 
 private:

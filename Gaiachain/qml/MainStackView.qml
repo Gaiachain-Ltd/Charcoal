@@ -15,6 +15,7 @@ Item {
             var keepPrevPageVisible = false
             if (properites.isPopup)
                 keepPrevPageVisible = true
+
             stackView.push(url, properites, getMode(immediate))
             if (keepPrevPageVisible && stackView.depth > 1)
                 stackView.get(stackView.depth - 2).visible = true

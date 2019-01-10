@@ -36,12 +36,19 @@ namespace Enums {
         ViewType,
         QRScanner,
 
-        InformationPopup,
-
         PageCount
     };
     Q_ENUM_NS(Page)
     inline uint qHash(Page key, uint seed) {return qH<Page>(key, seed);}
+
+    enum class Popup {
+        InvalidPopup = -1,
+        Information,
+
+        PopupCount
+    };
+    Q_ENUM_NS(Popup)
+    inline uint qHash(Popup key, uint seed) {return qH<Popup>(key, seed);}
 
     enum class PageSections {
         DefaultSection = -1,
@@ -82,6 +89,18 @@ namespace Enums {
     Q_ENUM_NS(PlaceType)
     inline uint qHash(PlaceType key, uint seed) { return qH<PlaceType>(key, seed);}
 
+    enum class PopupAction {
+        InvalidPopupAction = -1,
+        Accept,
+        Cancel,
+        Save,
+        Logout,
+        Exit,
+
+        PopupActionCount
+    };
+    Q_ENUM_NS(PopupAction)
+    inline uint qHash(PopupAction key, uint seed) { return qH<PopupAction>(key, seed);}
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 

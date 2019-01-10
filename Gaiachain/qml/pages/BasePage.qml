@@ -68,7 +68,8 @@ Item {
 
         Items.Footer {
             Layout.fillWidth: true
-            Layout.preferredHeight: s(Style.footerHeight)
+            // Math.round added because line below footer would appear
+            Layout.preferredHeight: Math.round(s(Style.footerHeight))
             visible: top.footerVisible
         }
     }

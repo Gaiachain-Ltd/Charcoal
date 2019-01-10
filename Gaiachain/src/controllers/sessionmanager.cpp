@@ -20,11 +20,6 @@ void SessionManager::setOverlayManager(OverlayManager *manager)
     m_overlayManager = manager;
 }
 
-void SessionManager::displayErrorPopup(const QString &errorMessage)
-{
-    emit displayError(errorMessage, QString() , tr("Close"));
-}
-
 void SessionManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("sessionManager"), this);
@@ -43,7 +38,7 @@ void SessionManager::login(const QString &email, const QString &password)
 
     auto errorLambda = [&]() {
         m_overlayManager->setLoginRequest(false);
-        displayErrorPopup(tr("Login failed. Try again."));
+        displayLoginError(tr("Login failed. Try again."), QString() , tr("Close"));
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);

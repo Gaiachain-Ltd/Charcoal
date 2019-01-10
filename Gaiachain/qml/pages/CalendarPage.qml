@@ -72,8 +72,10 @@ BasePage {
             text: currentYear
             horizontalAlignment: Text.AlignLeft
 
-            font.pixelSize: s(60)
-            font.bold: true
+            font {
+                pixelSize: s(60)
+                bold: true
+            }
         }
 
         GridView {
@@ -82,6 +84,8 @@ BasePage {
             Layout.fillWidth: true
 
             clip: true
+
+            cacheBuffer: top.height * 3
 
             cellHeight: height / 2
             cellWidth: width / 2

@@ -29,6 +29,8 @@ Button {
 
     property real inset: 0
 
+    padding: s(Style.defaultPadding)
+
     implicitWidth: s(Style.buttonHeight)
     implicitHeight: s(Style.buttonHeight)
 
@@ -42,11 +44,12 @@ Button {
         Row {
             id: row
             anchors.centerIn: parent
-            spacing: top.text !== "" && top.source !== "" ? s(Style.smallMargin) : 0
+            spacing: top.text != "" && top.source != "" ? s(Style.smallMargin) : 0
             BasicText {
                 id: buttonTextItem
                 text: top.text
                 visible: text.length > 0
+                font.pixelSize: s(Style.buttonPixelSize)
                 anchors.verticalCenter: parent.verticalCenter
             }
 

@@ -22,6 +22,11 @@ void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("userManager"), this);
 }
 
+void UserManager::logOut()
+{
+    setUserType(Enums::UserType::NotLoggedUser);
+}
+
 Enums::UserType UserManager::getUserType() const
 {
     return m_userType;
