@@ -34,7 +34,8 @@ Item {
     readonly property color buttonBackColor: textGreenColor
 
     // Text
-    readonly property real pixelSize: 42
+    readonly property real smallPixelSize: 30
+    readonly property real pixelSize: 40
     readonly property real bigPixelSize: 60
     readonly property real headerTitlePixelSize: pixelSize + 3
     readonly property real buttonPixelSize: pixelSize + 3
@@ -44,8 +45,8 @@ Item {
     readonly property string secondaryFontFamily: "Montserrat"
 
     // Components sizes
-    readonly property int footerHeight: 165
-    readonly property int headerHeight: 205
+    readonly property int footerHeight: 140
+    readonly property int headerHeight: 175
     readonly property int headerArrowWidth: 20
     readonly property int headerArrowHeight: headerArrowWidth * 1.5
 
@@ -111,7 +112,7 @@ Item {
     readonly property int inputHeight: buttonHeight
 
     // button
-    readonly property int buttonHeight: 105
+    readonly property int buttonHeight: 90
     readonly property int smallButtonHeight: 40
     readonly property int buttonRadius: 20
     readonly property int bigButtonRadius: 28

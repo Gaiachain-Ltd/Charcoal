@@ -28,7 +28,7 @@ BasePage {
             id: buttonLayout
             Layout.fillWidth: true
             property real margin: s(Style.bigMargin) * 1.5
-            property real buttonHeight: s(175)
+            property real buttonHeight: s(Style.buttonHeight) * 1.75
             Layout.preferredHeight: buttonHeight
             Layout.topMargin: margin
             Layout.leftMargin: margin

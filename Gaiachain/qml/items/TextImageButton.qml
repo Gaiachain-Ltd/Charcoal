@@ -54,6 +54,7 @@ Item {
         BasicText {
             id: text
             Layout.fillWidth: true
+            font.pixelSize: s(Style.smallPixelSize)
         }
     }
 }
