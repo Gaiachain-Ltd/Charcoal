@@ -244,7 +244,7 @@ BasePage {
                 Repeater {
                     model: mainFlickable.imagesModel
                     delegate: Items.SvgImage {
-                        width: parent.width * (modelData.placeType === "export" ? 0.75 : 1 )
+                        width: parent.width
                         height: s(100)
                         y: modelData.imageMidYPos - height / 2
                         anchors.horizontalCenter: parent.horizontalCenter
