@@ -13,10 +13,10 @@ OverlayManager::OverlayManager(QObject *parent)
 
 void OverlayManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
-    engine.rootContext()->setContextProperty(QStringLiteral("overlay"), this);
+    engine.rootContext()->setContextProperty(QStringLiteral("overlays"), this);
 }
 
-bool OverlayManager::getLoginRequest() const
+bool OverlayManager::loginRequest() const
 {
     return m_loginRequest;
 }

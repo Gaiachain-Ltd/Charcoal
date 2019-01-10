@@ -83,6 +83,18 @@ OTHER_FILES += \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
 
+android {
+    INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/include
+
+    SSLLIB = $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/lib
+    LIBS += -lc -ldl
+
+    ANDROID_NDK_PLATFORM=android-23
+    ANDROID_EXTRA_LIBS = $$SSLLIB/libcrypto.so $$SSLLIB/libssl.so
+
+    LIBS += -L$$SSLLIB -lcrypto -lssl
+}
+
 ## Put all build files into build directory
 ##  This also works with shadow building, so don't worry!
 BUILD_DIR = build

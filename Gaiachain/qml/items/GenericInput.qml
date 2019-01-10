@@ -68,7 +68,10 @@ FocusScope
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
 
-                font.pixelSize: s(Style.pixelSize-5)
+                font {
+                    pixelSize: s(Style.pixelSize-5)
+                    family: Style.primaryFontFamily
+                }
                 echoMode: isPassword ? TextInput.Password : TextInput.Normal
 
                 inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints

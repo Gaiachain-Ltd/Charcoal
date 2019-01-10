@@ -14,6 +14,8 @@ Item {
     property int bottomSpacing: 0
     property alias dayFont: grid.font
 
+    property int daySpacing: 0
+
     signal titleClicked()
     signal dateClicked(date d)
 
@@ -36,24 +38,25 @@ Item {
 
             delegate: Column {
                 property bool currentMonth: model.month === grid.month
+                spacing: daySpacing
                 BasicText {
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     text: model.day
                     verticalAlignment: Text.AlignTop
 
-                    opacity: currentMonth ? 1 : 0.2
+                    opacity: currentMonth ? (utility.isWeekend(model.date) ? 0.4 : 1) : 0.05
                     font: grid.font
                 }
 
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    width: parent.width / 4
+                    width: parent.width * 0.2
                     height: width
-                    radius: width / 2
+                    radius: width * 0.5
 
-                    color: currentMonth ? "gray" : "transparent"
+                    color: currentMonth ? Style.buttonGreenColor : "transparent"
                 }
             }
         }

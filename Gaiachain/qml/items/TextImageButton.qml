@@ -3,6 +3,8 @@ import QtQuick.Layouts 1.11
 
 import "../items"
 
+import com.gaiachain.style 1.0
+
 Item {
     id: top
 
@@ -52,6 +54,7 @@ Item {
         BasicText {
             id: text
             Layout.fillWidth: true
+            font.pixelSize: s(Style.smallPixelSize)
         }
     }
 }

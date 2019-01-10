@@ -2,14 +2,14 @@ pragma Singleton
 
 import QtQuick 2.11
 
-QtObject {
+Item {
     // Colors
     readonly property color backgroundColor: "white"
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
     readonly property color textErrorColor: "red"
     readonly property color textGreyColor: "#999999"
-    readonly property color textGreenColor: "green"
+    readonly property color textGreenColor: "#5AB400"
     readonly property color buttonGreenColor: "#96c354"
     readonly property color buttonBlackGreyColor: "#666666"
     readonly property color buttonGreyColor: "#cccccc"
@@ -31,23 +31,30 @@ QtObject {
     // image
     readonly property int imageSize: 30
 
-    readonly property color buttonBackColor: "#FF5AB400"
+    readonly property color buttonBackColor: textGreenColor
 
     // Text
+    readonly property real smallPixelSize: 30
     readonly property real pixelSize: 40
     readonly property real bigPixelSize: 60
+    readonly property real headerTitlePixelSize: pixelSize + 3
+    readonly property real buttonPixelSize: pixelSize + 3
+
+    // font
+    readonly property string primaryFontFamily: "Lato"
+    readonly property string secondaryFontFamily: "Montserrat"
 
     // Components sizes
-    readonly property int footerHeight: 150
-
-    readonly property int headerHeight: 180
+    readonly property int footerHeight: 140
+    readonly property int headerHeight: 175
     readonly property int headerArrowWidth: 20
-    readonly property int headerButtonsPadding: 20
+    readonly property int headerArrowHeight: headerArrowWidth * 1.5
 
     // urls
     readonly property url blackAddImgUrl: "qrc:/ui/add_black"
     readonly property url greenAddImgUrl: "qrc:/ui/add_green"
     readonly property url rightArrowImgUrl: "qrc:/ui/right_arrow"
+    readonly property url rightArrowLightImgUrl: "qrc:/ui/right_arrow_light"
     readonly property url backImgUrl: "qrc:/ui/back"
     readonly property url backBlackImgUrl: "qrc:/ui/back_black"
     readonly property url calendarImgUrl: "qrc:/ui/calendar"
@@ -108,8 +115,20 @@ QtObject {
     readonly property int buttonHeight: 90
     readonly property int smallButtonHeight: 40
     readonly property int buttonRadius: 20
+    readonly property int bigButtonRadius: 28
+    readonly property int defaultPadding: smallMargin * 1.5
 
     // Other
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
+
+    FontLoader {
+        source: "qrc:/font/fonts/Lato-Regular.ttf"
+    }
+    FontLoader {
+        source: "qrc:/font/fonts/Lato-Bold.ttf"
+    }
+    FontLoader {
+        source: "qrc:/font/fonts/Montserrat-Medium.ttf"
+    }
 }

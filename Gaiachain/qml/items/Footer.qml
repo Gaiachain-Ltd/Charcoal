@@ -26,7 +26,6 @@ Item {
 
         backgroundColor: !isAddButtonActive ? Style.buttonGreenColor : "transparent"
         source: !isAddButtonActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
-        fillMode: Image.PreserveAspectFit
 
         onClicked: {
             if (isAddButtonActive)
@@ -43,7 +42,6 @@ Item {
         source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
 
         visible: page !== Enums.Page.Login && userManager.loggedIn
-        fillMode: Image.PreserveAspectFit
 
         onClicked: {
             if (!isAddButtonActive) {

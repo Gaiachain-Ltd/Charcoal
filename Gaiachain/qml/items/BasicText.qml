@@ -7,7 +7,10 @@ Text {
     verticalAlignment: Text.AlignVCenter
 
     color: Style.textPrimaryColor
-    font.pixelSize: s(Style.pixelSize)
+    font {
+        pixelSize: s(Style.pixelSize)
+        family: Style.primaryFontFamily
+    }
 
     elide: Qt.ElideRight
 }

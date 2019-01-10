@@ -29,11 +29,8 @@ private:
     RestAPIClient m_client;
     QString m_token;
 
-    void displayErrorPopup(const QString &errorMessage);
-
 signals:
-    void displayError(const QString &error, const QString &button1, const QString &button2) const;
-
+    void displayLoginError(const QString &error, const QString &button1, const QString &button2) const;
     void loginFinished(const QJsonDocument &doc) const;
 };
 
