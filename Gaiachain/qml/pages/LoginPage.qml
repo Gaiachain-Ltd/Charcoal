@@ -180,6 +180,6 @@ BasePage {
     Items.WaitOverlay
     {
         anchors.fill: parent
-        visible: overlay.loginRequest
+        visible: overlays.loginRequest
     }
 }
