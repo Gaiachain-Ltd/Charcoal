@@ -10,7 +10,7 @@ BasePage {
     id: top
     property bool readOnly: true
 
-    property string logId: ""
+    property string commodityId: ""
 
     Connections {
         target: pageManager
@@ -78,11 +78,11 @@ BasePage {
                     width: flickableId.contentWidth
 
                     Items.TextWithTitle {
-                        id: logTextId
+                        id: commodityTextId
                         Layout.preferredWidth: parent.width * 0.75
 
                         titleText: (Strings.logID + ":")
-                        contentText: logId
+                        contentText: commodityId
                     }
                     Items.LayoutSpacer {}
                     Items.ImageButton {

@@ -23,7 +23,7 @@ BasePage {
     id: top
 
     function enterEventDetailsPage() {
-        pageManager.enter(Enums.Page.EditableEventDetails, {"logId": scannedId})
+        pageManager.enter(Enums.Page.EditableEventDetails, {"commodityId": scannedId})
     }
 
     function previewCapturedImage(result) {
