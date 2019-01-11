@@ -86,6 +86,12 @@ BasePage {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
+            Rectangle
+            {
+                anchors.fill: parent
+                color: Style.textGreyColor
+            }
+
             Camera {
                 id: camera
             }
@@ -97,12 +103,6 @@ BasePage {
                 filters: [zxingFilter]
                 fillMode: VideoOutput.PreserveAspectCrop
                 autoOrientation: true
-            }
-
-            Rectangle
-            {
-                anchors.fill: parent
-                color: Style.textGreyColor
             }
 
             Image {

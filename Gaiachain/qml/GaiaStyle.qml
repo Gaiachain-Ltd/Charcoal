@@ -16,7 +16,6 @@ Item {
     readonly property color disabledButtonGreyColor: "#E6E6E6"
     readonly property color backgroundShadowColor: "#99000000"
 
-    readonly property real listEventsDelegateRelativeHeight: 390
     readonly property color listEventsDelegateBottomLineColor: buttonGreyColor
 
     readonly property color pageBaseBackgroundColor: "white"
@@ -121,6 +120,7 @@ Item {
     // Other
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
+    readonly property int headerMaximumButtonCount: 5
 
     FontLoader {
         source: "qrc:/font/fonts/Lato-Regular.ttf"

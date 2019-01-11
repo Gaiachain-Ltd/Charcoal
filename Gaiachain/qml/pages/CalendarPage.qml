@@ -5,6 +5,7 @@ import QtQml.Models 2.12
 import Qt.labs.calendar 1.0
 
 import com.gaiachain.enums 1.0
+import com.gaiachain.style 1.0
 
 import "../items" as Items
 
@@ -130,6 +131,7 @@ BasePage {
 
                         currentMonth: month
                         currentYear: year
+                        circleColor: Style.buttonBlackGreyColor
 
                         MouseArea {
                             anchors.fill: parent

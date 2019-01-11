@@ -30,12 +30,12 @@ Item {
 
         property real delegateHeight: s(50)
 
-        spacing: s(Style.normalMargin)
+        spacing: s(Style.smallMargin)
 
         delegate: Item {
             id: delegate
             height: Math.max(ListView.view.delegateHeight, mainLayout.childrenRect.height)
-            width: utility.proportionalWidth(Style.listEventsDelegateRelativeHeight)
+            width: parent.width - s(Style.bigMargin) * 3
 
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -54,7 +54,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
-                    spacing: s(30)
+                    spacing: s(Style.smallMargin)
 
                     BasicText {
                         id: text
