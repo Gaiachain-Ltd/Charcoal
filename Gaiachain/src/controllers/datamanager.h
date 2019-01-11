@@ -32,6 +32,7 @@ private:
 
     CommodityProxyModel m_commodityProxyModel;
     CommodityDateRangeProxyModel m_commodityDateRangeProxyModel;
+    CommodityDateRangeProxyModel m_eventsDateRangeProxyModel;
 
     CalendarProxy calendarProxy;
 };

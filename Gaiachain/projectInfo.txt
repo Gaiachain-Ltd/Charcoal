@@ -138,3 +138,27 @@ dam odpowiednie opisy w swaggerze potem
 3:48 PM
 w swaggerze na dole masz listę modeli i większość (prócz tych ostatnio dodanych) ma opisy i example. A wa kazdym endpoincie dodatkowe info o danych requesta i response i lista rzucanych errorów
 
+
+hej, update - detale (i historia) entities gotowa. Tu lista tych, które są w chainie:
+{
+"id":  "r5et-le6l-caip"
+} {
+"id":  "i8et-kb6b-t62u"
+} {
+"id":  "d4dv-x6kx-9y82"
+} {
+"id":  "uzna-58nc-l8pm"
+} {
+"id":  "u6kx-d56p-ryoc"
+} {
+"id":  "he83-mn4r-else"
+} {
+"id":  "l7qd-jhkd-drd6"
+} {
+"id":  "ras8-gv52-iwio"
+}
+4:06 PM
+endpoint z listą i filtrami będzie niedługo
+4:07 PM
+z jakiegoś powodu swagger się sypie i nie daje zrobić requestu na detail endpoincie (rzuca errorem, że id nie podane). Z postmana działa normalnie.
+

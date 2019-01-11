@@ -12,6 +12,33 @@ Utility *Utility::instance()
     return &u;
 }
 
+QString Utility::commodityToString(Enums::CommodityType ct)
+{
+    return enumToQString<Enums::CommodityType>(ct, "CommodityType").toLower();
+}
+
+QString Utility::placeToString(Enums::PlaceType pt)
+{
+    switch (pt) {
+    case Enums::PlaceType::Forestery:
+        return tr("forestry");
+        break;
+    case Enums::PlaceType::LogPark:
+        return tr("log park");
+        break;
+    case Enums::PlaceType::Sawmill:
+        return tr("sawmill");
+        break;
+    case Enums::PlaceType::Export:
+        return tr("harbour");
+        break;
+    default:
+        break;
+    }
+
+    return {};
+}
+
 qreal Utility::scaleByDpi(qreal num) const
 {
     return num * m_dpiScale;
@@ -28,24 +55,6 @@ qreal Utility::scaleRoundByDpi(qreal num) const
     } else {
         return scaleByDpi(num);
     }
-}
-
-qreal Utility::proportionalWidth(qreal val, qreal refWidth) const
-{
-    if (refWidth < 0.0)
-        refWidth = m_refWidth;
-
-    qreal prop = clamp(val, 0.0, refWidth) / refWidth;
-    return prop * refWidth;
-}
-
-qreal Utility::proportionalHeight(qreal val, qreal refHeight) const
-{
-    if (refHeight < 0.0)
-        refHeight = m_refHeight;
-
-    qreal prop = clamp(val, 0.0, refHeight) / refHeight;
-    return prop * refHeight;
 }
 
 qreal Utility::clamp(qreal v, qreal min, qreal max) const

@@ -28,6 +28,14 @@ BasePage {
         return new Date(year, month + 1, 0).getDate();
     }
 
+    onCurrentDayChanged: {
+        var today = new Date(currentYear, currentMonth, currentDay)
+        var tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        eventsDateRangeProxyModel.setDateTimeRange(today, tomorrow)
+    }
+
     onCurrentDateChanged: {
         var daysCount = daysInMonth(currentDate.getFullYear(), currentDate.getMonth())
         daysModel.clear()
@@ -136,20 +144,7 @@ BasePage {
 
             onDelegateClicked: top.enterShipmentDetailsPage(data)
 
-            viewModel: ListModel { //TO_DO
-                ListElement {
-                    name: "Apple"
-                    cost: 2.45
-                }
-                ListElement {
-                    name: "Orange"
-                    cost: 3.25
-                }
-                ListElement {
-                    name: "Banana"
-                    cost: 1.95
-                }
-            }
+            viewModel: eventsDateRangeProxyModel
         }
     }
 }

@@ -17,8 +17,9 @@ DataManager::DataManager(QObject *parent)
 
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
-    engine.rootContext()->setContextProperty(QStringLiteral("commodityRangeProxy"), &m_commodityDateRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("commodityProxy"), &m_commodityProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("commodityRangeProxy"), &m_commodityDateRangeProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("eventsDateRangeProxyModel"), &m_eventsDateRangeProxyModel);
 }
 
 void DataManager::setupModels()
@@ -27,6 +28,9 @@ void DataManager::setupModels()
 
     m_commodityDateRangeProxyModel.setSourceModel(&m_eventModel);
     m_commodityDateRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
+
+    m_eventsDateRangeProxyModel.setSourceModel(&m_eventModel);
+    m_eventsDateRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 }
 
 #include <QDebug>
@@ -49,7 +53,7 @@ void DataManager::populateModels()
                 Enums::PlaceType::Sawmill, Enums::PlaceType::Export};
     QVector<Enums::PlaceAction> actions {Enums::PlaceAction::Arrived, Enums::PlaceAction::Departed};
 
-    QDateTime startDate(QDate(2016,1,1));
+    QDateTime startDate(QDate(2018,1,1));
     QDateTime endDate(QDate(2019,1,1));
     auto dateDiff = startDate.daysTo(endDate) / 4;
 

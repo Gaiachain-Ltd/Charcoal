@@ -50,7 +50,8 @@ HEADERS += \
     src/controllers/overlaymanager.h \
     src/controllers/abstractmanager.h \
     src/common/location.h \
-    src/models/calendarproxy.h
+    src/models/calendarproxy.h \
+    src/models/shipmenteventsproxy.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -69,7 +70,8 @@ SOURCES += src/main.cpp \
     src/controllers/usermanager.cpp \
     src/controllers/overlaymanager.cpp \
     src/controllers/abstractmanager.cpp \
-    src/models/calendarproxy.cpp
+    src/models/calendarproxy.cpp \
+    src/models/shipmenteventsproxy.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

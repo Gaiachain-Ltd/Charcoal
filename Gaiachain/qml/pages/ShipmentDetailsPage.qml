@@ -9,6 +9,13 @@ import "../items" as Items
 BasePage {
     id: top
 
+    property string shipmentId
+    property int resourceType
+
+    onShipmentIdChanged: {
+
+    }
+
     // TO_DO change below to enums when model will be used
     function typeToUrl(shipmentType) {
         switch(shipmentType) {
@@ -23,66 +30,86 @@ BasePage {
         return ""
     }
 
-    //TO_DO change it to proxy model with all data about shipment
     ListModel {
         id: shipmentModel
 
         ListElement {
             type: "forestery"
-            attributes: [
-                ListElement {
-                    title: "Apple"
-                    contentText: "Logs 1"
-                },
-                ListElement {
-                    title: "Orange"
-                    contentText: "Logs 2"
-                },
-                ListElement {
-                    title: "Banana"
-                    contentText: "Logs 3"
-                },
-                ListElement {
-                    title: "Kiwi"
-                    contentText: "Logs 4"
-                }
-            ]
         }
 
         ListElement {
             type: "logpark"
-            attributes: [
-                ListElement {
-                    title: "Log park"
-                    contentText: "Batch 1"
-                }
-            ]
         }
 
         ListElement {
             type: "sawmill"
-            attributes: [
-                ListElement {
-                    title: "Sawmill"
-                    contentText: "Batch 1"
-                }
-            ]
         }
 
         ListElement {
             type: "export"
-            attributes: [
-                ListElement {
-                    title: "Timber for export"
-                    contentText: "Batch 1"
-                },
-                ListElement {
-                    title: "Timber for export"
-                    contentText: "Batch 2"
-                }
-            ]
         }
     }
+
+    //TO_DO change it to proxy model with all data about shipment
+//    ListModel {
+//        id: shipmentModel
+
+//        ListElement {
+//            type: "forestery"
+//            attributes: [
+//                ListElement {
+//                    title: "Apple"
+//                    contentText: "Logs 1"
+//                },
+//                ListElement {
+//                    title: "Orange"
+//                    contentText: "Logs 2"
+//                },
+//                ListElement {
+//                    title: "Banana"
+//                    contentText: "Logs 3"
+//                },
+//                ListElement {
+//                    title: "Kiwi"
+//                    contentText: "Logs 4"
+//                }
+//            ]
+//        }
+
+//        ListElement {
+//            type: "logpark"
+//            attributes: [
+//                ListElement {
+//                    title: "Log park"
+//                    contentText: "Batch 1"
+//                }
+//            ]
+//        }
+
+//        ListElement {
+//            type: "sawmill"
+//            attributes: [
+//                ListElement {
+//                    title: "Sawmill"
+//                    contentText: "Batch 1"
+//                }
+//            ]
+//        }
+
+//        ListElement {
+//            type: "export"
+//            attributes: [
+//                ListElement {
+//                    title: "Timber for export"
+//                    contentText: "Batch 1"
+//                },
+//                ListElement {
+//                    title: "Timber for export"
+//                    contentText: "Batch 2"
+//                }
+//            ]
+//        }
+//    }
 
     Flickable {
         id: mainFlickable
