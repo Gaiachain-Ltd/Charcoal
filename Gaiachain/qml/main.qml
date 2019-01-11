@@ -55,21 +55,24 @@ ApplicationWindow
         var keyboardH = Qt.inputMethod.keyboardRectangle.height
         // if keyboard would hide input, page must be moved up
         if (itemY + mainWindow.activeFocusItem.height > keyboardY) {
+            // ignore if page position was already changed
             if (bottomMarginKeyboard > 0)
                 return
+            // how high input is placed from bottom of the page
             var screnRaiseDiff = (mainWindow.height - itemY - mainWindow.activeFocusItem.height)
-            // calculating how must lower header
-            // to be visible when keyboard is displayed
+            // calculate how much main window is raised from bottom
+            // to move header lower to always display it
             headerTopMargin = keyboardH - screnRaiseDiff
             // move page up and hide footer
             bottomMargin = screnRaiseDiff - s(Style.footerHeight)
         } else {
+            // ignore if page position was already changed
+            if (bottomMargin > 0)
+                return
             // input is above keyboard so
             // there is no need to move page
             // just change page height to fit all content
             // above keyboard)
-            if (bottomMargin > 0)
-                return
             bottomMarginKeyboard = keyboardH - s(Style.footerHeight)
         }
     }
