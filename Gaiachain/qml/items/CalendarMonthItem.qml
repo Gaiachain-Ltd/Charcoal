@@ -70,7 +70,6 @@ Item {
                     height: width
                     radius: width * 0.5
 
-
                     color: {
                          // Used here to force change color after commodity type change
                         var invalidateColor = invalidateDelegates

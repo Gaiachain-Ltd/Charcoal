@@ -150,7 +150,7 @@ BasePage {
             Component.onCompleted: {
                 // Slow down flick as page component is quite heavy which leads to poor UX.
                 flickDeceleration = flickDeceleration * 0.5
-                maximumFlickVelocity = maximumFlickVelocity * 0.5
+                maximumFlickVelocity = maximumFlickVelocity * 0.3
             }
         }
     }

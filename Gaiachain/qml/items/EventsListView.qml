@@ -69,7 +69,7 @@ Item {
 
                         wrapMode: Text.WordWrap
                         elide: Text.ElideNone
-                        text: "TEST fjhjkf ffjdkf d gfldf jdlfkljfkl d f fd fklklfds"
+                        text: listText !== "undefined" ? listText : "Default event."
                     }
 
                     SvgImage {

@@ -17,6 +17,8 @@ BasePage {
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
+    property bool timberEnabled: commodityProxy.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
+
     function enterShipmentDetailsPage(data) {
         pageManager.enter(Enums.Page.ShipmentDetails, data)
     }
@@ -88,6 +90,7 @@ BasePage {
                 width: ListView.view.width / ListView.view.visibleCount
 
                 property bool isSelected: ListView.view.selectedDay === day
+                property date myDate: new Date(currentYear, currentMonth, day)
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -111,7 +114,9 @@ BasePage {
                         Layout.preferredHeight: s(20)
                         Layout.preferredWidth: s(20)
                         radius: width * 0.5
-                        color: Style.textGreenColor
+                        color: timberEnabled && commodityRangeProxy.isEventToday(myDate)
+                               ? Style.textGreenColor
+                               : "transparent"
                     }
                 }
 
