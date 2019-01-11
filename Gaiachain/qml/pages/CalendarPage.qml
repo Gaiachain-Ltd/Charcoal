@@ -24,6 +24,12 @@ BasePage {
         Calendar.October, Calendar.November, Calendar.December
     ]
 
+    onLowestYearChanged: {
+        var startDate = new Date(lowestYear, 0, 1)
+        var endDate = currentDate
+        commodityRangeProxy.setDateTimeRange(startDate, endDate)
+    }
+
     function addYear(lastMonth) {
         var endMonth = lastMonth === undefined ? Calendar.December : lastMonth
         var blockInsert = true // Block insert until lastMonth is found
@@ -139,6 +145,12 @@ BasePage {
                         }
                     }
                 }
+            }
+
+            Component.onCompleted: {
+                // Slow down flick as page component is quite heavy which leads to poor UX.
+                flickDeceleration = flickDeceleration * 0.5
+                maximumFlickVelocity = maximumFlickVelocity * 0.5
             }
         }
     }

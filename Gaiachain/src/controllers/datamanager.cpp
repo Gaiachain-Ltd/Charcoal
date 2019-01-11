@@ -37,7 +37,7 @@ void DataManager::populateModels()
 
     // Populate shipment data
     int ctCount = static_cast<int>(Enums::CommodityType::CommodityCount);
-    int shipmentCount = 100;
+    int shipmentCount = 300;
     for (int i = 0; i < shipmentCount; ++i) {
         shipmentData.append({QString::number(i), i % ctCount});
     }
@@ -49,12 +49,12 @@ void DataManager::populateModels()
                 Enums::PlaceType::Sawmill, Enums::PlaceType::Export};
     QVector<Enums::PlaceAction> actions {Enums::PlaceAction::Arrived, Enums::PlaceAction::Departed};
 
-    QDateTime startDate(QDate(2018,1,1));
+    QDateTime startDate(QDate(2016,1,1));
     QDateTime endDate(QDate(2019,1,1));
     auto dateDiff = startDate.daysTo(endDate) / 4;
 
-    QDateTime startTestRange(QDate(2018,12,1));
-    QDateTime endTestRange(QDate(2019,1,1));
+    QDateTime startTestRange = startDate;//(QDate(2018,12,1));
+    QDateTime endTestRange = endDate;//(QDate(2019,1,1));
     int countTest = 0;
 
     for (int i =0; i < shipmentCount; ++i) {

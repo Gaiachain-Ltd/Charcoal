@@ -18,6 +18,7 @@ Item {
     property int daySpacing: 0
 
     property color circleColor: Style.textGreenColor
+    property bool timberEnabled: commodityProxy.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
 
     signal titleClicked()
     signal dateClicked(date d)
@@ -25,10 +26,7 @@ Item {
     property bool invalidateDelegates: false
     Connections {
         target: commodityRangeProxy
-        onFilteringFinished: {
-            invalidateDelegates = !invalidateDelegates
-            console.log("Delegates invalidated", invalidateDelegates)
-        }
+        onFilteringFinished: invalidateDelegates = !invalidateDelegates
     }
 
     ColumnLayout {
@@ -51,7 +49,10 @@ Item {
 
             delegate: Column {
                 property bool currentMonth: model.month === grid.month
+                property date myDate: new Date(model.year, model.month, model.day)
+
                 spacing: daySpacing
+
                 BasicText {
                     anchors.horizontalCenter: parent.horizontalCenter
 
@@ -69,39 +70,20 @@ Item {
                     height: width
                     radius: width * 0.5
 
+
                     color: {
                          // Used here to force change color after commodity type change
                         var invalidateColor = invalidateDelegates
 
-                        var delegateDate = new Date(model.year, model.month, model.day)
-                        var isEventToday = commodityRangeProxy.isEventToday(delegateDate)
-
-                        var commodityTimberEnabled = commodityProxy.commodityEnabled(Enums.CommodityType.Timber)
-                        var commodityCocoaEnabled = commodityProxy.commodityEnabled(Enums.CommodityType.Cocoa)
-
-                        var colorUse = circleColor
-                        if (commodityCocoaEnabled) {
-                            colorUse = "brown"
-                        }
-
-                        console.log("Delegate commodity", isEventToday, commodityCocoaEnabled, commodityTimberEnabled)
-
-                        return currentMonth && (commodityTimberEnabled || commodityCocoaEnabled) && isEventToday ? colorUse : "transparent"
+                        return currentMonth && timberEnabled
+                                && commodityRangeProxy.isEventToday(myDate)
+                                ? circleColor: "transparent"
                     }
                 }
             }
         }
 
         LayoutSpacer { spacerHeight: top.bottomSpacing }
-    }
-
-    Timer {
-        interval: 2000
-        running: true
-        onTriggered: {
-            console.log("Timer trigered", invalidateDelegates)
-            commodityProxy.setCommodityType(Enums.CommodityType.Cocoa, true)
-        }
     }
 }
 

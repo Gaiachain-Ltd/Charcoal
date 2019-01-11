@@ -3,6 +3,8 @@
 
 #include <QSortFilterProxyModel>
 #include <QDateTime>
+#include <QDate>
+#include <QSet>
 
 #include "../common/enums.h"
 
@@ -28,11 +30,11 @@ protected:
 
 private:
     CommodityProxyModel *m_commodityProxyModel = nullptr;
+    mutable QSet<QDate> m_filteredDates;
 
     QDateTime m_startDateTime;
     QDateTime m_endDateTime;
 
-    bool commodityProxyModelContainsId(int shipmentId) const; //TO_DO make it faster
     inline bool isInDateTimeRange(QDateTime &dt) const;
 };
 

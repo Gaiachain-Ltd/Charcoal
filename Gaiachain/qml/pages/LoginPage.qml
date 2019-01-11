@@ -22,23 +22,24 @@ BasePage {
     }
 
     // Month should be 0-indexed
-    function getNextMonth (date, year, month) {
-        if (date.getMonth() === 11) {
-            return new Date(date.getFullYear() + 1, 0, 1);
-        } else {
-            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
-        }
-    }
+//    function getNextMonth (date, year, month) {
+//        if (date.getMonth() === 11) {
+//            return new Date(date.getFullYear() + 1, 0, 1);
+//        } else {
+//            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+//        }
+//    }
 
-    property int currentMonth: Calendar.December
-    property int currentYear: 2018
+//    property int currentMonth: Calendar.December
+//    property int currentYear: 2018
     Component.onCompleted: {
-        var startDate = new Date(currentYear, currentMonth, 1)
-        var endDate = getNextMonth(startDate)
-
-        console.log("Current start/end date", startDate, endDate)
+        // Temporarly set Timber fixed.
         commodityProxy.setCommodityType(Enums.CommodityType.Timber)
-        commodityRangeProxy.setDateTimeRange(startDate, endDate)
+        //var startDate = new Date(currentYear, currentMonth, 1)
+        //var endDate = getNextMonth(startDate)
+
+        //console.log("Current start/end date", startDate, endDate)
+        //commodityRangeProxy.setDateTimeRange(startDate, endDate)
 
     }
 

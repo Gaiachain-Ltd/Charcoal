@@ -25,20 +25,13 @@ void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime e
     m_endDateTime = end;
 
     qDebug() << "Start end dates" << start << end;
-    emit layoutAboutToBeChanged();
+    m_filteredDates.clear();
     invalidateFilter();
 }
 
 bool CommodityDateRangeProxyModel::isEventToday(QDate date)
 {
-    for (int i = 0; i < rowCount(); ++i) {
-        auto timestamp = data(index(i,0), EventModel::Timestamp).toDate();
-
-        if (date == timestamp)
-            return true;
-    }
-
-    return false;
+    return m_filteredDates.contains(date);
 }
 
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -53,12 +46,12 @@ bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
     bool containsId = false;
     if (isInDateTimeRange(timestamp)) {
-        auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();
-        containsId = commodityProxyModelContainsId(shipmentId);
+        auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toString();
+        containsId = m_commodityProxyModel->isIdIn(shipmentId);
     }
 
     if (containsId)
-        qDebug() << "Contains timestamp" << timestamp;
+        m_filteredDates.insert(timestamp.date());
 
     return containsId;
 }
@@ -70,23 +63,6 @@ bool CommodityDateRangeProxyModel::lessThan(const QModelIndex &source_left, cons
     //TO_DO sort by date (arrival and departure)
 
     return true;
-}
-
-bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId) const
-{
-    Q_ASSERT(m_commodityProxyModel != nullptr);
-
-    const int rowCount = m_commodityProxyModel->rowCount();
-    qDebug() << m_commodityProxyModel->rowCount();
-
-    for (int i = 0; i < rowCount; ++i) {
-        if (m_commodityProxyModel->data(
-                    m_commodityProxyModel->index(i, 0),ShipmentModel::ShipmentId).toInt() == shipmentId) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 bool CommodityDateRangeProxyModel::isInDateTimeRange(QDateTime &dt) const

@@ -34,6 +34,7 @@ Item {
         return isImmediate ? StackView.Immediate : StackView.Transition
     }
 
+    // TO_DO add handling of calendar page separetly as it is heavy component!
     StackView {
         id: stackView
         anchors.fill: parent
@@ -75,10 +76,6 @@ Item {
                 duration: Style.animationDuration
                 easing.type: Style.animationEasing
             }
-        }
-
-        Component.onCompleted: {
-            pageManager.enter(Enums.Page.CalendarMonth)
         }
     }
 }

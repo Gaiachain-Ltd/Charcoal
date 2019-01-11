@@ -21,6 +21,7 @@ void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool
         m_enabledCommodites.remove(filterType);
     }
 
+    m_idx.clear();
     invalidateFilter();
     emit commodityTypeChanged();
 }
@@ -28,6 +29,11 @@ void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool
 bool CommodityProxyModel::commodityEnabled(Enums::CommodityType filterType) const
 {
     return m_enabledCommodites.contains(filterType);
+}
+
+bool CommodityProxyModel::isIdIn(const QString &id) const
+{
+    return m_idx.contains(id);
 }
 
 bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -39,6 +45,10 @@ bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sou
     }
 
     auto commodityType = sourceModel()->data(srcIdx, ShipmentModel::Commodity).value<Enums::CommodityType>();
+    if (commodityEnabled(commodityType)) {
+        m_idx.insert(sourceModel()->data(srcIdx, ShipmentModel::ShipmentId).toString());
+        return true;
+    }
 
-    return commodityEnabled(commodityType);
+    return false;
 }
