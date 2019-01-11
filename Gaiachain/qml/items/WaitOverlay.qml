@@ -11,6 +11,8 @@ Rectangle
 
     visible: false
 
+    property bool logoVisible: true
+
     Column
     {
         anchors.fill: parent
@@ -22,6 +24,8 @@ Rectangle
                 right: parent.right
             }
             height: parent.height * 0.5
+
+            visible: logoVisible
 
             SvgImage
             {
@@ -41,7 +45,7 @@ Rectangle
                 left: parent.left
                 right: parent.right
             }
-            height: parent.height * 0.5
+            height: parent.height * (logoVisible ? 0.5 : 1.0)
 
             SvgImage {
                 id: spinner
