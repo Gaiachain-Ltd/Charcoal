@@ -23,7 +23,7 @@ BasePage {
     id: top
 
     function enterEventDetailsPage() {
-        pageManager.enter(Enums.Page.EditableEventDetails)
+        pageManager.enter(Enums.Page.EditableEventDetails, {"commodityId": scannedId})
     }
 
     function previewCapturedImage(result) {
@@ -216,9 +216,9 @@ BasePage {
                         visible: false
                         placeholderText: Strings.typeId + "..."
 
-                        additionalInputMethodHints: Qt.ImhDigitsOnly
+                        additionalInputMethodHints: Qt.ImhLowercaseOnly
                         input.maximumLength: utility.getScannedIdLength()
-                        input.validator : RegExpValidator { regExp : /[0-9]+/ }
+                        input.validator : RegExpValidator { regExp : /[a-zA-Z0-9]+/ }
 
                         onMoveToNextInput: {
                             parseInputId()
