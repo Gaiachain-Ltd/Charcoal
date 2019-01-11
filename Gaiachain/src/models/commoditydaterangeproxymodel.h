@@ -19,6 +19,9 @@ public:
 
     void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
 
+signals:
+    void filteringFinished() const;
+
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const Q_DECL_OVERRIDE;

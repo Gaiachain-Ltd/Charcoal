@@ -7,6 +7,10 @@ import com.gaiachain.style 1.0
 
 import "../items" as Items
 
+
+import Qt.labs.calendar 1.0
+
+
 BasePage {
     id: top
     page: Enums.Page.Login
@@ -15,6 +19,27 @@ BasePage {
 
     function enterViewTypePage() {
         pageManager.enter(Enums.Page.ViewType)
+    }
+
+    // Month should be 0-indexed
+    function getNextMonth (date, year, month) {
+        if (date.getMonth() === 11) {
+            return new Date(date.getFullYear() + 1, 0, 1);
+        } else {
+            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+        }
+    }
+
+    property int currentMonth: Calendar.December
+    property int currentYear: 2018
+    Component.onCompleted: {
+        var startDate = new Date(currentYear, currentMonth, 1)
+        var endDate = getNextMonth(startDate)
+
+        console.log("Current start/end date", startDate, endDate)
+        commodityProxy.setCommodityType(Enums.CommodityType.Timber)
+        commodityRangeProxy.setDateTimeRange(startDate, endDate)
+
     }
 
     Connections

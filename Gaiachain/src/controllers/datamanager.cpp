@@ -51,7 +51,7 @@ void DataManager::populateModels()
 
     QDateTime startDate(QDate(2018,1,1));
     QDateTime endDate(QDate(2019,1,1));
-    auto dateDiff = startDate.daysTo(endDate) / 30;
+    auto dateDiff = startDate.daysTo(endDate) / 4;
 
     QDateTime startTestRange(QDate(2018,12,1));
     QDateTime endTestRange(QDate(2019,1,1));

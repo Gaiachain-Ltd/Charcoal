@@ -19,6 +19,7 @@ public:
 
 signals:
     void commodityTypeChanged() const;
+    void filteringFinished() const;
 
 private:
     QSet<Enums::CommodityType> m_enabledCommodites;

@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.11
 import Qt.labs.calendar 1.0
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 Item {
     id: top
@@ -21,12 +22,12 @@ Item {
     signal titleClicked()
     signal dateClicked(date d)
 
-    // Month should be 0-indexed
-    function getNextMonth (date, year, month) {
-        if (date.getMonth() === 11) {
-            return new Date(date.getFullYear() + 1, 0, 1);
-        } else {
-            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    property bool invalidateDelegates: false
+    Connections {
+        target: commodityRangeProxy
+        onFilteringFinished: {
+            invalidateDelegates = !invalidateDelegates
+            console.log("Delegates invalidated", invalidateDelegates)
         }
     }
 
@@ -69,15 +70,23 @@ Item {
                     radius: width * 0.5
 
                     color: {
+                         // Used here to force change color after commodity type change
+                        var invalidateColor = invalidateDelegates
+
                         var delegateDate = new Date(model.year, model.month, model.day)
                         var isEventToday = commodityRangeProxy.isEventToday(delegateDate)
-                        var color = Style.buttonGreenColor
-                        if (commodityProxy.commodityEnabled(Enums.CommodityType.Timber))
-                            color = circleColor
 
-                        console.log("Is event today", isEventToday, delegateDate)
+                        var commodityTimberEnabled = commodityProxy.commodityEnabled(Enums.CommodityType.Timber)
+                        var commodityCocoaEnabled = commodityProxy.commodityEnabled(Enums.CommodityType.Cocoa)
 
-                        return currentMonth ? color : "transparent"
+                        var colorUse = circleColor
+                        if (commodityCocoaEnabled) {
+                            colorUse = "brown"
+                        }
+
+                        console.log("Delegate commodity", isEventToday, commodityCocoaEnabled, commodityTimberEnabled)
+
+                        return currentMonth && (commodityTimberEnabled || commodityCocoaEnabled) && isEventToday ? colorUse : "transparent"
                     }
                 }
             }
@@ -86,14 +95,13 @@ Item {
         LayoutSpacer { spacerHeight: top.bottomSpacing }
     }
 
-    Component.onCompleted: {
-        var startDate = new Date(currentYear, currentMonth, 1)
-        var endDate = getNextMonth(startDate)
-
-        console.log("Current start/end date", startDate, endDate)
-        commodityProxy.setCommodityType(Enums.CommodityType.Timber)
-        commodityRangeProxy.setDateTimeRange(startDate, endDate)
-
+    Timer {
+        interval: 2000
+        running: true
+        onTriggered: {
+            console.log("Timer trigered", invalidateDelegates)
+            commodityProxy.setCommodityType(Enums.CommodityType.Cocoa, true)
+        }
     }
 }
 

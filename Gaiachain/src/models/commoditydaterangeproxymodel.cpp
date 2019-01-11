@@ -4,18 +4,19 @@
 #include "eventmodel.h"
 #include "shipmentmodel.h"
 
+#include <QTimer>
+
 #include <QDebug>
 
 CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
-
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
 {
     m_commodityProxyModel = commodityProxyModel;
-    connect(m_commodityProxyModel, &CommodityProxyModel::commodityTypeChanged, this, &CommodityDateRangeProxyModel::invalidateFilter);
+    connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilter);
 }
 
 void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime end)
@@ -24,48 +25,42 @@ void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime e
     m_endDateTime = end;
 
     qDebug() << "Start end dates" << start << end;
+    emit layoutAboutToBeChanged();
     invalidateFilter();
 }
 
 bool CommodityDateRangeProxyModel::isEventToday(QDate date)
 {
-    Q_UNUSED(date)
-//    for (int i = 0; i < rowCount(); ++i) {
-//        auto index = sourceModel()->index(i, 0);
-//        auto arrival = data(index, EventModel::ArrivalDateTime).toDate();
-//        auto departure = data(index, EventModel::DepartureDateTime).toDate();
+    for (int i = 0; i < rowCount(); ++i) {
+        auto timestamp = data(index(i,0), EventModel::Timestamp).toDate();
 
-//        if (date == arrival || date == departure)
-//            return true;
-//    }
+        if (date == timestamp)
+            return true;
+    }
 
     return false;
 }
 
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    Q_UNUSED(sourceRow)
-    Q_UNUSED(sourceParent)
-//    if (sourceRow < 0 || sourceRow > sourceModel()->rowCount())
-//        return false;
+    auto index = sourceModel()->index(sourceRow, 0, sourceParent);
+    if (!index.isValid()) {
+        QTimer::singleShot(250, this, &CommodityDateRangeProxyModel::filteringFinished);
+        return false;
+    }
 
-//    auto index = sourceModel()->index(sourceRow, 0, sourceParent);
+    auto timestamp = sourceModel()->data(index, EventModel::Timestamp).toDateTime();
 
-//    auto arrivalDateTime = sourceModel()->data(index, EventModel::ArrivalDateTime).toDateTime();
-//    auto departureDateTime = sourceModel()->data(index, EventModel::DepartureDateTime).toDateTime();
+    bool containsId = false;
+    if (isInDateTimeRange(timestamp)) {
+        auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();
+        containsId = commodityProxyModelContainsId(shipmentId);
+    }
 
-//    bool containsId = false;
-//    if (isInDateTimeRange(arrivalDateTime) || isInDateTimeRange(departureDateTime)) {
-//        auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();
-//        containsId = commodityProxyModelContainsId(shipmentId);
-//    }
+    if (containsId)
+        qDebug() << "Contains timestamp" << timestamp;
 
-//    if (containsId) {
-//        qDebug() << "Contains Arrival/Departure" << arrivalDateTime << departureDateTime;
-//    }
-
-//    return containsId;
-    return true;
+    return containsId;
 }
 
 bool CommodityDateRangeProxyModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
@@ -82,6 +77,7 @@ bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId)
     Q_ASSERT(m_commodityProxyModel != nullptr);
 
     const int rowCount = m_commodityProxyModel->rowCount();
+    qDebug() << m_commodityProxyModel->rowCount();
 
     for (int i = 0; i < rowCount; ++i) {
         if (m_commodityProxyModel->data(

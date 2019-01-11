@@ -2,12 +2,13 @@
 
 #include "shipmentmodel.h"
 
+#include <QTimer>
 #include <QDebug>
 
 CommodityProxyModel::CommodityProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
-
+    setDynamicSortFilter(true);
 }
 
 void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool enable)
@@ -31,10 +32,13 @@ bool CommodityProxyModel::commodityEnabled(Enums::CommodityType filterType) cons
 
 bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (sourceRow < 0 || sourceRow > sourceModel()->rowCount())
+    auto srcIdx = sourceModel()->index(sourceRow, 0, sourceParent);
+    if (!srcIdx.isValid()) {
+        QTimer::singleShot(250, this, &CommodityProxyModel::filteringFinished);
         return false;
+    }
 
-    auto commodityType = sourceModel()->data(sourceModel()->index(sourceRow, 0, sourceParent), ShipmentModel::Commodity).value<Enums::CommodityType>();
+    auto commodityType = sourceModel()->data(srcIdx, ShipmentModel::Commodity).value<Enums::CommodityType>();
 
     return commodityEnabled(commodityType);
 }
