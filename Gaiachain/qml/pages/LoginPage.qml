@@ -49,6 +49,10 @@ BasePage {
         }
     }
 
+    function closeEventHandler() {
+        return true
+    }
+
     Column
     {
         anchors.fill: parent

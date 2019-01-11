@@ -61,6 +61,7 @@ ApplicationWindow
             // calculating how must lower header
             // to be visible when keyboard is displayed
             headerTopMargin = keyboardH - screnRaiseDiff
+            // move page up and hide footer
             bottomMargin = screnRaiseDiff - s(Style.footerHeight)
         } else {
             // input is above keyboard so
@@ -99,4 +100,6 @@ ApplicationWindow
         id: mainStackView
         anchors.fill: parent
     }
+
+    onClosing: close.accepted = mainStackView.onClosingEvent()
 }

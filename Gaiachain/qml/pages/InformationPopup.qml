@@ -5,11 +5,9 @@ import "../items" as Items
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
-Item
+Items.GenericPanel
 {
     id: top
-    property int page: Enums.Page.InvalidPage
-    property bool isPopup: true
 
     property string text: ""
 
@@ -24,6 +22,11 @@ Item
 
     function acceptHandler() {
         pageManager.sendAction(acceptButtonType)
+    }
+
+    function closeEventHandler() {
+        if (rejectButton.visible)
+            rejectButton.clicked()
     }
 
     Rectangle
