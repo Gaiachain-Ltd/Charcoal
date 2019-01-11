@@ -10,6 +10,8 @@ BasePage {
     id: top
     property bool readOnly: true
 
+    property string logId: ""
+
     Connections {
         target: pageManager
         // When using popup always add checking if I'm on top
@@ -80,7 +82,7 @@ BasePage {
                         Layout.preferredWidth: parent.width * 0.75
 
                         titleText: (Strings.logID + ":")
-                        contentText: "Harvest Inc."
+                        contentText: logId
                     }
                     Items.LayoutSpacer {}
                     Items.ImageButton {
