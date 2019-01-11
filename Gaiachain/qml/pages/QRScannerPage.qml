@@ -45,7 +45,7 @@ BasePage {
 
     function grabImageOfCamera() {
         if (!photoPreview.visible)
-            cameraContainer.grabToImage(previewCapturedImage)
+            videoOutput.grabToImage(previewCapturedImage)
     }
 
     function parseInputId() {

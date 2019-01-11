@@ -50,19 +50,34 @@ Item {
 
         Items.NavigationHeader {
             Layout.fillWidth: true
+            Layout.topMargin: mainWindow.headerTopMargin
             Layout.preferredHeight: s(Style.headerHeight)
             visible: top.headerVisible
+            z: 5
         }
 
         Item {
-            id: pageContent
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            layer.enabled: true
+            clip: true
 
             Rectangle {
                 id: background
                 anchors.fill: parent
                 color: top.backgroundColor
+            }
+
+            Item {
+                id: pageContent
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                    verticalCenterOffset: -Math.max(mainWindow.bottomMargin, mainWindow.bottomMarginKeyboard * 0.5)
+                }
+                height: parent.height - mainWindow.bottomMarginKeyboard * 0.5
             }
         }
 
