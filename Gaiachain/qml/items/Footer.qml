@@ -16,40 +16,73 @@ Item {
         color: Style.registerBarBackgroundColor
     }
 
-    ImageButton
-    {
+    Row {
+        id: buttonRow
+
+        readonly property real buttonWidth: s(Style.buttonHeight)
+
         anchors {
+            leftMargin: buttonRow.spacing
+            rightMargin: buttonRow.spacing
             left: parent.left
-            leftMargin: s(Style.bigMargin)
+            right: parent.right
             verticalCenter: parent.verticalCenter
         }
 
-        backgroundColor: !isAddButtonActive ? Style.buttonGreenColor : "transparent"
-        source: !isAddButtonActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
+        spacing: Math.round((top.width - (buttonWidth * Style.headerMaximumButtonCount)) / (Style.headerMaximumButtonCount + 1))
 
-        onClicked: {
-            if (isAddButtonActive)
-                pageManager.backTo(pageManager.homePage());
-        }
-    }
+        ImageButton
+        {
+            width: buttonRow.buttonWidth
+            height: buttonRow.buttonWidth
 
-    ImageButton
-    {
-        id: addButton
-        anchors.centerIn: parent
+            backgroundColor: !isAddButtonActive ? Style.buttonGreenColor : "transparent"
+            source: !isAddButtonActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
 
-        backgroundColor: isAddButtonActive ? Style.buttonGreenColor : "transparent"
-        source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
-
-        visible: page !== Enums.Page.Login && userManager.loggedIn
-
-        onClicked: {
-            if (!isAddButtonActive) {
-                pageManager.backToAndEnter(pageManager.homePage(),
-                                           Enums.Page.QRScanner,
-                                           {},
-                                           true)
+            onClicked: {
+                if (isAddButtonActive)
+                    pageManager.backTo(pageManager.homePage());
             }
+        }
+
+        Item {
+            // button slot
+            width: buttonRow.buttonWidth
+            height: buttonRow.buttonWidth
+        }
+
+        ImageButton
+        {
+            id: addButton
+
+            width: buttonRow.buttonWidth
+            height: buttonRow.buttonWidth
+
+            backgroundColor: isAddButtonActive ? Style.buttonGreenColor : "transparent"
+            source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
+
+            visible: page !== Enums.Page.Login && userManager.loggedIn
+
+            onClicked: {
+                if (!isAddButtonActive) {
+                    pageManager.backToAndEnter(pageManager.homePage(),
+                                               Enums.Page.QRScanner,
+                                               {},
+                                               true)
+                }
+            }
+        }
+
+        Item {
+            // button slot
+            width: buttonRow.buttonWidth
+            height: buttonRow.buttonWidth
+        }
+
+        Item {
+            // button slot
+            width: buttonRow.buttonWidth
+            height: buttonRow.buttonWidth
         }
     }
 }

@@ -111,7 +111,7 @@ BasePage {
                         Layout.preferredHeight: s(20)
                         Layout.preferredWidth: s(20)
                         radius: width * 0.5
-                        color: Style.buttonGreenColor
+                        color: Style.textGreenColor
                     }
                 }
 

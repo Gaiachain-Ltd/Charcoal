@@ -30,7 +30,6 @@ BasePage {
 
             pageManager.enterPopup(Enums.Popup.Information, {
                                        "text" : Strings.loginErrorInfo,
-                                       "acceptButtonText": Strings.close
                                    })
         }
     }
