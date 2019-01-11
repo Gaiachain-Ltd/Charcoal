@@ -120,6 +120,7 @@ Item {
     // Other
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
+    readonly property int headerMaximumButtonCount: 5
 
     FontLoader {
         source: "qrc:/font/fonts/Lato-Regular.ttf"
