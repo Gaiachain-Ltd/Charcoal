@@ -12,12 +12,12 @@ class EventModel : public QAbstractListModel
 
 public:
     enum ModelRole {
-        EventId = Qt::UserRole +1,
-        ShipmentId, //Foreign key
+        ShipmentId = Qt::UserRole, //Foreign key
+        Timestamp,
+        Location,
         Company,
-        LogId,
-        ArrivalDateTime,
-        DepartureDateTime,
+        Place,
+        PlaceAction,
         LastRole
     }; //!!! Add new roles at the end
 
@@ -33,16 +33,17 @@ public:
 
 private:
     const QHash<int, QByteArray> m_roleNames = {
-        { EventId, "id" },
-        { ShipmentId, "shipmentId" },
-        { Company, "company" },
-        { LogId, "logId"},
-        { ArrivalDateTime, "arrivalDateTime"},
-        { DepartureDateTime, "departureDateTime"}
+        { ModelRole::ShipmentId, "shipmentId" },
+        { ModelRole::Timestamp, "timestamp" },
+        { ModelRole::Location, "location" },
+        { ModelRole::Company, "company" },
+        { ModelRole::Place, "place" },
+        { ModelRole::PlaceAction, "action" }
     };
-    // TO_DO add gps and others
 
     QHash<int, QVariantList> m_data;
+
+    int shiftedIndex(const int idx) const;
 };
 
 #endif // EVENTMODEL_H

@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick 2.11
 
-Item {
+QtObject {
     // Colors
     readonly property color backgroundColor: "white"
     readonly property color textPrimaryColor: "black"
@@ -122,13 +122,13 @@ Item {
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
 
-    FontLoader {
+    readonly property var latoRegularFont: FontLoader {
         source: "qrc:/font/fonts/Lato-Regular.ttf"
     }
-    FontLoader {
+    readonly property var latoBoldFont: FontLoader {
         source: "qrc:/font/fonts/Lato-Bold.ttf"
     }
-    FontLoader {
+    readonly property var latoMontserratFont: FontLoader {
         source: "qrc:/font/fonts/Montserrat-Medium.ttf"
     }
 }

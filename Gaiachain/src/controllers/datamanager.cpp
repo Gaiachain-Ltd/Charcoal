@@ -4,7 +4,9 @@
 #include <QQmlContext>
 #include <QDateTime>
 
+#include "../common/enums.h"
 #include "../common/globals.h"
+#include "../common/location.h"
 
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
@@ -37,43 +39,51 @@ void DataManager::populateModels()
     int ctCount = static_cast<int>(Enums::CommodityType::CommodityCount);
     int shipmentCount = 100;
     for (int i = 0; i < shipmentCount; ++i) {
-        shipmentData.append({i, i%ctCount});
+        shipmentData.append({QString::number(i), i % ctCount});
     }
     m_shipmentModel.appendData(shipmentData);
 
     //Populate events data
-    int eventCount = 100;
     QStringList comapnyNames{"Milo", "Solutions", "XentCorp", "YOLOCorp"};
+    QVector<Enums::PlaceType> placeType{Enums::PlaceType::Forestery, Enums::PlaceType::LogPark,
+                Enums::PlaceType::Sawmill, Enums::PlaceType::Export};
+    QVector<Enums::PlaceAction> actions {Enums::PlaceAction::Arrived, Enums::PlaceAction::Departed};
+
     QDateTime startDate(QDate(2018,1,1));
     QDateTime endDate(QDate(2019,1,1));
-    auto dateDiff = startDate.daysTo(endDate);
-
+    auto dateDiff = startDate.daysTo(endDate) / 30;
 
     QDateTime startTestRange(QDate(2018,12,1));
     QDateTime endTestRange(QDate(2019,1,1));
     int countTest = 0;
 
-    for (int i = 0; i < eventCount; ++i) {
-        int shipmentId = rand() % shipmentCount;
-        QString companyName = comapnyNames[rand() % comapnyNames.size()];
-        int daysElapsed = rand() % dateDiff;
+    for (int i =0; i < shipmentCount; ++i) {
+        int shipId = i;
+        QDateTime sd = startDate;
 
-        QDateTime arrivalDateTime = startDate.addDays(daysElapsed);
-        QDateTime departureDateTime = arrivalDateTime.addDays(rand() % 15 + 1);
+        for (const auto &place : placeType) {
+            for (const auto &action : actions) {
+                QString companyName = comapnyNames[rand() % comapnyNames.size()];
 
-        if (arrivalDateTime >= startTestRange && arrivalDateTime < endTestRange)
-            ++countTest;
+                int daysElapsed = (rand() % dateDiff + 1);
+                sd = sd.addDays(daysElapsed);
 
-        if (departureDateTime >= startTestRange && departureDateTime < endTestRange)
-            ++countTest;
+                if (sd >= startTestRange || sd <= endTestRange)
+                    ++countTest;
 
-        eventData.append({i,
-                          shipmentId,
-                          companyName,
-                          shipmentId,
-                          arrivalDateTime,
-                          departureDateTime
-                         });
+                Location loc;
+                loc.lat = 9.665645 + i;
+                loc.lon = 7.324432 + i;
+
+                eventData.append({shipId,
+                                  sd,
+                                  QVariant::fromValue(loc),
+                                  companyName,
+                                  static_cast<int>(place),
+                                  static_cast<int>(action)
+                                 });
+            }
+        }
     }
 
     qDebug() << "Count between dates:" << startTestRange << endTestRange <<  countTest;

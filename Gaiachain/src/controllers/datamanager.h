@@ -9,6 +9,8 @@
 #include "../models/commodityproxymodel.h"
 #include "../models/commoditydaterangeproxymodel.h"
 
+#include "../models/calendarproxy.h"
+
 class DataManager : public AbstractManager
 {
     Q_OBJECT
@@ -30,6 +32,8 @@ private:
 
     CommodityProxyModel m_commodityProxyModel;
     CommodityDateRangeProxyModel m_commodityDateRangeProxyModel;
+
+    CalendarProxy calendarProxy;
 };
 
 #endif // DATAMANAGER_H
