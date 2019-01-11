@@ -173,7 +173,12 @@ Item {
                             SvgImage {
                                 height: s(Style.headerArrowHeight)
                                 width: s(Style.headerArrowWidth)
-                                anchors.centerIn: parent
+                                anchors {
+                                    centerIn: parent
+                                    // last arrow is moved a little to the left
+                                    // because button is little bigger than other
+                                    horizontalCenterOffset: delegateId.isLast ? -(parent.width * 0.5 - width) : 0
+                                }
 
                                 source: Style.rightArrowLightImgUrl
                             }
