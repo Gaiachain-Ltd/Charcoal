@@ -74,54 +74,68 @@ Item {
     ColumnLayout {
         anchors {
             fill: parent
-            leftMargin: s(Style.bigMargin)
-            rightMargin: s(Style.bigMargin)
             topMargin: s(Style.smallMargin)
             bottomMargin: s(Style.smallMargin)
+            leftMargin: topRow.calculatedSpacing
+            rightMargin: topRow.calculatedSpacing
         }
 
         spacing: 0
 
         RowLayout {
             id: topRow
-            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
+
+            readonly property real buttonWidth: s(Style.buttonHeight)
+            readonly property real calculatedSpacing: Math.round((top.width - (buttonWidth * Style.headerMaximumButtonCount)) / (Style.headerMaximumButtonCount + 1))
 
             spacing: 0
 
-            ImageButton {
-                Layout.preferredHeight: s(Style.buttonHeight) * 0.9
-                Layout.preferredWidth: s(Style.buttonHeight) * 0.9
-                Layout.alignment: Qt.AlignVCenter
+            Item {
+                Layout.preferredWidth: topRow.buttonWidth
+                Layout.preferredHeight: topRow.buttonWidth
+                ImageButton {
+                    height: topRow.buttonWidth * 0.9
+                    width: topRow.buttonWidth * 0.9
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                    }
 
-                property bool isOnHomePage: pageManager.isOnHomePage()
-                source: {
-                    if (!isOnHomePage) return Style.backImgUrl
+                    property bool isOnHomePage: pageManager.isOnHomePage()
+                    source: {
+                        if (!isOnHomePage) return Style.backImgUrl
 
-                    return userManager.loggedIn ? Style.logoutImgUrl : Style.exitToLoginImgUrl
-                }
+                        return userManager.loggedIn ? Style.logoutImgUrl : Style.exitToLoginImgUrl
+                    }
 
-                onClicked: {
-                    if (userManager.loggedIn && isOnHomePage) {
-                        pageManager.enterPopup(Enums.Popup.Information, {
-                                                   "text" : Strings.logoutQuestion,
-                                                   "acceptButtonText": Strings.logout,
-                                                   "rejectButtonText": Strings.cancel,
-                                                   "acceptButtonType": Enums.PopupAction.Logout
-                                               })
-                    } else {
-                        pageManager.back()
+                    onClicked: {
+                        if (userManager.loggedIn && isOnHomePage) {
+                            pageManager.enterPopup(Enums.Popup.Information, {
+                                                       "text" : Strings.logoutQuestion,
+                                                       "acceptButtonText": Strings.logout,
+                                                       "rejectButtonText": Strings.cancel,
+                                                       "acceptButtonType": Enums.PopupAction.Logout
+                                                   })
+                        } else {
+                            pageManager.back()
+                        }
                     }
                 }
             }
 
-            LayoutSpacer {}
+            Item
+            {
+                // empty item
+                Layout.preferredWidth: topRow.calculatedSpacing
+                Layout.preferredHeight: parent.height
+            }
 
             ImageButton {
-                Layout.preferredHeight: s(Style.buttonHeight)
-                Layout.preferredWidth: s(Style.buttonHeight)
+                Layout.preferredWidth: topRow.buttonWidth
+                Layout.preferredHeight: topRow.buttonWidth
 
-                Layout.alignment: Qt.AlignVCenter
                 source: Style.homeImgUrl
 
                 onClicked: pageManager.backTo(pageManager.homePage())
@@ -130,7 +144,7 @@ Item {
             ListView {
                 id: buttonList
                 Layout.fillHeight: true
-                Layout.preferredWidth: Math.max(sectionsModel.maxSectionsDepth() * (topRow.height + s(Style.headerArrowWidth)), topRow.width * 0.5 + delegateWidth * 0.8)
+                Layout.fillWidth: true
 
                 orientation: ListView.Horizontal
                 interactive: false
@@ -138,36 +152,45 @@ Item {
 
                 model: sectionsModel
 
-                readonly property int delegateWidth: s(Style.headerArrowWidth) + topRow.height
+                readonly property int delegateWidth: topRow.calculatedSpacing + topRow.buttonWidth
 
                 delegate: Item {
                     id: delegateId
                     height: ListView.view.height
-                    width: buttonList.delegateWidth + (delegateId.isLast ? imageButton.padding : 0)
+                    width: buttonList.delegateWidth
 
                     property bool isLast: (ListView.view.count - 1) === index
 
                     RowLayout {
                         anchors.fill: parent
 
-                        spacing: delegateId.isLast ? imageButton.padding : s(Style.smallMargin)
+                        spacing: 0
 
-                        SvgImage {
-                            Layout.preferredHeight: s(Style.headerArrowHeight)
-                            Layout.preferredWidth: s(Style.headerArrowWidth)
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
 
-                            source: Style.rightArrowLightImgUrl
+                            SvgImage {
+                                height: s(Style.headerArrowHeight)
+                                width: s(Style.headerArrowWidth)
+                                anchors {
+                                    centerIn: parent
+                                    // last arrow is moved a little to the left
+                                    // because button is little bigger than other
+                                    horizontalCenterOffset: delegateId.isLast ? -(parent.width * 0.5 - width) : 0
+                                }
+
+                                source: Style.rightArrowLightImgUrl
+                            }
                         }
+
 
                         ImageButton {
                             id: imageButton
-                            // From delegate size and arrow size, image button will have squere shape.
-                            // Do not set width: height, to force square shape as it leads to "holes" between arrow and button.
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
+                            Layout.preferredWidth: topRow.buttonWidth
+                            Layout.preferredHeight: topRow.buttonWidth
 
-                            padding: s(Style.normalMargin) * 0.75
-                            inset: s(Style.tinyMargin) * 0.5
+                            padding: (delegateId.isLast ? 1.1 : 1.5) * s(Style.smallMargin)
 
                             source: sectionToUrl(id, !delegateId.isLast)
                             backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
@@ -184,6 +207,7 @@ Item {
 
             color: Style.textGreenColor
             verticalAlignment: Text.AlignTop
+            horizontalAlignment: Text.AlignHCenter
             font {
                 pixelSize: s(Style.headerTitlePixelSize)
                 capitalization: Font.AllUppercase

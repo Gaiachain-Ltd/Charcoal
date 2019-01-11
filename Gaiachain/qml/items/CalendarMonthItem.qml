@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.11
 import Qt.labs.calendar 1.0
 
 import com.gaiachain.style 1.0
-import com.gaiachain.enums 1.0
 
 Item {
     id: top
@@ -16,6 +15,8 @@ Item {
     property alias dayFont: grid.font
 
     property int daySpacing: 0
+
+    property color circleColor: Style.textGreenColor
 
     signal titleClicked()
     signal dateClicked(date d)
@@ -43,6 +44,7 @@ Item {
             year: currentYear
             locale: Qt.locale("en_GB")
             font.pixelSize: s(25)
+            font.family: Style.primaryFontFamily
 
             onClicked: dateClicked(date)
 
@@ -71,7 +73,7 @@ Item {
                         var isEventToday = commodityRangeProxy.isEventToday(delegateDate)
                         var color = Style.buttonGreenColor
                         if (commodityProxy.commodityEnabled(Enums.CommodityType.Timber))
-                            color = "green"
+                            color = circleColor
 
                         console.log("Is event today", isEventToday, delegateDate)
 
