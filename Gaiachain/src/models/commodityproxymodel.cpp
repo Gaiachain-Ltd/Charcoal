@@ -26,7 +26,6 @@ void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool
         m_enabledCommodites.remove(filterType);
     }
 
-    m_shipmentsType.clear();
     invalidateFilterNotify();
     emit commodityTypeChanged();
 }
