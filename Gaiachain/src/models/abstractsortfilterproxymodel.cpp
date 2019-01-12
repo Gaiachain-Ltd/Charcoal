@@ -6,6 +6,7 @@ AbstractSortFilterProxyModel::AbstractSortFilterProxyModel(QObject *parent)
 
 void AbstractSortFilterProxyModel::invalidateFilterNotify()
 {
+    emit filteringStarted();
     invalidateFilter();
     QMetaObject::invokeMethod(this, "filteringFinished");
 }

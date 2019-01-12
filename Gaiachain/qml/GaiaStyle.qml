@@ -48,6 +48,8 @@ QtObject {
     readonly property int headerHeight: 175
     readonly property int headerArrowWidth: 20
     readonly property int headerArrowHeight: headerArrowWidth * 1.5
+    readonly property int calendarSmallDotSize: 8
+    readonly property int calendarBigDotSize: calendarSmallDotSize * 2
 
     // urls
     readonly property url blackAddImgUrl: "qrc:/ui/add_black"

@@ -18,6 +18,8 @@ Item {
     property int daySpacing: 0
 
     property color circleColor: Style.textGreenColor
+    property int circleSize: s(Style.calendarBigDotSize)
+
     property bool timberEnabled: commodityProxy.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
 
     signal titleClicked()
@@ -74,7 +76,7 @@ Item {
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    width: parent.width * 0.2
+                    width: circleSize
                     height: width
                     radius: width * 0.5
 

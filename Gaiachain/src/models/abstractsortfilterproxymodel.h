@@ -10,6 +10,7 @@ public:
     AbstractSortFilterProxyModel(QObject *parent = nullptr);
 
 signals:
+    void filteringStarted() const;
     void filteringFinished() const;
 
 protected:

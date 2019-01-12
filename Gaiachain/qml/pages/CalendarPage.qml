@@ -24,16 +24,7 @@ BasePage {
         Calendar.October, Calendar.November, Calendar.December
     ]
 
-    Connections {
-        target: commodityRangeProxy
-        onFilteringFinished: {
-            overlayId.visible = false
-        }
-    }
-
     onLowestYearChanged: {
-        overlayId.visible = true
-
         var startDate = new Date(lowestYear, 0, 1)
         var endDate = currentDate
         commodityRangeProxy.setDateTimeRange(startDate, endDate)
@@ -148,30 +139,30 @@ BasePage {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    Items.CalendarMonthItem {
+                    Component {
+                        id: monthItemComponent
+
+                        Items.CalendarMonthItem {
+                            currentMonth: month
+                            currentYear: year
+                            circleColor: Style.buttonBlackGreyColor
+                            circleSize: s(Style.calendarSmallDotSize)
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: enterCalendarMonthPage(month, year)
+                            }
+                        }
+                    }
+
+                    Loader {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
 
-                        currentMonth: month
-                        currentYear: year
-                        circleColor: Style.buttonBlackGreyColor
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: enterCalendarMonthPage(month, year)
-                        }
+                        asynchronous: true
+                        sourceComponent: monthItemComponent
                     }
                 }
-            }
-
-            Items.WaitOverlay
-            {
-                id: overlayId
-
-                anchors.fill: parent
-
-                opacity: 0.7
-                logoVisible: false
             }
 
             Component.onCompleted: {
