@@ -54,10 +54,10 @@ void DataManager::populateModels()
     QVector<Enums::PlaceAction> actions {Enums::PlaceAction::Arrived, Enums::PlaceAction::Departed};
 
     QDateTime startDate(QDate(2018,1,1));
-    QDateTime endDate(QDate(2019,1,1));
+    QDateTime endDate = QDateTime::currentDateTime();
     auto dateDiff = startDate.daysTo(endDate) / 4;
 
-    QDateTime startTestRange = startDate;//(QDate(2018,12,1));
+    QDateTime startTestRange = QDateTime(QDate(2019,1,1));
     QDateTime endTestRange = endDate;//(QDate(2019,1,1));
     int countTest = 0;
 
@@ -72,7 +72,7 @@ void DataManager::populateModels()
                 int daysElapsed = (rand() % dateDiff + 1);
                 sd = sd.addDays(daysElapsed);
 
-                if (sd >= startTestRange || sd <= endTestRange)
+                if (sd >= startTestRange && sd <= endTestRange)
                     ++countTest;
 
                 Location loc;
