@@ -12,9 +12,11 @@ import "../items" as Items
 BasePage {
     id: top
 
+
     property date currentDate: new Date()
     property int currentYear: currentDate.getFullYear()
     property int currentMonth: monthModel[currentDate.getMonth()]
+    property int displayedYear: currentYear
     property int lowestYear: currentYear
 
     readonly property var monthModel: [
@@ -51,16 +53,15 @@ BasePage {
                 }
             }
 
-            datesModel.insert(0, { "month": monthModel[i], "year": lowestYear })
+            datesModel.append({ "month": monthModel[i], "year": lowestYear })
         }
     }
 
     ListModel {
         id: datesModel
         Component.onCompleted: {
-            addYear(currentMonth)
+            addYear(currentMonth % 2 == 0 ? currentMonth + 1 : currentMonth)
             addYear()
-            grid.positionViewAtEnd()
         }
     }
 
@@ -83,7 +84,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.leftMargin: s(20)
 
-            text: currentYear
+            text: displayedYear
             horizontalAlignment: Text.AlignLeft
 
             font {
@@ -94,6 +95,9 @@ BasePage {
 
         GridView {
             id: grid
+
+            property int loadedIndex: 1 // bottom row always loaded
+
             Layout.fillHeight: true
             Layout.fillWidth: true
 
@@ -106,12 +110,15 @@ BasePage {
 
             model: datesModel
 
+            verticalLayoutDirection: GridView.BottomToTop
+            layoutDirection: Qt.RightToLeft
+
             onContentYChanged: {
                 // Update curent year based on item at bottomLeft position.
                 var bottomLeft = itemAt(contentX + cellWidth / 2,
                                         contentY + height - cellHeight * 0.3)
                 if (bottomLeft !== null) {
-                    top.currentYear = bottomLeft.cYear
+                    top.displayedYear = bottomLeft.cYear
 
                     // Add next year when we're in May. If we set March here recurently next years are added...
                     if (bottomLeft.cMonth === Calendar.May && bottomLeft.cYear === lowestYear)
@@ -125,6 +132,9 @@ BasePage {
 
                 property int cYear: year
                 property int cMonth: month
+
+                enabled: year < currentYear || month <= currentMonth
+                visible: enabled
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -168,6 +178,12 @@ BasePage {
                             sourceComponent: monthItemComponent
 
                             visible: ready
+                            active: enabled && index <= grid.loadedIndex
+
+                            onReadyChanged: {
+                                if (index == grid.loadedIndex)
+                                    grid.loadedIndex++;
+                            }
                         }
                         Items.WaitOverlay {
                             anchors.fill: parent
