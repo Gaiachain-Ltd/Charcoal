@@ -99,6 +99,20 @@ BasePage {
 
                 property bool isSelected: ListView.view.selectedDay === day
                 property date myDate: new Date(currentYear, currentMonth, day)
+                property bool hasEvents: false
+
+                function updateData() {
+                    hasEvents = commodityRangeProxy.hasEvents(myDate);
+                }
+
+                Component.onCompleted: updateData();
+                Connections {
+                    target: commodityRangeProxy
+                    onEventsCommoditiesChanged: {
+                        if (date === myDate)
+                            updateData()
+                    }
+                }
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -122,7 +136,7 @@ BasePage {
                         Layout.preferredHeight: s(20)
                         Layout.preferredWidth: s(20)
                         radius: width * 0.5
-                        color: timberEnabled && commodityRangeProxy.isEventToday(myDate)
+                        color: timberEnabled && hasEvents
                                ? Style.textGreenColor
                                : "transparent"
                     }

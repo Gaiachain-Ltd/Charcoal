@@ -23,12 +23,6 @@ Item {
     signal titleClicked()
     signal dateClicked(date d)
 
-    property bool invalidateDelegates: false
-    Connections {
-        target: commodityRangeProxy
-        onFilteringFinished: invalidateDelegates = !invalidateDelegates
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -50,7 +44,20 @@ Item {
             delegate: Column {
                 property bool currentMonth: model.month === grid.month
                 property date myDate: new Date(model.year, model.month, model.day)
-                property bool isEventToday: commodityRangeProxy.isEventToday(myDate)
+                property bool hasEvents: false
+
+                function updateData() {
+                    hasEvents = commodityRangeProxy.hasEvents(myDate);
+                }
+
+                Component.onCompleted: updateData();
+                Connections {
+                    target: commodityRangeProxy
+                    onEventsCommoditiesChanged: {
+                        if (date === myDate)
+                            updateData()
+                    }
+                }
 
                 spacing: daySpacing
 
@@ -72,10 +79,7 @@ Item {
                     radius: width * 0.5
 
                     color: {
-                         // Used here to force change color after commodity type change
-                        var invalidateColor = invalidateDelegates
-
-                        return currentMonth && timberEnabled && isEventToday
+                        return currentMonth && timberEnabled && hasEvents
                                 ? circleColor
                                 : "transparent"
                     }

@@ -9,19 +9,24 @@ CommodityProxyModel::CommodityProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
+
+    connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityProxyModel::onRowsInserted);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityProxyModel::onRowsRemoved);
 }
 
 void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool enable)
 {
-    qDebug() << "FilterType" << filterType << enable;
+    if (m_enabledCommodites.contains(filterType) == enable)
+        return;
 
+    qDebug() << "FilterType" << filterType << enable;
     if (enable) {
         m_enabledCommodites.insert(filterType);
     } else {
         m_enabledCommodites.remove(filterType);
     }
 
-    m_shipmentIds.clear();
+    m_shipmentsType.clear();
     invalidateFilterNotify();
     emit commodityTypeChanged();
 }
@@ -31,19 +36,41 @@ bool CommodityProxyModel::commodityEnabled(Enums::CommodityType filterType) cons
     return m_enabledCommodites.contains(filterType);
 }
 
-bool CommodityProxyModel::hasShipmentId(const QString &id) const
+bool CommodityProxyModel::hasShipment(const QString &shipmentId) const
 {
-    return m_shipmentIds.contains(id);
+    return m_shipmentsType.contains(shipmentId);
+}
+
+Enums::CommodityType CommodityProxyModel::shipmentCommodityType(const QString &shipmentId) const
+{
+    return m_shipmentsType.value(shipmentId);
 }
 
 bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
     auto commodityType = sourceModel()->data(index, ShipmentModel::Commodity).value<Enums::CommodityType>();
-    if (commodityEnabled(commodityType)) {
-        m_shipmentIds.insert(sourceModel()->data(index, ShipmentModel::ShipmentId).toString());
-        return true;
-    }
+    return commodityEnabled(commodityType);
+}
 
-    return false;
+void CommodityProxyModel::onRowsInserted(const QModelIndex &parent, int first, int last)
+{
+    for (auto row = first; row <= last; ++row) {
+        auto rowIndex = index(row, 0, parent);
+
+        auto shipmentId = data(rowIndex, ShipmentModel::ShipmentId).toString();
+        auto commodityType = data(rowIndex, ShipmentModel::Commodity).value<Enums::CommodityType>();
+
+        m_shipmentsType.insert(shipmentId, commodityType);
+    }
+}
+
+void CommodityProxyModel::onRowsRemoved(const QModelIndex &parent, int first, int last)
+{
+    for (auto row = first; row <= last; ++row) {
+        auto rowIndex = index(row, 0, parent);
+
+        auto shipmentId = data(rowIndex, ShipmentModel::ShipmentId).toString();
+        m_shipmentsType.remove(shipmentId);
+    }
 }

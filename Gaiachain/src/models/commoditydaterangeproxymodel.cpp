@@ -12,6 +12,9 @@ CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
+
+    connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityDateRangeProxyModel::onRowsInserted);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityDateRangeProxyModel::onRowsRemoved);
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
@@ -20,23 +23,29 @@ void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *c
     connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilterNotify);
 }
 
-void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime startDateTime, QDateTime endDateTime)
+void CommodityDateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime)
 {
     if (m_startDateTime == startDateTime
             && m_endDateTime == endDateTime)
         return;
 
+    qDebug() << "Start end dates" << startDateTime << endDateTime;
     m_startDateTime = startDateTime;
     m_endDateTime = endDateTime;
 
-    qDebug() << "Start end dates" << startDateTime << endDateTime;
-    m_filteredDates.clear();
     invalidateFilterNotify();
+    emit dateRangeChanged();
 }
 
-bool CommodityDateRangeProxyModel::isEventToday(QDate date)
+bool CommodityDateRangeProxyModel::hasEvents(const QDate &date) const
 {
-    return m_filteredDates.contains(date);
+    auto val = eventsCommodityTypes(date);
+    return !eventsCommodityTypes(date).isEmpty();
+}
+
+QList<Enums::CommodityType> CommodityDateRangeProxyModel::eventsCommodityTypes(const QDate &date) const
+{
+    return m_dateEventsCommodityTypes.value(date).keys();
 }
 
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -44,20 +53,61 @@ bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelI
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
     auto timestamp = sourceModel()->data(index, EventModel::Timestamp).toDateTime();
 
-    bool containsId = false;
     if (isInDateTimeRange(timestamp)) {
         auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toString();
-        containsId = m_commodityProxyModel->hasShipmentId(shipmentId);
+        return m_commodityProxyModel->hasShipment(shipmentId);
     }
-
-    if (containsId)
-        m_filteredDates.insert(timestamp.date());
-
-    return containsId;
+    return false;
 }
 
 bool CommodityDateRangeProxyModel::isInDateTimeRange(QDateTime &dt) const
 {
     return m_startDateTime <= dt && dt < m_endDateTime;
+}
+
+void CommodityDateRangeProxyModel::onRowsInserted(const QModelIndex &parent, int first, int last)
+{
+    auto changedDates = QSet<QDate>{};
+
+    for (auto row = first; row <= last; ++row) {
+        auto rowIndex = index(row, 0, parent);
+
+        auto eventDate = data(rowIndex, EventModel::Timestamp).toDateTime().date();
+        auto shipmentId = data(rowIndex, EventModel::ShipmentId).toString();
+
+        auto commodityType = m_commodityProxyModel->shipmentCommodityType(shipmentId);
+
+        auto &dateEventsCommodities = m_dateEventsCommodityTypes[eventDate];
+        dateEventsCommodities[commodityType]++;
+        if (dateEventsCommodities.value(commodityType) == 1)
+            changedDates.insert(eventDate);
+    }
+
+    for (const auto &date : changedDates)
+        emit eventsCommoditiesChanged(date);
+}
+
+void CommodityDateRangeProxyModel::onRowsRemoved(const QModelIndex &parent, int first, int last)
+{
+    auto changedDates = QSet<QDate>{};
+
+    for (auto row = first; row <= last; ++row) {
+        auto rowIndex = index(row, 0, parent);
+
+        auto eventDate = data(rowIndex, EventModel::Timestamp).toDateTime().date();
+        auto shipmentId = data(rowIndex, EventModel::ShipmentId).toString();
+
+        auto commodityType = m_commodityProxyModel->shipmentCommodityType(shipmentId);
+
+        auto &dateEventsCommodities = m_dateEventsCommodityTypes[eventDate];
+        dateEventsCommodities[commodityType]--;
+        if (dateEventsCommodities.value(commodityType) <= 0) {
+            dateEventsCommodities.remove(commodityType);
+            changedDates.insert(eventDate);
+        }
+    }
+
+    for (const auto &date : changedDates)
+        emit eventsCommoditiesChanged(date);
 }
 
