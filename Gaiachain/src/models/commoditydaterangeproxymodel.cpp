@@ -11,6 +11,7 @@
 CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
 {
+    setDynamicSortFilter(true);
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
@@ -19,12 +20,16 @@ void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *c
     connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilterNotify);
 }
 
-void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime end)
+void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime startDateTime, QDateTime endDateTime)
 {
-    m_startDateTime = start;
-    m_endDateTime = end;
+    if (m_startDateTime == startDateTime
+            && m_endDateTime == endDateTime)
+        return;
 
-    qDebug() << "Start end dates" << start << end;
+    m_startDateTime = startDateTime;
+    m_endDateTime = endDateTime;
+
+    qDebug() << "Start end dates" << startDateTime << endDateTime;
     m_filteredDates.clear();
     invalidateFilterNotify();
 }

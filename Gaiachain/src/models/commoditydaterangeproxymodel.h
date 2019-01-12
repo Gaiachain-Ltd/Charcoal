@@ -17,7 +17,7 @@ class CommodityDateRangeProxyModel : public AbstractSortFilterProxyModel
 public:
     explicit CommodityDateRangeProxyModel(QObject *parent = nullptr);
 
-    Q_INVOKABLE void setDateTimeRange(QDateTime start, QDateTime end);
+    Q_INVOKABLE void setDateTimeRange(QDateTime startDateTime, QDateTime endDateTime);
     Q_INVOKABLE bool isEventToday(QDate date);
 
     void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
