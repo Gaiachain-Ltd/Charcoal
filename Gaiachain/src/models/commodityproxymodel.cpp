@@ -6,7 +6,7 @@
 #include <QDebug>
 
 CommodityProxyModel::CommodityProxyModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
+    : AbstractSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
 }
@@ -21,8 +21,8 @@ void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool
         m_enabledCommodites.remove(filterType);
     }
 
-    m_idx.clear();
-    invalidateFilter();
+    m_shipmentIds.clear();
+    invalidateFilterNotify();
     emit commodityTypeChanged();
 }
 
@@ -31,22 +31,17 @@ bool CommodityProxyModel::commodityEnabled(Enums::CommodityType filterType) cons
     return m_enabledCommodites.contains(filterType);
 }
 
-bool CommodityProxyModel::isIdIn(const QString &id) const
+bool CommodityProxyModel::hasShipmentId(const QString &id) const
 {
-    return m_idx.contains(id);
+    return m_shipmentIds.contains(id);
 }
 
 bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    auto srcIdx = sourceModel()->index(sourceRow, 0, sourceParent);
-    if (!srcIdx.isValid()) {
-        QTimer::singleShot(250, this, &CommodityProxyModel::filteringFinished);
-        return false;
-    }
-
-    auto commodityType = sourceModel()->data(srcIdx, ShipmentModel::Commodity).value<Enums::CommodityType>();
+    auto index = sourceModel()->index(sourceRow, 0, sourceParent);
+    auto commodityType = sourceModel()->data(index, ShipmentModel::Commodity).value<Enums::CommodityType>();
     if (commodityEnabled(commodityType)) {
-        m_idx.insert(sourceModel()->data(srcIdx, ShipmentModel::ShipmentId).toString());
+        m_shipmentIds.insert(sourceModel()->data(index, ShipmentModel::ShipmentId).toString());
         return true;
     }
 

@@ -9,14 +9,14 @@
 #include <QDebug>
 
 CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
+    : AbstractSortFilterProxyModel(parent)
 {
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
 {
     m_commodityProxyModel = commodityProxyModel;
-    connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilter);
+    connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilterNotify);
 }
 
 void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime end)
@@ -26,7 +26,7 @@ void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime e
 
     qDebug() << "Start end dates" << start << end;
     m_filteredDates.clear();
-    invalidateFilter();
+    invalidateFilterNotify();
 }
 
 bool CommodityDateRangeProxyModel::isEventToday(QDate date)
@@ -37,32 +37,18 @@ bool CommodityDateRangeProxyModel::isEventToday(QDate date)
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
-    if (!index.isValid()) {
-        QTimer::singleShot(250, this, &CommodityDateRangeProxyModel::filteringFinished);
-        return false;
-    }
-
     auto timestamp = sourceModel()->data(index, EventModel::Timestamp).toDateTime();
 
     bool containsId = false;
     if (isInDateTimeRange(timestamp)) {
         auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toString();
-        containsId = m_commodityProxyModel->isIdIn(shipmentId);
+        containsId = m_commodityProxyModel->hasShipmentId(shipmentId);
     }
 
     if (containsId)
         m_filteredDates.insert(timestamp.date());
 
     return containsId;
-}
-
-bool CommodityDateRangeProxyModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
-{
-    Q_UNUSED(source_left)
-    Q_UNUSED(source_right)
-    //TO_DO sort by date (arrival and departure)
-
-    return true;
 }
 
 bool CommodityDateRangeProxyModel::isInDateTimeRange(QDateTime &dt) const
