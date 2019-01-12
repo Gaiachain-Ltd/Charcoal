@@ -14,8 +14,8 @@ BasePage {
 
     property date currentDate: new Date()
     property int currentYear: currentDate.getFullYear()
-    property int lowestYear: currentYear
     property int currentMonth: monthModel[currentDate.getMonth()]
+    property int lowestYear: currentYear
 
     readonly property var monthModel: [
         Calendar.January, Calendar.February, Calendar.March,
@@ -139,28 +139,41 @@ BasePage {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    Component {
-                        id: monthItemComponent
-
-                        Items.CalendarMonthItem {
-                            currentMonth: month
-                            currentYear: year
-                            circleColor: Style.buttonBlackGreyColor
-                            circleSize: s(Style.calendarSmallDotSize)
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: enterCalendarMonthPage(month, year)
-                            }
-                        }
-                    }
-
-                    Loader {
+                    Item {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
 
-                        asynchronous: true
-                        sourceComponent: monthItemComponent
+                        Component {
+                            id: monthItemComponent
+
+                            Items.CalendarMonthItem {
+                                currentMonth: month
+                                currentYear: year
+                                circleColor: Style.buttonBlackGreyColor
+                                circleSize: s(Style.calendarSmallDotSize)
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: enterCalendarMonthPage(month, year)
+                                }
+                            }
+                        }
+
+                        Loader {
+                            id: loader
+                            anchors.fill: parent
+
+                            property bool ready: status === Loader.Ready
+                            asynchronous: true
+                            sourceComponent: monthItemComponent
+
+                            visible: ready
+                        }
+                        Items.WaitOverlay {
+                            anchors.fill: parent
+                            visible: !loader.ready
+                            logoVisible: false
+                        }
                     }
                 }
             }
