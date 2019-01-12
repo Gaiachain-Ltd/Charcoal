@@ -23,7 +23,7 @@ public:
     void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
 
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
     CommodityProxyModel *m_commodityProxyModel = nullptr;
