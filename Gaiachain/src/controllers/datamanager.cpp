@@ -3,6 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QDateTime>
+#include <QDebug>
 
 #include "../common/enums.h"
 #include "../common/globals.h"
@@ -33,7 +34,6 @@ void DataManager::setupModels()
     m_eventsDateRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 }
 
-#include <QDebug>
 void DataManager::populateModels()
 {
     Gaia::ModelData shipmentData;
@@ -41,7 +41,7 @@ void DataManager::populateModels()
 
     // Populate shipment data
     int ctCount = static_cast<int>(Enums::CommodityType::CommodityCount);
-    int shipmentCount = 300;
+    int shipmentCount = 1000;
     for (int i = 0; i < shipmentCount; ++i) {
         shipmentData.append({QString::number(i), i % ctCount});
     }
@@ -53,7 +53,7 @@ void DataManager::populateModels()
                 Enums::PlaceType::Sawmill, Enums::PlaceType::Export};
     QVector<Enums::PlaceAction> actions {Enums::PlaceAction::Arrived, Enums::PlaceAction::Departed};
 
-    QDateTime startDate(QDate(2018,1,1));
+    QDateTime startDate(QDate(2015,1,1));
     QDateTime endDate = QDateTime::currentDateTime();
     auto dateDiff = startDate.daysTo(endDate) / 4;
 
