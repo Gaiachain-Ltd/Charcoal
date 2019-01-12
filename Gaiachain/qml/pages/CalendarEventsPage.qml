@@ -42,9 +42,6 @@ BasePage {
 
         for (var i=1; i <= daysCount; ++i)
             daysModel.append({"day": i, "isWeekend": utility.isWeekend(new Date(currentDate.getFullYear(), currentDate.getMonth(), i))})
-
-        // TO_DO fix postioing at start
-        daysView.positionViewAtIndex(currentDate.getDate() - 1, ListView.Contain)
     }
 
     ListModel {
@@ -81,13 +78,14 @@ BasePage {
 
             property int visibleCount: 7
             property int selectedDay: top.currentDay
-
-            onSelectedDayChanged: positionViewAtIndex(selectedDay-1, ListView.Contain)
+            property int cellWidth: width / visibleCount
 
             Layout.fillWidth: true
             Layout.preferredHeight: s(Style.bigMargin) * 3
 
             model: daysModel
+
+            cacheBuffer: count * cellWidth
 
             orientation: ListView.Horizontal
             clip: true
@@ -95,7 +93,7 @@ BasePage {
             delegate: Item {
                 id: delegate
                 height: ListView.view.height
-                width: ListView.view.width / ListView.view.visibleCount
+                width: ListView.view.cellWidth
 
                 property bool isSelected: ListView.view.selectedDay === day
                 property date myDate: new Date(currentYear, currentMonth, day)
@@ -105,13 +103,19 @@ BasePage {
                     hasEvents = commodityRangeProxy.hasEvents(myDate);
                 }
 
-                Component.onCompleted: updateData();
                 Connections {
                     target: commodityRangeProxy
                     onEventsCommoditiesChanged: {
                         if (date === myDate)
                             updateData()
                     }
+                }
+                Component.onCompleted: {
+                    updateData();
+
+                    // TO_DO find a better solution (center!)
+                    if (delegate.isSelected)
+                        ListView.view.positionViewAtIndex(ListView.view.selectedDay-1, ListView.Center)
                 }
 
                 ColumnLayout {
