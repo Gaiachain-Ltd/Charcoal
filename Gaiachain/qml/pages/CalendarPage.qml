@@ -40,7 +40,16 @@ BasePage {
     }
 
     function addYear(lastMonth) {
-        var endMonth = lastMonth === undefined ? Calendar.December : lastMonth
+        var endMonth = lastMonth
+
+        /* For first year we want months up to currentDate
+         * and we don't want to update lowestYear
+         */
+        if (endMonth === undefined) {
+            endMonth = Calendar.December
+            --lowestYear
+        }
+
         var blockInsert = true // Block insert until lastMonth is found
         for (var i = monthModel.length-1; i >= 0; --i) {
             if (blockInsert) {
@@ -53,8 +62,6 @@ BasePage {
 
             datesModel.insert(0, { "month": monthModel[i], "year": lowestYear })
         }
-
-        --lowestYear
     }
 
     ListModel {
@@ -108,17 +115,17 @@ BasePage {
 
             model: datesModel
 
-            onAtYBeginningChanged: {
-                if (atYBeginning) {
-                    // Add next year if we're at the begining
-                    addYear()
-                    grid.positionViewAtIndex(monthModel.length, GridView.Beginning)
-                }
-            }
-
             onContentYChanged: {
-                // Update curent year based on item at (contentX, contentY) position
-                top.currentYear = itemAt(contentX, contentY).cYear
+                // Update curent year based on item at bottomLeft position.
+                var bottomLeft = itemAt(contentX + cellWidth / 2,
+                                        contentY + height - cellHeight * 0.3)
+                if (bottomLeft !== null) {
+                    top.currentYear = bottomLeft.cYear
+
+                    // Add next year when we're in May. If we set March here recurently next years are added...
+                    if (bottomLeft.cMonth === Calendar.May && bottomLeft.cYear === lowestYear)
+                         addYear()
+                }
             }
 
             delegate: Item {
@@ -126,6 +133,7 @@ BasePage {
                 height: GridView.view.cellHeight
 
                 property int cYear: year
+                property int cMonth: month
 
                 ColumnLayout {
                     anchors.fill: parent

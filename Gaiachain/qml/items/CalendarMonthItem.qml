@@ -50,6 +50,7 @@ Item {
             delegate: Column {
                 property bool currentMonth: model.month === grid.month
                 property date myDate: new Date(model.year, model.month, model.day)
+                property bool isEventToday: commodityRangeProxy.isEventToday(myDate)
 
                 spacing: daySpacing
 
@@ -74,9 +75,9 @@ Item {
                          // Used here to force change color after commodity type change
                         var invalidateColor = invalidateDelegates
 
-                        return currentMonth && timberEnabled
-                                && commodityRangeProxy.isEventToday(myDate)
-                                ? circleColor: "transparent"
+                        return currentMonth && timberEnabled && isEventToday
+                                ? circleColor
+                                : "transparent"
                     }
                 }
             }
