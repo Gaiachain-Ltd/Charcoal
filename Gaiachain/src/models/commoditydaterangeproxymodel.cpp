@@ -4,8 +4,6 @@
 #include "eventmodel.h"
 #include "shipmentmodel.h"
 
-#include <QTimer>
-
 #include <QDebug>
 
 CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
