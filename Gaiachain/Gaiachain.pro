@@ -50,7 +50,6 @@ HEADERS += \
     src/controllers/overlaymanager.h \
     src/controllers/abstractmanager.h \
     src/common/location.h \
-    src/models/calendarproxy.h \
     src/models/shipmenteventsproxy.h \
     src/models/abstractsortfilterproxymodel.h
 
@@ -71,7 +70,6 @@ SOURCES += src/main.cpp \
     src/controllers/usermanager.cpp \
     src/controllers/overlaymanager.cpp \
     src/controllers/abstractmanager.cpp \
-    src/models/calendarproxy.cpp \
     src/models/shipmenteventsproxy.cpp \
     src/models/abstractsortfilterproxymodel.cpp
 
