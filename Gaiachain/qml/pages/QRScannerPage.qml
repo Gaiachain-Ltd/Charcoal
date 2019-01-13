@@ -56,7 +56,7 @@ BasePage {
 
     function grabImageOfCamera() {
         if (!photoPreview.visible)
-            cameraContainer.grabToImage(previewCapturedImage)
+            videoOutput.grabToImage(previewCapturedImage)
     }
 
     function parseInputId() {
@@ -71,6 +71,8 @@ BasePage {
     }
 
     function retry() {
+        if (camera.cameraState !== Camera.ActiveState)
+            camera.start()
         scanInput.visible = false
         error = false
         photoPreview.source = ""
@@ -118,6 +120,7 @@ BasePage {
 
             Image {
                 id: photoPreview
+                visible: false
                 anchors.fill: parent
             }
 
@@ -225,6 +228,7 @@ BasePage {
                         background.border.width: 0
                         anchors.fill: parent
                         visible: false
+                        focus: true
                         placeholderText: Strings.typeId + "..."
 
                         additionalInputMethodHints: Qt.ImhLowercaseOnly

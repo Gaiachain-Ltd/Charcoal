@@ -12,8 +12,11 @@
         <file>pages/ShipmentDetailsPage.qml</file>
         <file>pages/EventDetailsPage.qml</file>
         <file>pages/EventsListPage.qml</file>
+        <file>pages/EditableEventDetailsPage.qml</file>
         <file>pages/BasePage.qml</file>
         <file>pages/QRScannerPage.qml</file>
+        <file>pages/InformationPopup.qml</file>
+        <file>items/GenericPanel.qml</file>
         <file>items/Footer.qml</file>
         <file>items/NavigationHeader.qml</file>
         <file>items/ImageButton.qml</file>
@@ -25,17 +28,15 @@
         <file>items/ShadowedImageButton.qml</file>
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
+        <file>items/TextWithTitle.qml</file>
         <file>items/EventsListView.qml</file>
         <file>items/ItemBorder.qml</file>
         <file>items/GenericInput.qml</file>
         <file>items/ShipmentDetailsDelegate.qml</file>
+        <file>items/WaitOverlay.qml</file>
         <file>MainStackView.qml</file>
         <file>GaiaStrings.qml</file>
         <file>GaiaStyle.qml</file>
-        <file>items/WaitOverlay.qml</file>
-        <file>pages/InformationPopup.qml</file>
-        <file>items/TextWithTitle.qml</file>
-        <file>pages/EditableEventDetailsPage.qml</file>
         <file>common/Helpers.qml</file>
     </qresource>
 </RCC>
