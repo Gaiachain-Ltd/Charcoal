@@ -49,12 +49,12 @@ Item {
                 property bool hasEvents: false
 
                 function updateData() {
-                    hasEvents = commodityRangeProxy.hasEvents(myDate);
+                    hasEvents = calendarRangeProxyModel.hasEvents(myDate);
                 }
 
                 Component.onCompleted: updateData();
                 Connections {
-                    target: commodityRangeProxy
+                    target: calendarRangeProxyModel
                     onEventsCommoditiesChanged: {
                         if (date === myDate)
                             updateData()

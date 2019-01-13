@@ -51,7 +51,7 @@ Item {
             Component.onCompleted: {
                 var startDate = new Date(2016, 1, 1);
                 var endDate = new Date(2020, 1, 1);
-                commodityRangeProxy.setDateTimeRange(startDate, endDate)
+                calendarRangeProxyModel.setDateTimeRange(startDate, endDate)
             }
         }
 
@@ -81,7 +81,7 @@ Item {
             ListView {
                 anchors.fill: parent
 
-                model: commodityRangeProxy
+                model: calendarRangeProxyModel
 
                 delegate: Rectangle {
                     width: parent.width

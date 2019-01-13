@@ -29,8 +29,8 @@ private:
     ShipmentModel m_shipmentModel;
 
     CommodityProxyModel m_commodityProxyModel;
-    CommodityDateRangeProxyModel m_commodityDateRangeProxyModel;
-    CommodityDateRangeProxyModel m_eventsDateRangeProxyModel;
+    CommodityDateRangeProxyModel m_calendarRangeProxyModel;
+    CommodityDateRangeProxyModel m_dateEventsRangeProxyModel;
 };
 
 #endif // DATAMANAGER_H

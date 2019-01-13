@@ -33,7 +33,7 @@ BasePage {
         var tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
 
-        eventsDateRangeProxyModel.setDateTimeRange(today, tomorrow)
+        dateEventsRangeProxyModel.setDateTimeRange(today, tomorrow)
     }
 
     onCurrentDateChanged: {
@@ -100,11 +100,11 @@ BasePage {
                 property bool hasEvents: false
 
                 function updateData() {
-                    hasEvents = commodityRangeProxy.hasEvents(myDate);
+                    hasEvents = calendarRangeProxyModel.hasEvents(myDate);
                 }
 
                 Connections {
-                    target: commodityRangeProxy
+                    target: calendarRangeProxyModel
                     onEventsCommoditiesChanged: {
                         if (date === myDate)
                             updateData()
@@ -162,7 +162,7 @@ BasePage {
 
             onDelegateClicked: top.enterShipmentDetailsPage(data)
 
-            viewModel: eventsDateRangeProxyModel
+            viewModel: dateEventsRangeProxyModel
         }
     }
 }

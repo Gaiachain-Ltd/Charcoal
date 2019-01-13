@@ -29,7 +29,7 @@ BasePage {
     onLowestYearChanged: {
         var startDate = new Date(lowestYear, 0, 1)
         var endDate = currentDate
-        commodityRangeProxy.setDateTimeRange(startDate, endDate)
+        calendarRangeProxyModel.setDateTimeRange(startDate, endDate)
     }
 
     function addYear(lastMonth) {

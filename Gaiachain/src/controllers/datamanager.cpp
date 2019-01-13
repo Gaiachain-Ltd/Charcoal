@@ -19,19 +19,19 @@ DataManager::DataManager(QObject *parent)
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("commodityProxy"), &m_commodityProxyModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("commodityRangeProxy"), &m_commodityDateRangeProxyModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("eventsDateRangeProxyModel"), &m_eventsDateRangeProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("calendarRangeProxyModel"), &m_calendarRangeProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
 }
 
 void DataManager::setupModels()
 {
     m_commodityProxyModel.setSourceModel(&m_shipmentModel);
 
-    m_commodityDateRangeProxyModel.setSourceModel(&m_eventModel);
-    m_commodityDateRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
+    m_calendarRangeProxyModel.setSourceModel(&m_eventModel);
+    m_calendarRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
-    m_eventsDateRangeProxyModel.setSourceModel(&m_eventModel);
-    m_eventsDateRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
+    m_dateEventsRangeProxyModel.setSourceModel(&m_eventModel);
+    m_dateEventsRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 }
 
 void DataManager::populateModels()
