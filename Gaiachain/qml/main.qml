@@ -49,30 +49,27 @@ ApplicationWindow
     }
 
     function calculateBottomMargin() {
-        // input global Y position
-        var itemY = mainWindow.activeFocusItem.mapToItem(null, mainWindow.activeFocusItem.x, mainWindow.activeFocusItem.y).y
+        // Currently focused input bottomY position.
+        var inputBottomY = mainWindow.activeFocusItem.mapToItem(null, mainWindow.activeFocusItem.x, mainWindow.activeFocusItem.y).y + mainWindow.activeFocusItem.height
         var keyboardY = Qt.inputMethod.keyboardRectangle.y
         var keyboardH = Qt.inputMethod.keyboardRectangle.height
-        // if keyboard would hide input, page must be moved up
-        if (itemY + mainWindow.activeFocusItem.height > keyboardY) {
-            // ignore if page position was already changed
+        // If keyboard would hide input, page must be moved up.
+        if (inputBottomY > keyboardY) {
+            // Ignore if page position was already changed.
             if (bottomMarginKeyboard > 0)
                 return
-            // how high input is placed from bottom of the page
-            var screnRaiseDiff = (mainWindow.height - itemY - mainWindow.activeFocusItem.height)
-            // calculate how much main window is raised from bottom
-            // to move header lower to always display it
+            // How high input is placed from bottom of the page.
+            var screnRaiseDiff = (mainWindow.height - inputBottomY)
+            // Calculate how much main window is raised from bottom
+            // to move header lower to always display it.
             headerTopMargin = keyboardH - screnRaiseDiff
-            // move page up and hide footer
+            // Move page up and hide footer.
             bottomMargin = screnRaiseDiff - s(Style.footerHeight)
         } else {
-            // ignore if page position was already changed
+            // Ignore if page position was already changed.
             if (bottomMargin > 0)
                 return
-            // input is above keyboard so
-            // there is no need to move page
-            // just change page height to fit all content
-            // above keyboard)
+            // Change page height to fit all content and hide footer.
             bottomMarginKeyboard = keyboardH - s(Style.footerHeight)
         }
     }
@@ -88,15 +85,8 @@ ApplicationWindow
         }
     }
 
-    // bottom margin to move page up
-    // when keyboard is displayed
-    // nad input would be hidden behind keyboard
     property real bottomMargin: 0
-    // height change when input is above keyboard
-    // and there is no need to move page up
     property real bottomMarginKeyboard: 0
-    // top margin for header to always display it
-    // when keyboard is showed
     property real headerTopMargin: 0
 
     MainStackView {

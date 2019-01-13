@@ -20,7 +20,7 @@ Items.GenericPanel
     property alias header: navigationHeader
 
     function closeEventHandler() {
-        navigationHeader.backHandler()
+        navigationHeader.backHandler() // calling back button
     }
 
     default property alias content: pageContent.data

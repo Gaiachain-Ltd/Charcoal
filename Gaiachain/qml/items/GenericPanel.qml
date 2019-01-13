@@ -6,7 +6,7 @@ import com.gaiachain.enums 1.0
 
 Item {
     property int page: Enums.Page.InvalidPage
-    property bool isPopup: true
+    property bool isPopup: false
 
     property var attachedStackView: StackView.view
 

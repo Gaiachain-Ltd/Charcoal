@@ -11,6 +11,8 @@ Items.GenericPanel
 
     property string text: ""
 
+    isPopup: true
+
     property string acceptButtonText: ""
     property int acceptButtonType: Enums.PopupAction.Accept
     property string rejectButtonText: ""
