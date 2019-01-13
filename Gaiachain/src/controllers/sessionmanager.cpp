@@ -53,7 +53,7 @@ void SessionManager::login(const QString &email, const QString &password)
     m_client.send(request);
 }
 
-void SessionManager::getEntities()
+void SessionManager::getEntity()
 {
     auto request = QSharedPointer<EntityRequest>::create(m_token, EntityRequest::RequestUninitializedGet);
 
@@ -66,9 +66,22 @@ void SessionManager::getEntities()
     m_client.send(request);
 }
 
-void SessionManager::getEntityData(const QString &id)
+void SessionManager::getEntity(const QString &id)
 {
     auto request = QSharedPointer<EntityRequest>::create(m_token, id);
+
+    auto errorLambda = [&](const QString &msgs, const int errorCode) {
+        qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
+    };
+
+    connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+    m_client.send(request);
+}
+
+void SessionManager::putEntity(const QString &id)
+{
+    auto request = QSharedPointer<EntityRequest>::create(m_token, id, EntityRequest::EntityDeparted);
 
     auto errorLambda = [&](const QString &msgs, const int errorCode) {
         qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;

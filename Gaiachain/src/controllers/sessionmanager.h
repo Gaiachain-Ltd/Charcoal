@@ -18,8 +18,9 @@ public:
     virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
     Q_INVOKABLE void login(const QString &email, const QString &password);
-    Q_INVOKABLE void getEntities();
-    Q_INVOKABLE void getEntityData(const QString &id);
+    Q_INVOKABLE void getEntity();
+    Q_INVOKABLE void getEntity(const QString &id);
+    Q_INVOKABLE void putEntity(const QString &id);
 
 public slots:
     void onTokenChanged(const QString &token);

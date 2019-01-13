@@ -10,7 +10,11 @@ BasePage {
     id: top
 
     function enterCalendarPage() {
-        sessionManager.getEntities()
+//        sessionManager.getEntity()
+        console.log(EntityRequest.EntityDeparted)
+//        sessionManager.getEntity("0yiy-103n-anbn")
+//        sessionManager.putEntity("0yiy-103n-anbn")
+
 //        pageManager.enter(Enums.Page.Calendar)
     }
 

@@ -11,24 +11,23 @@ class EntityRequest : public BaseRequest
 public:
     enum RequestType {
         RequestGet = 0,
+        RequestGetFiltered,
         RequestBatch,
         RequestCalendar,
         RequestUninitializedGet,
-        RequestUninitializedPost,
+        RequestUninitializedPost, // not used (web part)
         RequestEntityGet,
         RequestEntityPut
     };
     Q_ENUM(RequestType)
 
     enum EntityAction {
-        EntityInitialize = 0,
-        EntityDepart,
-        EntityArrive,
-        EntityFinalize
+        EntityArrived = 0,
+        EntityDeparted
     };
     Q_ENUM(EntityAction)
 
-    EntityRequest(const QString &token, const int requestType = RequestType::RequestGet);
+    EntityRequest(const QString &token, const RequestType requestType = RequestType::RequestGet);
     EntityRequest(const QString &token, const int count, const QString &type);
     EntityRequest(const QString &token, const QString &id);
     EntityRequest(const QString &token, const QString &id, const EntityAction action);

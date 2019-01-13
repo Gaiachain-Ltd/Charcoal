@@ -14,7 +14,7 @@
 #define ADDRESS_CALENDAR QStringLiteral("%1/calendar/").arg(ADDRESS_BASE)
 #define ADDRESS_BATCH QStringLiteral("%1/batch/").arg(ADDRESS_BASE)
 
-EntityRequest::EntityRequest(const QString &token, const int requestType)
+EntityRequest::EntityRequest(const QString &token, const RequestType requestType)
     : BaseRequest(requestType == RequestType::RequestUninitializedGet ? ADDRESS_UNINITIALIZED : ADDRESS, token)
     , m_requestType(static_cast<RequestType>(requestType))
 {
@@ -86,27 +86,21 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enti
     : BaseRequest(ADDRESS_DATA.arg(id), token)
     , m_requestType(RequestEntityPut)
 {
-    if (!token.isEmpty() && action >= 0 && !id.isEmpty()) {
+    if (!token.isEmpty() && !id.isEmpty()) {
         QJsonObject object;
         QString actionString;
         switch(action) {
-        case EntityInitialize:
-            actionString = QStringLiteral("Initialize");
+        case EntityArrived:
+            actionString = QStringLiteral("ARRIVED");
             break;
-        case EntityDepart:
-            actionString = QStringLiteral("Depart");
-            break;
-        case EntityArrive:
-            actionString = QStringLiteral("Arrive");
-            break;
-        case EntityFinalize:
-            actionString = QStringLiteral("Finalize");
+        case EntityDeparted:
+            actionString = QStringLiteral("DEPARTED");
             break;
         }
         object.insert(Tags::action, QJsonValue(actionString));
         mRequestDocument.setObject(object);
 
-        mType = Type::Post;
+        mType = Type::Put;
     } else {
         qCritical() << "Error: missing entity PUT info" << id << action;
     }
@@ -121,5 +115,5 @@ bool EntityRequest::isTokenRequired() const
 
 void EntityRequest::parse()
 {
-    qDebug() << "-------- ENTITITES" << mReplyDocument << m_requestType;
+    qDebug() << "-------- ENTITY_RESPONSE" << m_requestType << mReplyDocument;
 }
