@@ -10,6 +10,8 @@ BasePage {
     id: top
     property bool readOnly: true
 
+    property string commodityId: ""
+
     Connections {
         target: pageManager
         // When using popup always add checking if I'm on top
@@ -76,11 +78,11 @@ BasePage {
                     width: flickableId.contentWidth
 
                     Items.TextWithTitle {
-                        id: logTextId
+                        id: commodityTextId
                         Layout.preferredWidth: parent.width * 0.75
 
                         titleText: (Strings.logID + ":")
-                        contentText: "Harvest Inc."
+                        contentText: commodityId
                     }
                     Items.LayoutSpacer {}
                     Items.ImageButton {
