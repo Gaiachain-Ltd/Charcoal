@@ -13,6 +13,11 @@ namespace Tags {
     const QLatin1String commodityType = QLatin1String("commodity_type");
     const QLatin1String authorizationHeader = QLatin1String("Authorization");
     const QLatin1String bearerHeader = QLatin1String("Bearer");
+    const QLatin1String timestampFrom = QLatin1String("from_timestamp");
+    const QLatin1String dateFrom = QLatin1String("from_date");
+    const QLatin1String timestampTo = QLatin1String("to_timestamp");
+    const QLatin1String dateTo = QLatin1String("to_date");
+    const QLatin1String action = QLatin1String("action");
 };
 
 #endif // TAGS_H
