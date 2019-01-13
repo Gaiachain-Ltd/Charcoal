@@ -9,15 +9,19 @@ import "../items" as Items
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
-Item {
+Items.GenericPanel
+{
     id: top
     property bool footerVisible: true
     property bool headerVisible: true
 
-    property int page: Enums.Page.InvalidPage
-    property var attachedStackView: StackView.view
-
     property color backgroundColor: Style.pageBaseBackgroundColor
+
+    property alias header: navigationHeader
+
+    function closeEventHandler() {
+        navigationHeader.backHandler() // calling back button
+    }
 
     default property alias content: pageContent.data
 
@@ -49,20 +53,37 @@ Item {
         spacing: 0
 
         Items.NavigationHeader {
+            id: navigationHeader
             Layout.fillWidth: true
+            Layout.topMargin: mainWindow.headerTopMargin
             Layout.preferredHeight: s(Style.headerHeight)
             visible: top.headerVisible
+            z: 5
         }
 
         Item {
-            id: pageContent
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            layer.enabled: true
+            clip: true
 
             Rectangle {
                 id: background
                 anchors.fill: parent
                 color: top.backgroundColor
+            }
+
+            Item {
+                id: pageContent
+                readonly property int verticalOffset: -Math.max(mainWindow.bottomMargin, mainWindow.bottomMarginKeyboard * 0.5)
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                    verticalCenterOffset: pageContent.verticalOffset
+                }
+                height: parent.height - mainWindow.bottomMarginKeyboard * 0.5
             }
         }
 

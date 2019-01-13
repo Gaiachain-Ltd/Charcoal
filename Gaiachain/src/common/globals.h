@@ -5,7 +5,7 @@
 #include <QObject>
 
 #define SERVER_ADDRESS QStringLiteral("https://beta.gaiachain.io/api/v1")
-#define QR_CODE_LENGTH 10
+#define QR_CODE_LENGTH 12
 
 #if defined(Q_OS_LINUX) and !defined(Q_OS_ANDROID)
     #define Q_OS_LINUX_DESKTOP 1

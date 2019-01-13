@@ -17,6 +17,10 @@ BasePage {
         pageManager.enter(Enums.Page.ViewType)
     }
 
+    function closeEventHandler() {
+        return true // android back button will close app
+    }
+
     Connections
     {
         target: sessionManager

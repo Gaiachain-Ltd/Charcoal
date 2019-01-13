@@ -11,6 +11,20 @@ Item {
     signal headerClicked()
 
     property var currentResource: Enums.CommodityType.Timber //TO_DO set proper text after user set
+    readonly property bool isOnHomePage: pageManager.isOnHomePage()
+
+    function backHandler() {
+        if (userManager.loggedIn && isOnHomePage) {
+            pageManager.enterPopup(Enums.Popup.Information, {
+                                       "text" : Strings.logoutQuestion,
+                                       "acceptButtonText": Strings.logout,
+                                       "rejectButtonText": Strings.cancel,
+                                       "acceptButtonType": Enums.PopupAction.Logout
+                                   })
+        } else {
+            pageManager.back()
+        }
+    }
 
     Connections {
         target: pageManager
@@ -103,7 +117,6 @@ Item {
                         left: parent.left
                     }
 
-                    property bool isOnHomePage: pageManager.isOnHomePage()
                     source: {
                         if (!isOnHomePage) return Style.backImgUrl
 
@@ -111,16 +124,7 @@ Item {
                     }
 
                     onClicked: {
-                        if (userManager.loggedIn && isOnHomePage) {
-                            pageManager.enterPopup(Enums.Popup.Information, {
-                                                       "text" : Strings.logoutQuestion,
-                                                       "acceptButtonText": Strings.logout,
-                                                       "rejectButtonText": Strings.cancel,
-                                                       "acceptButtonType": Enums.PopupAction.Logout
-                                                   })
-                        } else {
-                            pageManager.back()
-                        }
+                        backHandler()
                     }
                 }
             }
