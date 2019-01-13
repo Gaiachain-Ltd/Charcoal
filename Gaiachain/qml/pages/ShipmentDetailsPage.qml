@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.utility 1.0
 
 import "../items" as Items
 
@@ -12,104 +13,52 @@ BasePage {
     property string shipmentId
     property int resourceType
 
-    onShipmentIdChanged: {
+    Component.onCompleted: shipmentEventsProxyModel.setShipmentId(shipmentId)
 
-    }
-
-    // TO_DO change below to enums when model will be used
-    function typeToUrl(shipmentType) {
-        switch(shipmentType) {
-        case "forestery": return Style.timberImgUrl
-        case "logpark": return Style.logParkImgUrl
-        case "sawmill": return Style.sawmillImgUrl
-        case "export": return Style.exportImgUrl
-        default:
-            console.log("Wrong type of shipment:", shipmentType)
-        }
-
-        return ""
+    Connections {
+        target: shipmentEventsProxyModel
+        onProxyChangeFinished: parseModelData()
     }
 
     ListModel {
         id: shipmentModel
-
-        ListElement {
-            type: "forestery"
-        }
-
-        ListElement {
-            type: "logpark"
-        }
-
-        ListElement {
-            type: "sawmill"
-        }
-
-        ListElement {
-            type: "export"
-        }
     }
 
-    //TO_DO change it to proxy model with all data about shipment
-//    ListModel {
-//        id: shipmentModel
+    function createDataObject(attributes) {
+        // TO_DO find a better solution
+        return { "company": attributes.company,
+            "place": Number(attributes.place),
+            "action": Number(attributes.action),
+            "shipmentId": attributes.shipmentId
+          };
+    }
+    function addModelData(currentPlace, eventsList) {
+        shipmentModel.append({ "place": Number(currentPlace), "events": eventsList})
+    }
+    function parseModelData() {
+        var companyEventsList = [];
+        var currentCompany = undefined;
+        var currentPlace = undefined;
 
-//        ListElement {
-//            type: "forestery"
-//            attributes: [
-//                ListElement {
-//                    title: "Apple"
-//                    contentText: "Logs 1"
-//                },
-//                ListElement {
-//                    title: "Orange"
-//                    contentText: "Logs 2"
-//                },
-//                ListElement {
-//                    title: "Banana"
-//                    contentText: "Logs 3"
-//                },
-//                ListElement {
-//                    title: "Kiwi"
-//                    contentText: "Logs 4"
-//                }
-//            ]
-//        }
+        for (var row = 0; row < shipmentEventsProxyModel.rowCount(); ++ row) {
+            var rowAttributes = shipmentEventsProxyModel.getRowAttributes(row);
+            if(currentCompany !== rowAttributes.company || currentPlace !== rowAttributes.place) {
+                if (currentCompany !== undefined || currentCompany !== undefined) {
+                    // save previous list
+                    addModelData(currentPlace, companyEventsList)
+                    companyEventsList = []
+                }
+                currentCompany = rowAttributes.company
+                currentPlace = rowAttributes.place
+            }
+            companyEventsList.push(createDataObject(rowAttributes))
+        }
 
-//        ListElement {
-//            type: "logpark"
-//            attributes: [
-//                ListElement {
-//                    title: "Log park"
-//                    contentText: "Batch 1"
-//                }
-//            ]
-//        }
-
-//        ListElement {
-//            type: "sawmill"
-//            attributes: [
-//                ListElement {
-//                    title: "Sawmill"
-//                    contentText: "Batch 1"
-//                }
-//            ]
-//        }
-
-//        ListElement {
-//            type: "export"
-//            attributes: [
-//                ListElement {
-//                    title: "Timber for export"
-//                    contentText: "Batch 1"
-//                },
-//                ListElement {
-//                    title: "Timber for export"
-//                    contentText: "Batch 2"
-//                }
-//            ]
-//        }
-//    }
+        // save last list
+        if (currentCompany !== undefined || currentCompany !== undefined) {
+            addModelData(currentPlace, companyEventsList)
+        }
+    }
 
     Flickable {
         id: mainFlickable
@@ -277,7 +226,7 @@ BasePage {
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         fillMode: Image.PreserveAspectFit
-                        source: typeToUrl(modelData.placeType)
+                        source: Utility.placeTypeToUrl(modelData.placeType)
                     }
                 }
             }

@@ -21,6 +21,7 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("commodityProxy"), &m_commodityProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("calendarRangeProxyModel"), &m_calendarRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("shipmentEventsProxyModel"), &m_shipmentEventsProxyModel);
 }
 
 void DataManager::setupModels()
@@ -32,6 +33,8 @@ void DataManager::setupModels()
 
     m_dateEventsRangeProxyModel.setSourceModel(&m_eventModel);
     m_dateEventsRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
+
+    m_shipmentEventsProxyModel.setSourceModel(&m_eventModel);
 }
 
 void DataManager::populateModels()
@@ -66,9 +69,9 @@ void DataManager::populateModels()
         QDateTime sd = startDate;
 
         for (const auto &place : placeType) {
-            for (const auto &action : actions) {
-                QString companyName = comapnyNames[rand() % comapnyNames.size()];
+            QString companyName = comapnyNames[rand() % comapnyNames.size()];
 
+            for (const auto &action : actions) {
                 int daysElapsed = (rand() % dateDiff + 1);
                 sd = sd.addDays(daysElapsed);
 
@@ -83,8 +86,8 @@ void DataManager::populateModels()
                                   sd,
                                   QVariant::fromValue(loc),
                                   companyName,
-                                  static_cast<int>(place),
-                                  static_cast<int>(action)
+                                  QVariant::fromValue(place),
+                                  QVariant::fromValue(action)
                                  });
             }
         }

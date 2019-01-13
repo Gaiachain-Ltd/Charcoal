@@ -3,13 +3,14 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.utility 1.0
 
 ColumnLayout {
     id: top
 
     Layout.fillHeight: false
 
-    property string placeType: type
+    property var placeType: place
     property var midYPos: []
 
     function enterEventDetailsPage() {
@@ -23,7 +24,7 @@ ColumnLayout {
 
     Repeater {
         id: rep
-        model: attributes
+        model: events
 
         delegate: Item {
             id: delegateId
@@ -49,22 +50,24 @@ ColumnLayout {
                     spacing: 0
                     BasicText {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: s(70)
                         horizontalAlignment: Text.AlignLeft
-                        text: title
+                        font.pixelSize: s(Style.smallPixelSize)
+                        text: Utility.placeTypeToString(place) + ":"
                     }
                     BasicText {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: s(70)
                         horizontalAlignment: Text.AlignLeft
+                        font.pixelSize: s(Style.smallPixelSize)
+                        wrapMode: Text.WordWrap
+                        font.italic: true
+                        text: Utility.placeActionToStringAction(action) + " " + company
+                    }
+                    BasicText {
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignLeft
+                        font.pixelSize: s(Style.smallPixelSize)
                         font.bold: true
-                        text: Strings.batch + " " + index
-                    }
-                    BasicText {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: s(70)
-                        horizontalAlignment: Text.AlignLeft
-                        text: contentText
+                        text: Strings.batch + " " + shipmentId
                     }
                 }
 

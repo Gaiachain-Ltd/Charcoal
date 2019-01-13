@@ -45,6 +45,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
+    qmlRegisterSingletonType(QUrl("qrc:///common/Utility.qml"), "com.gaiachain.utility", 1, 0, "Utility");
 
     m_pageManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);

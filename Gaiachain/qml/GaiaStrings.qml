@@ -60,4 +60,15 @@ QtObject {
     readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
     readonly property string logoutQuestion: qsTr("Do you want to logout?")
 
+    // enums
+    readonly property string placeTypeForestery: qsTr("Forestery")
+    readonly property string placeTypeLogPark: qsTr("Log Park")
+    readonly property string placeTypeSawmill: qsTr("Sawmill")
+    readonly property string placeTypeExport: qsTr("Export")
+
+    readonly property string placeActionArrived: qsTr("Arrived")
+    readonly property string placeActionDeparted: qsTr("Departed")
+
+    readonly property string placeActionArrivedAction: qsTr("Arrived to")
+    readonly property string placeActionDepartedAction: qsTr("Departed from")
 }

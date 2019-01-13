@@ -17,28 +17,6 @@ QString Utility::commodityToString(Enums::CommodityType ct)
     return enumToQString<Enums::CommodityType>(ct, "CommodityType").toLower();
 }
 
-QString Utility::placeToString(Enums::PlaceType pt)
-{
-    switch (pt) {
-    case Enums::PlaceType::Forestery:
-        return tr("forestry");
-        break;
-    case Enums::PlaceType::LogPark:
-        return tr("log park");
-        break;
-    case Enums::PlaceType::Sawmill:
-        return tr("sawmill");
-        break;
-    case Enums::PlaceType::Export:
-        return tr("harbour");
-        break;
-    default:
-        break;
-    }
-
-    return {};
-}
-
 qreal Utility::scaleByDpi(qreal num) const
 {
     return num * m_dpiScale;

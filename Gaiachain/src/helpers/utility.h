@@ -24,7 +24,6 @@ public:
     }
 
     Q_INVOKABLE QString commodityToString(Enums::CommodityType ct);
-    Q_INVOKABLE QString placeToString(Enums::PlaceType pt);
 
     Q_INVOKABLE qreal scaleByDpi(qreal num) const;
     Q_INVOKABLE qreal scaleRoundByDpi(qreal num) const;
