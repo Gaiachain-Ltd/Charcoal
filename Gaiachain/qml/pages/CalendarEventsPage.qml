@@ -131,8 +131,8 @@ BasePage {
                         Items.BasicText {
                             anchors.centerIn: parent
                             text: day
-                            color: delegate.isSelected ? "white" : "black"
-                            opacity: isWeekend ? 0.3 : 1
+                            color: delegate.isSelected ? "white" : "black" // TO_DO should be in Style!
+                            opacity: isWeekend ? 0.3 : 1 // TO_DO should be in Style!
                         }
                     }
                     Rectangle {
@@ -158,7 +158,7 @@ BasePage {
             Layout.fillHeight: true
 
             delegateHeight: s(100)
-            backgroundColor: "#FFF5F5F5"
+            backgroundColor: "#FFF5F5F5"    // TO_DO should be in Style!
 
             onDelegateClicked: top.enterShipmentDetailsPage(data)
 

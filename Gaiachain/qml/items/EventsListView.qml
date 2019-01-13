@@ -97,8 +97,7 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: delegateClicked({"shipmentId": shipmentId,
-                                            "resourceType": Enums.CommodityType.Timber})
+                onClicked: delegateClicked({ "shipmentId": shipmentId })
             }
         }
     }

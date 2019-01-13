@@ -69,7 +69,7 @@ Item {
                     text: model.day
                     verticalAlignment: Text.AlignTop
 
-                    opacity: currentMonth ? (utility.isWeekend(model.date) ? 0.4 : 1) : 0.05
+                    opacity: currentMonth ? (utility.isWeekend(model.date) ? 0.4 : 1) : 0.05 // TO_DO should be in Style!
                     font: grid.font
                 }
 

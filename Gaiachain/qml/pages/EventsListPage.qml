@@ -11,37 +11,18 @@ BasePage {
         pageManager.enter(Enums.Page.ShipmentDetails , data)
     }
 
+    Component.onCompleted: {
+        // TO_DO for tests only
+        var today = new Date();
+        dateEventsRangeProxyModel.setDateTimeRange(new Date(today.getFullYear() - 1), today)
+    }
+
     Items.EventsListView {
         anchors.fill: parent
         delegateHeight: s(100)
 
         onDelegateClicked: top.enterShipmentDetailsPage(data)
 
-        viewModel: ListModel { //TO_DO
-            ListElement {
-                name: "Apple"
-                cost: 2.45
-            }
-            ListElement {
-                name: "Orange"
-                cost: 3.25
-            }
-            ListElement {
-                name: "Banana"
-                cost: 1.95
-            }
-            ListElement {
-                name: "Apple"
-                cost: 2.45
-            }
-            ListElement {
-                name: "Orange"
-                cost: 3.25
-            }
-            ListElement {
-                name: "Banana"
-                cost: 1.95
-            }
-        }
+        viewModel: dateEventsRangeProxyModel    // TO_DO for tests only
     }
 }
