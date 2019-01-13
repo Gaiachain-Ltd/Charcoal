@@ -96,7 +96,8 @@ BasePage {
         GridView {
             id: grid
 
-            property int loadedIndex: 1 // bottom row always loaded
+            readonly property int synchronousItems: 6 // 1.5 page loaded synchronously
+            property int loadedItems: synchronousItems + 1
 
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -150,8 +151,18 @@ BasePage {
                     }
 
                     Item {
+                        id: asyncMonthItem
+                        property bool synchronous: index <= grid.synchronousItems
+                        property bool active: index <= grid.loadedItems
+                        property bool ready: loader.status === Loader.Ready
+
                         Layout.fillHeight: true
                         Layout.fillWidth: true
+
+                        onReadyChanged: {
+                            if (index == grid.loadedItems)
+                                grid.loadedItems++;
+                        }
 
                         Component {
                             id: monthItemComponent
@@ -173,21 +184,15 @@ BasePage {
                             id: loader
                             anchors.fill: parent
 
-                            property bool ready: status === Loader.Ready
-                            asynchronous: true
+                            asynchronous: !asyncMonthItem.synchronous
                             sourceComponent: monthItemComponent
 
-                            visible: ready
-                            active: enabled && index <= grid.loadedIndex
-
-                            onReadyChanged: {
-                                if (index == grid.loadedIndex)
-                                    grid.loadedIndex++;
-                            }
+                            visible: asyncMonthItem.ready
+                            active: enabled && asyncMonthItem.active
                         }
                         Items.WaitOverlay {
                             anchors.fill: parent
-                            visible: !loader.ready
+                            visible: !asyncMonthItem.ready
                             logoVisible: false
                         }
                     }
