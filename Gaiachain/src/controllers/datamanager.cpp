@@ -18,10 +18,11 @@ DataManager::DataManager(QObject *parent)
 
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
-    engine.rootContext()->setContextProperty(QStringLiteral("commodityProxy"), &m_commodityProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("commodityProxyModel"), &m_commodityProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("calendarRangeProxyModel"), &m_calendarRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("shipmentEventsProxyModel"), &m_shipmentEventsProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("latestEventsProxyModel"), &m_latestEventsProxyModel);
 }
 
 void DataManager::setupModels()
@@ -35,6 +36,7 @@ void DataManager::setupModels()
     m_dateEventsRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
     m_shipmentEventsProxyModel.setSourceModel(&m_eventModel);
+    m_latestEventsProxyModel.setSourceModel(&m_eventModel);
 }
 
 void DataManager::populateModels()

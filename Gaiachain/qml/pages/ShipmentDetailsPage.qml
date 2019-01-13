@@ -238,7 +238,7 @@ BasePage {
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         fillMode: Image.PreserveAspectFit
-                        source: Utility.placeTypeToUrl(modelData.placeType)
+                        source: Helpers.placeTypeToUrl(modelData.placeType)
                     }
                 }
             }

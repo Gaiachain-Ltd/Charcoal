@@ -20,7 +20,7 @@ Item {
     property color circleColor: Style.textGreenColor
     property int circleSize: s(Style.calendarBigDotSize)
 
-    property bool timberEnabled: commodityProxy.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
+    property bool timberEnabled: commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
 
     signal titleClicked()
     signal dateClicked(date d)

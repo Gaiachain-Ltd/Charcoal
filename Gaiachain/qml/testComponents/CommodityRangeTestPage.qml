@@ -33,8 +33,8 @@ Item {
                 signal commodityClicked()
 
                 onClicked: {
-                    commodityProxy.setCommodityType(res[prevIdx], false)
-                    commodityProxy.setCommodityType(res[currentIdx])
+                    commodityProxyModel.setCommodityType(res[prevIdx], false)
+                    commodityProxyModel.setCommodityType(res[currentIdx])
 
                     commodityClicked()
 
@@ -65,14 +65,14 @@ Item {
 
             property string commoditiesNames: ""
             Connections {
-                target: commodityProxy
+                target: commodityProxyModel
                 onCommodityTypeChanged: {
                     rect.commoditiesNames = ""
-                    if (commodityProxy.commodityEnabled(Enums.CommodityType.Timber))
+                    if (commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber))
                         rect.commoditiesNames += " Timber "
-                    if (commodityProxy.commodityEnabled(Enums.CommodityType.Charcoal))
+                    if (commodityProxyModel.commodityEnabled(Enums.CommodityType.Charcoal))
                         rect.commoditiesNames += " Charcoal "
-                    if (commodityProxy.commodityEnabled(Enums.CommodityType.Cocoa))
+                    if (commodityProxyModel.commodityEnabled(Enums.CommodityType.Cocoa))
                         rect.commoditiesNames += " Cocoa "
                     console.log("Current commodities", rect.commoditiesNames)
                 }

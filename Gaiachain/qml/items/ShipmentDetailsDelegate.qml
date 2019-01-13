@@ -50,7 +50,7 @@ ColumnLayout {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignLeft
                         font.pixelSize: s(Style.smallPixelSize)
-                        text: Utility.placeTypeToString(place) + ":"
+                        text: Helpers.placeTypeToString(place) + ":"
                     }
                     BasicText {
                         Layout.fillWidth: true
@@ -58,7 +58,7 @@ ColumnLayout {
                         font.pixelSize: s(Style.smallPixelSize)
                         wrapMode: Text.WordWrap
                         font.italic: true
-                        text: Utility.placeActionToStringAction(action) + " " + company
+                        text: Helpers.placeActionToStringAction(action) + " " + company
                     }
                     BasicText {
                         Layout.fillWidth: true

@@ -10,7 +10,7 @@ import "../items" as Items
 BasePage {
     id: top
     property bool editable: false
-    property var attributes: {}
+    property var attributes: ({})
 
     signal editClicked()
     signal cancelClicked()
@@ -49,8 +49,8 @@ BasePage {
                 Items.TextWithTitle {
                     width: flickableId.contentWidth
 
-                    titleText: (Strings.gpsLocationOf.arg(Utility.placeTypeToString(attributes.place).toLowerCase()) + ":")
-                    contentText: Utility.formatLocation(attributes.location)
+                    titleText: (Strings.gpsLocationOf.arg(Helpers.placeTypeToString(attributes.place).toLowerCase()) + ":")
+                    contentText: Helpers.formatLocation(attributes.location)
                 }
 
                 RowLayout {
@@ -83,8 +83,8 @@ BasePage {
                 Items.TextWithTitle {
                     width: flickableId.contentWidth
 
-                    titleText: Utility.placeActionToDateTimeString(attributes.action) + ":"
-                    contentText: Utility.formatDate(attributes.timestamp)
+                    titleText: Helpers.placeActionToDateTimeString(attributes.action) + ":"
+                    contentText: Helpers.formatDate(attributes.timestamp)
                 }
             }
         }

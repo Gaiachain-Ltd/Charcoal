@@ -17,7 +17,7 @@ BasePage {
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
-    property bool timberEnabled: commodityProxy.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
+    property bool timberEnabled: commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
 
     function enterShipmentDetailsPage(data) {
         pageManager.enter(Enums.Page.ShipmentDetails, data)

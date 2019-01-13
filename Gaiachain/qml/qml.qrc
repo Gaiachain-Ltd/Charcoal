@@ -36,6 +36,6 @@
         <file>pages/InformationPopup.qml</file>
         <file>items/TextWithTitle.qml</file>
         <file>pages/EditableEventDetailsPage.qml</file>
-        <file>common/Utility.qml</file>
+        <file>common/Helpers.qml</file>
     </qresource>
 </RCC>

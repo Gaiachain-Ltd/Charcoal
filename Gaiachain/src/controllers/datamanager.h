@@ -9,6 +9,7 @@
 #include "../models/commodityproxymodel.h"
 #include "../models/commoditydaterangeproxymodel.h"
 #include "../models/shipmenteventsproxy.h"
+#include "../models/latesteventsproxy.h"
 
 class DataManager : public AbstractManager
 {
@@ -33,6 +34,7 @@ private:
     CommodityDateRangeProxyModel m_calendarRangeProxyModel;
     CommodityDateRangeProxyModel m_dateEventsRangeProxyModel;
     ShipmentEventsProxy m_shipmentEventsProxyModel;
+    LatestEventsProxy m_latestEventsProxyModel;
 };
 
 #endif // DATAMANAGER_H

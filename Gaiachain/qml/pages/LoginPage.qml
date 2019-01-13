@@ -19,7 +19,7 @@ BasePage {
 
     Component.onCompleted: {
         // Temporarly set Timber fixed until chosing resoures will be available (ResourceChosingPage).
-        commodityProxy.setCommodityType(Enums.CommodityType.Timber)
+        commodityProxyModel.setCommodityType(Enums.CommodityType.Timber)
     }
 
     Connections

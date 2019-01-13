@@ -71,7 +71,7 @@ Item {
 
                         wrapMode: Text.WordWrap
                         elide: Text.ElideNone
-                        text: "Logs from " + Utility.placeTypeToString(place) + " concession " + company + "." // TO_DO add getting resource for id
+                        text: "Logs from " + Helpers.placeTypeToString(Number(place)).toLowerCase() + " concession " + company + "."
                     }
 
                     SvgImage {
