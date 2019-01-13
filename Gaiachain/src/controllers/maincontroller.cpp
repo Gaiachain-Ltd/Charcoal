@@ -15,6 +15,8 @@
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
+    QLocale::setDefault(QLocale("en_UK"));
+
 #ifdef Q_OS_ANDROID
     // check for permissions before opening scanner page to load camera faster
     // TO_DO user it only after login
@@ -45,6 +47,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
+    qmlRegisterSingletonType(QUrl("qrc:///common/Helpers.qml"), "com.gaiachain.utility", 1, 0, "Helpers");
 
     m_pageManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);

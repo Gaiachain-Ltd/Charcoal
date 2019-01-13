@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick 2.11
 
-Item {
+QtObject {
     // Colors
     readonly property color backgroundColor: "white"
     readonly property color textPrimaryColor: "black"
@@ -48,6 +48,8 @@ Item {
     readonly property int headerHeight: 175
     readonly property int headerArrowWidth: 20
     readonly property int headerArrowHeight: headerArrowWidth * 1.5
+    readonly property int calendarSmallDotSize: 8
+    readonly property int calendarBigDotSize: calendarSmallDotSize * 2
 
     // urls
     readonly property url blackAddImgUrl: "qrc:/ui/add_black"
@@ -122,13 +124,13 @@ Item {
     readonly property int animationEasing: Easing.Linear
     readonly property int headerMaximumButtonCount: 5
 
-    FontLoader {
+    readonly property var latoRegularFont: FontLoader {
         source: "qrc:/font/fonts/Lato-Regular.ttf"
     }
-    FontLoader {
+    readonly property var latoBoldFont: FontLoader {
         source: "qrc:/font/fonts/Lato-Bold.ttf"
     }
-    FontLoader {
+    readonly property var latoMontserratFont: FontLoader {
         source: "qrc:/font/fonts/Montserrat-Medium.ttf"
     }
 }

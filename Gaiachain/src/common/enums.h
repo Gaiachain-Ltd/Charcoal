@@ -12,6 +12,7 @@ namespace Enums {
     }
 
     enum class CommodityType {
+        InvalidCommodity = -1,
         Timber = 0,
         Charcoal,
         Cocoa,
@@ -89,6 +90,16 @@ namespace Enums {
     Q_ENUM_NS(PlaceType)
     inline uint qHash(PlaceType key, uint seed) { return qH<PlaceType>(key, seed);}
 
+    enum class PlaceAction {
+        InvalidPlaceAction = -1,
+        Arrived,
+        Departed,
+
+        PlaceActionCount
+    };
+    Q_ENUM_NS(PlaceAction)
+    inline uint qHash(PlaceAction key, uint seed) { return qH<PlaceAction>(key, seed);}
+
     enum class PopupAction {
         InvalidPopupAction = -1,
         Accept,
@@ -101,6 +112,7 @@ namespace Enums {
     };
     Q_ENUM_NS(PopupAction)
     inline uint qHash(PopupAction key, uint seed) { return qH<PopupAction>(key, seed);}
+
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 

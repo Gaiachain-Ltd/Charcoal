@@ -12,10 +12,12 @@ import "../items" as Items
 BasePage {
     id: top
 
+
     property date currentDate: new Date()
     property int currentYear: currentDate.getFullYear()
-    property int lowestYear: currentYear
     property int currentMonth: monthModel[currentDate.getMonth()]
+    property int displayedYear: currentYear
+    property int lowestYear: currentYear
 
     readonly property var monthModel: [
         Calendar.January, Calendar.February, Calendar.March,
@@ -24,8 +26,23 @@ BasePage {
         Calendar.October, Calendar.November, Calendar.December
     ]
 
+    onLowestYearChanged: {
+        var startDate = new Date(lowestYear, 0, 1)
+        var endDate = currentDate
+        calendarRangeProxyModel.setDateTimeRange(startDate, endDate)
+    }
+
     function addYear(lastMonth) {
-        var endMonth = lastMonth === undefined ? Calendar.December : lastMonth
+        var endMonth = lastMonth
+
+        /* For first year we want months up to currentDate
+         * and we don't want to update lowestYear
+         */
+        if (endMonth === undefined) {
+            endMonth = Calendar.December
+            --lowestYear
+        }
+
         var blockInsert = true // Block insert until lastMonth is found
         for (var i = monthModel.length-1; i >= 0; --i) {
             if (blockInsert) {
@@ -36,18 +53,15 @@ BasePage {
                 }
             }
 
-            datesModel.insert(0, { "month": monthModel[i], "year": lowestYear })
+            datesModel.append({ "month": monthModel[i], "year": lowestYear })
         }
-
-        --lowestYear
     }
 
     ListModel {
         id: datesModel
         Component.onCompleted: {
-            addYear(currentMonth)
+            addYear(currentMonth % 2 == 0 ? currentMonth + 1 : currentMonth)
             addYear()
-            grid.positionViewAtEnd()
         }
     }
 
@@ -70,7 +84,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.leftMargin: s(20)
 
-            text: currentYear
+            text: displayedYear
             horizontalAlignment: Text.AlignLeft
 
             font {
@@ -81,6 +95,10 @@ BasePage {
 
         GridView {
             id: grid
+
+            readonly property int synchronousItems: 6 // 1.5 page loaded synchronously
+            property int loadedItems: synchronousItems + 1
+
             Layout.fillHeight: true
             Layout.fillWidth: true
 
@@ -93,24 +111,31 @@ BasePage {
 
             model: datesModel
 
-            onAtYBeginningChanged: {
-                if (atYBeginning) {
-                    // Add next year if we're at the begining
-                    addYear()
-                    grid.positionViewAtIndex(monthModel.length, GridView.Beginning)
-                }
-            }
+            verticalLayoutDirection: GridView.BottomToTop
+            layoutDirection: Qt.RightToLeft
 
             onContentYChanged: {
-                // Update curent year based on item at (contentX, contentY) position
-                top.currentYear = itemAt(contentX, contentY).cYear
+                // Update curent year based on item at bottomLeft position.
+                var bottomLeft = itemAt(contentX + cellWidth / 2,
+                                        contentY + height - cellHeight * 0.3)
+                if (bottomLeft !== null) {
+                    top.displayedYear = bottomLeft.cYear
+
+                    // Add next year when we're in May. If we set March here recurently next years are added...
+                    if (bottomLeft.cMonth === Calendar.May && bottomLeft.cYear === lowestYear)
+                         addYear()
+                }
             }
 
             delegate: Item {
                 width: GridView.view.cellWidth
                 height: GridView.view.cellHeight
 
-                property var cYear: year
+                property int cYear: year
+                property int cMonth: month
+
+                enabled: year < currentYear || month <= currentMonth
+                visible: enabled
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -125,20 +150,59 @@ BasePage {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    Items.CalendarMonthItem {
+                    Item {
+                        id: asyncMonthItem
+                        property bool synchronous: index <= grid.synchronousItems
+                        property bool active: index <= grid.loadedItems
+                        property bool ready: loader.status === Loader.Ready
+
                         Layout.fillHeight: true
                         Layout.fillWidth: true
 
-                        currentMonth: month
-                        currentYear: year
-                        circleColor: Style.buttonBlackGreyColor
+                        onReadyChanged: {
+                            if (index == grid.loadedItems)
+                                grid.loadedItems++;
+                        }
 
-                        MouseArea {
+                        Component {
+                            id: monthItemComponent
+
+                            Items.CalendarMonthItem {
+                                currentMonth: month
+                                currentYear: year
+                                circleColor: Style.buttonBlackGreyColor
+                                circleSize: s(Style.calendarSmallDotSize)
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: enterCalendarMonthPage(month, year)
+                                }
+                            }
+                        }
+
+                        Loader {
+                            id: loader
                             anchors.fill: parent
-                            onClicked: enterCalendarMonthPage(month, year)
+
+                            asynchronous: !asyncMonthItem.synchronous
+                            sourceComponent: monthItemComponent
+
+                            visible: asyncMonthItem.ready
+                            active: enabled && asyncMonthItem.active
+                        }
+                        Items.WaitOverlay {
+                            anchors.fill: parent
+                            visible: !asyncMonthItem.ready
+                            logoVisible: false
                         }
                     }
                 }
+            }
+
+            Component.onCompleted: {
+                // Slow down flick as page component is quite heavy which leads to poor UX.
+                flickDeceleration = flickDeceleration * 0.5
+                maximumFlickVelocity = maximumFlickVelocity * 0.3
             }
         }
     }

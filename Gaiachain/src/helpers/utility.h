@@ -23,12 +23,10 @@ public:
         return QString(enumerator.valueToKey(static_cast<int>(value)));
     }
 
+    Q_INVOKABLE QString commodityToString(Enums::CommodityType ct);
+
     Q_INVOKABLE qreal scaleByDpi(qreal num) const;
     Q_INVOKABLE qreal scaleRoundByDpi(qreal num) const;
-
-    // Scale proportionaly to refWidth/refHeight
-    Q_INVOKABLE qreal proportionalWidth(qreal val, qreal refWidth = -1.0) const;
-    Q_INVOKABLE qreal proportionalHeight(qreal val, qreal refHeight = -1.0) const;
 
     Q_INVOKABLE qreal clamp(qreal v, qreal min, qreal max) const;
 
@@ -49,8 +47,6 @@ private:
     qreal setupDpiScale();
 
     qreal m_dpiScale;
-    qreal m_refWidth = 480;
-    qreal m_refHeight = 854;
 
     QString m_dateFormat = QStringLiteral("yyyy/MM/dd");
     QRegExp m_emailRegex;

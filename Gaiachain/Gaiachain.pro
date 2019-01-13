@@ -48,7 +48,11 @@ HEADERS += \
     src/controllers/sessionmanager.h \
     src/controllers/usermanager.h \
     src/controllers/overlaymanager.h \
-    src/controllers/abstractmanager.h
+    src/controllers/abstractmanager.h \
+    src/common/location.h \
+    src/models/shipmenteventsproxy.h \
+    src/models/abstractsortfilterproxymodel.h \
+    src/models/latesteventsproxy.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -66,7 +70,10 @@ SOURCES += src/main.cpp \
     src/controllers/sessionmanager.cpp \
     src/controllers/usermanager.cpp \
     src/controllers/overlaymanager.cpp \
-    src/controllers/abstractmanager.cpp
+    src/controllers/abstractmanager.cpp \
+    src/models/shipmenteventsproxy.cpp \
+    src/models/abstractsortfilterproxymodel.cpp \
+    src/models/latesteventsproxy.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

@@ -13,7 +13,7 @@ class UserManager : public AbstractManager
 public:
     explicit UserManager(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     Q_INVOKABLE void logOut();
 
