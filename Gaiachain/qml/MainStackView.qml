@@ -34,6 +34,17 @@ Item {
         return isImmediate ? StackView.Immediate : StackView.Transition
     }
 
+    // handler for android back button
+    function onClosingEvent() {
+        if (stackView.depth === 0)
+            return false
+        var result = stackView.get(stackView.depth - 1).closeEventHandler()
+        if (result === undefined)
+            return false
+
+        return result
+    }
+
     StackView {
         id: stackView
         anchors.fill: parent
