@@ -46,7 +46,7 @@ void DataManager::populateModels()
 
     // Populate shipment data
     int ctCount = static_cast<int>(Enums::CommodityType::CommodityCount);
-    int shipmentCount = 1000;
+    int shipmentCount = 300;
     for (int i = 0; i < shipmentCount; ++i) {
         shipmentData.append({QString::number(i), i % ctCount});
     }
