@@ -15,6 +15,8 @@
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
+    QLocale::setDefault(QLocale("en_UK"));
+
 #ifdef Q_OS_ANDROID
     // check for permissions before opening scanner page to load camera faster
     // TO_DO user it only after login

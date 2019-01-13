@@ -42,9 +42,9 @@ QtObject {
 
     // Event Details Page
     readonly property string companyName: qsTr("Company name")
-    readonly property string gpsHarvestLocation: qsTr("Location of harvest (GPS point)")
-    readonly property string harvestDate: qsTr("Date of harvest")
+    readonly property string gpsLocationOf: qsTr("Location of %1 (GPS point)")
     readonly property string logID: qsTr("Log ID")
+    readonly property string dateTimeArrival: qsTr("Date and time of arrival")
     readonly property string dateTimeDeparture: qsTr("Date and time of departure")
 
     // popup

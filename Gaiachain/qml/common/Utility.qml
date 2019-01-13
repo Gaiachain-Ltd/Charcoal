@@ -6,6 +6,14 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
 QtObject {
+    function formatDate(timestamp) {
+        return new Date(timestamp).toLocaleDateString()
+    }
+
+    function formatLocation(location) {
+        return location.lat.toFixed(6) + ", " + location.lon.toFixed(6)
+    }
+
     function placeTypeToUrl(placeType) {
         switch(placeType) {
         case Enums.PlaceType.Forestery: return Style.timberImgUrl
@@ -54,4 +62,14 @@ QtObject {
         return ""
     }
 
+    function placeActionToDateTimeString(placeAction) {
+        switch(placeAction) {
+        case Enums.PlaceAction.Arrived: return Strings.dateTimeArrival
+        case Enums.PlaceAction.Departed: return Strings.dateTimeDeparture
+        default:
+            console.log("Wrong placeAction:", placeAction)
+        }
+
+        return ""
+    }
 }

@@ -13,9 +13,7 @@ ColumnLayout {
     property var placeType: place
     property var midYPos: []
 
-    function enterEventDetailsPage() {
-        pageManager.enter(Enums.Page.EventDetails)
-    }
+    signal delegateClicked(int row)
 
     onYChanged: {
         for (var i = 0; i < rep.count; ++i)
@@ -84,7 +82,7 @@ ColumnLayout {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: enterEventDetailsPage()
+                onClicked: delegateClicked(row)
             }
         }
     }

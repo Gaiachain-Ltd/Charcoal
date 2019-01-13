@@ -27,8 +27,10 @@ BasePage {
     function createDataObject(attributes) {
         // TO_DO find a better solution
         return { "company": attributes.company,
+            "timestamp": Number(attributes.timestamp),
             "place": Number(attributes.place),
             "action": Number(attributes.action),
+            "location": attributes.location,
             "shipmentId": attributes.shipmentId
           };
     }
@@ -51,13 +53,21 @@ BasePage {
                 currentCompany = rowAttributes.company
                 currentPlace = rowAttributes.place
             }
-            companyEventsList.push(createDataObject(rowAttributes))
+
+            var dataObject = createDataObject(rowAttributes);
+            dataObject["row"] = row
+            companyEventsList.push(dataObject)
         }
 
         // save last list
         if (currentCompany !== undefined || currentCompany !== undefined) {
             addModelData(currentPlace, companyEventsList)
         }
+    }
+
+    function enterEventDetailsPage(row) {
+        var rowAttributes = shipmentEventsProxyModel.getRowAttributes(row);
+        pageManager.enter(Enums.Page.EventDetails, { "attributes": createDataObject(rowAttributes) })
     }
 
     Flickable {
@@ -101,6 +111,8 @@ BasePage {
                     model: shipmentModel
                     delegate: Items.ShipmentDetailsDelegate {
                         spacing: s(Style.bigMargin)
+
+                        onDelegateClicked: enterEventDetailsPage(row)
                     }
                 }
             }

@@ -3,32 +3,18 @@ import QtQuick.Layouts 1.1
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.utility 1.0
 
 import "../items" as Items
 
 BasePage {
     id: top
-    property bool readOnly: true
+    property bool editable: false
+    property var attributes: {}
 
-    property string commodityId: ""
-
-    Connections {
-        target: pageManager
-        // When using popup always add checking if I'm on top
-        enabled: pageManager.isOnTop(page)
-        onPopupAction: {
-            switch(action) {
-            case Enums.PopupAction.Save:
-                console.log("Save action to implement")
-                break
-            case Enums.PopupAction.Exit:
-                pageManager.backTo(pageManager.homePage())
-                break
-            case Enums.PopupAction.Cancel:
-            default:
-            }
-        }
-    }
+    signal editClicked()
+    signal cancelClicked()
+    signal acceptClicked()
 
     ColumnLayout {
         anchors {
@@ -57,21 +43,14 @@ BasePage {
                     width: flickableId.contentWidth
 
                     titleText: (Strings.companyName + ":")
-                    contentText: "Harvest Inc." //TO_DO content texts are temporary
+                    contentText: attributes.company
                 }
 
                 Items.TextWithTitle {
                     width: flickableId.contentWidth
 
-                    titleText: (Strings.gpsHarvestLocation + ":")
-                    contentText: "Harvest Inc. Location of harvest (GPS point): Location of harvest (GPS point):"
-                }
-
-                Items.TextWithTitle {
-                    width: flickableId.contentWidth
-
-                    titleText: (Strings.harvestDate + ":")
-                    contentText: "Harvest Inc."
+                    titleText: (Strings.gpsLocationOf.arg(Utility.placeTypeToString(attributes.place).toLowerCase()) + ":")
+                    contentText: Utility.formatLocation(attributes.location)
                 }
 
                 RowLayout {
@@ -82,13 +61,13 @@ BasePage {
                         Layout.preferredWidth: parent.width * 0.75
 
                         titleText: (Strings.logID + ":")
-                        contentText: commodityId
+                        contentText: attributes.shipmentId
                     }
                     Items.LayoutSpacer {}
                     Items.ImageButton {
                         Layout.preferredHeight: implicitWidth * 0.7
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                        visible: !top.readOnly
+                        visible: top.editable
 
                         source: Style.miniEditImgUrl
                         padding: s(10)
@@ -96,7 +75,7 @@ BasePage {
                         backgroundRadius: s(Style.smallMargin)
                         backgroundColor: Style.buttonGreyColor
 
-                        onClicked: pageManager.back()
+                        onClicked: editClicked()
                     }
                     Items.LayoutSpacer {}
                 }
@@ -104,8 +83,8 @@ BasePage {
                 Items.TextWithTitle {
                     width: flickableId.contentWidth
 
-                    titleText: (Strings.dateTimeDeparture + ":")
-                    contentText: "Harvest Inc."
+                    titleText: Utility.placeActionToDateTimeString(attributes.action) + ":"
+                    contentText: Utility.formatDate(attributes.timestamp)
                 }
             }
         }
@@ -115,7 +94,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.fillHeight: false
             Layout.preferredHeight: s(Style.footerHeight)
-            visible: !top.readOnly
+            visible: top.editable
 
             spacing: s(Style.bigMargin)
 
@@ -132,12 +111,7 @@ BasePage {
 
                 padding: s(22)
 
-                onClicked: pageManager.enterPopup(Enums.Popup.Information, {
-                                                      "text" : Strings.exitWithoutSaveQuestion,
-                                                      "acceptButtonText": Strings.exit,
-                                                      "rejectButtonText": Strings.cancel,
-                                                      "acceptButtonType": Enums.PopupAction.Exit
-                                                  }, true)
+                onClicked: cancelClicked()
             }
 
             Items.ImageButton
@@ -152,12 +126,7 @@ BasePage {
 
                 padding: s(22)
 
-                onClicked: pageManager.enterPopup(Enums.Popup.Information, {
-                                                      "text" : Strings.saveQuestion,
-                                                      "acceptButtonText": Strings.save,
-                                                      "rejectButtonText": Strings.cancel,
-                                                      "acceptButtonType": Enums.PopupAction.Save
-                                                  })
+                onClicked: acceptClicked()
             }
         }
     }
