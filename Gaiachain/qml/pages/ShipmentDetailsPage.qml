@@ -11,9 +11,9 @@ BasePage {
     id: top
 
     property string shipmentId
-    property int resourceType
 
     Component.onCompleted: shipmentEventsProxyModel.setShipmentId(shipmentId)
+    Component.onDestruction: shipmentEventsProxyModel.clearShipmentId()
 
     Connections {
         target: shipmentEventsProxyModel
