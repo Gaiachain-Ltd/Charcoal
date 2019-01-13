@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.11
 import Qt.labs.calendar 1.0
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 Item {
     id: top
@@ -17,6 +18,9 @@ Item {
     property int daySpacing: 0
 
     property color circleColor: Style.textGreenColor
+    property int circleSize: s(Style.calendarBigDotSize)
+
+    property bool timberEnabled: commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
 
     signal titleClicked()
     signal dateClicked(date d)
@@ -41,25 +45,46 @@ Item {
 
             delegate: Column {
                 property bool currentMonth: model.month === grid.month
+                property date myDate: new Date(model.year, model.month, model.day)
+                property bool hasEvents: false
+
+                function updateData() {
+                    hasEvents = calendarRangeProxyModel.hasEvents(myDate);
+                }
+
+                Component.onCompleted: updateData();
+                Connections {
+                    target: calendarRangeProxyModel
+                    onEventsCommoditiesChanged: {
+                        if (date === myDate)
+                            updateData()
+                    }
+                }
+
                 spacing: daySpacing
+
                 BasicText {
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     text: model.day
                     verticalAlignment: Text.AlignTop
 
-                    opacity: currentMonth ? (utility.isWeekend(model.date) ? 0.4 : 1) : 0.05
+                    opacity: currentMonth ? (utility.isWeekend(model.date) ? 0.4 : 1) : 0.05 // TO_DO should be in Style!
                     font: grid.font
                 }
 
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    width: parent.width * 0.2
+                    width: circleSize
                     height: width
                     radius: width * 0.5
 
-                    color: currentMonth ? circleColor : "transparent"
+                    color: {
+                        return currentMonth && timberEnabled && hasEvents
+                                ? circleColor
+                                : "transparent"
+                    }
                 }
             }
         }

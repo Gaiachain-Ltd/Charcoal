@@ -3,85 +3,71 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.utility 1.0
 
 import "../items" as Items
 
 BasePage {
     id: top
 
-    // TO_DO change below to enums when model will be used
-    function typeToUrl(shipmentType) {
-        switch(shipmentType) {
-        case "forestery": return Style.timberImgUrl
-        case "logpark": return Style.logParkImgUrl
-        case "sawmill": return Style.sawmillImgUrl
-        case "export": return Style.exportImgUrl
-        default:
-            console.log("Wrong type of shipment:", shipmentType)
-        }
+    property string shipmentId
 
-        return ""
+    Component.onCompleted: shipmentEventsProxyModel.setShipmentId(shipmentId)
+    Component.onDestruction: shipmentEventsProxyModel.clearShipmentId()
+
+    Connections {
+        target: shipmentEventsProxyModel
+        onProxyChangeFinished: parseModelData()
     }
 
-    //TO_DO change it to proxy model with all data about shipment
     ListModel {
         id: shipmentModel
+    }
 
-        ListElement {
-            type: "forestery"
-            attributes: [
-                ListElement {
-                    title: "Apple"
-                    contentText: "Logs 1"
-                },
-                ListElement {
-                    title: "Orange"
-                    contentText: "Logs 2"
-                },
-                ListElement {
-                    title: "Banana"
-                    contentText: "Logs 3"
-                },
-                ListElement {
-                    title: "Kiwi"
-                    contentText: "Logs 4"
+    function createDataObject(attributes) {
+        // TO_DO find a better solution
+        return { "company": attributes.company,
+            "timestamp": Number(attributes.timestamp),
+            "place": Number(attributes.place),
+            "action": Number(attributes.action),
+            "location": attributes.location,
+            "shipmentId": attributes.shipmentId
+          };
+    }
+    function addModelData(currentPlace, eventsList) {
+        shipmentModel.append({ "place": Number(currentPlace), "events": eventsList})
+    }
+    function parseModelData() {
+        var companyEventsList = [];
+        var currentCompany = undefined;
+        var currentPlace = undefined;
+
+        for (var row = 0; row < shipmentEventsProxyModel.rowCount(); ++ row) {
+            var rowAttributes = shipmentEventsProxyModel.getRowAttributes(row);
+            if(currentCompany !== rowAttributes.company || currentPlace !== rowAttributes.place) {
+                if (currentCompany !== undefined || currentCompany !== undefined) {
+                    // save previous list
+                    addModelData(currentPlace, companyEventsList)
+                    companyEventsList = []
                 }
-            ]
+                currentCompany = rowAttributes.company
+                currentPlace = rowAttributes.place
+            }
+
+            var dataObject = createDataObject(rowAttributes);
+            dataObject["row"] = row
+            companyEventsList.push(dataObject)
         }
 
-        ListElement {
-            type: "logpark"
-            attributes: [
-                ListElement {
-                    title: "Log park"
-                    contentText: "Batch 1"
-                }
-            ]
+        // save last list
+        if (currentCompany !== undefined || currentCompany !== undefined) {
+            addModelData(currentPlace, companyEventsList)
         }
+    }
 
-        ListElement {
-            type: "sawmill"
-            attributes: [
-                ListElement {
-                    title: "Sawmill"
-                    contentText: "Batch 1"
-                }
-            ]
-        }
-
-        ListElement {
-            type: "export"
-            attributes: [
-                ListElement {
-                    title: "Timber for export"
-                    contentText: "Batch 1"
-                },
-                ListElement {
-                    title: "Timber for export"
-                    contentText: "Batch 2"
-                }
-            ]
-        }
+    function enterEventDetailsPage(row) {
+        var rowAttributes = shipmentEventsProxyModel.getRowAttributes(row);
+        pageManager.enter(Enums.Page.EventDetails, { "attributes": createDataObject(rowAttributes) })
     }
 
     Flickable {
@@ -125,6 +111,8 @@ BasePage {
                     model: shipmentModel
                     delegate: Items.ShipmentDetailsDelegate {
                         spacing: s(Style.bigMargin)
+
+                        onDelegateClicked: enterEventDetailsPage(row)
                     }
                 }
             }
@@ -250,7 +238,7 @@ BasePage {
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         fillMode: Image.PreserveAspectFit
-                        source: typeToUrl(modelData.placeType)
+                        source: Helpers.placeTypeToUrl(modelData.placeType)
                     }
                 }
             }

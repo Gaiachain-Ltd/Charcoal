@@ -45,6 +45,7 @@ Item {
         return result
     }
 
+    // TO_DO add handling of calendar page separetly as it is heavy component!
     StackView {
         id: stackView
         anchors.fill: parent

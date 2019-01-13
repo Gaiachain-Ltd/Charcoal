@@ -17,6 +17,8 @@ BasePage {
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
+    property bool timberEnabled: commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
+
     function enterShipmentDetailsPage(data) {
         pageManager.enter(Enums.Page.ShipmentDetails, data)
     }
@@ -26,15 +28,20 @@ BasePage {
         return new Date(year, month + 1, 0).getDate();
     }
 
+    onCurrentDayChanged: {
+        var today = new Date(currentYear, currentMonth, currentDay)
+        var tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        dateEventsRangeProxyModel.setDateTimeRange(today, tomorrow)
+    }
+
     onCurrentDateChanged: {
         var daysCount = daysInMonth(currentDate.getFullYear(), currentDate.getMonth())
         daysModel.clear()
 
         for (var i=1; i <= daysCount; ++i)
             daysModel.append({"day": i, "isWeekend": utility.isWeekend(new Date(currentDate.getFullYear(), currentDate.getMonth(), i))})
-
-        // TO_DO fix postioing at start
-        daysView.positionViewAtIndex(currentDate.getDate() - 1, ListView.Contain)
     }
 
     ListModel {
@@ -71,13 +78,14 @@ BasePage {
 
             property int visibleCount: 7
             property int selectedDay: top.currentDay
-
-            onSelectedDayChanged: positionViewAtIndex(selectedDay-1, ListView.Contain)
+            property int cellWidth: width / visibleCount
 
             Layout.fillWidth: true
             Layout.preferredHeight: s(Style.bigMargin) * 3
 
             model: daysModel
+
+            cacheBuffer: count * cellWidth
 
             orientation: ListView.Horizontal
             clip: true
@@ -85,9 +93,30 @@ BasePage {
             delegate: Item {
                 id: delegate
                 height: ListView.view.height
-                width: ListView.view.width / ListView.view.visibleCount
+                width: ListView.view.cellWidth
 
                 property bool isSelected: ListView.view.selectedDay === day
+                property date myDate: new Date(currentYear, currentMonth, day)
+                property bool hasEvents: false
+
+                function updateData() {
+                    hasEvents = calendarRangeProxyModel.hasEvents(myDate);
+                }
+
+                Connections {
+                    target: calendarRangeProxyModel
+                    onEventsCommoditiesChanged: {
+                        if (date === myDate)
+                            updateData()
+                    }
+                }
+                Component.onCompleted: {
+                    updateData();
+
+                    // TO_DO find a better solution (center!)
+                    if (delegate.isSelected)
+                        ListView.view.positionViewAtIndex(ListView.view.selectedDay-1, ListView.Center)
+                }
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -102,8 +131,8 @@ BasePage {
                         Items.BasicText {
                             anchors.centerIn: parent
                             text: day
-                            color: delegate.isSelected ? "white" : "black"
-                            opacity: isWeekend ? 0.3 : 1
+                            color: delegate.isSelected ? "white" : "black" // TO_DO should be in Style!
+                            opacity: isWeekend ? 0.3 : 1 // TO_DO should be in Style!
                         }
                     }
                     Rectangle {
@@ -111,7 +140,9 @@ BasePage {
                         Layout.preferredHeight: s(20)
                         Layout.preferredWidth: s(20)
                         radius: width * 0.5
-                        color: Style.textGreenColor
+                        color: timberEnabled && hasEvents
+                               ? Style.textGreenColor
+                               : "transparent"
                     }
                 }
 
@@ -127,24 +158,11 @@ BasePage {
             Layout.fillHeight: true
 
             delegateHeight: s(100)
-            backgroundColor: "#FFF5F5F5"
+            backgroundColor: "#FFF5F5F5"    // TO_DO should be in Style!
 
             onDelegateClicked: top.enterShipmentDetailsPage(data)
 
-            viewModel: ListModel { //TO_DO
-                ListElement {
-                    name: "Apple"
-                    cost: 2.45
-                }
-                ListElement {
-                    name: "Orange"
-                    cost: 3.25
-                }
-                ListElement {
-                    name: "Banana"
-                    cost: 1.95
-                }
-            }
+            viewModel: dateEventsRangeProxyModel
         }
     }
 }

@@ -82,4 +82,83 @@ Wydaje mi się że klikanie w obrazki byłoby bardziej intuicyjne.
 3.I tak, i nie  "..." włącza/wyłącza możliwość zaznaczenia kilku surowców. Mój pomysł. Stwierdziłem, że z jednej strony ciekawą opcją będzie możliwość pokazania różnych surowców "w kupie", a z drugiej strony, dobrze, żeby surowce można było przełączać, bez potrzeby "odklikiwania" właśnie włączonego.
 4.W sumie takie rzeczy na razie pomijałem, bo wolałem się skupić na funkcjonalności, ale dorobię.
 
+{
+  "assignement_timestamp": 1547087274,
+  "commodity_type": "TIMBER",
+  "finished_timestamp": null,
+  "generation_timestamp": 1547087158,
+  "generator_public_key": "02af5bc172757735b1492e51ebb5a824b700c06b02fb40c7ebb7c4d588bfe1535a",
+  "id": "00fb-ee9n-ppid",
+  "is_finished": false,
+  "is_initialized": true,
+  "history": [
+      {
+        "timestamp": 1547087274,
+        "location": [
+          5.53466,
+          -9.507254
+        ],
+        "company_name": "Jon Doe Inc.",
+        "role": "PRODUCER",
+        "action": "ARRIVED"
+      },
+      {
+        "timestamp": 1547087374,
+        "location": [
+          5.53466,
+          -9.507254
+        ],
+        "company_name": "Jon Doe Inc.",
+        "role": "PRODUCER",
+        "action": "DEPARTED"
+      },
+      {
+        "timestamp": 1547097374,
+        "location": [
+          5.83466,
+          -9.207254
+        ],
+        "company_name": "Log park comapny",
+        "role": "LOG_PARK",
+        "action": "ARRIVED"
+      }
+    ],
+    "id": "00fb-ee9n-ppid",
+    "owner_public_key": "02af5bc172757735b1492e51ebb5a824b700c06b02fb40c7ebb7c4d588bfe1535a",
+    "status": "ARRIVED"
+  }
+}
+
+public key to klucz publiczny agenta. Odpowiednik id, żebym wiedział który to był. Obiekt Agent to detale agenta (masz to np. na liście agentów).
+3:47 PM
+generation_timestamp - kiedy entity był wygenerowany
+assignment_timestamp - kiedy pierwszy raz zeskanowany i włączony do chaina
+3:47 PM
+dam odpowiednie opisy w swaggerze potem
+3:48 PM
+w swaggerze na dole masz listę modeli i większość (prócz tych ostatnio dodanych) ma opisy i example. A wa kazdym endpoincie dodatkowe info o danych requesta i response i lista rzucanych errorów
+
+
+hej, update - detale (i historia) entities gotowa. Tu lista tych, które są w chainie:
+{
+"id":  "r5et-le6l-caip"
+} {
+"id":  "i8et-kb6b-t62u"
+} {
+"id":  "d4dv-x6kx-9y82"
+} {
+"id":  "uzna-58nc-l8pm"
+} {
+"id":  "u6kx-d56p-ryoc"
+} {
+"id":  "he83-mn4r-else"
+} {
+"id":  "l7qd-jhkd-drd6"
+} {
+"id":  "ras8-gv52-iwio"
+}
+4:06 PM
+endpoint z listą i filtrami będzie niedługo
+4:07 PM
+z jakiegoś powodu swagger się sypie i nie daje zrobić requestu na detail endpoincie (rzuca errorem, że id nie podane). Z postmana działa normalnie.
 

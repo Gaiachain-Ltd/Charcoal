@@ -23,7 +23,18 @@ BasePage {
     id: top
 
     function enterEventDetailsPage() {
-        pageManager.enter(Enums.Page.EditableEventDetails, {"commodityId": scannedId})
+        // TO_DO get real attributes from userManager (QVariantMap)
+        var attributes = {
+            "company": "Harvest Inc.",
+            "place": Number(Enums.PlaceType.Forestry),
+            "location": { "lat": 1.176953, "lon": 14.819439 }, // TO_DO should be Location type
+        }
+
+        attributes["action"] = Number(Enums.PlaceAction.Arrived) // TO_DO how to know if departure or arrival?
+        attributes["timestamp"] = Number(new Date())
+        attributes["shipmentId"] = scannedId
+
+        pageManager.enter(Enums.Page.EditableEventDetails, { "attributes": attributes })
     }
 
     function previewCapturedImage(result) {

@@ -3,22 +3,32 @@
 
 #include <QSortFilterProxyModel>
 #include <QDateTime>
+#include <QDate>
+#include <QSet>
 
+#include "abstractsortfilterproxymodel.h"
 #include "../common/enums.h"
 
 class CommodityProxyModel;
 
-class CommodityDateRangeProxyModel : public QSortFilterProxyModel
+class CommodityDateRangeProxyModel : public AbstractSortFilterProxyModel
 {
     Q_OBJECT
 public:
     explicit CommodityDateRangeProxyModel(QObject *parent = nullptr);
 
-    Q_INVOKABLE void setDateTimeRange(QDateTime start, QDateTime end);
+    Q_INVOKABLE void setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime);
+    Q_INVOKABLE bool hasEvents(const QDate &date) const;
+    Q_INVOKABLE QList<Enums::CommodityType> eventsCommodityTypes(const QDate &date) const;
 
     void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
 
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+signals:
+    void dateRangeChanged() const;
+    void eventsCommoditiesChanged(const QDate &date) const;
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
     CommodityProxyModel *m_commodityProxyModel = nullptr;
@@ -26,8 +36,13 @@ private:
     QDateTime m_startDateTime;
     QDateTime m_endDateTime;
 
-    bool commodityProxyModelContainsId(int shipmentId) const; //TO_DO make it faster
+    QHash<QDate, QHash<Enums::CommodityType, int>> m_dateEventsCommodityTypes; // should NOT contains CommodityTypes of 0 count!
+
     inline bool isInDateTimeRange(QDateTime &dt) const;
+
+private slots:
+    void onRowsInserted(const QModelIndex &parent, int first, int last);
+    void onRowsRemoved(const QModelIndex &parent, int first, int last);
 };
 
 #endif // COMMODITYDATERANGEPROXYMODEL_H

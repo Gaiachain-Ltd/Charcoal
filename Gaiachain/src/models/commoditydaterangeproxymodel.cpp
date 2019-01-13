@@ -4,67 +4,108 @@
 #include "eventmodel.h"
 #include "shipmentmodel.h"
 
-CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
-{
+#include <QDebug>
 
+CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
+    : AbstractSortFilterProxyModel(parent)
+{
+    setDynamicSortFilter(true);
+
+    connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityDateRangeProxyModel::onRowsInserted, Qt::QueuedConnection);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityDateRangeProxyModel::onRowsRemoved, Qt::QueuedConnection);
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
 {
     m_commodityProxyModel = commodityProxyModel;
-    connect(m_commodityProxyModel, &CommodityProxyModel::commodityTypeChanged, this, &CommodityDateRangeProxyModel::invalidateFilter);
+    connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilterNotify);
 }
 
-#include <QDebug>
-
-void CommodityDateRangeProxyModel::setDateTimeRange(QDateTime start, QDateTime end)
+void CommodityDateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime)
 {
-    m_startDateTime = start;
-    m_endDateTime = end;
+    if (m_startDateTime == startDateTime
+            && m_endDateTime == endDateTime)
+        return;
 
-    qDebug() << "Start end dates" << start << end;
-    invalidateFilter();
+    qDebug() << "Start end dates" << startDateTime << endDateTime;
+    m_startDateTime = startDateTime;
+    m_endDateTime = endDateTime;
+
+    invalidateFilterNotify();
+    emit dateRangeChanged();
+}
+
+bool CommodityDateRangeProxyModel::hasEvents(const QDate &date) const
+{
+    auto val = eventsCommodityTypes(date);
+    return !eventsCommodityTypes(date).isEmpty();
+}
+
+QList<Enums::CommodityType> CommodityDateRangeProxyModel::eventsCommodityTypes(const QDate &date) const
+{
+    return m_dateEventsCommodityTypes.value(date).keys();
 }
 
 bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (sourceRow < 0 || sourceRow > sourceModel()->rowCount())
-        return false;
-
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
+    auto timestamp = sourceModel()->data(index, EventModel::Timestamp).toDateTime();
 
-    auto arrivalDateTime = sourceModel()->data(index, EventModel::ArrivalDateTime).toDateTime();
-    auto departureDateTime = sourceModel()->data(index, EventModel::DepartureDateTime).toDateTime();
-
-    //qDebug() << "Arrival/Departure" << arrivalDateTime << departureDateTime;
-
-    if (isInDateTimeRange(arrivalDateTime) || isInDateTimeRange(departureDateTime)) {
-        auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toInt();
-        return commodityProxyModelContainsId(shipmentId);
+    if (isInDateTimeRange(timestamp)) {
+        auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toString();
+        return m_commodityProxyModel->hasShipment(shipmentId);
     }
-
-    return false;
-}
-
-bool CommodityDateRangeProxyModel::commodityProxyModelContainsId(int shipmentId) const
-{
-    Q_ASSERT(m_commodityProxyModel != nullptr);
-
-    const int rowCount = m_commodityProxyModel->rowCount();
-
-    for (int i = 0; i < rowCount; ++i) {
-        if (m_commodityProxyModel->data(
-                    m_commodityProxyModel->index(i, 0),ShipmentModel::ShipmentId).toInt() == shipmentId) {
-            return true;
-        }
-    }
-
     return false;
 }
 
 bool CommodityDateRangeProxyModel::isInDateTimeRange(QDateTime &dt) const
 {
-    return m_startDateTime <= dt && dt <= m_endDateTime;
+    return m_startDateTime <= dt && dt < m_endDateTime;
+}
+
+void CommodityDateRangeProxyModel::onRowsInserted(const QModelIndex &parent, int first, int last)
+{
+    auto changedDates = QSet<QDate>{};
+
+    for (auto row = first; row <= last; ++row) {
+        auto rowIndex = index(row, 0, parent);
+
+        auto eventDate = data(rowIndex, EventModel::Timestamp).toDateTime().date();
+        auto shipmentId = data(rowIndex, EventModel::ShipmentId).toString();
+
+        auto commodityType = m_commodityProxyModel->shipmentCommodityType(shipmentId);
+
+        auto &dateEventsCommodities = m_dateEventsCommodityTypes[eventDate];
+        dateEventsCommodities[commodityType]++;
+        if (dateEventsCommodities.value(commodityType) == 1)
+            changedDates.insert(eventDate);
+    }
+
+    for (const auto &date : changedDates)
+        emit eventsCommoditiesChanged(date);
+}
+
+void CommodityDateRangeProxyModel::onRowsRemoved(const QModelIndex &parent, int first, int last)
+{
+    auto changedDates = QSet<QDate>{};
+
+    for (auto row = first; row <= last; ++row) {
+        auto rowIndex = index(row, 0, parent);
+
+        auto eventDate = data(rowIndex, EventModel::Timestamp).toDateTime().date();
+        auto shipmentId = data(rowIndex, EventModel::ShipmentId).toString();
+
+        auto commodityType = m_commodityProxyModel->shipmentCommodityType(shipmentId);
+
+        auto &dateEventsCommodities = m_dateEventsCommodityTypes[eventDate];
+        dateEventsCommodities[commodityType]--;
+        if (dateEventsCommodities.value(commodityType) <= 0) {
+            dateEventsCommodities.remove(commodityType);
+            changedDates.insert(eventDate);
+        }
+    }
+
+    for (const auto &date : changedDates)
+        emit eventsCommoditiesChanged(date);
 }
 

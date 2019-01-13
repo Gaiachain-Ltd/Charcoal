@@ -14,6 +14,7 @@ public:
     explicit MainController(QObject *parent = nullptr);
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
+
 signals:
 
 public slots:

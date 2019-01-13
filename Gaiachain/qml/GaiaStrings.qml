@@ -42,9 +42,9 @@ QtObject {
 
     // Event Details Page
     readonly property string companyName: qsTr("Company name")
-    readonly property string gpsHarvestLocation: qsTr("Location of harvest (GPS point)")
-    readonly property string harvestDate: qsTr("Date of harvest")
+    readonly property string gpsLocationOf: qsTr("Location of %1 (GPS point)")
     readonly property string logID: qsTr("Log ID")
+    readonly property string dateTimeArrival: qsTr("Date and time of arrival")
     readonly property string dateTimeDeparture: qsTr("Date and time of departure")
 
     // popup
@@ -60,4 +60,15 @@ QtObject {
     readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
     readonly property string logoutQuestion: qsTr("Do you want to logout?")
 
+    // enums
+    readonly property string placeTypeForestery: qsTr("Forestery")
+    readonly property string placeTypeLogPark: qsTr("Log Park")
+    readonly property string placeTypeSawmill: qsTr("Sawmill")
+    readonly property string placeTypeExport: qsTr("Export")
+
+    readonly property string placeActionArrived: qsTr("Arrived")
+    readonly property string placeActionDeparted: qsTr("Departed")
+
+    readonly property string placeActionArrivedAction: qsTr("Arrived to")
+    readonly property string placeActionDepartedAction: qsTr("Departed from")
 }

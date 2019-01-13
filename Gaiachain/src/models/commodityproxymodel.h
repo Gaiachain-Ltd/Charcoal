@@ -3,10 +3,12 @@
 
 #include <QSortFilterProxyModel>
 #include <QSet>
+#include <QHash>
 
+#include "abstractsortfilterproxymodel.h"
 #include "../common/enums.h"
 
-class CommodityProxyModel : public QSortFilterProxyModel
+class CommodityProxyModel : public AbstractSortFilterProxyModel
 {
     Q_OBJECT
 public:
@@ -15,13 +17,22 @@ public:
     Q_INVOKABLE void setCommodityType(Enums::CommodityType filterType, bool enable = true);
     Q_INVOKABLE bool commodityEnabled(Enums::CommodityType filterType) const;
 
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    bool hasShipment(const QString& shipmentId) const;
+    Enums::CommodityType shipmentCommodityType(const QString& shipmentId) const;
 
 signals:
     void commodityTypeChanged() const;
 
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+
 private:
     QSet<Enums::CommodityType> m_enabledCommodites;
+    QHash<QString, Enums::CommodityType> m_shipmentsType;
+
+private slots:
+    void onRowsInserted(const QModelIndex &parent, int first, int last);
+    void onRowsRemoved(const QModelIndex &parent, int first, int last);
 };
 
 #endif // COMMODITYPROXYMODEL_H

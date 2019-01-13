@@ -21,9 +21,9 @@ public:
 
     explicit PageSectionsModel(QObject *parent = nullptr);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, const int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, const int role = Qt::DisplayRole) const override;
+    QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE int maxSectionsDepth() const;
 

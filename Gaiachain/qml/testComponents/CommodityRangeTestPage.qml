@@ -33,8 +33,8 @@ Item {
                 signal commodityClicked()
 
                 onClicked: {
-                    commodityProxy.setCommodityType(res[prevIdx], false)
-                    commodityProxy.setCommodityType(res[currentIdx])
+                    commodityProxyModel.setCommodityType(res[prevIdx], false)
+                    commodityProxyModel.setCommodityType(res[currentIdx])
 
                     commodityClicked()
 
@@ -51,7 +51,7 @@ Item {
             Component.onCompleted: {
                 var startDate = new Date(2016, 1, 1);
                 var endDate = new Date(2020, 1, 1);
-                commodityRangeProxy.setDateTimeRange(startDate, endDate)
+                calendarRangeProxyModel.setDateTimeRange(startDate, endDate)
             }
         }
 
@@ -65,14 +65,14 @@ Item {
 
             property string commoditiesNames: ""
             Connections {
-                target: commodityProxy
+                target: commodityProxyModel
                 onCommodityTypeChanged: {
                     rect.commoditiesNames = ""
-                    if (commodityProxy.commodityEnabled(Enums.CommodityType.Timber))
+                    if (commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber))
                         rect.commoditiesNames += " Timber "
-                    if (commodityProxy.commodityEnabled(Enums.CommodityType.Charcoal))
+                    if (commodityProxyModel.commodityEnabled(Enums.CommodityType.Charcoal))
                         rect.commoditiesNames += " Charcoal "
-                    if (commodityProxy.commodityEnabled(Enums.CommodityType.Cocoa))
+                    if (commodityProxyModel.commodityEnabled(Enums.CommodityType.Cocoa))
                         rect.commoditiesNames += " Cocoa "
                     console.log("Current commodities", rect.commoditiesNames)
                 }
@@ -81,7 +81,7 @@ Item {
             ListView {
                 anchors.fill: parent
 
-                model: commodityRangeProxy
+                model: calendarRangeProxyModel
 
                 delegate: Rectangle {
                     width: parent.width

@@ -8,6 +8,8 @@
 
 #include "../models/commodityproxymodel.h"
 #include "../models/commoditydaterangeproxymodel.h"
+#include "../models/shipmenteventsproxy.h"
+#include "../models/latesteventsproxy.h"
 
 class DataManager : public AbstractManager
 {
@@ -15,7 +17,7 @@ class DataManager : public AbstractManager
 public:
     explicit DataManager(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
 signals:
 
@@ -29,7 +31,10 @@ private:
     ShipmentModel m_shipmentModel;
 
     CommodityProxyModel m_commodityProxyModel;
-    CommodityDateRangeProxyModel m_commodityDateRangeProxyModel;
+    CommodityDateRangeProxyModel m_calendarRangeProxyModel;
+    CommodityDateRangeProxyModel m_dateEventsRangeProxyModel;
+    ShipmentEventsProxy m_shipmentEventsProxyModel;
+    LatestEventsProxy m_latestEventsProxyModel;
 };
 
 #endif // DATAMANAGER_H

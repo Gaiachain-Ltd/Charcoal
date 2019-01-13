@@ -21,8 +21,8 @@ bool EventModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if (role < Qt::UserRole || role >= ModelRole::LastRole)
         return false;
 
-    int shiftedIndex = role - static_cast<int>(ModelRole::EventId);
-    m_data[index.row()][shiftedIndex] = value;
+    int shiftedIdx = shiftedIndex(role);
+    m_data[index.row()][shiftedIdx] = value;
 
     emit dataChanged(index, index, {role});
 
@@ -37,11 +37,11 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
     if (index.row() < 0 || index.row() > m_data.count())
         return {};
 
-    int shiftedIndex = role - static_cast<int>(ModelRole::EventId);
+    int shiftedIdx = shiftedIndex(role);
     auto values = m_data[index.row()];
 
-    if (0 <= shiftedIndex && shiftedIndex < values.count())
-        return values[shiftedIndex];
+    if (0 <= shiftedIdx && shiftedIdx < values.count())
+        return values[shiftedIdx];
 
     Q_ASSERT(false);
     return {};
@@ -62,7 +62,7 @@ void EventModel::appendData(const Gaia::ModelData &inData)
     int newIndex = modelCount;
     for (const auto &dataRow : inData) {
         QVariantList rowToInsert;
-        int currentRole = EventId;
+        int currentRole = Qt::UserRole;
         for (const auto &data : dataRow) {
             if (currentRole == LastRole)
                 break;
@@ -80,4 +80,9 @@ void EventModel::appendData(const Gaia::ModelData &inData)
     }
 
     endInsertRows();
+}
+
+int EventModel::shiftedIndex(const int idx) const
+{
+    return idx - static_cast<int>(Qt::UserRole);
 }

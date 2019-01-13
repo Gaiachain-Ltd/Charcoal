@@ -2,6 +2,8 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
+import com.gaiachain.utility 1.0
 
 Item {
     id: top
@@ -69,7 +71,7 @@ Item {
 
                         wrapMode: Text.WordWrap
                         elide: Text.ElideNone
-                        text: "TEST fjhjkf ffjdkf d gfldf jdlfkljfkl d f fd fklklfds"
+                        text: "Logs from " + Helpers.placeTypeToString(Number(place)).toLowerCase() + " concession " + company + "."
                     }
 
                     SvgImage {
@@ -95,7 +97,7 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: delegateClicked({"idx": index})
+                onClicked: delegateClicked({ "shipmentId": shipmentId })
             }
         }
     }
