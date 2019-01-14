@@ -26,9 +26,7 @@ EventDetailsPage {
             switch(action) {
             case Enums.PopupAction.Save:
                 sessionManager.putEntity(attributes.shipmentId, attributes.action)
-                dataManager.clearModels()
                 mainOverlayVisible = true
-                dataRequestTimer.start()
                 break
             case Enums.PopupAction.Exit:
                 pageManager.backTo(pageManager.homePage())
