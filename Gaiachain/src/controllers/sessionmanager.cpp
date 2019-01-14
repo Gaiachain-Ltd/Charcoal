@@ -119,11 +119,15 @@ void SessionManager::getEntityAction(const QString &id, const int role)
 
             if (status == QStringLiteral("ARRIVED")) {
                 action = Enums::PlaceAction::Arrived;
-            } else if (status == QStringLiteral("DEPARTED")) {
-                action = Enums::PlaceAction::Departed;
+            } else {
+                emit entityActionDownloadedError(id, true);
             }
-        } else if (ownerRoleEnum != role - 1) {
-            // Error!
+        } else if (ownerRoleEnum < role - 1) {
+            // Error - not arrived yet
+            emit entityActionDownloadedError(id, false);
+            return;
+        } else if (ownerRoleEnum > role) {
+            // Error - already departed
             emit entityActionDownloadedError(id, true);
             return;
         }
