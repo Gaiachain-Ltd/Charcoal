@@ -1,6 +1,7 @@
 ﻿import QtQuick 2.11
 
 import QtQuick.Layouts 1.11
+import QtQuick.Controls 2.5
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
@@ -177,7 +178,33 @@ BasePage {
 
                         onClicked: {
                             userManager.userType = Enums.UserType.NotLoggedUser
+                            sessionManager.getEntity()
                             top.enterViewTypePage()
+                        }
+                    }
+                }
+
+                ComboBox
+                {
+                    Layout.alignment: Qt.AlignHCenter
+                    model: ["Producer", "Log", "Sawmill", "Exporter"]
+
+                    onActivated: {
+                        switch(index) {
+                        case 0:
+                            loginInput.text = "producer@gaiachain.io"
+                            break
+                        case 1:
+                            loginInput.text = "logpark@gaiachain.io"
+                            break
+                        case 2:
+                            loginInput.text = "sawmill@gaiachain.io"
+                            break
+                        case 3:
+                            loginInput.text = "exporter@gaiachain.io"
+                            break
+                        default:
+                            break
                         }
                     }
                 }

@@ -18,11 +18,7 @@ EntityRequest::EntityRequest(const QString &token, const RequestType requestType
     : BaseRequest(requestType == RequestType::RequestUninitializedGet ? ADDRESS_UNINITIALIZED : ADDRESS, token)
     , m_requestType(static_cast<RequestType>(requestType))
 {
-    if (!token.isEmpty()) {
-        mType = Type::Get;
-    } else {
-        qCritical() << "Error: missing entities GET token";
-    }
+    mType = Type::Get;
 }
 
 EntityRequest::EntityRequest(const QString &token, const int count, const QString &type)
@@ -45,7 +41,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &id)
     : BaseRequest(ADDRESS_DATA.arg(id), token)
     , m_requestType(RequestEntityGet)
 {
-    if (!token.isEmpty() && !id.isEmpty()) {
+    if (!id.isEmpty()) {
         mType = Type::Get;
     } else {
         qCritical() << "Error: missing entity GET info" << id;
@@ -56,33 +52,29 @@ EntityRequest::EntityRequest(const QString &token, const QString &dateFrom, cons
     : BaseRequest(ADDRESS_CALENDAR, token)
     , m_requestType(RequestCalendar)
 {
-    if (!token.isEmpty() && (!dateFrom.isEmpty() || !dateTo.isEmpty())) {
-        QJsonObject object;
-        if (!dateFrom.isEmpty()) {
-            const int timestampFrom = dateFrom.toInt();
-            if (timestampFrom > 0) {
-                object.insert(Tags::timestampFrom, QJsonValue(timestampFrom));
-            } else {
-                object.insert(Tags::dateFrom, QJsonValue(dateFrom));
-            }
+    QJsonObject object;
+    if (!dateFrom.isEmpty()) {
+        const int timestampFrom = dateFrom.toInt();
+        if (timestampFrom > 0) {
+            object.insert(Tags::timestampFrom, QJsonValue(timestampFrom));
+        } else {
+            object.insert(Tags::dateFrom, QJsonValue(dateFrom));
         }
-        if (!dateTo.isEmpty()) {
-            const int timestampTo = dateFrom.toInt();
-            if (timestampTo > 0) {
-                object.insert(Tags::timestampTo, QJsonValue(timestampTo));
-            } else {
-                object.insert(Tags::dateTo, QJsonValue(dateTo));
-            }
-            mRequestDocument.setObject(object);
-        }
-
-        mType = Type::Get;
-    } else {
-        qCritical() << "Error: missing entities GET by date info" << dateFrom << dateTo;
     }
+    if (!dateTo.isEmpty()) {
+        const int timestampTo = dateFrom.toInt();
+        if (timestampTo > 0) {
+            object.insert(Tags::timestampTo, QJsonValue(timestampTo));
+        } else {
+            object.insert(Tags::dateTo, QJsonValue(dateTo));
+        }
+        mRequestDocument.setObject(object);
+    }
+
+    mType = Type::Get;
 }
 
-EntityRequest::EntityRequest(const QString &token, const QString &id, const EntityAction action)
+EntityRequest::EntityRequest(const QString &token, const QString &id, const Enums::PlaceAction action)
     : BaseRequest(ADDRESS_DATA.arg(id), token)
     , m_requestType(RequestEntityPut)
 {
@@ -90,11 +82,11 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enti
         QJsonObject object;
         QString actionString;
         switch(action) {
-        case EntityArrived:
-            actionString = QStringLiteral("ARRIVED");
-            break;
-        case EntityDeparted:
+        case Enums::PlaceAction::Departed:
             actionString = QStringLiteral("DEPARTED");
+            break;
+        default:
+            actionString = QStringLiteral("ARRIVED");
             break;
         }
         object.insert(Tags::action, QJsonValue(actionString));
@@ -115,5 +107,5 @@ bool EntityRequest::isTokenRequired() const
 
 void EntityRequest::parse()
 {
-    qDebug() << "-------- ENTITY_RESPONSE" << m_requestType << mReplyDocument;
+    BaseRequest::parse();
 }

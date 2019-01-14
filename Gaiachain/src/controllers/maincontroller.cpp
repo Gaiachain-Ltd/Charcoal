@@ -34,6 +34,7 @@ void MainController::setupConnections()
     m_sessionManager.setOverlayManager(&m_overlayManager);
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &SessionManager::onTokenChanged);
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
+    connect(&m_sessionManager, &SessionManager::entityLoaded, &m_dataManager, &DataManager::onEntityLoaded, Qt::DirectConnection);
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)

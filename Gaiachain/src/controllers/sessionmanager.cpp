@@ -3,6 +3,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QJsonArray>
+
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(session, "session")
 
@@ -40,6 +42,7 @@ void SessionManager::login(const QString &email, const QString &password)
     auto finishLambda = [&](const QJsonDocument &reply) {
         emit loginFinished(reply);
         m_overlayManager->setLoginRequest(false);
+        this->getEntity();
     };
 
     auto errorLambda = [&]() {
@@ -55,12 +58,22 @@ void SessionManager::login(const QString &email, const QString &password)
 
 void SessionManager::getEntity()
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token, EntityRequest::RequestUninitializedGet);
+    auto request = QSharedPointer<EntityRequest>::create(m_token);
 
     auto errorLambda = [&](const QString &msgs, const int errorCode) {
         qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
     };
 
+    auto finishLambda = [&](const QJsonDocument &reply) {
+        const QJsonArray &array = reply.array();
+        QJsonArray::const_iterator it = array.constBegin();
+        while(it != array.constEnd()) {
+            this->getEntity((*it).toString());
+            ++it;
+        }
+    };
+
+    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     m_client.send(request);
@@ -74,6 +87,11 @@ void SessionManager::getEntity(const QString &id)
         qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
     };
 
+    auto finishLambda = [&](const QJsonDocument &reply) {
+        emit entityLoaded(reply);
+    };
+
+    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     m_client.send(request);
@@ -81,7 +99,7 @@ void SessionManager::getEntity(const QString &id)
 
 void SessionManager::putEntity(const QString &id)
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token, id, EntityRequest::EntityDeparted);
+    auto request = QSharedPointer<EntityRequest>::create(m_token, id, Enums::PlaceAction::Departed);
 
     auto errorLambda = [&](const QString &msgs, const int errorCode) {
         qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;

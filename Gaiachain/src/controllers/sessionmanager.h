@@ -33,6 +33,7 @@ private:
 signals:
     void displayLoginError(const QString &error, const QString &button1, const QString &button2) const;
     void loginFinished(const QJsonDocument &doc) const;
+    void entityLoaded(const QJsonDocument &doc) const;
 };
 
 #endif // SESSION_H

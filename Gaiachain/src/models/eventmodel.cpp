@@ -1,6 +1,7 @@
 #include "eventmodel.h"
 
 #include <QDateTime>
+#include <QDebug>
 
 #include "../common/enums.h"
 

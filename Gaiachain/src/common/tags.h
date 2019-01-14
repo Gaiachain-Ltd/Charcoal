@@ -16,8 +16,13 @@ namespace Tags {
     const QLatin1String timestampFrom = QLatin1String("from_timestamp");
     const QLatin1String dateFrom = QLatin1String("from_date");
     const QLatin1String timestampTo = QLatin1String("to_timestamp");
+    const QLatin1String timestamp = QLatin1String("timestamp");
     const QLatin1String dateTo = QLatin1String("to_date");
     const QLatin1String action = QLatin1String("action");
+    const QLatin1String history = QLatin1String("history");
+    const QLatin1String agent = QLatin1String("agent");
+    const QLatin1String companyName = QLatin1String("company_name");
+    const QLatin1String location = QLatin1String("location");
 };
 
 #endif // TAGS_H

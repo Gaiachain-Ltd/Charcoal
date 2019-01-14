@@ -2,6 +2,8 @@
 
 #include "eventmodel.h"
 
+#include <QDebug>
+
 LatestEventsProxy::LatestEventsProxy(QObject *parent)
     : AbstractSortFilterProxyModel (parent)
 {
