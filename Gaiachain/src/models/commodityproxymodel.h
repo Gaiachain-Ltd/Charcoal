@@ -33,6 +33,7 @@ private:
 private slots:
     void onRowsInserted(const QModelIndex &parent, int first, int last);
     void onRowsRemoved(const QModelIndex &parent, int first, int last);
+    void onModelReset();
 };
 
 #endif // COMMODITYPROXYMODEL_H

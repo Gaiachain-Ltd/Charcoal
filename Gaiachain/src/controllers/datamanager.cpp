@@ -3,21 +3,27 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QDateTime>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QDebug>
 
 #include "../common/enums.h"
 #include "../common/globals.h"
 #include "../common/location.h"
+#include "../common/tags.h"
+#include "../helpers/utility.h"
 
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
 {
     setupModels();
-    populateModels();
+//    populateModels();
 }
 
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
+    engine.rootContext()->setContextProperty(QStringLiteral("dataManager"), this);
     engine.rootContext()->setContextProperty(QStringLiteral("commodityProxyModel"), &m_commodityProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("calendarRangeProxyModel"), &m_calendarRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
@@ -33,10 +39,59 @@ void DataManager::setupModels()
     m_calendarRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
     m_dateEventsRangeProxyModel.setSourceModel(&m_eventModel);
+    m_dateEventsRangeProxyModel.setSortingTypeAndRole(EventModel::Timestamp, 0, Qt::DescendingOrder);
     m_dateEventsRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
     m_shipmentEventsProxyModel.setSourceModel(&m_eventModel);
     m_latestEventsProxyModel.setSourceModel(&m_eventModel);
+}
+
+void DataManager::onEntityLoaded(const QJsonDocument &doc)
+{
+    Gaia::ModelData eventData;
+
+    const QJsonObject &obj = doc.object();
+    const QString shipmentId = obj.value(Tags::id).toString();
+    const QJsonArray &history = obj.value(Tags::history).toArray();
+    QJsonArray::const_iterator it = history.constBegin();
+
+    while (it != history.constEnd()) {
+        const QJsonObject &historyObj = (*it).toObject();
+        const QDateTime date = QDateTime::fromSecsSinceEpoch(static_cast<uint>(historyObj.value(Tags::timestamp).toInt(0)));
+        const QJsonObject agent = historyObj.value(Tags::agent).toObject();
+        const QString companyName = agent.value(Tags::companyName).toString();
+        const QString agentRole = agent.value(Tags::role).toString();
+        const QString action = historyObj.value(Tags::action).toString();
+        Enums::PlaceAction placeAction = Enums::PlaceAction::Arrived;
+        // TO_DO handling strings to enum conversions
+        if (action == QStringLiteral("DEPARTED"))
+            placeAction = Enums::PlaceAction::Departed;
+        const QJsonArray locationArray = historyObj.value(Tags::location).toArray();
+        Location loc;
+        loc.lat = locationArray.at(0).toDouble();
+        loc.lon = locationArray.at(1).toDouble();
+
+        eventData.append({shipmentId,
+                          date,
+                          QVariant::fromValue(loc),
+                          companyName,
+                          QVariant::fromValue(Utility::instance()->userTypeFromString(agentRole)),
+                          QVariant::fromValue(placeAction)
+                         });
+        ++it;
+    }
+
+    Gaia::ModelData shipmentData;
+    shipmentData.append({shipmentId, QVariant::fromValue(Enums::CommodityType::Timber)});
+    m_shipmentModel.appendData(shipmentData);
+
+    m_eventModel.appendData(eventData);
+}
+
+void DataManager::clearModels()
+{
+    m_eventModel.clearModel();
+    m_shipmentModel.clearModel();
 }
 
 void DataManager::populateModels()

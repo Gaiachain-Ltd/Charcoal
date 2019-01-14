@@ -5,6 +5,12 @@
 
 #include <QDebug>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
+#include "../common/tags.h"
+#include "../common/location.h"
+#include "../helpers/utility.h"
 
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
@@ -34,9 +40,26 @@ Enums::UserType UserManager::getUserType() const
 
 void UserManager::parseLoginData(const QJsonDocument &doc)
 {
-    setUserType(Enums::UserType::Producer);
+    const QJsonObject obj = doc.object();
 
-    qDebug() << "------ RECEIVED LOGIN DATA" << doc;
+    m_userData.insert(Tags::company, obj.value(Tags::companyName).toString());
+    const QJsonArray locationArray = obj.value(Tags::location).toArray();
+    Location location;
+    location.lat = locationArray.at(0).toDouble();
+    location.lon = locationArray.at(1).toDouble();
+    m_userData.insert(Tags::location, QVariant::fromValue(location));
+    const QString &role = obj.value(Tags::role).toString();
+    const Enums::UserType userType = Utility::instance()->userTypeFromString(role);
+    m_userData.insert(Tags::place, static_cast<int>(userType));
+
+    emit tokenChanged(obj.value(Tags::token).toString());
+
+    setUserType(userType);
+}
+
+QVariantMap UserManager::userData() const
+{
+    return m_userData;
 }
 
 void UserManager::setLoggedIn()

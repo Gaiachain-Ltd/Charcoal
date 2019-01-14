@@ -2,17 +2,18 @@
 
 #include "eventmodel.h"
 
+#include <QDebug>
+
 LatestEventsProxy::LatestEventsProxy(QObject *parent)
     : AbstractSortFilterProxyModel (parent)
 {
     setDynamicSortFilter(true);
     setSortRole(EventModel::Timestamp);
+
+    invalidateSortNotify(0, Qt::SortOrder::DescendingOrder);
 }
 
 bool LatestEventsProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    Q_UNUSED(sourceRow)
-    Q_UNUSED(sourceParent)
-
-    return true;
+    return sourceModel()->index(sourceRow, 0, sourceParent).isValid();
 }

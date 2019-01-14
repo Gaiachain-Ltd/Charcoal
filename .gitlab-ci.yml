@@ -8,6 +8,7 @@ variables:
     QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.0/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
     ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r15c"
+    ANDROID_SIGN_COMMANDS: "--sign $CI_PROJECT_DIR/Gaiachain/platforms/android/cert/gaiachain_cert.keystore gaiachain --storepass $ANDROID_KEYSTORE_PASS"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
     ANDROID_TARGET_PLATFORM: "android-23"
     JAVA_HOME: "/home/tools/jdk8"
@@ -29,7 +30,7 @@ android_build:
     - LinuxAndroid
   stage: build
   variables:
-    BUILD_TYPE: "debug"
+    BUILD_TYPE: "release"
     PACKAGE_NAME: "Gaiachain_$CI_COMMIT_REF_SLUG.apk"
   script:
     - cd $CI_PROJECT_DIR
@@ -42,8 +43,8 @@ android_build:
     - ls -la
     - cd Gaiachain
     - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --$BUILD_TYPE
-    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
+    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 # Linux
 linux_build:

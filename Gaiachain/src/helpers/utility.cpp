@@ -65,6 +65,15 @@ qreal Utility::setupDpiScale()
     return dpiScale;
 }
 
+QString Utility::formatRawId(QString id) const
+{
+    if (!id.contains('-')) {
+        for (int i = QR_CODE_LENGTH - 4 ; i > 0 ; i-=4)
+            id.insert(i, '-');
+    }
+    return id;
+}
+
 bool Utility::isWeekend(const QDate &date) const
 {
     const int day = date.dayOfWeek();
@@ -78,14 +87,16 @@ int Utility::parseInt(const QString &num) const
 
 bool Utility::validateId(const QString &id) const
 {
-    QString::const_iterator it = id.constBegin();
-    while(it != id.constEnd()) {
+    QString rawId = id;
+    rawId.remove('-');
+    QString::const_iterator it = rawId.constBegin();
+    while(it != rawId.constEnd()) {
         const QChar &c = (*it);
         if (c.isLetterOrNumber() == false)
             return false;
         ++it;
     }
-    return id.length() == QR_CODE_LENGTH;
+    return rawId.length() == QR_CODE_LENGTH;
 }
 
 int Utility::getScannedIdLength() const
@@ -113,4 +124,19 @@ QDate Utility::convertDateString(const QString &dateStr, const QString &dateForm
 QString Utility::defaultDateFormat() const
 {
     return m_dateFormat;
+}
+
+Enums::UserType Utility::userTypeFromString(const QString &text) const
+{
+    if (text == QStringLiteral("PRODUCER")) {
+        return Enums::UserType::Producer;
+    } else if (text == QStringLiteral("LOG_PARK")) {
+        return Enums::UserType::LogParkWorker;
+    } else if (text == QStringLiteral("SAWMILL")) {
+        return Enums::UserType::SawmillWorker;
+    } else if (text == QStringLiteral("EXPORTER")) {
+        return Enums::UserType::Exporter;
+    } else {
+        return Enums::UserType::NotLoggedUser;
+    }
 }

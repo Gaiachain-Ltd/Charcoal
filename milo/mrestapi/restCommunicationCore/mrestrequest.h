@@ -65,6 +65,7 @@ protected:
 
     void send();
     virtual void retry();
+    virtual void customizeRequest(QNetworkRequest &request);
     virtual void parse() = 0;
 
     Priority mPriority = Priority::Normal;

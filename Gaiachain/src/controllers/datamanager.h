@@ -19,9 +19,12 @@ public:
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
+    Q_INVOKABLE void clearModels();
+
 signals:
 
 public slots:
+    void onEntityLoaded(const QJsonDocument &doc);
 
 private:
     void setupModels();
