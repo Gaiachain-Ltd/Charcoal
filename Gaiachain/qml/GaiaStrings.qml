@@ -41,8 +41,8 @@ QtObject {
     readonly property string batch: qsTr("Batch")
 
     // Event list
-    readonly property string eventText: qsTr("%1<br><b>Log ID %2</b><br>from %3 concession<br>%4")
-    readonly property string eventTextCalendar: qsTr("<b>Log ID %2</b><br>from %3 concession<br>%4")
+    readonly property string eventText: qsTr("%1<br><b>Log ID %2</b><br>%3 %4 concession<br>%5")
+    readonly property string eventTextCalendar: qsTr("<b>Log ID %1</b><br>%2 %3 concession<br>%4")
 
     // Event Details Page
     readonly property string companyName: qsTr("Company name")

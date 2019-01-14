@@ -74,8 +74,10 @@ Item {
                         wrapMode: Text.WordWrap
                         textFormat: Text.RichText
                         elide: Text.ElideNone
-                        text: displayDate ? Strings.eventText.arg(Helpers.convertTimestampToDate(timestamp)).arg(shipmentId).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
-                                          : Strings.eventTextCalendar.arg(shipmentId).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
+
+                        readonly property string actionStr: Helpers.placeActionToStringAction(Number(action)).toLowerCase()
+                        text: displayDate ? Strings.eventText.arg(Helpers.convertTimestampToDate(timestamp)).arg(shipmentId).arg(actionStr).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
+                                          : Strings.eventTextCalendar.arg(shipmentId).arg(actionStr).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
                     }
 
                     SvgImage {
