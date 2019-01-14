@@ -126,9 +126,9 @@ BasePage {
 
                 property color backColor: Style.pageBaseBackgroundColor
                 property color linesColor: Style.buttonBackColor
-                property int lineWidth: s(8)
-                property int ringRadius: s(14)
-                property int ringThick: sr(3)
+                property real lineWidth: sr(8)
+                property real ringRadius: sr(14)
+                property real ringThick: sr(3)
 
                 function drawTreeLevel(ctx2d, referenceX, yMidPos, lineLen) {
                     var containerLen = yMidPos.length
@@ -152,7 +152,7 @@ BasePage {
                         if (j !== (containerLen - 1)) {
                             //yMidLocal =  mapFromItem(mainRowLayout, 0, yMidPos[j+1]).y
                             yMidLocal =  yMidPos[j+1]
-                            ctx2d.lineTo((referenceX - lineLen), yMidLocal)
+                            ctx2d.lineTo((referenceX - lineLen), yMidLocal + lineWidth / 2)
                         }
 
                         ctx2d.stroke()
