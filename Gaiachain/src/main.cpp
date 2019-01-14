@@ -46,7 +46,8 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
   */
 int main(int argc, char *argv[]) {
 
-    MLog::instance();
+    MLog::instance()->enableLogToFile("Gaiachain");
+
     // Set up basic application data. Modify this to your needs
     QGuiApplication app(argc, argv);
     app.setApplicationVersion(AppVersion);
