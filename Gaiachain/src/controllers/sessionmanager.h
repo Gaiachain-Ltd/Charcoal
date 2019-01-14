@@ -34,6 +34,7 @@ private:
 signals:
     void displayLoginError(const QString &error, const QString &button1, const QString &button2) const;
     void loginFinished(const QJsonDocument &doc) const;
+    void entityLoadError() const;
     void entityLoaded(const QJsonDocument &doc) const;
     void entityActionDownloaded(const QString &id, const int action) const;
     void entityActionDownloadedError(const QString &id) const;

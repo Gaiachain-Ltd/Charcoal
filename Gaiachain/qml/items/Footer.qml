@@ -31,17 +31,21 @@ Item {
 
         spacing: Math.round((top.width - (buttonWidth * Style.headerMaximumButtonCount)) / (Style.headerMaximumButtonCount + 1))
 
-        ImageButton
-        {
+        Item {
             width: buttonRow.buttonWidth
             height: buttonRow.buttonWidth
 
-            backgroundColor: !isAddButtonActive ? Style.buttonGreenColor : "transparent"
-            source: !isAddButtonActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
+            ImageButton
+            {
+                anchors.fill: parent
 
-            onClicked: {
-                if (isAddButtonActive)
-                    pageManager.backTo(pageManager.homePage());
+                backgroundColor: !isAddButtonActive ? Style.buttonGreenColor : "transparent"
+                source: !isAddButtonActive ? Style.gaiaBlackImgUrl : Style.gaiaColorImgUrl
+
+                onClicked: {
+                    if (isAddButtonActive)
+                        pageManager.backTo(pageManager.homePage());
+                }
             }
         }
 
@@ -92,20 +96,7 @@ Item {
             enabled: !refreshTimer.running
             visible: page === Enums.Page.ViewType
 
-            onClicked: {
-                mainOverlayVisible = true
-                dataManager.clearModels()
-                refreshTimer.start()
-            }
-        }
-    }
-
-    Timer {
-        id: refreshTimer
-        interval: Style.requestOverlayInterval
-        onTriggered: {
-            sessionManager.getEntity()
-            mainOverlayVisible = false
+            onClicked: refreshData()
         }
     }
 }

@@ -62,15 +62,20 @@ Items.GenericPanel
             anchors.centerIn: parent
             width: parent.width
 
-            Items.BasicText
+            Item
             {
+                width: parent.width
+                height: popupText.paintedHeight + s(Style.normalMargin) * 2.5
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width * 0.6
-                topPadding: s(Style.normalMargin)
-                bottomPadding: s(Style.normalMargin)
+                Items.BasicText
+                {
+                    id: popupText
+                    anchors.centerIn: parent
+                    width: parent.width * 0.6
 
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                text: top.text
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    text: top.text
+                }
             }
 
             Rectangle

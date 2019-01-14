@@ -20,6 +20,10 @@ Items.GenericPanel
     property alias header: navigationHeader
     property alias mainOverlayVisible: mainOverlay.visible
 
+    property alias refreshTimer: refreshDataTimer
+
+    property bool errorDisplayed: false
+
     function closeEventHandler() {
         navigationHeader.backHandler() // calling back button
     }
@@ -45,6 +49,63 @@ Items.GenericPanel
         }
 
         return Strings.january +"!" // Add "!" if invalid
+    }
+
+    function refreshData() {
+        mainOverlayVisible = true
+        dataManager.clearModels()
+        refreshDataTimer.start()
+    }
+
+    Connections
+    {
+        target: sessionManager
+
+        onEntityLoadError: {
+            if (errorDisplayed || !pageManager.isOnTop(page))
+                return
+            errorDisplayed = true
+            pageManager.enterPopup(Enums.Popup.Information, {
+                                                            "text" : Strings.dataDownloadError,
+                                                            "acceptButtonText": Strings.tryAgain,
+                                                            "acceptButtonType": Enums.PopupAction.Error,
+                                                            "rejectButtonText": Strings.close,
+                                                            "rejectButtonType": Enums.PopupAction.Cancel
+                                   }, true)
+        }
+    }
+
+    Connections {
+        target: pageManager
+        // When using popup always add checking if I'm on top
+        enabled: pageManager.isOnTop(page)
+        onPopupAction: {
+            errorDisplayed = false
+            switch(action) {
+            case Enums.PopupAction.Error:
+                mainOverlayVisible = true
+                refreshDateDelayTimer.start()
+                break
+            default:
+            }
+        }
+    }
+
+    Timer {
+        id: refreshDateDelayTimer
+        interval: 1000
+        onTriggered: {
+            refreshData()
+        }
+    }
+
+    Timer {
+        id: refreshDataTimer
+        interval: Style.requestOverlayInterval
+        onTriggered: {
+            sessionManager.getEntity()
+            mainOverlayVisible = false
+        }
     }
 
     ColumnLayout {

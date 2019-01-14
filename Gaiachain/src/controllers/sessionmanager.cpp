@@ -62,8 +62,8 @@ void SessionManager::getEntity()
 {
     auto request = QSharedPointer<EntityRequest>::create(m_token);
 
-    auto errorLambda = [&](const QString &msgs, const int errorCode) {
-        qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
+    auto errorLambda = [&](const QString &, const int) {
+        emit entityLoadError();
     };
 
     auto finishLambda = [&](const QJsonDocument &reply) {
@@ -85,8 +85,8 @@ void SessionManager::getEntity(const QString &id)
 {
     auto request = QSharedPointer<EntityRequest>::create(m_token, id);
 
-    auto errorLambda = [&](const QString &msgs, const int errorCode) {
-        qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
+    auto errorLambda = [&](const QString &, const int) {
+        emit entityLoadError();
     };
 
     auto finishLambda = [&](const QJsonDocument &reply) {
@@ -103,9 +103,7 @@ void SessionManager::getEntityAction(const QString &id, const int role)
 {
     auto request = QSharedPointer<EntityRequest>::create(m_token, id);
 
-    auto errorLambda = [&, id](const QString &msgs, const int errorCode) {
-        Q_UNUSED(msgs)
-        Q_UNUSED(errorCode)
+    auto errorLambda = [&, id](const QString &, const int) {
         emit entityActionDownloadedError(id);
     };
 
@@ -118,7 +116,6 @@ void SessionManager::getEntityAction(const QString &id, const int role)
 
         if (ownerRoleEnum == role) {
             const QString status = obj.value(Tags::status).toString();
-            qDebug() << ownerRole << ownerRoleEnum << role << status;
 
             if (status == QStringLiteral("ARRIVED")) {
                 action = Enums::PlaceAction::Arrived;

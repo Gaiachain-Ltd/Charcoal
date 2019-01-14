@@ -57,6 +57,7 @@ QtObject {
     readonly property string cancel: qsTr("Cancel")
     readonly property string exit: qsTr("Exit")
     readonly property string save: qsTr("Save")
+    readonly property string tryAgain: qsTr("Try Again")
 
     readonly property string loginErrorInfo: qsTr("Login failed. Try again.")
 
@@ -64,6 +65,7 @@ QtObject {
     readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
     readonly property string logoutQuestion: qsTr("Do you want to logout?")
     readonly property string dataSaveError: qsTr("Data save error.")
+    readonly property string dataDownloadError: qsTr("Downloading server data failed.")
 
     // enums
     readonly property string placeTypeForestery: qsTr("Forestery")

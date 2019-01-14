@@ -100,12 +100,6 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
 
 }
 
-bool EntityRequest::isTokenRequired() const
-{
-    return true;
-}
-
-
 void EntityRequest::parse()
 {
     if (m_timer.isValid())

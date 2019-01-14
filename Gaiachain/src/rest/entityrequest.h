@@ -34,7 +34,6 @@ private:
     QElapsedTimer m_timer;
 
 protected:
-    virtual bool isTokenRequired() const Q_DECL_OVERRIDE;
     virtual void parse() Q_DECL_OVERRIDE final;
 };
 
