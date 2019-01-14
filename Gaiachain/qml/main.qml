@@ -32,17 +32,24 @@ ApplicationWindow
             if (Qt.inputMethod.keyboardRectangle.y > 0) {
                 keyboardCorrectionTimer.restart()
             } else {
-                resetValues()
+                resetMarginValues()
             }
         }
 
         onVisibleChanged: {
             if (!Qt.inputMethod.visible)
-                resetValues()
+                resetMarginValues()
         }
     }
 
-    function resetValues() {
+    Connections
+    {
+        target: Qt.application
+
+        onStateChanged: resetMarginValues()
+    }
+
+    function resetMarginValues() {
         bottomMarginKeyboard = 0
         bottomMargin = 0
         headerTopMargin = 0
