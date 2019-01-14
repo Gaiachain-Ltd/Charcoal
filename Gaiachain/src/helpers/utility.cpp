@@ -87,14 +87,16 @@ int Utility::parseInt(const QString &num) const
 
 bool Utility::validateId(const QString &id) const
 {
-    QString::const_iterator it = id.constBegin();
-    while(it != id.constEnd()) {
+    QString rawId = id;
+    rawId.remove('-');
+    QString::const_iterator it = rawId.constBegin();
+    while(it != rawId.constEnd()) {
         const QChar &c = (*it);
         if (c.isLetterOrNumber() == false)
             return false;
         ++it;
     }
-    return id.length() == QR_CODE_LENGTH;
+    return rawId.length() == QR_CODE_LENGTH;
 }
 
 int Utility::getScannedIdLength() const
