@@ -94,8 +94,11 @@ BasePage {
 
         onEntityActionDownloadedError: {
             if (id == scannedId) {
-                scannedId = ""
-                error = true
+                pageManager.enterPopup(Enums.Popup.Information, {
+                                                                "text" : exists ? Strings.idAlreadyUsed : Strings.incorrectId,
+                                                                "rejectButtonText": Strings.tryAgain,
+                                                                "rejectButtonType": Enums.PopupAction.TryAgain,
+                                       }, true)
             }
         }
     }
@@ -103,7 +106,16 @@ BasePage {
     Connections
     {
         target: pageManager
+        enabled: pageManager.isOnTop(page)
         onStackViewPop: camera.stop()
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.TryAgain:
+                retry()
+                break
+            default:
+            }
+        }
     }
 
     ColumnLayout

@@ -46,7 +46,7 @@ Items.GenericPanel
             pageManager.enterPopup(Enums.Popup.Information, {
                                                             "text" : Strings.dataDownloadError,
                                                             "acceptButtonText": Strings.tryAgain,
-                                                            "acceptButtonType": Enums.PopupAction.TryAgain,
+                                                            "acceptButtonType": Enums.PopupAction.ReloadData,
                                                             "rejectButtonText": Strings.close,
                                                             "rejectButtonType": Enums.PopupAction.Cancel
                                    }, true)
@@ -60,7 +60,7 @@ Items.GenericPanel
         onPopupAction: {
             errorDisplayed = false
             switch(action) {
-            case Enums.PopupAction.TryAgain:
+            case Enums.PopupAction.ReloadData:
                 mainOverlayVisible = true
                 refreshDateDelayTimer.start()
                 break

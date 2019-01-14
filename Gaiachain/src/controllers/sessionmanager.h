@@ -37,7 +37,7 @@ signals:
     void entityLoadError() const;
     void entityLoaded(const QJsonDocument &doc) const;
     void entityActionDownloaded(const QString &id, const int action) const;
-    void entityActionDownloadedError(const QString &id) const;
+    void entityActionDownloadedError(const QString &id, const bool exists) const;
 
     void entitySaveResult(const QString &id, const bool result) const;
 };
