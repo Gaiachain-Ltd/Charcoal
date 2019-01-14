@@ -8,19 +8,12 @@ import "../items" as Items
 EventDetailsPage {
     editable: true
 
-    Items.WaitOverlay {
-        id: requestOverlay
-
-        anchors.fill: parent
-        logoVisible: false
-    }
-
     Timer {
         id: dataRequestTimer
-        interval: 1000
+        interval: Style.requestOverlayInterval
         onTriggered: {
-            requestOverlay.visible = false
             sessionManager.getEntity()
+            mainOverlayVisible = false
             pageManager.backTo(pageManager.homePage())
         }
     }
@@ -34,7 +27,7 @@ EventDetailsPage {
             case Enums.PopupAction.Save:
                 sessionManager.putEntity(attributes.shipmentId, attributes.action)
                 dataManager.clearModels()
-                requestOverlay.visible = true
+                mainOverlayVisible = true
                 dataRequestTimer.start()
                 break
             case Enums.PopupAction.Exit:

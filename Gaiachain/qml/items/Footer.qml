@@ -51,24 +51,27 @@ Item {
             height: buttonRow.buttonWidth
         }
 
-        ImageButton
-        {
-            id: addButton
-
+        Item {
             width: buttonRow.buttonWidth
             height: buttonRow.buttonWidth
 
-            backgroundColor: isAddButtonActive ? Style.buttonGreenColor : "transparent"
-            source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
+            ImageButton
+            {
+                id: addButton
+                anchors.fill: parent
 
-            visible: page !== Enums.Page.Login && userManager.loggedIn
+                backgroundColor: isAddButtonActive ? Style.buttonGreenColor : "transparent"
+                source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
 
-            onClicked: {
-                if (!isAddButtonActive) {
-                    pageManager.backToAndEnter(pageManager.homePage(),
-                                               Enums.Page.QRScanner,
-                                               {},
-                                               true)
+                visible: page !== Enums.Page.Login && userManager.loggedIn
+
+                onClicked: {
+                    if (!isAddButtonActive) {
+                        pageManager.backToAndEnter(pageManager.homePage(),
+                                                   Enums.Page.QRScanner,
+                                                   {},
+                                                   true)
+                    }
                 }
             }
         }
@@ -79,10 +82,30 @@ Item {
             height: buttonRow.buttonWidth
         }
 
-        Item {
-            // button slot
+        ImageButton
+        {
             width: buttonRow.buttonWidth
             height: buttonRow.buttonWidth
+
+            source: Style.refreshImgUrl
+
+            enabled: !refreshTimer.running
+            visible: page === Enums.Page.ViewType
+
+            onClicked: {
+                mainOverlayVisible = true
+                dataManager.clearModels()
+                refreshTimer.start()
+            }
+        }
+    }
+
+    Timer {
+        id: refreshTimer
+        interval: Style.requestOverlayInterval
+        onTriggered: {
+            sessionManager.getEntity()
+            mainOverlayVisible = false
         }
     }
 }

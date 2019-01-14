@@ -39,6 +39,7 @@
         <file alias="mini_timber_green">ui/timber-mini-icon-green.svg</file>
         <file alias="timeline">ui/timeline-icon.svg</file>
         <file alias="timeline_green">ui/timeline-icon-green.svg</file>
+        <file alias="refresh">ui/refresh-icon.svg</file>
         <file alias="reload">ui/reload-icon.svg</file>
         <file alias="edit_green">ui/edit-icon-green.svg</file>
         <file alias="right_arrow_light">ui/arrow-light.svg</file>

@@ -18,6 +18,7 @@ Items.GenericPanel
     property color backgroundColor: Style.pageBaseBackgroundColor
 
     property alias header: navigationHeader
+    property alias mainOverlayVisible: mainOverlay.visible
 
     function closeEventHandler() {
         navigationHeader.backHandler() // calling back button
@@ -93,5 +94,10 @@ Items.GenericPanel
             Layout.preferredHeight: Math.round(s(Style.footerHeight))
             visible: top.footerVisible
         }
+    }
+
+    Items.WaitOverlay {
+        id: mainOverlay
+        anchors.fill: parent
     }
 }
