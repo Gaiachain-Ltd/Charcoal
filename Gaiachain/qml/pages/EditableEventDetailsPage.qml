@@ -51,7 +51,7 @@ EventDetailsPage {
                     pageManager.enterPopup(Enums.Popup.Information, {
                                                                     "text" : Strings.dataSaveError,
                                                                     "rejectButtonText": Strings.close,
-                                                                    "rejectButtonType": Enums.PopupAction.Error
+                                                                    "rejectButtonType": Enums.PopupAction.Cancel
                                            }, true)
                 }
             }

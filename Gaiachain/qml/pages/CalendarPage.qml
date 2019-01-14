@@ -194,7 +194,6 @@ BasePage {
                         Items.WaitOverlay {
                             anchors.fill: parent
                             visible: !asyncMonthItem.ready
-                            logoVisible: false
                         }
                     }
                 }

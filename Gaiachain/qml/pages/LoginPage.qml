@@ -218,6 +218,8 @@ BasePage {
     Items.WaitOverlay
     {
         anchors.fill: parent
+        logoVisible: true
+
         visible: overlays.loginRequest
     }
 }

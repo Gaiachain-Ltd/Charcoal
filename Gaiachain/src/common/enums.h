@@ -107,7 +107,7 @@ namespace Enums {
         Save,
         Logout,
         Exit,
-        Error,
+        TryAgain,
 
         PopupActionCount
     };
