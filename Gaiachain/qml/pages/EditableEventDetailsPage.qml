@@ -39,6 +39,27 @@ EventDetailsPage {
         }
     }
 
+    Connections
+    {
+        target: sessionManager
+
+        onEntitySaveResult: {
+            if (id == attributes.shipmentId) {
+                if (result) {
+                    dataManager.clearModels()
+                    dataRequestTimer.start()
+                } else {
+                    mainOverlayVisible = false
+                    pageManager.enterPopup(Enums.Popup.Information, {
+                                                                    "text" : Strings.dataSaveError,
+                                                                    "rejectButtonText": Strings.close,
+                                                                    "acceptButtonType": Enums.PopupAction.Error
+                                           }, true)
+                }
+            }
+        }
+    }
+
     onEditClicked: pageManager.back()
 
     onCancelClicked: pageManager.enterPopup(Enums.Popup.Information, {

@@ -7,7 +7,7 @@ import com.gaiachain.style 1.0
 // TO_DO consider using Toolbar
 Item {
     id: top
-    readonly property bool isAddButtonActive : page === Enums.Page.QRScanner
+    readonly property bool isAddButtonActive : page === Enums.Page.QRScanner || page === Enums.Page.EditableEventDetails
     signal barClicked()
 
     Rectangle {

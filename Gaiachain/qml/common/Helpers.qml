@@ -6,17 +6,18 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
 QtObject {
-    function formatDate(timestamp) {
-        return new Date(timestamp).toLocaleDateString()
-    }
-
     // TO_DO move to Utility
     function convertTimestampToDate(timestamp) {
         var date = new Date(timestamp)
-        var month = date.getMonth() + 1
-        if (month < 10)
-            month = "0" + month
-        return date.getFullYear() + "-" + month + "-" + date.getDate()
+        return date.getFullYear() + "-" + formatDateValue(date.getMonth()+1) + "-" + date.getDate()
+               + " " + formatDateValue(date.getHours()) + ":" + formatDateValue(date.getMinutes()) + ":" + formatDateValue(date.getSeconds())
+    }
+
+    function formatDateValue(val) {
+        var formattedVal = val
+        if (formattedVal < 10)
+            formattedVal = "0" + formattedVal
+        return formattedVal
     }
 
     function formatLocation(location) {
