@@ -44,9 +44,18 @@ public:
     Q_INVOKABLE QString formatRawId(QString id) const;
 
     Enums::UserType userTypeFromString(const QString &text) const;
+    Q_INVOKABLE QString userTypeToString(const Enums::UserType type) const;
 
 private:
     Utility();
+
+    const QHash<Enums::UserType, QString> m_userTypes = {
+        {Enums::UserType::Producer, QStringLiteral("PRODUCER") },
+        {Enums::UserType::LogParkWorker, QStringLiteral("LOG_PARK") },
+        {Enums::UserType::SawmillWorker, QStringLiteral("SAWMILL") },
+        {Enums::UserType::Exporter, QStringLiteral("EXPORTER") },
+        {Enums::UserType::NotLoggedUser, QString()}
+    };
 
     qreal setupDpiScale();
 

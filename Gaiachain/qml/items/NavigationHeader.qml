@@ -42,16 +42,29 @@ Item {
         }
     }
 
-    function getResourceName(res) {
+    function getTitleText(res) {
+        var result = ""
         switch(res) {
-        case Enums.CommodityType.Timber: return Strings.timber
-        case Enums.CommodityType.Charcoal: return Strings.charcoal
-        case Enums.CommodityType.Cocoa: return Strings.cocoa
+        case Enums.CommodityType.Timber:
+            result = Strings.timber
+            break
+        case Enums.CommodityType.Charcoal:
+            result = Strings.charcoal
+            break
+        case Enums.CommodityType.Cocoa:
+            result = Strings.cocoa
+            break
         default:
+            // Add "!" if invalid
+            result = Strings.timber + "!"
             console.warn("Invalid resource type!")
         }
 
-        return Strings.timber + "!" // Add "!" if invalid
+        if (userManager.userType !== Enums.UserType.NotLoggedUser) {
+            return result + " " + utility.userTypeToString(userManager.userType).replace("_", " ")
+        } else {
+            return result
+        }
     }
 
     function getResourceUrl(res, green) {
@@ -218,7 +231,7 @@ Item {
                 family: Style.secondaryFontFamily
                 letterSpacing: s(Style.pixelSize) * 0.1
             }
-            text: getResourceName(currentResource)
+            text: getTitleText(currentResource)
         }
     }
 }
