@@ -45,11 +45,6 @@ void DataManager::setupModels()
     m_latestEventsProxyModel.setSourceModel(&m_eventModel);
 }
 
-void DataManager::clearModels()
-{
-//    m_shipmentModel
-}
-
 void DataManager::onEntityLoaded(const QJsonDocument &doc)
 {
     Gaia::ModelData eventData;

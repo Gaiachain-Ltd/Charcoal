@@ -36,6 +36,7 @@ signals:
     void loginFinished(const QJsonDocument &doc) const;
     void entityLoaded(const QJsonDocument &doc) const;
     void entityActionDownloaded(const QString &id, const int action) const;
+    void entityActionDownloadedError(const QString &id) const;
 };
 
 #endif // SESSION_H

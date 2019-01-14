@@ -80,8 +80,23 @@ BasePage {
     {
         target: sessionManager
         onEntityActionDownloaded: {
-            if (id == scannedId)
-                scannedIdAction = action
+            if (id == scannedId) {
+                // If it arrived then user is scanning departing part.
+                // If invalid then it just arrived to new location.
+                if (action == Enums.PlaceAction.Arrived) {
+                    scannedIdAction = Enums.PlaceAction.Departed
+                } else {
+                    scannedIdAction = Enums.PlaceAction.Arrived
+                }
+
+            }
+        }
+
+        onEntityActionDownloadedError: {
+            if (id == scannedId) {
+                scannedId = ""
+                error = true
+            }
         }
     }
 
