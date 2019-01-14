@@ -78,6 +78,21 @@ BasePage {
 
     Connections
     {
+        target: Qt.application
+
+        onStateChanged: {
+            if (pageManager.isOnTop(page) && Qt.application.state !== Qt.ApplicationActive) {
+                if (scanInput.visible) {
+                    pageManager.back()
+                } else {
+                    retry()
+                }
+            }
+        }
+    }
+
+    Connections
+    {
         target: sessionManager
         onEntityActionDownloaded: {
             if (id == scannedId) {
