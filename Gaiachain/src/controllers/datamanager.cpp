@@ -91,6 +91,12 @@ void DataManager::onEntityLoaded(const QJsonDocument &doc)
     m_eventModel.appendData(eventData);
 }
 
+void DataManager::clearModels()
+{
+    m_eventModel.clearModel();
+    m_shipmentModel.clearModel();
+}
+
 void DataManager::populateModels()
 {
     Gaia::ModelData shipmentData;

@@ -13,6 +13,7 @@ CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
 
     connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityDateRangeProxyModel::onRowsInserted, Qt::QueuedConnection);
     connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityDateRangeProxyModel::onRowsRemoved, Qt::QueuedConnection);
+    connect(this, &QAbstractItemModel::modelReset, this, &CommodityDateRangeProxyModel::onModelReset, Qt::QueuedConnection);
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
@@ -107,5 +108,16 @@ void CommodityDateRangeProxyModel::onRowsRemoved(const QModelIndex &parent, int 
 
     for (const auto &date : changedDates)
         emit eventsCommoditiesChanged(date);
+}
+
+void CommodityDateRangeProxyModel::onModelReset()
+{
+    auto keys = m_dateEventsCommodityTypes.keys();
+    m_dateEventsCommodityTypes.clear();
+
+    while (!keys.isEmpty()) emit eventsCommoditiesChanged(keys.takeLast());
+
+    m_startDateTime = {};
+    m_endDateTime = {};
 }
 

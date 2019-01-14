@@ -24,6 +24,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+    void clearModel();
+
     void appendData(const Gaia::ModelData &inData);
 
 private:

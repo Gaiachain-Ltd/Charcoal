@@ -10,6 +10,8 @@ ShipmentEventsProxy::ShipmentEventsProxy(QObject *parent)
 {
     setDynamicSortFilter(true);
     setSortRole(EventModel::Timestamp);
+
+    connect(this, &QAbstractItemModel::modelReset, this, &ShipmentEventsProxy::clearShipmentId);
 }
 
 void ShipmentEventsProxy::clearShipmentId()
