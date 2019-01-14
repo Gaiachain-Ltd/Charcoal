@@ -84,7 +84,7 @@ BasePage {
                     width: flickableId.contentWidth
 
                     titleText: Helpers.placeActionToDateTimeString(attributes.action) + ":"
-                    contentText: Helpers.formatDate(attributes.timestamp)
+                    contentText: Helpers.convertTimestampToDate(attributes.timestamp)
                 }
             }
         }

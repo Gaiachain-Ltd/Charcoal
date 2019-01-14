@@ -144,10 +144,15 @@ void SessionManager::putEntity(const QString &id, const int action)
 {
     auto request = QSharedPointer<EntityRequest>::create(m_token, id, static_cast<Enums::PlaceAction>(action));
 
-    auto errorLambda = [&](const QString &msgs, const int errorCode) {
-        qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
+    auto errorLambda = [&](const QString &, const int) {
+        emit entitySaveResult(false);
     };
 
+    auto finishLambda = [&](const QJsonDocument &) {
+        emit entitySaveResult(true);
+    };
+
+    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     m_client.send(request);

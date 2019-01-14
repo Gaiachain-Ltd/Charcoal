@@ -111,7 +111,6 @@ BasePage {
                     source: Style.emailImgUrl
                     showImage: true
 
-                    text: "producer@gaiachain.io" //TO_DO remove it in production
                     placeholderText: Strings.emailAddress
 
                     nextInput: passwordInput
@@ -128,7 +127,6 @@ BasePage {
                     showImage: true
                     isPassword: true
 
-                    text: "test1234" //TO_DO remove it in production
                     placeholderText: Strings.password
 
                     onMoveToNextInput: loginButton.clicked()
@@ -150,8 +148,6 @@ BasePage {
 
                         imageSize: s(Style.imageSize)
 
-                        fillMode: Image.PreserveAspectFit
-
                         enabled: loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text)
                         opacity: enabled ? 1 : 0.5
 
@@ -170,8 +166,6 @@ BasePage {
                         text: Strings.skipLogin
                         source: Style.skipArrowImgUrl
 
-                        fillMode: Image.PreserveAspectFit
-
                         imageSize: s(Style.imageSize)
 
                         width: s(Style.buttonHeight) * 3.25
@@ -187,23 +181,32 @@ BasePage {
                 ComboBox
                 {
                     Layout.alignment: Qt.AlignHCenter
-                    model: ["Producer", "Log", "Sawmill", "Exporter"]
+                    model: ["Choose role", "Producer", "Log", "Sawmill", "Exporter"]
+
+                    Layout.preferredHeight: s(Style.buttonHeight)
+                    Layout.preferredWidth: s(Style.buttonHeight) * 3
 
                     onActivated: {
                         switch(index) {
-                        case 0:
-                            loginInput.text = "producer@gaiachain.io"
-                            break
                         case 1:
-                            loginInput.text = "logpark@gaiachain.io"
+                            loginInput.text = "producer@gaiachain.io"
+                            passwordInput.text = "test1234"
                             break
                         case 2:
-                            loginInput.text = "sawmill@gaiachain.io"
+                            loginInput.text = "logpark@gaiachain.io"
+                            passwordInput.text = "test1234"
                             break
                         case 3:
+                            loginInput.text = "sawmill@gaiachain.io"
+                            passwordInput.text = "test1234"
+                            break
+                        case 4:
                             loginInput.text = "exporter@gaiachain.io"
+                            passwordInput.text = "test1234"
                             break
                         default:
+                            loginInput.text = ""
+                            passwordInput.text = ""
                             break
                         }
                     }
