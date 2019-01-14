@@ -12,6 +12,7 @@ CommodityProxyModel::CommodityProxyModel(QObject *parent)
 
     connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityProxyModel::onRowsInserted, Qt::QueuedConnection);
     connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityProxyModel::onRowsRemoved, Qt::QueuedConnection);
+    connect(this, &QAbstractItemModel::modelReset, this, &CommodityProxyModel::onModelReset, Qt::QueuedConnection);
 }
 
 void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool enable)
@@ -72,4 +73,10 @@ void CommodityProxyModel::onRowsRemoved(const QModelIndex &parent, int first, in
         auto shipmentId = data(rowIndex, ShipmentModel::ShipmentId).toString();
         m_shipmentsType.remove(shipmentId);
     }
+}
+
+void CommodityProxyModel::onModelReset()
+{
+    //m_enabledCommodites.clear(); TO_DO_LATER do not clear commodity type on PoC
+    m_shipmentsType.clear();
 }

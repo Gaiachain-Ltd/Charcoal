@@ -25,6 +25,7 @@ public slots:
     void onEntityLoaded(const QJsonDocument &doc);
 
 private:
+    void clearModels();
     void setupModels();
     void populateModels(); //TO_DO temporary for feeding models with artificial data
 

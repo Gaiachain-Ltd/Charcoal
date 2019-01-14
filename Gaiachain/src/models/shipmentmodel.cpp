@@ -51,6 +51,13 @@ QHash<int, QByteArray> ShipmentModel::roleNames() const
     return m_roleNames;
 }
 
+void ShipmentModel::clearModel()
+{
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
+}
+
 void ShipmentModel::appendData(const Gaia::ModelData &inData)
 {
     int modelCount = rowCount();
