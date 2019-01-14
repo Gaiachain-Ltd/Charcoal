@@ -17,7 +17,7 @@ BasePage {
 
     Connections {
         target: shipmentEventsProxyModel
-        onProxyChangeFinished: parseModelData()
+        onModelChanged: parseModelData()
     }
 
     ListModel {
@@ -38,6 +38,8 @@ BasePage {
         shipmentModel.append({ "place": Number(currentPlace), "events": eventsList})
     }
     function parseModelData() {
+        shipmentModel.clear()
+
         var companyEventsList = [];
         var currentCompany = undefined;
         var currentPlace = undefined;
