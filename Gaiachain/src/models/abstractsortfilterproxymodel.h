@@ -32,7 +32,7 @@ protected:
      * Use this function instead of QSortFilterProxyModel::sort
      * if you want to notify start and end of sorting.
      */
-    void invalidateSortNotify(int sortColumn = 0);
+    void invalidateSortNotify(int sortColumn = 0, Qt::SortOrder order = Qt::AscendingOrder);
 
     /**
      * @brief invalidateNotify
@@ -40,7 +40,6 @@ protected:
      * if you want to notify start and end of filtering and sorting.
      */
     void invalidateNotify(int sortColumn = 0);
-
 };
 
 #endif // ABSTRACTSORTFILTERPROXYMODEL_H

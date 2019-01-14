@@ -13,12 +13,24 @@ CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
 
     connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityDateRangeProxyModel::onRowsInserted, Qt::QueuedConnection);
     connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityDateRangeProxyModel::onRowsRemoved, Qt::QueuedConnection);
+    connect(this, &QAbstractItemModel::modelReset, this, &CommodityDateRangeProxyModel::onModelReset, Qt::QueuedConnection);
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
 {
     m_commodityProxyModel = commodityProxyModel;
     connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilterNotify);
+}
+
+void CommodityDateRangeProxyModel::setSortingTypeAndRole(int role, int sortColumn, Qt::SortOrder order)
+{
+    if (role < Qt::UserRole || role >= EventModel::LastRole) {
+        qWarning() << "Invlaid sort role" << role;
+        return;
+    }
+
+    setSortRole(role);
+    invalidateSortNotify(sortColumn, order);
 }
 
 void CommodityDateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime)
@@ -107,5 +119,16 @@ void CommodityDateRangeProxyModel::onRowsRemoved(const QModelIndex &parent, int 
 
     for (const auto &date : changedDates)
         emit eventsCommoditiesChanged(date);
+}
+
+void CommodityDateRangeProxyModel::onModelReset()
+{
+    auto keys = m_dateEventsCommodityTypes.keys();
+    m_dateEventsCommodityTypes.clear();
+
+    while (!keys.isEmpty()) emit eventsCommoditiesChanged(keys.takeLast());
+
+    m_startDateTime = {};
+    m_endDateTime = {};
 }
 

@@ -163,6 +163,8 @@ BasePage {
             onDelegateClicked: top.enterShipmentDetailsPage(data)
 
             viewModel: dateEventsRangeProxyModel
+
+            displayDate: false
         }
     }
 }

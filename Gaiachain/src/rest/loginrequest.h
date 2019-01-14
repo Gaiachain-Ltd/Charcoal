@@ -10,9 +10,6 @@ class LoginRequest : public BaseRequest
     Q_OBJECT
 public:
     LoginRequest(const QString &email, const QString &password);
-
-protected:
-    virtual void parse() override final;
 };
 
 #endif // LOGINREQUEST_H

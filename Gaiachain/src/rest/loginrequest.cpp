@@ -4,26 +4,21 @@
 #include <QLoggingCategory>
 #include <QDebug>
 
-Q_LOGGING_CATEGORY(requestLogin, "request.login")
+#include "../common/tags.h"
 
 LoginRequest::LoginRequest(const QString &email, const QString &password)
     : BaseRequest(QStringLiteral("/auth/login/"))
 {
     if (!email.isEmpty() && !password.isEmpty()) {
         QJsonObject object;
-        object.insert(QStringLiteral("email"), QJsonValue(email));
-        object.insert(QStringLiteral("password"), QJsonValue(password));
+        object.insert(Tags::email, QJsonValue(email));
+        object.insert(Tags::password, QJsonValue(password));
         mRequestDocument.setObject(object);
 
         mType = Type::Post;
 
     } else {
-        qCDebug(requestLogin) << "Error: missing login info"
+        qCritical() << "Error: missing login info"
                                  << email << password.length();
     }
-}
-
-void LoginRequest::parse()
-{
-    emit requestFinished(mReplyDocument);
 }

@@ -103,6 +103,7 @@ QtObject {
     readonly property url buttonAddBlack: "qrc:/ui/add_black"
 
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"
+    readonly property url refreshImgUrl: "qrc:/ui/refresh"
 
     // camera
     readonly property color normalBorderColor: "white"
@@ -123,6 +124,7 @@ QtObject {
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
     readonly property int headerMaximumButtonCount: 5
+    readonly property int requestOverlayInterval: 2000
 
     readonly property var latoRegularFont: FontLoader {
         source: "qrc:/font/fonts/Lato-Regular.ttf"

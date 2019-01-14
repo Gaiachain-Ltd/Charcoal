@@ -56,8 +56,12 @@ Item {
                 Connections {
                     target: calendarRangeProxyModel
                     onEventsCommoditiesChanged: {
-                        if (date === myDate)
-                            updateData()
+                        if (date.getFullYear() === myDate.getFullYear()) {
+                            if (date.getMonth() === myDate.getMonth()) {
+                                if (date.getDate() === myDate.getDate())
+                                    updateData()
+                            }
+                        }
                     }
                 }
 

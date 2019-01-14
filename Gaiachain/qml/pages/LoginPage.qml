@@ -1,6 +1,7 @@
 ﻿import QtQuick 2.11
 
 import QtQuick.Layouts 1.11
+import QtQuick.Controls 2.5
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
@@ -110,7 +111,6 @@ BasePage {
                     source: Style.emailImgUrl
                     showImage: true
 
-                    text: "producer@gaiachain.io" //TO_DO remove it in production
                     placeholderText: Strings.emailAddress
 
                     nextInput: passwordInput
@@ -127,7 +127,6 @@ BasePage {
                     showImage: true
                     isPassword: true
 
-                    text: "test1234" //TO_DO remove it in production
                     placeholderText: Strings.password
 
                     onMoveToNextInput: loginButton.clicked()
@@ -149,8 +148,6 @@ BasePage {
 
                         imageSize: s(Style.imageSize)
 
-                        fillMode: Image.PreserveAspectFit
-
                         enabled: loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text)
                         opacity: enabled ? 1 : 0.5
 
@@ -169,15 +166,48 @@ BasePage {
                         text: Strings.skipLogin
                         source: Style.skipArrowImgUrl
 
-                        fillMode: Image.PreserveAspectFit
-
                         imageSize: s(Style.imageSize)
 
                         width: s(Style.buttonHeight) * 3.25
 
                         onClicked: {
                             userManager.userType = Enums.UserType.NotLoggedUser
+                            sessionManager.getEntity()
                             top.enterViewTypePage()
+                        }
+                    }
+                }
+
+                ComboBox
+                {
+                    Layout.alignment: Qt.AlignHCenter
+                    model: ["Choose role", "Producer", "Log", "Sawmill", "Exporter"]
+
+                    Layout.preferredHeight: s(Style.buttonHeight)
+                    Layout.preferredWidth: s(Style.buttonHeight) * 3
+
+                    onActivated: {
+                        switch(index) {
+                        case 1:
+                            loginInput.text = "producer@gaiachain.io"
+                            passwordInput.text = "test1234"
+                            break
+                        case 2:
+                            loginInput.text = "logpark@gaiachain.io"
+                            passwordInput.text = "test1234"
+                            break
+                        case 3:
+                            loginInput.text = "sawmill@gaiachain.io"
+                            passwordInput.text = "test1234"
+                            break
+                        case 4:
+                            loginInput.text = "exporter@gaiachain.io"
+                            passwordInput.text = "test1234"
+                            break
+                        default:
+                            loginInput.text = ""
+                            passwordInput.text = ""
+                            break
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 #include "eventmodel.h"
 
 #include <QDateTime>
+#include <QDebug>
 
 #include "../common/enums.h"
 
@@ -50,6 +51,13 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> EventModel::roleNames() const
 {
     return m_roleNames;
+}
+
+void EventModel::clearModel()
+{
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
 }
 
 void EventModel::appendData(const Gaia::ModelData &inData)

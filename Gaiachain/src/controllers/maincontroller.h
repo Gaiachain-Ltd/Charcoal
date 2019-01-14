@@ -13,13 +13,15 @@ class MainController : public AbstractManager
 public:
     explicit MainController(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
 
 signals:
 
 public slots:
 
 private:
+    void setupConnections();
+
     DataManager m_dataManager;
     PageManager m_pageManager;
     UserManager m_userManager;

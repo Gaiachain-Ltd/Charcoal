@@ -16,10 +16,10 @@ void AbstractSortFilterProxyModel::invalidateFilterNotify()
     QMetaObject::invokeMethod(this, "filteringFinished");
 }
 
-void AbstractSortFilterProxyModel::invalidateSortNotify(int sortColumn)
+void AbstractSortFilterProxyModel::invalidateSortNotify(int sortColumn, Qt::SortOrder order)
 {
     emit sortingStarted();
-    sort(sortColumn);
+    sort(sortColumn, order);
     QMetaObject::invokeMethod(this, "sortingFinished");
 }
 

@@ -29,6 +29,8 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
+    void clearModel();
+
     void appendData(const Gaia::ModelData &inData);
 
 private:

@@ -40,6 +40,10 @@ QtObject {
     readonly property string id: qsTr("ID")
     readonly property string batch: qsTr("Batch")
 
+    // Event list
+    readonly property string eventText: qsTr("%1<br><b>Log ID %2</b><br>from %3 concession<br>%4")
+    readonly property string eventTextCalendar: qsTr("<b>Log ID %2</b><br>from %3 concession<br>%4")
+
     // Event Details Page
     readonly property string companyName: qsTr("Company name")
     readonly property string gpsLocationOf: qsTr("Location of %1 (GPS point)")
@@ -53,12 +57,15 @@ QtObject {
     readonly property string cancel: qsTr("Cancel")
     readonly property string exit: qsTr("Exit")
     readonly property string save: qsTr("Save")
+    readonly property string tryAgain: qsTr("Try Again")
 
     readonly property string loginErrorInfo: qsTr("Login failed. Try again.")
 
     readonly property string saveQuestion: qsTr("Do you want to save your changes?")
     readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
     readonly property string logoutQuestion: qsTr("Do you want to logout?")
+    readonly property string dataSaveError: qsTr("Data save error.")
+    readonly property string dataDownloadError: qsTr("Downloading server data failed.")
 
     // enums
     readonly property string placeTypeForestery: qsTr("Forestery")
