@@ -78,23 +78,6 @@ namespace Enums {
     Q_ENUM_NS(UserType)
     inline uint qHash(UserType key, uint seed) { return qH<UserType>(key, seed);}
 
-    struct UserTypeStruct {
-        static UserType userTypeFromString(const QString &text)
-        {
-            if (text == QStringLiteral("PRODUCER")) {
-                return UserType::Producer;
-            } else if (text == QStringLiteral("LOG_PARK")) {
-                return UserType::LogParkWorker;
-            } else if (text == QStringLiteral("SAWMILL")) {
-                return UserType::SawmillWorker;
-            } else if (text == QStringLiteral("EXPORTER")) {
-                return UserType::Exporter;
-            } else {
-                return UserType::NotLoggedUser;
-            }
-        }
-    };
-
     enum class PlaceType {
         InvalidPlace = -1,
         Forestery,

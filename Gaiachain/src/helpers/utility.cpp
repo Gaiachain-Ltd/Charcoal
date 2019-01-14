@@ -123,3 +123,18 @@ QString Utility::defaultDateFormat() const
 {
     return m_dateFormat;
 }
+
+Enums::UserType Utility::userTypeFromString(const QString &text) const
+{
+    if (text == QStringLiteral("PRODUCER")) {
+        return Enums::UserType::Producer;
+    } else if (text == QStringLiteral("LOG_PARK")) {
+        return Enums::UserType::LogParkWorker;
+    } else if (text == QStringLiteral("SAWMILL")) {
+        return Enums::UserType::SawmillWorker;
+    } else if (text == QStringLiteral("EXPORTER")) {
+        return Enums::UserType::Exporter;
+    } else {
+        return Enums::UserType::NotLoggedUser;
+    }
+}

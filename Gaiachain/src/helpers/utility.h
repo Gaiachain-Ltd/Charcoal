@@ -43,6 +43,8 @@ public:
 
     Q_INVOKABLE QString formatRawId(QString id) const;
 
+    Enums::UserType userTypeFromString(const QString &text) const;
+
 private:
     Utility();
 

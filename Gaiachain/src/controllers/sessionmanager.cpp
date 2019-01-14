@@ -10,6 +10,7 @@ Q_LOGGING_CATEGORY(session, "session")
 
 #include "overlaymanager.h"
 #include "../common/tags.h"
+#include "../helpers/utility.h"
 #include "../rest/loginrequest.h"
 #include "../rest/entityrequest.h"
 
@@ -111,7 +112,7 @@ void SessionManager::getEntityAction(const QString &id, const int role)
         Enums::PlaceAction action = Enums::PlaceAction::Arrived;
 
         const QString ownerRole = obj.value(Tags::owner).toObject().value(Tags::role).toString();
-        const int ownerRoleEnum = static_cast<int>(Enums::UserTypeStruct::userTypeFromString(ownerRole));
+        const int ownerRoleEnum = static_cast<int>(Utility::instance()->userTypeFromString(ownerRole));
 
         if (ownerRoleEnum == role) {
             const QString status = obj.value(Tags::status).toString();

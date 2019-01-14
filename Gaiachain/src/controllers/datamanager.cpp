@@ -12,6 +12,7 @@
 #include "../common/globals.h"
 #include "../common/location.h"
 #include "../common/tags.h"
+#include "../helpers/utility.h"
 
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
@@ -59,7 +60,7 @@ void DataManager::onEntityLoaded(const QJsonDocument &doc)
     QJsonArray::const_iterator it = history.constBegin();
     while (it != history.constEnd()) {
         const QJsonObject &historyObj = (*it).toObject();
-        const QDateTime date = QDateTime::fromTime_t(static_cast<uint>(historyObj.value(Tags::timestamp).toInt(0)));
+        const QDateTime date = QDateTime::fromSecsSinceEpoch(static_cast<uint>(historyObj.value(Tags::timestamp).toInt(0)));
         const QJsonObject agent = historyObj.value(Tags::agent).toObject();
         const QString companyName = agent.value(Tags::companyName).toString();
         const QString agentRole = agent.value(Tags::role).toString();
@@ -77,7 +78,7 @@ void DataManager::onEntityLoaded(const QJsonDocument &doc)
                           date,
                           QVariant::fromValue(loc),
                           companyName,
-                          static_cast<int>(Enums::UserTypeStruct::userTypeFromString(agentRole)),
+                          QVariant::fromValue(Utility::instance()->userTypeFromString(agentRole)),
                           QVariant::fromValue(placeAction)
                          });
         ++it;
