@@ -3,8 +3,27 @@ import QtQuick 2.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
+import "../items" as Items
+
 EventDetailsPage {
     editable: true
+
+    Items.WaitOverlay {
+        id: requestOverlay
+
+        anchors.fill: parent
+        logoVisible: false
+    }
+
+    Timer {
+        id: dataRequestTimer
+        interval: 1000
+        onTriggered: {
+            requestOverlay.visible = false
+            sessionManager.getEntity()
+            pageManager.backTo(pageManager.homePage())
+        }
+    }
 
     Connections {
         target: pageManager
@@ -14,9 +33,9 @@ EventDetailsPage {
             switch(action) {
             case Enums.PopupAction.Save:
                 sessionManager.putEntity(attributes.shipmentId, attributes.action)
-                pageManager.backTo(pageManager.homePage())
                 dataManager.clearModels()
-                sessionManager.getEntity()
+                requestOverlay.visible = true
+                dataRequestTimer.start()
                 break
             case Enums.PopupAction.Exit:
                 pageManager.backTo(pageManager.homePage())

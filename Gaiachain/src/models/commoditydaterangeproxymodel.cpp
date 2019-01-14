@@ -22,6 +22,17 @@ void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *c
     connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilterNotify);
 }
 
+void CommodityDateRangeProxyModel::setSortingTypeAndRole(int role, int sortColumn, Qt::SortOrder order)
+{
+    if (role < Qt::UserRole || role >= EventModel::LastRole) {
+        qWarning() << "Invlaid sort role" << role;
+        return;
+    }
+
+    setSortRole(role);
+    invalidateSortNotify(sortColumn, order);
+}
+
 void CommodityDateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime)
 {
     if (m_startDateTime == startDateTime
