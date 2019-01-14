@@ -152,7 +152,7 @@ BasePage {
                         if (j !== (containerLen - 1)) {
                             //yMidLocal =  mapFromItem(mainRowLayout, 0, yMidPos[j+1]).y
                             yMidLocal =  yMidPos[j+1]
-                            ctx2d.lineTo((referenceX - lineLen), yMidLocal + lineWidth / 2)
+                            ctx2d.lineTo((referenceX - lineLen), yMidLocal + lineWidth * 0.5)
                         }
 
                         ctx2d.stroke()
@@ -192,7 +192,7 @@ BasePage {
                     ctx.lineWidth = lineWidth
                     ctx.strokeStyle = linesColor
 
-                    var lineLen = width / 2 - ringRadius / 2 // subtract ring radius. Otherwise circle will be cut
+                    var lineLen = width * 0.5 - ringRadius * 0.5 // subtract ring radius. Otherwise circle will be cut
                     var referenceX = width
                     var midPoints = []
                     var placeTypes = []
@@ -207,7 +207,7 @@ BasePage {
                         var minMax = drawTreeLevel(ctx, referenceX, yMidPos, lineLen)
 
                         placeTypes.push(child.placeType)
-                        midPoints.push((minMax.maxY - minMax.minY)/2 + minMax.minY)
+                        midPoints.push((minMax.maxY - minMax.minY) * 0.5 + minMax.minY)
                     }
                     referenceX = referenceX - lineLen
 
@@ -236,7 +236,7 @@ BasePage {
                     delegate: Items.SvgImage {
                         width: parent.width
                         height: s(100)
-                        y: modelData.imageMidYPos - height / 2
+                        y: modelData.imageMidYPos - height * 0.5
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         fillMode: Image.PreserveAspectFit
