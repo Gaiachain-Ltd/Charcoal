@@ -22,6 +22,10 @@ QtObject {
         return formattedVal
     }
 
+    function isNetworkError(code) {
+        return code === 3 || code === 99
+    }
+
     function formatLocation(location) {
         return location.lat.toFixed(6) + ", " + location.lon.toFixed(6)
     }

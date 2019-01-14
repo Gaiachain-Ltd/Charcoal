@@ -47,9 +47,9 @@ void SessionManager::login(const QString &email, const QString &password)
         this->getEntity();
     };
 
-    auto errorLambda = [&]() {
+    auto errorLambda = [&](const QString &, const int code) {
         m_overlayManager->setLoginRequest(false);
-        displayLoginError(tr("Login failed. Try again."), QString() , tr("Close"));
+        emit displayLoginError(code);
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
@@ -63,8 +63,8 @@ void SessionManager::getEntity()
     emit beforeGetEntity();
     auto request = QSharedPointer<EntityRequest>::create(m_token);
 
-    auto errorLambda = [&](const QString &, const int) {
-        emit entityLoadError();
+    auto errorLambda = [&](const QString &, const int code) {
+        emit entityLoadError(code);
     };
 
     auto finishLambda = [&](const QJsonDocument &reply) {
@@ -86,8 +86,8 @@ void SessionManager::getEntity(const QString &id)
 {
     auto request = QSharedPointer<EntityRequest>::create(m_token, id);
 
-    auto errorLambda = [&](const QString &, const int) {
-        emit entityLoadError();
+    auto errorLambda = [&](const QString &, const int code) {
+        emit entityLoadError(code);
     };
 
     auto finishLambda = [&](const QJsonDocument &reply) {

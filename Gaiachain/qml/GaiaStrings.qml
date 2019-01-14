@@ -60,6 +60,7 @@ QtObject {
     readonly property string tryAgain: qsTr("Try Again")
 
     readonly property string loginErrorInfo: qsTr("Login failed. Try again.")
+    readonly property string noInternet: qsTr("No internet connection.")
 
     readonly property string incorrectId: qsTr("Incorrect ID.")
     readonly property string idAlreadyUsed: qsTr("ID already used.")

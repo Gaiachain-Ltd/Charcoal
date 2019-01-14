@@ -32,9 +32,9 @@ private:
     QString m_token;
 
 signals:
-    void displayLoginError(const QString &error, const QString &button1, const QString &button2) const;
+    void displayLoginError(const int code) const;
     void loginFinished(const QJsonDocument &doc) const;
-    void entityLoadError() const;
+    void entityLoadError(const int code) const;
     void entityLoaded(const QJsonDocument &doc) const;
     void entityActionDownloaded(const QString &id, const int action) const;
     void entityActionDownloadedError(const QString &id, const bool exists) const;
