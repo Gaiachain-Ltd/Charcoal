@@ -12,7 +12,6 @@ EventDetailsPage {
         id: dataRequestTimer
         interval: Style.requestOverlayInterval
         onTriggered: {
-            sessionManager.getEntity()
             mainOverlayVisible = false
             pageManager.backTo(pageManager.homePage())
         }
@@ -45,6 +44,7 @@ EventDetailsPage {
             if (id == attributes.shipmentId) {
                 if (result) {
                     dataManager.clearModels()
+                    sessionManager.getEntity()
                     dataRequestTimer.start()
                 } else {
                     mainOverlayVisible = false

@@ -31,6 +31,7 @@ Items.GenericPanel
     function refreshData() {
         mainOverlayVisible = true
         dataManager.clearModels()
+        sessionManager.getEntity()
         refreshDataTimer.start()
     }
 
@@ -71,18 +72,13 @@ Items.GenericPanel
     Timer {
         id: refreshDateDelayTimer
         interval: 1000
-        onTriggered: {
-            refreshData()
-        }
+        onTriggered: refreshData()
     }
 
     Timer {
         id: refreshDataTimer
         interval: Style.requestOverlayInterval
-        onTriggered: {
-            sessionManager.getEntity()
-            mainOverlayVisible = false
-        }
+        onTriggered: mainOverlayVisible = false
     }
 
     ColumnLayout {
