@@ -29,7 +29,7 @@ android_build:
     - LinuxAndroid
   stage: build
   variables:
-    BUILD_TYPE: "debug"
+    BUILD_TYPE: "release"
     PACKAGE_NAME: "Gaiachain_$CI_COMMIT_REF_SLUG.apk"
   script:
     - cd $CI_PROJECT_DIR
@@ -43,7 +43,7 @@ android_build:
     - cd Gaiachain
     - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --$BUILD_TYPE
-    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-unsigned.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 # Linux
 linux_build:
