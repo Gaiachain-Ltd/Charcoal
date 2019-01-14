@@ -165,7 +165,7 @@ BasePage {
             QZXingFilter {
                 id: zxingFilter
                 property real normalizedScanSize: Style.normalizedScanSize
-                property real normalizedScanPos: (1.0 - normalizedSize) * 0.5 //Position of scanning area is centered
+                property real normalizedScanPos: (1.0 - normalizedScanSize) * 0.5 //Position of scanning area is centered
                 captureRect: {
                     // setup bindings
                     videoOutput.contentRect
