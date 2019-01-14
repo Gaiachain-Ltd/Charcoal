@@ -137,5 +137,8 @@ Items.GenericPanel
     Items.WaitOverlay {
         id: mainOverlay
         anchors.fill: parent
+
+        logoVisible: false
+        color: Style.backgroundShadowColor
     }
 }
