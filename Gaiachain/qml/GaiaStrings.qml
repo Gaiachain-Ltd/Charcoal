@@ -63,6 +63,7 @@ QtObject {
     readonly property string saveQuestion: qsTr("Do you want to save your changes?")
     readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
     readonly property string logoutQuestion: qsTr("Do you want to logout?")
+    readonly property string dataSaveError: qsTr("Data save error.")
 
     // enums
     readonly property string placeTypeForestery: qsTr("Forestery")

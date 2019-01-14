@@ -38,7 +38,7 @@ signals:
     void entityActionDownloaded(const QString &id, const int action) const;
     void entityActionDownloadedError(const QString &id) const;
 
-    void entitySaveResult(const bool result) const;
+    void entitySaveResult(const QString &id, const bool result) const;
 };
 
 #endif // SESSION_H

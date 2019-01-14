@@ -33,15 +33,34 @@ EventDetailsPage {
             switch(action) {
             case Enums.PopupAction.Save:
                 sessionManager.putEntity(attributes.shipmentId, attributes.action)
-                dataManager.clearModels()
                 requestOverlay.visible = true
-                dataRequestTimer.start()
                 break
             case Enums.PopupAction.Exit:
                 pageManager.backTo(pageManager.homePage())
                 break
             case Enums.PopupAction.Cancel:
             default:
+            }
+        }
+    }
+
+    Connections
+    {
+        target: sessionManager
+
+        onEntitySaveResult: {
+            if (id == attributes.shipmentId) {
+                if (result) {
+                    dataManager.clearModels()
+                    dataRequestTimer.start()
+                } else {
+                    requestOverlay.visible = false
+                    pageManager.enterPopup(Enums.Popup.Information, {
+                                                                    "text" : Strings.dataSaveError,
+                                                                    "rejectButtonText": Strings.close,
+                                                                    "acceptButtonType": Enums.PopupAction.Error
+                                           }, true)
+                }
             }
         }
     }
