@@ -35,6 +35,7 @@ void MainController::setupConnections()
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &SessionManager::onTokenChanged);
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
     connect(&m_sessionManager, &SessionManager::entityLoaded, &m_dataManager, &DataManager::onEntityLoaded, Qt::DirectConnection);
+    connect(&m_sessionManager, &SessionManager::beforeGetEntity, &m_dataManager, &DataManager::clearModels, Qt::DirectConnection);
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)

@@ -31,7 +31,7 @@ BasePage {
             if (utility.validateId(id)) {
                 scannedId = utility.formatRawId(id)
             } else {
-                error = true
+                showErrorPopup(false)
                 console.warn("Wrong code content!", id)
             }
             grabImageOfCamera()
@@ -62,6 +62,14 @@ BasePage {
         photoPreview.source = ""
         photoPreview.visible = false
         scannedId = ""
+    }
+
+    function showErrorPopup(exists) {
+        pageManager.enterPopup(Enums.Popup.Information, {
+                                                        "text" : exists ? Strings.idAlreadyUsed : Strings.incorrectId,
+                                                        "rejectButtonText": Strings.tryAgain,
+                                                        "rejectButtonType": Enums.PopupAction.TryAgain,
+                               }, true)
     }
 
     property string scannedId: ""
@@ -109,11 +117,7 @@ BasePage {
 
         onEntityActionDownloadedError: {
             if (id == scannedId) {
-                pageManager.enterPopup(Enums.Popup.Information, {
-                                                                "text" : exists ? Strings.idAlreadyUsed : Strings.incorrectId,
-                                                                "rejectButtonText": Strings.tryAgain,
-                                                                "rejectButtonType": Enums.PopupAction.TryAgain,
-                                       }, true)
+                showErrorPopup(exists)
             }
         }
     }
