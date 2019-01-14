@@ -39,6 +39,8 @@ signals:
     void entityActionDownloaded(const QString &id, const int action) const;
     void entityActionDownloadedError(const QString &id, const bool exists) const;
 
+    void beforeGetEntity() const;
+
     void entitySaveResult(const QString &id, const bool result) const;
 };
 

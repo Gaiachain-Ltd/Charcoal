@@ -60,6 +60,7 @@ void SessionManager::login(const QString &email, const QString &password)
 
 void SessionManager::getEntity()
 {
+    emit beforeGetEntity();
     auto request = QSharedPointer<EntityRequest>::create(m_token);
 
     auto errorLambda = [&](const QString &, const int) {
