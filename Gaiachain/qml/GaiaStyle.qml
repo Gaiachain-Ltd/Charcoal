@@ -109,6 +109,7 @@ QtObject {
     readonly property color normalBorderColor: "white"
     readonly property color errorBorderColor: "red"
     readonly property color finishedBorderColor: buttonGreenColor
+    readonly property real normalizedScanSize: 0.6 // Should be between 0 and 1
 
     // input
     readonly property int inputHeight: buttonHeight

@@ -155,6 +155,32 @@ BasePage {
 
             Camera {
                 id: camera
+                captureMode: Camera.CaptureVideo
+                focus {
+                    focusMode: CameraFocus.FocusContinuous
+                    focusPointMode: CameraFocus.FocusPointAuto
+                }
+            }
+
+            QZXingFilter {
+                id: zxingFilter
+                property real normalizedScanSize: Style.normalizedScanSize
+                property real normalizedScanPos: (1.0 - normalizedSize) * 0.5 //Position of scanning area is centered
+                captureRect: {
+                    // setup bindings
+                    videoOutput.contentRect
+                    videoOutput.sourceRect
+
+                    // only scan the central quarter of the area for a barcode
+                    return videoOutput.mapRectToSource(
+                                videoOutput.mapNormalizedRectToItem(
+                                    Qt.rect(normalizedScanPos, normalizedScanPos, normalizedScanSize, normalizedScanSize)))
+                }
+
+                decoder {
+                    enabledDecoders: QZXing.DecoderFormat_QR_CODE
+                    onTagFound: parseScannedId(tag)
+                }
             }
 
             VideoOutput {
@@ -176,7 +202,7 @@ BasePage {
             {
                 id: scanBorder
                 anchors.centerIn: parent
-                width: Math.min(videoOutput.width, videoOutput.height) * 0.6
+                width: Math.min(videoOutput.width, videoOutput.height) * zxingFilter.normalizedScanSize
                 height: width
 
                 error: top.error
@@ -231,17 +257,6 @@ BasePage {
                     verticalCenter: buttonRow.verticalCenter
                     left: parent.left
                     leftMargin: s(Style.bigMargin)
-                }
-            }
-
-            QZXingFilter {
-                id: zxingFilter
-                decoder {
-                    enabledDecoders: QZXing.DecoderFormat_QR_CODE
-
-                    onTagFound:  {
-                        parseScannedId(tag)
-                    }
                 }
             }
         }
