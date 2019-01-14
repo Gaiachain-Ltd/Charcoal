@@ -5,6 +5,7 @@ import QtQuick.Controls 2.5
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 
@@ -38,8 +39,9 @@ BasePage {
                 return
             }
 
+            console.log("ON_LOGIN_ERROR",code)
             pageManager.enterPopup(Enums.Popup.Information, {
-                                       "text" : Strings.loginErrorInfo,
+                                       "text" : Helpers.isNetworkError(code) ? Strings.noInternet : Strings.loginErrorInfo,
                                    })
         }
     }
