@@ -39,6 +39,7 @@ void DataManager::setupModels()
     m_calendarRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
     m_dateEventsRangeProxyModel.setSourceModel(&m_eventModel);
+    m_dateEventsRangeProxyModel.setSortingTypeAndRole(EventModel::Timestamp, 0, Qt::DescendingOrder);
     m_dateEventsRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
     m_shipmentEventsProxyModel.setSourceModel(&m_eventModel);
@@ -53,6 +54,7 @@ void DataManager::onEntityLoaded(const QJsonDocument &doc)
     const QString shipmentId = obj.value(Tags::id).toString();
     const QJsonArray &history = obj.value(Tags::history).toArray();
     QJsonArray::const_iterator it = history.constBegin();
+
     while (it != history.constEnd()) {
         const QJsonObject &historyObj = (*it).toObject();
         const QDateTime date = QDateTime::fromSecsSinceEpoch(static_cast<uint>(historyObj.value(Tags::timestamp).toInt(0)));

@@ -22,6 +22,7 @@ public:
     Q_INVOKABLE QList<Enums::CommodityType> eventsCommodityTypes(const QDate &date) const;
 
     void setCommodityProxyModel(CommodityProxyModel *commodityProxyModel);
+    void setSortingTypeAndRole(int role, int sortColumn = 0, Qt::SortOrder order = Qt::AscendingOrder);
 
 signals:
     void dateRangeChanged() const;
