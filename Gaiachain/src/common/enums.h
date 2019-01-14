@@ -108,6 +108,7 @@ namespace Enums {
         Logout,
         Exit,
         TryAgain,
+        ReloadData,
 
         PopupActionCount
     };

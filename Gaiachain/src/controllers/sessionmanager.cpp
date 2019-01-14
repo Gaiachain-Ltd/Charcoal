@@ -104,7 +104,7 @@ void SessionManager::getEntityAction(const QString &id, const int role)
     auto request = QSharedPointer<EntityRequest>::create(m_token, id);
 
     auto errorLambda = [&, id](const QString &, const int) {
-        emit entityActionDownloadedError(id);
+        emit entityActionDownloadedError(id, false);
     };
 
     auto finishLambda = [&, id, role](const QJsonDocument &reply) {
@@ -124,7 +124,7 @@ void SessionManager::getEntityAction(const QString &id, const int role)
             }
         } else if (ownerRoleEnum != role - 1) {
             // Error!
-            emit entityActionDownloadedError(id);
+            emit entityActionDownloadedError(id, true);
             return;
         }
 
