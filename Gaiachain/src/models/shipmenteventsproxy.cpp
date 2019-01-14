@@ -9,9 +9,9 @@ ShipmentEventsProxy::ShipmentEventsProxy(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
-    setSortRole(EventModel::Timestamp);
 
-    connect(this, &QAbstractItemModel::modelReset, this, &ShipmentEventsProxy::clearShipmentId);
+    setSortRole(EventModel::Timestamp);
+    sort(0);
 }
 
 void ShipmentEventsProxy::clearShipmentId()
@@ -25,7 +25,7 @@ void ShipmentEventsProxy::setShipmentId(const QString &shipmentId)
         return;
 
     m_shipmentId = shipmentId;
-    invalidateNotify();
+    invalidateFilter();
     emit shipmentIdChanged();
 }
 

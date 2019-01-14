@@ -2,8 +2,6 @@ import QtQuick 2.11
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.11
 
-import Qt.labs.calendar 1.0
-
 import "../items" as Items
 
 import com.gaiachain.enums 1.0
@@ -24,36 +22,16 @@ Items.GenericPanel
 
     property bool errorDisplayed: false
 
-    function closeEventHandler() {
-        navigationHeader.backHandler() // calling back button
-    }
-
     default property alias content: pageContent.data
 
-    function getMonthName(month) {
-        switch(month) {
-        case Calendar.January:return Strings.january
-        case Calendar.February: return Strings.february
-        case Calendar.March: return Strings.march
-        case Calendar.April: return Strings.april
-        case Calendar.May: return Strings.may
-        case Calendar.June: return Strings.june
-        case Calendar.July: return Strings.july
-        case Calendar.August: return Strings.august
-        case Calendar.September: return Strings.september
-        case Calendar.October: return Strings.october
-        case Calendar.November: return Strings.november
-        case Calendar.December: return Strings.december
-        default:
-            console.warn("CalendarMonthItem: Invalid month provided!")
-        }
-
-        return Strings.january +"!" // Add "!" if invalid
+    function closeEventHandler() {
+        navigationHeader.backHandler() // calling back button
     }
 
     function refreshData() {
         mainOverlayVisible = true
         dataManager.clearModels()
+        sessionManager.getEntity()
         refreshDataTimer.start()
     }
 
@@ -68,7 +46,7 @@ Items.GenericPanel
             pageManager.enterPopup(Enums.Popup.Information, {
                                                             "text" : Strings.dataDownloadError,
                                                             "acceptButtonText": Strings.tryAgain,
-                                                            "acceptButtonType": Enums.PopupAction.Error,
+                                                            "acceptButtonType": Enums.PopupAction.TryAgain,
                                                             "rejectButtonText": Strings.close,
                                                             "rejectButtonType": Enums.PopupAction.Cancel
                                    }, true)
@@ -82,7 +60,7 @@ Items.GenericPanel
         onPopupAction: {
             errorDisplayed = false
             switch(action) {
-            case Enums.PopupAction.Error:
+            case Enums.PopupAction.TryAgain:
                 mainOverlayVisible = true
                 refreshDateDelayTimer.start()
                 break
@@ -94,18 +72,13 @@ Items.GenericPanel
     Timer {
         id: refreshDateDelayTimer
         interval: 1000
-        onTriggered: {
-            refreshData()
-        }
+        onTriggered: refreshData()
     }
 
     Timer {
         id: refreshDataTimer
         interval: Style.requestOverlayInterval
-        onTriggered: {
-            sessionManager.getEntity()
-            mainOverlayVisible = false
-        }
+        onTriggered: mainOverlayVisible = false
     }
 
     ColumnLayout {
@@ -160,5 +133,7 @@ Items.GenericPanel
     Items.WaitOverlay {
         id: mainOverlay
         anchors.fill: parent
+
+        color: Style.backgroundShadowColor
     }
 }

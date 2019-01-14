@@ -11,7 +11,7 @@ Rectangle
 
     visible: false
 
-    property bool logoVisible: true
+    property bool logoVisible: false
 
     Column
     {

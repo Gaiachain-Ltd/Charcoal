@@ -94,7 +94,7 @@ Item {
             source: Style.refreshImgUrl
 
             enabled: !refreshTimer.running
-            visible: page === Enums.Page.ViewType
+            visible: page !== Enums.Page.Login
 
             onClicked: refreshData()
         }

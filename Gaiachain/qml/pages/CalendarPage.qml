@@ -6,6 +6,7 @@ import Qt.labs.calendar 1.0
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 
@@ -146,7 +147,7 @@ BasePage {
                     Items.BasicText {
                         Layout.fillWidth: true
 
-                        text: getMonthName(month)
+                        text: Helpers.getMonthName(month)
                         horizontalAlignment: Text.AlignLeft
                     }
 
@@ -193,7 +194,6 @@ BasePage {
                         Items.WaitOverlay {
                             anchors.fill: parent
                             visible: !asyncMonthItem.ready
-                            logoVisible: false
                         }
                     }
                 }

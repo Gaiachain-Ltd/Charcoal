@@ -19,7 +19,7 @@ CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
 {
     m_commodityProxyModel = commodityProxyModel;
-    connect(m_commodityProxyModel, &CommodityProxyModel::filteringFinished, this, &CommodityDateRangeProxyModel::invalidateFilterNotify);
+    connect(m_commodityProxyModel, &CommodityProxyModel::modelChanged, this, &CommodityDateRangeProxyModel::invalidateFilter);
 }
 
 void CommodityDateRangeProxyModel::setSortingTypeAndRole(int role, int sortColumn, Qt::SortOrder order)
@@ -30,7 +30,7 @@ void CommodityDateRangeProxyModel::setSortingTypeAndRole(int role, int sortColum
     }
 
     setSortRole(role);
-    invalidateSortNotify(sortColumn, order);
+    sort(sortColumn, order);
 }
 
 void CommodityDateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime)
@@ -43,7 +43,7 @@ void CommodityDateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTi
     m_startDateTime = startDateTime;
     m_endDateTime = endDateTime;
 
-    invalidateFilterNotify();
+    invalidateFilter();
     emit dateRangeChanged();
 }
 
@@ -127,8 +127,5 @@ void CommodityDateRangeProxyModel::onModelReset()
     m_dateEventsCommodityTypes.clear();
 
     while (!keys.isEmpty()) emit eventsCommoditiesChanged(keys.takeLast());
-
-    m_startDateTime = {};
-    m_endDateTime = {};
 }
 

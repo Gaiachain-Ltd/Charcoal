@@ -27,7 +27,7 @@ void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool
         m_enabledCommodites.remove(filterType);
     }
 
-    invalidateFilterNotify();
+    invalidateFilter();
     emit commodityTypeChanged();
 }
 
@@ -77,6 +77,5 @@ void CommodityProxyModel::onRowsRemoved(const QModelIndex &parent, int first, in
 
 void CommodityProxyModel::onModelReset()
 {
-    //m_enabledCommodites.clear(); TO_DO_LATER do not clear commodity type on PoC
     m_shipmentsType.clear();
 }

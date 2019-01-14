@@ -8,9 +8,9 @@ LatestEventsProxy::LatestEventsProxy(QObject *parent)
     : AbstractSortFilterProxyModel (parent)
 {
     setDynamicSortFilter(true);
-    setSortRole(EventModel::Timestamp);
 
-    invalidateSortNotify(0, Qt::SortOrder::DescendingOrder);
+    setSortRole(EventModel::Timestamp);
+    sort(0, Qt::SortOrder::DescendingOrder);
 }
 
 bool LatestEventsProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
