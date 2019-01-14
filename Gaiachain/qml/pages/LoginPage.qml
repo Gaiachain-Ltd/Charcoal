@@ -129,7 +129,10 @@ BasePage {
 
                     placeholderText: Strings.password
 
-                    onMoveToNextInput: loginButton.clicked()
+                    onMoveToNextInput: {
+                        if (loginButton.enabled)
+                            loginButton.clicked()
+                    }
                 }
 
                 Row {
