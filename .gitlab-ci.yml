@@ -8,7 +8,7 @@ variables:
     QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.0/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
     ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r15c"
-    ANDROID_SIGN_COMMANDS: "--sign $CI_PROJECT_DIR/Gaiachain/platforms/android/cert gaiachain_cert --storepass $ANDROID_KEYSTORE_PASS"
+    ANDROID_SIGN_COMMANDS: "--sign $CI_PROJECT_DIR/Gaiachain/platforms/android/cert/gaiachain_cert.keystroe gaiachain --storepass $ANDROID_KEYSTORE_PASS"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
     ANDROID_TARGET_PLATFORM: "android-23"
     JAVA_HOME: "/home/tools/jdk8"
