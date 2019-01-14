@@ -5,6 +5,7 @@ import Qt.labs.calendar 1.0
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 
@@ -63,7 +64,7 @@ BasePage {
             buttonWidth: s(30)
             imageUrl: Style.backBlackImgUrl
 
-            text: top.getMonthName(top.currentMonth) + " " + top.currentYear
+            text: Helpers.getMonthName(top.currentMonth) + " " + top.currentYear
             textFont.bold: true
             textFont.pixelSize: s(50)
 
