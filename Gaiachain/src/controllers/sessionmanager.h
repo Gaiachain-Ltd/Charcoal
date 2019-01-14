@@ -20,7 +20,8 @@ public:
     Q_INVOKABLE void login(const QString &email, const QString &password);
     Q_INVOKABLE void getEntity();
     Q_INVOKABLE void getEntity(const QString &id);
-    Q_INVOKABLE void putEntity(const QString &id);
+    Q_INVOKABLE void putEntity(const QString &id, const int action);
+    Q_INVOKABLE void getEntityAction(const QString &id, const int role);
 
 public slots:
     void onTokenChanged(const QString &token);
@@ -34,6 +35,7 @@ signals:
     void displayLoginError(const QString &error, const QString &button1, const QString &button2) const;
     void loginFinished(const QJsonDocument &doc) const;
     void entityLoaded(const QJsonDocument &doc) const;
+    void entityActionDownloaded(const QString &id, const int action) const;
 };
 
 #endif // SESSION_H

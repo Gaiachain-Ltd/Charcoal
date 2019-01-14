@@ -42,6 +42,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &id)
     , m_requestType(RequestEntityGet)
 {
     if (!id.isEmpty()) {
+        m_timer.start();
         mType = Type::Get;
     } else {
         qCritical() << "Error: missing entity GET info" << id;
@@ -107,5 +108,7 @@ bool EntityRequest::isTokenRequired() const
 
 void EntityRequest::parse()
 {
+    if (m_timer.isValid())
+        qDebug() << "Request elapsed time:" << m_timer.elapsed();
     BaseRequest::parse();
 }

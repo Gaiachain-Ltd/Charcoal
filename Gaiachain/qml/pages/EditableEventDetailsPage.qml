@@ -13,7 +13,10 @@ EventDetailsPage {
         onPopupAction: {
             switch(action) {
             case Enums.PopupAction.Save:
-                console.log("Save action to implement")
+                sessionManager.putEntity(attributes.shipmentId, attributes.action)
+                pageManager.backTo(pageManager.homePage())
+                dataManager.clearModels()
+                sessionManager.getEntity()
                 break
             case Enums.PopupAction.Exit:
                 pageManager.backTo(pageManager.homePage())

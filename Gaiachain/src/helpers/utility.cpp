@@ -65,6 +65,15 @@ qreal Utility::setupDpiScale()
     return dpiScale;
 }
 
+QString Utility::formatRawId(QString id) const
+{
+    if (!id.contains('-')) {
+        for (int i = QR_CODE_LENGTH - 4 ; i > 0 ; i-=4)
+            id.insert(i, '-');
+    }
+    return id;
+}
+
 bool Utility::isWeekend(const QDate &date) const
 {
     const int day = date.dayOfWeek();

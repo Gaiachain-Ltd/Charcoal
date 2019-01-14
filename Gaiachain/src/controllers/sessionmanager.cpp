@@ -2,13 +2,14 @@
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-
+#include <QJsonObject>
 #include <QJsonArray>
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(session, "session")
 
 #include "overlaymanager.h"
+#include "../common/tags.h"
 #include "../rest/loginrequest.h"
 #include "../rest/entityrequest.h"
 
@@ -97,9 +98,43 @@ void SessionManager::getEntity(const QString &id)
     m_client.send(request);
 }
 
-void SessionManager::putEntity(const QString &id)
+void SessionManager::getEntityAction(const QString &id, const int role)
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token, id, Enums::PlaceAction::Departed);
+    auto request = QSharedPointer<EntityRequest>::create(m_token, id);
+
+    auto errorLambda = [&](const QString &msgs, const int errorCode) {
+        qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;
+    };
+
+    auto finishLambda = [&, id, role](const QJsonDocument &reply) {
+        const QJsonObject obj = reply.object();
+        Enums::PlaceAction action = Enums::PlaceAction::Arrived;
+
+        const QString ownerRole = obj.value(Tags::owner).toObject().value(Tags::role).toString();
+        const int ownerRoleEnum = static_cast<int>(Enums::UserTypeStruct::userTypeFromString(ownerRole));
+
+        if (ownerRoleEnum == role) {
+            const QString status = obj.value(Tags::status).toString();
+            qDebug() << ownerRole << ownerRoleEnum << role << status;
+            if (status == QStringLiteral("DEPARTED"))
+                action = Enums::PlaceAction::Departed;
+        } else if (ownerRoleEnum != role - 1) {
+            // TO_DO error handling, wrong pathing (e.g. forestry - exporter)
+            qDebug() << "------ ENTITY_GET_ACTION_ERROR" << ownerRoleEnum << role;
+        }
+
+        emit entityActionDownloaded(id, static_cast<int>(action));
+    };
+
+    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
+    connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+    m_client.send(request);
+}
+
+void SessionManager::putEntity(const QString &id, const int action)
+{
+    auto request = QSharedPointer<EntityRequest>::create(m_token, id, static_cast<Enums::PlaceAction>(action));
 
     auto errorLambda = [&](const QString &msgs, const int errorCode) {
         qDebug() << "--------- ENTITY_ERROR" << errorCode << msgs;

@@ -3,6 +3,8 @@
 
 #include "baserequest.h"
 
+#include <QElapsedTimer>
+
 #include "../common/enums.h"
 
 class EntityRequest : public BaseRequest
@@ -29,6 +31,7 @@ public:
 
 private:
     const RequestType m_requestType = RequestType::RequestGet;
+    QElapsedTimer m_timer;
 
 protected:
     virtual bool isTokenRequired() const Q_DECL_OVERRIDE;

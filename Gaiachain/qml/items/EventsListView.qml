@@ -71,7 +71,7 @@ Item {
 
                         wrapMode: Text.WordWrap
                         elide: Text.ElideNone
-                        text: "Logs from " + Helpers.placeTypeToString(Number(place)).toLowerCase() + " concession " + company + "."
+                        text: "Logs from " + Helpers.placeTypeToString(Number(place)).toLowerCase() + " concession " + company
                     }
 
                     SvgImage {

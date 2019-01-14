@@ -41,6 +41,8 @@ public:
 
     Q_INVOKABLE bool isWeekend(const QDate &date) const;
 
+    Q_INVOKABLE QString formatRawId(QString id) const;
+
 private:
     Utility();
 

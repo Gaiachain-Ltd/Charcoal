@@ -8,29 +8,13 @@ import com.gaiachain.style 1.0
 
 import "../items" as Items
 
-/*
-        Jak zeskanuje poprawny kod, to ramka zrobi się zielona (#96c354),
-        a jak błędny, to czerwona (ff0000) i pojawi się napis "Scan failed",
-        tak jak jest teraz, tylko czerwony.
-
-        Oprócz tej zmiany w obydwu przypadkach (poprawny i niepoprawny kod)
-        kamera zrobi zdjęcie zeskanowanego kodu i je wyświetli,
-        a obok przycisku [ x ] (anuluj/zamknij),
-        pojawi się nowa ikona do ponownego odpalenia trybu skanowania.
-  */
-
 BasePage {
     id: top
 
     function enterEventDetailsPage() {
-        // TO_DO get real attributes from userManager (QVariantMap)
-        var attributes = {
-            "company": "Harvest Inc.",
-            "place": Number(Enums.PlaceType.Forestry),
-            "location": { "lat": 1.176953, "lon": 14.819439 }, // TO_DO should be Location type
-        }
+        var attributes = userManager.userData
 
-        attributes["action"] = Number(Enums.PlaceAction.Arrived) // TO_DO how to know if departure or arrival?
+        attributes["action"] = scannedIdAction
         attributes["timestamp"] = Number(new Date())
         attributes["shipmentId"] = scannedId
 
@@ -45,7 +29,7 @@ BasePage {
     function parseScannedId(id) {
         if (scannedId.length == 0) {
             if (utility.validateId(id)) {
-                scannedId = id
+                scannedId = utility.formatRawId(id)
             } else {
                 error = true
                 console.warn("Wrong code content!", id)
@@ -81,7 +65,25 @@ BasePage {
     }
 
     property string scannedId: ""
+
+    property int scannedIdAction: Number(Enums.PlaceAction.Arrived)
+
+    onScannedIdChanged: {
+        if (scannedId.length > 0) {
+            sessionManager.getEntityAction(scannedId, userManager.userType)
+        }
+    }
+
     property bool error: false
+
+    Connections
+    {
+        target: sessionManager
+        onEntityActionDownloaded: {
+            if (id == scannedId)
+                scannedIdAction = action
+        }
+    }
 
     Connections
     {

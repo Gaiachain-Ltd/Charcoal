@@ -65,7 +65,7 @@ ColumnLayout {
                         horizontalAlignment: Text.AlignLeft
                         font.pixelSize: s(Style.smallPixelSize)
                         font.bold: true
-                        text: Strings.batch + " " + shipmentId
+                        text: Strings.id + " " + shipmentId
                     }
                 }
 

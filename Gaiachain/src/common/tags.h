@@ -22,7 +22,11 @@ namespace Tags {
     const QLatin1String history = QLatin1String("history");
     const QLatin1String agent = QLatin1String("agent");
     const QLatin1String companyName = QLatin1String("company_name");
+    const QLatin1String company = QLatin1String("company");
+    const QLatin1String place = QLatin1String("place");
     const QLatin1String location = QLatin1String("location");
+    const QLatin1String status = QLatin1String("status");
+    const QLatin1String owner = QLatin1String("owner");
 };
 
 #endif // TAGS_H
