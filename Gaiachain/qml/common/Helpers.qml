@@ -10,6 +10,15 @@ QtObject {
         return new Date(timestamp).toLocaleDateString()
     }
 
+    // TO_DO move to Utility
+    function convertTimestampToDate(timestamp) {
+        var date = new Date(timestamp)
+        var month = date.getMonth() + 1
+        if (month < 10)
+            month = "0" + month
+        return date.getFullYear() + "-" + month + "-" + date.getDate()
+    }
+
     function formatLocation(location) {
         return location.lat.toFixed(6) + ", " + location.lon.toFixed(6)
     }

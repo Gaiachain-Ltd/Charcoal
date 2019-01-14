@@ -40,6 +40,10 @@ QtObject {
     readonly property string id: qsTr("ID")
     readonly property string batch: qsTr("Batch")
 
+    // Event list
+    readonly property string eventText: qsTr("%1<br><b>Log ID %2</b><br>from %3 concession<br>%4")
+    readonly property string eventTextCalendar: qsTr("<b>Log ID %2</b><br>from %3 concession<br>%4")
+
     // Event Details Page
     readonly property string companyName: qsTr("Company name")
     readonly property string gpsLocationOf: qsTr("Location of %1 (GPS point)")

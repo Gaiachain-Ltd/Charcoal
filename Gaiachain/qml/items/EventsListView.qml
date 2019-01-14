@@ -12,6 +12,8 @@ Item {
     property alias delegateHeight: mainView.delegateHeight
     property alias backgroundColor: background.color
 
+    property bool displayDate: true
+
     signal delegateClicked(var data)
 
     Rectangle {
@@ -70,8 +72,10 @@ Item {
                         horizontalAlignment: Text.AlignLeft
 
                         wrapMode: Text.WordWrap
+                        textFormat: Text.RichText
                         elide: Text.ElideNone
-                        text: "Logs from " + Helpers.placeTypeToString(Number(place)).toLowerCase() + " concession " + company
+                        text: displayDate ? Strings.eventText.arg(Helpers.convertTimestampToDate(timestamp)).arg(shipmentId).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
+                                          : Strings.eventTextCalendar.arg(shipmentId).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
                     }
 
                     SvgImage {
