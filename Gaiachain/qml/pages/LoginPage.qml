@@ -110,12 +110,76 @@ BasePage {
                     Layout.preferredHeight: s(Style.inputHeight)
                     Layout.alignment: Qt.AlignHCenter
 
+                    input.enabled: false
+
                     source: Style.emailImgUrl
                     showImage: true
 
-                    placeholderText: Strings.emailAddress
+                    placeholderText: ""//Strings.emailAddress
 
                     nextInput: passwordInput
+
+                    property string currentLoginStr: "producer@gaiachain.io"
+
+                    ComboBox //TO_DO_LATER remove it
+                    {
+                        id: controlCombo
+                        model: ["producer@gaiachain.io", "logpark@gaiachain.io", "sawmill@gaiachain.io", "exporter@gaiachain.io"]
+                        visible: true
+
+                        anchors.centerIn: parent
+                        height: parent.height
+                        width: parent.width
+
+                        background: Rectangle { color: "transparent" }
+
+                        contentItem: Text {
+                            leftPadding: loginInput.height
+
+                            text: controlCombo.displayText
+                            color: Style.textPrimaryColor
+                            font {
+                                pixelSize: s(Style.pixelSize)
+                                family: Style.primaryFontFamily
+                            }
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        delegate: ItemDelegate {
+                            leftPadding: loginInput.height
+                            contentItem: Text {
+                                text: modelData
+                                color: Style.textPrimaryColor
+                                font {
+                                    pixelSize: s(Style.pixelSize)
+                                    family: Style.primaryFontFamily
+                                }
+                                elide: Text.ElideRight
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            background: Rectangle {
+                                color: "transparent"
+                            }
+                        }
+
+                        onActivated: {
+                            passwordInput.text = "test1234"
+                            switch(index) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                                loginInput.currentLoginStr = model[index]
+                                break
+                            default:
+                                loginInput.currentLogin = ""
+                                passwordInput.text = ""
+                                break
+                            }
+                        }
+                    }
                 }
 
                 Items.GenericInput
@@ -125,11 +189,14 @@ BasePage {
                     Layout.preferredHeight: s(Style.inputHeight)
                     Layout.alignment: Qt.AlignHCenter
 
+                    enabled: false
+
                     source: Style.keyImgUrl
                     showImage: true
                     isPassword: true
 
                     placeholderText: Strings.password
+                    text: "test1234"
 
                     onMoveToNextInput: {
                         if (loginButton.enabled)
@@ -153,13 +220,15 @@ BasePage {
 
                         imageSize: s(Style.imageSize)
 
-                        enabled: loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text)
+                        //enabled: loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text)
+                        enabled: true
                         opacity: enabled ? 1 : 0.5
 
                         width: s(Style.buttonHeight) * 2.5
 
                         onClicked: {
-                            sessionManager.login(loginInput.text, passwordInput.text)
+                            //sessionManager.login(loginInput.text, passwordInput.text)
+                            sessionManager.login(loginInput.currentLoginStr, passwordInput.text)
                         }
                     }
 
