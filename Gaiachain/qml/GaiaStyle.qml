@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick 2.11
 
 QtObject {
-    readonly property bool loginByCombobox: true
+    readonly property bool loginByCombobox: utility.isLoginComboboxVisible()
 
     readonly property real logoSize: 0.6
 
