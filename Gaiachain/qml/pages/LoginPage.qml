@@ -187,6 +187,7 @@ BasePage {
                 {
                     Layout.alignment: Qt.AlignHCenter
                     model: ["Choose role", "Producer", "Log", "Sawmill", "Exporter"]
+                    visible: false // TO_DO_LATER
 
                     Layout.preferredHeight: s(Style.buttonHeight)
                     Layout.preferredWidth: s(Style.buttonHeight) * 3
