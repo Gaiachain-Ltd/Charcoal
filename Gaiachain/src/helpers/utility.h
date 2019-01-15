@@ -46,6 +46,8 @@ public:
     Enums::UserType userTypeFromString(const QString &text) const;
     Q_INVOKABLE QString userTypeToString(const Enums::UserType type) const;
 
+    Q_INVOKABLE bool isLoginComboboxVisible() const;
+
 private:
     Utility();
 

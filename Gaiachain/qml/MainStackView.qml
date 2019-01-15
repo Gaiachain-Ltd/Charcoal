@@ -12,7 +12,6 @@ Item {
         target: pageManager
 
         onStackViewPush: {
-            resetMarginValues()
             var keepPrevPageVisible = false
             if (properites.isPopup)
                 keepPrevPageVisible = true
