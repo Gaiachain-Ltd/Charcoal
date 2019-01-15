@@ -169,6 +169,7 @@ BasePage {
                             id: monthItemComponent
 
                             Items.CalendarMonthItem {
+                                anchors.fill: parent
                                 currentMonth: month
                                 currentYear: year
                                 circleColor: Style.buttonBlackGreyColor
@@ -185,7 +186,7 @@ BasePage {
                             id: loader
                             anchors.fill: parent
 
-                            asynchronous: !asyncMonthItem.synchronous
+                            asynchronous: false //!asyncMonthItem.synchronous
                             sourceComponent: monthItemComponent
 
                             visible: asyncMonthItem.ready

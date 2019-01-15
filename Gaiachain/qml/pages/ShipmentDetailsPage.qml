@@ -87,7 +87,7 @@ BasePage {
         boundsBehavior: Flickable.OvershootBounds
 
         contentWidth: width
-        contentHeight: mainRowLayout.implicitHeight
+        contentHeight: mainRowLayout.implicitHeight + s(Style.bigMargin)
 
         property var imagesModel
 
@@ -106,13 +106,13 @@ BasePage {
                 Layout.fillHeight: false
                 Layout.preferredWidth: 0.5 * parent.availableWidth
                 Layout.leftMargin: s(Style.tinyMargin)
-                spacing: s(Style.bigMargin)
+                spacing: s(Style.bigMargin) * 1.2
 
                 Repeater {
                     id: shipmentRep
                     model: shipmentModel
                     delegate: Items.ShipmentDetailsDelegate {
-                        spacing: s(Style.bigMargin)
+                        spacing: s(Style.bigMargin) * 1.2
 
                         onDelegateClicked: enterEventDetailsPage(row)
                     }
