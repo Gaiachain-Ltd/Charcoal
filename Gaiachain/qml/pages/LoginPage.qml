@@ -114,6 +114,7 @@ BasePage {
                     input.enabled: !Style.loginByCombobox
 
                     source: Style.emailImgUrl
+                    focus: true
                     showImage: true
 
                     placeholderText: Style.loginByCombobox ? "" : Strings.emailAddress
@@ -195,6 +196,7 @@ BasePage {
                     source: Style.keyImgUrl
                     showImage: true
                     isPassword: true
+                    focus: true
 
                     placeholderText: Strings.password
                     text: Style.loginByCombobox ?  "test1234" : ""
