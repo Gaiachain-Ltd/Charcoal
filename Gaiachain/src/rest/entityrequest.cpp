@@ -49,6 +49,21 @@ EntityRequest::EntityRequest(const QString &token, const QString &id)
     }
 }
 
+EntityRequest::EntityRequest(const QString &token, const QJsonArray &ids)
+    : BaseRequest(ADDRESS_BATCH, token)
+    , m_requestType(RequestEntityGet)
+{
+    if (!ids.isEmpty()) {
+        m_timer.start();
+        QJsonObject object;
+        object.insert(Tags::ids, QJsonValue(ids));
+        mRequestDocument.setObject(object);
+        mType = Type::Get;
+    } else {
+        qCritical() << "Error: missing entity GET info" << ids;
+    }
+}
+
 EntityRequest::EntityRequest(const QString &token, const QString &dateFrom, const QString &dateTo)
     : BaseRequest(ADDRESS_CALENDAR, token)
     , m_requestType(RequestCalendar)

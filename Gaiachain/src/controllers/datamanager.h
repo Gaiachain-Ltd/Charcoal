@@ -21,7 +21,8 @@ public:
 
 public slots:
     void clearModels();
-    void onEntityLoaded(const QJsonDocument &doc);
+    void onEntityLoaded(const QJsonObject &entity);
+    void onEntitiesLoaded(const QJsonArray &entities);
 
 private:
     void setupModels();

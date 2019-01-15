@@ -91,7 +91,25 @@ void SessionManager::getEntity(const QString &id)
     };
 
     auto finishLambda = [&](const QJsonDocument &reply) {
-        emit entityLoaded(reply);
+        emit entityLoaded(reply.object());
+    };
+
+    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
+    connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+    m_client.send(request);
+}
+
+void SessionManager::getEntities(const QJsonArray &ids)
+{
+    auto request = QSharedPointer<EntityRequest>::create(m_token, ids);
+
+    auto errorLambda = [&](const QString &, const int code) {
+        emit entityLoadError(code);
+    };
+
+    auto finishLambda = [&](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.array());
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);

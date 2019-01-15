@@ -20,6 +20,7 @@ public:
     Q_INVOKABLE void login(const QString &email, const QString &password);
     Q_INVOKABLE void getEntity();
     Q_INVOKABLE void getEntity(const QString &id);
+    Q_INVOKABLE void getEntities(const QJsonArray &ids);
     Q_INVOKABLE void putEntity(const QString &id, const int action);
     Q_INVOKABLE void getEntityAction(const QString &id, const int role);
 
@@ -35,7 +36,8 @@ signals:
     void displayLoginError(const int code) const;
     void loginFinished(const QJsonDocument &doc) const;
     void entityLoadError(const int code) const;
-    void entityLoaded(const QJsonDocument &doc) const;
+    void entityLoaded(const QJsonObject &entity) const;
+    void entitiesLoaded(const QJsonArray &entities) const;
     void entityActionDownloaded(const QString &id, const int action) const;
     void entityActionDownloadedError(const QString &id, const bool exists) const;
 
