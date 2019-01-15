@@ -40,7 +40,7 @@ Rectangle
 
                 source: Style.logoImgUrl
 
-                readonly property int calcWidth: parent.width * 0.7
+                readonly property int calcWidth: parent.width * Style.logoSize
                 width: calcWidth
                 height: 0.35 * calcWidth
             }

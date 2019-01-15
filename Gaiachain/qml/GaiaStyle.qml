@@ -3,6 +3,10 @@ pragma Singleton
 import QtQuick 2.11
 
 QtObject {
+    readonly property bool loginByCombobox: true
+
+    readonly property real logoSize: 0.6
+
     // Colors
     readonly property color backgroundColor: "white"
     readonly property color textPrimaryColor: "black"

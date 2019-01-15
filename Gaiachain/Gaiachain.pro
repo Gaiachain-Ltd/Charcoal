@@ -9,6 +9,10 @@ exists(../local.pri) {
     include(../local.pri)
 }
 
+use_combobox {
+    DEFINES+=USE_COMBOBOX
+}
+
 include(../version.pri)
 
 # qzxing
