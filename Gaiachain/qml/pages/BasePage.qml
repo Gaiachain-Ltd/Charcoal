@@ -91,7 +91,6 @@ Items.GenericPanel
         Items.NavigationHeader {
             id: navigationHeader
             Layout.fillWidth: true
-            Layout.topMargin: mainWindow.headerTopMargin
             Layout.preferredHeight: s(Style.headerHeight)
             visible: top.headerVisible
             z: 5
@@ -112,14 +111,12 @@ Items.GenericPanel
 
             Item {
                 id: pageContent
-                readonly property int verticalOffset: -Math.max(mainWindow.bottomMargin, mainWindow.bottomMarginKeyboard * 0.5)
                 anchors {
                     left: parent.left
                     right: parent.right
                     verticalCenter: parent.verticalCenter
-                    verticalCenterOffset: pageContent.verticalOffset
                 }
-                height: parent.height - mainWindow.bottomMarginKeyboard * 0.5
+                height: parent.height
             }
         }
 

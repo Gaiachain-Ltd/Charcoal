@@ -79,7 +79,7 @@ BasePage {
 
                 source: Style.logoImgUrl
 
-                readonly property int calcWidth: parent.width * 0.7
+                readonly property int calcWidth: parent.width * Style.logoSize
                 width: calcWidth
                 height: 0.35 * calcWidth
             }
@@ -109,13 +109,14 @@ BasePage {
                     Layout.preferredWidth: parent.width * 0.9
                     Layout.preferredHeight: s(Style.inputHeight)
                     Layout.alignment: Qt.AlignHCenter
+                    additionalInputMethodHints: Qt.ImhNoAutoUppercase
 
-                    input.enabled: false
+                    input.enabled: !Style.loginByCombobox
 
                     source: Style.emailImgUrl
                     showImage: true
 
-                    placeholderText: ""//Strings.emailAddress
+                    placeholderText: Style.loginByCombobox ? "" : Strings.emailAddress
 
                     nextInput: passwordInput
 
@@ -125,7 +126,7 @@ BasePage {
                     {
                         id: controlCombo
                         model: ["producer@gaiachain.io", "logpark@gaiachain.io", "sawmill@gaiachain.io", "exporter@gaiachain.io"]
-                        visible: true
+                        visible: Style.loginByCombobox
 
                         anchors.centerIn: parent
                         height: parent.height
@@ -189,14 +190,14 @@ BasePage {
                     Layout.preferredHeight: s(Style.inputHeight)
                     Layout.alignment: Qt.AlignHCenter
 
-                    enabled: false
+                    enabled: !Style.loginByCombobox
 
                     source: Style.keyImgUrl
                     showImage: true
                     isPassword: true
 
                     placeholderText: Strings.password
-                    text: "test1234"
+                    text: Style.loginByCombobox ?  "test1234" : ""
 
                     onMoveToNextInput: {
                         if (loginButton.enabled)
@@ -220,15 +221,17 @@ BasePage {
 
                         imageSize: s(Style.imageSize)
 
-                        //enabled: loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text)
-                        enabled: true
+                        enabled: Style.loginByCombobox || (loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text))
                         opacity: enabled ? 1 : 0.5
 
                         width: s(Style.buttonHeight) * 2.5
 
                         onClicked: {
-                            //sessionManager.login(loginInput.text, passwordInput.text)
-                            sessionManager.login(loginInput.currentLoginStr, passwordInput.text)
+                            if (Style.loginByCombobox) {
+                                sessionManager.login(loginInput.currentLoginStr, passwordInput.text)
+                            } else {
+                                sessionManager.login(loginInput.text, passwordInput.text)
+                            }
                         }
                     }
 
@@ -248,41 +251,6 @@ BasePage {
                             userManager.userType = Enums.UserType.NotLoggedUser
                             sessionManager.getEntity()
                             top.enterViewTypePage()
-                        }
-                    }
-                }
-
-                ComboBox
-                {
-                    Layout.alignment: Qt.AlignHCenter
-                    model: ["Choose role", "Producer", "Log", "Sawmill", "Exporter"]
-                    visible: false // TO_DO_LATER
-
-                    Layout.preferredHeight: s(Style.buttonHeight)
-                    Layout.preferredWidth: s(Style.buttonHeight) * 3
-
-                    onActivated: {
-                        switch(index) {
-                        case 1:
-                            loginInput.text = "producer@gaiachain.io"
-                            passwordInput.text = "test1234"
-                            break
-                        case 2:
-                            loginInput.text = "logpark@gaiachain.io"
-                            passwordInput.text = "test1234"
-                            break
-                        case 3:
-                            loginInput.text = "sawmill@gaiachain.io"
-                            passwordInput.text = "test1234"
-                            break
-                        case 4:
-                            loginInput.text = "exporter@gaiachain.io"
-                            passwordInput.text = "test1234"
-                            break
-                        default:
-                            loginInput.text = ""
-                            passwordInput.text = ""
-                            break
                         }
                     }
                 }

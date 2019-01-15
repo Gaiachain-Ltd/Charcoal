@@ -331,7 +331,6 @@ BasePage {
                     padding: s(Style.smallMargin) * 1.25
 
                     enabled: !error && !wrongCodeError && scannedId.length == 0
-                    visible: false // TO_DO_LATER
 
                     backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: scanInput.visible ? Style.qrCodeImgUrl : Style.keyboardImgUrl

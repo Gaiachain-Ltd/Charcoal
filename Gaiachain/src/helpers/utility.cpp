@@ -135,3 +135,12 @@ QString Utility::userTypeToString(const Enums::UserType type) const
 {
     return m_userTypes.value(type);
 }
+
+bool Utility::isLoginComboboxVisible() const
+{
+#ifdef USE_COMBOBOX
+    return true;
+#else
+    return false;
+#endif
+}
