@@ -34,6 +34,7 @@ QtObject {
 
     // Text
     readonly property real smallPixelSize: 30
+    readonly property real normalPixelSize: 37
     readonly property real pixelSize: 40
     readonly property real bigPixelSize: 60
     readonly property real headerTitlePixelSize: pixelSize + 3

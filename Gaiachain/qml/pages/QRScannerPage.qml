@@ -27,10 +27,13 @@ BasePage {
     }
 
     function parseScannedId(id) {
-        if (scannedId.length == 0) {
+        if (scannedId.length == 0 && !error && !wrongCodeError) {
+            console.log("SCANNED_ID_VALIDATE", id)
             if (utility.validateId(id)) {
                 scannedId = utility.formatRawId(id)
             } else {
+                wrongCodeError = true
+                scannedId = id
                 showErrorPopup(false)
                 console.warn("Wrong code content!", id)
             }
@@ -59,6 +62,7 @@ BasePage {
             camera.start()
         scanInput.visible = false
         error = false
+        wrongCodeError = false
         photoPreview.source = ""
         photoPreview.visible = false
         scannedId = ""
@@ -77,12 +81,13 @@ BasePage {
     property int scannedIdAction: Number(Enums.PlaceAction.Arrived)
 
     onScannedIdChanged: {
-        if (scannedId.length > 0) {
+        if (scannedId.length > 0 && !wrongCodeError) {
             sessionManager.getEntityAction(scannedId, userManager.userType)
         }
     }
 
     property bool error: false
+    property bool wrongCodeError: false
 
     Connections
     {
@@ -205,7 +210,7 @@ BasePage {
                 width: Math.min(videoOutput.width, videoOutput.height) * zxingFilter.normalizedScanSize
                 height: width
 
-                error: top.error
+                error: top.error || top.wrongCodeError
                 finished: scannedId.length > 0
             }
 
@@ -238,7 +243,7 @@ BasePage {
                     backgroundColor: Style.backgroundShadowColor
                     source: Style.relaodImgUrl
 
-                    visible: error || scannedId.length > 0
+                    visible: error || wrongCodeError || scannedId.length > 0
                 }
             }
 
@@ -340,7 +345,7 @@ BasePage {
 
                     padding: s(Style.smallMargin) * 1.25
 
-                    enabled: !error && scannedId.length == 0
+                    enabled: !error && !wrongCodeError && scannedId.length == 0
 
                     backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
                     source: scanInput.visible ? Style.qrCodeImgUrl : Style.keyboardImgUrl
