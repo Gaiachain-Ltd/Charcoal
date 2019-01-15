@@ -24,6 +24,15 @@ ApplicationWindow
         return utility.scaleRoundByDpi(num)
     }
 
+    Connections
+    {
+        target: Qt.application
+
+        onStateChanged: {
+            Qt.inputMethod.hide()
+        }
+    }
+
     MainStackView {
         id: mainStackView
 
@@ -33,7 +42,7 @@ ApplicationWindow
             right: parent.right
         }
 
-        height: Qt.inputMethod.keyboardRectangle.y > 0
+        height: Qt.inputMethod.keyboardRectangle.y > 0 && Qt.inputMethod.keyboardRectangle.y < mainWindow.height
                 ? Qt.inputMethod.keyboardRectangle.y + Math.round(s(Style.footerHeight))
                 : parent.height
 
