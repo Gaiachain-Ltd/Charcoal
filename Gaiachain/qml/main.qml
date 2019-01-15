@@ -24,11 +24,20 @@ ApplicationWindow
         return utility.scaleRoundByDpi(num)
     }
 
-
     MainStackView {
         id: mainStackView
-        anchors.fill: parent
-        anchors.bottomMargin:  Qt.inputMethod.keyboardRectangle.height > 0 ? Qt.inputMethod.keyboardRectangle.height - Math.round(s(Style.footerHeight)) : 0
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
+        height: Qt.inputMethod.keyboardRectangle.y > 0
+                ? Qt.inputMethod.keyboardRectangle.y + Math.round(s(Style.footerHeight))
+                : parent.height
+
+        Behavior on height { NumberAnimation { duration: 200 } }
     }
 
     onClosing: close.accepted = mainStackView.onClosingEvent()
