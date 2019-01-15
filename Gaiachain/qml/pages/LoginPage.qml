@@ -174,7 +174,7 @@ BasePage {
                                 loginInput.currentLoginStr = model[index]
                                 break
                             default:
-                                loginInput.currentLogin = ""
+                                loginInput.currentLoginStr = ""
                                 passwordInput.text = ""
                                 break
                             }
