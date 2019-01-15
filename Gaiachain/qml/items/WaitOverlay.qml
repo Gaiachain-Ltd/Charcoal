@@ -13,6 +13,13 @@ Rectangle
 
     property bool logoVisible: false
 
+    MouseArea
+    {
+        anchors.fill: parent
+        onClicked: {}
+        onPressed: {}
+    }
+
     Column
     {
         anchors.fill: parent
