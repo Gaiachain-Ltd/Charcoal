@@ -60,7 +60,11 @@ Item {
             console.warn("Invalid resource type!")
         }
 
-        if (userManager.userType !== Enums.UserType.NotLoggedUser) {
+        var showUserType = userManager.userType !== Enums.UserType.NotLoggedUser
+                           && (page === Enums.Page.QRScanner
+                           || page === Enums.Page.EditableEventDetails)
+
+        if (showUserType) {
             return result + " " + utility.userTypeToString(userManager.userType).replace("_", " ")
         } else {
             return result

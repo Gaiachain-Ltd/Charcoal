@@ -59,48 +59,64 @@ FocusScope
                 visible: false
             }
 
-            TextInput
-            {
-                id: inputItem
-
-                focus: true
-
+            Item {
                 Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredHeight: inputItem.height
 
-                font {
-                    pixelSize: s(Style.pixelSize-5)
-                    family: Style.primaryFontFamily
-                }
-                echoMode: isPassword ? TextInput.Password : TextInput.Normal
+                layer.enabled: true
 
-                inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
-
-                Keys.onReturnPressed: moveToNextInput()
-                Keys.onEnterPressed: moveToNextInput()
-                Keys.onTabPressed: moveToNextInput()
-
-                BasicText
+                // Placed inside item to enable clipping.
+                TextInput
                 {
-                    id: placeholder
+                    id: inputItem
+
+                    focus: true
 
                     anchors {
+                        verticalCenter: parent.verticalCenter
                         left: parent.left
                         right: parent.right
-                        verticalCenter: parent.verticalCenter
                     }
 
-                    color: Style.textGreyColor
+                    autoScroll: true
 
-                    elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignLeft
+                    maximumLength: 50
 
-                    font: inputItem.font
-                    opacity: inputItem.text.length == 0 ? 1 : 0
+                    font {
+                        pixelSize: s(Style.pixelSize-5)
+                        family: Style.primaryFontFamily
+                    }
+                    echoMode: isPassword ? TextInput.Password : TextInput.Normal
 
-                    Behavior on opacity { PropertyAnimation { duration: 50 } }
+                    inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
+
+                    Keys.onReturnPressed: moveToNextInput()
+                    Keys.onEnterPressed: moveToNextInput()
+                    Keys.onTabPressed: moveToNextInput()
+
+                    BasicText
+                    {
+                        id: placeholder
+
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                        }
+
+                        color: Style.textGreyColor
+
+                        elide: Text.ElideRight
+                        horizontalAlignment: Text.AlignLeft
+
+                        font: inputItem.font
+                        opacity: inputItem.text.length == 0 ? 1 : 0
+
+                        Behavior on opacity { PropertyAnimation { duration: 50 } }
+                    }
                 }
             }
+
         }
     }
 }

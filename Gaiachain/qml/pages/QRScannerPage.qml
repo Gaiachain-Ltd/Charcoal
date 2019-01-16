@@ -28,7 +28,6 @@ BasePage {
 
     function parseScannedId(id) {
         if (scannedId.length == 0 && !error && !wrongCodeError) {
-            console.log("SCANNED_ID_VALIDATE", id)
             if (utility.validateId(id)) {
                 scannedId = utility.formatRawId(id)
             } else {
