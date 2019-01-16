@@ -46,13 +46,12 @@ void DataManager::setupModels()
     m_latestEventsProxyModel.setSourceModel(&m_eventModel);
 }
 
-void DataManager::onEntityLoaded(const QJsonDocument &doc)
+void DataManager::onEntityLoaded(const QJsonObject &entity)
 {
     Gaia::ModelData eventData;
 
-    const QJsonObject &obj = doc.object();
-    const QString shipmentId = obj.value(Tags::id).toString();
-    const QJsonArray &history = obj.value(Tags::history).toArray();
+    const QString shipmentId = entity.value(Tags::id).toString();
+    const QJsonArray &history = entity.value(Tags::history).toArray();
     QJsonArray::const_iterator it = history.constBegin();
 
     while (it != history.constEnd()) {
@@ -86,6 +85,16 @@ void DataManager::onEntityLoaded(const QJsonDocument &doc)
     m_shipmentModel.appendData(shipmentData);
 
     m_eventModel.appendData(eventData);
+}
+
+void DataManager::onEntitiesLoaded(const QJsonArray &entities)
+{
+    QJsonArray::const_iterator it = entities.constBegin();
+    while (it != entities.constEnd()) {
+        const QJsonObject &obj = (*it).toObject();
+        onEntityLoaded(obj);
+        ++it;
+    }
 }
 
 void DataManager::clearModels()
