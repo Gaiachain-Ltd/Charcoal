@@ -123,7 +123,7 @@ BasePage {
 
                     property string currentLoginStr: "producer@gaiachain.io"
 
-                    ComboBox //TO_DO_LATER remove it
+                    ComboBox
                     {
                         id: controlCombo
                         model: ["producer@gaiachain.io", "logpark@gaiachain.io", "sawmill@gaiachain.io", "exporter@gaiachain.io"]
