@@ -61,17 +61,15 @@ BasePage {
         }
     }
 
-    Column
+    ColumnLayout
     {
+        id: layout
         anchors.fill: parent
 
         Item
         {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            height: parent.height * 0.5
+            Layout.fillWidth: true
+            Layout.preferredHeight: parent.height * (Qt.inputMethod.keyboardRectangle.y > 0 ?  0.35 : 0.5)
 
             Items.SvgImage
             {
@@ -87,11 +85,8 @@ BasePage {
 
         Item
         {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            height: parent.height * 0.5
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
             ColumnLayout
             {

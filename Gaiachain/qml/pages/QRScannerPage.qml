@@ -115,7 +115,6 @@ BasePage {
     {
         target: pageManager
         enabled: pageManager.isOnTop(page)
-        onStackViewPop: camera.stop()
         onPopupAction: {
             switch(action) {
             case Enums.PopupAction.TryAgain:
