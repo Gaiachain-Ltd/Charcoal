@@ -10,6 +10,7 @@ Q_LOGGING_CATEGORY(session, "session")
 
 #include "overlaymanager.h"
 #include "../common/tags.h"
+#include "../common/globals.h"
 #include "../helpers/utility.h"
 #include "../rest/loginrequest.h"
 #include "../rest/entityrequest.h"
@@ -70,10 +71,17 @@ void SessionManager::getEntity()
     auto finishLambda = [&](const QJsonDocument &reply) {
         const QJsonArray &array = reply.array();
         QJsonArray::const_iterator it = array.constBegin();
+        QJsonArray batchArray;
         while(it != array.constEnd()) {
-            this->getEntity((*it).toString());
+            batchArray.push_back(*it);
+            if (batchArray.size() > MAX_BATCH_SIZE) {
+                this->getEntities(batchArray);
+                batchArray = QJsonArray();
+            }
             ++it;
         }
+        if (batchArray.size() > 0)
+            this->getEntities(batchArray);
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
@@ -91,7 +99,32 @@ void SessionManager::getEntity(const QString &id)
     };
 
     auto finishLambda = [&](const QJsonDocument &reply) {
-        emit entityLoaded(reply);
+        emit entityLoaded(reply.object());
+    };
+
+    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
+    connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+    m_client.send(request);
+}
+
+void SessionManager::getEntities(const QJsonArray &ids)
+{
+    auto request = QSharedPointer<EntityRequest>::create(m_token, ids);
+
+    auto errorLambda = [&](const QString &, const int code) {
+        emit entityLoadError(code);
+    };
+
+    auto finishLambda = [&](const QJsonDocument &reply) {
+        QJsonArray array;
+        const QJsonObject &obj = reply.object();
+        QJsonObject::const_iterator it = obj.constBegin();
+        while (it != obj.constEnd()) {
+            array.push_back(*it);
+            ++it;
+        }
+        emit entitiesLoaded(array);
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);

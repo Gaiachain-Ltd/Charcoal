@@ -26,6 +26,7 @@ EntityRequest::EntityRequest(const QString &token, const int count, const QStrin
     , m_requestType(RequestUninitializedPost)
 {
     if (!token.isEmpty() && count > 0 && !type.isEmpty()) {
+        m_timer.start();
         QJsonObject object;
         object.insert(Tags::count, QJsonValue(count));
         object.insert(Tags::commodityType, QJsonValue(type));
@@ -49,10 +50,26 @@ EntityRequest::EntityRequest(const QString &token, const QString &id)
     }
 }
 
+EntityRequest::EntityRequest(const QString &token, const QJsonArray &ids)
+    : BaseRequest(ADDRESS_BATCH, token)
+    , m_requestType(RequestBatch)
+{
+    if (!ids.isEmpty()) {
+        m_timer.start();
+        QJsonObject object;
+        object.insert(Tags::ids, QJsonValue(ids));
+        mRequestDocument.setObject(object);
+        mType = Type::Post;
+    } else {
+        qCritical() << "Error: missing entity GET info" << ids;
+    }
+}
+
 EntityRequest::EntityRequest(const QString &token, const QString &dateFrom, const QString &dateTo)
     : BaseRequest(ADDRESS_CALENDAR, token)
     , m_requestType(RequestCalendar)
 {
+    m_timer.start();
     QJsonObject object;
     if (!dateFrom.isEmpty()) {
         const int timestampFrom = dateFrom.toInt();
@@ -80,6 +97,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
     , m_requestType(RequestEntityPut)
 {
     if (!token.isEmpty() && !id.isEmpty()) {
+        m_timer.start();
         QJsonObject object;
         QString actionString;
         switch(action) {
@@ -103,6 +121,6 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
 void EntityRequest::parse()
 {
     if (m_timer.isValid())
-        qDebug() << "Request elapsed time:" << m_timer.elapsed();
+        qDebug() << "Request" << m_requestType << "elapsed time:" << m_timer.elapsed();
     BaseRequest::parse();
 }
