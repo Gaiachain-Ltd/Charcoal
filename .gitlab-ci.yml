@@ -85,6 +85,8 @@ linux_build:
 
 upload_job:
   <<: *common
+  only:
+    - master
   tags:
     - LinuxAndroid
   stage: upload
