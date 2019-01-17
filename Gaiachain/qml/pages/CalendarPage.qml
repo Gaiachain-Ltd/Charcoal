@@ -13,12 +13,12 @@ import "../items" as Items
 BasePage {
     id: top
 
-
     property date currentDate: new Date()
     property int currentYear: currentDate.getFullYear()
     property int currentMonth: monthModel[currentDate.getMonth()]
-    property int displayedYear: currentYear
     property int lowestYear: currentYear
+    // Initialize displayedYear with lowest year when only one/two months of new year are present, due to fact that topLeft item is from lowestYear.
+    property int displayedYear: (currentMonth === Calendar.January || currentMonth === Calendar.February) ? lowestYear : currentYear
 
     readonly property var monthModel: [
         Calendar.January, Calendar.February, Calendar.March,
@@ -117,13 +117,14 @@ BasePage {
 
             onContentYChanged: {
                 // Update curent year based on item at bottomLeft position.
-                var bottomLeft = itemAt(contentX + cellWidth / 2,
-                                        contentY + height - cellHeight * 0.3)
-                if (bottomLeft !== null) {
-                    top.displayedYear = bottomLeft.cYear
+                // 0.8 is here tu assure that year will be changed when month header is shown.
+                var topLeft = itemAt(contentX + cellWidth * 0.5, contentY + cellHeight * 0.8)
 
-                    // Add next year when we're in May. If we set March here recurently next years are added...
-                    if (bottomLeft.cMonth === Calendar.May && bottomLeft.cYear === lowestYear)
+                if (topLeft !== null) {
+                    top.displayedYear = topLeft.cYear
+
+                    // Add next year when topLeft is in March.
+                    if (topLeft.cMonth === Calendar.March && topLeft.cYear === lowestYear)
                          addYear()
                 }
             }
