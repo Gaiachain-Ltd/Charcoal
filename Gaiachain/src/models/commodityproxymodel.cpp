@@ -10,9 +10,9 @@ CommodityProxyModel::CommodityProxyModel(QObject *parent)
 {
     setDynamicSortFilter(true);
 
-    connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityProxyModel::onRowsInserted, Qt::QueuedConnection);
-    connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityProxyModel::onRowsRemoved, Qt::QueuedConnection);
-    connect(this, &QAbstractItemModel::modelReset, this, &CommodityProxyModel::onModelReset, Qt::QueuedConnection);
+    connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityProxyModel::onRowsInserted);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityProxyModel::onRowsRemoved);
+    connect(this, &QAbstractItemModel::modelReset, this, &CommodityProxyModel::onModelReset);
 }
 
 void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool enable)

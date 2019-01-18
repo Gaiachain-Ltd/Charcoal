@@ -11,9 +11,9 @@ CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
 {
     setDynamicSortFilter(true);
 
-    connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityDateRangeProxyModel::onRowsInserted, Qt::QueuedConnection);
-    connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityDateRangeProxyModel::onRowsRemoved, Qt::QueuedConnection);
-    connect(this, &QAbstractItemModel::modelReset, this, &CommodityDateRangeProxyModel::onModelReset, Qt::QueuedConnection);
+    connect(this, &QAbstractItemModel::rowsInserted, this, &CommodityDateRangeProxyModel::onRowsInserted);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &CommodityDateRangeProxyModel::onRowsRemoved);
+    connect(this, &QAbstractItemModel::modelReset, this, &CommodityDateRangeProxyModel::onModelReset);
 }
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
