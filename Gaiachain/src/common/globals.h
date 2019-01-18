@@ -4,7 +4,7 @@
 #include <QVector>
 #include <QObject>
 
-#define SERVER_ADDRESS QStringLiteral("https://beta.gaiachain.io/api/v1")
+#define SERVER_ADDRESS QStringLiteral("https://poc.gaiachain.io/api/v1")
 #define QR_CODE_LENGTH 12
 
 #define MAX_BATCH_SIZE 20
