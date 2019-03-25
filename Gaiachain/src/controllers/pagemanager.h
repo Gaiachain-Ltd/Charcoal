@@ -48,7 +48,7 @@ public slots:
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
     const Enums::Page m_initialPage = Enums::Page::Login;
-    const Enums::Page m_homePage = Enums::Page::ViewType;
+    const Enums::Page m_homePage = Enums::Page::ResourceChosing;
 
     QVector<Enums::Page> m_pageStack;
     QVector<Enums::Popup> m_popupStack;

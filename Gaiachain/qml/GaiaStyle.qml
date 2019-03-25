@@ -35,6 +35,7 @@ QtObject {
     readonly property int imageSize: 30
 
     readonly property color buttonBackColor: textGreenColor
+    readonly property color buttonBackBrownColor: "#AA6400"
 
     // Text
     readonly property real smallPixelSize: 30
@@ -57,6 +58,9 @@ QtObject {
     readonly property int calendarBigDotSize: calendarSmallDotSize * 2
 
     // urls
+    readonly property url chooseCocoaImgUrl: "qrc:/ui/choose_cocoa"
+    readonly property url chooseTimberImgUrl: "qrc:/ui/choose_timber"
+
     readonly property url blackAddImgUrl: "qrc:/ui/add_black"
     readonly property url greenAddImgUrl: "qrc:/ui/add_green"
     readonly property url rightArrowImgUrl: "qrc:/ui/right_arrow"

@@ -81,3 +81,17 @@ void UserManager::setUserType(const Enums::UserType userType)
     setLoggedIn();
     emit userTypeChanged(userType);
 }
+
+Enums::CommodityType UserManager::commodityType() const
+{
+    return m_commodityType;
+}
+
+void UserManager::setCommodityType(const Enums::CommodityType commodityType)
+{
+    if (m_commodityType == commodityType)
+        return;
+
+    m_commodityType = commodityType;
+    emit commodityTypeChanged(commodityType);
+}
