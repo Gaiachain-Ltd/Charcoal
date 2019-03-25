@@ -54,7 +54,6 @@ BasePage {
                     Items.ImageItem {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        imageUrl: Style.cocoaImgUrl
                         text: Strings.gaiachain
                         textFont.pixelSize: s(Style.pixelSize)
                     }
@@ -83,7 +82,7 @@ BasePage {
                 shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)
 
-                source: Style.timberImgUrl
+                source: Style.chooseTimberImgUrl
                 text: Strings.timber
 
                 spacing: s(Style.normalMargin)
@@ -96,12 +95,12 @@ BasePage {
 
                 buttonHeight: width
                 buttonPadding: s(Style.normalMargin) * 1.1
-                buttonBackgroundColor: Style.buttonBackColor
+                buttonBackgroundColor: Style.buttonBackBrownColor
 
                 shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)
 
-                source: Style.cocoaImgUrl
+                source: Style.chooseCocoaImgUrl
                 text: Strings.cocoa
 
                 spacing: s(Style.normalMargin)

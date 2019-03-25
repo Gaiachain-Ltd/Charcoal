@@ -26,7 +26,7 @@ public:
     Enums::UserType getUserType() const;
     void setUserType(const Enums::UserType userType);
 
-    Enums::UserType commodityType() const;
+    Enums::CommodityType commodityType() const;
     void setCommodityType(const Enums::CommodityType commodityType);
 
     QVariantMap userData() const;

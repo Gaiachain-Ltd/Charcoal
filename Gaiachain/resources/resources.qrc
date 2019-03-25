@@ -43,6 +43,8 @@
         <file alias="reload">ui/reload-icon.svg</file>
         <file alias="edit_green">ui/edit-icon-green.svg</file>
         <file alias="right_arrow_light">ui/arrow-light.svg</file>
+        <file alias="choose_cocoa">ui/cocoa-main-icon.svg</file>
+        <file alias="choose_timber">ui/timber-main-icon.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/Montserrat-Medium.ttf</file>

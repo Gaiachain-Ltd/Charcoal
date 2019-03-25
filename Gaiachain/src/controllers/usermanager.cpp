@@ -82,7 +82,7 @@ void UserManager::setUserType(const Enums::UserType userType)
     emit userTypeChanged(userType);
 }
 
-Enums::UserType UserManager::commodityType() const
+Enums::CommodityType UserManager::commodityType() const
 {
     return m_commodityType;
 }
