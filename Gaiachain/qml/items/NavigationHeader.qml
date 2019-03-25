@@ -14,7 +14,7 @@ Item {
     readonly property bool isOnHomePage: pageManager.isOnHomePage()
 
     function backHandler() {
-        if (userManager.loggedIn && isOnHomePage) {
+        if (userManager.loggedIn && (isOnHomePage || pageManager.isOnTop(Enums.Page.ResourceChosing))) {
             pageManager.enterPopup(Enums.Popup.Information, {
                                        "text" : Strings.logoutQuestion,
                                        "acceptButtonText": Strings.logout,

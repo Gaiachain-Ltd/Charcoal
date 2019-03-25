@@ -1,4 +1,4 @@
-﻿import QtQuick 2.11
+import QtQuick 2.11
 
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.5
@@ -15,8 +15,8 @@ BasePage {
 
     headerVisible: false
 
-    function enterViewTypePage() {
-        pageManager.enter(Enums.Page.ViewType)
+    function enterNextPage() {
+        pageManager.enter(Enums.Page.ResourceChosing)
     }
 
     function closeEventHandler() {
@@ -31,7 +31,7 @@ BasePage {
     Connections
     {
         target: sessionManager
-        onLoginFinished: enterViewTypePage()
+        onLoginFinished: enterNextPage()
         onDisplayLoginError: {
             // If someone send displayLoginError when not in login screen, ignore it and print warning
             if (!pageManager.isOnTop(page)) {
@@ -145,6 +145,7 @@ BasePage {
 
                         delegate: ItemDelegate {
                             leftPadding: loginInput.height
+                            width: parent.width
                             contentItem: Text {
                                 text: modelData
                                 color: Style.textPrimaryColor
@@ -247,7 +248,7 @@ BasePage {
                         onClicked: {
                             userManager.userType = Enums.UserType.NotLoggedUser
                             sessionManager.getEntity()
-                            top.enterViewTypePage()
+                            top.enterNextPage()
                         }
                     }
                 }

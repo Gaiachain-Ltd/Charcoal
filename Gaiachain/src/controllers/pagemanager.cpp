@@ -27,8 +27,8 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
  */
 void PageManager::enter(const Enums::Page page, QJsonObject properites, const bool immediate)
 {
-    qDebug() << "Print PAGE stack on enter" << m_pageStack;
-    qDebug() << "Enter PAGE:" << page << "properites:" << properites;
+    qDebug() << "\033[1;36m" << "Print PAGE stack on enter" << m_pageStack << "\033[0m";
+    qDebug() << "\033[1;36m" << "Enter PAGE:" << page << "properites:" << properites << "\033[0m";
 
     if (!m_popupStack.isEmpty()) {
         qWarning() << "Popup stack not empty:" <<  m_popupStack
@@ -53,8 +53,8 @@ void PageManager::enter(const Enums::Page page, QJsonObject properites, const bo
 
 void PageManager::enterPopup(const Enums::Popup popup, QJsonObject properites, const bool immediate)
 {
-    qDebug() << "Print POPUPS stack on enter" << m_pageStack;
-    qDebug() << "Enter POPUP:" << popup << "properites:" << properites;
+    qDebug() << "\033[1;36m" << "Print POPUPS stack on enter" << m_pageStack << "\033[0m";
+    qDebug() << "\033[1;36m" << "Enter POPUP:" << popup << "properites:" << properites << "\033[0m";
 
     properites.insert(QStringLiteral("isPopup"), true);
     m_popupStack.push_back(popup);
@@ -72,8 +72,8 @@ void PageManager::sendAction(Enums::PopupAction action)
 
 void PageManager::back(const bool immediate)
 {
-    qDebug() << "Print PAGE stack on pop" << m_pageStack;
-    qDebug() << "Print POPUP stack on pop" << m_popupStack;
+    qDebug() << "\033[1;36m" << "Print PAGE stack on pop" << m_pageStack << "\033[0m";
+    qDebug() << "\033[1;36m" << "Print POPUP stack on pop" << m_popupStack << "\033[0m";
 
     // ************** HANDLE popups first
     if (!m_popupStack.isEmpty()) {
