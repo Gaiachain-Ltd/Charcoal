@@ -92,7 +92,7 @@ void FakeDataPopulator::populateFakeData(const int count, const Enums::Commodity
         QDateTime sd = startDate;
 
         int stepCount = 0;
-        const int maxStepCount = /*qrand() %*/ (userType.size() * actions.size());
+        const int maxStepCount = qrand() % (userType.size() * actions.size());
         qDebug() << BLUE("[FAKE_DATA]") << commodityType << shipmentId << (maxStepCount + 1);
 
         for (const auto &user : userType) {

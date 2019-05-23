@@ -53,6 +53,7 @@ private:
         {Enums::Page::ShipmentDetails, Enums::PageSections::ShipmentDetailsSection},
         {Enums::Page::ViewType, Enums::PageSections::ViewTypeSection},
         {Enums::Page::QRScanner, Enums::PageSections::QRSection},
+        {Enums::Page::Map, Enums::PageSections::EventDetailsSection},
 
         {Enums::Page::LanguageChosing, Enums::PageSections::DefaultSection}, // TO_DO_later
         {Enums::Page::Login, Enums::PageSections::DefaultSection}, // TO_DO_later
@@ -67,7 +68,7 @@ private:
         {Enums::PageSections::EventsListSection, Enums::Page::EventsList},
         {Enums::PageSections::EventDetailsSection, Enums::Page::EventDetails},
         {Enums::PageSections::ShipmentDetailsSection, Enums::Page::ShipmentDetails},
-        {Enums::PageSections::QRSection, Enums::Page::QRScanner}
+        {Enums::PageSections::QRSection, Enums::Page::QRScanner},
     };
 
     const int m_maxDepth = 4;

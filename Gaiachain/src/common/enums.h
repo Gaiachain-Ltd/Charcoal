@@ -36,6 +36,7 @@ namespace Enums {
         ShipmentDetails,
         ViewType,
         QRScanner,
+        Map,
 
         PageCount
     };

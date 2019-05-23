@@ -58,6 +58,7 @@
         <file alias="motorcycle">ui/motorcycle-icon.svg</file>
         <file alias="export_brown">ui/ship-icon.svg</file>
         <file alias="truck">ui/truck-icon.svg</file>
+        <file alias="right_arrow_white">ui/arrow-light-white.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/Montserrat-Medium.ttf</file>

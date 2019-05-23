@@ -14,6 +14,8 @@ BasePage {
     page: Enums.Page.Login
 
     headerVisible: false
+    addButtonVisible: false
+    refreshButtonVisible: false
 
     function enterNextPage() {
         pageManager.enter(Enums.Page.ResourceChosing)

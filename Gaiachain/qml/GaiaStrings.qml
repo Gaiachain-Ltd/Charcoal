@@ -71,6 +71,9 @@ QtObject {
     readonly property string dataSaveError: qsTr("Data save error.")
     readonly property string dataDownloadError: qsTr("Downloading server data failed.")
 
+    // map
+    readonly property string zeroDeforestation: qsTr("Zero-deforestation")
+
     // enums
     readonly property string placeTypeForestery: qsTr("Forestery")
     readonly property string placeTypeLogPark: qsTr("Log Park")

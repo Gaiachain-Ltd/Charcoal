@@ -8,6 +8,8 @@ import com.gaiachain.style 1.0
 Item {
     id: top
     readonly property bool isAddButtonActive : page === Enums.Page.QRScanner || page === Enums.Page.EditableEventDetails
+    property bool addButtonVisible: true
+    property bool refreshButtonVisible: true
     signal barClicked()
 
     Rectangle {
@@ -67,7 +69,7 @@ Item {
                 backgroundColor: isAddButtonActive ? Style.buttonGreenColor : "transparent"
                 source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
 
-                visible: page !== Enums.Page.Login && page !== Enums.Page.ResourceChosing && userManager.loggedIn
+                visible: addButtonVisible && userManager.loggedIn
 
                 onClicked: {
                     if (!isAddButtonActive) {
@@ -94,7 +96,7 @@ Item {
             source: Style.refreshImgUrl
 
             enabled: !refreshTimer.running
-            visible: page !== Enums.Page.Login && !fakeData
+            visible: refreshButtonVisible && !fakeData
 
             onClicked: refreshData()
         }
