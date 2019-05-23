@@ -1,8 +1,8 @@
 #include "eventmodel.h"
 
 #include <QDateTime>
-#include <QDebug>
 
+#include "../common/logs.h"
 #include "../common/enums.h"
 
 EventModel::EventModel(QObject *parent)

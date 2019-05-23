@@ -13,6 +13,10 @@ use_combobox {
     DEFINES+=USE_COMBOBOX
 }
 
+fake_data {
+    DEFINES+=FAKE_DATA
+}
+
 include(../version.pri)
 
 # qzxing
@@ -58,7 +62,9 @@ HEADERS += \
     src/models/abstractsortfilterproxymodel.h \
     src/common/tags.h \
     src/rest/entityrequest.h \
-    src/models/latesteventsproxy.h
+    src/models/latesteventsproxy.h \
+    src/common/logs.h \
+    src/controllers/fakedatapopulator.h
 
 SOURCES += src/main.cpp \ 
     src/models/shipmentmodel.cpp \
@@ -80,7 +86,8 @@ SOURCES += src/main.cpp \
     src/controllers/abstractmanager.cpp \
     src/models/shipmenteventsproxy.cpp \
     src/models/abstractsortfilterproxymodel.cpp \
-    src/models/latesteventsproxy.cpp
+    src/models/latesteventsproxy.cpp \
+    src/controllers/fakedatapopulator.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

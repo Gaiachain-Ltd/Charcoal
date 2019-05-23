@@ -2,8 +2,8 @@
 
 #include <QGuiApplication>
 #include <QScreen>
-#include <QDebug>
 
+#include "../common/logs.h"
 #include "../common/globals.h"
 
 Utility *Utility::instance()

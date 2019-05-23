@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.helpers 1.0
 
 // TO_DO consider using Toolbar
 Item {
@@ -10,7 +11,9 @@ Item {
 
     signal headerClicked()
 
-    property var currentResource: Enums.CommodityType.Timber //TO_DO set proper text after user set
+    readonly property bool isMaxDepth: sectionsModel.maxSectionsDepth() === buttonList.count
+
+    property int currentResource: userManager.commodityType
     readonly property bool isOnHomePage: pageManager.isOnHomePage()
 
     function backHandler() {
@@ -71,11 +74,11 @@ Item {
         }
     }
 
-    function getResourceUrl(res, green) {
+    function getResourceUrl(res) {
         switch (res) {
-        case Enums.CommodityType.Timber: return green ? Style.miniTimberGreenImgUrl : Style.miniTimberImgUrl
+        case Enums.CommodityType.Timber: return Style.miniTimberImgUrl
             //case Enums.CommodityType.Charcoal: return Style.charcoalImgUrl
-            //case Enums.CommodityType.Cocoa: return Style.cocoaImgUrl
+        case Enums.CommodityType.Cocoa: return Style.miniCocoaImgUrl
         default:
             console.warn("Invalid resource type. Return empty url!")
         }
@@ -83,16 +86,16 @@ Item {
         return ""
     }
 
-    function sectionToUrl(section, green) {
+    function sectionToUrl(section, colored) {
+        var suffix = colored ? Helpers.getCurrentCommodityTypeSuffix() : ""
         switch(section) {
-        case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource, green)
-        case Enums.PageSections.CalendarSection: return green ? Style.miniCalendarGreenImgUrl : Style.miniCalendarImgUrl
-        case Enums.PageSections.EditableEventDetailsSection: return green ? Style.editGreenImgUrl : Style.editImgUrl
-        case Enums.PageSections.EventsListSection: return green ? Style.miniListGreenImgUrl : Style.miniListImgUrl
-        case Enums.PageSections.EventDetailsSection: return green ? Style.detailsGreenImgUrl : Style.detailsImgUrl
-        case Enums.PageSections.ShipmentDetailsSection: return green ? Style.timelineGreenImgUrl : Style.timelineImgUrl
-        case Enums.PageSections.QRSection: return green ? Style.qrCodeGreenImgUrl : Style.qrCodeImgUrl
-
+        case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource) + suffix
+        case Enums.PageSections.CalendarSection: return Style.miniCalendarImgUrl + suffix
+        case Enums.PageSections.EditableEventDetailsSection: return Style.editImgUrl + suffix
+        case Enums.PageSections.EventsListSection: return Style.miniListImgUrl + suffix
+        case Enums.PageSections.EventDetailsSection: return Style.detailsImgUrl + suffix
+        case Enums.PageSections.ShipmentDetailsSection: return Style.timelineImgUrl + suffix
+        case Enums.PageSections.QRSection: return Style.qrCodeImgUrl + suffix
         case Enums.PageSections.DefaultSection: return ""
 
         default:
@@ -159,6 +162,8 @@ Item {
 
                 source: Style.homeImgUrl
 
+                visible: !isMaxDepth
+
                 onClicked: pageManager.backTo(pageManager.homePage())
             }
 
@@ -178,7 +183,7 @@ Item {
                 delegate: Item {
                     id: delegateId
                     height: ListView.view.height
-                    width: buttonList.delegateWidth
+                    width: arrowContainer.visible ? buttonList.delegateWidth : topRow.buttonWidth
 
                     property bool isLast: (ListView.view.count - 1) === index
 
@@ -188,12 +193,16 @@ Item {
                         spacing: 0
 
                         Item {
+                            id: arrowContainer
                             Layout.fillWidth: true
                             Layout.fillHeight: true
+
+                            visible: index > 0 || !isMaxDepth
 
                             SvgImage {
                                 height: s(Style.headerArrowHeight)
                                 width: s(Style.headerArrowWidth)
+
                                 anchors {
                                     centerIn: parent
                                     // last arrow is moved a little to the left
@@ -214,7 +223,7 @@ Item {
                             padding: (delegateId.isLast ? 1.1 : 1.5) * s(Style.smallMargin)
 
                             source: sectionToUrl(id, !delegateId.isLast)
-                            backgroundColor: delegateId.isLast ? Style.buttonBackColor : "transparent"
+                            backgroundColor: delegateId.isLast ? Style.currentCommodityColor : "transparent"
 
                             onClicked: pageManager.backToSection(id)
                         }
@@ -226,7 +235,7 @@ Item {
         BasicText {
             Layout.fillWidth: true
 
-            color: Style.textGreenColor
+            color: Style.currentCommodityColor
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignHCenter
             font {

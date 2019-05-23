@@ -6,19 +6,27 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QDebug>
 
 #include "../common/enums.h"
 #include "../common/globals.h"
 #include "../common/location.h"
 #include "../common/tags.h"
 #include "../helpers/utility.h"
+#include "../common/logs.h"
+
+#ifdef FAKE_DATA
+    #include "fakedatapopulator.h"
+#endif
 
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
 {
     setupModels();
-//    populateModels();
+#ifdef FAKE_DATA
+    FakeDataPopulator fakeData(m_eventModel, m_shipmentModel);
+    fakeData.populateFakeData(1, Enums::CommodityType::Timber);
+    fakeData.populateFakeData(1, Enums::CommodityType::Cocoa);
+#endif
 }
 
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -44,6 +52,7 @@ void DataManager::setupModels()
 
     m_shipmentEventsProxyModel.setSourceModel(&m_eventModel);
     m_latestEventsProxyModel.setSourceModel(&m_eventModel);
+    m_latestEventsProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 }
 
 void DataManager::onEntityLoaded(const QJsonObject &entity)
@@ -101,65 +110,4 @@ void DataManager::clearModels()
 {
     m_eventModel.clearModel();
     m_shipmentModel.clearModel();
-}
-
-void DataManager::populateModels()
-{
-    Gaia::ModelData shipmentData;
-    Gaia::ModelData eventData;
-
-    // Populate shipment data
-    int ctCount = static_cast<int>(Enums::CommodityType::CommodityCount);
-    int shipmentCount = 300;
-    for (int i = 0; i < shipmentCount; ++i) {
-        shipmentData.append({QString::number(i), i % ctCount});
-    }
-    m_shipmentModel.appendData(shipmentData);
-
-    //Populate events data
-    QStringList comapnyNames{"Milo", "Solutions", "XentCorp", "YOLOCorp"};
-    QVector<Enums::PlaceType> placeType{Enums::PlaceType::Forestery, Enums::PlaceType::LogPark,
-                Enums::PlaceType::Sawmill, Enums::PlaceType::Export};
-    QVector<Enums::PlaceAction> actions {Enums::PlaceAction::Arrived, Enums::PlaceAction::Departed};
-
-    QDateTime startDate(QDate(2015,1,1));
-    QDateTime endDate = QDateTime::currentDateTime();
-    auto dateDiff = startDate.daysTo(endDate) / 4;
-
-    QDateTime startTestRange = QDateTime(QDate(2019,1,1));
-    QDateTime endTestRange = endDate;//(QDate(2019,1,1));
-    int countTest = 0;
-
-    for (int i =0; i < shipmentCount; ++i) {
-        int shipId = i;
-        QDateTime sd = startDate;
-
-        for (const auto &place : placeType) {
-            QString companyName = comapnyNames[rand() % comapnyNames.size()];
-
-            for (const auto &action : actions) {
-                int daysElapsed = (rand() % dateDiff + 1);
-                sd = sd.addDays(daysElapsed);
-
-                if (sd >= startTestRange && sd <= endTestRange)
-                    ++countTest;
-
-                Location loc;
-                loc.lat = 9.665645 + i;
-                loc.lon = 7.324432 + i;
-
-                eventData.append({shipId,
-                                  sd,
-                                  QVariant::fromValue(loc),
-                                  companyName,
-                                  QVariant::fromValue(place),
-                                  QVariant::fromValue(action)
-                                 });
-            }
-        }
-    }
-
-    qDebug() << "Count between dates:" << startTestRange << endTestRange <<  countTest;
-
-    m_eventModel.appendData(eventData);
 }

@@ -12,6 +12,8 @@ BasePage {
 
     function enterViewTypePage(type) {
         userManager.commodityType = type
+        commodityProxyModel.clearCommodityFilter()
+        commodityProxyModel.setFilterForType(type)
         pageManager.enter(Enums.Page.ViewType)
     }
 
@@ -77,7 +79,7 @@ BasePage {
 
                 buttonHeight: width
                 buttonPadding: s(Style.normalMargin) * 1.1
-                buttonBackgroundColor: Style.buttonBackColor
+                buttonBackgroundColor: Style.textGreenColor
 
                 shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)
@@ -95,7 +97,7 @@ BasePage {
 
                 buttonHeight: width
                 buttonPadding: s(Style.normalMargin) * 1.1
-                buttonBackgroundColor: Style.buttonBackBrownColor
+                buttonBackgroundColor: Style.textBrownColor
 
                 shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)
@@ -105,7 +107,7 @@ BasePage {
 
                 spacing: s(Style.normalMargin)
 
-//                onButtonClicked: top.enterViewTypePage(Enums.CommodityType.Cocoa)
+                onButtonClicked: top.enterViewTypePage(Enums.CommodityType.Cocoa)
             }
             Items.LayoutSpacer { spacerHeight: buttonLayout.buttonHeight }
         }

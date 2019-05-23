@@ -4,7 +4,7 @@
 #include "eventmodel.h"
 #include "shipmentmodel.h"
 
-#include <QDebug>
+#include "../common/logs.h"
 
 CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
@@ -18,8 +18,10 @@ CommodityDateRangeProxyModel::CommodityDateRangeProxyModel(QObject *parent)
 
 void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *commodityProxyModel)
 {
-    m_commodityProxyModel = commodityProxyModel;
-    connect(m_commodityProxyModel, &CommodityProxyModel::modelChanged, this, &CommodityDateRangeProxyModel::invalidateFilter);
+    if (!m_commodityProxyModel && commodityProxyModel) {
+        m_commodityProxyModel = commodityProxyModel;
+        connect(m_commodityProxyModel, &CommodityProxyModel::modelChanged, this, &CommodityDateRangeProxyModel::invalidate);
+    }
 }
 
 void CommodityDateRangeProxyModel::setSortingTypeAndRole(int role, int sortColumn, Qt::SortOrder order)
@@ -63,7 +65,7 @@ bool CommodityDateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelI
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
     auto timestamp = sourceModel()->data(index, EventModel::Timestamp).toDateTime();
 
-    if (isInDateTimeRange(timestamp)) {
+    if (isInDateTimeRange(timestamp) && m_commodityProxyModel) {
         auto shipmentId = sourceModel()->data(index, EventModel::ShipmentId).toString();
         return m_commodityProxyModel->hasShipment(shipmentId);
     }

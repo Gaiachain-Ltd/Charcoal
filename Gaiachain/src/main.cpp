@@ -66,12 +66,6 @@ int main(int argc, char *argv[]) {
     MainController mc;
     mc.setupQmlContext(engine);
 
-#ifdef DESKTOP_TESTS
-    engine.rootContext()->setContextProperty("isDesktop", true);
-#else
-    engine.rootContext()->setContextProperty("isDesktop", false);
-#endif
-
 #ifdef Q_OS_ANDROID
     const int splashScreenTimeMs = 2000;
     QTimer::singleShot(splashScreenTimeMs, [&engine]() { engine.load(QUrl(QStringLiteral("qrc:///main.qml"))); } );

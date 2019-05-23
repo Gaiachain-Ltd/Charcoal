@@ -14,8 +14,9 @@ class CommodityProxyModel : public AbstractSortFilterProxyModel
 public:
     explicit CommodityProxyModel(QObject *parent = nullptr);
 
-    Q_INVOKABLE void setCommodityType(Enums::CommodityType filterType, bool enable = true);
-    Q_INVOKABLE bool commodityEnabled(Enums::CommodityType filterType) const;
+    Q_INVOKABLE void setFilterForType(const Enums::CommodityType commodityType, const bool enable = true);
+    Q_INVOKABLE void clearCommodityFilter();
+    Q_INVOKABLE bool commodityEnabled(const Enums::CommodityType commodityType) const;
 
     bool hasShipment(const QString& shipmentId) const;
     Enums::CommodityType shipmentCommodityType(const QString& shipmentId) const;

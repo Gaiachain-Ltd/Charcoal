@@ -41,13 +41,14 @@ QtObject {
     readonly property string batch: qsTr("Batch")
 
     // Event list
-    readonly property string eventText: qsTr("%1<br><b>Log ID %2</b><br>%3 %4 concession<br>%5")
-    readonly property string eventTextCalendar: qsTr("<b>Log ID %1</b><br>%2 %3 concession<br>%4")
+    readonly property string eventText: qsTr("%2<br><b>%1 %3</b><br>%4 %5 concession<br>%6")
+    readonly property string eventTextCalendar: qsTr("<b>%1 %2</b><br>%3 %4 concession<br>%5")
 
     // Event Details Page
     readonly property string companyName: qsTr("Company name")
     readonly property string gpsLocationOf: qsTr("Location of %1 (GPS point)")
     readonly property string logID: qsTr("Log ID")
+    readonly property string cocoaID: qsTr("Cocoa ID")
     readonly property string dateTimeArrival: qsTr("Date and time of arrival")
     readonly property string dateTimeDeparture: qsTr("Date and time of departure")
 
@@ -75,6 +76,10 @@ QtObject {
     readonly property string placeTypeLogPark: qsTr("Log Park")
     readonly property string placeTypeSawmill: qsTr("Sawmill")
     readonly property string placeTypeExport: qsTr("Export")
+    readonly property string placeTypeVillage: qsTr("Transport village")
+    readonly property string placeTypeBagging: qsTr("Séchage / Ensachage")
+    readonly property string placeTypeNursery: qsTr("Pépinière")
+    readonly property string placeTypeTruck: qsTr("Transport au Port d’Abidjan")
 
     readonly property string placeActionArrived: qsTr("Arrived")
     readonly property string placeActionDeparted: qsTr("Departed")

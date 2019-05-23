@@ -2,8 +2,8 @@
 
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QDebug>
 
+#include "../common/logs.h"
 #include "../helpers/utility.h"
 #include "../common/tags.h"
 

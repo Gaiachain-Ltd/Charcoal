@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>testComponents/CommodityRangeTestPage.qml</file>
         <file>pages/LanguageChosingPage.qml</file>
         <file>pages/LoginPage.qml</file>
         <file>pages/ResourceChosingPage.qml</file>

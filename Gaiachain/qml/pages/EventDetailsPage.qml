@@ -60,7 +60,7 @@ BasePage {
                         id: commodityTextId
                         Layout.preferredWidth: parent.width * 0.75
 
-                        titleText: (Strings.logID + ":")
+                        titleText: Helpers.getCurrentIdText() + ":"
                         contentText: attributes.shipmentId
                     }
                     Items.LayoutSpacer {}

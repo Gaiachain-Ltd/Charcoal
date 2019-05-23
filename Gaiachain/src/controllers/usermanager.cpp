@@ -3,7 +3,6 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -11,6 +10,7 @@
 #include "../common/tags.h"
 #include "../common/location.h"
 #include "../helpers/utility.h"
+#include "../common/logs.h"
 
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
@@ -82,12 +82,12 @@ void UserManager::setUserType(const Enums::UserType userType)
     emit userTypeChanged(userType);
 }
 
-Enums::CommodityType UserManager::commodityType() const
+int UserManager::commodityType() const
 {
     return m_commodityType;
 }
 
-void UserManager::setCommodityType(const Enums::CommodityType commodityType)
+void UserManager::setCommodityType(const int commodityType)
 {
     if (m_commodityType == commodityType)
         return;

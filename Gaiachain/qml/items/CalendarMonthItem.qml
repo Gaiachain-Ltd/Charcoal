@@ -17,10 +17,8 @@ Item {
 
     property int daySpacing: 0
 
-    property color circleColor: Style.textGreenColor
+    property color circleColor: Style.currentCommodityColor
     property int circleSize: s(Style.calendarBigDotSize)
-
-    property bool timberEnabled: commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
 
     signal titleClicked()
     signal dateClicked(date d)
@@ -85,7 +83,7 @@ Item {
                     radius: width * 0.5
 
                     color: {
-                        return currentMonth && timberEnabled && hasEvents
+                        return currentMonth && hasEvents
                                 ? circleColor
                                 : "transparent"
                     }

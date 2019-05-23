@@ -1,7 +1,6 @@
 #include "pagesectionsmodel.h"
 
-#include <QDebug>
-
+#include "../common/logs.h"
 #include "../helpers/utility.h"
 
 PageSectionsModel::PageSectionsModel(QObject *parent)
@@ -72,8 +71,10 @@ void PageSectionsModel::pagePushed(const Enums::Page page)
     }
 
     if (pushData) {
-        if (m_data.count() >= m_maxDepth)
-            qWarning() << "Page not pushed! Maximum depth of sections exceeded! Fix this!";
+        if (m_data.count() >= m_maxDepth) {
+            m_tmpData.push_back(m_data.front());
+            m_data.pop_front();
+        }
 
         pushBackData(newSection);
     }
@@ -94,6 +95,10 @@ void PageSectionsModel::pagePopped(const Enums::Page currentTopPage)
 
     if (currentSection != topSection) {
         m_data.pop_back();
+        if (!m_tmpData.isEmpty()) {
+            m_data.push_front(m_tmpData.back());
+            m_tmpData.pop_back();
+        }
         if (m_data.empty()) {
             m_isHomeSection = true;
             pushBackData(m_homeSection);
@@ -128,8 +133,11 @@ int PageSectionsModel::getShiftedIndex(const ModelRole role) const
 
 void PageSectionsModel::pushBackData(const Enums::PageSections section)
 {
-    QVariantList rowToInsert;
-    rowToInsert.append({static_cast<int>(section),
-                       Utility::enumToQString<Enums::PageSections>(section, "PageSections")});
-    m_data.push_back(rowToInsert);
+    if (section > Enums::PageSections::DefaultSection) {
+        QVariantList rowToInsert;
+        rowToInsert.append({static_cast<int>(section),
+                           Utility::enumToQString<Enums::PageSections>(section, "PageSections")});
+        qDebug() << CYAN("[SECTION] Push") << section << m_data;
+        m_data.push_back(rowToInsert);
+    }
 }

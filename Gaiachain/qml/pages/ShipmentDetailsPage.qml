@@ -125,7 +125,7 @@ BasePage {
                 Layout.preferredWidth: 0.2 * parent.availableWidth
 
                 property color backColor: Style.pageBaseBackgroundColor
-                property color linesColor: Style.buttonBackColor
+                property color linesColor: Style.currentCommodityColor
                 property real lineWidth: sr(8)
                 property real ringRadius: sr(14)
                 property real ringThick: sr(3)
@@ -234,8 +234,26 @@ BasePage {
                 Repeater {
                     model: mainFlickable.imagesModel
                     delegate: Items.SvgImage {
+                        readonly property real imageMultiplier: {
+                            // Pixel perfect resizing images.
+                            // Some images has bigger width / height ratio than
+                            // others. Every image need to be similar size.
+                            switch(modelData.placeType) {
+                            case Enums.PlaceType.Export:
+                            case Enums.PlaceType.Village:
+                                return 0.9
+                            case Enums.PlaceType.Bagging:
+                            case Enums.PlaceType.Nursery:
+                                return 1.25
+                            case Enums.PlaceType.Truck:
+                                return 0.75
+                            default:
+                                return 1.0
+                            }
+                        }
+
                         width: parent.width
-                        height: s(100)
+                        height: s(100) * imageMultiplier
                         y: modelData.imageMidYPos - height * 0.5
                         anchors.horizontalCenter: parent.horizontalCenter
 

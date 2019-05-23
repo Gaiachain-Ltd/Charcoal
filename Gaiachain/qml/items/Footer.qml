@@ -67,11 +67,11 @@ Item {
                 backgroundColor: isAddButtonActive ? Style.buttonGreenColor : "transparent"
                 source: isAddButtonActive ? Style.buttonAddBlack : Style.buttonAddGreen
 
-                visible: page !== Enums.Page.Login && userManager.loggedIn
+                visible: page !== Enums.Page.Login && page !== Enums.Page.ResourceChosing && userManager.loggedIn
 
                 onClicked: {
                     if (!isAddButtonActive) {
-                        pageManager.backToAndEnter(pageManager.homePage(),
+                        pageManager.backToAndEnter(Enums.Page.ViewType,
                                                    Enums.Page.QRScanner,
                                                    {},
                                                    true)
@@ -94,7 +94,7 @@ Item {
             source: Style.refreshImgUrl
 
             enabled: !refreshTimer.running
-            visible: page !== Enums.Page.Login
+            visible: page !== Enums.Page.Login && !fakeData
 
             onClicked: refreshData()
         }

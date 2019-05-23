@@ -60,6 +60,7 @@ namespace Enums {
         EventDetailsSection,
         ShipmentDetailsSection,
         QRSection,
+        HomeSection,
 
         PageSectionsCount
     };
@@ -72,6 +73,10 @@ namespace Enums {
         LogParkWorker,
         SawmillWorker,
         Exporter,
+        VillageWorker,
+        BaggingWorker,
+        NurseryWorker,
+        TruckDriver,
 
         UserTypeCount
     };
@@ -84,6 +89,10 @@ namespace Enums {
         LogPark,
         Sawmill,
         Export,
+        Village,
+        Bagging,
+        Nursery,
+        Truck,
 
         PlaceTypeCount
     };
