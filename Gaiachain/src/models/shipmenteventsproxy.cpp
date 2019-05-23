@@ -2,8 +2,7 @@
 
 #include "eventmodel.h"
 #include "../common/enums.h"
-
-#include <QDebug>
+#include "../common/logs.h"
 
 ShipmentEventsProxy::ShipmentEventsProxy(QObject *parent)
     : AbstractSortFilterProxyModel(parent)

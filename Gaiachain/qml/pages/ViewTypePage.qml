@@ -40,7 +40,7 @@ BasePage {
 
                 buttonHeight: width
                 buttonPadding: s(Style.normalMargin) * 1.1
-                buttonBackgroundColor: Style.buttonBackColor
+                buttonBackgroundColor: Style.currentCommodityColor
 
                 shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)
@@ -58,7 +58,7 @@ BasePage {
 
                 buttonHeight: width
                 buttonPadding: s(Style.normalMargin) * 1.1
-                buttonBackgroundColor: Style.buttonBackColor
+                buttonBackgroundColor: Style.currentCommodityColor
 
                 shadowHorizontalOffset: 0
                 shadowVericalOffset: s(15)

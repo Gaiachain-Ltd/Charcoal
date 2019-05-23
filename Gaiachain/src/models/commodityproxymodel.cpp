@@ -3,7 +3,8 @@
 #include "shipmentmodel.h"
 
 #include <QTimer>
-#include <QDebug>
+
+#include "../common/logs.h"
 
 CommodityProxyModel::CommodityProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
@@ -15,35 +16,41 @@ CommodityProxyModel::CommodityProxyModel(QObject *parent)
     connect(this, &QAbstractItemModel::modelReset, this, &CommodityProxyModel::onModelReset);
 }
 
-void CommodityProxyModel::setCommodityType(Enums::CommodityType filterType, bool enable)
+void CommodityProxyModel::clearCommodityFilter()
 {
-    if (m_enabledCommodites.contains(filterType) == enable)
+    m_enabledCommodites.clear();
+}
+
+void CommodityProxyModel::setFilterForType(Enums::CommodityType commodityType, const bool enable)
+{
+    if (m_enabledCommodites.contains(commodityType) == enable)
         return;
 
-    qDebug() << "FilterType" << filterType << enable;
+    qDebug() << "Set filter for" << commodityType << enable;
     if (enable) {
-        m_enabledCommodites.insert(filterType);
+        m_enabledCommodites.insert(commodityType);
     } else {
-        m_enabledCommodites.remove(filterType);
+        m_enabledCommodites.remove(commodityType);
     }
 
     invalidateFilter();
     emit commodityTypeChanged();
-}
-
-bool CommodityProxyModel::commodityEnabled(Enums::CommodityType filterType) const
-{
-    return m_enabledCommodites.contains(filterType);
+    emit modelChanged();
 }
 
 bool CommodityProxyModel::hasShipment(const QString &shipmentId) const
 {
-    return m_shipmentsType.contains(shipmentId);
+    return commodityEnabled(m_shipmentsType.value(shipmentId));
 }
 
 Enums::CommodityType CommodityProxyModel::shipmentCommodityType(const QString &shipmentId) const
 {
     return m_shipmentsType.value(shipmentId);
+}
+
+bool CommodityProxyModel::commodityEnabled(const Enums::CommodityType filterType) const
+{
+    return m_enabledCommodites.contains(filterType);
 }
 
 bool CommodityProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

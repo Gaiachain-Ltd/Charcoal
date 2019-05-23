@@ -2,6 +2,8 @@ pragma Singleton
 
 import QtQuick 2.11
 
+import com.gaiachain.enums 1.0
+
 QtObject {
     readonly property bool loginByCombobox: utility.isLoginComboboxVisible()
 
@@ -14,6 +16,7 @@ QtObject {
     readonly property color textErrorColor: "red"
     readonly property color textGreyColor: "#999999"
     readonly property color textGreenColor: "#5AB400"
+    readonly property color textBrownColor: "#AA6400"
     readonly property color buttonGreenColor: "#96c354"
     readonly property color buttonBlackGreyColor: "#666666"
     readonly property color buttonGreyColor: "#cccccc"
@@ -25,6 +28,17 @@ QtObject {
     readonly property color pageBaseBackgroundColor: "white"
     readonly property color registerBarBackgroundColor: "black"
 
+    readonly property color currentCommodityColor: {
+        switch(userManager.commodityType) {
+            case Enums.CommodityType.Cocoa:
+                return textBrownColor
+            case Enums.CommodityType.Timber:
+                return textGreenColor
+            default:
+                return textPrimaryColor
+        }
+    }
+
     // Margins
     readonly property int bigMargin: 45
     readonly property int normalMargin: 30
@@ -33,9 +47,6 @@ QtObject {
 
     // image
     readonly property int imageSize: 30
-
-    readonly property color buttonBackColor: textGreenColor
-    readonly property color buttonBackBrownColor: "#AA6400"
 
     // Text
     readonly property real smallPixelSize: 30
@@ -72,12 +83,15 @@ QtObject {
     readonly property url cancelImgUrl: "qrc:/ui/cancel"
     readonly property url relaodImgUrl: "qrc:/ui/reload"
     readonly property url detailsImgUrl: "qrc:/ui/details"
-    readonly property url detailsGreenImgUrl: "qrc:/ui/details_green"
     readonly property url editImgUrl: "qrc:/ui/edit"
-    readonly property url editGreenImgUrl: "qrc:/ui/edit_green"
     readonly property url exitToLoginImgUrl: "qrc:/ui/exit_to_login"
     readonly property url exportImgUrl: "qrc:/ui/export"
     readonly property url logoImgUrl: "qrc:/ui/gaia_logo"
+
+    readonly property url cocoaImgUrl: "qrc:/ui/cocoa"
+    readonly property url dryingImgUrl: "qrc:/ui/drying"
+    readonly property url motorcycleImgUrl: "qrc:/ui/motorcycle"
+    readonly property url truckImgUrl: "qrc:/ui/truck"
 
     readonly property url gaiaBlackImgUrl: "qrc:/ui/gaia_black"
     readonly property url gaiaColorImgUrl: "qrc:/ui/gaia_color"
@@ -91,22 +105,18 @@ QtObject {
     readonly property url logoutImgUrl: "qrc:/ui/logout"
     readonly property url logParkImgUrl: "qrc:/ui/log_park"
     readonly property url miniCalendarImgUrl: "qrc:/ui/mini_calendar"
-    readonly property url miniCalendarGreenImgUrl: "qrc:/ui/mini_calendar_green"
     readonly property url miniEditImgUrl: "qrc:/ui/mini_edit"
 
     readonly property url miniListImgUrl: "qrc:/ui/mini_list"
-    readonly property url miniListGreenImgUrl: "qrc:/ui/mini_list_green"
     readonly property url okImgUrl: "qrc:/ui/ok"
     readonly property url qrCodeImgUrl: "qrc:/ui/qr_code"
-    readonly property url qrCodeGreenImgUrl: "qrc:/ui/qr_code_green"
     readonly property url sawmillImgUrl: "qrc:/ui/sawmill"
     readonly property url skipArrowImgUrl: "qrc:/ui/skip_arrow"
 
     readonly property url timberImgUrl: "qrc:/ui/timber"
     readonly property url miniTimberImgUrl: "qrc:/ui/mini_timber"
-    readonly property url miniTimberGreenImgUrl: "qrc:/ui/mini_timber_green"
+    readonly property url miniCocoaImgUrl: "qrc:/ui/mini_cocoa"
     readonly property url timelineImgUrl: "qrc:/ui/timeline"
-    readonly property url timelineGreenImgUrl: "qrc:/ui/timeline_green"
 
     readonly property url buttonAddGreen: "qrc:/ui/add_green"
     readonly property url buttonAddBlack: "qrc:/ui/add_black"

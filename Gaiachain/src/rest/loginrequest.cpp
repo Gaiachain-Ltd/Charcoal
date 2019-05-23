@@ -2,8 +2,8 @@
 
 #include <QJsonObject>
 #include <QLoggingCategory>
-#include <QDebug>
 
+#include "../common/logs.h"
 #include "../common/tags.h"
 
 LoginRequest::LoginRequest(const QString &email, const QString &password)

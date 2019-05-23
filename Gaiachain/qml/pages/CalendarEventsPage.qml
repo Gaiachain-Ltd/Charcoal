@@ -18,8 +18,6 @@ BasePage {
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
-    property bool timberEnabled: commodityProxyModel.commodityEnabled(Enums.CommodityType.Timber) //TO_DO_LATER
-
     function enterShipmentDetailsPage(data) {
         pageManager.enter(Enums.Page.ShipmentDetails, data)
     }
@@ -145,9 +143,7 @@ BasePage {
                         Layout.preferredHeight: s(20)
                         Layout.preferredWidth: s(20)
                         radius: width * 0.5
-                        color: timberEnabled && hasEvents
-                               ? Style.textGreenColor
-                               : "transparent"
+                        color: hasEvents ? Style.currentCommodityColor : "transparent"
                     }
                 }
 

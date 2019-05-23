@@ -8,7 +8,6 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
 QtObject {
-    // TO_DO move to Utility
     function convertTimestampToDate(timestamp) {
         var date = new Date(timestamp)
         return date.getFullYear() + "-" + formatDateValue(date.getMonth()+1) + "-" + date.getDate()
@@ -51,12 +50,38 @@ QtObject {
         return Strings.january +"!" // Add "!" if invalid
     }
 
+    function getCurrentIdText() {
+        switch(userManager.commodityType) {
+        case Enums.CommodityType.Cocoa:
+            return Strings.cocoaID
+        case Enums.CommodityType.Timber:
+            return Strings.logID
+        default:
+            return Strings.id
+        }
+    }
+
+    function getCurrentCommodityTypeSuffix() {
+        switch(userManager.commodityType) {
+        case Enums.CommodityType.Cocoa:
+            return "_brown"
+        case Enums.CommodityType.Timber:
+            return "_green"
+        default:
+            return ""
+        }
+    }
+
     function placeTypeToUrl(placeType) {
         switch(placeType) {
         case Enums.PlaceType.Forestery: return Style.timberImgUrl
         case Enums.PlaceType.LogPark: return Style.logParkImgUrl
         case Enums.PlaceType.Sawmill: return Style.sawmillImgUrl
-        case Enums.PlaceType.Export: return Style.exportImgUrl
+        case Enums.PlaceType.Village: return Style.motorcycleImgUrl
+        case Enums.PlaceType.Bagging: return Style.dryingImgUrl
+        case Enums.PlaceType.Nursery: return Style.cocoaImgUrl
+        case Enums.PlaceType.Truck: return Style.truckImgUrl
+        case Enums.PlaceType.Export: return Style.exportImgUrl + getCurrentCommodityTypeSuffix()
         default:
             console.log("Wrong placeType:", placeType)
         }
@@ -70,6 +95,10 @@ QtObject {
         case Enums.PlaceType.LogPark: return Strings.placeTypeLogPark
         case Enums.PlaceType.Sawmill: return Strings.placeTypeSawmill
         case Enums.PlaceType.Export: return Strings.placeTypeExport
+        case Enums.PlaceType.Village: return Strings.placeTypeVillage
+        case Enums.PlaceType.Bagging: return Strings.placeTypeBagging
+        case Enums.PlaceType.Nursery: return Strings.placeTypeNursery
+        case Enums.PlaceType.Truck: return Strings.placeTypeTruck
         default:
             console.log("Wrong placeType:", placeType)
         }

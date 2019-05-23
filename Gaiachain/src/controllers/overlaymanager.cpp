@@ -3,7 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include <QDebug>
+#include "../common/logs.h"
 
 OverlayManager::OverlayManager(QObject *parent)
     : AbstractManager(parent)

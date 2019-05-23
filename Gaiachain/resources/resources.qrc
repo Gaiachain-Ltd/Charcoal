@@ -12,7 +12,7 @@
         <file alias="edit">ui/edit-icon.svg</file>
         <file alias="email">ui/email-icon.svg</file>
         <file alias="exit_to_login">ui/login-screen-icon.svg</file>
-        <file alias="export">ui/export-icon.svg</file>
+        <file alias="export_green">ui/export-icon.svg</file>
         <file alias="gaia_logo">ui/gaiachain-logo-black.svg</file>
         <file alias="gaia_black">ui/gaia-icon.svg</file>
         <file alias="gaia_color">ui/gaia-color-icon.svg</file>
@@ -45,6 +45,19 @@
         <file alias="right_arrow_light">ui/arrow-light.svg</file>
         <file alias="choose_cocoa">ui/cocoa-main-icon.svg</file>
         <file alias="choose_timber">ui/timber-main-icon.svg</file>
+        <file alias="details_brown">ui/details-icon-brown.svg</file>
+        <file alias="edit_brown">ui/edit-icon-brown.svg</file>
+        <file alias="mini_calendar_brown">ui/mini-calendar-icon-brown.svg</file>
+        <file alias="mini_list_brown">ui/mini-list-icon-brown.svg</file>
+        <file alias="qr_code_brown">ui/QR-code-icon-brown.svg</file>
+        <file alias="timeline_brown">ui/timeline-icon-brown.svg</file>
+        <file alias="mini_cocoa_brown">ui/cocoa-mini-icon-brown.svg</file>
+        <file alias="mini_cocoa">ui/cocoa-mini-icon.svg</file>
+        <file alias="cocoa">ui/cocoa-icon.svg</file>
+        <file alias="drying">ui/drying-icon.svg</file>
+        <file alias="motorcycle">ui/motorcycle-icon.svg</file>
+        <file alias="export_brown">ui/ship-icon.svg</file>
+        <file alias="truck">ui/truck-icon.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/Montserrat-Medium.ttf</file>

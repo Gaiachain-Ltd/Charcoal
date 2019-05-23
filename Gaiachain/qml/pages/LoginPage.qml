@@ -23,11 +23,6 @@ BasePage {
         return true // android back button will close app
     }
 
-    Component.onCompleted: {
-        // Temporarly set Timber fixed until chosing resoures will be available (ResourceChosingPage).
-        commodityProxyModel.setCommodityType(Enums.CommodityType.Timber)
-    }
-
     Connections
     {
         target: sessionManager

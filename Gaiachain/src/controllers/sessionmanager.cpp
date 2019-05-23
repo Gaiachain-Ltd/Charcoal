@@ -45,7 +45,9 @@ void SessionManager::login(const QString &email, const QString &password)
     auto finishLambda = [&](const QJsonDocument &reply) {
         emit loginFinished(reply);
         m_overlayManager->setLoginRequest(false);
+#ifndef FAKE_DATA
         this->getEntity();
+#endif
     };
 
     auto errorLambda = [&](const QString &, const int code) {

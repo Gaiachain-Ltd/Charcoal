@@ -26,7 +26,6 @@ public slots:
 
 private:
     void setupModels();
-    void populateModels(); //TO_DO temporary for feeding models with artificial data
 
     EventModel m_eventModel;
     ShipmentModel m_shipmentModel;

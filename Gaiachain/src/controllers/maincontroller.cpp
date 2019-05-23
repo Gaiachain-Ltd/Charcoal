@@ -27,6 +27,8 @@ MainController::MainController(QObject *parent)
     }
 #endif
     setupConnections();
+
+    qsrand(time(NULL));
 }
 
 void MainController::setupConnections()
@@ -34,13 +36,29 @@ void MainController::setupConnections()
     m_sessionManager.setOverlayManager(&m_overlayManager);
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &SessionManager::onTokenChanged);
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
+#ifndef FAKE_DATA
     connect(&m_sessionManager, &SessionManager::entityLoaded, &m_dataManager, &DataManager::onEntityLoaded, Qt::DirectConnection);
     connect(&m_sessionManager, &SessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded, Qt::DirectConnection);
     connect(&m_sessionManager, &SessionManager::beforeGetEntity, &m_dataManager, &DataManager::clearModels, Qt::DirectConnection);
+#endif
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 {
+    engine.rootContext()->setContextProperty("isDesktop",
+#ifdef DESKTOP_TESTS
+                                             true);
+#else
+                                             false);
+#endif
+
+    engine.rootContext()->setContextProperty("fakeData",
+#ifdef FAKE_DATA
+                                             true);
+#else
+                                             false);
+#endif
+
     //Register namespace for enums first
     qmlRegisterUncreatableMetaObject(Enums::staticMetaObject, "com.gaiachain.enums", 1, 0,
                                      "Enums", "Cannot create namespace Enums in QML");
@@ -72,3 +90,4 @@ void MainController::setupQZXing(QQmlApplicationEngine &engine)
     QZXing::registerQMLTypes();
     QZXing::registerQMLImageProvider(engine);
 }
+

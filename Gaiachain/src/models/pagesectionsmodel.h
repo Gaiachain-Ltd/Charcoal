@@ -70,10 +70,11 @@ private:
         {Enums::PageSections::QRSection, Enums::Page::QRScanner}
     };
 
-    const int m_maxDepth = 3;
+    const int m_maxDepth = 4;
     bool m_isHomeSection = false;
 
     Gaia::ModelData m_data;
+    Gaia::ModelData m_tmpData;
     Enums::Page m_homePage;
     Enums::PageSections m_homeSection;
 
