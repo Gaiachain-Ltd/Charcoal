@@ -17,6 +17,7 @@
         <file alias="gaia_black">ui/gaia-icon.svg</file>
         <file alias="gaia_color">ui/gaia-color-icon.svg</file>
         <file alias="home">ui/home-icon.svg</file>
+        <file alias="home_brown">ui/home-icon-brown.svg</file>
         <file alias="keyboard">ui/keyboard-icon.svg</file>
         <file alias="key">ui/key-icon.svg</file>
         <file alias="list">ui/list-icon.svg</file>
@@ -59,6 +60,9 @@
         <file alias="export_brown">ui/ship-icon.svg</file>
         <file alias="truck">ui/truck-icon.svg</file>
         <file alias="right_arrow_white">ui/arrow-light-white.svg</file>
+        <file alias="abidjan_scale_1">ui/abidjan_scale_1.png</file>
+        <file alias="abidjan_scale_2">ui/abidjan_scale_2.png</file>
+        <file alias="abidjan_scale_3">ui/abidjan_scale_3.png</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/Montserrat-Medium.ttf</file>

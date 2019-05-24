@@ -98,6 +98,7 @@ QtObject {
     readonly property url gaiaBlackImgUrl: "qrc:/ui/gaia_black"
     readonly property url gaiaColorImgUrl: "qrc:/ui/gaia_color"
     readonly property url homeImgUrl: "qrc:/ui/home"
+    readonly property url homeImgBrownUrl: "qrc:/ui/home_brown"
     readonly property url keyboardImgUrl: "qrc:/ui/keyboard"
     readonly property url keyImgUrl: "qrc:/ui/key"
     readonly property url emailImgUrl: "qrc:/ui/email"
@@ -125,6 +126,8 @@ QtObject {
 
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"
     readonly property url refreshImgUrl: "qrc:/ui/refresh"
+
+    readonly property url abidjanMapTemplateImgUrl: "qrc:/ui/abidjan_scale_"
 
     // camera
     readonly property color normalBorderColor: "white"
