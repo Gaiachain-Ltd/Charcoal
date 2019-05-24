@@ -20,7 +20,7 @@ void CommodityDateRangeProxyModel::setCommodityProxyModel(CommodityProxyModel *c
 {
     if (!m_commodityProxyModel && commodityProxyModel) {
         m_commodityProxyModel = commodityProxyModel;
-        connect(m_commodityProxyModel, &CommodityProxyModel::modelChanged, this, &CommodityDateRangeProxyModel::invalidateFilter);
+        connect(m_commodityProxyModel, &CommodityProxyModel::modelChanged, this, &CommodityDateRangeProxyModel::invalidate);
         invalidate();
     }
 }

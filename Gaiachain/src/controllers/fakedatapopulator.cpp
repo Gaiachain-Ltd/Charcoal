@@ -134,9 +134,8 @@ void FakeDataPopulator::addId(const QVariantMap &attributes, const Enums::Commod
         const QString &s = m_shipmentModel.data(m_shipmentModel.index(i), ShipmentModel::ShipmentId).toString();
         if (s == id) {
             const Enums::CommodityType c = static_cast<Enums::CommodityType>(m_shipmentModel.data(m_shipmentModel.index(i), ShipmentModel::Commodity).toInt());
-            if (c == commodityType) {
+            if (c == commodityType)
                 exists = true;
-            }
         }
     }
 

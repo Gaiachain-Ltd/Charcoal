@@ -68,7 +68,7 @@ private:
         {Enums::PageSections::EventsListSection, Enums::Page::EventsList},
         {Enums::PageSections::EventDetailsSection, Enums::Page::EventDetails},
         {Enums::PageSections::ShipmentDetailsSection, Enums::Page::ShipmentDetails},
-        {Enums::PageSections::QRSection, Enums::Page::QRScanner},
+        {Enums::PageSections::QRSection, Enums::Page::QRScanner}
     };
 
     const int m_maxDepth = 4;
