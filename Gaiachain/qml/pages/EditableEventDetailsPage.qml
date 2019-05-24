@@ -13,7 +13,7 @@ EventDetailsPage {
         interval: Style.requestOverlayInterval
         onTriggered: {
             mainOverlayVisible = false
-            pageManager.backTo(pageManager.homePage())
+            pageManager.backTo(Enums.Page.ViewType)
         }
     }
 
@@ -24,11 +24,16 @@ EventDetailsPage {
         onPopupAction: {
             switch(action) {
             case Enums.PopupAction.Save:
-                sessionManager.putEntity(attributes.shipmentId, attributes.action)
-                mainOverlayVisible = true
+                if (fakeData) {
+                    fakeDataPopulator.addId(attributes, userManager.commodityType)
+                    pageManager.backTo(Enums.Page.ViewType)
+                } else {
+                    sessionManager.putEntity(attributes.shipmentId, attributes.action)
+                    mainOverlayVisible = true
+                }
                 break
             case Enums.PopupAction.Exit:
-                pageManager.backTo(pageManager.homePage())
+                pageManager.backTo(Enums.Page.ViewType)
                 break
             case Enums.PopupAction.Cancel:
             default:
@@ -41,7 +46,7 @@ EventDetailsPage {
         target: sessionManager
 
         onEntitySaveResult: {
-            if (id == attributes.shipmentId) {
+            if (id === attributes.shipmentId) {
                 if (result) {
                     dataManager.clearModels()
                     sessionManager.getEntity()

@@ -10,6 +10,9 @@
 #include "../models/commoditydaterangeproxymodel.h"
 #include "../models/shipmenteventsproxy.h"
 #include "../models/latesteventsproxy.h"
+#ifdef FAKE_DATA
+    #include "fakedatapopulator.h"
+#endif
 
 class DataManager : public AbstractManager
 {
@@ -35,6 +38,9 @@ private:
     CommodityDateRangeProxyModel m_dateEventsRangeProxyModel;
     ShipmentEventsProxy m_shipmentEventsProxyModel;
     LatestEventsProxy m_latestEventsProxyModel;
+#ifdef FAKE_DATA
+    FakeDataPopulator m_fakeDataPopulator;
+#endif
 };
 
 #endif // DATAMANAGER_H
