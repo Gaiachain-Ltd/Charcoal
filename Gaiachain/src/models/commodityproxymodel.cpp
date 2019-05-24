@@ -40,7 +40,7 @@ void CommodityProxyModel::setFilterForType(Enums::CommodityType commodityType, c
 
 bool CommodityProxyModel::hasShipment(const QString &shipmentId) const
 {
-    return commodityEnabled(m_shipmentsType.value(shipmentId));
+    return commodityEnabled(shipmentCommodityType(shipmentId));
 }
 
 Enums::CommodityType CommodityProxyModel::shipmentCommodityType(const QString &shipmentId) const

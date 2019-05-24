@@ -5,6 +5,7 @@
 
 namespace Tags {
     const QLatin1String id = QLatin1String("id");
+    const QLatin1String shipmentId = QLatin1String("shipmentId");
     const QLatin1String ids = QLatin1String("ids");
     const QLatin1String token = QLatin1String("token");
     const QLatin1String role = QLatin1String("role");

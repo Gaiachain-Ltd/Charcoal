@@ -23,6 +23,9 @@ Items.GenericPanel
 
     property bool errorDisplayed: false
 
+    property alias addButtonVisible: footer.addButtonVisible
+    property alias refreshButtonVisible: footer.refreshButtonVisible
+
     default property alias content: pageContent.data
 
     function closeEventHandler() {
@@ -121,6 +124,7 @@ Items.GenericPanel
         }
 
         Items.Footer {
+            id: footer
             Layout.fillWidth: true
             // Math.round added because line below footer would appear
             Layout.preferredHeight: Math.round(s(Style.footerHeight))

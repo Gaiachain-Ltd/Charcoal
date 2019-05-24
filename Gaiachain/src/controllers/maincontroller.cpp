@@ -27,8 +27,6 @@ MainController::MainController(QObject *parent)
     }
 #endif
     setupConnections();
-
-    qsrand(time(NULL));
 }
 
 void MainController::setupConnections()

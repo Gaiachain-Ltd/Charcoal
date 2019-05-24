@@ -45,7 +45,7 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
   class, if present.
   */
 int main(int argc, char *argv[]) {
-
+    qsrand(time(NULL));
     MLog::instance()->enableLogToFile("Gaiachain");
 
     // Set up basic application data. Modify this to your needs

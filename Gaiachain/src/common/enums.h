@@ -36,6 +36,7 @@ namespace Enums {
         ShipmentDetails,
         ViewType,
         QRScanner,
+        Map,
 
         PageCount
     };
@@ -73,9 +74,9 @@ namespace Enums {
         LogParkWorker,
         SawmillWorker,
         Exporter,
+        NurseryWorker,
         VillageWorker,
         BaggingWorker,
-        NurseryWorker,
         TruckDriver,
 
         UserTypeCount
@@ -89,9 +90,9 @@ namespace Enums {
         LogPark,
         Sawmill,
         Export,
+        Nursery,
         Village,
         Bagging,
-        Nursery,
         Truck,
 
         PlaceTypeCount

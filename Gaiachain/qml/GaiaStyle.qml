@@ -22,6 +22,7 @@ QtObject {
     readonly property color buttonGreyColor: "#cccccc"
     readonly property color disabledButtonGreyColor: "#E6E6E6"
     readonly property color backgroundShadowColor: "#99000000"
+    readonly property color forestBackgroundColor: "#97BD3D"
 
     readonly property color listEventsDelegateBottomLineColor: buttonGreyColor
 
@@ -75,6 +76,7 @@ QtObject {
     readonly property url blackAddImgUrl: "qrc:/ui/add_black"
     readonly property url greenAddImgUrl: "qrc:/ui/add_green"
     readonly property url rightArrowImgUrl: "qrc:/ui/right_arrow"
+    readonly property url rightArrowWhiteImgUrl: "qrc:/ui/right_arrow_white"
     readonly property url rightArrowLightImgUrl: "qrc:/ui/right_arrow_light"
     readonly property url backImgUrl: "qrc:/ui/back"
     readonly property url backBlackImgUrl: "qrc:/ui/back_black"
@@ -96,6 +98,7 @@ QtObject {
     readonly property url gaiaBlackImgUrl: "qrc:/ui/gaia_black"
     readonly property url gaiaColorImgUrl: "qrc:/ui/gaia_color"
     readonly property url homeImgUrl: "qrc:/ui/home"
+    readonly property url homeImgBrownUrl: "qrc:/ui/home_brown"
     readonly property url keyboardImgUrl: "qrc:/ui/keyboard"
     readonly property url keyImgUrl: "qrc:/ui/key"
     readonly property url emailImgUrl: "qrc:/ui/email"
@@ -123,6 +126,8 @@ QtObject {
 
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"
     readonly property url refreshImgUrl: "qrc:/ui/refresh"
+
+    readonly property url abidjanMapTemplateImgUrl: "qrc:/ui/abidjan_scale_"
 
     // camera
     readonly property color normalBorderColor: "white"

@@ -19,14 +19,16 @@ BasePage {
     ColumnLayout {
         anchors {
             fill: parent
-            margins: s(Style.bigMargin)
             bottomMargin: 0
         }
+        spacing: 0
 
         Flickable {
             id: flickableId
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.leftMargin: s(Style.bigMargin) * 0.5
+            Layout.rightMargin: s(Style.bigMargin) * 0.5
 
             clip: true
             flickableDirection: Flickable.VerticalFlick
@@ -94,6 +96,8 @@ BasePage {
             Layout.fillWidth: true
             Layout.fillHeight: false
             Layout.preferredHeight: s(Style.footerHeight)
+            Layout.leftMargin: s(Style.bigMargin) * 0.5
+            Layout.rightMargin: s(Style.bigMargin) * 0.5
             visible: top.editable
 
             spacing: s(Style.bigMargin)
@@ -127,6 +131,69 @@ BasePage {
                 padding: s(22)
 
                 onClicked: acceptClicked()
+            }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: top.height * 0.2
+
+            visible: userManager.commodityType === Enums.CommodityType.Cocoa
+
+            color: Style.forestBackgroundColor
+
+            RowLayout {
+                spacing: parent.width * 0.05
+                anchors {
+                   fill: parent
+                   margins: parent.width * 0.1
+                }
+
+                Item {
+                    Layout.preferredWidth: parent.width * 0.25
+                    Layout.fillHeight: true
+
+                    Items.BasicText {
+                        anchors.centerIn: parent
+
+                        color: Style.textSecondaryColor
+                        textFormat: Text.RichText
+                        font {
+                            weight: Font.Black
+                            pixelSize: s(Style.pixelSize) * 1.25
+                        }
+                        text: "GLOBAL<br><font color='#474747'>FOREST</font><br>WATCH"
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    Items.BasicText {
+                        anchors.centerIn: parent
+
+                        color: Style.textSecondaryColor
+                        text: Strings.zeroDeforestation
+                    }
+                }
+
+                Item {
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: arrow.width * 1.5
+                    Items.SvgImage {
+                        id: arrow
+                        height: s(Style.headerArrowHeight)
+                        width: s(Style.headerArrowWidth)
+                        anchors.centerIn: parent
+                        source: Style.rightArrowWhiteImgUrl
+                    }
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: pageManager.enter(Enums.Page.Map)
             }
         }
     }

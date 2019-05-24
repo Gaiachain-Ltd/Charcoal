@@ -9,6 +9,7 @@ import "../items" as Items
 BasePage {
     id: top
     headerVisible: false
+    addButtonVisible: false
 
     function enterViewTypePage(type) {
         userManager.commodityType = type

@@ -17,7 +17,7 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    CommodityProxyModel *m_commodityProxyModel;
+    CommodityProxyModel *m_commodityProxyModel = nullptr;
 };
 
 #endif // LATESTEVENTSPROXY_H

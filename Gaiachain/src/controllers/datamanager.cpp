@@ -14,18 +14,16 @@
 #include "../helpers/utility.h"
 #include "../common/logs.h"
 
-#ifdef FAKE_DATA
-    #include "fakedatapopulator.h"
-#endif
-
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
+#ifdef FAKE_DATA
+    , m_fakeDataPopulator(m_eventModel, m_shipmentModel)
+#endif
 {
     setupModels();
 #ifdef FAKE_DATA
-    FakeDataPopulator fakeData(m_eventModel, m_shipmentModel);
-    fakeData.populateFakeData(1, Enums::CommodityType::Timber);
-    fakeData.populateFakeData(1, Enums::CommodityType::Cocoa);
+    m_fakeDataPopulator.populateFakeData(20, Enums::CommodityType::Timber);
+    m_fakeDataPopulator.populateFakeData(20, Enums::CommodityType::Cocoa);
 #endif
 }
 
@@ -37,6 +35,9 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("shipmentEventsProxyModel"), &m_shipmentEventsProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("latestEventsProxyModel"), &m_latestEventsProxyModel);
+#ifdef FAKE_DATA
+    engine.rootContext()->setContextProperty(QStringLiteral("fakeDataPopulator"), &m_fakeDataPopulator);
+#endif
 }
 
 void DataManager::setupModels()
