@@ -6,7 +6,7 @@
 #include "../common/enums.h"
 #include "../helpers/utility.h"
 
-#include <QZXing>
+#include <QZXing.h>
 
 #ifdef Q_OS_ANDROID
     #include <QtAndroidExtras/QtAndroid>

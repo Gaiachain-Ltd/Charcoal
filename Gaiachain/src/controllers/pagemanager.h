@@ -5,7 +5,6 @@
 #include <QJsonObject>
 
 #include "abstractmanager.h"
-#include "../models/pagesectionsmodel.h"
 #include "../common/enums.h"
 #include "../helpers/utility.h"
 
@@ -38,7 +37,6 @@ public slots:
     bool backTo(const Enums::Page backPage, const bool immediate = false);
     void backToAndEnter(const Enums::Page backPage, const Enums::Page page, QJsonObject properites = QJsonObject(),
                             const bool backImmediate = false, const bool enterImmediate = false);
-    bool backToSection(const Enums::PageSections section);
 
     // Popup managment
     // Use enterPopup only on QML side to handle strings and don't mess sendAction signal receivers!
@@ -48,11 +46,10 @@ public slots:
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
     const Enums::Page m_initialPage = Enums::Page::Login;
-    const Enums::Page m_homePage = Enums::Page::ResourceChosing;
+    const Enums::Page m_homePage = Enums::Page::MainMenu;
 
     QVector<Enums::Page> m_pageStack;
     QVector<Enums::Popup> m_popupStack;
-    PageSectionsModel m_pageSectionsModel;
 
     void prepareConnections();
 

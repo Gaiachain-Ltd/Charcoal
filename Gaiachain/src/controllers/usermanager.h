@@ -10,24 +10,23 @@
 class UserManager : public AbstractManager
 {
     Q_OBJECT
+    Q_PROPERTY(QString login READ getLogin NOTIFY loginChanged)
     Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
     Q_PROPERTY(QVariantMap userData READ userData CONSTANT)
-    Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
-    Q_PROPERTY(int commodityType READ commodityType WRITE setCommodityType NOTIFY commodityTypeChanged)
+    Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
 public:
     explicit UserManager(QObject *parent = nullptr);
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
+    Q_INVOKABLE void skipLogin();
     Q_INVOKABLE void logOut();
 
-    bool loggedIn() const;
+    bool isLoggedIn() const;
 
+    QString getLogin() const;
     Enums::UserType getUserType() const;
     void setUserType(const Enums::UserType userType);
-
-    int commodityType() const;
-    void setCommodityType(const int commodityType);
 
     QVariantMap userData() const;
 
@@ -35,18 +34,14 @@ public slots:
     void parseLoginData(const QJsonDocument &doc);
 
 signals:
+    void loginChanged(const QString &getLogin) const;
     void userTypeChanged(Enums::UserType userType) const;
-    void commodityTypeChanged(int commodityType) const;
-    void loggedInChanged(bool loggedIn) const;
+    void loggedInChanged(bool isLoggedIn) const;
     void tokenChanged(const QString &token) const;
 
 private:
-    int m_commodityType = static_cast<int>(Enums::CommodityType::InvalidCommodity);
     Enums::UserType m_userType = Enums::UserType::NotLoggedUser;
-    bool m_loggedIn = false;
     QVariantMap m_userData;
-
-    void setLoggedIn();
 };
 
 #endif // USERMANAGER_H

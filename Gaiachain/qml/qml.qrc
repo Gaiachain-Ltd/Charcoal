@@ -3,8 +3,7 @@
         <file>main.qml</file>
         <file>pages/LanguageChosingPage.qml</file>
         <file>pages/LoginPage.qml</file>
-        <file>pages/ResourceChosingPage.qml</file>
-        <file>pages/ViewTypePage.qml</file>
+        <file>pages/MainMenuPage.qml</file>
         <file>pages/CalendarPage.qml</file>
         <file>pages/CalendarMonthPage.qml</file>
         <file>pages/CalendarEventsPage.qml</file>
@@ -38,5 +37,6 @@
         <file>GaiaStyle.qml</file>
         <file>common/Helpers.qml</file>
         <file>pages/MapPage.qml</file>
+        <file>items/GenericButton.qml</file>
     </qresource>
 </RCC>

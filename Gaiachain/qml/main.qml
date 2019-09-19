@@ -11,7 +11,7 @@ ApplicationWindow
     id: mainWindow
 
     width: isDesktop ? 480 : Screen.desktopAvailableWidth
-    height: isDesktop ? 854 : Screen.desktopAvailableHeight
+    height: isDesktop ? 800 : Screen.desktopAvailableHeight
     visible: true
 
     color: Style.backgroundColor

@@ -5,246 +5,89 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
-// TO_DO consider using Toolbar
+import "../items" as Items
+
 Item {
     id: top
 
+    readonly property bool isOnHomePage: pageManager.isOnHomePage()
     signal headerClicked()
 
-    readonly property bool isMaxDepth: sectionsModel.maxSectionsDepth() === buttonList.count
-
-    property int currentResource: userManager.commodityType
-    readonly property bool isOnHomePage: pageManager.isOnHomePage()
-
     function backHandler() {
-        if (userManager.loggedIn && (isOnHomePage || pageManager.isOnTop(Enums.Page.ResourceChosing))) {
-            pageManager.enterPopup(Enums.Popup.Information, {
-                                       "text" : Strings.logoutQuestion,
-                                       "acceptButtonText": Strings.logout,
-                                       "rejectButtonText": Strings.cancel,
-                                       "acceptButtonType": Enums.PopupAction.Logout
-                                   })
-        } else {
+        if (!isOnHomePage) {
             pageManager.back()
         }
     }
-
-    Connections {
-        target: pageManager
-        // When using popup always add checking if I'm on top
-        enabled: pageManager.isOnTop(page)
-        onPopupAction: {
-            switch(action) {
-            case Enums.PopupAction.Logout:
-                userManager.logOut()
-                pageManager.backTo(Enums.Page.Login) //TO_DO immediate generates bug
-                break
-            case Enums.PopupAction.Cancel:
-            default:
-            }
-        }
+    function logout() {
+        userManager.logOut()
+        pageManager.backTo(Enums.Page.Login) //TO_DO immediate generates bug
     }
 
-    function getTitleText(res) {
-        var result = ""
-        switch(res) {
-        case Enums.CommodityType.Timber:
-            result = Strings.timber
-            break
-        case Enums.CommodityType.Charcoal:
-            result = Strings.charcoal
-            break
-        case Enums.CommodityType.Cocoa:
-            result = Strings.cocoa
-            break
-        default:
-            // Add "!" if invalid
-            result = Strings.timber + "!"
-            console.warn("Invalid resource type!")
-        }
+    property string title
+    property bool logoVisible: false
 
-        var showUserType = userManager.userType !== Enums.UserType.NotLoggedUser
-                           && (page === Enums.Page.QRScanner
-                           || page === Enums.Page.EditableEventDetails)
+    implicitHeight: s(Style.headerHeight)
 
-        if (showUserType) {
-            return result + " " + utility.userTypeToString(userManager.userType).replace("_", " ")
-        } else {
-            return result
-        }
+    Rectangle {
+        id: background
+        anchors.fill: parent
+        color: Style.headerBackgroundColor
     }
 
-    function getResourceUrl(res) {
-        switch (res) {
-        case Enums.CommodityType.Timber: return Style.miniTimberImgUrl
-            //case Enums.CommodityType.Charcoal: return Style.charcoalImgUrl
-        case Enums.CommodityType.Cocoa: return Style.miniCocoaImgUrl
-        default:
-            console.warn("Invalid resource type. Return empty url!")
-        }
-
-        return ""
-    }
-
-    function sectionToUrl(section, colored) {
-        var suffix = colored ? Helpers.getCurrentCommodityTypeSuffix() : ""
-        switch(section) {
-        case Enums.PageSections.ViewTypeSection: return getResourceUrl(currentResource) + suffix
-        case Enums.PageSections.CalendarSection: return Style.miniCalendarImgUrl + suffix
-        case Enums.PageSections.EditableEventDetailsSection: return Style.editImgUrl + suffix
-        case Enums.PageSections.EventsListSection: return Style.miniListImgUrl + suffix
-        case Enums.PageSections.EventDetailsSection: return Style.detailsImgUrl + suffix
-        case Enums.PageSections.ShipmentDetailsSection: return Style.timelineImgUrl + suffix
-        case Enums.PageSections.QRSection: return Style.qrCodeImgUrl + suffix
-        case Enums.PageSections.DefaultSection: return ""
-
-        default:
-            console.warn("Invalid section!", section)
-        }
-
-        return ""
-    }
-
-    ColumnLayout {
+    RowLayout {
+        id: topRow
         anchors {
             fill: parent
+            leftMargin: s(Style.normalMargin)
+            rightMargin: s(Style.normalMargin)
             topMargin: s(Style.smallMargin)
             bottomMargin: s(Style.smallMargin)
-            leftMargin: topRow.calculatedSpacing
-            rightMargin: topRow.calculatedSpacing
         }
 
-        spacing: 0
+        readonly property real logoHeight: height
+        readonly property int buttonHeight: height * 0.75
 
-        RowLayout {
-            id: topRow
+        ImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.fillWidth: true
+            Layout.preferredHeight: topRow.buttonHeight
+            Layout.preferredWidth: Layout.preferredHeight
 
-            readonly property real buttonWidth: s(Style.buttonHeight)
-            readonly property real calculatedSpacing: Math.round((top.width - (buttonWidth * Style.headerMaximumButtonCount)) / (Style.headerMaximumButtonCount + 1))
+            opacity: isOnHomePage ? 0 : 1
+            enabled: !isOnHomePage
+            source: Style.backImgUrl
 
-            spacing: 0
+            onClicked: backHandler()
+        }
 
-            Item {
-                Layout.preferredWidth: topRow.buttonWidth
-                Layout.preferredHeight: topRow.buttonWidth
-                ImageButton {
-                    height: topRow.buttonWidth * 0.9
-                    width: topRow.buttonWidth * 0.9
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        left: parent.left
-                    }
+        Items.LayoutSpacer {}
 
-                    source: {
-                        if (!isOnHomePage) return Style.backImgUrl
+        ImageButton {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.preferredHeight: topRow.logoHeight
+            Layout.preferredWidth: Layout.preferredHeight
 
-                        return userManager.loggedIn ? Style.logoutImgUrl : Style.exitToLoginImgUrl
-                    }
+            source: Style.logoIconImgUrl
+            visible: logoVisible
 
-                    onClicked: {
-                        backHandler()
-                    }
-                }
-            }
-
-            Item
-            {
-                // empty item
-                Layout.preferredWidth: topRow.calculatedSpacing
-                Layout.preferredHeight: parent.height
-            }
-
-            ImageButton {
-                Layout.preferredWidth: topRow.buttonWidth
-                Layout.preferredHeight: topRow.buttonWidth
-
-                source: Style.homeImgUrl
-
-                visible: !isMaxDepth
-
-                onClicked: pageManager.backTo(pageManager.homePage())
-            }
-
-            ListView {
-                id: buttonList
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-
-                orientation: ListView.Horizontal
-                interactive: false
-                spacing: 0
-
-                model: sectionsModel
-
-                readonly property int delegateWidth: topRow.calculatedSpacing + topRow.buttonWidth
-
-                delegate: Item {
-                    id: delegateId
-                    height: ListView.view.height
-                    width: arrowContainer.visible ? buttonList.delegateWidth : topRow.buttonWidth
-
-                    property bool isLast: (ListView.view.count - 1) === index
-
-                    RowLayout {
-                        anchors.fill: parent
-
-                        spacing: 0
-
-                        Item {
-                            id: arrowContainer
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-
-                            visible: index > 0 || !isMaxDepth
-
-                            SvgImage {
-                                height: s(Style.headerArrowHeight)
-                                width: s(Style.headerArrowWidth)
-
-                                anchors {
-                                    centerIn: parent
-                                    // last arrow is moved a little to the left
-                                    // because button is little bigger than other
-                                    horizontalCenterOffset: delegateId.isLast ? -(parent.width * 0.5 - width) : 0
-                                }
-
-                                source: Style.rightArrowLightImgUrl
-                            }
-                        }
-
-
-                        ImageButton {
-                            id: imageButton
-                            Layout.preferredWidth: topRow.buttonWidth
-                            Layout.preferredHeight: topRow.buttonWidth
-
-                            padding: (delegateId.isLast ? 1.1 : 1.5) * s(Style.smallMargin)
-
-                            source: sectionToUrl(id, !delegateId.isLast)
-                            backgroundColor: delegateId.isLast ? Style.currentCommodityColor : "transparent"
-
-                            onClicked: pageManager.backToSection(id)
-                        }
-                    }
-                }
-            }
+            onClicked: headerClicked()
         }
 
         BasicText {
-            Layout.fillWidth: true
+            text: title
+            color: Style.textSecondaryColor
+            font.pixelSize: s(Style.titlePixelSize)
+        }
 
-            color: Style.currentCommodityColor
-            verticalAlignment: Text.AlignTop
-            horizontalAlignment: Text.AlignHCenter
-            font {
-                pixelSize: s(Style.headerTitlePixelSize)
-                capitalization: Font.AllUppercase
-                family: Style.secondaryFontFamily
-                letterSpacing: s(Style.pixelSize) * 0.1
-            }
-            text: getTitleText(currentResource)
+        Items.LayoutSpacer {}
+
+        ImageButton {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.preferredHeight: topRow.buttonHeight
+            Layout.preferredWidth: Layout.preferredHeight
+
+            source: Style.logoutImgUrl
+
+            onClicked: logout()
         }
     }
 }

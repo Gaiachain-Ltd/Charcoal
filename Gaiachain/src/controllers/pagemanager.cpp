@@ -8,13 +8,11 @@
 PageManager::PageManager(QObject *parent) : AbstractManager(parent)
 {
     m_pageStack.push_back(m_initialPage);
-    m_pageSectionsModel.stackReset(m_homePage);
 }
 
 void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("pageManager"), this);
-    engine.rootContext()->setContextProperty(QStringLiteral("sectionsModel"), &m_pageSectionsModel);
 }
 
 /*!
@@ -45,7 +43,6 @@ void PageManager::enter(const Enums::Page page, QJsonObject properites, const bo
     }
 
     m_pageStack.push_back(page);
-    m_pageSectionsModel.pagePushed(page);
 
     properites.insert(QStringLiteral("page"), static_cast<int>(page));
 
@@ -96,7 +93,6 @@ void PageManager::back(const bool immediate)
         return;
 
     auto poppedPage = m_pageStack.takeLast();
-    m_pageSectionsModel.pagePopped(m_pageStack.last());
 
     qDebug() << "Popped page" << pageToQString(poppedPage);
 
@@ -119,7 +115,6 @@ bool PageManager::backTo(const Enums::Page backPage, const bool immediate)
     while (currentTop != backPage) {
         m_pageStack.pop_back();
         currentTop = m_pageStack.last();
-        m_pageSectionsModel.pagePopped(currentTop);
     }
 
     qDebug() << "Going back to page" << pageToQString(backPage);
@@ -134,12 +129,6 @@ void PageManager::backToAndEnter(const Enums::Page backPage, const Enums::Page p
 {
     backTo(backPage, backImmediate);
     enter(page, properites, enterImmediate);
-}
-
-bool PageManager::backToSection(const Enums::PageSections section)
-{
-    Enums::Page page = m_pageSectionsModel.getPageForSection(section);
-    return backTo(page);
 }
 
 QString PageManager::getInitialPageUrl() const

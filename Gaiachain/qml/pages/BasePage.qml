@@ -11,22 +11,15 @@ import com.gaiachain.helpers 1.0
 Items.GenericPanel
 {
     id: top
-    property bool footerVisible: true
-    property bool headerVisible: true
+    property alias headerVisible: header.visible
+    property alias footerVisible: footer.visible
 
-    property color backgroundColor: Style.pageBaseBackgroundColor
+    property alias backgroundColor: top.palette.window
 
-    property alias header: navigationHeader
     property alias mainOverlayVisible: mainOverlay.visible
-
     property alias refreshTimer: refreshDataTimer
 
     property bool errorDisplayed: false
-
-    property alias addButtonVisible: footer.addButtonVisible
-    property alias refreshButtonVisible: footer.refreshButtonVisible
-
-    default property alias content: pageContent.data
 
     function closeEventHandler() {
         navigationHeader.backHandler() // calling back button
@@ -37,6 +30,16 @@ Items.GenericPanel
         dataManager.clearModels()
         sessionManager.getEntity()
         refreshDataTimer.start()
+    }
+
+    header: Items.NavigationHeader {
+        id: header
+        Layout.fillWidth: true
+    }
+
+    footer: Items.Footer {
+        id: footer
+        Layout.fillWidth: true
     }
 
     Connections
@@ -85,52 +88,6 @@ Items.GenericPanel
         onTriggered: mainOverlayVisible = false
     }
 
-    ColumnLayout {
-        id:  columnLayout
-        anchors.fill: parent
-
-        spacing: 0
-
-        Items.NavigationHeader {
-            id: navigationHeader
-            Layout.fillWidth: true
-            Layout.preferredHeight: s(Style.headerHeight)
-            visible: top.headerVisible
-            z: 5
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            layer.enabled: true
-            clip: true
-
-            Rectangle {
-                id: background
-                anchors.fill: parent
-                color: top.backgroundColor
-            }
-
-            Item {
-                id: pageContent
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
-                }
-                height: parent.height
-            }
-        }
-
-        Items.Footer {
-            id: footer
-            Layout.fillWidth: true
-            // Math.round added because line below footer would appear
-            Layout.preferredHeight: Math.round(s(Style.footerHeight))
-            visible: top.footerVisible
-        }
-    }
 
     Items.WaitOverlay {
         id: mainOverlay

@@ -49,7 +49,6 @@ HEADERS += \
     src/models/commoditydaterangeproxymodel.h \
     src/common/globals.h \
     src/controllers/pagemanager.h \
-    src/models/pagesectionsmodel.h \
     src/rest/baserequest.h \
     src/rest/loginrequest.h \
     src/rest/restapiclient.h \
@@ -75,7 +74,6 @@ SOURCES += src/main.cpp \
     src/models/commodityproxymodel.cpp \
     src/models/commoditydaterangeproxymodel.cpp \
     src/controllers/pagemanager.cpp \
-    src/models/pagesectionsmodel.cpp \
     src/rest/baserequest.cpp \
     src/rest/loginrequest.cpp \
     src/rest/restapiclient.cpp \
