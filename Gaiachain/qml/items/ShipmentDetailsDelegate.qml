@@ -49,7 +49,7 @@ ColumnLayout {
                     BasicText {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignLeft
-                        font.pixelSize: s(Style.normalPixelSize)
+                        font.pixelSize: s(Style.pixelSize)
                         text: Helpers.placeTypeToString(place) + ":"
                     }
                     BasicText {
@@ -57,14 +57,14 @@ ColumnLayout {
                         horizontalAlignment: Text.AlignLeft
                         wrapMode: Text.WordWrap
                         font.italic: true
-                        font.pixelSize: s(Style.normalPixelSize)
+                        font.pixelSize: s(Style.pixelSize)
                         text: Helpers.placeActionToStringAction(action) + " " + company
                     }
                     BasicText {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignLeft
                         font.bold: true
-                        font.pixelSize: s(Style.normalPixelSize)
+                        font.pixelSize: s(Style.pixelSize)
                         text: Strings.id + " " + shipmentId
                     }
                 }

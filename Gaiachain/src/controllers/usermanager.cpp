@@ -14,13 +14,16 @@
 
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
-{
+{}
 
-}
-
-bool UserManager::loggedIn() const
+bool UserManager::isLoggedIn() const
 {
     return m_userType != Enums::UserType::NotLoggedUser;
+}
+
+QString UserManager::getLogin() const
+{
+    return isLoggedIn() ? m_userData[Tags::email].toString() : QString{};
 }
 
 void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -28,9 +31,15 @@ void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("userManager"), this);
 }
 
+void UserManager::skipLogin()
+{
+    setUserType(Enums::UserType::NotLoggedUser);
+}
+
 void UserManager::logOut()
 {
     setUserType(Enums::UserType::NotLoggedUser);
+    m_userData.clear();
 }
 
 Enums::UserType UserManager::getUserType() const
@@ -42,6 +51,7 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
 {
     const QJsonObject obj = doc.object();
 
+    m_userData.insert(Tags::email, obj.value(Tags::email).toString());
     m_userData.insert(Tags::company, obj.value(Tags::companyName).toString());
     const QJsonArray locationArray = obj.value(Tags::location).toArray();
     Location location;
@@ -55,6 +65,7 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
     emit tokenChanged(obj.value(Tags::token).toString());
 
     setUserType(userType);
+    emit loginChanged(getLogin());
 }
 
 QVariantMap UserManager::userData() const
@@ -62,36 +73,18 @@ QVariantMap UserManager::userData() const
     return m_userData;
 }
 
-void UserManager::setLoggedIn()
-{
-    bool loggedIn = m_userType != Enums::UserType::NotLoggedUser;
-    if (loggedIn == m_loggedIn)
-        return;
-
-    m_loggedIn = loggedIn;
-    emit loggedInChanged(m_loggedIn);
-}
-
 void UserManager::setUserType(const Enums::UserType userType)
 {
     if (m_userType == userType)
         return;
 
+    auto prevUserType = m_userType;
     m_userType = userType;
-    setLoggedIn();
     emit userTypeChanged(userType);
-}
 
-int UserManager::commodityType() const
-{
-    return m_commodityType;
-}
-
-void UserManager::setCommodityType(const int commodityType)
-{
-    if (m_commodityType == commodityType)
-        return;
-
-    m_commodityType = commodityType;
-    emit commodityTypeChanged(commodityType);
+    if (prevUserType == Enums::UserType::NotLoggedUser ||
+            userType == Enums::UserType::NotLoggedUser) {
+        emit loggedInChanged(isLoggedIn());
+        emit loginChanged(getLogin());
+    }
 }

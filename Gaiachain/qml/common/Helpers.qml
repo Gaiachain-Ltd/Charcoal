@@ -44,98 +44,9 @@ QtObject {
         case Calendar.November: return Strings.november
         case Calendar.December: return Strings.december
         default:
-            console.warn("CalendarMonthItem: Invalid month provided!")
+            console.warn("getMonthName: Invalid month provided!")
         }
 
         return Strings.january +"!" // Add "!" if invalid
-    }
-
-    function getCurrentIdText() {
-        switch(userManager.commodityType) {
-        case Enums.CommodityType.Cocoa:
-            return Strings.cocoaID
-        case Enums.CommodityType.Timber:
-            return Strings.logID
-        default:
-            return Strings.id
-        }
-    }
-
-    function getCurrentCommodityTypeSuffix() {
-        switch(userManager.commodityType) {
-        case Enums.CommodityType.Cocoa:
-            return "_brown"
-        case Enums.CommodityType.Timber:
-            return "_green"
-        default:
-            return ""
-        }
-    }
-
-    function placeTypeToUrl(placeType) {
-        switch(placeType) {
-        case Enums.PlaceType.Forestery: return Style.timberImgUrl
-        case Enums.PlaceType.LogPark: return Style.logParkImgUrl
-        case Enums.PlaceType.Sawmill: return Style.sawmillImgUrl
-        case Enums.PlaceType.Village: return Style.motorcycleImgUrl
-        case Enums.PlaceType.Bagging: return Style.dryingImgUrl
-        case Enums.PlaceType.Nursery: return Style.cocoaImgUrl
-        case Enums.PlaceType.Truck: return Style.truckImgUrl
-        case Enums.PlaceType.Export: return Style.exportImgUrl + getCurrentCommodityTypeSuffix()
-        default:
-            console.log("Wrong placeType:", placeType)
-        }
-
-        return ""
-    }
-
-    function placeTypeToString(placeType) {
-        switch(placeType) {
-        case Enums.PlaceType.Forestery: return Strings.placeTypeForestery
-        case Enums.PlaceType.LogPark: return Strings.placeTypeLogPark
-        case Enums.PlaceType.Sawmill: return Strings.placeTypeSawmill
-        case Enums.PlaceType.Export: return Strings.placeTypeExport
-        case Enums.PlaceType.Village: return Strings.placeTypeVillage
-        case Enums.PlaceType.Bagging: return Strings.placeTypeBagging
-        case Enums.PlaceType.Nursery: return Strings.placeTypeNursery
-        case Enums.PlaceType.Truck: return Strings.placeTypeTruck
-        default:
-            console.log("Wrong placeType:", placeType)
-        }
-
-        return ""
-    }
-
-    function placeActionToString(placeAction) {
-        switch(placeAction) {
-        case Enums.PlaceAction.Arrived: return Strings.placeActionArrived
-        case Enums.PlaceAction.Departed: return Strings.placeActionDeparted
-        default:
-            console.log("Wrong placeAction:", placeAction)
-        }
-
-        return ""
-    }
-
-    function placeActionToStringAction(placeAction) {
-        switch(placeAction) {
-        case Enums.PlaceAction.Arrived: return Strings.placeActionArrivedAction
-        case Enums.PlaceAction.Departed: return Strings.placeActionDepartedAction
-        default:
-            console.log("Wrong placeAction:", placeAction)
-        }
-
-        return ""
-    }
-
-    function placeActionToDateTimeString(placeAction) {
-        switch(placeAction) {
-        case Enums.PlaceAction.Arrived: return Strings.dateTimeArrival
-        case Enums.PlaceAction.Departed: return Strings.dateTimeDeparture
-        default:
-            console.log("Wrong placeAction:", placeAction)
-        }
-
-        return ""
     }
 }

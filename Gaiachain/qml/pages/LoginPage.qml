@@ -14,8 +14,7 @@ BasePage {
     page: Enums.Page.Login
 
     headerVisible: false
-    addButtonVisible: false
-    refreshButtonVisible: false
+    footerVisible: false
 
     function enterNextPage() {
         pageManager.enter(Enums.Page.ResourceChosing)
@@ -61,203 +60,170 @@ BasePage {
     ColumnLayout
     {
         id: layout
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            margins: s(Style.bigMargin)
+        }
 
-        Item
+        spacing: s(Style.smallMargin) * 1.5
+
+        Item    // Item is to keep keyboard working properly
         {
             Layout.fillWidth: true
-            Layout.preferredHeight: parent.height * (Qt.inputMethod.keyboardRectangle.y > 0 ?  0.35 : 0.5)
+            Layout.preferredHeight: parent.height * 0.35
 
+            // FIX_ME biding loops
             Items.SvgImage
             {
                 anchors.centerIn: parent
 
                 source: Style.logoImgUrl
 
-                readonly property int calcWidth: parent.width * Style.logoSize
+                readonly property real calcWidth: parent.width * Style.logoSize
                 width: calcWidth
-                height: 0.35 * calcWidth
             }
         }
 
-        Item
+        Items.LayoutSpacer {}
+
+        Items.GenericInput
         {
-            Layout.fillHeight: true
+            id: loginInput
             Layout.fillWidth: true
 
-            ColumnLayout
+            nextInput: passwordInput
+
+            additionalInputMethodHints: Qt.ImhNoAutoUppercase
+            placeholderText: Style.loginByCombobox ? "" : Strings.emailAddress
+            iconSource: Style.emailImgUrl
+
+            readOnly: Style.loginByCombobox
+
+
+            ComboBox    // this is for testing only !!!
             {
-                id: itemColumn
-                spacing: s(Style.smallMargin) * 1.5
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
+                id: controlCombo
+                property string currentLoginStr: "producer@gaiachain.io"
+
+                model: ["producer@gaiachain.io", "exporter@gaiachain.io"]
+                visible: Style.loginByCombobox
+
+                anchors.centerIn: parent
+                height: parent.height
+                width: parent.width
+
+                background: Rectangle { color: "transparent" }
+
+                contentItem: Text {
+                    leftPadding: loginInput.height
+
+                    text: controlCombo.displayText
+                    color: Style.textPrimaryColor
+                    font {
+                        pixelSize: s(Style.pixelSize)
+                        family: Style.primaryFontFamily
+                    }
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
                 }
 
-                Items.GenericInput
-                {
-                    id: loginInput
-                    Layout.preferredWidth: parent.width * 0.9
-                    Layout.preferredHeight: s(Style.inputHeight)
-                    Layout.alignment: Qt.AlignHCenter
-                    additionalInputMethodHints: Qt.ImhNoAutoUppercase
-
-                    input.enabled: !Style.loginByCombobox
-
-                    source: Style.emailImgUrl
-                    focus: true
-                    showImage: true
-
-                    placeholderText: Style.loginByCombobox ? "" : Strings.emailAddress
-
-                    nextInput: passwordInput
-
-                    property string currentLoginStr: "producer@gaiachain.io"
-
-                    ComboBox
-                    {
-                        id: controlCombo
-                        model: ["producer@gaiachain.io", "logpark@gaiachain.io", "sawmill@gaiachain.io", "exporter@gaiachain.io"]
-                        visible: Style.loginByCombobox
-
-                        anchors.centerIn: parent
-                        height: parent.height
-                        width: parent.width
-
-                        background: Rectangle { color: "transparent" }
-
-                        contentItem: Text {
-                            leftPadding: loginInput.height
-
-                            text: controlCombo.displayText
-                            color: Style.textPrimaryColor
-                            font {
-                                pixelSize: s(Style.pixelSize)
-                                family: Style.primaryFontFamily
-                            }
-                            elide: Text.ElideRight
-                            verticalAlignment: Text.AlignVCenter
+                delegate: ItemDelegate {
+                    leftPadding: loginInput.height
+                    width: parent.width
+                    contentItem: Text {
+                        text: modelData
+                        color: Style.textPrimaryColor
+                        font {
+                            pixelSize: s(Style.pixelSize)
+                            family: Style.primaryFontFamily
                         }
+                        elide: Text.ElideRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
 
-                        delegate: ItemDelegate {
-                            leftPadding: loginInput.height
-                            width: parent.width
-                            contentItem: Text {
-                                text: modelData
-                                color: Style.textPrimaryColor
-                                font {
-                                    pixelSize: s(Style.pixelSize)
-                                    family: Style.primaryFontFamily
-                                }
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            background: Rectangle {
-                                color: "transparent"
-                            }
-                        }
-
-                        onActivated: {
-                            passwordInput.text = "test1234"
-                            switch(index) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                                loginInput.currentLoginStr = model[index]
-                                break
-                            default:
-                                loginInput.currentLoginStr = ""
-                                passwordInput.text = ""
-                                break
-                            }
-                        }
+                    background: Rectangle {
+                        color: "transparent"
                     }
                 }
 
-                Items.GenericInput
-                {
-                    id: passwordInput
-                    Layout.preferredWidth: parent.width * 0.9
-                    Layout.preferredHeight: s(Style.inputHeight)
-                    Layout.alignment: Qt.AlignHCenter
-
-                    enabled: !Style.loginByCombobox
-
-                    source: Style.keyImgUrl
-                    showImage: true
-                    isPassword: true
-                    focus: true
-
-                    placeholderText: Strings.password
-                    text: Style.loginByCombobox ?  "test1234" : ""
-
-                    onMoveToNextInput: {
-                        if (loginButton.enabled)
-                            loginButton.clicked()
-                    }
-                }
-
-                Row {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.topMargin: itemColumn.spacing
-
-                    spacing: s(Style.normalMargin)
-
-                    Items.ImageButton
-                    {
-                        id: loginButton
-                        backgroundColor: Style.buttonGreenColor
-                        textColor: Style.textSecondaryColor
-                        text: Strings.login
-                        source: Style.loginImgUrl
-
-                        imageSize: s(Style.imageSize)
-
-                        enabled: Style.loginByCombobox || (loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text))
-                        opacity: enabled ? 1 : 0.5
-
-                        width: s(Style.buttonHeight) * 2.5
-
-                        onClicked: {
-                            if (Style.loginByCombobox) {
-                                sessionManager.login(loginInput.currentLoginStr, passwordInput.text)
-                            } else {
-                                sessionManager.login(loginInput.text, passwordInput.text)
-                            }
-                        }
-                    }
-
-                    Items.ImageButton
-                    {
-                        id: skipLoginButton
-                        backgroundColor: Style.buttonBlackGreyColor
-                        textColor: Style.textSecondaryColor
-                        text: Strings.skipLogin
-                        source: Style.skipArrowImgUrl
-
-                        imageSize: s(Style.imageSize)
-
-                        width: s(Style.buttonHeight) * 3.25
-
-                        onClicked: {
-                            userManager.userType = Enums.UserType.NotLoggedUser
-                            sessionManager.getEntity()
-                            top.enterNextPage()
-                        }
+                onActivated: {
+                    passwordInput.text = "test1234"
+                    switch(index) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        controlCombo.currentLoginStr = model[index]
+                        break
+                    default:
+                        controlCombo.currentLoginStr = ""
+                        passwordInput.text = ""
+                        break
                     }
                 }
             }
         }
-    }
 
-    Items.WaitOverlay
-    {
-        anchors.fill: parent
-        logoVisible: true
+        Items.GenericInput
+        {
+            id: passwordInput
+            Layout.fillWidth: true
 
-        visible: overlays.loginRequest
+            placeholderText: Strings.password
+            iconSource: Style.passwordImgUrl
+            enabled: !Style.loginByCombobox
+            isPassword: true
+
+            text: Style.loginByCombobox ?  "test1234" : ""
+
+            onMoveToNextInput: {
+                if (loginButton.enabled) {
+                    loginButton.clicked()
+                }
+            }
+        }
+
+        Items.LayoutSpacer {
+            Layout.maximumHeight: loginButton.height * 2
+        }
+
+        Items.GenericButton
+        {
+            id: loginButton
+            Layout.fillWidth: true
+
+            text: Strings.login
+
+            enabled: Style.loginByCombobox || (loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text))
+
+            onClicked: {
+                var userName = Style.loginByCombobox ? controlCombo.currentLoginStr : loginInput.text
+                sessionManager.login(userName, passwordInput.text)
+            }
+        }
+
+        Items.GenericButton
+        {
+            id: skipLoginButton
+            Layout.fillWidth: true
+
+            palette {
+                button: Style.buttonSecondaryColor
+                buttonText: Style.textPrimaryColor
+            }
+            borderColor: Style.inputBorderColor
+
+            text: Strings.skipLogin
+
+            onClicked: {
+                userManager.skipLogin()
+                sessionManager.getEntity()
+                top.enterNextPage()
+            }
+        }
+
+        Items.LayoutSpacer {
+            Layout.maximumHeight: loginButton.height * 0.4
+        }
     }
 }

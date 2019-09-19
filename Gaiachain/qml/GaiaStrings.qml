@@ -3,21 +3,20 @@ pragma Singleton
 import QtQuick 2.11
 
 QtObject {
+    // general
     readonly property string gaiachain: qsTr("Gaiachain")
 
-    readonly property string timber: qsTr("Timber")
-    readonly property string charcoal: qsTr("Charcoal")
-    readonly property string cocoa: qsTr("Cocoa")
+    readonly property string supplyChainActionHarvest: qsTr("Harvest")
+    readonly property string supplyChainActionFermentation: qsTr("Breaking, Fermenting")
+    readonly property string supplyChainActionBagging: qsTr("Drying / Bagging")
+    readonly property string supplyChainActionStorage: qsTr("Storage")
+    readonly property string supplyChainActionTransport: qsTr("Transport")
+    readonly property string supplyChainActionReception: qsTr("Reception")
 
-    readonly property string calendar: qsTr("Calendar")
-    readonly property string map: qsTr("Map")
-    readonly property string list: qsTr("List")
-
-    readonly property string registerRequest: qsTr("Please register")
-    readonly property string login: qsTr("Login")
-    readonly property string skipLogin: qsTr("Skip login")
-    readonly property string emailAddress: qsTr("Email address")
-    readonly property string password: qsTr("Password")
+    readonly property string recolteId: qsTr("RECOLTE ID")
+    readonly property string sacId: qsTr("SAC ID")
+    readonly property string lotId: qsTr("LOT ID")
+    readonly property string arrivalId: qsTr("ARRIVAL ID")
 
     readonly property string january: qsTr("January")
     readonly property string february: qsTr("February")
@@ -32,61 +31,27 @@ QtObject {
     readonly property string november: qsTr("November")
     readonly property string december: qsTr("December")
 
-    // QR
-    readonly property string scanning: qsTr("Scanning")
-    readonly property string scanFailed: qsTr("Scan failed")
-    readonly property string typeId: qsTr("Type ID")
+    // login
+    readonly property string emailAddress: qsTr("Email address")
+    readonly property string password: qsTr("Password")
+    readonly property string login: qsTr("Login")
+    readonly property string skipLogin: qsTr("Skip login")
 
-    readonly property string id: qsTr("ID")
-    readonly property string batch: qsTr("Batch")
+    readonly property string loading: qsTr("Loading")
+    readonly property string anonymousUser: qsTr("Anonymous")
 
-    // Event list
-    readonly property string eventText: qsTr("%2<br><b>%1 %3</b><br>%4 %5 concession<br>%6")
-    readonly property string eventTextCalendar: qsTr("<b>%1 %2</b><br>%3 %4 concession<br>%5")
+    // main menu
+    readonly property string supplyChain: qsTr("Supply chain")
+    readonly property string transactions: qsTr("Transactions")
+    readonly property string calendar: qsTr("Calendar")
+    readonly property string tracking: qsTr("Tracking")
 
-    // Event Details Page
-    readonly property string companyName: qsTr("Company name")
-    readonly property string gpsLocationOf: qsTr("Location of %1 (GPS point)")
-    readonly property string logID: qsTr("Log ID")
-    readonly property string cocoaID: qsTr("Cocoa ID")
-    readonly property string dateTimeArrival: qsTr("Date and time of arrival")
-    readonly property string dateTimeDeparture: qsTr("Date and time of departure")
-
-    // popup
-    readonly property string close: qsTr("Close")
-    readonly property string logout: qsTr("Logout")
-    readonly property string cancel: qsTr("Cancel")
-    readonly property string exit: qsTr("Exit")
-    readonly property string save: qsTr("Save")
-    readonly property string tryAgain: qsTr("Try Again")
-
-    readonly property string loginErrorInfo: qsTr("Login failed. Try again.")
-    readonly property string noInternet: qsTr("No internet connection.")
-
-    readonly property string incorrectId: qsTr("Incorrect ID.")
-    readonly property string idAlreadyUsed: qsTr("ID already used.")
-    readonly property string saveQuestion: qsTr("Do you want to save your changes?")
-    readonly property string exitWithoutSaveQuestion: qsTr("Are you sure do you want to exit without saving?")
-    readonly property string logoutQuestion: qsTr("Do you want to logout?")
-    readonly property string dataSaveError: qsTr("Data save error.")
-    readonly property string dataDownloadError: qsTr("Downloading server data failed.")
-
-    // map
-    readonly property string zeroDeforestation: qsTr("Zero-deforestation")
-
-    // enums
-    readonly property string placeTypeForestery: qsTr("Forestery")
-    readonly property string placeTypeLogPark: qsTr("Log Park")
-    readonly property string placeTypeSawmill: qsTr("Sawmill")
-    readonly property string placeTypeExport: qsTr("Export")
-    readonly property string placeTypeVillage: qsTr("Transport village")
-    readonly property string placeTypeBagging: qsTr("Séchage / Ensachage")
-    readonly property string placeTypeNursery: qsTr("Pépinière")
-    readonly property string placeTypeTruck: qsTr("Transport au Port d’Abidjan")
-
-    readonly property string placeActionArrived: qsTr("Arrived")
-    readonly property string placeActionDeparted: qsTr("Departed")
-
-    readonly property string placeActionArrivedAction: qsTr("Arrived to")
-    readonly property string placeActionDepartedAction: qsTr("Departed from")
+    readonly property string supplyChainMenuCreateId: qsTr("(Create %1)")
+    readonly property string supplyChainMenuHarvest: supplyChainActionHarvest + " " + supplyChainMenuCreateId.arg(recolteId)
+    readonly property string supplyChainMenuFermentation: supplyChainActionFermentation
+    readonly property string supplyChainMenuBagging: supplyChainActionBagging + " " + supplyChainMenuCreateId.arg(sacId)
+    readonly property string supplyChainMenuStorageArrival: supplyChainActionStorage + " " + supplyChainMenuCreateId.arg(arrivalId)
+    readonly property string supplyChainMenuStorageLot: supplyChainActionStorage + " " + supplyChainMenuCreateId.arg(lotId)
+    readonly property string supplyChainMenuTransport: supplyChainActionTransport
+    readonly property string supplyChainMenuReception: supplyChainActionReception
 }
