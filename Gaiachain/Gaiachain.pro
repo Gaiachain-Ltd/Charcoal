@@ -101,10 +101,10 @@ OTHER_FILES += \
 
 android {
     QT += androidextras
-    INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/include
+    INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
 
-    SSL_LIB = $$PWD/3rdparty/OpenSSL/OpenSSL/android/armeabi-v7a/lib
-    ANDROID_EXTRA_LIBS += $$SSL_LIB/libcrypto.so $$SSL_LIB/libssl.so
+    SSL_LIB = $$PWD/3rdparty/OpenSSL/OpenSSL/lib/android/arm
+    ANDROID_EXTRA_LIBS += $$SSL_LIB/libcrypto_1_1.so $$SSL_LIB/libssl_1_1.so
 }
 
 ## Put all build files into build directory

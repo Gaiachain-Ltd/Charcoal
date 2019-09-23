@@ -45,5 +45,5 @@ milo/mcrypto/scripts/setenv-android.sh
 local.pri
 
 Gaiachain/3rdparty/OpenSSL/OpenSSL/
-Gaiachain/3rdparty/OpenSSL/src/
+Gaiachain/3rdparty/OpenSSL/build/
 Gaiachain/3rdparty/OpenSSL/setenv-android.sh
