@@ -23,9 +23,16 @@ variables:
     - git submodule update --init --recursive
     - git submodule status --recursive
 
+.only-common: &only-common
+  only:
+    - branches
+    - tags
+    - merge_requests
+
 # Android
 android_build:
   <<: *common
+  <<: *only-common
   tags:
     - LinuxAndroid
   stage: build
@@ -49,6 +56,7 @@ android_build:
 # Android (combobox)
 android_combobox_build:
   <<: *common
+  <<: *only-common
   tags:
     - LinuxAndroid
   stage: build
@@ -72,6 +80,7 @@ android_combobox_build:
 # Linux
 linux_build:
   <<: *common
+  <<: *only-common
   tags:
     - LinuxDesktop
   stage: build
@@ -104,6 +113,7 @@ upload_job:
 
 cleanup:
   <<: *common
+  <<: *only-common
   tags:
     - LinuxDesktop
     - LinuxAndroid
