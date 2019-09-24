@@ -32,6 +32,7 @@ namespace Enums {
         EventsList,
         LanguageChosing,
         Login,
+        LoginLoading,
         MainMenu,
         ShipmentDetails,
         QRScanner,

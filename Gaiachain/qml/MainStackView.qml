@@ -12,21 +12,25 @@ Item {
         target: pageManager
 
         onStackViewPush: {
-            var keepPrevPageVisible = false
-            if (properites.isPopup)
-                keepPrevPageVisible = true
-
-            stackView.push(url, properites, getMode(immediate))
-            if (keepPrevPageVisible && stackView.depth > 1)
-                stackView.get(stackView.depth - 2).visible = true
+            stackView.push(url, properties, getMode(immediate))
         }
         onStackViewPop: {
             stackView.pop(getMode(immediate))
         }
-        onStackViewBackToPage: {
+        onStackViewPopTo: {
             stackView.pop(stackView.find(function(item) {
-                  return item.page === backPage
+                  return item.page === page
               }), getMode(immediate));
+        }
+        onStackViewReplace: {
+            stackView.replace(stackView.currentItem, url, properties, getMode(immediate))
+        }
+
+        onPopupManagerOpen: {
+            popupManager.openPopup(url, properties)
+        }
+        onPopupManagerClose: {
+            popupManager.closePopup()
         }
     }
 
@@ -36,16 +40,19 @@ Item {
 
     // handler for android back button
     function onClosingEvent() {
-        if (stackView.depth === 0)
-            return false
-        var result = stackView.get(stackView.depth - 1).closeEventHandler()
-        if (result === undefined)
-            return false
+        var result = false
+
+        // cannot back popup
+        if (!popupManager.depth && stackView.depth) {
+            result = stackView.get(stackView.depth - 1).closeEventHandler()
+            if (result === undefined) {
+                result = false
+            }
+        }
 
         return result
     }
 
-    // TO_DO add handling of calendar page separetly as it is heavy component!
     StackView {
         id: stackView
         anchors.fill: parent
@@ -87,6 +94,52 @@ Item {
                 duration: Style.animationDuration
                 easing.type: Style.animationEasing
             }
+        }
+        replaceEnter: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: windowWidth
+                to: 0
+                duration: Style.animationDuration
+                easing.type: Style.animationEasing
+            }
+        }
+        replaceExit: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: 0
+                to: -windowWidth
+                duration: Style.animationDuration
+                easing.type: Style.animationEasing
+            }
+        }
+    }
+
+    QtObject {
+        id: popupManager
+
+        property int depth: stack.length
+        property var components: ({})
+        property var stack: []
+
+        function openPopup(url, properties) {
+            if (components[url] === undefined) {
+                components[url] = Qt.createComponent(url)
+                if (components[url].status === Component.Error) {
+                    console.error("Error, while creating popup:", components[url].errorString())
+                    return
+                }
+            }
+
+            var popupComponent = components[url]
+            var popup = popupComponent.createObject(mainWindow, properties)
+            stack.push(popup)
+            popup.open()
+        }
+        function closePopup() {
+            var popup = stack.pop()
+            popup.close()
+            popup.destroy()
         }
     }
 }

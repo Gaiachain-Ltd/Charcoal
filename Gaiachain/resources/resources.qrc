@@ -12,6 +12,9 @@
         <file alias="right_arrow_white">ui/arrow-light-white.svg</file>
         <file alias="logo_icon">ui/gaiachain-logo-icon.svg</file>
         <file alias="user">ui/gaia-icon.svg</file>
+        <file alias="loadingLogoOne">ui/loading-1.svg</file>
+        <file alias="loadingLogoTwo">ui/loading-2.svg</file>
+        <file alias="loadingLogoThree">ui/loading-3.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

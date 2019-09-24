@@ -31,6 +31,7 @@ QtObject {
 
     readonly property color buttonMenuColor: "#f6f6f6"
 
+    readonly property color disabledColorTint: "#C0a4a4a4"
     readonly property color backgroundShadowColor: "#99000000"
 
     readonly property color okColor: "#65cb00"
@@ -57,6 +58,7 @@ QtObject {
     readonly property real bigPixelSize: pixelSize * 1.5
     readonly property real titlePixelSize: pixelSize * 1.2
     readonly property real inputPixelSize: pixelSize * 0.9
+    readonly property real popupPixelSize: pixelSize * 1.1
     readonly property real buttonPixelSize: pixelSize * 1.1
 
     // font
@@ -88,6 +90,10 @@ QtObject {
 
     readonly property url emailImgUrl: "qrc:/ui/email"
     readonly property url passwordImgUrl: "qrc:/ui/password"
+
+    readonly property url loadingLogoOneImgUrl: "qrc:/ui/loadingLogoOne"
+    readonly property url loadingLogoTwoImgUrl: "qrc:/ui/loadingLogoTwo"
+    readonly property url loadingLogoThreeImgUrl: "qrc:/ui/loadingLogoThree"
 
     readonly property url refreshImgUrl: "qrc:/ui/refresh"
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"

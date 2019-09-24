@@ -99,14 +99,14 @@ bool Utility::validateId(const QString &id) const
     return rawId.length() == QR_CODE_LENGTH;
 }
 
-int Utility::getScannedIdLength() const
-{
-    return QR_CODE_LENGTH;
-}
-
 bool Utility::validateEmail(const QString &email) const
 {
     return m_emailRegex.exactMatch(email);
+}
+
+int Utility::getScannedIdLength() const
+{
+    return QR_CODE_LENGTH;
 }
 
 QDate Utility::convertDateString(const QString &dateStr, const QString &dateFormat) const

@@ -26,21 +26,24 @@ signals:
 
 signals:
     // Signals below should only be used by StackView!!!
-    void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject(), const bool immediate = false) const;
+    void stackViewPush(const QString &url, const QJsonObject properties = QJsonObject(), const bool immediate = false) const;
     void stackViewPop(const bool immediate = false) const;
-    void stackViewBackToPage(const Enums::Page backPage, const bool immediate = false) const;
+    void stackViewPopTo(const Enums::Page page, const bool immediate = false) const;
+    void stackViewReplace(const QString &url, const QJsonObject properties = QJsonObject(), const bool immediate = false) const;
+    void popupManagerOpen(const QString &url, const QJsonObject properties = QJsonObject()) const;
+    void popupManagerClose() const;
 
 public slots:
     // Page managment
-    void enter(const Enums::Page page, QJsonObject properites = QJsonObject(), const bool immediate = false);
+    void enter(const Enums::Page page, QJsonObject properties = QJsonObject(), const bool immediate = false);
+    void enterReplace(const Enums::Page page, QJsonObject properties = QJsonObject(), const bool immediate = false);
     void back(const bool immediate = false);
-    bool backTo(const Enums::Page backPage, const bool immediate = false);
-    void backToAndEnter(const Enums::Page backPage, const Enums::Page page, QJsonObject properites = QJsonObject(),
-                            const bool backImmediate = false, const bool enterImmediate = false);
+    bool backTo(const Enums::Page page, const bool immediate = false);
 
     // Popup managment
-    // Use enterPopup only on QML side to handle strings and don't mess sendAction signal receivers!
-    void enterPopup(const Enums::Popup popup, QJsonObject properites = QJsonObject(), const bool immediate = true);
+    // Use openPopup only on QML side to handle strings and don't mess sendAction signal receivers!
+    void openPopup(const Enums::Popup popup, QJsonObject properties = QJsonObject());
+    void closePopup();
     void sendAction(Enums::PopupAction action);
 
 private:

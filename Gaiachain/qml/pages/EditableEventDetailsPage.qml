@@ -53,11 +53,11 @@ EventDetailsPage {
                     dataRequestTimer.start()
                 } else {
                     mainOverlayVisible = false
-                    pageManager.enterPopup(Enums.Popup.Information, {
+                    pageManager.openPopup(Enums.Popup.Information, {
                                                                     "text" : Strings.dataSaveError,
                                                                     "rejectButtonText": Strings.close,
                                                                     "rejectButtonType": Enums.PopupAction.Cancel
-                                           }, true)
+                                           })
                 }
             }
         }
@@ -65,14 +65,14 @@ EventDetailsPage {
 
     onEditClicked: pageManager.back()
 
-    onCancelClicked: pageManager.enterPopup(Enums.Popup.Information, {
+    onCancelClicked: pageManager.openPopup(Enums.Popup.Information, {
                                                 "text" : Strings.exitWithoutSaveQuestion,
                                                 "acceptButtonText": Strings.exit,
                                                 "rejectButtonText": Strings.cancel,
                                                 "acceptButtonType": Enums.PopupAction.Exit
-                                            }, true)
+                                            })
 
-    onAcceptClicked: pageManager.enterPopup(Enums.Popup.Information, {
+    onAcceptClicked: pageManager.openPopup(Enums.Popup.Information, {
                                                 "text" : Strings.saveQuestion,
                                                 "acceptButtonText": Strings.save,
                                                 "rejectButtonText": Strings.cancel,

@@ -38,5 +38,8 @@
         <file>common/Helpers.qml</file>
         <file>pages/MapPage.qml</file>
         <file>items/GenericButton.qml</file>
+        <file>items/GenericPopup.qml</file>
+        <file>items/BasePopup.qml</file>
+        <file>pages/LoginLoadingPage.qml</file>
     </qresource>
 </RCC>

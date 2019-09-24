@@ -14,13 +14,12 @@ Item {
     signal headerClicked()
 
     function backHandler() {
-        if (!isOnHomePage) {
-            pageManager.back()
-        }
+        pageManager.back()
+        return false    // do not close application
     }
     function logout() {
+        pageManager.backTo(Enums.Page.Login)
         userManager.logOut()
-        pageManager.backTo(Enums.Page.Login) //TO_DO immediate generates bug
     }
 
     property string title

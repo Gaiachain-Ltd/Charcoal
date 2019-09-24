@@ -20,7 +20,7 @@ Button
     background: Rectangle {
         id: background
         radius: s(Style.smallMargin)
-        color: palette.button
+        color: top.enabled ? palette.button : Qt.tint(palette.button, Style.disabledColorTint)
         border {
             width: sr(1)
             color: top.borderColor

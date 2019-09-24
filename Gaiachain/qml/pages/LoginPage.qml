@@ -5,7 +5,6 @@ import QtQuick.Controls 2.5
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
-import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 
@@ -16,45 +15,8 @@ BasePage {
     headerVisible: false
     footerVisible: false
 
-    function enterNextPage() {
-        pageManager.enter(Enums.Page.ResourceChosing)
-    }
-
     function closeEventHandler() {
         return true // android back button will close app
-    }
-
-    Connections
-    {
-        target: sessionManager
-        onLoginFinished: enterNextPage()
-        onDisplayLoginError: {
-            // If someone send displayLoginError when not in login screen, ignore it and print warning
-            if (!pageManager.isOnTop(page)) {
-                console.warn("displayLoginError send when LoginPage is not on the top! Returning.")
-                return
-            }
-
-            console.log("ON_LOGIN_ERROR",code)
-            pageManager.enterPopup(Enums.Popup.Information, {
-                                       "text" : Helpers.isNetworkError(code) ? Strings.noInternet : Strings.loginErrorInfo,
-                                   })
-        }
-    }
-
-    Connections {
-        target: pageManager
-        // When using popup always add checking if I'm on top
-        enabled: pageManager.isOnTop(page)
-        onPopupAction: {
-            switch(action) {
-            case Enums.PopupAction.Accept:
-                console.log("Accept action to implement!")
-                break
-            default:
-                break
-            }
-        }
     }
 
     ColumnLayout
@@ -91,6 +53,8 @@ BasePage {
             id: loginInput
             Layout.fillWidth: true
 
+            property bool validInput: true
+
             nextInput: passwordInput
 
             additionalInputMethodHints: Qt.ImhNoAutoUppercase
@@ -99,13 +63,18 @@ BasePage {
 
             readOnly: Style.loginByCombobox
 
+            borderColor: validInput ? Style.inputBorderColor : Style.errorColor
+
+            onTextChanged: {
+                validInput = !length || utility.validateEmail(text)
+            }
 
             ComboBox    // this is for testing only !!!
             {
                 id: controlCombo
                 property string currentLoginStr: "producer@gaiachain.io"
 
-                model: ["producer@gaiachain.io", "exporter@gaiachain.io"]
+                model: ["producer@gaiachain.io", "exporter@gaiachain.io", "wrong@gaiachain.io"]
                 visible: Style.loginByCombobox
 
                 anchors.centerIn: parent
@@ -194,9 +163,11 @@ BasePage {
 
             text: Strings.login
 
-            enabled: Style.loginByCombobox || (loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text))
+            enabled: Style.loginByCombobox || (loginInput.text.length && passwordInput.text.length && loginInput.validInput)
 
             onClicked: {
+                pageManager.enter(Enums.Page.LoginLoading)
+
                 var userName = Style.loginByCombobox ? controlCombo.currentLoginStr : loginInput.text
                 sessionManager.login(userName, passwordInput.text)
             }
@@ -216,9 +187,10 @@ BasePage {
             text: Strings.skipLogin
 
             onClicked: {
+                pageManager.enter(Enums.Page.LoginLoading, { "skipLogin": true })
+
                 userManager.skipLogin()
                 sessionManager.getEntity()
-                top.enterNextPage()
             }
         }
 

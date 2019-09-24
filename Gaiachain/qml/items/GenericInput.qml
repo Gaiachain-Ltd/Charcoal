@@ -13,6 +13,8 @@ TextField
     property alias iconSource: icon.source
     property bool showIcon: true
 
+    property color borderColor: Style.inputBorderColor
+
     property Item nextInput: null
     signal moveToNextInput()
 
@@ -45,7 +47,7 @@ TextField
         radius: s(Style.smallMargin)
         border {
             width: sr(1)
-            color: Style.inputBorderColor
+            color: top.borderColor
         }
     }
 

@@ -6,6 +6,9 @@ QtObject {
     // general
     readonly property string gaiachain: qsTr("Gaiachain")
 
+    readonly property string ok: qsTr("Ok")
+    readonly property string cancel: qsTr("Cancel")
+
     readonly property string supplyChainActionHarvest: qsTr("Harvest")
     readonly property string supplyChainActionFermentation: qsTr("Breaking, Fermenting")
     readonly property string supplyChainActionBagging: qsTr("Drying / Bagging")
@@ -39,6 +42,9 @@ QtObject {
 
     readonly property string loading: qsTr("Loading")
     readonly property string anonymousUser: qsTr("Anonymous")
+
+    readonly property string noInternetError: qsTr("No internet connection.")
+    readonly property string loginError: qsTr("Login failed. Try again.")
 
     // main menu
     readonly property string supplyChain: qsTr("Supply chain")
