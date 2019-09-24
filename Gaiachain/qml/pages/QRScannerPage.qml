@@ -76,11 +76,11 @@ BasePage {
     }
 
     function showErrorPopup(exists) {
-        pageManager.enterPopup(Enums.Popup.Information, {
+        pageManager.openPopup(Enums.Popup.Information, {
                                                         "text" : exists ? Strings.idAlreadyUsed : Strings.incorrectId,
                                                         "rejectButtonText": Strings.tryAgain,
                                                         "rejectButtonType": Enums.PopupAction.TryAgain,
-                               }, true)
+                               })
     }
 
     property string scannedId: ""

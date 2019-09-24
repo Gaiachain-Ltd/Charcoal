@@ -8,10 +8,8 @@ import "../items" as Items
 BasePage {
     id: top
 
-    header {
-        title: Strings.gaiachain
-        logoVisible: true
-    }
+    title: Strings.gaiachain
+    logoVisible: true
 
     ColumnLayout {
         anchors.fill: parent

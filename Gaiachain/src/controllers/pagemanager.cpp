@@ -7,7 +7,7 @@
 
 PageManager::PageManager(QObject *parent) : AbstractManager(parent)
 {
-    m_pageStack.push_back(m_initialPage);
+    m_pageStack.append(m_initialPage);
 }
 
 void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -22,12 +22,12 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
     We're going back to specific page if it is already on the stack.
 
  * \param page
- * \param properites
+ * \param properties
  */
-void PageManager::enter(const Enums::Page page, QJsonObject properites, const bool immediate)
+void PageManager::enter(const Enums::Page page, QJsonObject properties, const bool immediate)
 {
     qDebug() << CYAN("[PAGE] Print stack on enter") << m_pageStack;
-    qDebug() << CYAN("[PAGE] Enter:") << page << "properites:" << properites;
+    qDebug() << CYAN("[PAGE] Enter:") << page << "properties:" << properties;
 
     if (!m_popupStack.isEmpty()) {
         qWarning() << "Popup stack not empty:" <<  m_popupStack
@@ -35,6 +35,27 @@ void PageManager::enter(const Enums::Page page, QJsonObject properites, const bo
         return;
     }
 
+    if (m_pageStack.contains(page)) {
+        qWarning() << "Page" << page << "is already on the stack. Going back to page.";
+        backTo(page);
+        return;
+    }
+
+    m_pageStack.append(page);
+    properties.insert(QStringLiteral("page"), static_cast<int>(page));
+    emit stackViewPush(pageToQString(page), properties, immediate);
+}
+
+void PageManager::enterReplace(const Enums::Page page, QJsonObject properties, const bool immediate)
+{
+    qDebug() << CYAN("[PAGE] Print stack on enter") << m_pageStack;
+    qDebug() << CYAN("[PAGE] Enter replace:") << page << "properties:" << properties;
+
+    if (!m_popupStack.isEmpty()) {
+        qWarning() << "Popup stack not empty:" <<  m_popupStack
+                   << ". Returning as page cannot be pushed over popup!";
+        return;
+    }
 
     if (m_pageStack.contains(page)) {
         qWarning() << "Page" << page << "is already on the stack. Going back to page.";
@@ -42,28 +63,40 @@ void PageManager::enter(const Enums::Page page, QJsonObject properites, const bo
         return;
     }
 
-    m_pageStack.push_back(page);
-
-    properites.insert(QStringLiteral("page"), static_cast<int>(page));
-
-    emit stackViewPush(pageToQString(page), properites, immediate);
+    m_pageStack.removeLast();
+    m_pageStack.append(page);
+    properties.insert(QStringLiteral("page"), static_cast<int>(page));
+    emit stackViewReplace(pageToQString(page), properties, immediate);
 }
 
-void PageManager::enterPopup(const Enums::Popup popup, QJsonObject properites, const bool immediate)
+void PageManager::openPopup(const Enums::Popup popup, QJsonObject properties)
 {
     qDebug() << CYAN("[POPUP] Print stack on enter") << m_pageStack;
-    qDebug() << CYAN("[POPUP] Enter:") << popup << "properites:" << properites;
+    qDebug() << CYAN("[POPUP] Enter:") << popup << "properties:" << properties;
 
-    properites.insert(QStringLiteral("isPopup"), true);
-    m_popupStack.push_back(popup);
+    m_popupStack.append(popup);
+    emit popupManagerOpen(pageToQString(popup), properties);
+}
 
-    emit stackViewPush(pageToQString(popup), properites, immediate);
+void PageManager::closePopup()
+{
+    qDebug() << CYAN("[PAGE] Print stack on pop") << m_pageStack;
+    qDebug() << CYAN("[POPUP] Print stack on pop") << m_popupStack;
+
+    if (m_popupStack.isEmpty()) {
+        qWarning() << "Closing empty popup! Aborting!";
+        return;
+    }
+
+    auto poppedPopup = m_popupStack.takeLast();
+    qDebug() << "Closing popup" << pageToQString(poppedPopup);
+    emit popupManagerClose();
 }
 
 void PageManager::sendAction(Enums::PopupAction action)
 {
-    // Pop popup first
-    back(true);
+    // close popup first
+    closePopup();
 
     emit popupAction(action);
 }
@@ -73,16 +106,11 @@ void PageManager::back(const bool immediate)
     qDebug() << CYAN("[PAGE] Print stack on pop") << m_pageStack;
     qDebug() << CYAN("[POPUP] Print stack on pop") << m_popupStack;
 
-    // ************** HANDLE popups first
     if (!m_popupStack.isEmpty()) {
-        auto poppedPopup = m_popupStack.takeLast();
-        qDebug() << "Popped popup" << pageToQString(poppedPopup);
-        emit stackViewPop(immediate);
-
+        qWarning() << "Trying back with popup opened! Aborting!";
         return;
     }
 
-    // ************** HANDLE pages next
     if (m_pageStack.isEmpty()) {
         qWarning() << "Popping empty stack! Aborting!";
         return;
@@ -93,42 +121,31 @@ void PageManager::back(const bool immediate)
         return;
 
     auto poppedPage = m_pageStack.takeLast();
-
     qDebug() << "Popped page" << pageToQString(poppedPage);
-
     emit stackViewPop(immediate);
 }
 
-bool PageManager::backTo(const Enums::Page backPage, const bool immediate)
+bool PageManager::backTo(const Enums::Page page, const bool immediate)
 {
-    // ***************** HANDLE popups first
-    if (!m_popupStack.isEmpty())
-        m_popupStack.clear();
+    if (!m_popupStack.isEmpty()) {
+        qWarning() << "Trying back with popup opened! Aborting!";
+        return false;
+    }
 
-    // ***************** HANDLE pages next
-    if (!m_pageStack.contains(backPage)) {
-        qWarning() << "Page" << backPage << "is not on the stack. Returning.";
+    if (!m_pageStack.contains(page)) {
+        qWarning() << "Page" << page << "is not on the stack. Returning.";
         return false;
     }
 
     Enums::Page currentTop = m_pageStack.last();
-    while (currentTop != backPage) {
+    while (currentTop != page) {
         m_pageStack.pop_back();
         currentTop = m_pageStack.last();
     }
 
-    qDebug() << "Going back to page" << pageToQString(backPage);
-
-    emit stackViewBackToPage(backPage, immediate);
-
+    qDebug() << "Going back to page" << pageToQString(page);
+    emit stackViewPopTo(page, immediate);
     return true;
-}
-
-void PageManager::backToAndEnter(const Enums::Page backPage, const Enums::Page page, QJsonObject properites,
-                                     const bool backImmediate, const bool enterImmediate)
-{
-    backTo(backPage, backImmediate);
-    enter(page, properites, enterImmediate);
 }
 
 QString PageManager::getInitialPageUrl() const

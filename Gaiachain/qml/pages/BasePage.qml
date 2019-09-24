@@ -14,6 +14,7 @@ Items.GenericPanel
     property alias headerVisible: header.visible
     property alias footerVisible: footer.visible
 
+    property alias logoVisible: header.logoVisible
     property alias backgroundColor: top.palette.window
 
     property alias mainOverlayVisible: mainOverlay.visible
@@ -22,7 +23,7 @@ Items.GenericPanel
     property bool errorDisplayed: false
 
     function closeEventHandler() {
-        navigationHeader.backHandler() // calling back button
+        return header.backHandler() // calling back button
     }
 
     function refreshData() {
@@ -35,6 +36,8 @@ Items.GenericPanel
     header: Items.NavigationHeader {
         id: header
         Layout.fillWidth: true
+
+        title: top.title
     }
 
     footer: Items.Footer {
@@ -50,7 +53,7 @@ Items.GenericPanel
             if (errorDisplayed || !pageManager.isOnTop(page))
                 return
             errorDisplayed = true
-            pageManager.enterPopup(Enums.Popup.Information, {
+            pageManager.openPopup(Enums.Popup.Information, {
                                                             "text" : Strings.dataDownloadError + (Helpers.isNetworkError(code) ? "\n" + Strings.noInternet : ""),
                                                             "acceptButtonText": Strings.tryAgain,
                                                             "acceptButtonType": Enums.PopupAction.ReloadData,
