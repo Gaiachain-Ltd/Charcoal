@@ -126,16 +126,16 @@ namespace Enums {
     Q_ENUM_NS(PopupAction)
     inline uint qHash(PopupAction key, uint seed) { return qH<PopupAction>(key, seed);}
 
-    enum class ConnectionStatus {
+    enum class ConnectionState {
         Unknown = -1,
         ConnectionSuccessful,
         Connecting,
         ConnectionError,
 
-        ConnectionStatusCount
+        ConnectionStateCount
     };
-    Q_ENUM_NS(ConnectionStatus)
-    inline uint qHash(ConnectionStatus key, uint seed) { return qH<ConnectionStatus>(key, seed);}
+    Q_ENUM_NS(ConnectionState)
+    inline uint qHash(ConnectionState key, uint seed) { return qH<ConnectionState>(key, seed);}
 
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }

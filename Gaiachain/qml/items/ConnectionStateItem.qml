@@ -8,33 +8,33 @@ import com.gaiachain.enums 1.0
 Item {
     id: top
 
-    function colorForStatus(status) {
-        switch (status) {
-        case Enums.ConnectionStatus.ConnectionSuccessful:
+    function colorForState(state) {
+        switch (state) {
+        case Enums.ConnectionState.ConnectionSuccessful:
             return Style.okColor
-        case Enums.ConnectionStatus.Connecting:
+        case Enums.ConnectionState.Connecting:
             return Style.warningColor
-        case Enums.ConnectionStatus.ConnectionError:
+        case Enums.ConnectionState.ConnectionError:
             return Style.errorColor
         default:
         }
         return Style.unknownColor
     }
-    function textForStatus(status) {
-        switch (status) {
-        case Enums.ConnectionStatus.ConnectionSuccessful:
+    function textForState(state) {
+        switch (state) {
+        case Enums.ConnectionState.ConnectionSuccessful:
             return userManager.loggedIn ? userManager.login : Strings.anonymousUser
-        case Enums.ConnectionStatus.Connecting:
+        case Enums.ConnectionState.Connecting:
             return Strings.searching + "..."
-        case Enums.ConnectionStatus.ConnectionError:
+        case Enums.ConnectionState.ConnectionError:
             return Strings.offline
         default:
         }
         return ""
     }
 
-    readonly property color currentColor: colorForStatus(connectionStatus)
-    property var connectionStatus: Enums.ConnectionStatus.Unknown
+    readonly property color currentColor: colorForState(connectionState)
+    property int connectionState: Enums.ConnectionState.Unknown
 
     RowLayout {
         anchors.fill: parent
@@ -51,7 +51,7 @@ Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            text: top.textForStatus(connectionStatus)
+            text: top.textForState(top.connectionState)
             color: top.currentColor
 
             font.bold: true

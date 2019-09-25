@@ -8,7 +8,6 @@
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(session, "session")
 
-#include "overlaymanager.h"
 #include "../common/tags.h"
 #include "../common/globals.h"
 #include "../helpers/utility.h"
@@ -17,18 +16,16 @@ Q_LOGGING_CATEGORY(session, "session")
 
 SessionManager::SessionManager(QObject *parent)
     : AbstractManager(parent)
-{
-
-}
-
-void SessionManager::setOverlayManager(OverlayManager *manager)
-{
-    m_overlayManager = manager;
-}
+{}
 
 void SessionManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("sessionManager"), this);
+}
+
+Enums::ConnectionState SessionManager::connectionState() const
+{
+    return m_connectionState;
 }
 
 void SessionManager::onTokenChanged(const QString &token)
@@ -40,25 +37,21 @@ void SessionManager::login(const QString &email, const QString &password)
 {
     auto request = QSharedPointer<LoginRequest>::create(email, password);
 
-    m_overlayManager->setLoginRequest(true);
-
     auto finishLambda = [&](const QJsonDocument &reply) {
         emit loginFinished(reply);
-        m_overlayManager->setLoginRequest(false);
 #ifndef FAKE_DATA
         this->getEntity();
 #endif
     };
 
     auto errorLambda = [&](const QString &, const int code) {
-        m_overlayManager->setLoginRequest(false);
-        emit displayLoginError(code);
+        emit loginError(code);
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
-    m_client.send(request);
+    sendRequest(request);
 }
 
 void SessionManager::getEntity()
@@ -89,7 +82,7 @@ void SessionManager::getEntity()
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
-    m_client.send(request);
+    sendRequest(request);
 }
 
 void SessionManager::getEntity(const QString &id)
@@ -107,7 +100,7 @@ void SessionManager::getEntity(const QString &id)
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
-    m_client.send(request);
+    sendRequest(request);
 }
 
 void SessionManager::getEntities(const QJsonArray &ids)
@@ -132,7 +125,7 @@ void SessionManager::getEntities(const QJsonArray &ids)
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
-    m_client.send(request);
+    sendRequest(request);
 }
 
 void SessionManager::getEntityAction(const QString &id, const int role)
@@ -174,7 +167,7 @@ void SessionManager::getEntityAction(const QString &id, const int role)
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
-    m_client.send(request);
+    sendRequest(request);
 }
 
 void SessionManager::putEntity(const QString &id, const int action)
@@ -192,5 +185,39 @@ void SessionManager::putEntity(const QString &id, const int action)
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
+    sendRequest(request);
+}
+
+void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
+{
+    connect(request.data(), &BaseRequest::requestFinished,
+            this, [this](const QJsonDocument &) { updateConnectionStateAfterRequest(); });
+    connect(request.data(), &BaseRequest::replyError,
+            this, [this](const QString &, const int errorCode) { updateConnectionStateAfterRequest(errorCode); });
+
+    updateConnectionStateBeforeRequest();
     m_client.send(request);
+}
+
+void SessionManager::updateConnectionStateBeforeRequest()
+{
+    if (m_connectionState == Enums::ConnectionState::ConnectionSuccessful
+            || m_connectionState == Enums::ConnectionState::Connecting) {
+        return;
+    }
+
+    m_connectionState = Enums::ConnectionState::Connecting;
+    emit connectionStateChanged(m_connectionState);
+}
+
+void SessionManager::updateConnectionStateAfterRequest(const int errorCode)
+{
+    auto newState = (errorCode == QNetworkReply::NoError) ? Enums::ConnectionState::ConnectionSuccessful
+                                                          : Enums::ConnectionState::ConnectionError;
+    if (m_connectionState == newState) {
+        return;
+    }
+
+    m_connectionState = newState;
+    emit connectionStateChanged(newState);
 }

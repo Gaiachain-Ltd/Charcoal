@@ -54,7 +54,6 @@ HEADERS += \
     src/rest/restapiclient.h \
     src/controllers/sessionmanager.h \
     src/controllers/usermanager.h \
-    src/controllers/overlaymanager.h \
     src/controllers/abstractmanager.h \
     src/common/location.h \
     src/models/shipmenteventsproxy.h \
@@ -79,7 +78,6 @@ SOURCES += src/main.cpp \
     src/rest/restapiclient.cpp \
     src/controllers/sessionmanager.cpp \
     src/controllers/usermanager.cpp \
-    src/controllers/overlaymanager.cpp \
     src/rest/entityrequest.cpp \
     src/controllers/abstractmanager.cpp \
     src/models/shipmenteventsproxy.cpp \
