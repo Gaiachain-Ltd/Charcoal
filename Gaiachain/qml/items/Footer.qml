@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
-// TO_DO consider using Toolbar
 Item {
     id: top
 
@@ -17,39 +16,25 @@ Item {
     }
 
     RowLayout {
-        id: topRow
         anchors {
             fill: parent
             margins: s(Style.normalMargin)
         }
 
-        readonly property int buttonHeight: height * 0.9
-
-        ImageButton {
+        ConnectionStatusItem {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: topRow.buttonHeight
-            Layout.preferredWidth: Layout.preferredHeight
-
-            source: Style.userImgUrl
-        }
-        BasicText {
-            text: userManager.loggedIn ? userManager.login : Strings.anonymousUser
-            color: Style.okColor
-            font.bold: true
-        }
-
-        Item    // spacer
-        {
+            Layout.preferredHeight: s(Style.buttonImageHeight)
             Layout.fillWidth: true
-            Layout.preferredHeight: parent.height
+
+            connectionStatus: Enums.ConnectionStatus.ConnectionSuccessful   // TODO real connection status
         }
 
         ImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: topRow.buttonHeight
-            Layout.preferredWidth: Layout.preferredHeight
+            Layout.preferredHeight: s(Style.buttonImageHeight)
 
             source: Style.refreshImgUrl
+            palette.button: Style.unknownColor
 
             onClicked: refreshData()
         }

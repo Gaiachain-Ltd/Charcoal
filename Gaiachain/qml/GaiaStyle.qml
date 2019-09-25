@@ -13,7 +13,7 @@ QtObject {
     readonly property color primaryColor: "#65cb00"
 
     readonly property color backgroundColor: "white"
-    readonly property color backgroundSecondaryColor: "#F6F6F6"
+    readonly property color backgroundSecondaryColor: "#f6f6f6"
     readonly property color headerBackgroundColor: "#667176"
     readonly property color footerBackgroundColor: "#e8eaec"
 
@@ -30,10 +30,13 @@ QtObject {
     readonly property color buttonPopupRejectColor: "#bebebe"
 
     readonly property color buttonMenuColor: "#f6f6f6"
+    readonly property color buttonBorderColor: "#d8d8d8"
+    readonly property color inputBorderColor: "#d6d6d6"
 
     readonly property color disabledColorTint: "#C0a4a4a4"
     readonly property color backgroundShadowColor: "#99000000"
 
+    readonly property color unknownColor: "#8f8f8f"
     readonly property color okColor: "#65cb00"
     readonly property color warningColor: "#de8c00"
     readonly property color errorColor: "#cb0000"
@@ -81,10 +84,13 @@ QtObject {
     readonly property int footerHeight: 210
 
     // urls
-    readonly property url logoImgUrl: "qrc:/ui/logo"
-    readonly property url logoIconImgUrl: "qrc:/ui/logo_icon"
+    readonly property url logoBlackImgUrl: "qrc:/ui/logo-black"
+    readonly property url logoWhiteImgUrl: "qrc:/ui/logo-white"
+    readonly property url logoImgUrl: logoBlackImgUrl
+    readonly property url logoIconImgUrl: "qrc:/ui/logo-icon"
 
     readonly property url backImgUrl: "qrc:/ui/back"
+    readonly property url closeImgUrl: "qrc:/ui/close"
     readonly property url logoutImgUrl: "qrc:/ui/logout"
     readonly property url userImgUrl: "qrc:/ui/user"
 
@@ -98,16 +104,21 @@ QtObject {
     readonly property url refreshImgUrl: "qrc:/ui/refresh"
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"
 
+    readonly property url supplyChainButtonImgUrl: "qrc:/ui/chain"
+    readonly property url transactionsButtonImgUrl: "qrc:/ui/transactions"
+    readonly property url calendarButtonImgUrl: "qrc:/ui/calendar-big"
+    readonly property url trackingButtonImgUrl: "qrc:/ui/tracking"
+
     // input
-    readonly property int inputHeight: buttonHeight
-    readonly property color inputBorderColor: "#e0e0e0"
+    readonly property int inputHeight: 90
 
     // button
-    readonly property int buttonHeight: 90
-    readonly property int smallButtonHeight: 40
-    readonly property int buttonRadius: 20
-    readonly property int bigButtonRadius: 28
-    readonly property int defaultPadding: smallMargin * 1.5
+    readonly property int buttonRadius: 15
+    readonly property int buttonSmallRadius: 10
+    readonly property int buttonImageSmallHeight: 70
+    readonly property int buttonImageHeight: 105
+    readonly property int buttonImageBigHeight: 150
+    readonly property int buttonImageMargin: 20
 
     // Other
     readonly property int animationDuration: 300

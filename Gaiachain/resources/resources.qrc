@@ -1,20 +1,24 @@
 <RCC>
     <qresource prefix="/ui">
-        <file alias="back">ui/back-icon.svg</file>
-        <file alias="close">ui/cancel-icon.svg</file>
+        <file alias="back">ui/icon-back.svg</file>
         <file alias="email">ui/icon-email.svg</file>
-        <file alias="logout">ui/login-screen-icon.svg</file>
-        <file alias="logo">ui/logo-gaiachain.svg</file>
+        <file alias="logout">ui/icon-exit.svg</file>
+        <file alias="logo-white">ui/gaiachain-logo-white.svg</file>
         <file alias="password">ui/icon-password.svg</file>
         <file alias="ok">ui/ok-icon.svg</file>
         <file alias="spinner">ui/loader.svg</file>
-        <file alias="refresh">ui/reload-icon.svg</file>
-        <file alias="right_arrow_white">ui/arrow-light-white.svg</file>
-        <file alias="logo_icon">ui/gaiachain-logo-icon.svg</file>
+        <file alias="refresh">ui/icon-refresh.svg</file>
+        <file alias="logo-icon">ui/gaiachain-logo-icon.svg</file>
         <file alias="user">ui/gaia-icon.svg</file>
         <file alias="loadingLogoOne">ui/loading-1.svg</file>
         <file alias="loadingLogoTwo">ui/loading-2.svg</file>
         <file alias="loadingLogoThree">ui/loading-3.svg</file>
+        <file alias="chain">ui/icon-chain.svg</file>
+        <file alias="calendar-big">ui/icon-calendar.svg</file>
+        <file alias="tracking">ui/icon-tracking.svg</file>
+        <file alias="transactions">ui/icon-transactions.svg</file>
+        <file alias="close">ui/close-icon.svg</file>
+        <file alias="logo-black">ui/gaiachain-logo-black.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

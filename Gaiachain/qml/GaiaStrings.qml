@@ -42,6 +42,8 @@ QtObject {
 
     readonly property string loading: qsTr("Loading")
     readonly property string anonymousUser: qsTr("Anonymous")
+    readonly property string searching: qsTr("Searching")
+    readonly property string offline: qsTr("Offline")
 
     readonly property string noInternetError: qsTr("No internet connection.")
     readonly property string loginError: qsTr("Login failed. Try again.")

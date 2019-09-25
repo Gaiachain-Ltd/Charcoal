@@ -11,6 +11,8 @@ Item {
     id: top
 
     readonly property bool isOnHomePage: pageManager.isOnHomePage()
+    readonly property bool isBackToHomePage: pageManager.isBackToHomePage()
+
     signal headerClicked()
 
     function backHandler() {
@@ -34,7 +36,6 @@ Item {
     }
 
     RowLayout {
-        id: topRow
         anchors {
             fill: parent
             leftMargin: s(Style.normalMargin)
@@ -43,29 +44,25 @@ Item {
             bottomMargin: s(Style.smallMargin)
         }
 
-        readonly property real logoHeight: height
-        readonly property int buttonHeight: height * 0.75
-
-        ImageButton {
+        PureImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: topRow.buttonHeight
-            Layout.preferredWidth: Layout.preferredHeight
+            Layout.preferredHeight: s(Style.buttonImageSmallHeight)
 
-            opacity: isOnHomePage ? 0 : 1
-            enabled: !isOnHomePage
+            opacity: isOnHomePage || isBackToHomePage ? 0 : 1
+            enabled: !isOnHomePage && !isBackToHomePage
             source: Style.backImgUrl
 
             onClicked: backHandler()
         }
 
-        Items.LayoutSpacer {}
+        Items.LayoutSpacer { visible: !logoVisible }
 
-        ImageButton {
+        PureImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: topRow.logoHeight
-            Layout.preferredWidth: Layout.preferredHeight
+            Layout.fillWidth: true
+            Layout.preferredHeight: s(Style.buttonImageBigHeight)
 
-            source: Style.logoIconImgUrl
+            source: Style.logoWhiteImgUrl
             visible: logoVisible
 
             onClicked: headerClicked()
@@ -75,16 +72,27 @@ Item {
             text: title
             color: Style.textSecondaryColor
             font.pixelSize: s(Style.titlePixelSize)
+
+            visible: !logoVisible
         }
 
-        Items.LayoutSpacer {}
+        Items.LayoutSpacer { visible: !logoVisible }
 
-        ImageButton {
+        PureImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: topRow.buttonHeight
-            Layout.preferredWidth: Layout.preferredHeight
+            Layout.preferredHeight: s(Style.buttonImageSmallHeight)
+
+            source: Style.closeImgUrl
+            visible: !isOnHomePage
+
+            onClicked: pageManager.backTo(pageManager.homePage())
+        }
+        PureImageButton {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.preferredHeight: s(Style.buttonImageSmallHeight)
 
             source: Style.logoutImgUrl
+            visible: isOnHomePage
 
             onClicked: logout()
         }

@@ -163,6 +163,15 @@ bool PageManager::isOnHomePage() const
     return isOnTop(m_homePage);
 }
 
+bool PageManager::isBackToHomePage() const
+{
+    if (m_pageStack.size() < 2) {
+        return false;
+    }
+
+    return m_pageStack.at(m_pageStack.size() - 2) == m_homePage;
+}
+
 bool PageManager::isOnTop(Enums::Page page) const
 {
     return m_pageStack.last() == page;

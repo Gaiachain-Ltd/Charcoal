@@ -19,6 +19,7 @@ public:
     Q_INVOKABLE QString getInitialPageUrl() const;
     Q_INVOKABLE Enums::Page homePage() const;
     Q_INVOKABLE bool isOnHomePage() const;
+    Q_INVOKABLE bool isBackToHomePage() const;
     Q_INVOKABLE bool isOnTop(Enums::Page page) const;
 
 signals:

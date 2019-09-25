@@ -27,13 +27,13 @@ BasePage {
         Items.ImageItem {
             Layout.fillWidth: true
 
-            buttonHeight: s(30)
-            buttonWidth: s(30)
-            imageUrl: Style.backBlackImgUrl
+//            buttonHeight: s(30)
+//            buttonWidth: s(30)
+//            imageUrl: Style.backBlackImgUrl
 
-            text: Helpers.getMonthName(top.currentMonth) + " " + top.currentYear
-            textFont.bold: true
-            textFont.pixelSize: s(50)
+//            text: Helpers.getMonthName(top.currentMonth) + " " + top.currentYear
+//            textFont.bold: true
+//            textFont.pixelSize: s(50)
 
             MouseArea {
                 anchors.fill: parent

@@ -13,6 +13,8 @@ import "../items" as Items
 BasePage {
     id: top
 
+    title: Strings.calendar
+
     property date currentDate: new Date()
     property int currentYear: currentDate.getFullYear()
     property int currentMonth: monthModel[currentDate.getMonth()]
@@ -173,8 +175,8 @@ BasePage {
                                 anchors.fill: parent
                                 currentMonth: month
                                 currentYear: year
-                                circleColor: Style.buttonBlackGreyColor
-                                circleSize: s(Style.calendarSmallDotSize)
+                                circleColor: "transparent"
+                                circleSize: 0
 
                                 MouseArea {
                                     anchors.fill: parent

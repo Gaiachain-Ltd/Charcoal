@@ -34,7 +34,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.preferredHeight: parent.height * 0.35
 
-            // FIX_ME biding loops
+            // FIXME biding loops
             Items.SvgImage
             {
                 anchors.centerIn: parent

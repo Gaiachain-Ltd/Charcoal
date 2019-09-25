@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>pages/LanguageChosingPage.qml</file>
         <file>pages/LoginPage.qml</file>
         <file>pages/MainMenuPage.qml</file>
         <file>pages/CalendarPage.qml</file>
@@ -18,12 +17,9 @@
         <file>items/Footer.qml</file>
         <file>items/NavigationHeader.qml</file>
         <file>items/ImageButton.qml</file>
-        <file>items/ImageCheckbox.qml</file>
-        <file>items/TextImageButton.qml</file>
         <file>items/CalendarMonthItem.qml</file>
         <file>items/ImageItem.qml</file>
         <file>items/SvgImage.qml</file>
-        <file>items/ShadowedImageButton.qml</file>
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
         <file>items/TextWithTitle.qml</file>
@@ -41,5 +37,10 @@
         <file>items/GenericPopup.qml</file>
         <file>items/BasePopup.qml</file>
         <file>pages/LoginLoadingPage.qml</file>
+        <file>items/PureImageButton.qml</file>
+        <file>items/ConnectionStatusItem.qml</file>
+        <file>items/MenuButton.qml</file>
+        <file>pages/TransactionsPage.qml</file>
+        <file>pages/TrackingPage.qml</file>
     </qresource>
 </RCC>

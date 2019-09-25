@@ -58,13 +58,13 @@ BasePage {
             Layout.fillWidth: true
             Layout.leftMargin: s(Style.normalMargin)
 
-            buttonHeight: s(30)
-            buttonWidth: s(30)
-            imageUrl: Style.backBlackImgUrl
+//            buttonHeight: s(30)
+//            buttonWidth: s(30)
+//            imageUrl: Style.backBlackImgUrl
 
-            text: Helpers.getMonthName(top.currentMonth) + " " + top.currentYear
-            textFont.bold: true
-            textFont.pixelSize: s(50)
+//            text: Helpers.getMonthName(top.currentMonth) + " " + top.currentYear
+//            textFont.bold: true
+//            textFont.pixelSize: s(50)
 
             MouseArea {
                 anchors.fill: parent
@@ -116,7 +116,7 @@ BasePage {
                 Component.onCompleted: {
                     updateData();
 
-                    // TO_DO find a better solution (center!)
+                    // TODO find a better solution (center!)
                     if (delegate.isSelected)
                         ListView.view.positionViewAtIndex(ListView.view.selectedDay-1, ListView.Center)
                 }
@@ -129,13 +129,13 @@ BasePage {
                         Layout.preferredHeight: parent.width * 0.7
                         Layout.preferredWidth: parent.width * 0.7
                         radius: width * 0.5
-                        color: delegate.isSelected ? Style.buttonBlackGreyColor : "transparent"
+                        color: "transparent"
 
                         Items.BasicText {
                             anchors.centerIn: parent
                             text: day
-                            color: delegate.isSelected ? "white" : "black" // TO_DO should be in Style!
-                            opacity: isWeekend ? 0.3 : 1 // TO_DO should be in Style!
+                            color: delegate.isSelected ? "white" : "black" // TODO should be in Style!
+                            opacity: isWeekend ? 0.3 : 1 // TODO should be in Style!
                         }
                     }
                     Rectangle {
@@ -159,7 +159,7 @@ BasePage {
             Layout.fillHeight: true
 
             delegateHeight: s(100)
-            backgroundColor: "#FFF5F5F5"    // TO_DO should be in Style!
+            backgroundColor: "#FFF5F5F5"    // TODO should be in Style!
 
             onDelegateClicked: top.enterShipmentDetailsPage(data)
 
