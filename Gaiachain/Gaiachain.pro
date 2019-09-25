@@ -123,8 +123,8 @@ include(platforms/linux/linux.pri)
 ## Modules
 include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)
-#include(../milo/mscripts/mscripts.pri) # TO_DO was is das?
-#include(../milo/mcrypto/mcrypto.pri)  # TO_DO disabling it until potential database encryption implementation
+#include(../milo/mscripts/mscripts.pri) # TODO disabling it until potential usecase
+#include(../milo/mcrypto/mcrypto.pri)  # TODO disabling it until potential database encryption implementation
 include(../milo/mrestapi/mrestapi.pri)
 
 DISTFILES += \

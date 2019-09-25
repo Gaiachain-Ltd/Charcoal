@@ -19,7 +19,7 @@ MainController::MainController(QObject *parent)
 
 #ifdef Q_OS_ANDROID
     // check for permissions before opening scanner page to load camera faster
-    // TO_DO user it only after login
+    // TODO user it only after login
     const QString cameraPermission = QStringLiteral("android.permission.CAMERA");
     if (QtAndroid::checkPermission(cameraPermission) == QtAndroid::PermissionResult::Denied) {
         auto permissionCallback = [](const QtAndroid::PermissionResultMap &) {};
@@ -60,13 +60,12 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     //Register namespace for enums first
     qmlRegisterUncreatableMetaObject(Enums::staticMetaObject, "com.gaiachain.enums", 1, 0,
                                      "Enums", "Cannot create namespace Enums in QML");
-    qRegisterMetaType<Enums::CommodityType>("CommodityType");
     qRegisterMetaType<Enums::Page>("Page");
-    qRegisterMetaType<Enums::PageSections>("PageSections");
     qRegisterMetaType<Enums::UserType>("UserType");
     qRegisterMetaType<Enums::PlaceType>("PlaceType");
     qRegisterMetaType<Enums::Popup>("Popup");
     qRegisterMetaType<Enums::PopupAction>("PopupAction");
+    qRegisterMetaType<Enums::ConnectionStatus>("ConnectionStatus");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
 

@@ -24,19 +24,20 @@ namespace Enums {
 
     enum class Page {
         InvalidPage = -1,
-        CalendarEvents = 0,
-        CalendarMonth,
+        CalendarEvents = 0,     // TODO check if still needed
+        CalendarMonth,          // TODO check if still needed
         Calendar,
-        EditableEventDetails,
-        EventDetails,
-        EventsList,
-        LanguageChosing,
+        EditableEventDetails,   // TODO check if still needed
+        EventDetails,           // TODO check if still needed
+        EventsList,             // TODO check if still needed
         Login,
         LoginLoading,
         MainMenu,
-        ShipmentDetails,
-        QRScanner,
-        Map,
+        QRScanner,              // TODO check if still needed
+        ShipmentDetails,        // TODO check if still needed
+        Transactions,
+        Tracking,
+        Map,                    // TODO check if still needed
 
         PageCount
     };
@@ -124,6 +125,17 @@ namespace Enums {
     };
     Q_ENUM_NS(PopupAction)
     inline uint qHash(PopupAction key, uint seed) { return qH<PopupAction>(key, seed);}
+
+    enum class ConnectionStatus {
+        Unknown = -1,
+        ConnectionSuccessful,
+        Connecting,
+        ConnectionError,
+
+        ConnectionStatusCount
+    };
+    Q_ENUM_NS(ConnectionStatus)
+    inline uint qHash(ConnectionStatus key, uint seed) { return qH<ConnectionStatus>(key, seed);}
 
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }

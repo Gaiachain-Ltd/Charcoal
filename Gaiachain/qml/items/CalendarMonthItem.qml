@@ -17,8 +17,8 @@ Item {
 
     property int daySpacing: 0
 
-    property color circleColor: Style.currentCommodityColor
-    property int circleSize: s(Style.calendarBigDotSize)
+    property color circleColor: "transparent"
+    property int circleSize: 0
 
     signal titleClicked()
     signal dateClicked(date d)
@@ -71,7 +71,7 @@ Item {
                     text: model.day
                     verticalAlignment: Text.AlignTop
 
-                    opacity: currentMonth ? (utility.isWeekend(model.date) ? 0.4 : 1) : 0.05 // TO_DO should be in Style!
+                    opacity: currentMonth ? (utility.isWeekend(model.date) ? 0.4 : 1) : 0.05 // TODO should be in Style!
                     font: grid.font
                 }
 

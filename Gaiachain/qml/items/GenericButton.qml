@@ -8,6 +8,9 @@ Button
     id: top
 
     property color borderColor: background.color
+    property int borderRadius: s(Style.buttonRadius)
+
+    property color disabledColorTint: Style.disabledColorTint
 
     font {
         pixelSize: s(Style.buttonPixelSize)
@@ -19,8 +22,8 @@ Button
 
     background: Rectangle {
         id: background
-        radius: s(Style.smallMargin)
-        color: top.enabled ? palette.button : Qt.tint(palette.button, Style.disabledColorTint)
+        radius: top.borderRadius
+        color: top.enabled ? palette.button : Qt.tint(palette.button, top.disabledColorTint)
         border {
             width: sr(1)
             color: top.borderColor

@@ -72,7 +72,7 @@ void DataManager::onEntityLoaded(const QJsonObject &entity)
         const QString agentRole = agent.value(Tags::role).toString();
         const QString action = historyObj.value(Tags::action).toString();
         Enums::PlaceAction placeAction = Enums::PlaceAction::Arrived;
-        // TO_DO handling strings to enum conversions
+        // TODO handling strings to enum conversions
         if (action == QStringLiteral("DEPARTED"))
             placeAction = Enums::PlaceAction::Departed;
         const QJsonArray locationArray = historyObj.value(Tags::location).toArray();

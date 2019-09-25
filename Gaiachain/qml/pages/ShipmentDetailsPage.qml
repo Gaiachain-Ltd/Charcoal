@@ -25,7 +25,7 @@ BasePage {
     }
 
     function createDataObject(attributes) {
-        // TO_DO find a better solution
+        // TODO find a better solution
         return { "company": attributes.company,
             "timestamp": Number(attributes.timestamp),
             "place": Number(attributes.place),

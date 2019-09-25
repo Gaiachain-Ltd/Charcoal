@@ -1,52 +1,28 @@
 import QtQuick 2.11
-import QtQuick.Layouts 1.11
+import QtQuick.Controls 2.5
 
 import com.gaiachain.style 1.0
 
-Item {
+Control {
     id: top
 
-    implicitHeight: mainLayout.implicitHeight
-    implicitWidth: mainLayout.implicitWidth
+    property alias source: image.source
+    property alias fillMode: image.fillMode
 
-    property alias imageUrl: image.source
+    property alias backgroundColor: background.color
+    property int borderRadius: s(Style.buttonSmallRadius)
 
-    // Use it to set image sizes.
-    property real buttonWidth: -1.0
-    property real buttonHeight: -1.0
+    implicitWidth: s(Style.buttonImageHeight)
+    implicitHeight: s(Style.buttonImageHeight)
 
-    property alias text: text.text
-    property alias textColor: text.color
-    property alias textFont: text.font
-    property alias textWrap: text.wrapMode
+    padding: s(Style.buttonImageMargin)
 
-    property alias spacing: mainLayout.spacing
+    contentItem: SvgImage { id: image }
 
-    property alias layoutDirection: mainLayout.layoutDirection
+    background: Rectangle {
+        id: background
 
-    RowLayout {
-        id: mainLayout
-
-        anchors.centerIn: parent
-        width: parent.width
-        height: parent.height
-
-        SvgImage {
-            id: image
-
-            Layout.fillWidth: top.buttonWidth < 0.0 ? true : false
-            Layout.fillHeight: top.buttonHeight < 0.0 ? true : false
-
-            Layout.preferredWidth: top.buttonWidth > 0.0 ? top.buttonWidth : implicitWidth
-            Layout.preferredHeight: top.buttonHeight > 0.0 ? top.buttonHeight : implicitHeight
-
-            fillMode: Image.PreserveAspectFit
-        }
-
-        BasicText {
-            id: text
-            Layout.fillHeight: true
-        }
+        color: palette.window
+        radius: top.borderRadius
     }
-
 }
