@@ -31,7 +31,6 @@ MainController::MainController(QObject *parent)
 
 void MainController::setupConnections()
 {
-    m_sessionManager.setOverlayManager(&m_overlayManager);
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &SessionManager::onTokenChanged);
     connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
 #ifndef FAKE_DATA
@@ -65,7 +64,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::PlaceType>("PlaceType");
     qRegisterMetaType<Enums::Popup>("Popup");
     qRegisterMetaType<Enums::PopupAction>("PopupAction");
-    qRegisterMetaType<Enums::ConnectionStatus>("ConnectionStatus");
+    qRegisterMetaType<Enums::ConnectionState>("ConnectionState");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
 
@@ -76,7 +75,6 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     m_pageManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);
     m_userManager.setupQmlContext(engine);
-    m_overlayManager.setupQmlContext(engine);
     m_sessionManager.setupQmlContext(engine);
 
     setupQZXing(engine);

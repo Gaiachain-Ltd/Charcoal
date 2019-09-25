@@ -21,12 +21,12 @@ Item {
             margins: s(Style.normalMargin)
         }
 
-        ConnectionStatusItem {
+        ConnectionStateItem {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(Style.buttonImageHeight)
             Layout.fillWidth: true
 
-            connectionStatus: Enums.ConnectionStatus.ConnectionSuccessful   // TODO real connection status
+            connectionState: sessionManager.connectionState
         }
 
         ImageButton {

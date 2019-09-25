@@ -21,7 +21,7 @@ Items.GenericPanel
     {
         target: sessionManager
         onLoginFinished: d.onLoginReady()
-        onDisplayLoginError: d.showLoginError(code)
+        onLoginError: d.showLoginError(code)
     }
 
     states: [

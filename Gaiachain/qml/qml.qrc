@@ -38,7 +38,7 @@
         <file>items/BasePopup.qml</file>
         <file>pages/LoginLoadingPage.qml</file>
         <file>items/PureImageButton.qml</file>
-        <file>items/ConnectionStatusItem.qml</file>
+        <file>items/ConnectionStateItem.qml</file>
         <file>items/MenuButton.qml</file>
         <file>pages/TransactionsPage.qml</file>
         <file>pages/TrackingPage.qml</file>
