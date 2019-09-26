@@ -17,37 +17,27 @@ class FakeDataPopulator : public QObject
 public:
     explicit FakeDataPopulator(EventModel &eventModel, ShipmentModel &shipmentModel);
 
-    void populateFakeData(const int count, const Enums::CommodityType commodityType);
+    void populateFakeData(const int count);
 
-    Q_INVOKABLE void addId(const QVariantMap &attributes, const Enums::CommodityType commodityType);
-    Q_INVOKABLE bool canAddId(const QString &id, const Enums::CommodityType commodityType) const;
-    Q_INVOKABLE QVariantMap getIdNextData(const QString &id, const Enums::CommodityType commodityType) const;
+    Q_INVOKABLE void addId(const QVariantMap &attributes);
+    Q_INVOKABLE bool canAddId(const QString &id) const;
+    Q_INVOKABLE QVariantMap getIdNextData(const QString &id) const;
 
 private:
     QStringList generateRandomIdList(const int count) const;
     QString generateRandomId() const;
-    Enums::PlaceType getNextPlaceType(const Enums::PlaceType place, const Enums::CommodityType commodityType) const;
+    Enums::PlaceType getNextPlaceType(const Enums::PlaceType place) const;
 
     EventModel &m_eventModel;
     ShipmentModel &m_shipmentModel;
 
     const QHash<Enums::UserType, QStringList> m_companyNames {
-        { Enums::UserType::Producer, {"ForestryInc", "Fortrest", "Fory"} },
-        { Enums::UserType::LogParkWorker, {"LogParkInc", "Park", "LoggingInc"} },
-        { Enums::UserType::SawmillWorker, {"SawmilWorkersInc", "Saws", "Sawmill"} },
-        { Enums::UserType::Exporter, {"ExportingInc", "ShipsInc", "XentExports"} },
-        { Enums::UserType::VillageWorker, {"VillageInc", "VillagesAndBrothers"} },
-        { Enums::UserType::BaggingWorker, {"BaggingInc", "BagsAndRoses", "RisingBags"} },
-        { Enums::UserType::NurseryWorker, {"NursyInc", "NuresersRos"} },
-        { Enums::UserType::TruckDriver, {"TruckersGoing", "TruckersInc"} }
+        { Enums::UserType::Producer, {"VillageInc", "VillagesAndBrothers"} },
+        { Enums::UserType::BaggingPerson, {"BaggingInc", "BagsAndRoses", "RisingBags"} },
+        { Enums::UserType::Storekeeper, {"StoreInc", "StoringAll"} },
+        { Enums::UserType::Exporter, {"ExportingInc", "ShipsInc", "XentExports"} }
     };
 
-    const QVector<Enums::PlaceType> m_timberPlaceList {
-        Enums::PlaceType::Forestery,
-        Enums::PlaceType::LogPark,
-        Enums::PlaceType::Sawmill,
-        Enums::PlaceType::Export,
-    };
     const QVector<Enums::PlaceType> m_cocoaPlaceList {
         Enums::PlaceType::Nursery,
         Enums::PlaceType::Village,

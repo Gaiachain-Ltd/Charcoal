@@ -65,6 +65,8 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::Popup>("Popup");
     qRegisterMetaType<Enums::PopupAction>("PopupAction");
     qRegisterMetaType<Enums::ConnectionState>("ConnectionState");
+    qRegisterMetaType<Enums::SupplyChainAction>("SupplyChainAction");
+    qRegisterMetaType<Enums::PackageType>("PackageType");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
 

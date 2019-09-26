@@ -6,8 +6,7 @@
 #include "../models/eventmodel.h"
 #include "../models/shipmentmodel.h"
 
-#include "../models/commodityproxymodel.h"
-#include "../models/commoditydaterangeproxymodel.h"
+#include "../models/daterangeproxymodel.h"
 #include "../models/shipmenteventsproxy.h"
 #include "../models/latesteventsproxy.h"
 #ifdef FAKE_DATA
@@ -33,9 +32,8 @@ private:
     EventModel m_eventModel;
     ShipmentModel m_shipmentModel;
 
-    CommodityProxyModel m_commodityProxyModel;
-    CommodityDateRangeProxyModel m_calendarRangeProxyModel;
-    CommodityDateRangeProxyModel m_dateEventsRangeProxyModel;
+    DateRangeProxyModel m_calendarRangeProxyModel;
+    DateRangeProxyModel m_dateEventsRangeProxyModel;
     ShipmentEventsProxy m_shipmentEventsProxyModel;
     LatestEventsProxy m_latestEventsProxyModel;
 #ifdef FAKE_DATA

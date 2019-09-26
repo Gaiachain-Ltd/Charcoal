@@ -4,10 +4,15 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
+import "../items" as Items
+import "../components" as Components
+
 Item {
     id: top
 
     implicitHeight: s(Style.footerHeight)
+
+    Items.BlockMouseArea{}
 
     Rectangle {
         id: background
@@ -21,7 +26,7 @@ Item {
             margins: s(Style.normalMargin)
         }
 
-        ConnectionStateItem {
+        Components.ConnectionStateItem {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(Style.buttonImageHeight)
             Layout.fillWidth: true
@@ -29,7 +34,7 @@ Item {
             connectionState: sessionManager.connectionState
         }
 
-        ImageButton {
+        Items.ImageButton {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(Style.buttonImageHeight)
 

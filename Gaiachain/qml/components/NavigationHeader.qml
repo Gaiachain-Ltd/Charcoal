@@ -29,6 +29,8 @@ Item {
 
     implicitHeight: s(Style.headerHeight)
 
+    Items.BlockMouseArea{}
+
     Rectangle {
         id: background
         anchors.fill: parent
@@ -44,7 +46,7 @@ Item {
             bottomMargin: s(Style.smallMargin)
         }
 
-        PureImageButton {
+        Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(Style.buttonImageSmallHeight)
 
@@ -57,7 +59,7 @@ Item {
 
         Items.LayoutSpacer { visible: !logoVisible }
 
-        PureImageButton {
+        Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
             Layout.preferredHeight: s(Style.buttonImageBigHeight)
@@ -68,7 +70,7 @@ Item {
             onClicked: headerClicked()
         }
 
-        BasicText {
+        Items.BasicText {
             text: title
             color: Style.textSecondaryColor
             font.pixelSize: s(Style.titlePixelSize)
@@ -78,7 +80,7 @@ Item {
 
         Items.LayoutSpacer { visible: !logoVisible }
 
-        PureImageButton {
+        Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(Style.buttonImageSmallHeight)
 
@@ -87,7 +89,7 @@ Item {
 
             onClicked: pageManager.backTo(pageManager.homePage())
         }
-        PureImageButton {
+        Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(Style.buttonImageSmallHeight)
 

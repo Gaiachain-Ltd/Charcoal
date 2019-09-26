@@ -12,11 +12,6 @@ Utility *Utility::instance()
     return &u;
 }
 
-QString Utility::commodityToString(Enums::CommodityType ct)
-{
-    return enumToQString<Enums::CommodityType>(ct, "CommodityType").toLower();
-}
-
 qreal Utility::scaleByDpi(qreal num) const
 {
     return num * m_dpiScale;

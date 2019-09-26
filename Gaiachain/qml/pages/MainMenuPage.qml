@@ -5,6 +5,7 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
 import "../items" as Items
+import "../components" as Components
 
 BasePage {
     id: top
@@ -15,29 +16,78 @@ BasePage {
     Flickable {
         anchors.fill: parent
 
-        contentHeight: menuColumn.implicitHeight
+        contentHeight: menuColumn.implicitHeight + 2 * menuColumn.margins
+        boundsBehavior: Flickable.StopAtBounds
 
         ColumnLayout {
             id: menuColumn
+            property int margins: s(Style.hugeMargin)
 
             anchors {
                 top: parent.top
                 left: parent.left
                 right: parent.right
-                margins: s(Style.hugeMargin)
+                margins: margins
             }
             spacing: s(Style.bigMargin)
 
-            Items.MenuButton {
-                Layout.fillWidth: true
+            ColumnLayout {
+                id: supplyChainButtonColumn
 
-                text: Strings.supplyChain
-                icon.source: Style.supplyChainButtonImgUrl
                 visible: userManager.loggedIn
+                spacing: 0
 
-                onClicked: {} // TODO supply chain list
+                Components.MenuButton {
+                    Layout.fillWidth: true
+
+                    text: Strings.supplyChain
+                    icon.source: Style.supplyChainButtonImgUrl
+
+                    onClicked: supplyChainSubmenu.menuVisible = !supplyChainSubmenu.menuVisible
+                }
+
+                Components.SupplyChainSubmenu {
+                    id: supplyChainSubmenu
+                    Layout.fillWidth: true
+
+                    property bool menuVisible: false
+
+                    opacity: 0
+                    implicitHeight: 0
+
+                    onMenuVisibleChanged: menuVisibleAnimation.start()
+
+                    onActionClicked: console.log("SUPPLY CHAIN ACTION CHOOSEN:", actionType)    // TODO open pages
+
+                    ParallelAnimation {
+                        id: menuVisibleAnimation
+
+                        NumberAnimation {
+                            target: supplyChainSubmenu
+                            property: "opacity";
+                            from: supplyChainSubmenu.menuVisible ? 1 : 0
+                            to: supplyChainSubmenu.menuVisible ? 0 : 1
+                            duration: 300
+                        }
+                        NumberAnimation {
+                            target: supplyChainSubmenu
+                            property: "implicitHeight"
+                            from: supplyChainSubmenu.menuVisible ? supplyChainSubmenu.contentHeight : 0
+                            to: supplyChainSubmenu.menuVisible ? 0 : supplyChainSubmenu.contentHeight
+                            duration: 300
+                        }
+                        NumberAnimation {
+                            target: supplyChainButtonColumn
+                            property: "spacing"
+                            from: supplyChainSubmenu.menuVisible ? menuColumn.spacing : 0
+                            to: supplyChainSubmenu.menuVisible ? 0 : menuColumn.spacing
+                            duration: 300
+                        }
+                    }
+                }
             }
-            Items.MenuButton {
+
+            Components.MenuButton {
                 Layout.fillWidth: true
 
                 text: Strings.transactions
@@ -45,7 +95,7 @@ BasePage {
 
                 onClicked: pageManager.enter(Enums.Page.Transactions)
             }
-            Items.MenuButton {
+            Components.MenuButton {
                 Layout.fillWidth: true
 
                 text: Strings.calendar
@@ -53,7 +103,7 @@ BasePage {
 
                 onClicked: pageManager.enter(Enums.Page.Calendar)
             }
-            Items.MenuButton {
+            Components.MenuButton {
                 Layout.fillWidth: true
 
                 text: Strings.tracking

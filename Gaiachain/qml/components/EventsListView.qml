@@ -5,6 +5,8 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
+import "../items" as Items
+
 Item {
     id: top
 
@@ -60,7 +62,7 @@ Item {
 
                     spacing: s(Style.smallMargin)
 
-                    BasicText {
+                    Items.BasicText {
                         id: text
 
                         Layout.fillHeight: true
@@ -80,7 +82,7 @@ Item {
                                           : Strings.eventTextCalendar.arg(Helpers.getCurrentIdText()).arg(shipmentId).arg(actionStr).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
                     }
 
-                    SvgImage {
+                    Items.SvgImage {
                         id: image
 
                         Layout.fillHeight: true

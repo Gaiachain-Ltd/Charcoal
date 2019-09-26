@@ -41,7 +41,7 @@ QtObject {
     readonly property color warningColor: "#de8c00"
     readonly property color errorColor: "#cb0000"
 
-    readonly property color recolteColor: "#2581eb"
+    readonly property color harvestColor: "#2581eb"
     readonly property color sacColor: "#65cb00"
     readonly property color lotColor: "#ff70f1"
 
@@ -104,10 +104,18 @@ QtObject {
     readonly property url refreshImgUrl: "qrc:/ui/refresh"
     readonly property url spinnerImgUrl: "qrc:/ui/spinner"
 
-    readonly property url supplyChainButtonImgUrl: "qrc:/ui/chain"
-    readonly property url transactionsButtonImgUrl: "qrc:/ui/transactions"
-    readonly property url calendarButtonImgUrl: "qrc:/ui/calendar-big"
-    readonly property url trackingButtonImgUrl: "qrc:/ui/tracking"
+    readonly property url supplyChainButtonImgUrl: "qrc:/ui/menuSupplyChain"
+    readonly property url transactionsButtonImgUrl: "qrc:/ui/menuTransactions"
+    readonly property url calendarButtonImgUrl: "qrc:/ui/menuCalendar"
+    readonly property url trackingButtonImgUrl: "qrc:/ui/menuTracking"
+
+    readonly property url supplyChainSubmenuHarvestImgUrl: "qrc:/ui/submenuHarvest"
+    readonly property url supplyChainSubmenuFermentationImgUrl: "qrc:/ui/submenuFermentation"
+    readonly property url supplyChainSubmenuBaggingImgUrl: "qrc:/ui/submenuBagging"
+    readonly property url supplyChainSubmenuStorageArrivalImgUrl: "qrc:/ui/submenuStorageArrival"
+    readonly property url supplyChainSubmenuStorageLotImgUrl: "qrc:/ui/submenuStorageLot"
+    readonly property url supplyChainSubmenuTransportImgUrl: "qrc:/ui/submenuTransport"
+    readonly property url supplyChainSubmenuReceptionImgUrl: "qrc:/ui/submenuReception"
 
     // input
     readonly property int inputHeight: 90
@@ -117,8 +125,11 @@ QtObject {
     readonly property int buttonSmallRadius: 10
     readonly property int buttonImageSmallHeight: 70
     readonly property int buttonImageHeight: 105
-    readonly property int buttonImageBigHeight: 150
+    readonly property int buttonImageBigHeight: 140
     readonly property int buttonImageMargin: 20
+
+    readonly property int menuButtonHeight: 225
+    readonly property int submenuButtonHeight: 145
 
     // Other
     readonly property int animationDuration: 300
