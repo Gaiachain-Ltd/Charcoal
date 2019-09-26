@@ -6,6 +6,7 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
 import "../items" as Items
+import "../components" as Components
 
 BasePage {
     id: top
@@ -111,7 +112,7 @@ BasePage {
                 Repeater {
                     id: shipmentRep
                     model: shipmentModel
-                    delegate: Items.ShipmentDetailsDelegate {
+                    delegate: Components.ShipmentDetailsDelegate {
                         spacing: s(Style.bigMargin) * 1.2
 
                         onDelegateClicked: enterEventDetailsPage(row)

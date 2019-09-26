@@ -45,31 +45,14 @@ QStringList FakeDataPopulator::generateRandomIdList(const int count) const
     return result;
 }
 
-void FakeDataPopulator::populateFakeData(const int count, const Enums::CommodityType commodityType)
+void FakeDataPopulator::populateFakeData(const int count)
 {
-    QVector<Enums::UserType> userType;
-
-    switch(commodityType) {
-    case Enums::CommodityType::Timber:
-        userType = {
-            Enums::UserType::Producer,
-            Enums::UserType::LogParkWorker,
-            Enums::UserType::SawmillWorker,
-            Enums::UserType::Exporter
-        };
-        break;
-    case Enums::CommodityType::Cocoa:
-        userType = {
-            Enums::UserType::NurseryWorker,
-            Enums::UserType::VillageWorker,
-            Enums::UserType::BaggingWorker,
-            Enums::UserType::TruckDriver,
-            Enums::UserType::Exporter
-        };
-        break;
-    default:
-        qFatal("[FAKE_DATA] Not supported commodityType!");
-    }
+    QVector<Enums::UserType> userType = {
+        Enums::UserType::Producer,
+        Enums::UserType::BaggingPerson,
+        Enums::UserType::Storekeeper,
+        Enums::UserType::Exporter
+    };
 
     const QVector<Enums::PlaceAction> actions {
         Enums::PlaceAction::Arrived,
@@ -116,12 +99,12 @@ void FakeDataPopulator::populateFakeData(const int count, const Enums::Commodity
         m_eventModel.appendData(eventData);
 
         Gaia::ModelData shipmentData;
-        shipmentData.append({shipmentId, QVariant::fromValue(commodityType)});
+        shipmentData.append({shipmentId, });
         m_shipmentModel.appendData(shipmentData);
     }
 }
 
-void FakeDataPopulator::addId(const QVariantMap &attributes, const Enums::CommodityType commodityType)
+void FakeDataPopulator::addId(const QVariantMap &attributes)
 {
     const QString id = attributes.value(Tags::shipmentId).toString();
     const Enums::PlaceAction newAction = static_cast<Enums::PlaceAction>(attributes.value(Tags::action).toInt());
@@ -133,15 +116,13 @@ void FakeDataPopulator::addId(const QVariantMap &attributes, const Enums::Commod
     for (int i = 0 ; i < m_shipmentModel.rowCount() && !exists ; i++) {
         const QString &s = m_shipmentModel.data(m_shipmentModel.index(i), ShipmentModel::ShipmentId).toString();
         if (s == id) {
-            const Enums::CommodityType c = static_cast<Enums::CommodityType>(m_shipmentModel.data(m_shipmentModel.index(i), ShipmentModel::Commodity).toInt());
-            if (c == commodityType)
-                exists = true;
+            exists = true;
         }
     }
 
     if (!exists) {
         Gaia::ModelData shipmentData;
-        shipmentData.append({id, QVariant::fromValue(commodityType)});
+        shipmentData.append({id, });
         m_shipmentModel.appendData(shipmentData);
     }
 
@@ -157,51 +138,24 @@ void FakeDataPopulator::addId(const QVariantMap &attributes, const Enums::Commod
     m_eventModel.appendData(eventData);
 }
 
-Enums::PlaceType FakeDataPopulator::getNextPlaceType(const Enums::PlaceType place, const Enums::CommodityType commodityType) const
+Enums::PlaceType FakeDataPopulator::getNextPlaceType(const Enums::PlaceType place) const
 {
-    switch(commodityType) {
-    case Enums::CommodityType::Timber: {
-        const int idx = m_timberPlaceList.indexOf(place);
-        if (idx < 0) {
-            return m_timberPlaceList.at(0);
-        } else if (idx < m_timberPlaceList.size()) {
-            return m_timberPlaceList.at(idx + 1);
-        }
-        break;
-    }
-    case Enums::CommodityType::Cocoa: {
-        const int idx = m_cocoaPlaceList.indexOf(place);
-        if (idx < 0) {
-            return m_cocoaPlaceList.at(0);
-        } else if (idx < m_cocoaPlaceList.size()) {
-            return m_cocoaPlaceList.at(idx + 1);
-        }
-        break;
-    }
-    default:
-        qFatal("Not supported commodity type!");
+    const int idx = m_cocoaPlaceList.indexOf(place);
+    if (idx < 0) {
+        return m_cocoaPlaceList.at(0);
+    } else if (idx < m_cocoaPlaceList.size()) {
+        return m_cocoaPlaceList.at(idx + 1);
     }
 
     return place;
 }
 
-bool FakeDataPopulator::canAddId(const QString &id, const Enums::CommodityType commodityType) const
+bool FakeDataPopulator::canAddId(const QString &id) const
 {
     // Last action is last action inserted for this shipmentId.
     for (int i = m_eventModel.rowCount() ; i >= 0 ; i--) {
         const QString &shipmentId = m_eventModel.data(m_eventModel.index(i), EventModel::ShipmentId).toString();
         if (id == shipmentId) {
-            // Checking if wrong commodity type code isn't used.
-            // For example using Timber code when scanning Cocoa.
-            for (int j = 0 ; j < m_shipmentModel.rowCount() ; j++) {
-                const QString &s = m_shipmentModel.data(m_shipmentModel.index(j), ShipmentModel::ShipmentId).toString();
-                if (s == id) {
-                    const Enums::CommodityType c = static_cast<Enums::CommodityType>(m_shipmentModel.data(m_shipmentModel.index(j), ShipmentModel::Commodity).toInt());
-                    if (c != commodityType)
-                        return false;
-                }
-            }
-
             const Enums::PlaceAction lastAction = static_cast<Enums::PlaceAction>(m_eventModel.data(m_eventModel.index(i), EventModel::PlaceAction).toInt());
             const Enums::PlaceType lastPlace = static_cast<Enums::PlaceType>(m_eventModel.data(m_eventModel.index(i), EventModel::Place).toInt());
 
@@ -215,7 +169,7 @@ bool FakeDataPopulator::canAddId(const QString &id, const Enums::CommodityType c
     return true;
 }
 
-QVariantMap FakeDataPopulator::getIdNextData(const QString &id, const Enums::CommodityType commodityType) const
+QVariantMap FakeDataPopulator::getIdNextData(const QString &id) const
 {
     QVariantMap result;
 
@@ -232,7 +186,7 @@ QVariantMap FakeDataPopulator::getIdNextData(const QString &id, const Enums::Com
 
             // Calculate new action and place for shipment.
             newAction = lastAction == Enums::PlaceAction::Arrived ? Enums::PlaceAction::Departed : Enums::PlaceAction::Arrived;
-            newPlace = newAction == Enums::PlaceAction::Departed ? lastPlace : getNextPlaceType(lastPlace, commodityType);
+            newPlace = newAction == Enums::PlaceAction::Departed ? lastPlace : getNextPlaceType(lastPlace);
 
             companyName = newAction == Enums::PlaceAction::Departed ? m_eventModel.data(m_eventModel.index(i), EventModel::Company).toString() : QString();
             break;
@@ -241,7 +195,7 @@ QVariantMap FakeDataPopulator::getIdNextData(const QString &id, const Enums::Com
 
     // This statment checks if shipment was not found in database.
     if (newPlace == Enums::PlaceType::InvalidPlace) {
-        newPlace = getNextPlaceType(newPlace, commodityType);
+        newPlace = getNextPlaceType(newPlace);
 
         const QStringList &companyNameList = m_companyNames[static_cast<Enums::UserType>(newPlace)];
         companyName = companyNameList[rand() % companyNameList.size()];

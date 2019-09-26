@@ -11,7 +11,7 @@ class UserManager : public AbstractManager
 {
     Q_OBJECT
     Q_PROPERTY(QString login READ getLogin NOTIFY loginChanged)
-    Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
+    Q_PROPERTY(Enums::UserType userType READ getUserType NOTIFY userTypeChanged)
     Q_PROPERTY(QVariantMap userData READ userData CONSTANT)
     Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
 public:
@@ -26,7 +26,6 @@ public:
 
     QString getLogin() const;
     Enums::UserType getUserType() const;
-    void setUserType(const Enums::UserType userType);
 
     QVariantMap userData() const;
 
@@ -42,6 +41,8 @@ signals:
 private:
     Enums::UserType m_userType = Enums::UserType::NotLoggedUser;
     QVariantMap m_userData;
+
+    void setUserType(const Enums::UserType userType);
 };
 
 #endif // USERMANAGER_H

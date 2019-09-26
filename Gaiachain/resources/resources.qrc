@@ -13,12 +13,19 @@
         <file alias="loadingLogoOne">ui/loading-1.svg</file>
         <file alias="loadingLogoTwo">ui/loading-2.svg</file>
         <file alias="loadingLogoThree">ui/loading-3.svg</file>
-        <file alias="chain">ui/icon-chain.svg</file>
-        <file alias="calendar-big">ui/icon-calendar.svg</file>
-        <file alias="tracking">ui/icon-tracking.svg</file>
-        <file alias="transactions">ui/icon-transactions.svg</file>
+        <file alias="menuSupplyChain">ui/icon-chain.svg</file>
+        <file alias="menuCalendar">ui/icon-calendar.svg</file>
+        <file alias="menuTracking">ui/icon-tracking.svg</file>
+        <file alias="menuTransactions">ui/icon-transactions.svg</file>
         <file alias="close">ui/close-icon.svg</file>
         <file alias="logo-black">ui/gaiachain-logo-black.svg</file>
+        <file alias="submenuStorageArrival">ui/icon-submenu-create-arrival.svg</file>
+        <file alias="submenuStorageLot">ui/icon-submenu-create-lot.svg</file>
+        <file alias="submenuBagging">ui/icon-submenu-drying.svg</file>
+        <file alias="submenuFermentation">ui/icon-submenu-fermentation.svg</file>
+        <file alias="submenuTransport">ui/icon-submenu-icon-submenu-transport.svg</file>
+        <file alias="submenuReception">ui/icon-submenu-reception.svg</file>
+        <file alias="submenuHarvest">ui/icon-submenu-recolte.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

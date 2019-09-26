@@ -14,8 +14,6 @@
         <file>pages/QRScannerPage.qml</file>
         <file>pages/InformationPopup.qml</file>
         <file>items/GenericPanel.qml</file>
-        <file>items/Footer.qml</file>
-        <file>items/NavigationHeader.qml</file>
         <file>items/ImageButton.qml</file>
         <file>items/CalendarMonthItem.qml</file>
         <file>items/ImageItem.qml</file>
@@ -23,10 +21,8 @@
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
         <file>items/TextWithTitle.qml</file>
-        <file>items/EventsListView.qml</file>
         <file>items/ItemBorder.qml</file>
         <file>items/GenericInput.qml</file>
-        <file>items/ShipmentDetailsDelegate.qml</file>
         <file>items/WaitOverlay.qml</file>
         <file>MainStackView.qml</file>
         <file>GaiaStrings.qml</file>
@@ -38,9 +34,15 @@
         <file>items/BasePopup.qml</file>
         <file>pages/LoginLoadingPage.qml</file>
         <file>items/PureImageButton.qml</file>
-        <file>items/ConnectionStateItem.qml</file>
-        <file>items/MenuButton.qml</file>
+        <file>components/ConnectionStateItem.qml</file>
         <file>pages/TransactionsPage.qml</file>
         <file>pages/TrackingPage.qml</file>
+        <file>components/EventsListView.qml</file>
+        <file>components/Footer.qml</file>
+        <file>components/MenuButton.qml</file>
+        <file>components/NavigationHeader.qml</file>
+        <file>components/ShipmentDetailsDelegate.qml</file>
+        <file>components/SupplyChainSubmenu.qml</file>
+        <file>items/BlockMouseArea.qml</file>
     </qresource>
 </RCC>

@@ -11,7 +11,7 @@ QtObject {
     function convertTimestampToDate(timestamp) {
         var date = new Date(timestamp)
         return date.getFullYear() + "-" + formatDateValue(date.getMonth()+1) + "-" + date.getDate()
-               + " " + formatDateValue(date.getHours()) + ":" + formatDateValue(date.getMinutes()) + ":" + formatDateValue(date.getSeconds())
+                + " " + formatDateValue(date.getHours()) + ":" + formatDateValue(date.getMinutes()) + ":" + formatDateValue(date.getSeconds())
     }
 
     function formatDateValue(val) {
@@ -48,5 +48,66 @@ QtObject {
         }
 
         return Strings.january +"!" // Add "!" if invalid
+    }
+
+    function supplyChainActionString(action) {
+        switch(action) {
+        case Enums.SupplyChainAction.Harvest: return Strings.supplyChainActionHarvest
+        case Enums.SupplyChainAction.Fermentation: return Strings.supplyChainActionFermentation
+        case Enums.SupplyChainAction.Bagging: return Strings.supplyChainActionBagging
+        case Enums.SupplyChainAction.StorageArrival: return Strings.supplyChainActionStorageArrival
+        case Enums.SupplyChainAction.StorageLot: return Strings.supplyChainActionStorageLot
+        case Enums.SupplyChainAction.Transport: return Strings.supplyChainActionTransport
+        case Enums.SupplyChainAction.Reception: return Strings.supplyChainActionReception
+        default:
+            console.warn("supplyChainActionString: Invalid action provided!")
+        }
+
+        return ""
+    }
+
+    function supplyChainActionMenuString(action) {
+        switch(action) {
+        case Enums.SupplyChainAction.Harvest: return Strings.supplyChainMenuHarvest
+        case Enums.SupplyChainAction.Fermentation: return Strings.supplyChainMenuFermentation
+        case Enums.SupplyChainAction.Bagging: return Strings.supplyChainMenuBagging
+        case Enums.SupplyChainAction.StorageArrival: return Strings.supplyChainMenuStorageArrival
+        case Enums.SupplyChainAction.StorageLot: return Strings.supplyChainMenuStorageLot
+        case Enums.SupplyChainAction.Transport: return Strings.supplyChainMenuTransport
+        case Enums.SupplyChainAction.Reception: return Strings.supplyChainMenuReception
+        default:
+            console.warn("supplyChainActionString: Invalid action provided!")
+        }
+
+        return ""
+    }
+
+    function supplyChainActionIcon(action) {
+        switch(action) {
+        case Enums.SupplyChainAction.Harvest: return Style.supplyChainSubmenuHarvestImgUrl
+        case Enums.SupplyChainAction.Fermentation: return Style.supplyChainSubmenuFermentationImgUrl
+        case Enums.SupplyChainAction.Bagging: return Style.supplyChainSubmenuBaggingImgUrl
+        case Enums.SupplyChainAction.StorageArrival: return Style.supplyChainSubmenuStorageArrivalImgUrl
+        case Enums.SupplyChainAction.StorageLot: return Style.supplyChainSubmenuStorageLotImgUrl
+        case Enums.SupplyChainAction.Transport: return Style.supplyChainSubmenuTransportImgUrl
+        case Enums.SupplyChainAction.Reception: return Style.supplyChainSubmenuReceptionImgUrl
+        default:
+            console.warn("supplyChainActionString: Invalid action provided!")
+        }
+
+        return ""
+    }
+
+
+    function packageTypeColor(packageType) {
+        switch(packageType) {
+        case Enums.PackageType.Harvest: return Style.harvestColor
+        case Enums.PackageType.Sac: return Style.sacColor
+        case Enums.PackageType.Lot: return Style.lotColor
+        default:
+            console.warn("packageTypeColor: Invalid packageType provided!")
+        }
+
+        return Style.unknownColor
     }
 }

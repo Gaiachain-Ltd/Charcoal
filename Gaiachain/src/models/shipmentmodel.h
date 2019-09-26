@@ -13,7 +13,6 @@ class ShipmentModel : public QAbstractListModel
 public:
     enum ModelRole {
         ShipmentId = Qt::UserRole +1,
-        Commodity,
         LastRole
     }; //!!! Add new roles at the end
 
@@ -31,7 +30,6 @@ public:
 private:
     const QHash<int, QByteArray> m_roleNames = {
         { ShipmentId, "id" },
-        { Commodity, "commodity"}
     };
 
     QHash<int, QVariantList> m_data;

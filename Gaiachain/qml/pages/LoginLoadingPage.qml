@@ -93,6 +93,7 @@ Items.GenericPanel
             if (currentStateIdx >= top.states.length) {
                 onAnimationFinished()
                 if (checkEnterMainPage()) {
+                    timer.running = false;
                     return
                 }
 
@@ -106,6 +107,7 @@ Items.GenericPanel
     Component.onCompleted: d.updateState()
 
     Timer {
+        id: timer
         running: true
         repeat: true
         interval: 500

@@ -5,6 +5,8 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
+import "../items" as Items
+
 ColumnLayout {
     id: top
 
@@ -46,13 +48,13 @@ ColumnLayout {
                 ColumnLayout {
                     Layout.fillWidth: true
                     spacing: 0
-                    BasicText {
+                    Items.BasicText {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignLeft
                         font.pixelSize: s(Style.pixelSize)
                         text: Helpers.placeTypeToString(place) + ":"
                     }
-                    BasicText {
+                    Items.BasicText {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignLeft
                         wrapMode: Text.WordWrap
@@ -60,7 +62,7 @@ ColumnLayout {
                         font.pixelSize: s(Style.pixelSize)
                         text: Helpers.placeActionToStringAction(action) + " " + company
                     }
-                    BasicText {
+                    Items.BasicText {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignLeft
                         font.bold: true
@@ -69,7 +71,7 @@ ColumnLayout {
                     }
                 }
 
-                ImageButton {
+                Items.ImageButton {
                     Layout.preferredWidth: s(Style.smallButtonHeight)
                     Layout.fillHeight: true
 

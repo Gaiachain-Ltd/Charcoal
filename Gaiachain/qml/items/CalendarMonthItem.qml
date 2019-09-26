@@ -51,17 +51,17 @@ Item {
                 }
 
                 Component.onCompleted: updateData();
-                Connections {
-                    target: calendarRangeProxyModel
-                    onEventsCommoditiesChanged: {
-                        if (date.getFullYear() === myDate.getFullYear()) {
-                            if (date.getMonth() === myDate.getMonth()) {
-                                if (date.getDate() === myDate.getDate())
-                                    updateData()
-                            }
-                        }
-                    }
-                }
+//                Connections {
+//                    target: calendarRangeProxyModel
+//                    onEventsCommoditiesChanged: {
+//                        if (date.getFullYear() === myDate.getFullYear()) {
+//                            if (date.getMonth() === myDate.getMonth()) {
+//                                if (date.getDate() === myDate.getDate())
+//                                    updateData()
+//                            }
+//                        }
+//                    }
+//                }
 
                 spacing: daySpacing
 

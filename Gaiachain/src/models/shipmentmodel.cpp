@@ -4,9 +4,7 @@
 
 ShipmentModel::ShipmentModel(QObject *parent)
     : QAbstractListModel(parent)
-{
-
-}
+{}
 
 int ShipmentModel::rowCount(const QModelIndex &parent) const
 {

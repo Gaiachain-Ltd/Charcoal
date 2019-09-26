@@ -195,10 +195,6 @@ BasePage {
                             visible: asyncMonthItem.ready
                             active: enabled && asyncMonthItem.active
                         }
-                        Items.WaitOverlay {
-                            anchors.fill: parent
-                            visible: !asyncMonthItem.ready
-                        }
                     }
                 }
             }

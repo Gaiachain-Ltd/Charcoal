@@ -3,6 +3,7 @@ import QtQuick 2.11
 import com.gaiachain.enums 1.0
 
 import "../items" as Items
+import "../components" as Components
 
 BasePage {
     id: top
@@ -11,7 +12,7 @@ BasePage {
         pageManager.enter(Enums.Page.ShipmentDetails , data)
     }
 
-    Items.EventsListView {
+    Components.EventsListView {
         anchors.fill: parent
         delegateHeight: s(100)
 

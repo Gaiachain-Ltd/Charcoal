@@ -12,11 +12,12 @@ QtObject {
     readonly property string supplyChainActionHarvest: qsTr("Harvest")
     readonly property string supplyChainActionFermentation: qsTr("Breaking, Fermenting")
     readonly property string supplyChainActionBagging: qsTr("Drying / Bagging")
-    readonly property string supplyChainActionStorage: qsTr("Storage")
+    readonly property string supplyChainActionStorageArrival: qsTr("Storage")
+    readonly property string supplyChainActionStorageLot: qsTr("Storage")
     readonly property string supplyChainActionTransport: qsTr("Transport")
     readonly property string supplyChainActionReception: qsTr("Reception")
 
-    readonly property string recolteId: qsTr("RECOLTE ID")
+    readonly property string harvestId: qsTr("HARVEST ID")
     readonly property string sacId: qsTr("SAC ID")
     readonly property string lotId: qsTr("LOT ID")
     readonly property string arrivalId: qsTr("ARRIVAL ID")
@@ -55,11 +56,11 @@ QtObject {
     readonly property string tracking: qsTr("Tracking")
 
     readonly property string supplyChainMenuCreateId: qsTr("(Create %1)")
-    readonly property string supplyChainMenuHarvest: supplyChainActionHarvest + " " + supplyChainMenuCreateId.arg(recolteId)
+    readonly property string supplyChainMenuHarvest: supplyChainActionHarvest + "\n" + supplyChainMenuCreateId.arg(harvestId)
     readonly property string supplyChainMenuFermentation: supplyChainActionFermentation
-    readonly property string supplyChainMenuBagging: supplyChainActionBagging + " " + supplyChainMenuCreateId.arg(sacId)
-    readonly property string supplyChainMenuStorageArrival: supplyChainActionStorage + " " + supplyChainMenuCreateId.arg(arrivalId)
-    readonly property string supplyChainMenuStorageLot: supplyChainActionStorage + " " + supplyChainMenuCreateId.arg(lotId)
+    readonly property string supplyChainMenuBagging: supplyChainActionBagging + "\n" + supplyChainMenuCreateId.arg(sacId)
+    readonly property string supplyChainMenuStorageArrival: supplyChainActionStorageArrival + "\n" + supplyChainMenuCreateId.arg(arrivalId)
+    readonly property string supplyChainMenuStorageLot: supplyChainActionStorageLot + "\n" + supplyChainMenuCreateId.arg(lotId)
     readonly property string supplyChainMenuTransport: supplyChainActionTransport
     readonly property string supplyChainMenuReception: supplyChainActionReception
 }

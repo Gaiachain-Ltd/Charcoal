@@ -11,17 +11,6 @@ namespace Enums {
         return ::qHash(static_cast<int>(key), seed);
     }
 
-    enum class CommodityType {
-        InvalidCommodity = -1,
-        Timber = 0,
-        Charcoal,
-        Cocoa,
-
-        CommodityCount
-    };
-    Q_ENUM_NS(CommodityType)
-    inline uint qHash(CommodityType key, uint seed) {return qH<CommodityType>(key, seed);}
-
     enum class Page {
         InvalidPage = -1,
         CalendarEvents = 0,     // TODO check if still needed
@@ -53,48 +42,27 @@ namespace Enums {
     Q_ENUM_NS(Popup)
     inline uint qHash(Popup key, uint seed) {return qH<Popup>(key, seed);}
 
-    enum class PageSections {
-        DefaultSection = -1,
-        ViewTypeSection = 0,
-        CalendarSection,
-        EditableEventDetailsSection,
-        EventsListSection,
-        EventDetailsSection,
-        ShipmentDetailsSection,
-        QRSection,
-        HomeSection,
-
-        PageSectionsCount
-    };
-    Q_ENUM_NS(PageSections)
-    inline uint qHash(PageSections key, uint seed) { return qH<PageSections>(key, seed);}
-
+    // TODO update with real values
     enum class UserType {
         NotLoggedUser = -1,
         Producer,
-        LogParkWorker,
-        SawmillWorker,
+        BaggingPerson,
+        Storekeeper,
         Exporter,
-        NurseryWorker,
-        VillageWorker,
-        BaggingWorker,
-        TruckDriver,
 
         UserTypeCount
     };
     Q_ENUM_NS(UserType)
     inline uint qHash(UserType key, uint seed) { return qH<UserType>(key, seed);}
 
+    // TODO update with real values
     enum class PlaceType {
         InvalidPlace = -1,
-        Forestery,
-        LogPark,
-        Sawmill,
-        Export,
         Nursery,
         Village,
         Bagging,
         Truck,
+        Export,
 
         PlaceTypeCount
     };
@@ -136,6 +104,32 @@ namespace Enums {
     };
     Q_ENUM_NS(ConnectionState)
     inline uint qHash(ConnectionState key, uint seed) { return qH<ConnectionState>(key, seed);}
+
+    enum class SupplyChainAction {
+        Unknown = -1,
+        Harvest,
+        Fermentation,
+        Bagging,
+        StorageArrival,
+        StorageLot,
+        Transport,
+        Reception,
+
+        ConnectionStateCount
+    };
+    Q_ENUM_NS(SupplyChainAction)
+    inline uint qHash(SupplyChainAction key, uint seed) { return qH<SupplyChainAction>(key, seed);}
+
+    enum class PackageType {
+        Unknown = -1,
+        Harvest,
+        Sac,
+        Lot,
+
+        ConnectionStateCount
+    };
+    Q_ENUM_NS(PackageType)
+    inline uint qHash(PackageType key, uint seed) { return qH<PackageType>(key, seed);}
 
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }

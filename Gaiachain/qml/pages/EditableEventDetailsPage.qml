@@ -8,15 +8,6 @@ import "../items" as Items
 EventDetailsPage {
     editable: true
 
-    Timer {
-        id: dataRequestTimer
-        interval: Style.requestOverlayInterval
-        onTriggered: {
-            mainOverlayVisible = false
-            pageManager.backTo(Enums.Page.ViewType)
-        }
-    }
-
     Connections {
         target: pageManager
         // When using popup always add checking if I'm on top
@@ -29,7 +20,6 @@ EventDetailsPage {
                     pageManager.backTo(Enums.Page.ViewType)
                 } else {
                     sessionManager.putEntity(attributes.shipmentId, attributes.action)
-                    mainOverlayVisible = true
                 }
                 break
             case Enums.PopupAction.Exit:
@@ -52,7 +42,6 @@ EventDetailsPage {
                     sessionManager.getEntity()
                     dataRequestTimer.start()
                 } else {
-                    mainOverlayVisible = false
                     pageManager.openPopup(Enums.Popup.Information, {
                                                                     "text" : Strings.dataSaveError,
                                                                     "rejectButtonText": Strings.close,

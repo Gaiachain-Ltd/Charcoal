@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
+import "../items" as Items
+
 Item {
     id: top
 
@@ -40,14 +42,14 @@ Item {
         anchors.fill: parent
         spacing: s(Style.bigMargin)
 
-        ImageItem {
+        Items.ImageItem {
             Layout.alignment: Qt.AlignVCenter
 
             source: Style.userImgUrl
             backgroundColor: top.currentColor
         }
 
-        BasicText {
+        Items.BasicText {
             Layout.fillHeight: true
             Layout.fillWidth: true
 

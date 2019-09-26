@@ -22,15 +22,14 @@ DataManager::DataManager(QObject *parent)
 {
     setupModels();
 #ifdef FAKE_DATA
-    m_fakeDataPopulator.populateFakeData(20, Enums::CommodityType::Timber);
-    m_fakeDataPopulator.populateFakeData(20, Enums::CommodityType::Cocoa);
+    m_fakeDataPopulator.populateFakeData(20);
+    m_fakeDataPopulator.populateFakeData(20);
 #endif
 }
 
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("dataManager"), this);
-    engine.rootContext()->setContextProperty(QStringLiteral("commodityProxyModel"), &m_commodityProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("calendarRangeProxyModel"), &m_calendarRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("shipmentEventsProxyModel"), &m_shipmentEventsProxyModel);
@@ -42,18 +41,13 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 
 void DataManager::setupModels()
 {
-    m_commodityProxyModel.setSourceModel(&m_shipmentModel);
-
     m_calendarRangeProxyModel.setSourceModel(&m_eventModel);
-    m_calendarRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
     m_dateEventsRangeProxyModel.setSourceModel(&m_eventModel);
     m_dateEventsRangeProxyModel.setSortingTypeAndRole(EventModel::Timestamp, 0, Qt::DescendingOrder);
-    m_dateEventsRangeProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 
     m_shipmentEventsProxyModel.setSourceModel(&m_eventModel);
     m_latestEventsProxyModel.setSourceModel(&m_eventModel);
-    m_latestEventsProxyModel.setCommodityProxyModel(&m_commodityProxyModel);
 }
 
 void DataManager::onEntityLoaded(const QJsonObject &entity)
@@ -91,7 +85,7 @@ void DataManager::onEntityLoaded(const QJsonObject &entity)
     }
 
     Gaia::ModelData shipmentData;
-    shipmentData.append({shipmentId, QVariant::fromValue(Enums::CommodityType::Timber)});
+    shipmentData.append({shipmentId, });
     m_shipmentModel.appendData(shipmentData);
 
     m_eventModel.appendData(eventData);

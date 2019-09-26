@@ -23,8 +23,6 @@ public:
         return QString(enumerator.valueToKey(static_cast<int>(value)));
     }
 
-    Q_INVOKABLE QString commodityToString(Enums::CommodityType ct);
-
     Q_INVOKABLE qreal scaleByDpi(qreal num) const;
     Q_INVOKABLE qreal scaleRoundByDpi(qreal num) const;
 
@@ -53,8 +51,6 @@ private:
 
     const QHash<Enums::UserType, QString> m_userTypes = {
         {Enums::UserType::Producer, QStringLiteral("PRODUCER") },
-        {Enums::UserType::LogParkWorker, QStringLiteral("LOG_PARK") },
-        {Enums::UserType::SawmillWorker, QStringLiteral("SAWMILL") },
         {Enums::UserType::Exporter, QStringLiteral("EXPORTER") },
         {Enums::UserType::NotLoggedUser, QString()}
     };
