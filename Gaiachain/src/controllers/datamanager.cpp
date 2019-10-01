@@ -16,7 +16,7 @@
 #include "../common/logs.h"
 
 #include <QLoggingCategory>
-Q_LOGGING_CATEGORY(datamanager, "datamanager")
+Q_LOGGING_CATEGORY(dataManager, "data.manager")
 
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
@@ -47,7 +47,7 @@ void DataManager::setupModels()
 QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)
 {
     if (!object.contains(tag)) {
-        qCWarning(datamanager) << "Tag" << tag << "is missing in an object data!";
+        qCWarning(dataManager) << "Tag" << tag << "is missing in an object data!";
         return {};
     }
     return object.value(tag);
@@ -90,10 +90,6 @@ void DataManager::onEntityLoaded(const QJsonObject &entity)
         ++it;
     }
 
-    Gaia::ModelData shipmentData;
-    shipmentData.append({shipmentId, });
-    m_shipmentModel.appendData(shipmentData);
-
     m_eventModel.appendData(eventData);
 }
 
@@ -105,10 +101,11 @@ void DataManager::onEntitiesLoaded(const QJsonArray &entities)
         onEntityLoaded(obj);
         ++it;
     }
+
+    m_shipmentEventsProxyModel.setShipmentId(entities.first().toObject().value(Tags::id).toString());
 }
 
 void DataManager::clearModels()
 {
     m_eventModel.clearModel();
-    m_shipmentModel.clearModel();
 }

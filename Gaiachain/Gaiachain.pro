@@ -42,7 +42,6 @@ HEADERS += \
     src/controllers/session/abstractsessionmanager.h \
     src/controllers/session/fakesessionmanager.h \
     src/models/daterangeproxymodel.h \
-    src/models/shipmentmodel.h \
     src/models/eventmodel.h \
     src/helpers/utility.h \
     src/controllers/maincontroller.h \
@@ -66,10 +65,10 @@ HEADERS += \
     src/controllers/session/fakedatapopulator.h
 
 SOURCES += src/main.cpp \
+    src/common/globals.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/fakesessionmanager.cpp \
     src/models/daterangeproxymodel.cpp \
-    src/models/shipmentmodel.cpp \
     src/models/eventmodel.cpp \
     src/helpers/utility.cpp \
     src/controllers/maincontroller.cpp \

@@ -18,7 +18,7 @@ LoginRequest::LoginRequest(const QString &email, const QString &password)
         mType = Type::Post;
 
     } else {
-        qCritical() << "Error: missing login info"
+        qCCritical(sessionRequest) << "Error: missing login info"
                                  << email << password.length();
     }
 }

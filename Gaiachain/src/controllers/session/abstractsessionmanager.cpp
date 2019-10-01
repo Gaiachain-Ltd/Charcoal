@@ -3,6 +3,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QLoggingCategory>
+Q_LOGGING_CATEGORY(sessionManager, "session.manager")
+
 AbstractSessionManager::AbstractSessionManager(QObject *parent)
     : AbstractManager(parent)
 {}

@@ -5,6 +5,9 @@
 #include "../common/globals.h"
 #include "../common/tags.h"
 
+#include <QLoggingCategory>
+Q_LOGGING_CATEGORY(sessionRequest, "session.request")
+
 BaseRequest::BaseRequest(const QString &method, const QString &token)
     : MRestRequest()
     , mToken(token)

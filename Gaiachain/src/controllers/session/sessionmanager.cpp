@@ -5,9 +5,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include <QLoggingCategory>
-Q_LOGGING_CATEGORY(session, "session")
-
 #include "../../common/tags.h"
 #include "../../common/globals.h"
 #include "../../helpers/utility.h"
