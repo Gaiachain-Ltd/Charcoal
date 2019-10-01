@@ -16,8 +16,9 @@ public:
         Timestamp,
         Location,
         Company,
-        Place,
-        PlaceAction,
+        UserRole,
+        Action,
+        ActionProgress,
         LastRole
     }; //!!! Add new roles at the end
 
@@ -39,8 +40,9 @@ private:
         { ModelRole::Timestamp, "timestamp" },
         { ModelRole::Location, "location" },
         { ModelRole::Company, "company" },
-        { ModelRole::Place, "place" },
-        { ModelRole::PlaceAction, "action" }
+        { ModelRole::UserRole, "userRole" },
+        { ModelRole::Action, "action" },
+        { ModelRole::ActionProgress, "actionProgress" }
     };
 
     QHash<int, QVariantList> m_data;

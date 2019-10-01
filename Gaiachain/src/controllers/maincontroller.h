@@ -4,7 +4,11 @@
 #include "datamanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
-#include "sessionmanager.h"
+#ifndef FAKE_DATA
+#include "session/sessionmanager.h"
+#else
+#include "session/fakesessionmanager.h"
+#endif
 
 class MainController : public AbstractManager
 {
@@ -24,7 +28,11 @@ private:
     DataManager m_dataManager;
     PageManager m_pageManager;
     UserManager m_userManager;
+#ifndef FAKE_DATA
     SessionManager m_sessionManager;
+#else
+    FakeSessionManager m_sessionManager;
+#endif
 
     void setupQZXing(QQmlApplicationEngine &engine);
 };

@@ -8,30 +8,15 @@
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(session, "session")
 
-#include "../common/tags.h"
-#include "../common/globals.h"
-#include "../helpers/utility.h"
-#include "../rest/loginrequest.h"
-#include "../rest/entityrequest.h"
+#include "../../common/tags.h"
+#include "../../common/globals.h"
+#include "../../helpers/utility.h"
+#include "../../rest/loginrequest.h"
+#include "../../rest/entityrequest.h"
 
 SessionManager::SessionManager(QObject *parent)
-    : AbstractManager(parent)
+    : AbstractSessionManager(parent)
 {}
-
-void SessionManager::setupQmlContext(QQmlApplicationEngine &engine)
-{
-    engine.rootContext()->setContextProperty(QStringLiteral("sessionManager"), this);
-}
-
-Enums::ConnectionState SessionManager::connectionState() const
-{
-    return m_connectionState;
-}
-
-void SessionManager::onTokenChanged(const QString &token)
-{
-    m_token = token;
-}
 
 void SessionManager::login(const QString &email, const QString &password)
 {
@@ -39,9 +24,6 @@ void SessionManager::login(const QString &email, const QString &password)
 
     auto finishLambda = [&](const QJsonDocument &reply) {
         emit loginFinished(reply);
-#ifndef FAKE_DATA
-        this->getEntity();
-#endif
     };
 
     auto errorLambda = [&](const QString &, const int code) {
@@ -128,51 +110,9 @@ void SessionManager::getEntities(const QJsonArray &ids)
     sendRequest(request);
 }
 
-void SessionManager::getEntityAction(const QString &id, const int role)
+void SessionManager::putEntity(const QString &id, const Enums::SupplyChainAction &action, const Enums::ActionProgress &actionProgress)
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token, id);
-
-    auto errorLambda = [&, id](const QString &, const int) {
-        emit entityActionDownloadedError(id, false);
-    };
-
-    auto finishLambda = [&, id, role](const QJsonDocument &reply) {
-        const QJsonObject obj = reply.object();
-        Enums::PlaceAction action = Enums::PlaceAction::InvalidPlaceAction;
-
-        const QString ownerRole = obj.value(Tags::owner).toObject().value(Tags::role).toString();
-        const int ownerRoleEnum = static_cast<int>(Utility::instance()->userTypeFromString(ownerRole));
-
-        if (ownerRoleEnum == role) {
-            const QString status = obj.value(Tags::status).toString();
-
-            if (status == QStringLiteral("ARRIVED")) {
-                action = Enums::PlaceAction::Arrived;
-            } else {
-                emit entityActionDownloadedError(id, true);
-            }
-        } else if (ownerRoleEnum < role - 1) {
-            // Error - not arrived yet
-            emit entityActionDownloadedError(id, false);
-            return;
-        } else if (ownerRoleEnum > role) {
-            // Error - already departed
-            emit entityActionDownloadedError(id, true);
-            return;
-        }
-
-        emit entityActionDownloaded(id, static_cast<int>(action));
-    };
-
-    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-    connect(request.data(), &BaseRequest::replyError, errorLambda);
-
-    sendRequest(request);
-}
-
-void SessionManager::putEntity(const QString &id, const int action)
-{
-    auto request = QSharedPointer<EntityRequest>::create(m_token, id, static_cast<Enums::PlaceAction>(action));
+    auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, actionProgress);
 
     auto errorLambda = [&, id](const QString &, const int) {
         emit entitySaveResult(id, false);
@@ -193,31 +133,8 @@ void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
     connect(request.data(), &BaseRequest::requestFinished,
             this, [this](const QJsonDocument &) { updateConnectionStateAfterRequest(); });
     connect(request.data(), &BaseRequest::replyError,
-            this, [this](const QString &, const int errorCode) { updateConnectionStateAfterRequest(errorCode); });
+            this, [this](const QString &, const int errorCode) { updateConnectionStateAfterRequest(QNetworkReply::NetworkError(errorCode)); });
 
     updateConnectionStateBeforeRequest();
     m_client.send(request);
-}
-
-void SessionManager::updateConnectionStateBeforeRequest()
-{
-    if (m_connectionState == Enums::ConnectionState::ConnectionSuccessful
-            || m_connectionState == Enums::ConnectionState::Connecting) {
-        return;
-    }
-
-    m_connectionState = Enums::ConnectionState::Connecting;
-    emit connectionStateChanged(m_connectionState);
-}
-
-void SessionManager::updateConnectionStateAfterRequest(const int errorCode)
-{
-    auto newState = (errorCode == QNetworkReply::NoError) ? Enums::ConnectionState::ConnectionSuccessful
-                                                          : Enums::ConnectionState::ConnectionError;
-    if (m_connectionState == newState) {
-        return;
-    }
-
-    m_connectionState = newState;
-    emit connectionStateChanged(newState);
 }

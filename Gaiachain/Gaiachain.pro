@@ -39,6 +39,8 @@ CONFIG += c++14
 TARGET = Gaiachain
 
 HEADERS += \
+    src/controllers/session/abstractsessionmanager.h \
+    src/controllers/session/fakesessionmanager.h \
     src/models/daterangeproxymodel.h \
     src/models/shipmentmodel.h \
     src/models/eventmodel.h \
@@ -51,7 +53,7 @@ HEADERS += \
     src/rest/baserequest.h \
     src/rest/loginrequest.h \
     src/rest/restapiclient.h \
-    src/controllers/sessionmanager.h \
+    src/controllers/session/sessionmanager.h \
     src/controllers/usermanager.h \
     src/controllers/abstractmanager.h \
     src/common/location.h \
@@ -61,9 +63,11 @@ HEADERS += \
     src/rest/entityrequest.h \
     src/models/latesteventsproxy.h \
     src/common/logs.h \
-    src/controllers/fakedatapopulator.h
+    src/controllers/session/fakedatapopulator.h
 
 SOURCES += src/main.cpp \
+    src/controllers/session/abstractsessionmanager.cpp \
+    src/controllers/session/fakesessionmanager.cpp \
     src/models/daterangeproxymodel.cpp \
     src/models/shipmentmodel.cpp \
     src/models/eventmodel.cpp \
@@ -74,14 +78,14 @@ SOURCES += src/main.cpp \
     src/rest/baserequest.cpp \
     src/rest/loginrequest.cpp \
     src/rest/restapiclient.cpp \
-    src/controllers/sessionmanager.cpp \
+    src/controllers/session/sessionmanager.cpp \
     src/controllers/usermanager.cpp \
     src/rest/entityrequest.cpp \
     src/controllers/abstractmanager.cpp \
     src/models/shipmenteventsproxy.cpp \
     src/models/abstractsortfilterproxymodel.cpp \
     src/models/latesteventsproxy.cpp \
-    src/controllers/fakedatapopulator.cpp
+    src/controllers/session/fakedatapopulator.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

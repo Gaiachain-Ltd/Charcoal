@@ -27,7 +27,7 @@ public:
     EntityRequest(const QString &token, const int count, const QString &type);
     EntityRequest(const QString &token, const QString &id);
     EntityRequest(const QString &token, const QJsonArray &ids);
-    EntityRequest(const QString &token, const QString &id, const Enums::PlaceAction action);
+    EntityRequest(const QString &token, const QString &id, const Enums::SupplyChainAction action, const Enums::ActionProgress actionProgress);
     EntityRequest(const QString &token, const QString &dateFrom, const QString &dateTo);
 
 private:

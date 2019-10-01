@@ -60,7 +60,6 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
     m_userData.insert(Tags::location, QVariant::fromValue(location));
     const QString &role = obj.value(Tags::role).toString();
     const Enums::UserType userType = Utility::instance()->userTypeFromString(role);
-    m_userData.insert(Tags::place, static_cast<int>(userType));
 
     emit tokenChanged(obj.value(Tags::token).toString());
 

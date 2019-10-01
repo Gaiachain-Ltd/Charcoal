@@ -18,8 +18,9 @@ Item {
             stackView.pop(getMode(immediate))
         }
         onStackViewPopTo: {
+            var backToPage = page
             stackView.pop(stackView.find(function(item) {
-                  return item.page === page
+                  return item.page === backToPage
               }), getMode(immediate));
         }
         onStackViewReplace: {
