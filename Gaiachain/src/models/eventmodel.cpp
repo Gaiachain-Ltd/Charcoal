@@ -65,7 +65,7 @@ void EventModel::appendData(const Gaia::ModelData &inData)
     int modelCount = rowCount();
     int newDataCount = inData.count();
 
-    beginInsertRows(QModelIndex(), modelCount, modelCount + newDataCount);
+    beginInsertRows(QModelIndex(), modelCount, modelCount + newDataCount - 1);
 
     int newIndex = modelCount;
     for (const auto &dataRow : inData) {

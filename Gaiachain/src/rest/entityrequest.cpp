@@ -33,7 +33,7 @@ EntityRequest::EntityRequest(const QString &token, const int count, const QStrin
 
         mType = Type::Post;
     } else {
-        qCritical() << "Error: missing entities POST info" << count << type.length();
+        qCCritical(sessionRequest) << "Error: missing entities POST info" << count << type.length();
     }
 }
 
@@ -45,7 +45,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &id)
         m_timer.start();
         mType = Type::Get;
     } else {
-        qCritical() << "Error: missing entity GET info" << id;
+        qCCritical(sessionRequest) << "Error: missing entity GET info" << id;
     }
 }
 
@@ -60,7 +60,7 @@ EntityRequest::EntityRequest(const QString &token, const QJsonArray &ids)
         mRequestDocument.setObject(object);
         mType = Type::Post;
     } else {
-        qCritical() << "Error: missing entity GET info" << ids;
+        qCCritical(sessionRequest) << "Error: missing entity GET info" << ids;
     }
 }
 
@@ -105,7 +105,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
 
         mType = Type::Put;
     } else {
-        qCritical() << "Error: missing entity PUT info" << id << action;
+        qCCritical(sessionRequest) << "Error: missing entity PUT info" << id << action;
     }
 
 }
@@ -113,6 +113,6 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
 void EntityRequest::parse()
 {
     if (m_timer.isValid())
-        qDebug() << "Request" << m_requestType << "elapsed time:" << m_timer.elapsed();
+        qCDebug(sessionRequest) << "Request" << m_requestType << "elapsed time:" << m_timer.elapsed();
     BaseRequest::parse();
 }

@@ -2,6 +2,9 @@
 #define BASEREQUEST_H
 
 #include "mrestrequest.h"
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(sessionRequest)
 
 class BaseRequest : public MRestRequest
 {

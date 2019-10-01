@@ -5,7 +5,7 @@
 #include "../common/logs.h"
 
 LatestEventsProxy::LatestEventsProxy(QObject *parent)
-    : AbstractSortFilterProxyModel (parent)
+    : AbstractSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
 

@@ -8,9 +8,6 @@
 
 #include "../../common/tags.h"
 
-#include <QLoggingCategory>
-Q_LOGGING_CATEGORY(fakeSession, "fakeSession")
-
 FakeSessionManager::FakeSessionManager(QObject *parent)
     : AbstractSessionManager(parent)
 {

@@ -5,6 +5,9 @@
 #include "../../common/enums.h"
 
 #include <QNetworkReply>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(sessionManager)
 
 class AbstractSessionManager : public AbstractManager
 {

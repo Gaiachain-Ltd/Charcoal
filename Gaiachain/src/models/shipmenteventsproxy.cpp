@@ -34,7 +34,7 @@ QVariantMap ShipmentEventsProxy::getRowAttributes(int row)
 
     auto rowIndex = index(row, 0);
     if (!rowIndex.isValid()) {
-        qWarning() << "Trying to get attributes for invalid row:" << row;
+        qCWarning(dataModels) << "Trying to get attributes for invalid row:" << row;
         return {};
     }
 

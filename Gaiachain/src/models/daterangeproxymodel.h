@@ -15,6 +15,8 @@ class DateRangeProxyModel : public AbstractSortFilterProxyModel
 public:
     explicit DateRangeProxyModel(QObject *parent = nullptr);
 
+    Q_INVOKABLE void setSingleDateRange(const QDate &date);
+    Q_INVOKABLE void setDateRange(const QDate &startDate, const QDate &endDate);
     Q_INVOKABLE void setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime);
     Q_INVOKABLE bool hasEvents(const QDate &date) const;
 

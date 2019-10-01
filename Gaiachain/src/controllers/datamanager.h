@@ -4,7 +4,6 @@
 #include "abstractmanager.h"
 
 #include "../models/eventmodel.h"
-#include "../models/shipmentmodel.h"
 
 #include "../models/daterangeproxymodel.h"
 #include "../models/shipmenteventsproxy.h"
@@ -27,7 +26,6 @@ private:
     void setupModels();
 
     EventModel m_eventModel;
-    ShipmentModel m_shipmentModel;
 
     DateRangeProxyModel m_calendarRangeProxyModel;
     DateRangeProxyModel m_dateEventsRangeProxyModel;
