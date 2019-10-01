@@ -3,6 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QDateTime>
+#include <QVariant>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -14,17 +15,13 @@
 #include "../helpers/utility.h"
 #include "../common/logs.h"
 
+#include <QLoggingCategory>
+Q_LOGGING_CATEGORY(datamanager, "datamanager")
+
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
-#ifdef FAKE_DATA
-    , m_fakeDataPopulator(m_eventModel, m_shipmentModel)
-#endif
 {
     setupModels();
-#ifdef FAKE_DATA
-    m_fakeDataPopulator.populateFakeData(20);
-    m_fakeDataPopulator.populateFakeData(20);
-#endif
 }
 
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -34,9 +31,6 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("shipmentEventsProxyModel"), &m_shipmentEventsProxyModel);
     engine.rootContext()->setContextProperty(QStringLiteral("latestEventsProxyModel"), &m_latestEventsProxyModel);
-#ifdef FAKE_DATA
-    engine.rootContext()->setContextProperty(QStringLiteral("fakeDataPopulator"), &m_fakeDataPopulator);
-#endif
 }
 
 void DataManager::setupModels()
@@ -50,37 +44,49 @@ void DataManager::setupModels()
     m_latestEventsProxyModel.setSourceModel(&m_eventModel);
 }
 
+QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)
+{
+    if (!object.contains(tag)) {
+        qCWarning(datamanager) << "Tag" << tag << "is missing in an object data!";
+        return {};
+    }
+    return object.value(tag);
+}
+
 void DataManager::onEntityLoaded(const QJsonObject &entity)
 {
     Gaia::ModelData eventData;
 
-    const QString shipmentId = entity.value(Tags::id).toString();
-    const QJsonArray &history = entity.value(Tags::history).toArray();
-    QJsonArray::const_iterator it = history.constBegin();
+    const auto shipmentId = checkAndValue(entity, Tags::id).toString();
+    const auto historyArray = checkAndValue(entity, Tags::history).toArray();
 
-    while (it != history.constEnd()) {
-        const QJsonObject &historyObj = (*it).toObject();
-        const QDateTime date = QDateTime::fromSecsSinceEpoch(static_cast<uint>(historyObj.value(Tags::timestamp).toInt(0)));
-        const QJsonObject agent = historyObj.value(Tags::agent).toObject();
-        const QString companyName = agent.value(Tags::companyName).toString();
-        const QString agentRole = agent.value(Tags::role).toString();
-        const QString action = historyObj.value(Tags::action).toString();
-        Enums::PlaceAction placeAction = Enums::PlaceAction::Arrived;
-        // TODO handling strings to enum conversions
-        if (action == QStringLiteral("DEPARTED"))
-            placeAction = Enums::PlaceAction::Departed;
-        const QJsonArray locationArray = historyObj.value(Tags::location).toArray();
-        Location loc;
-        loc.lat = locationArray.at(0).toDouble();
-        loc.lon = locationArray.at(1).toDouble();
+    QJsonArray::const_iterator it = historyArray.constBegin();
+    while (it != historyArray.constEnd()) {
+        const auto &historyObj = (*it).toObject();
 
-        eventData.append({shipmentId,
-                          date,
-                          QVariant::fromValue(loc),
-                          companyName,
-                          QVariant::fromValue(Utility::instance()->userTypeFromString(agentRole)),
-                          QVariant::fromValue(placeAction)
-                         });
+        const auto agentObj = checkAndValue(historyObj, Tags::agent).toObject();
+        const auto companyName = checkAndValue(agentObj, Tags::companyName).toString();
+        const auto agentRole = Utility::instance()->userTypeFromString(
+                    checkAndValue(agentObj, Tags::role).toString());
+
+        const auto date = QDateTime::fromSecsSinceEpoch(
+                    checkAndValue(historyObj, Tags::timestamp).toVariant().value<qint64>());
+        const auto action = Utility::instance()->supplyChainActionFromString(
+                    checkAndValue(historyObj, Tags::action).toString());
+        const auto actionProgress = Utility::instance()->actionProgressFromString(
+                    checkAndValue(historyObj, Tags::actionProgress).toString());
+
+        const auto locationArray = checkAndValue(historyObj, Tags::location).toArray();
+        const auto location = Location{ locationArray.at(0).toDouble(), locationArray.at(1).toDouble() };
+
+        eventData.append(QVariantList({ shipmentId,
+                                        date,
+                                        QVariant::fromValue(location),
+                                        companyName,
+                                        QVariant::fromValue(agentRole),
+                                        QVariant::fromValue(action),
+                                        QVariant::fromValue(actionProgress)
+                                      } ));
         ++it;
     }
 

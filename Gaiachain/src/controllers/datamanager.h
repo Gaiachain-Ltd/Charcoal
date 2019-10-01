@@ -9,9 +9,6 @@
 #include "../models/daterangeproxymodel.h"
 #include "../models/shipmenteventsproxy.h"
 #include "../models/latesteventsproxy.h"
-#ifdef FAKE_DATA
-    #include "fakedatapopulator.h"
-#endif
 
 class DataManager : public AbstractManager
 {
@@ -36,9 +33,8 @@ private:
     DateRangeProxyModel m_dateEventsRangeProxyModel;
     ShipmentEventsProxy m_shipmentEventsProxyModel;
     LatestEventsProxy m_latestEventsProxyModel;
-#ifdef FAKE_DATA
-    FakeDataPopulator m_fakeDataPopulator;
-#endif
+
+    QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
 };
 
 #endif // DATAMANAGER_H

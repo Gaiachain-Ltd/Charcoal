@@ -31,13 +31,11 @@ MainController::MainController(QObject *parent)
 
 void MainController::setupConnections()
 {
-    connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &SessionManager::onTokenChanged);
-    connect(&m_sessionManager, &SessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
-#ifndef FAKE_DATA
-    connect(&m_sessionManager, &SessionManager::entityLoaded, &m_dataManager, &DataManager::onEntityLoaded, Qt::DirectConnection);
-    connect(&m_sessionManager, &SessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded, Qt::DirectConnection);
-    connect(&m_sessionManager, &SessionManager::beforeGetEntity, &m_dataManager, &DataManager::clearModels, Qt::DirectConnection);
-#endif
+    connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::onTokenChanged);
+    connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
+    connect(&m_sessionManager, &AbstractSessionManager::entityLoaded, &m_dataManager, &DataManager::onEntityLoaded, Qt::DirectConnection);
+    connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded, Qt::DirectConnection);
+    connect(&m_sessionManager, &AbstractSessionManager::beforeGetEntity, &m_dataManager, &DataManager::clearModels, Qt::DirectConnection);
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
@@ -49,23 +47,16 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
                                              false);
 #endif
 
-    engine.rootContext()->setContextProperty("fakeData",
-#ifdef FAKE_DATA
-                                             true);
-#else
-                                             false);
-#endif
-
     //Register namespace for enums first
     qmlRegisterUncreatableMetaObject(Enums::staticMetaObject, "com.gaiachain.enums", 1, 0,
                                      "Enums", "Cannot create namespace Enums in QML");
     qRegisterMetaType<Enums::Page>("Page");
     qRegisterMetaType<Enums::UserType>("UserType");
-    qRegisterMetaType<Enums::PlaceType>("PlaceType");
     qRegisterMetaType<Enums::Popup>("Popup");
     qRegisterMetaType<Enums::PopupAction>("PopupAction");
     qRegisterMetaType<Enums::ConnectionState>("ConnectionState");
     qRegisterMetaType<Enums::SupplyChainAction>("SupplyChainAction");
+    qRegisterMetaType<Enums::ActionProgress>("ActionProgress");
     qRegisterMetaType<Enums::PackageType>("PackageType");
 
     engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());

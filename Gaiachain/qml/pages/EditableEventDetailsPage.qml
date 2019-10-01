@@ -15,12 +15,7 @@ EventDetailsPage {
         onPopupAction: {
             switch(action) {
             case Enums.PopupAction.Save:
-                if (fakeData) {
-                    fakeDataPopulator.addId(attributes, userManager.commodityType)
-                    pageManager.backTo(Enums.Page.ViewType)
-                } else {
-                    sessionManager.putEntity(attributes.shipmentId, attributes.action)
-                }
+                sessionManager.putEntity(attributes.shipmentId, attributes.action)
                 break
             case Enums.PopupAction.Exit:
                 pageManager.backTo(Enums.Page.ViewType)

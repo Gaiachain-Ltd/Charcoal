@@ -58,26 +58,15 @@ namespace Enums {
     // TODO update with real values
     enum class PlaceType {
         InvalidPlace = -1,
-        Nursery,
+        Parcele,
         Village,
-        Bagging,
-        Truck,
-        Export,
+        Section,
+        Port,
 
         PlaceTypeCount
     };
     Q_ENUM_NS(PlaceType)
     inline uint qHash(PlaceType key, uint seed) { return qH<PlaceType>(key, seed);}
-
-    enum class PlaceAction {
-        InvalidPlaceAction = -1,
-        Arrived,
-        Departed,
-
-        PlaceActionCount
-    };
-    Q_ENUM_NS(PlaceAction)
-    inline uint qHash(PlaceAction key, uint seed) { return qH<PlaceAction>(key, seed);}
 
     enum class PopupAction {
         InvalidPopupAction = -1,
@@ -115,10 +104,20 @@ namespace Enums {
         Transport,
         Reception,
 
-        ConnectionStateCount
+        SupplyChainActionCount
     };
     Q_ENUM_NS(SupplyChainAction)
     inline uint qHash(SupplyChainAction key, uint seed) { return qH<SupplyChainAction>(key, seed);}
+
+    enum class ActionProgress {
+        Unknown = -1,
+        Started,
+        Finished,
+
+        ActionProgressCount
+    };
+    Q_ENUM_NS(ActionProgress)
+    inline uint qHash(ActionProgress key, uint seed) { return qH<ActionProgress>(key, seed);}
 
     enum class PackageType {
         Unknown = -1,
@@ -126,7 +125,7 @@ namespace Enums {
         Sac,
         Lot,
 
-        ConnectionStateCount
+        PackageTypeCount
     };
     Q_ENUM_NS(PackageType)
     inline uint qHash(PackageType key, uint seed) { return qH<PackageType>(key, seed);}

@@ -29,7 +29,6 @@ EntityRequest::EntityRequest(const QString &token, const int count, const QStrin
         m_timer.start();
         QJsonObject object;
         object.insert(Tags::count, QJsonValue(count));
-        object.insert(Tags::commodityType, QJsonValue(type));
         mRequestDocument.setObject(object);
 
         mType = Type::Post;
@@ -92,7 +91,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &dateFrom, cons
     mType = Type::Get;
 }
 
-EntityRequest::EntityRequest(const QString &token, const QString &id, const Enums::PlaceAction action)
+EntityRequest::EntityRequest(const QString &token, const QString &id, const Enums::SupplyChainAction action, const Enums::ActionProgress actionProgress)
     : BaseRequest(ADDRESS_DATA.arg(id), token)
     , m_requestType(RequestEntityPut)
 {
@@ -100,15 +99,8 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
         m_timer.start();
         QJsonObject object;
         QString actionString;
-        switch(action) {
-        case Enums::PlaceAction::Departed:
-            actionString = QStringLiteral("DEPARTED");
-            break;
-        default:
-            actionString = QStringLiteral("ARRIVED");
-            break;
-        }
-        object.insert(Tags::action, QJsonValue(actionString));
+        object.insert(Tags::action, Utility::instance()->supplyChainActionToString(action));
+        object.insert(Tags::actionProgress, Utility::instance()->actionProgressToString(actionProgress));
         mRequestDocument.setObject(object);
 
         mType = Type::Put;

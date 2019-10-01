@@ -19,13 +19,6 @@ BasePage {
         attributes["timestamp"] = Number(new Date())
         attributes["shipmentId"] = scannedId
 
-        if (fakeData) {
-            var fakeAtt = fakeDataPopulator.getIdNextData(scannedId, userManager.commodityType)
-            attributes["place"] = fakeAtt.place
-            attributes["action"] = fakeAtt.action
-            attributes["company"] = fakeAtt.company
-        }
-
         pageManager.enter(Enums.Page.EditableEventDetails, { "attributes": attributes })
     }
 
@@ -89,12 +82,7 @@ BasePage {
 
     onScannedIdChanged: {
         if (scannedId.length > 0 && !wrongCodeError) {
-            if (fakeData) {
-                if (!fakeDataPopulator.canAddId(scannedId, userManager.commodityType))
-                    showErrorPopup(true)
-            } else {
-                sessionManager.getEntityAction(scannedId, userManager.userType)
-            }
+            sessionManager.getEntityAction(scannedId, userManager.userType)
         }
     }
 

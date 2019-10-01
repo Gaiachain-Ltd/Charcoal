@@ -74,7 +74,9 @@ BasePage {
                 id: controlCombo
                 property string currentLoginStr: "producer@gaiachain.io"
 
-                model: ["producer@gaiachain.io", "exporter@gaiachain.io", "wrong@gaiachain.io"]
+                model: ["producer@gaiachain.io", "bagging@gaiachain.io",
+                        "storekeeper@gaiachain.io", "exporter@gaiachain.io",
+                        "wrong@gaiachain.io"]
                 visible: Style.loginByCombobox
 
                 anchors.centerIn: parent
