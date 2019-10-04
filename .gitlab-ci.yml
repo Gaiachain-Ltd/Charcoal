@@ -97,6 +97,7 @@ upload_job:
   only:
     - master
     - merge_requests
+    - schedules
   tags:
     - LinuxAndroid
   stage: upload
