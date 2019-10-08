@@ -44,7 +44,7 @@ TextField
 
 
     background: Rectangle {
-        radius: s(Style.smallMargin)
+        radius: s(Style.tinyMargin)
         border {
             width: sr(1)
             color: top.borderColor
@@ -53,7 +53,7 @@ TextField
 
     SvgImage {
         id: icon
-        property real horizontalMargins: s(Style.normalMargin)
+        property real horizontalMargins: s(Style.middleMargin)
 
         anchors {
             top: parent.top

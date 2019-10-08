@@ -40,8 +40,8 @@ Item {
     RowLayout {
         anchors {
             fill: parent
-            leftMargin: s(Style.normalMargin)
-            rightMargin: s(Style.normalMargin)
+            leftMargin: s(Style.middleMargin)
+            rightMargin: s(Style.middleMargin)
             topMargin: s(Style.smallMargin)
             bottomMargin: s(Style.smallMargin)
         }

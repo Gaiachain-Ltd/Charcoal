@@ -29,7 +29,7 @@ BasePage {
                 right: parent.right
                 margins: margins
             }
-            spacing: s(Style.bigMargin)
+            spacing: s(Style.middleBigMargin)
 
             ColumnLayout {
                 id: supplyChainButtonColumn

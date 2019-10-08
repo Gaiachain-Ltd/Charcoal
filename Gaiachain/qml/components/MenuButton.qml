@@ -20,12 +20,12 @@ Items.GenericButton
     borderRadius: s(Style.buttonSmallRadius)
 
     palette {
-        button: Style.buttonMenuColor
+        button: Style.menuButtonColor
         buttonText: Style.textPrimaryColor
     }
 
-    icon.height: s(Style.buttonImageBigHeight * 0.9)
-    icon.width: s(Style.buttonImageBigHeight * 0.9)
+    icon.height: s(Style.menuButtonImageHeight)
+    icon.width: s(Style.menuButtonImageHeight)
 
     font.capitalization: Font.MixedCase
     font.letterSpacing: 0

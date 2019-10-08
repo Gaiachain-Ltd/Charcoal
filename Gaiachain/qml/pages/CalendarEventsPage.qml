@@ -57,7 +57,7 @@ BasePage {
 
         Items.ImageItem {
             Layout.fillWidth: true
-            Layout.leftMargin: s(Style.normalMargin)
+            Layout.leftMargin: s(Style.middleMargin)
 
 //            buttonHeight: s(30)
 //            buttonWidth: s(30)
