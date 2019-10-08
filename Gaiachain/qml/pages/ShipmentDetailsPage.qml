@@ -80,7 +80,7 @@ BasePage {
             fill: parent
             leftMargin: s(Style.bigMargin)
             rightMargin: s(Style.bigMargin)
-            topMargin: s(Style.normalMargin)
+            topMargin: s(Style.middleMargin)
         }
 
         clip: true

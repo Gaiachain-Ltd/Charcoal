@@ -27,22 +27,26 @@ BasePage {
             margins: s(Style.bigMargin)
         }
 
-        spacing: s(Style.smallMargin) * 1.5
+        spacing: s(Style.middleSmallMargin)
 
-        Item    // Item is to keep keyboard working properly
+        Items.LayoutSpacer  // It is to keep keyboard working properly
         {
-            Layout.fillWidth: true
-            Layout.preferredHeight: parent.height * 0.35
+            Layout.minimumHeight: logoImage.paintedHeight
+            preferredHeight: parent.height * 0.42 - 2 * layout.spacing   // remove spacing for LayoutSpacer
+            Layout.maximumHeight: preferredHeight
 
             // FIXME biding loops
             Items.SvgImage
             {
-                anchors.centerIn: parent
+                id: logoImage
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+                height: s(Style.logoHeight)
 
                 source: Style.logoImgUrl
-
-                readonly property real calcWidth: parent.width * Style.logoSize
-                width: calcWidth
             }
         }
 
@@ -155,7 +159,8 @@ BasePage {
         }
 
         Items.LayoutSpacer {
-            Layout.maximumHeight: loginButton.height * 2
+            preferredHeight: 5 * s(Style.middleMargin)
+            Layout.maximumHeight: preferredHeight
         }
 
         Items.GenericButton
@@ -197,7 +202,8 @@ BasePage {
         }
 
         Items.LayoutSpacer {
-            Layout.maximumHeight: loginButton.height * 0.4
+            preferredHeight: s(Style.bigMargin)
+            Layout.maximumHeight: preferredHeight
         }
     }
 }

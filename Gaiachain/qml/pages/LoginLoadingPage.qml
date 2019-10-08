@@ -27,7 +27,6 @@ Items.GenericPanel
     states: [
         State {
             name: "zero"
-            PropertyChanges { target: logoLoading; source: Style.loadingLogoOneImgUrl }
             PropertyChanges { target: logoLoading; opacity: 0 }
         },
         State {
@@ -117,23 +116,30 @@ Items.GenericPanel
 
     Items.SvgImage {
         id: logoLoading
-        anchors.centerIn: parent
+        anchors {
+            left: parent.left
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+        height: s(Style.logoHeight)
+
+        source: Style.loadingLogoOneImgUrl
     }
 
     Items.BasicText {
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
-            bottomMargin: s(Style.hugeMargin)
+            bottomMargin: 3 * s(Style.hugeMargin)
         }
 
         font {
-            pixelSize: s(Style.titlePixelSize)
+            pixelSize: s(Style.subtitlePixelSize)
             capitalization: Font.AllUppercase
             letterSpacing: s(Style.buttonLetterSpacing)
             weight: Font.DemiBold
         }
-        color: Style.textDisabledColor
+        color: Style.loginLoadingTextColor
 
         text: Strings.loading
     }

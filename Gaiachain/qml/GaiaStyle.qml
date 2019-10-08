@@ -7,7 +7,7 @@ import com.gaiachain.enums 1.0
 QtObject {
     readonly property bool loginByCombobox: utility.isLoginComboboxVisible()
 
-    readonly property real logoSize: 0.55
+    readonly property real logoHeight: 170
 
     // Colors
     readonly property color primaryColor: "#65cb00"
@@ -29,7 +29,6 @@ QtObject {
     readonly property color buttonPopupAcceptSecondaryColor: "black"
     readonly property color buttonPopupRejectColor: "#bebebe"
 
-    readonly property color buttonMenuColor: "#f6f6f6"
     readonly property color buttonBorderColor: "#d8d8d8"
     readonly property color inputBorderColor: "#d6d6d6"
 
@@ -46,9 +45,11 @@ QtObject {
     readonly property color lotColor: "#ff70f1"
 
     // Margins
-    readonly property int hugeMargin: 45
-    readonly property int bigMargin: 40
-    readonly property int normalMargin: 30
+    readonly property int hugeMargin: 40
+    readonly property int bigMargin: 35
+    readonly property int middleBigMargin: 30
+    readonly property int middleMargin: 25
+    readonly property int middleSmallMargin: 20
     readonly property int smallMargin: 15
     readonly property int tinyMargin: 10
 
@@ -57,9 +58,10 @@ QtObject {
 
     // Text
     readonly property real smallPixelSize: pixelSize * 0.8
-    readonly property real pixelSize: 45
+    readonly property real pixelSize: 40
     readonly property real bigPixelSize: pixelSize * 1.5
     readonly property real titlePixelSize: pixelSize * 1.2
+    readonly property real subtitlePixelSize: pixelSize * 1.1
     readonly property real inputPixelSize: pixelSize * 0.9
     readonly property real popupPixelSize: pixelSize * 1.1
     readonly property real buttonPixelSize: pixelSize * 1.1
@@ -80,8 +82,8 @@ QtObject {
     }
 
     // Components sizes
-    readonly property int headerHeight: 210
-    readonly property int footerHeight: 210
+    readonly property int headerHeight: 200
+    readonly property int footerHeight: 200
 
     // urls
     readonly property url logoBlackImgUrl: "qrc:/ui/logo-black"
@@ -121,18 +123,27 @@ QtObject {
     readonly property int inputHeight: 90
 
     // button
-    readonly property int buttonRadius: 15
+    readonly property int buttonRadius: smallMargin
     readonly property int buttonSmallRadius: 10
-    readonly property int buttonImageSmallHeight: 70
-    readonly property int buttonImageHeight: 105
-    readonly property int buttonImageBigHeight: 140
+    readonly property int buttonImageSmallHeight: 55
+    readonly property int buttonImageHeight: 95
+    readonly property int buttonImageBigHeight: 125
     readonly property int buttonImageMargin: 20
-
-    readonly property int menuButtonHeight: 225
-    readonly property int submenuButtonHeight: 145
 
     // Other
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
     readonly property int requestOverlayInterval: 2000
+
+    // PAGES SPECIFIC
+    // login loading
+    readonly property color loginLoadingTextColor: "#d6d6d6"
+
+    // main menu
+    readonly property int menuButtonHeight: 180
+    readonly property int submenuButtonHeight: 125
+    readonly property int menuButtonImageHeight: buttonImageBigHeight * 0.85
+    readonly property int submenuButtonImageHeight: buttonImageSmallHeight
+    readonly property real submenuButtonPixelSize: buttonPixelSize * 0.8
+    readonly property color menuButtonColor: "#f6f6f6"
 }

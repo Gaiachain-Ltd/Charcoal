@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 23.0.6, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 23.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
 	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
 	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
@@ -11,14 +11,14 @@
 	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
 ]>
 <svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 400 400"
-	 style="enable-background:new 0 0 400 400;" xml:space="preserve">
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 86.6 100"
+	 style="enable-background:new 0 0 86.6 100;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#C0DA95;}
 	.st1{fill:#96C354;}
 </style>
 <metadata>
-	<x:xmpmeta  x:xmptk="Adobe XMP Core 5.6-c145 79.163499, 2018/08/13-16:40:22        " xmlns:x="adobe:ns:meta/">
+	<x:xmpmeta  xmlns:x="adobe:ns:meta/">
 		<rdf:RDF  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 			
 				<rdf:Description  rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:illustrator="http://ns.adobe.com/illustrator/1.0/" xmlns:pdf="http://ns.adobe.com/pdf/1.3/" xmlns:stDim="http://ns.adobe.com/xap/1.0/sType/Dimensions#" xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpG="http://ns.adobe.com/xap/1.0/g/" xmlns:xmpGImg="http://ns.adobe.com/xap/1.0/g/img/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:xmpTPg="http://ns.adobe.com/xap/1.0/t/pg/">
@@ -684,7 +684,7 @@ EDkjMuZOxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxV2KuxVh
 	</sfw>
 </metadata>
 <g>
-	<polygon class="st0" points="156.7,225.1 200,200 156.7,174.9 	"/>
-	<polygon class="st1" points="156.7,225.1 200,250 243.3,225.1 200,200 	"/>
+	<polygon class="st0" points="0,75.1 43.3,50 0,24.9 	"/>
+	<polygon class="st1" points="0,75.1 43.3,100 86.6,75.1 43.3,50 	"/>
 </g>
 </svg>

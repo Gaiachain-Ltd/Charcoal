@@ -50,7 +50,7 @@ qreal Utility::setupDpiScale()
     qreal dpiScale = QGuiApplication::primaryScreen()->physicalDotsPerInch() / 332.5;
 
 #ifdef Q_OS_LINUX_DESKTOP
-    dpiScale = QGuiApplication::primaryScreen()->physicalDotsPerInch() / (332.5 * 0.6);
+    dpiScale = QGuiApplication::primaryScreen()->physicalDotsPerInch() / (332.5 * 0.55);
 #endif
 
 #ifdef Q_OS_IOS

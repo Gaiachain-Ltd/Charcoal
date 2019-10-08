@@ -10,7 +10,7 @@ import "../items" as Items
 ListView {
     signal actionClicked(int actionType)
 
-    spacing: s(Style.normalMargin)
+    spacing: s(Style.middleBigMargin)
     interactive: false
 
     model: ListModel {
@@ -60,17 +60,17 @@ ListView {
     }
 
     delegate: MenuButton {
-        padding: s(Style.normalMargin)
-        spacing: s(Style.normalMargin)
+        padding: s(Style.middleMargin)
+        spacing: s(Style.middleMargin)
 
-        icon.height: s(Style.buttonImageSmallHeight)
-        icon.width: s(Style.buttonImageSmallHeight)
+        icon.height: s(Style.submenuButtonImageHeight)
+        icon.width: s(Style.submenuButtonImageHeight)
         icon.source: Helpers.supplyChainActionIcon(actionType)
 
         width: ListView.view.width
         height: s(Style.submenuButtonHeight)
 
-        font.pixelSize: s(Style.buttonPixelSize * 0.8)
+        font.pixelSize: s(Style.submenuButtonPixelSize)
 
         text: Helpers.supplyChainActionMenuString(actionType)
 

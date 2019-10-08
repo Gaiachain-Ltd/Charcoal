@@ -23,7 +23,7 @@ Item {
     RowLayout {
         anchors {
             fill: parent
-            margins: s(Style.normalMargin)
+            margins: s(Style.middleMargin)
         }
 
         Components.ConnectionStateItem {
