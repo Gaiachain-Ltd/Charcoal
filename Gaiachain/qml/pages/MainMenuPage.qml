@@ -57,7 +57,7 @@ BasePage {
 
                     onMenuVisibleChanged: menuVisibleAnimation.start()
 
-                    onActionClicked: console.log("SUPPLY CHAIN ACTION CHOOSEN:", actionType)    // TODO open pages
+                    onActionClicked: console.log("SUPPLY CHAIN ACTION CHOOSEN:", action)    // TODO open pages
 
                     ParallelAnimation {
                         id: menuVisibleAnimation
@@ -95,14 +95,22 @@ BasePage {
 
                 onClicked: pageManager.enter(Enums.Page.Transactions)
             }
+
             Components.MenuButton {
                 Layout.fillWidth: true
 
                 text: Strings.calendar
                 icon.source: Style.calendarButtonImgUrl
 
-                onClicked: pageManager.enter(Enums.Page.Calendar)
+                onClicked: {
+                    var today = new Date()
+                    pageManager.enter(Enums.Page.Calendar, {
+                                          "currentDay": today.getDate(),
+                                          "currentMonth": today.getMonth(),
+                                          "currentYear": today.getFullYear() })
+                }
             }
+
             Components.MenuButton {
                 Layout.fillWidth: true
 

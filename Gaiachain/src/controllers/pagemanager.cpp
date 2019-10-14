@@ -27,7 +27,7 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
  * \param page
  * \param properties
  */
-void PageManager::enter(const Enums::Page page, QJsonObject properties, const bool immediate)
+void PageManager::enter(const Enums::Page page, QVariantMap properties, const bool immediate)
 {
     qCDebug(corePageManager) << CYAN("[PAGE] Print stack on enter") << m_pageStack;
     qCDebug(corePageManager) << CYAN("[PAGE] Enter:") << page << "properties:" << properties;
@@ -40,7 +40,7 @@ void PageManager::enter(const Enums::Page page, QJsonObject properties, const bo
 
     if (m_pageStack.contains(page)) {
         qCWarning(corePageManager) << "Page" << page << "is already on the stack. Going back to page.";
-        backTo(page);
+        backTo(page, properties, immediate);
         return;
     }
 
@@ -49,7 +49,7 @@ void PageManager::enter(const Enums::Page page, QJsonObject properties, const bo
     emit stackViewPush(pageToQString(page), properties, immediate);
 }
 
-void PageManager::enterReplace(const Enums::Page page, QJsonObject properties, const bool immediate)
+void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, const bool immediate)
 {
     qCDebug(corePageManager) << CYAN("[PAGE] Print stack on enter") << m_pageStack;
     qCDebug(corePageManager) << CYAN("[PAGE] Enter replace:") << page << "properties:" << properties;
@@ -72,7 +72,7 @@ void PageManager::enterReplace(const Enums::Page page, QJsonObject properties, c
     emit stackViewReplace(pageToQString(page), properties, immediate);
 }
 
-void PageManager::openPopup(const Enums::Popup popup, QJsonObject properties)
+void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties)
 {
     qCDebug(corePageManager) << CYAN("[POPUP] Print stack on enter") << m_pageStack;
     qCDebug(corePageManager) << CYAN("[POPUP] Enter:") << popup << "properties:" << properties;
@@ -128,7 +128,7 @@ void PageManager::back(const bool immediate)
     emit stackViewPop(immediate);
 }
 
-bool PageManager::backTo(const Enums::Page page, const bool immediate)
+bool PageManager::backTo(const Enums::Page page, const QVariantMap properties, const bool immediate)
 {
     if (!m_popupStack.isEmpty()) {
         qCWarning(corePageManager) << "Trying back with popup opened! Aborting!";
@@ -146,8 +146,8 @@ bool PageManager::backTo(const Enums::Page page, const bool immediate)
         currentTop = m_pageStack.last();
     }
 
-    qCDebug(corePageManager) << "Going back to page" << pageToQString(page);
-    emit stackViewPopTo(page, immediate);
+    qCDebug(corePageManager) << "Going back to page" << pageToQString(page) << "properties:" << properties;
+    emit stackViewPopTo(page, properties, immediate);
     return true;
 }
 

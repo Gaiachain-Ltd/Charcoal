@@ -5,10 +5,12 @@
 #include <QHash>
 
 #include "../common/globals.h"
+#include "modelchangedextension.h"
 
-class EventModel : public QAbstractListModel
+class EventModel : public QAbstractListModel, public ModelChangedExtension
 {
     Q_OBJECT
+    Q_INTERFACES(ModelChangedExtension)
 
 public:
     enum ModelRole {
@@ -34,16 +36,11 @@ public:
 
     void appendData(const Gaia::ModelData &inData);
 
+signals:
+    void modelChanged() const override;
+
 private:
-    const QHash<int, QByteArray> m_roleNames = {
-        { ModelRole::ShipmentId, "shipmentId" },
-        { ModelRole::Timestamp, "timestamp" },
-        { ModelRole::Location, "location" },
-        { ModelRole::Company, "company" },
-        { ModelRole::UserRole, "userRole" },
-        { ModelRole::Action, "action" },
-        { ModelRole::ActionProgress, "actionProgress" }
-    };
+    static const QHash<int, QByteArray> sc_roleNames;
 
     QHash<int, QVariantList> m_data;
 

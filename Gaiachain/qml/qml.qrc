@@ -4,7 +4,6 @@
         <file>pages/LoginPage.qml</file>
         <file>pages/MainMenuPage.qml</file>
         <file>pages/CalendarPage.qml</file>
-        <file>pages/CalendarMonthPage.qml</file>
         <file>pages/CalendarEventsPage.qml</file>
         <file>pages/ShipmentDetailsPage.qml</file>
         <file>pages/EventDetailsPage.qml</file>
@@ -15,7 +14,6 @@
         <file>pages/InformationPopup.qml</file>
         <file>items/GenericPanel.qml</file>
         <file>items/ImageButton.qml</file>
-        <file>items/CalendarMonthItem.qml</file>
         <file>items/ImageItem.qml</file>
         <file>items/SvgImage.qml</file>
         <file>items/LayoutSpacer.qml</file>
@@ -44,5 +42,12 @@
         <file>components/ShipmentDetailsDelegate.qml</file>
         <file>components/SupplyChainSubmenu.qml</file>
         <file>items/BlockMouseArea.qml</file>
+        <file>components/CalendarPackageEventsBars.qml</file>
+        <file>components/CalendarItemDelegate.qml</file>
+        <file>components/CalendarMonthItem.qml</file>
+        <file>components/CalendarWeekItem.qml</file>
+        <file>pages/CalendarPageBase.qml</file>
+        <file>items/LayoutSeparator.qml</file>
+        <file>components/dummy/DummyLoginCombobox.qml</file>
     </qresource>
 </RCC>

@@ -13,11 +13,11 @@ BasePage {
 
     property string shipmentId
 
-    Component.onCompleted: shipmentEventsProxyModel.setShipmentId(shipmentId)
-    Component.onDestruction: shipmentEventsProxyModel.clearShipmentId()
+    Component.onCompleted: shipmentEventsModel.setShipmentId(shipmentId)
+    Component.onDestruction: shipmentEventsModel.clearShipmentId()
 
     Connections {
-        target: shipmentEventsProxyModel
+        target: shipmentEventsModel
         onModelChanged: parseModelData()
     }
 
@@ -45,8 +45,8 @@ BasePage {
         var currentCompany = undefined;
         var currentPlace = undefined;
 
-        for (var row = 0; row < shipmentEventsProxyModel.rowCount(); ++ row) {
-            var rowAttributes = shipmentEventsProxyModel.getRowAttributes(row);
+        for (var row = 0; row < shipmentEventsModel.rowCount(); ++ row) {
+            var rowAttributes = shipmentEventsModel.getRowAttributes(row);
             if(currentCompany !== rowAttributes.company || currentPlace !== rowAttributes.place) {
                 if (currentCompany !== undefined || currentCompany !== undefined) {
                     // save previous list
@@ -69,7 +69,7 @@ BasePage {
     }
 
     function enterEventDetailsPage(row) {
-        var rowAttributes = shipmentEventsProxyModel.getRowAttributes(row);
+        var rowAttributes = shipmentEventsModel.getRowAttributes(row);
         pageManager.enter(Enums.Page.EventDetails, { "attributes": createDataObject(rowAttributes) })
     }
 

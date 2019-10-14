@@ -12,7 +12,7 @@
 #include "../common/globals.h"
 #include "../common/location.h"
 #include "../common/tags.h"
-#include "../helpers/utility.h"
+#include "../common/dataglobals.h"
 #include "../common/logs.h"
 
 #include <QLoggingCategory>
@@ -27,21 +27,24 @@ DataManager::DataManager(QObject *parent)
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("dataManager"), this);
-    engine.rootContext()->setContextProperty(QStringLiteral("calendarRangeProxyModel"), &m_calendarRangeProxyModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("dateEventsRangeProxyModel"), &m_dateEventsRangeProxyModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("shipmentEventsProxyModel"), &m_shipmentEventsProxyModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("latestEventsProxyModel"), &m_latestEventsProxyModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("calendarModel"), &m_calendarModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("calendarPackageTypesModel"), &m_calendarPackagesTypesModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("dateEventsModel"), &m_dateEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("latestDateEventsModel"), &m_latestDateEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("shipmentEventsModel"), &m_shipmentEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("latestEventsModel"), &m_latestEventsModel);
 }
 
 void DataManager::setupModels()
 {
-    m_calendarRangeProxyModel.setSourceModel(&m_eventModel);
+    m_calendarModel.setSourceModel(&m_eventModel);
+    m_calendarPackagesTypesModel.setSourceModel(&m_calendarModel);
 
-    m_dateEventsRangeProxyModel.setSourceModel(&m_eventModel);
-    m_dateEventsRangeProxyModel.setSortingTypeAndRole(EventModel::Timestamp, 0, Qt::DescendingOrder);
+    m_dateEventsModel.setSourceModel(&m_eventModel);
+    m_latestDateEventsModel.setSourceModel(&m_dateEventsModel);
 
-    m_shipmentEventsProxyModel.setSourceModel(&m_eventModel);
-    m_latestEventsProxyModel.setSourceModel(&m_eventModel);
+    m_shipmentEventsModel.setSourceModel(&m_eventModel);
+    m_latestEventsModel.setSourceModel(&m_eventModel);
 }
 
 QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)
@@ -66,14 +69,14 @@ void DataManager::onEntityLoaded(const QJsonObject &entity)
 
         const auto agentObj = checkAndValue(historyObj, Tags::agent).toObject();
         const auto companyName = checkAndValue(agentObj, Tags::companyName).toString();
-        const auto agentRole = Utility::instance()->userTypeFromString(
+        const auto agentRole = DataGlobals::userTypeFromString(
                     checkAndValue(agentObj, Tags::role).toString());
 
         const auto date = QDateTime::fromSecsSinceEpoch(
                     checkAndValue(historyObj, Tags::timestamp).toVariant().value<qint64>());
-        const auto action = Utility::instance()->supplyChainActionFromString(
+        const auto action = DataGlobals::supplyChainActionFromString(
                     checkAndValue(historyObj, Tags::action).toString());
-        const auto actionProgress = Utility::instance()->actionProgressFromString(
+        const auto actionProgress = DataGlobals::actionProgressFromString(
                     checkAndValue(historyObj, Tags::actionProgress).toString());
 
         const auto locationArray = checkAndValue(historyObj, Tags::location).toArray();
@@ -102,7 +105,7 @@ void DataManager::onEntitiesLoaded(const QJsonArray &entities)
         ++it;
     }
 
-    m_shipmentEventsProxyModel.setShipmentId(entities.first().toObject().value(Tags::id).toString());
+    m_shipmentEventsModel.setShipmentId(entities.first().toObject().value(Tags::id).toString());
 }
 
 void DataManager::clearModels()

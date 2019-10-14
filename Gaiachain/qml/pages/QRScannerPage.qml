@@ -29,8 +29,8 @@ BasePage {
 
     function parseScannedId(id) {
         if (scannedId.length == 0 && !error && !wrongCodeError) {
-            if (utility.validateId(id)) {
-                scannedId = utility.formatRawId(id)
+            if (Utility.validateId(id)) {
+                scannedId = Utility.formatRawId(id)
             } else {
                 wrongCodeError = true
                 scannedId = id
@@ -284,7 +284,7 @@ BasePage {
                         placeholderText: Strings.typeId + "..."
 
                         additionalInputMethodHints: Qt.ImhLowercaseOnly
-                        input.maximumLength: utility.getScannedIdLength()
+                        input.maximumLength: Utility.getScannedIdLength()
                         input.validator : RegExpValidator { regExp : /[a-zA-Z0-9]+/ }
 
                         onMoveToNextInput: {

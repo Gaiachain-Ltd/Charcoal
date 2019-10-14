@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     app.setOrganizationName("Milo Solutions");
     app.setOrganizationDomain("milosolutions.com");
     app.setApplicationName("Gaiachain");
-    //logger()->enableLogToFile(app.applicationName());
+
     qCInfo(coreMain) << "\nName:" << app.applicationName()
                      << "\nOrganisation:" << app.organizationName()
                      << "\nDomain:" << app.organizationDomain()

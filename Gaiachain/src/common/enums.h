@@ -13,8 +13,7 @@ namespace Enums {
 
     enum class Page {
         InvalidPage = -1,
-        CalendarEvents = 0,     // TODO check if still needed
-        CalendarMonth,          // TODO check if still needed
+        CalendarEvents = 0,
         Calendar,
         EditableEventDetails,   // TODO check if still needed
         EventDetails,           // TODO check if still needed
@@ -55,7 +54,6 @@ namespace Enums {
     Q_ENUM_NS(UserType)
     inline uint qHash(UserType key, uint seed) { return qH<UserType>(key, seed);}
 
-    // TODO update with real values
     enum class PlaceType {
         InvalidPlace = -1,
         Parcele,

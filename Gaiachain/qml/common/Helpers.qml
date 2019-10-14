@@ -8,17 +8,8 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
 QtObject {
-    function convertTimestampToDate(timestamp) {
-        var date = new Date(timestamp)
-        return date.getFullYear() + "-" + formatDateValue(date.getMonth()+1) + "-" + date.getDate()
-                + " " + formatDateValue(date.getHours()) + ":" + formatDateValue(date.getMinutes()) + ":" + formatDateValue(date.getSeconds())
-    }
-
-    function formatDateValue(val) {
-        var formattedVal = val
-        if (formattedVal < 10)
-            formattedVal = "0" + formattedVal
-        return formattedVal
+    function daysInMonth(year, month) {
+        return new Date(year, month + 1, 0).getDate();
     }
 
     function isNetworkError(code) {
@@ -76,7 +67,7 @@ QtObject {
         case Enums.SupplyChainAction.Transport: return Strings.supplyChainMenuTransport
         case Enums.SupplyChainAction.Reception: return Strings.supplyChainMenuReception
         default:
-            console.warn("supplyChainActionString: Invalid action provided!")
+            console.warn("supplyChainActionString: Invalid action provided!", action)
         }
 
         return ""
@@ -92,12 +83,24 @@ QtObject {
         case Enums.SupplyChainAction.Transport: return Style.supplyChainSubmenuTransportImgUrl
         case Enums.SupplyChainAction.Reception: return Style.supplyChainSubmenuReceptionImgUrl
         default:
-            console.warn("supplyChainActionString: Invalid action provided!")
+            console.warn("supplyChainActionIcon: Invalid action provided!", action)
         }
 
         return ""
     }
 
+
+    function packageTypeName(packageType) {
+        switch(packageType) {
+        case Enums.PackageType.Harvest: return Strings.harvestId
+        case Enums.PackageType.Sac: return Strings.sacId
+        case Enums.PackageType.Lot: return Strings.lotId
+        default:
+            console.warn("packageTypeName: Invalid packageType provided!")
+        }
+
+        return Style.unknownColor
+    }
 
     function packageTypeColor(packageType) {
         switch(packageType) {

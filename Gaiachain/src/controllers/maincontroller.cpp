@@ -2,8 +2,10 @@
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQmlEngine>
 
 #include "../common/enums.h"
+#include "../common/dataglobals.h"
 #include "../helpers/utility.h"
 
 #include <QZXing.h>
@@ -15,7 +17,7 @@
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
-    QLocale::setDefault(QLocale("en_UK"));
+    QLocale::setDefault(QLocale("en_GB"));
 
 #ifdef Q_OS_ANDROID
     // check for permissions before opening scanner page to load camera faster
@@ -50,6 +52,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     //Register namespace for enums first
     qmlRegisterUncreatableMetaObject(Enums::staticMetaObject, "com.gaiachain.enums", 1, 0,
                                      "Enums", "Cannot create namespace Enums in QML");
+
     qRegisterMetaType<Enums::Page>("Page");
     qRegisterMetaType<Enums::UserType>("UserType");
     qRegisterMetaType<Enums::Popup>("Popup");
@@ -59,7 +62,8 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::ActionProgress>("ActionProgress");
     qRegisterMetaType<Enums::PackageType>("PackageType");
 
-    engine.rootContext()->setContextProperty(QStringLiteral("utility"), Utility::instance());
+    engine.rootContext()->setContextProperty(QStringLiteral("Utility"), Utility::instance());
+    engine.rootContext()->setContextProperty(QStringLiteral("DataGlobals"), DataGlobals::instance());
 
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");

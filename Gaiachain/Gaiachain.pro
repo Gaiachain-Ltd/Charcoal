@@ -39,9 +39,14 @@ CONFIG += c++14
 TARGET = Gaiachain
 
 HEADERS += \
+    src/common/dataglobals.h \
     src/controllers/session/abstractsessionmanager.h \
     src/controllers/session/fakesessionmanager.h \
+    src/helpers/typetraits.h \
+    src/models/abstractidentityproxymodel.h \
     src/models/daterangeproxymodel.h \
+    src/models/modelchangedextension.h \
+    src/models/packagetypeeventsproxymodel.h \
     src/models/eventmodel.h \
     src/helpers/utility.h \
     src/controllers/maincontroller.h \
@@ -65,10 +70,14 @@ HEADERS += \
     src/controllers/session/fakedatapopulator.h
 
 SOURCES += src/main.cpp \
+    src/common/dataglobals.cpp \
     src/common/globals.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/fakesessionmanager.cpp \
+    src/models/abstractidentityproxymodel.cpp \
     src/models/daterangeproxymodel.cpp \
+    src/models/modelchangedextension.cpp \
+    src/models/packagetypeeventsproxymodel.cpp \
     src/models/eventmodel.cpp \
     src/helpers/utility.cpp \
     src/controllers/maincontroller.cpp \

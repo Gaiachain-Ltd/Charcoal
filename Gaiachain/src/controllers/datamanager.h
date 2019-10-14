@@ -8,6 +8,7 @@
 #include "../models/daterangeproxymodel.h"
 #include "../models/shipmenteventsproxy.h"
 #include "../models/latesteventsproxy.h"
+#include "../models/packagetypeeventsproxymodel.h"
 
 class DataManager : public AbstractManager
 {
@@ -27,10 +28,14 @@ private:
 
     EventModel m_eventModel;
 
-    DateRangeProxyModel m_calendarRangeProxyModel;
-    DateRangeProxyModel m_dateEventsRangeProxyModel;
-    ShipmentEventsProxy m_shipmentEventsProxyModel;
-    LatestEventsProxy m_latestEventsProxyModel;
+    DateRangeProxyModel m_calendarModel;
+    PackageTypeEventsProxyModel m_calendarPackagesTypesModel;
+
+    DateRangeProxyModel m_dateEventsModel;
+    LatestEventsProxy m_latestDateEventsModel;
+
+    ShipmentEventsProxy m_shipmentEventsModel;
+    LatestEventsProxy m_latestEventsModel;
 
     QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
 };

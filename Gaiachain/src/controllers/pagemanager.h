@@ -27,23 +27,23 @@ signals:
 
 signals:
     // Signals below should only be used by StackView!!!
-    void stackViewPush(const QString &url, const QJsonObject properties = QJsonObject(), const bool immediate = false) const;
+    void stackViewPush(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
     void stackViewPop(const bool immediate = false) const;
-    void stackViewPopTo(const Enums::Page page, const bool immediate = false) const;
-    void stackViewReplace(const QString &url, const QJsonObject properties = QJsonObject(), const bool immediate = false) const;
-    void popupManagerOpen(const QString &url, const QJsonObject properties = QJsonObject()) const;
+    void stackViewPopTo(const Enums::Page page, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
+    void stackViewReplace(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
+    void popupManagerOpen(const QString &url, const QVariantMap properties = QVariantMap{}) const;
     void popupManagerClose() const;
 
 public slots:
     // Page managment
-    void enter(const Enums::Page page, QJsonObject properties = QJsonObject(), const bool immediate = false);
-    void enterReplace(const Enums::Page page, QJsonObject properties = QJsonObject(), const bool immediate = false);
+    void enter(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
+    void enterReplace(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
     void back(const bool immediate = false);
-    bool backTo(const Enums::Page page, const bool immediate = false);
+    bool backTo(const Enums::Page page, const QVariantMap properties = QVariantMap{}, const bool immediate = false);
 
     // Popup managment
     // Use openPopup only on QML side to handle strings and don't mess sendAction signal receivers!
-    void openPopup(const Enums::Popup popup, QJsonObject properties = QJsonObject());
+    void openPopup(const Enums::Popup popup, QVariantMap properties = QVariantMap{});
     void closePopup();
     void sendAction(Enums::PopupAction action);
 
