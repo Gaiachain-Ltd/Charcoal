@@ -17,11 +17,11 @@ ApplicationWindow
     color: Style.backgroundColor
 
     function s(num) {
-        return utility.scaleByDpi(num)
+        return Utility.scaleByDpi(num)
     }
 
     function sr(num) {
-        return utility.scaleRoundByDpi(num)
+        return Utility.scaleRoundByDpi(num)
     }
 
     Connections

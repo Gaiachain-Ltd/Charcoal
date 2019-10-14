@@ -26,6 +26,9 @@
         <file alias="submenuTransport">ui/icon-submenu-icon-submenu-transport.svg</file>
         <file alias="submenuReception">ui/icon-submenu-reception.svg</file>
         <file alias="submenuHarvest">ui/icon-submenu-recolte.svg</file>
+        <file alias="leftArrow">ui/left-arrow-icon.svg</file>
+        <file alias="rightArrow">ui/right-arrow-icon.svg</file>
+        <file alias="dummy/testIcon">ui/dummy/gaia-test-icon.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

@@ -6,6 +6,7 @@
 #include <QMetaEnum>
 #include <QDate>
 
+#include "typetraits.h"
 #include "../common/enums.h"
 
 class Utility : public QObject
@@ -41,40 +42,45 @@ public:
 
     Q_INVOKABLE QString formatRawId(QString id) const;
 
-    Enums::UserType userTypeFromString(const QString &text) const;
-    Q_INVOKABLE QString userTypeToString(const Enums::UserType &type) const;
+    Q_INVOKABLE bool useCombobox() const;
+    Q_INVOKABLE bool fakeData() const;
 
-    Enums::SupplyChainAction supplyChainActionFromString(const QString &text) const;
-    Q_INVOKABLE QString supplyChainActionToString(const Enums::SupplyChainAction &type) const;
+    template <typename C, std::enable_if_t<is_qt_array_type<C>::value, int> = 0>
+    static QVariantList toVariantList(const C &arrayType, QMetaType::Type converToType = QMetaType::Void)
+    {
+        auto variantList = QVariantList{};
+        for (const auto &type : arrayType) {
+            auto variantValue = QVariant::fromValue(type);
+            if (converToType != QMetaType::Void) {
+                variantValue.convert(converToType);
+            }
+            variantList.append(variantValue);
+        }
+        return variantList;
+    }
 
-    Enums::ActionProgress actionProgressFromString(const QString &text) const;
-    Q_INVOKABLE QString actionProgressToString(const Enums::ActionProgress &type) const;
+    template <typename C, std::enable_if_t<is_qt_dictionary_type<C>::value, int> = 0>
+    static QVariantMap toVariantsMap(const C &dictionaryType,
+                                     QMetaType::Type converToTypeKey = QMetaType::Void, QMetaType::Type converToTypeValue = QMetaType::Void)
+    {
+        auto variantsMap = QVariantMap{};
+        for (const auto &key : dictionaryType.keys()) {
+            auto variantKey = QVariant::fromValue(key);
+            if (converToTypeKey != QMetaType::Void) {
+                variantKey.convert(converToTypeKey);
+            }
+            auto variantValue = QVariant::fromValue(dictionaryType.value(key));
+            if (converToTypeValue != QMetaType::Void) {
+                variantValue.convert(converToTypeValue);
+            }
 
-    Q_INVOKABLE bool isLoginComboboxVisible() const;
+            variantsMap.insert(variantKey.toString(), variantValue);
+        }
+        return variantsMap;
+    }
 
 private:
     Utility();
-
-    const QHash<Enums::UserType, QString> m_userTypes = {
-        {Enums::UserType::Producer, QStringLiteral("PRODUCER") },
-        {Enums::UserType::BaggingPerson, QStringLiteral("BAGGING") },
-        {Enums::UserType::Storekeeper, QStringLiteral("STOREKEEPER") },
-        {Enums::UserType::Exporter, QStringLiteral("EXPORTER") },
-        {Enums::UserType::NotLoggedUser, QString()}
-    };
-    const QHash<Enums::SupplyChainAction, QString> m_supplyChainActionTypes = {
-        {Enums::SupplyChainAction::Harvest, QStringLiteral("HARVEST") },
-        {Enums::SupplyChainAction::Fermentation, QStringLiteral("FERMENTATION") },
-        {Enums::SupplyChainAction::Bagging, QStringLiteral("BAGGING") },
-        {Enums::SupplyChainAction::StorageArrival, QStringLiteral("STORAGE_ARRIVAL") },
-        {Enums::SupplyChainAction::StorageLot, QStringLiteral("STORAGE_LOT") },
-        {Enums::SupplyChainAction::Transport, QStringLiteral("TRANSPORT") },
-        {Enums::SupplyChainAction::Reception, QStringLiteral("RECEPTION") }
-    };
-    const QHash<Enums::ActionProgress, QString> m_actionProgressTypes = {
-        {Enums::ActionProgress::Started, QStringLiteral("ACTION_STARTED") },
-        {Enums::ActionProgress::Finished, QStringLiteral("ACTION_FINISHED") }
-    };
 
     qreal setupDpiScale();
 

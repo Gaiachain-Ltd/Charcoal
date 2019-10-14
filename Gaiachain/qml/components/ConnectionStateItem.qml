@@ -45,7 +45,7 @@ Item {
         Items.ImageItem {
             Layout.alignment: Qt.AlignVCenter
 
-            source: Style.userImgUrl
+            source: Utility.fakeData() ? Style.dummyTestIconUrl : Style.userImgUrl
             backgroundColor: top.currentColor
         }
 

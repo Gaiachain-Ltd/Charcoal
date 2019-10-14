@@ -5,8 +5,6 @@ import QtQuick 2.11
 import com.gaiachain.enums 1.0
 
 QtObject {
-    readonly property bool loginByCombobox: utility.isLoginComboboxVisible()
-
     readonly property real logoHeight: 170
 
     // Colors
@@ -29,8 +27,11 @@ QtObject {
     readonly property color buttonPopupAcceptSecondaryColor: "black"
     readonly property color buttonPopupRejectColor: "#bebebe"
 
+    readonly property color buttonMenuColor: "#f6f6f6"
     readonly property color buttonBorderColor: "#d8d8d8"
     readonly property color inputBorderColor: "#d6d6d6"
+
+    readonly property color separatorColor: "#d6d6d6"
 
     readonly property color disabledColorTint: "#C0a4a4a4"
     readonly property color backgroundShadowColor: "#99000000"
@@ -57,6 +58,7 @@ QtObject {
     readonly property int imageSize: 30
 
     // Text
+    readonly property real tinyPixelSize: pixelSize * 0.7
     readonly property real smallPixelSize: pixelSize * 0.8
     readonly property real pixelSize: 40
     readonly property real bigPixelSize: pixelSize * 1.5
@@ -84,8 +86,11 @@ QtObject {
     // Components sizes
     readonly property int headerHeight: 200
     readonly property int footerHeight: 200
+    readonly property int separatorHeight: 1
 
     // urls
+    readonly property url dummyTestIconUrl: "qrc:/ui/dummy/testIcon"
+
     readonly property url logoBlackImgUrl: "qrc:/ui/logo-black"
     readonly property url logoWhiteImgUrl: "qrc:/ui/logo-white"
     readonly property url logoImgUrl: logoBlackImgUrl
@@ -119,6 +124,9 @@ QtObject {
     readonly property url supplyChainSubmenuTransportImgUrl: "qrc:/ui/submenuTransport"
     readonly property url supplyChainSubmenuReceptionImgUrl: "qrc:/ui/submenuReception"
 
+    readonly property url leftArrowImgUrl: "qrc:/ui/leftArrow"
+    readonly property url rightArrowImgUrl: "qrc:/ui/rightArrow"
+
     // input
     readonly property int inputHeight: 90
 
@@ -146,4 +154,13 @@ QtObject {
     readonly property int submenuButtonImageHeight: buttonImageSmallHeight
     readonly property real submenuButtonPixelSize: buttonPixelSize * 0.8
     readonly property color menuButtonColor: "#f6f6f6"
+
+    // calendar pages
+    readonly property color calendarArrowButtonColor: "#e8eaec"
+    readonly property int calendarDotSize: 15
+    readonly property int calendarCurrentDayBorderWidth: 3
+    readonly property int calendarNamePixelSize: tinyPixelSize
+    readonly property int calendarNumberPixelSize: smallPixelSize
+    readonly property int calendarDayMinHeight: calendarNumberPixelSize + calendarDotSize + 2 * smallMargin
+    readonly property int calendarDayChangeDuration: 1000
 }

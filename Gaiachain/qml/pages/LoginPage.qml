@@ -7,6 +7,7 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
 import "../items" as Items
+import "../components/dummy" as DummyComponents
 
 BasePage {
     id: top
@@ -62,80 +63,18 @@ BasePage {
             nextInput: passwordInput
 
             additionalInputMethodHints: Qt.ImhNoAutoUppercase
-            placeholderText: Style.loginByCombobox ? "" : Strings.emailAddress
+            placeholderText: Strings.emailAddress
             iconSource: Style.emailImgUrl
-
-            readOnly: Style.loginByCombobox
 
             borderColor: validInput ? Style.inputBorderColor : Style.errorColor
 
             onTextChanged: {
-                validInput = !length || utility.validateEmail(text)
+                validInput = !length || Utility.validateEmail(text)
             }
 
-            ComboBox    // this is for testing only !!!
-            {
-                id: controlCombo
-                property string currentLoginStr: "producer@gaiachain.io"
-
-                model: ["producer@gaiachain.io", "bagging@gaiachain.io",
-                        "storekeeper@gaiachain.io", "exporter@gaiachain.io",
-                        "wrong@gaiachain.io"]
-                visible: Style.loginByCombobox
-
-                anchors.centerIn: parent
-                height: parent.height
-                width: parent.width
-
-                background: Rectangle { color: "transparent" }
-
-                contentItem: Text {
-                    leftPadding: loginInput.height
-
-                    text: controlCombo.displayText
-                    color: Style.textPrimaryColor
-                    font {
-                        pixelSize: s(Style.pixelSize)
-                        family: Style.primaryFontFamily
-                    }
-                    elide: Text.ElideRight
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                delegate: ItemDelegate {
-                    leftPadding: loginInput.height
-                    width: parent.width
-                    contentItem: Text {
-                        text: modelData
-                        color: Style.textPrimaryColor
-                        font {
-                            pixelSize: s(Style.pixelSize)
-                            family: Style.primaryFontFamily
-                        }
-                        elide: Text.ElideRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
-
-                    background: Rectangle {
-                        color: "transparent"
-                    }
-                }
-
-                onActivated: {
-                    passwordInput.text = "test1234"
-                    switch(index) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        controlCombo.currentLoginStr = model[index]
-                        break
-                    default:
-                        controlCombo.currentLoginStr = ""
-                        passwordInput.text = ""
-                        break
-                    }
-                }
+            DummyComponents.DummyLoginCombobox {
+                loginInput: loginInput
+                passwordInput: passwordInput
             }
         }
 
@@ -146,10 +85,7 @@ BasePage {
 
             placeholderText: Strings.password
             iconSource: Style.passwordImgUrl
-            enabled: !Style.loginByCombobox
             isPassword: true
-
-            text: Style.loginByCombobox ?  "test1234" : ""
 
             onMoveToNextInput: {
                 if (loginButton.enabled) {
@@ -170,13 +106,11 @@ BasePage {
 
             text: Strings.login
 
-            enabled: Style.loginByCombobox || (loginInput.text.length && passwordInput.text.length && loginInput.validInput)
+            enabled: loginInput.text.length && passwordInput.text.length && loginInput.validInput
 
             onClicked: {
                 pageManager.enter(Enums.Page.LoginLoading)
-
-                var userName = Style.loginByCombobox ? controlCombo.currentLoginStr : loginInput.text
-                sessionManager.login(userName, passwordInput.text)
+                sessionManager.login(loginInput.text, passwordInput.text)
             }
         }
 

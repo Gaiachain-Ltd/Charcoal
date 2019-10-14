@@ -22,6 +22,11 @@ Item {
             stackView.pop(stackView.find(function(item) {
                   return item.page === backToPage
               }), getMode(immediate));
+
+            // update properties
+            for (var key in properties) {
+                stackView.currentItem[key] = properties[key]
+            }
         }
         onStackViewReplace: {
             stackView.replace(stackView.currentItem, url, properties, getMode(immediate))

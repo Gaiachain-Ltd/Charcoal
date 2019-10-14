@@ -18,6 +18,6 @@ BasePage {
 
         onDelegateClicked: top.enterShipmentDetailsPage(data)
 
-        viewModel: latestEventsProxyModel
+        viewModel: latestEventsModel
     }
 }

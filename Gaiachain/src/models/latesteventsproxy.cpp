@@ -7,8 +7,6 @@
 LatestEventsProxy::LatestEventsProxy(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
 {
-    setDynamicSortFilter(true);
-
     setSortRole(EventModel::Timestamp);
     sort(0, Qt::SortOrder::DescendingOrder);
 }

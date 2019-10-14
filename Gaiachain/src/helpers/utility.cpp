@@ -121,39 +121,18 @@ QString Utility::defaultDateFormat() const
     return m_dateFormat;
 }
 
-Enums::UserType Utility::userTypeFromString(const QString &text) const
-{
-    return m_userTypes.key(text);
-}
-
-QString Utility::userTypeToString(const Enums::UserType &type) const
-{
-    return m_userTypes.value(type);
-}
-
-Enums::SupplyChainAction Utility::supplyChainActionFromString(const QString &text) const
-{
-    return m_supplyChainActionTypes.key(text);
-}
-
-QString Utility::supplyChainActionToString(const Enums::SupplyChainAction &type) const
-{
-    return m_supplyChainActionTypes.value(type);
-}
-
-Enums::ActionProgress Utility::actionProgressFromString(const QString &text) const
-{
-    return m_actionProgressTypes.key(text);
-}
-
-QString Utility::actionProgressToString(const Enums::ActionProgress &type) const
-{
-    return m_actionProgressTypes.value(type);
-}
-
-bool Utility::isLoginComboboxVisible() const
+bool Utility::useCombobox() const
 {
 #ifdef USE_COMBOBOX
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool Utility::fakeData() const
+{
+#ifdef FAKE_DATA
     return true;
 #else
     return false;

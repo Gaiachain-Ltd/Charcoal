@@ -5,9 +5,20 @@
 #include "../common/logs.h"
 #include "../common/enums.h"
 
+const QHash<int, QByteArray> EventModel::sc_roleNames = {
+    { ModelRole::ShipmentId,        QByteArrayLiteral("shipmentId") },
+    { ModelRole::Timestamp,         QByteArrayLiteral("timestamp") },
+    { ModelRole::Location,          QByteArrayLiteral("location") },
+    { ModelRole::Company,           QByteArrayLiteral("company") },
+    { ModelRole::UserRole,          QByteArrayLiteral("userRole") },
+    { ModelRole::Action,            QByteArrayLiteral("action") },
+    { ModelRole::ActionProgress,    QByteArrayLiteral("actionProgress") }
+};
+
 EventModel::EventModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    ModelChangedExtension::setupConnections(this);
 }
 
 int EventModel::rowCount(const QModelIndex &parent) const
@@ -50,7 +61,7 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
 
 QHash<int, QByteArray> EventModel::roleNames() const
 {
-    return m_roleNames;
+    return sc_roleNames;
 }
 
 void EventModel::clearModel()

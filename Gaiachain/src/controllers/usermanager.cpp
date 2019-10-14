@@ -9,7 +9,7 @@
 
 #include "../common/tags.h"
 #include "../common/location.h"
-#include "../helpers/utility.h"
+#include "../common/dataglobals.h"
 #include "../common/logs.h"
 
 UserManager::UserManager(QObject *parent)
@@ -59,7 +59,7 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
     location.lon = locationArray.at(1).toDouble();
     m_userData.insert(Tags::location, QVariant::fromValue(location));
     const QString &role = obj.value(Tags::role).toString();
-    const Enums::UserType userType = Utility::instance()->userTypeFromString(role);
+    const Enums::UserType userType = DataGlobals::userTypeFromString(role);
 
     emit tokenChanged(obj.value(Tags::token).toString());
 

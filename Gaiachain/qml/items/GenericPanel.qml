@@ -37,4 +37,6 @@ Page {
         window: Style.backgroundColor
         windowText: Style.textPrimaryColor
     }
+
+    locale: Qt.locale()
 }

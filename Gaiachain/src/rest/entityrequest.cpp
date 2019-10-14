@@ -4,7 +4,7 @@
 #include <QJsonArray>
 
 #include "../common/logs.h"
-#include "../helpers/utility.h"
+#include "../common/dataglobals.h"
 #include "../common/tags.h"
 
 #define ADDRESS_BASE QStringLiteral("/entities")
@@ -99,8 +99,8 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
         m_timer.start();
         QJsonObject object;
         QString actionString;
-        object.insert(Tags::action, Utility::instance()->supplyChainActionToString(action));
-        object.insert(Tags::actionProgress, Utility::instance()->actionProgressToString(actionProgress));
+        object.insert(Tags::action, DataGlobals::supplyChainActionToString(action));
+        object.insert(Tags::actionProgress, DataGlobals::actionProgressToString(actionProgress));
         mRequestDocument.setObject(object);
 
         mType = Type::Put;

@@ -2,7 +2,7 @@
 
 #include <QDateTime>
 
-#include "../../helpers/utility.h"
+#include "../../common/dataglobals.h"
 #include "../../common/globals.h"
 #include "../../common/tags.h"
 #include "../../common/logs.h"
@@ -83,7 +83,7 @@ QVariantMap FakeDataPopulator::generateUserData(const QString &email)
     obj.insert(Tags::email, email);
     obj.insert(Tags::companyName, company.first);
     obj.insert(Tags::location, QVariantList{ company.second.lat, company.second.lon });
-    obj.insert(Tags::role, Utility::instance()->userTypeToString(userType));
+    obj.insert(Tags::role, DataGlobals::userTypeToString(userType));
     return obj;
 }
 
@@ -124,13 +124,13 @@ void FakeDataPopulator::populateFakeData(const int shipmentsCount, const QDateTi
                     break;
                 }
 
-                auto agentInfo = QVariantMap({ { Tags::role, Utility::instance()->userTypeToString(userType) },
+                auto agentInfo = QVariantMap({ { Tags::role, DataGlobals::userTypeToString(userType) },
                                                { Tags::companyName, company.first } });
 
                 auto eventData = QVariantMap({ { Tags::timestamp, actionStartDate.toSecsSinceEpoch() },
                                                { Tags::agent, agentInfo },
-                                               { Tags::action, Utility::instance()->supplyChainActionToString(currentAction) },
-                                               { Tags::actionProgress, Utility::instance()->actionProgressToString(currentActionProgress) },
+                                               { Tags::action, DataGlobals::supplyChainActionToString(currentAction) },
+                                               { Tags::actionProgress, DataGlobals::actionProgressToString(currentActionProgress) },
                                                { Tags::location, QVariantList({ company.second.lat, company.second.lon }) } });
                 shipmentHistory.append(eventData);
 
@@ -169,20 +169,20 @@ bool FakeDataPopulator::addAction(const QString &shipmentId, const Enums::Supply
     if (!shipmentHistory.isEmpty()) {
         auto lastHistoryItem = shipmentHistory.last().toMap();
         auto lastAgent = lastHistoryItem.value(Tags::agent).toMap();
-        auto newUserType = Utility::instance()->userTypeFromString(lastAgent.value(Tags::role).toString());
+        auto newUserType = DataGlobals::userTypeFromString(lastAgent.value(Tags::role).toString());
         if (newUserType == userType) {
             auto companyName = lastAgent.value(Tags::companyName).toString();
             company = { companyName, companyLocation(userType, companyName) };
         }
     }
 
-    auto agentInfo = QVariantMap({ { Tags::role, Utility::instance()->userTypeToString(userType) },
+    auto agentInfo = QVariantMap({ { Tags::role, DataGlobals::userTypeToString(userType) },
                                    { Tags::companyName, company.first } });
 
     auto eventData = QVariantMap({ { Tags::timestamp, QDateTime::currentDateTime().toMSecsSinceEpoch() },
                                    { Tags::agent, agentInfo },
-                                   { Tags::action, Utility::instance()->supplyChainActionToString(action) },
-                                   { Tags::actionProgress, Utility::instance()->actionProgressToString(actionProgress) },
+                                   { Tags::action, DataGlobals::supplyChainActionToString(action) },
+                                   { Tags::actionProgress, DataGlobals::actionProgressToString(actionProgress) },
                                    { Tags::location, QVariantList({ company.second.lat, company.second.lon }) } });
 
     m_shipmentsHistory[shipmentId].append(eventData);

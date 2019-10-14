@@ -8,7 +8,7 @@ import com.gaiachain.helpers 1.0
 import "../items" as Items
 
 ListView {
-    signal actionClicked(int actionType)
+    signal actionClicked(int action)
 
     spacing: s(Style.middleBigMargin)
     interactive: false
@@ -16,37 +16,30 @@ ListView {
     model: ListModel {
         ListElement {
             actionType: Enums.SupplyChainAction.Harvest
-            packageType: Enums.PackageType.Harvest
             userType: Enums.UserType.Producer
         }
         ListElement {
             actionType: Enums.SupplyChainAction.Fermentation
-            packageType: Enums.PackageType.Harvest
             userType: Enums.UserType.Producer
         }
         ListElement {
             actionType: Enums.SupplyChainAction.Bagging
-            packageType: Enums.PackageType.Sac
             userType: Enums.UserType.BaggingPerson
         }
         ListElement {
             actionType: Enums.SupplyChainAction.StorageArrival
-            packageType: Enums.PackageType.Sac
             userType: Enums.UserType.Storekeeper
         }
         ListElement {
             actionType: Enums.SupplyChainAction.StorageLot
-            packageType: Enums.PackageType.Lot
             userType: Enums.UserType.Storekeeper
         }
         ListElement {
             actionType: Enums.SupplyChainAction.Transport
-            packageType: Enums.PackageType.Lot
             userType: Enums.UserType.Exporter
         }
         ListElement {
             actionType: Enums.SupplyChainAction.Reception
-            packageType: Enums.PackageType.Lot
             userType: Enums.UserType.Exporter
         }
     }
@@ -92,7 +85,7 @@ ListView {
             radius: s(Style.buttonRadius)
             width: 2 * radius
 
-            color: Helpers.packageTypeColor(packageType)
+            color: Helpers.packageTypeColor(DataGlobals.packageType(actionType))
         }
     }
 }

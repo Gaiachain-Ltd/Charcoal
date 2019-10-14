@@ -17,10 +17,10 @@ QtObject {
     readonly property string supplyChainActionTransport: qsTr("Transport")
     readonly property string supplyChainActionReception: qsTr("Reception")
 
-    readonly property string harvestId: qsTr("HARVEST ID")
-    readonly property string sacId: qsTr("SAC ID")
-    readonly property string lotId: qsTr("LOT ID")
-    readonly property string arrivalId: qsTr("ARRIVAL ID")
+    readonly property string harvestId: qsTr("Harvest ID")
+    readonly property string sacId: qsTr("Sac ID")
+    readonly property string lotId: qsTr("Lot ID")
+    readonly property string arrivalId: qsTr("Arrival ID")
 
     readonly property string january: qsTr("January")
     readonly property string february: qsTr("February")
@@ -56,11 +56,14 @@ QtObject {
     readonly property string tracking: qsTr("Tracking")
 
     readonly property string supplyChainMenuCreateId: qsTr("(Create %1)")
-    readonly property string supplyChainMenuHarvest: supplyChainActionHarvest + "\n" + supplyChainMenuCreateId.arg(harvestId)
+    readonly property string supplyChainMenuHarvest: supplyChainActionHarvest + "\n" + supplyChainMenuCreateId.arg(harvestId.toUpperCase())
     readonly property string supplyChainMenuFermentation: supplyChainActionFermentation
-    readonly property string supplyChainMenuBagging: supplyChainActionBagging + "\n" + supplyChainMenuCreateId.arg(sacId)
-    readonly property string supplyChainMenuStorageArrival: supplyChainActionStorageArrival + "\n" + supplyChainMenuCreateId.arg(arrivalId)
-    readonly property string supplyChainMenuStorageLot: supplyChainActionStorageLot + "\n" + supplyChainMenuCreateId.arg(lotId)
+    readonly property string supplyChainMenuBagging: supplyChainActionBagging + "\n" + supplyChainMenuCreateId.arg(sacId.toUpperCase())
+    readonly property string supplyChainMenuStorageArrival: supplyChainActionStorageArrival + "\n" + supplyChainMenuCreateId.arg(arrivalId.toUpperCase())
+    readonly property string supplyChainMenuStorageLot: supplyChainActionStorageLot + "\n" + supplyChainMenuCreateId.arg(lotId.toUpperCase())
     readonly property string supplyChainMenuTransport: supplyChainActionTransport
     readonly property string supplyChainMenuReception: supplyChainActionReception
+
+    // calendar
+    readonly property string activities: qsTr("activities")
 }

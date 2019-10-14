@@ -2,15 +2,18 @@
 #define ABSTRACTSORTFILTERPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
+#include "modelchangedextension.h"
 
-class AbstractSortFilterProxyModel : public QSortFilterProxyModel
+class AbstractSortFilterProxyModel : public QSortFilterProxyModel, public ModelChangedExtension
 {
     Q_OBJECT
+    Q_INTERFACES(ModelChangedExtension)
+
 public:
     AbstractSortFilterProxyModel(QObject *parent = nullptr);
 
 signals:
-    void modelChanged() const;
+    void modelChanged() const override;
 };
 
 #endif // ABSTRACTSORTFILTERPROXYMODEL_H
