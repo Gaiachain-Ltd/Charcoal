@@ -2,6 +2,7 @@ import QtQuick 2.11
 import QtQuick.Controls 2.5
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
 TextField
 {
@@ -11,6 +12,7 @@ TextField
     property int additionalInputMethodHints: 0
 
     property alias iconSource: icon.source
+    property var iconEdge: Enums.Edge.LeftEdge
     property bool showIcon: true
 
     property color borderColor: Style.inputBorderColor
@@ -27,7 +29,8 @@ TextField
     autoScroll: true
     maximumLength: 50
     padding: s(Style.bigMargin)
-    leftPadding: icon.visible ? icon.width + 2 * icon.horizontalMargins : padding
+    leftPadding: (iconEdge === Enums.Edge.LeftEdge) && icon.visible ? icon.width + 2 * icon.horizontalMargins : padding
+    rightPadding: (iconEdge === Enums.Edge.RightEdge) && icon.visible ? icon.width + 2 * icon.horizontalMargins : padding
 
     font {
         pixelSize: s(Style.inputPixelSize)
@@ -58,7 +61,8 @@ TextField
         anchors {
             top: parent.top
             bottom: parent.bottom
-            left: parent.left
+            left: (iconEdge == Enums.Edge.LeftEdge) ? parent.left : undefined
+            right: (iconEdge == Enums.Edge.RightEdge) ? parent.right : undefined
 
             leftMargin: horizontalMargins
             rightMargin: horizontalMargins

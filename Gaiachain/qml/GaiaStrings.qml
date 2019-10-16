@@ -9,6 +9,8 @@ QtObject {
     readonly property string ok: qsTr("Ok")
     readonly property string cancel: qsTr("Cancel")
 
+    readonly property string empty: ""
+
     readonly property string supplyChainActionHarvest: qsTr("Harvest")
     readonly property string supplyChainActionFermentation: qsTr("Breaking, Fermenting")
     readonly property string supplyChainActionBagging: qsTr("Drying / Bagging")
@@ -64,6 +66,14 @@ QtObject {
     readonly property string supplyChainMenuTransport: supplyChainActionTransport
     readonly property string supplyChainMenuReception: supplyChainActionReception
 
+    // transactions page
+    readonly property string searchForTransaction: qsTr("Search for a transaction")
+    readonly property string onlyMyTransactions: qsTr("Only my transactions")
+    readonly property string recentTransactions: qsTr("Recent transactions")
+
     // calendar
     readonly property string activities: qsTr("activities")
+
+    // special
+    readonly property string checkMark: "\u2713"
 }

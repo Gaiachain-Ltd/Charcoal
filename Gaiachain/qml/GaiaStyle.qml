@@ -45,6 +45,9 @@ QtObject {
     readonly property color sacColor: "#65cb00"
     readonly property color lotColor: "#ff70f1"
 
+    readonly property color controlGradientStartColor: "#eff6f0"
+    readonly property color controlGradientStopColor: "#ffffff"
+
     // Margins
     readonly property int hugeMargin: 40
     readonly property int bigMargin: 35
@@ -115,6 +118,9 @@ QtObject {
     readonly property url transactionsButtonImgUrl: "qrc:/ui/menuTransactions"
     readonly property url calendarButtonImgUrl: "qrc:/ui/menuCalendar"
 
+    readonly property url searchImgUrl: "qrc:/ui/search"
+    readonly property url calendarBlackImgUrl: "qrc:/ui/calendarBlack"
+
     readonly property url supplyChainSubmenuHarvestImgUrl: "qrc:/ui/submenuHarvest"
     readonly property url supplyChainSubmenuFermentationImgUrl: "qrc:/ui/submenuFermentation"
     readonly property url supplyChainSubmenuBaggingImgUrl: "qrc:/ui/submenuBagging"
@@ -125,6 +131,10 @@ QtObject {
 
     readonly property url leftArrowImgUrl: "qrc:/ui/leftArrow"
     readonly property url rightArrowImgUrl: "qrc:/ui/rightArrow"
+
+    // control
+    readonly property int controlDefaultBorderWidth: 1
+    readonly property int controlBoldBorderWidth: 2
 
     // input
     readonly property int inputHeight: 90
@@ -141,6 +151,9 @@ QtObject {
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
     readonly property int requestOverlayInterval: 2000
+
+    // none
+    readonly property int none: 0
 
     // PAGES SPECIFIC
     // login loading
