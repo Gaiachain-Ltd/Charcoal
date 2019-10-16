@@ -114,7 +114,6 @@ QtObject {
     readonly property url supplyChainButtonImgUrl: "qrc:/ui/menuSupplyChain"
     readonly property url transactionsButtonImgUrl: "qrc:/ui/menuTransactions"
     readonly property url calendarButtonImgUrl: "qrc:/ui/menuCalendar"
-    readonly property url trackingButtonImgUrl: "qrc:/ui/menuTracking"
 
     readonly property url supplyChainSubmenuHarvestImgUrl: "qrc:/ui/submenuHarvest"
     readonly property url supplyChainSubmenuFermentationImgUrl: "qrc:/ui/submenuFermentation"

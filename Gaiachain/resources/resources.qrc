@@ -15,7 +15,6 @@
         <file alias="loadingLogoThree">ui/loading-3.svg</file>
         <file alias="menuSupplyChain">ui/icon-chain.svg</file>
         <file alias="menuCalendar">ui/icon-calendar.svg</file>
-        <file alias="menuTracking">ui/icon-tracking.svg</file>
         <file alias="menuTransactions">ui/icon-transactions.svg</file>
         <file alias="close">ui/close-icon.svg</file>
         <file alias="logo-black">ui/gaiachain-logo-black.svg</file>
