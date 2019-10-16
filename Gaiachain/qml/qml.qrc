@@ -34,7 +34,6 @@
         <file>items/PureImageButton.qml</file>
         <file>components/ConnectionStateItem.qml</file>
         <file>pages/TransactionsPage.qml</file>
-        <file>pages/TrackingPage.qml</file>
         <file>components/EventsListView.qml</file>
         <file>components/Footer.qml</file>
         <file>components/MenuButton.qml</file>

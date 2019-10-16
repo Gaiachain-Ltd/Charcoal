@@ -110,15 +110,6 @@ BasePage {
                                           "currentYear": today.getFullYear() })
                 }
             }
-
-            Components.MenuButton {
-                Layout.fillWidth: true
-
-                text: Strings.tracking
-                icon.source: Style.trackingButtonImgUrl
-
-                onClicked: pageManager.enter(Enums.Page.Tracking)
-            }
         }
     }
 }

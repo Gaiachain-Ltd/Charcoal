@@ -54,7 +54,6 @@ QtObject {
     readonly property string supplyChain: qsTr("Supply chain")
     readonly property string transactions: qsTr("Transactions")
     readonly property string calendar: qsTr("Calendar")
-    readonly property string tracking: qsTr("Tracking")
 
     readonly property string supplyChainMenuCreateId: qsTr("(Create %1)")
     readonly property string supplyChainMenuHarvest: supplyChainActionHarvest + "\n" + supplyChainMenuCreateId.arg(harvestId.toUpperCase())
