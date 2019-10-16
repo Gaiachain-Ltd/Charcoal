@@ -25,7 +25,7 @@ Item {
     function textForState(state) {
         switch (state) {
         case Enums.ConnectionState.ConnectionSuccessful:
-            return userManager.loggedIn ? userManager.login : Strings.anonymousUser
+            return Strings.online
         case Enums.ConnectionState.Connecting:
             return Strings.searching + "..."
         case Enums.ConnectionState.ConnectionError:
