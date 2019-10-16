@@ -128,6 +128,15 @@ namespace Enums {
     Q_ENUM_NS(PackageType)
     inline uint qHash(PackageType key, uint seed) { return qH<PackageType>(key, seed);}
 
+    enum class Edge {
+        Unknown = -1,
+        LeftEdge,
+        RightEdge
+    };
+    Q_ENUM_NS(Edge)
+    inline uint qHash(Edge key, uint seed) { return qH<Edge>(key, seed);}
+
+
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 

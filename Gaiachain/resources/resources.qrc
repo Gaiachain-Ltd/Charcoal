@@ -28,6 +28,8 @@
         <file alias="leftArrow">ui/left-arrow-icon.svg</file>
         <file alias="rightArrow">ui/right-arrow-icon.svg</file>
         <file alias="dummy/testIcon">ui/dummy/gaia-test-icon.svg</file>
+        <file alias="calendarBlack">ui/calendar-icon-black.svg</file>
+        <file alias="search">ui/icon-search.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>
