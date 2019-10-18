@@ -6,7 +6,6 @@
 #include "../models/eventmodel.h"
 
 #include "../models/daterangeproxymodel.h"
-#include "../models/shipmenteventsproxy.h"
 #include "../models/latesteventsproxy.h"
 #include "../models/packagetypeeventsproxymodel.h"
 
@@ -20,12 +19,9 @@ public:
 
 public slots:
     void clearModels();
-    void onEntityLoaded(const QJsonObject &entity);
     void onEntitiesLoaded(const QJsonArray &entities);
 
 private:
-    void setupModels();
-
     EventModel m_eventModel;
 
     DateRangeProxyModel m_calendarModel;
@@ -34,10 +30,12 @@ private:
     DateRangeProxyModel m_dateEventsModel;
     LatestEventsProxy m_latestDateEventsModel;
 
-    ShipmentEventsProxy m_shipmentEventsModel;
     LatestEventsProxy m_latestEventsModel;
 
+    void setupModels();
+
     QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
+    void loadEntity(const QJsonObject &entityObj);
 };
 
 #endif // DATAMANAGER_H

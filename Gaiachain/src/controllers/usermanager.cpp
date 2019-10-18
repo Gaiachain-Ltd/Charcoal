@@ -18,7 +18,7 @@ UserManager::UserManager(QObject *parent)
 
 bool UserManager::isLoggedIn() const
 {
-    return m_userType != Enums::UserType::NotLoggedUser;
+    return m_userType != Enums::UserType::Annonymous;
 }
 
 QString UserManager::getLogin() const
@@ -33,12 +33,12 @@ void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
 
 void UserManager::skipLogin()
 {
-    setUserType(Enums::UserType::NotLoggedUser);
+    setUserType(Enums::UserType::Annonymous);
 }
 
 void UserManager::logOut()
 {
-    setUserType(Enums::UserType::NotLoggedUser);
+    setUserType(Enums::UserType::Annonymous);
     m_userData.clear();
 }
 
@@ -52,12 +52,13 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
     const QJsonObject obj = doc.object();
 
     m_userData.insert(Tags::email, obj.value(Tags::email).toString());
-    m_userData.insert(Tags::company, obj.value(Tags::companyName).toString());
-    const QJsonArray locationArray = obj.value(Tags::location).toArray();
+    m_userData.insert(Tags::companyId, obj.value(Tags::companyId).toString());
+    m_userData.insert(Tags::companyName, obj.value(Tags::companyName).toString());
+    const QJsonArray locationArray = obj.value(Tags::companyLocation).toArray();
     Location location;
     location.lat = locationArray.at(0).toDouble();
     location.lon = locationArray.at(1).toDouble();
-    m_userData.insert(Tags::location, QVariant::fromValue(location));
+    m_userData.insert(Tags::companyLocation, QVariant::fromValue(location));
     const QString &role = obj.value(Tags::role).toString();
     const Enums::UserType userType = DataGlobals::userTypeFromString(role);
 
@@ -81,8 +82,8 @@ void UserManager::setUserType(const Enums::UserType userType)
     m_userType = userType;
     emit userTypeChanged(userType);
 
-    if (prevUserType == Enums::UserType::NotLoggedUser ||
-            userType == Enums::UserType::NotLoggedUser) {
+    if (prevUserType == Enums::UserType::Annonymous ||
+            userType == Enums::UserType::Annonymous) {
         emit loggedInChanged(isLoggedIn());
         emit loginChanged(getLogin());
     }

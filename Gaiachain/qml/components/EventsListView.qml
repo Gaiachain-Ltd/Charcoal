@@ -78,8 +78,8 @@ Item {
                         elide: Text.ElideNone
 
                         readonly property string actionStr: Helpers.placeActionToStringAction(Number(action)).toLowerCase()
-                        text: displayDate ? Strings.eventText.arg(Helpers.getCurrentIdText()).arg(Helpers.convertTimestampToDate(timestamp)).arg(shipmentId).arg(actionStr).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
-                                          : Strings.eventTextCalendar.arg(Helpers.getCurrentIdText()).arg(shipmentId).arg(actionStr).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
+                        text: displayDate ? Strings.eventText.arg(Helpers.getCurrentIdText()).arg(Helpers.convertTimestampToDate(timestamp)).arg(packageId).arg(actionStr).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
+                                          : Strings.eventTextCalendar.arg(Helpers.getCurrentIdText()).arg(packageId).arg(actionStr).arg(Helpers.placeTypeToString(Number(place)).toLowerCase()).arg(company)
                     }
 
                     Items.SvgImage {
@@ -105,7 +105,7 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: delegateClicked({ "shipmentId": shipmentId })
+                onClicked: delegateClicked({ "packageId": packageId })
             }
         }
     }

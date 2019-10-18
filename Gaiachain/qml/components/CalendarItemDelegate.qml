@@ -48,7 +48,7 @@ Item {
             id: packageTypesModel
 
             function initData() {
-                var availablePackageTypes = calendarPackageTypesModel.availablePackageTypesQml();
+                var availablePackageTypes = DataGlobals.availablePackageTypes;
                 for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                     var packageType = availablePackageTypes[idx]
                     append({ "packageType": packageType,
@@ -60,7 +60,7 @@ Item {
             function updateData() {
                 var datePackageTypes = calendarPackageTypesModel.datePackageTypesQml(model.date);
 
-                var availablePackageTypes = calendarPackageTypesModel.availablePackageTypesQml();
+                var availablePackageTypes = DataGlobals.availablePackageTypes
                 for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                     var packageType = availablePackageTypes[idx]
                     get(idx).hasEvents = datePackageTypes.includes(packageType)
@@ -83,9 +83,11 @@ Item {
                 }
             }
         }
+
         Connections {
             target: model
-            onDateChanged: packageTypesModel.updateData()
+            onMonthChanged: packageTypesModel.updateData()
+            onYearChanged: packageTypesModel.updateData()
         }
 
         Row {

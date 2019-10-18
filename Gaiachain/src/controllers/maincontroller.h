@@ -7,7 +7,7 @@
 #ifndef FAKE_DATA
 #include "session/sessionmanager.h"
 #else
-#include "session/fakesessionmanager.h"
+#include "session/dummy/fakesessionmanager.h"
 #endif
 
 class MainController : public AbstractManager

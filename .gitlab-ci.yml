@@ -42,7 +42,7 @@ android_build:
   script:
     - cd $CI_PROJECT_DIR
     - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake "CONFIG+=fake_data"
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=fake_data
     - cat Makefile
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
@@ -66,7 +66,7 @@ android_combobox_build:
   script:
     - cd $CI_PROJECT_DIR
     - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake "CONFIG+=use_combobox CONFIG+=fake_data"
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=use_combobox CONFIG+=fake_data
     - cat Makefile
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build

@@ -41,33 +41,17 @@ QtObject {
         return Strings.january +"!" // Add "!" if invalid
     }
 
-    function supplyChainActionString(action) {
-        switch(action) {
-        case Enums.SupplyChainAction.Harvest: return Strings.supplyChainActionHarvest
-        case Enums.SupplyChainAction.Fermentation: return Strings.supplyChainActionFermentation
-        case Enums.SupplyChainAction.Bagging: return Strings.supplyChainActionBagging
-        case Enums.SupplyChainAction.StorageArrival: return Strings.supplyChainActionStorageArrival
-        case Enums.SupplyChainAction.StorageLot: return Strings.supplyChainActionStorageLot
-        case Enums.SupplyChainAction.Transport: return Strings.supplyChainActionTransport
-        case Enums.SupplyChainAction.Reception: return Strings.supplyChainActionReception
-        default:
-            console.warn("supplyChainActionString: Invalid action provided!")
-        }
-
-        return ""
-    }
-
     function supplyChainActionMenuString(action) {
         switch(action) {
-        case Enums.SupplyChainAction.Harvest: return Strings.supplyChainMenuHarvest
-        case Enums.SupplyChainAction.Fermentation: return Strings.supplyChainMenuFermentation
-        case Enums.SupplyChainAction.Bagging: return Strings.supplyChainMenuBagging
-        case Enums.SupplyChainAction.StorageArrival: return Strings.supplyChainMenuStorageArrival
-        case Enums.SupplyChainAction.StorageLot: return Strings.supplyChainMenuStorageLot
-        case Enums.SupplyChainAction.Transport: return Strings.supplyChainMenuTransport
-        case Enums.SupplyChainAction.Reception: return Strings.supplyChainMenuReception
+        case Enums.SupplyChainAction.Harvest: return Strings.supplyChainMenuActionHarvest
+        case Enums.SupplyChainAction.GrainProcessing: return Strings.supplyChainMenuActionGrainProcessing
+        case Enums.SupplyChainAction.SectionReception: return Strings.supplyChainMenuActionSectionReception
+        case Enums.SupplyChainAction.Bagging: return Strings.supplyChainMenuActionBagging
+        case Enums.SupplyChainAction.LotCreation: return Strings.supplyChainMenuActionLotCreation
+        case Enums.SupplyChainAction.WarehouseTransport: return Strings.supplyChainMenuActionWarehouseTransport
+        case Enums.SupplyChainAction.ExportReception: return Strings.supplyChainMenuActionExportReception
         default:
-            console.warn("supplyChainActionString: Invalid action provided!", action)
+            console.warn("supplyChainActionMenuString: Invalid action provided!", action)
         }
 
         return ""
@@ -76,12 +60,13 @@ QtObject {
     function supplyChainActionIcon(action) {
         switch(action) {
         case Enums.SupplyChainAction.Harvest: return Style.supplyChainSubmenuHarvestImgUrl
-        case Enums.SupplyChainAction.Fermentation: return Style.supplyChainSubmenuFermentationImgUrl
+        case Enums.SupplyChainAction.GrainProcessing: return Style.supplyChainSubmenuGrainProcessingImgUrl
         case Enums.SupplyChainAction.Bagging: return Style.supplyChainSubmenuBaggingImgUrl
-        case Enums.SupplyChainAction.StorageArrival: return Style.supplyChainSubmenuStorageArrivalImgUrl
-        case Enums.SupplyChainAction.StorageLot: return Style.supplyChainSubmenuStorageLotImgUrl
-        case Enums.SupplyChainAction.Transport: return Style.supplyChainSubmenuTransportImgUrl
-        case Enums.SupplyChainAction.Reception: return Style.supplyChainSubmenuReceptionImgUrl
+        case Enums.SupplyChainAction.LotCreation: return Style.supplyChainSubmenuLotCreationImgUrl
+
+        case Enums.SupplyChainAction.WarehouseTransport: return Style.supplyChainSubmenuTransportImgUrl
+        case Enums.SupplyChainAction.SectionReception: return Style.supplyChainSubmenuReceptionImgUrl
+        case Enums.SupplyChainAction.ExportReception: return Style.supplyChainSubmenuReceptionImgUrl
         default:
             console.warn("supplyChainActionIcon: Invalid action provided!", action)
         }

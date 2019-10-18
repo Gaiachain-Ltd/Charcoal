@@ -25,7 +25,7 @@ public:
 
     Q_INVOKABLE virtual void getEntity() = 0;
     Q_INVOKABLE virtual void getEntity(const QString &id) = 0;
-    Q_INVOKABLE virtual void putEntity(const QString &id, const Enums::SupplyChainAction &action, const Enums::ActionProgress &actionProgress) = 0;
+    Q_INVOKABLE virtual void putEntity(const QString &id, const Enums::SupplyChainAction &action, const QVariantMap &properties) = 0;
 
 public slots:
     void onTokenChanged(const QString &token);
@@ -37,7 +37,6 @@ signals:
     void loginFinished(const QJsonDocument &doc) const;
 
     void entityLoadError(const int code) const;
-    void entityLoaded(const QJsonObject &entity) const;
     void entitiesLoaded(const QJsonArray &entities) const;
 
     void beforeGetEntity() const;

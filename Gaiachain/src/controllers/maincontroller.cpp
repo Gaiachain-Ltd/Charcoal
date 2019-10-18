@@ -14,6 +14,10 @@
     #include <QtAndroidExtras/QtAndroid>
 #endif
 
+#ifdef USE_COMBOBOX
+#include "session/dummy/fakedatapopulator.h"
+#endif
+
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
@@ -35,7 +39,6 @@ void MainController::setupConnections()
 {
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::onTokenChanged);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
-    connect(&m_sessionManager, &AbstractSessionManager::entityLoaded, &m_dataManager, &DataManager::onEntityLoaded, Qt::DirectConnection);
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded, Qt::DirectConnection);
     connect(&m_sessionManager, &AbstractSessionManager::beforeGetEntity, &m_dataManager, &DataManager::clearModels, Qt::DirectConnection);
 }
@@ -54,14 +57,17 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
                                      "Enums", "Cannot create namespace Enums in QML");
 
     qRegisterMetaType<Enums::Page>("Page");
-    qRegisterMetaType<Enums::UserType>("UserType");
     qRegisterMetaType<Enums::Popup>("Popup");
     qRegisterMetaType<Enums::PopupAction>("PopupAction");
     qRegisterMetaType<Enums::ConnectionState>("ConnectionState");
-    qRegisterMetaType<Enums::SupplyChainAction>("SupplyChainAction");
-    qRegisterMetaType<Enums::ActionProgress>("ActionProgress");
+    qRegisterMetaType<Enums::UserType>("UserType");
+    qRegisterMetaType<Enums::PlaceType>("PlaceType");
     qRegisterMetaType<Enums::PackageType>("PackageType");
+    qRegisterMetaType<Enums::SupplyChainAction>("SupplyChainAction");
 
+#ifdef USE_COMBOBOX
+    engine.rootContext()->setContextProperty(QStringLiteral("fakeLogins"), FakeDataPopulator::availableLogins());
+#endif
     engine.rootContext()->setContextProperty(QStringLiteral("Utility"), Utility::instance());
     engine.rootContext()->setContextProperty(QStringLiteral("DataGlobals"), DataGlobals::instance());
 

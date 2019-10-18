@@ -13,34 +13,35 @@ ListView {
     spacing: s(Style.middleBigMargin)
     interactive: false
 
+    // TODO update with current solution
     model: ListModel {
         ListElement {
             actionType: Enums.SupplyChainAction.Harvest
-            userType: Enums.UserType.Producer
+            userType: Enums.UserType.SuperUser
         }
         ListElement {
-            actionType: Enums.SupplyChainAction.Fermentation
-            userType: Enums.UserType.Producer
+            actionType: Enums.SupplyChainAction.GrainProcessing
+            userType: Enums.UserType.SuperUser
+        }
+        ListElement {
+            actionType: Enums.SupplyChainAction.SectionReception
+            userType: Enums.UserType.SuperUser
         }
         ListElement {
             actionType: Enums.SupplyChainAction.Bagging
-            userType: Enums.UserType.BaggingPerson
+            userType: Enums.UserType.SuperUser
         }
         ListElement {
-            actionType: Enums.SupplyChainAction.StorageArrival
-            userType: Enums.UserType.Storekeeper
+            actionType: Enums.SupplyChainAction.LotCreation
+            userType: Enums.UserType.SuperUser
         }
         ListElement {
-            actionType: Enums.SupplyChainAction.StorageLot
-            userType: Enums.UserType.Storekeeper
+            actionType: Enums.SupplyChainAction.WarehouseTransport
+            userType: Enums.UserType.SuperUser
         }
         ListElement {
-            actionType: Enums.SupplyChainAction.Transport
-            userType: Enums.UserType.Exporter
-        }
-        ListElement {
-            actionType: Enums.SupplyChainAction.Reception
-            userType: Enums.UserType.Exporter
+            actionType: Enums.SupplyChainAction.ExportReception
+            userType: Enums.UserType.SuperUser
         }
     }
 

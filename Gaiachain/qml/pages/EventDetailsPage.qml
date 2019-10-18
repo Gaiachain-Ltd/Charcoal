@@ -63,7 +63,7 @@ BasePage {
                         Layout.preferredWidth: parent.width * 0.75
 
                         titleText: Helpers.getCurrentIdText() + ":"
-                        contentText: attributes.shipmentId
+                        contentText: attributes.packageId
                     }
                     Items.LayoutSpacer {}
                     Items.ImageButton {

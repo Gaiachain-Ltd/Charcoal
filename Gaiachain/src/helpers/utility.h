@@ -79,6 +79,19 @@ public:
         return variantsMap;
     }
 
+    template<typename Enum,
+             typename = std::enable_if_t<std::is_enum<Enum>::value>>
+    static QList<Enum> generateEnumValues(const Enum &before, const Enum &after)
+    {
+        auto list = std::list<Enum>(static_cast<int>(after) - static_cast<int>(before) - 1);
+        std::generate(list.begin(), list.end(),
+                      [before = before]() mutable {
+            before = static_cast<Enum>(static_cast<int>(before) + 1);
+            return before;
+        });
+        return QList<Enum>::fromStdList(list);
+    }
+
 private:
     Utility();
 

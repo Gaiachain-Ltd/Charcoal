@@ -21,8 +21,6 @@ public:
     QHash<Enums::PackageType, int> packageTypeEvents() const;
     QList<Enums::PackageType> datePackageTypes(const QDate &date) const;
 
-    Q_INVOKABLE static QVariantList availablePackageTypesQml();
-
     Q_INVOKABLE QVariantMap packageTypeEventsQml() const;
     Q_INVOKABLE QVariantList datePackageTypesQml(const QDate &date) const;
 
@@ -32,7 +30,6 @@ signals:
 
 private:
     static const QHash<int, QByteArray> sc_roleNames;
-    static const QVector<Enums::PackageType> sc_availablePackageTypes;
 
     QHash<Enums::PackageType, int> m_packageTypeEvents;
     QHash<QDate, QHash<Enums::PackageType, int> > m_datesPackageTypeEvents;
