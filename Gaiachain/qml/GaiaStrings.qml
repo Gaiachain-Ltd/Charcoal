@@ -11,14 +11,6 @@ QtObject {
 
     readonly property string empty: ""
 
-    readonly property string supplyChainActionHarvest: qsTr("Harvest")
-    readonly property string supplyChainActionFermentation: qsTr("Breaking, Fermenting")
-    readonly property string supplyChainActionBagging: qsTr("Drying / Bagging")
-    readonly property string supplyChainActionStorageArrival: qsTr("Storage")
-    readonly property string supplyChainActionStorageLot: qsTr("Storage")
-    readonly property string supplyChainActionTransport: qsTr("Transport")
-    readonly property string supplyChainActionReception: qsTr("Reception")
-
     readonly property string harvestId: qsTr("Harvest ID")
     readonly property string sacId: qsTr("Sac ID")
     readonly property string lotId: qsTr("Lot ID")
@@ -57,14 +49,17 @@ QtObject {
     readonly property string transactions: qsTr("Transactions")
     readonly property string calendar: qsTr("Calendar")
 
-    readonly property string supplyChainMenuCreateId: qsTr("(Create %1)")
-    readonly property string supplyChainMenuHarvest: supplyChainActionHarvest + "\n" + supplyChainMenuCreateId.arg(harvestId.toUpperCase())
-    readonly property string supplyChainMenuFermentation: supplyChainActionFermentation
-    readonly property string supplyChainMenuBagging: supplyChainActionBagging + "\n" + supplyChainMenuCreateId.arg(sacId.toUpperCase())
-    readonly property string supplyChainMenuStorageArrival: supplyChainActionStorageArrival + "\n" + supplyChainMenuCreateId.arg(arrivalId.toUpperCase())
-    readonly property string supplyChainMenuStorageLot: supplyChainActionStorageLot + "\n" + supplyChainMenuCreateId.arg(lotId.toUpperCase())
-    readonly property string supplyChainMenuTransport: supplyChainActionTransport
-    readonly property string supplyChainMenuReception: supplyChainActionReception
+    readonly property string supplyChainMenuActionHarvest: qsTr("Harvest")
+    readonly property string supplyChainMenuActionGrainProcessing: qsTr("Breaking, Fermentation, Drying")
+    readonly property string supplyChainMenuActionBagging: qsTr("Bagging")
+    readonly property string supplyChainMenuActionLotCreation: qsTr("Lot creation")
+
+    readonly property string supplyChainMenuActionTransport: qsTr("Transport")
+    readonly property string supplyChainMenuActionWarehouseTransport: qsTr("to Central Warehouse")
+
+    readonly property string supplyChainMenuActionReception: qsTr("Reception")
+    readonly property string supplyChainMenuActionSectionReception: qsTr("at the Section")
+    readonly property string supplyChainMenuActionExportReception: qsTr("in Cooperative HQ")
 
     // transactions page
     readonly property string searchForTransaction: qsTr("Search for a transaction")

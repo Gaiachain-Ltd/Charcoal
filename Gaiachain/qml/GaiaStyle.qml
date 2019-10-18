@@ -122,10 +122,10 @@ QtObject {
     readonly property url calendarBlackImgUrl: "qrc:/ui/calendarBlack"
 
     readonly property url supplyChainSubmenuHarvestImgUrl: "qrc:/ui/submenuHarvest"
-    readonly property url supplyChainSubmenuFermentationImgUrl: "qrc:/ui/submenuFermentation"
+    readonly property url supplyChainSubmenuGrainProcessingImgUrl: "qrc:/ui/submenuGrainProcessing"
     readonly property url supplyChainSubmenuBaggingImgUrl: "qrc:/ui/submenuBagging"
-    readonly property url supplyChainSubmenuStorageArrivalImgUrl: "qrc:/ui/submenuStorageArrival"
-    readonly property url supplyChainSubmenuStorageLotImgUrl: "qrc:/ui/submenuStorageLot"
+    readonly property url supplyChainSubmenuLotCreationImgUrl: "qrc:/ui/submenuLotCreation"
+
     readonly property url supplyChainSubmenuTransportImgUrl: "qrc:/ui/submenuTransport"
     readonly property url supplyChainSubmenuReceptionImgUrl: "qrc:/ui/submenuReception"
 

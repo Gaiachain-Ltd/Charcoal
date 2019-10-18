@@ -6,12 +6,13 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "../../common/tags.h"
+#include "../../../common/tags.h"
+#include "../../../helpers/utility.h"
 
 FakeSessionManager::FakeSessionManager(QObject *parent)
     : AbstractSessionManager(parent)
 {
-    m_populator.populateFakeData(sc_initialShipmentsCount, QDateTime::currentDateTime().addDays(-sc_firstShipmentShift));
+    m_populator.populateFakeData(QDate::currentDate().addDays(-sc_firstHarvestShift));
 }
 
 void FakeSessionManager::login(const QString &email, const QString &password)
@@ -40,12 +41,12 @@ void FakeSessionManager::getEntity(const QString &id)
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntitySingle(id); });
 }
 
-void FakeSessionManager::putEntity(const QString &id, const Enums::SupplyChainAction &action, const Enums::ActionProgress &actionProgress)
+void FakeSessionManager::putEntity(const QString &id, const Enums::SupplyChainAction &action, const QVariantMap &properties)
 {
     bool error = (qrand() % 100 == 1);
 
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError(id) : onEntitySaved(id, action, actionProgress); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError(id) : onEntitySaved(id, action, properties); });
 }
 
 int FakeSessionManager::randomWaitTime()
@@ -61,8 +62,10 @@ void FakeSessionManager::onLogin(const QString &email, const QString &password)
     updateConnectionStateAfterRequest(error);
     if (isSuccess) {
         emit loginFinished(QJsonDocument::fromVariant(m_populator.generateUserData(email)) );
+        m_currentUserType = m_populator.userType(email);
     } else {
         emit loginError(error);
+        m_currentUserType = Enums::UserType::Annonymous;
     }
 }
 
@@ -72,6 +75,8 @@ void FakeSessionManager::onLoginError()
 
     updateConnectionStateAfterRequest(error);
     emit loginError(error);
+
+    m_currentUserType = Enums::UserType::Annonymous;
 }
 
 void FakeSessionManager::onEntityError()
@@ -86,42 +91,26 @@ void FakeSessionManager::onEntityAll()
 {
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
-    auto shipmentsHistoryArray = QJsonArray{};
-    auto shipmentsHistory = m_populator.getShipmentsHistory();
-    for (const auto &shipmentId : shipmentsHistory.keys()) {
-        auto shipmentHistory = QVariantMap({ { Tags::id, shipmentId },
-                                             { Tags::history, shipmentsHistory.value(shipmentId) }});
-        shipmentsHistoryArray.append(QJsonObject::fromVariantMap(shipmentHistory));
-    }
-
-    emit entitiesLoaded(shipmentsHistoryArray);
+    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventsHistory()) );
 }
 
-void FakeSessionManager::onEntitySingle(const QString &shipmentId)
+void FakeSessionManager::onEntitySingle(const QString &packageId)
 {
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
-    auto shipmentsHistory = m_populator.getShipmentsHistory();
-    if (!shipmentsHistory.contains(shipmentId)) {
-        emit entityLoadError(-1);
-        return;
-    }
-
-    auto shipmentHistory = QVariantMap({ { Tags::id, shipmentId },
-                                         { Tags::history, shipmentsHistory.value(shipmentId) }});
-    emit entityLoaded(QJsonObject::fromVariantMap(shipmentHistory));
+    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventHistory(packageId)) );
 }
 
-void FakeSessionManager::onEntitySaveError(const QString &shipmentId)
+void FakeSessionManager::onEntitySaveError(const QString &packageId)
 {
     updateConnectionStateAfterRequest(QNetworkReply::HostNotFoundError);
-    emit entitySaveResult(shipmentId, false);
+    emit entitySaveResult(packageId, false);
 }
 
-void FakeSessionManager::onEntitySaved(const QString &shipmentId, const Enums::SupplyChainAction &action, const Enums::ActionProgress &actionProgress)
+void FakeSessionManager::onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QVariantMap &)
 {
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
-    auto result = m_populator.canAddAction(shipmentId, action, actionProgress);
-    emit entitySaveResult(shipmentId, result);
+    auto result = m_populator.canAddAction(packageId, action, m_currentUserType);
+    emit entitySaveResult(packageId, result);
 }

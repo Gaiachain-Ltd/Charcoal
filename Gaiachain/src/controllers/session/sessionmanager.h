@@ -16,7 +16,7 @@ public:
 
     Q_INVOKABLE void getEntity() override;
     Q_INVOKABLE void getEntity(const QString &id) override;
-    Q_INVOKABLE void putEntity(const QString &id, const Enums::SupplyChainAction &action, const Enums::ActionProgress &actionProgress) override;
+    Q_INVOKABLE void putEntity(const QString &id, const Enums::SupplyChainAction &action, const QVariantMap &properties) override;
 
 private:
     RestAPIClient m_client;

@@ -5,10 +5,7 @@
         <file>pages/MainMenuPage.qml</file>
         <file>pages/CalendarPage.qml</file>
         <file>pages/CalendarEventsPage.qml</file>
-        <file>pages/ShipmentDetailsPage.qml</file>
         <file>pages/EventDetailsPage.qml</file>
-        <file>pages/EventsListPage.qml</file>
-        <file>pages/EditableEventDetailsPage.qml</file>
         <file>pages/BasePage.qml</file>
         <file>pages/QRScannerPage.qml</file>
         <file>pages/InformationPopup.qml</file>
@@ -38,7 +35,6 @@
         <file>components/Footer.qml</file>
         <file>components/MenuButton.qml</file>
         <file>components/NavigationHeader.qml</file>
-        <file>components/ShipmentDetailsDelegate.qml</file>
         <file>components/SupplyChainSubmenu.qml</file>
         <file>items/BlockMouseArea.qml</file>
         <file>components/CalendarPackageEventsBars.qml</file>

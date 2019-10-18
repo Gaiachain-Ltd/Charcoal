@@ -39,7 +39,7 @@ signals:
     void tokenChanged(const QString &token) const;
 
 private:
-    Enums::UserType m_userType = Enums::UserType::NotLoggedUser;
+    Enums::UserType m_userType = Enums::UserType::Annonymous;
     QVariantMap m_userData;
 
     void setUserType(const Enums::UserType userType);

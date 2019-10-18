@@ -41,9 +41,10 @@ TARGET = Gaiachain
 HEADERS += \
     src/common/dataglobals.h \
     src/controllers/session/abstractsessionmanager.h \
-    src/controllers/session/fakesessionmanager.h \
+    src/controllers/session/dummy/fakesessionmanager.h \
     src/helpers/typetraits.h \
     src/models/abstractidentityproxymodel.h \
+    src/models/abstractmodel.h \
     src/models/daterangeproxymodel.h \
     src/models/modelchangedextension.h \
     src/models/packagetypeeventsproxymodel.h \
@@ -54,6 +55,7 @@ HEADERS += \
     src/common/enums.h \
     src/common/globals.h \
     src/controllers/pagemanager.h \
+    src/models/producermodel.h \
     src/rest/baserequest.h \
     src/rest/loginrequest.h \
     src/rest/restapiclient.h \
@@ -61,20 +63,20 @@ HEADERS += \
     src/controllers/usermanager.h \
     src/controllers/abstractmanager.h \
     src/common/location.h \
-    src/models/shipmenteventsproxy.h \
     src/models/abstractsortfilterproxymodel.h \
     src/common/tags.h \
     src/rest/entityrequest.h \
     src/models/latesteventsproxy.h \
     src/common/logs.h \
-    src/controllers/session/fakedatapopulator.h
+    src/controllers/session/dummy/fakedatapopulator.h
 
 SOURCES += src/main.cpp \
     src/common/dataglobals.cpp \
     src/common/globals.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
-    src/controllers/session/fakesessionmanager.cpp \
+    src/controllers/session/dummy/fakesessionmanager.cpp \
     src/models/abstractidentityproxymodel.cpp \
+    src/models/abstractmodel.cpp \
     src/models/daterangeproxymodel.cpp \
     src/models/modelchangedextension.cpp \
     src/models/packagetypeeventsproxymodel.cpp \
@@ -83,6 +85,7 @@ SOURCES += src/main.cpp \
     src/controllers/maincontroller.cpp \
     src/controllers/datamanager.cpp \
     src/controllers/pagemanager.cpp \
+    src/models/producermodel.cpp \
     src/rest/baserequest.cpp \
     src/rest/loginrequest.cpp \
     src/rest/restapiclient.cpp \
@@ -90,10 +93,9 @@ SOURCES += src/main.cpp \
     src/controllers/usermanager.cpp \
     src/rest/entityrequest.cpp \
     src/controllers/abstractmanager.cpp \
-    src/models/shipmenteventsproxy.cpp \
     src/models/abstractsortfilterproxymodel.cpp \
     src/models/latesteventsproxy.cpp \
-    src/controllers/session/fakedatapopulator.cpp
+    src/controllers/session/dummy/fakedatapopulator.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

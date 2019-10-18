@@ -19,7 +19,7 @@ BasePage {
         id: packageModel
 
         function initData() {
-            var availablePackageTypes = calendarPackageTypesModel.availablePackageTypesQml()
+            var availablePackageTypes = DataGlobals.availablePackageTypes
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                 var packageType = availablePackageTypes[idx]
                 append({"packageColor": String(Helpers.packageTypeColor(packageType)),
@@ -103,7 +103,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: latestEventsProxyModel
+            viewModel: latestEventsModel
         }
     }
 }

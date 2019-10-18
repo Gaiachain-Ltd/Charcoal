@@ -19,12 +19,12 @@ namespace Tags {
     const QLatin1String timestamp = QLatin1String("timestamp");
     const QLatin1String dateTo = QLatin1String("to_date");
     const QLatin1String action = QLatin1String("action");
-    const QLatin1String actionProgress = QLatin1String("action_progress");
+    const QLatin1String properties = QLatin1String("properties");
     const QLatin1String history = QLatin1String("history");
     const QLatin1String agent = QLatin1String("agent");
+    const QLatin1String companyId = QLatin1String("company_id");
     const QLatin1String companyName = QLatin1String("company_name");
-    const QLatin1String company = QLatin1String("company");
-    const QLatin1String location = QLatin1String("location");
+    const QLatin1String companyLocation = QLatin1String("company_location");
     const QLatin1String status = QLatin1String("status");
     const QLatin1String owner = QLatin1String("owner");
 };

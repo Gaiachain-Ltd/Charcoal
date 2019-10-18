@@ -1,26 +1,24 @@
-#ifndef EVENTMODEL_H
-#define EVENTMODEL_H
+#ifndef PRODUCERMODEL_H
+#define PRODUCERMODEL_H
 
 #include "abstractmodel.h"
 
 #include <QHash>
 
-class EventModel : public AbstractModel
+class ProducerModel : public AbstractModel
 {
     Q_OBJECT
 
 public:
     enum ModelRole {
-        PackageId = Qt::UserRole,
-        UserRole,
-        CooperativeId,
-        Timestamp,
-        Action,
-        Properties,
+        ProducerId = Qt::UserRole,
+        Name,
+        Village,
+        ParcelCodes,
         LastRole
     }; //!!! Add new roles at the end
 
-    explicit EventModel(QObject *parent = nullptr);
+    explicit ProducerModel(QObject *parent = nullptr);
 
     int lastRole() const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -29,4 +27,4 @@ private:
     static const QHash<int, QByteArray> sc_roleNames;
 };
 
-#endif // EVENTMODEL_H
+#endif // PRODUCERMODEL_H

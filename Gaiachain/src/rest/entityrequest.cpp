@@ -91,7 +91,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &dateFrom, cons
     mType = Type::Get;
 }
 
-EntityRequest::EntityRequest(const QString &token, const QString &id, const Enums::SupplyChainAction action, const Enums::ActionProgress actionProgress)
+EntityRequest::EntityRequest(const QString &token, const QString &id, const Enums::SupplyChainAction action, const QVariantMap &properties)
     : BaseRequest(ADDRESS_DATA.arg(id), token)
     , m_requestType(RequestEntityPut)
 {
@@ -100,7 +100,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &id, const Enum
         QJsonObject object;
         QString actionString;
         object.insert(Tags::action, DataGlobals::supplyChainActionToString(action));
-        object.insert(Tags::actionProgress, DataGlobals::actionProgressToString(actionProgress));
+        object.insert(Tags::properties, QJsonObject::fromVariantMap(properties));
         mRequestDocument.setObject(object);
 
         mType = Type::Put;

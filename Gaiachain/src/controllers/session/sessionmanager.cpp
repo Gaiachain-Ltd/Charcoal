@@ -73,7 +73,7 @@ void SessionManager::getEntity(const QString &id)
     };
 
     auto finishLambda = [&](const QJsonDocument &reply) {
-        emit entityLoaded(reply.object());
+        emit entitiesLoaded(reply.array());
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);
@@ -107,9 +107,9 @@ void SessionManager::getEntities(const QJsonArray &ids)
     sendRequest(request);
 }
 
-void SessionManager::putEntity(const QString &id, const Enums::SupplyChainAction &action, const Enums::ActionProgress &actionProgress)
+void SessionManager::putEntity(const QString &id, const Enums::SupplyChainAction &action, const QVariantMap &properties)
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, actionProgress);
+    auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, properties);
 
     auto errorLambda = [&, id](const QString &, const int) {
         emit entitySaveResult(id, false);

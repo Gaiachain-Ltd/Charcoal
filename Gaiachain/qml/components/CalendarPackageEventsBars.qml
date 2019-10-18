@@ -16,7 +16,7 @@ Item {
         id: packageTypeActionsModel
 
         function initData() {
-            var availablePackageTypes = calendarPackageTypesModel.availablePackageTypesQml();
+            var availablePackageTypes = DataGlobals.availablePackageTypes
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                 var packageType = availablePackageTypes[idx]
                 append({ "packageType": packageType,
@@ -29,7 +29,7 @@ Item {
         function updateData() {
             var packageTypeEvents = calendarPackageTypesModel.packageTypeEventsQml();
 
-            var availablePackageTypes = calendarPackageTypesModel.availablePackageTypesQml();
+            var availablePackageTypes = DataGlobals.availablePackageTypes
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                 var packageType = availablePackageTypes[idx]
                 get(idx).eventsCount = packageTypeEvents[String(packageType)]

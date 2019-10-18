@@ -5,20 +5,12 @@
 #include "../common/dataglobals.h"
 #include "../helpers/utility.h"
 
-const QVector<Enums::PackageType> PackageTypeEventsProxyModel::sc_availablePackageTypes = {
-        Enums::PackageType::Harvest, Enums::PackageType::Sac, Enums::PackageType::Lot };
-
 PackageTypeEventsProxyModel::PackageTypeEventsProxyModel(QObject *parent)
     : AbstractIdentityProxyModel(parent)
 {
     connect(this, &QAbstractItemModel::rowsInserted, this, &PackageTypeEventsProxyModel::onRowsInserted);
     connect(this, &QAbstractItemModel::rowsAboutToBeRemoved, this, &PackageTypeEventsProxyModel::onRowsToBeRemoved);
     connect(this, &QAbstractItemModel::modelReset, this, &PackageTypeEventsProxyModel::onModelReset);
-}
-
-QVector<Enums::PackageType> PackageTypeEventsProxyModel::availablePackageTypes()
-{
-    return sc_availablePackageTypes;
 }
 
 QHash<Enums::PackageType, int> PackageTypeEventsProxyModel::packageTypeEvents() const
@@ -31,18 +23,13 @@ QList<Enums::PackageType> PackageTypeEventsProxyModel::datePackageTypes(const QD
     auto datePackageTypes = QList<Enums::PackageType>{};
 
     auto datePackageTypeEvents = m_datesPackageTypeEvents.value(date);
-    for (const auto &packageType : sc_availablePackageTypes) {
+    for (const auto &packageType : DataGlobals::availablePackageTypes()) {
         if (datePackageTypeEvents.value(packageType) > 0) {
             datePackageTypes.append(packageType);
         }
     }
 
     return datePackageTypes;
-}
-
-QVariantList PackageTypeEventsProxyModel::availablePackageTypesQml()
-{
-    return Utility::toVariantList(availablePackageTypes(), QMetaType::Int);
 }
 
 QVariantMap PackageTypeEventsProxyModel::packageTypeEventsQml() const
@@ -136,7 +123,7 @@ void PackageTypeEventsProxyModel::onModelReset()
     m_packageTypeEvents.clear();
     m_datesPackageTypeEvents.clear();
 
-    for (const auto &packageType : sc_availablePackageTypes) {
+    for (const auto &packageType : DataGlobals::availablePackageTypes()) {
         emit packageTypeEventsChanged(packageType);
     }
     for (const auto &date : dates) {

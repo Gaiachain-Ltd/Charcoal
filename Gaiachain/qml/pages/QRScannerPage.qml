@@ -17,7 +17,7 @@ BasePage {
 
         attributes["action"] = scannedIdAction
         attributes["timestamp"] = Number(new Date())
-        attributes["shipmentId"] = scannedId
+        attributes["packageId"] = scannedId
 
         pageManager.enter(Enums.Page.EditableEventDetails, { "attributes": attributes })
     }

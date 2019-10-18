@@ -13,19 +13,14 @@ ComboBox
     property var passwordInput
 
     function updateInputsProperties() {
-        loginInput.readOnly = useDummy
         loginInput.text = useDummy ?  Qt.binding(function() { return currentText }) : ""
-
-        passwordInput.enabled = useDummy
         passwordInput.text = useDummy ?  "test1234" : ""
     }
 
     Component.onCompleted: updateInputsProperties()
     onUseDummyChanged: updateInputsProperties()
 
-    model: ["producer@gaiachain.io", "bagging@gaiachain.io",
-            "storekeeper@gaiachain.io", "exporter@gaiachain.io",
-            "wrong@gaiachain.io"]
+    model: fakeLogins
     visible: useDummy
 
     anchors.centerIn: parent
