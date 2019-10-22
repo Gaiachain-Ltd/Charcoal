@@ -53,6 +53,7 @@ BasePage {
 
         Items.BasicCheckBox {
             checked: true
+            visible: userManager.loggedIn
 
             text: Strings.onlyMyTransactions
         }
