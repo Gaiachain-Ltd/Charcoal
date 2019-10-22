@@ -77,7 +77,13 @@ BasePage {
 
                 source: Style.calendarBlackImgUrl
 
-                onClicked: pageManager.enter(Enums.Page.Calendar)
+                onClicked: {
+                    var today = new Date()
+                    pageManager.enter(Enums.Page.Calendar, {
+                                        "currentDay": today.getDate(),
+                                        "currentMonth": today.getMonth(),
+                                        "currentYear": today.getFullYear() })
+                }
             }
         }
 
