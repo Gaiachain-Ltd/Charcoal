@@ -46,5 +46,6 @@
         <file>components/dummy/DummyLoginCombobox.qml</file>
         <file>items/BasicCheckBox.qml</file>
         <file>items/RectCheckBox.qml</file>
+        <file>pages/PackageDataPage.qml</file>
     </qresource>
 </RCC>

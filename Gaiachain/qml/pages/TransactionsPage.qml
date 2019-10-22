@@ -111,6 +111,8 @@ BasePage {
             Layout.fillHeight: true
 
             viewModel: latestEventsModel
+
+            onDelegateClicked: pageManager.enter(Enums.Page.PackageData, data)
         }
     }
 }

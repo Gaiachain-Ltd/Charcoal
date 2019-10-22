@@ -34,6 +34,7 @@ namespace Enums {
         QRScanner,              // TODO check if still needed
         Transactions,
         Tracking,
+        PackageData,
 
         PageCount
     };
