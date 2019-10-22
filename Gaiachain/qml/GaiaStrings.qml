@@ -61,6 +61,15 @@ QtObject {
     readonly property string supplyChainMenuActionSectionReception: qsTr("at the Section")
     readonly property string supplyChainMenuActionExportReception: qsTr("in Cooperative HQ")
 
+    // events action description
+    readonly property string actionHarvestDescriptionStatus: qsTr("Harvest done | Harvest ID created")
+    readonly property string actionGrainProcessingDescriptionStatus: qsTr("Breaking, fermentation and drying finished")
+    readonly property string actionSectionReceptionDescriptionStatus: qsTr("Received at the section")
+    readonly property string actionBaggingDescriptionStatus: qsTr("Bagging finished | Sac ID created")
+    readonly property string actionLotCreationDescriptionStatus: qsTr("Lot ID created")
+    readonly property string actionWarehouseTransportDescriptionStatus: qsTr("Transport sent to Central Warehouse")
+    readonly property string actionExportReceptionDescriptionStatus: qsTr("Received in the Cooperative HQ")
+
     // transactions page
     readonly property string searchForTransaction: qsTr("Search for a transaction")
     readonly property string onlyMyTransactions: qsTr("Only my transactions")

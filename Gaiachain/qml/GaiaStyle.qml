@@ -89,6 +89,7 @@ QtObject {
     // Components sizes
     readonly property int headerHeight: 200
     readonly property int footerHeight: 200
+    readonly property int listViewDelegateDefaultHeight: 120
     readonly property int separatorHeight: 1
 
     // urls
