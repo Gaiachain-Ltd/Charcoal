@@ -27,6 +27,7 @@ namespace Enums {
     enum class Page {
         InvalidPage = -1,
         CalendarEvents,
+        CalendarYear,
         Calendar,
         Login,
         LoginLoading,

@@ -9,6 +9,7 @@ Button
 
     property color borderColor: background.color
     property int borderRadius: s(Style.buttonRadius)
+    property int borderWidth: sr(Style.controlDefaultBorderWidth)
 
     property color disabledColorTint: Style.disabledColorTint
 
@@ -25,7 +26,7 @@ Button
         radius: top.borderRadius
         color: top.enabled ? palette.button : Qt.tint(palette.button, top.disabledColorTint)
         border {
-            width: sr(1)
+            width: top.borderWidth
             color: top.borderColor
         }
     }
