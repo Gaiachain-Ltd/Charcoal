@@ -13,7 +13,7 @@ BasePage {
     id: top
 
     function enterEventDetailsPage() {
-        var attributes = userManager.userData
+        var attributes = {}
 
         attributes["action"] = scannedIdAction
         attributes["timestamp"] = Number(new Date())

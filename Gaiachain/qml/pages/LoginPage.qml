@@ -130,8 +130,7 @@ BasePage {
             onClicked: {
                 pageManager.enter(Enums.Page.LoginLoading, { "skipLogin": true })
 
-                userManager.skipLogin()
-                sessionManager.getEntity()
+                sessionManager.getFullData()
             }
         }
 

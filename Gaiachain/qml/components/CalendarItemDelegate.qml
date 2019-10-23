@@ -58,7 +58,7 @@ Item {
             }
 
             function updateData() {
-                var datePackageTypes = calendarPackageTypesModel.datePackageTypesQml(model.date);
+                var datePackageTypes = packageTypesCompanyCalendarModel.datePackageTypesQml(model.date);
 
                 var availablePackageTypes = DataGlobals.availablePackageTypes
                 for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
@@ -83,7 +83,6 @@ Item {
                 }
             }
         }
-
         Connections {
             target: model
             onMonthChanged: packageTypesModel.updateData()

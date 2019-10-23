@@ -79,6 +79,23 @@ public:
         return variantsMap;
     }
 
+    template <typename C, std::enable_if_t<is_qt_multi_dictionary_type<C>::value, int> = 0>
+    static QVariantMap toVariantsMap(const C &dictionaryType,
+                                     QMetaType::Type converToTypeKey = QMetaType::Void, QMetaType::Type converToTypeValue = QMetaType::Void)
+    {
+        auto variantsMap = QVariantMap{};
+        for (const auto &key : dictionaryType.uniqueKeys()) {
+            auto variantKey = QVariant::fromValue(key);
+            if (converToTypeKey != QMetaType::Void) {
+                variantKey.convert(converToTypeKey);
+            }
+
+            auto variantListValue = toVariantList(dictionaryType.values(key), converToTypeValue);
+            variantsMap.insert(variantKey.toString(), variantListValue);
+        }
+        return variantsMap;
+    }
+
     template<typename Enum,
              typename = std::enable_if_t<std::is_enum<Enum>::value>>
     static QList<Enum> generateEnumValues(const Enum &before, const Enum &after)

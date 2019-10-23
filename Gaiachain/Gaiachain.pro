@@ -45,8 +45,11 @@ HEADERS += \
     src/helpers/typetraits.h \
     src/models/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
+    src/models/companyeventsproxymodel.h \
     src/models/daterangeproxymodel.h \
+    src/models/latesteventsproxymodel.h \
     src/models/modelchangedextension.h \
+    src/models/packagedataproxymodel.h \
     src/models/packagetypeeventsproxymodel.h \
     src/models/eventmodel.h \
     src/helpers/utility.h \
@@ -55,7 +58,10 @@ HEADERS += \
     src/common/enums.h \
     src/common/globals.h \
     src/controllers/pagemanager.h \
+    src/models/packagetypeproxymodel.h \
     src/models/producermodel.h \
+    src/models/searcheventsproxymodel.h \
+    src/common/packagedata.h \
     src/rest/baserequest.h \
     src/rest/loginrequest.h \
     src/rest/restapiclient.h \
@@ -66,26 +72,31 @@ HEADERS += \
     src/models/abstractsortfilterproxymodel.h \
     src/common/tags.h \
     src/rest/entityrequest.h \
-    src/models/latesteventsproxy.h \
     src/common/logs.h \
     src/controllers/session/dummy/fakedatapopulator.h
 
 SOURCES += src/main.cpp \
+    src/common/packagedata.cpp \
     src/common/dataglobals.cpp \
     src/common/globals.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/dummy/fakesessionmanager.cpp \
     src/models/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
+    src/models/companyeventsproxymodel.cpp \
     src/models/daterangeproxymodel.cpp \
+    src/models/latesteventsproxymodel.cpp \
     src/models/modelchangedextension.cpp \
+    src/models/packagedataproxymodel.cpp \
     src/models/packagetypeeventsproxymodel.cpp \
     src/models/eventmodel.cpp \
     src/helpers/utility.cpp \
     src/controllers/maincontroller.cpp \
     src/controllers/datamanager.cpp \
     src/controllers/pagemanager.cpp \
+    src/models/packagetypeproxymodel.cpp \
     src/models/producermodel.cpp \
+    src/models/searcheventsproxymodel.cpp \
     src/rest/baserequest.cpp \
     src/rest/loginrequest.cpp \
     src/rest/restapiclient.cpp \
@@ -94,7 +105,6 @@ SOURCES += src/main.cpp \
     src/rest/entityrequest.cpp \
     src/controllers/abstractmanager.cpp \
     src/models/abstractsortfilterproxymodel.cpp \
-    src/models/latesteventsproxy.cpp \
     src/controllers/session/dummy/fakedatapopulator.cpp
 
 RESOURCES +=  \

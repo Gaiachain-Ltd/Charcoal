@@ -52,7 +52,7 @@ Items.GenericPanel
 
         function onLoginReady() {
             loginReady = true
-            sessionManager.getEntity()
+            sessionManager.getFullData()
         }
         function onAnimationFinished() {
             animationFinished = true

@@ -28,14 +28,27 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("dataManager"), this);
     engine.rootContext()->setContextProperty(QStringLiteral("calendarModel"), &m_calendarModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("calendarPackageTypesModel"), &m_calendarPackagesTypesModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("companyCalendarModel"), &m_companyCalendarModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("packagesCompanyCalendarModel"), &m_packagesCalendarModel);
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsModel"), &m_dateEventsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("latestDateEventsModel"), &m_latestDateEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("companyLatestDateEventsModel"), &m_companyLatestDateEventsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("latestEventsModel"), &m_latestEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("searchLatestEventsModel"), &m_searchLatestEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("companySearchLatestEventsModel"), &m_companySearchLatestEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeCompanySearchLatestEventsModel"), &m_packagesTypeCompanySearchLatestEventsModel);
+}
+
+void DataManager::updateCompanyId(const QString &companyId)
+{
+    m_companyCalendarModel.setCompanyId(companyId);
+    m_companyLatestDateEventsModel.setCompanyId(companyId);
+    m_companySearchLatestEventsModel.setCompanyId(companyId);
 }
 
 void DataManager::clearModels()
 {
+    m_relationsModel.clear();
     m_eventModel.clearModel();
 }
 
@@ -49,15 +62,41 @@ void DataManager::onEntitiesLoaded(const QJsonArray &entities)
     }
 }
 
+void DataManager::onRelationsLoaded(const QJsonObject &relations)
+{
+    for (const auto &key : relations.keys()) {
+        for (auto value : relations.value(key).toArray()) {
+            m_relationsModel.insert(key, value.toString());
+        }
+    }
+}
+
+PackageData DataManager::getPackageData(const QString &packageId) const
+{
+    auto packageData = PackageData{};
+    packageData.id = packageId;
+    packageData.relatedPackages = m_relationsModel.values(packageId);
+    m_packageDataModel.fillPackageData(packageData);
+
+    return packageData;
+}
+
 void DataManager::setupModels()
 {
+    m_packageDataModel.setSourceModel(&m_eventModel);
+
     m_calendarModel.setSourceModel(&m_eventModel);
-    m_calendarPackagesTypesModel.setSourceModel(&m_calendarModel);
+    m_companyCalendarModel.setSourceModel(&m_calendarModel);
+    m_packagesCalendarModel.setSourceModel(&m_companyCalendarModel);
 
     m_dateEventsModel.setSourceModel(&m_eventModel);
     m_latestDateEventsModel.setSourceModel(&m_dateEventsModel);
+    m_companyLatestDateEventsModel.setSourceModel(&m_latestEventsModel);
 
     m_latestEventsModel.setSourceModel(&m_eventModel);
+    m_searchLatestEventsModel.setSourceModel(&m_latestEventsModel);
+    m_companySearchLatestEventsModel.setSourceModel(&m_searchLatestEventsModel);
+    m_packagesTypeCompanySearchLatestEventsModel.setSourceModel(&m_companySearchLatestEventsModel);
 }
 
 QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)

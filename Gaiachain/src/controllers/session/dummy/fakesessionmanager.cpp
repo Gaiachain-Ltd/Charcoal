@@ -23,14 +23,20 @@ void FakeSessionManager::login(const QString &email, const QString &password)
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onLoginError() : onLogin(email, password); });
 }
 
-void FakeSessionManager::getEntity()
+void FakeSessionManager::getRelations(const QString &id)
 {
-    emit beforeGetEntity();
-
     bool error = (qrand() % 100 == 1);
 
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityAll(); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelationsSingle(id); });
+}
+
+void FakeSessionManager::getEntities(const QStringList &ids)
+{
+    bool error = (qrand() % 100 == 1);
+
+    updateConnectionStateBeforeRequest();
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityMultiple(ids); });
 }
 
 void FakeSessionManager::getEntity(const QString &id)
@@ -49,9 +55,35 @@ void FakeSessionManager::putEntity(const QString &id, const Enums::SupplyChainAc
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError(id) : onEntitySaved(id, action, properties); });
 }
 
+void FakeSessionManager::getAllRelations()
+{
+    bool error = (qrand() % 100 == 1);
+
+    updateConnectionStateBeforeRequest();
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelationsAll(); });
+}
+
+void FakeSessionManager::getAllEntities()
+{
+    bool error = (qrand() % 100 == 1);
+
+    updateConnectionStateBeforeRequest();
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityAll(); });
+}
+
 int FakeSessionManager::randomWaitTime()
 {
     return qrand() % 1000;
+}
+
+void FakeSessionManager::onLoginError()
+{
+    const auto error = QNetworkReply::HostNotFoundError;
+
+    updateConnectionStateAfterRequest(error);
+    emit loginError(error);
+
+    m_currentUserType = Enums::UserType::Annonymous;
 }
 
 void FakeSessionManager::onLogin(const QString &email, const QString &password)
@@ -69,14 +101,26 @@ void FakeSessionManager::onLogin(const QString &email, const QString &password)
     }
 }
 
-void FakeSessionManager::onLoginError()
+void FakeSessionManager::onRelationsError()
 {
     const auto error = QNetworkReply::HostNotFoundError;
 
     updateConnectionStateAfterRequest(error);
-    emit loginError(error);
+    emit relationsLoadError(error);
+}
 
-    m_currentUserType = Enums::UserType::Annonymous;
+void FakeSessionManager::onRelationsAll()
+{
+    updateConnectionStateAfterRequest(QNetworkReply::NoError);
+
+    emit packagesRelationsLoaded(QJsonObject::fromVariantMap(m_populator.getPackagesRelations()) );
+}
+
+void FakeSessionManager::onRelationsSingle(const QString &packageId)
+{
+    updateConnectionStateAfterRequest(QNetworkReply::NoError);
+
+    emit packageRelationsLoaded(QJsonArray::fromVariantList(m_populator.getPackageRelations(packageId)) );
 }
 
 void FakeSessionManager::onEntityError()
@@ -92,6 +136,13 @@ void FakeSessionManager::onEntityAll()
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
     emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventsHistory()) );
+}
+
+void FakeSessionManager::onEntityMultiple(const QStringList &packagesId)
+{
+    updateConnectionStateAfterRequest(QNetworkReply::NoError);
+
+    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventHistory(packagesId)) );
 }
 
 void FakeSessionManager::onEntitySingle(const QString &packageId)

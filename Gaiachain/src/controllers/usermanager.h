@@ -11,20 +11,21 @@ class UserManager : public AbstractManager
 {
     Q_OBJECT
     Q_PROPERTY(QString login READ getLogin NOTIFY loginChanged)
+    Q_PROPERTY(QString companyId READ getCompanyId NOTIFY companyIdChanged)
     Q_PROPERTY(Enums::UserType userType READ getUserType NOTIFY userTypeChanged)
-    Q_PROPERTY(QVariantMap userData READ userData CONSTANT)
     Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
 public:
     explicit UserManager(QObject *parent = nullptr);
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
-    Q_INVOKABLE void skipLogin();
     Q_INVOKABLE void logOut();
 
     bool isLoggedIn() const;
 
     QString getLogin() const;
+    QString getCompanyId() const;
+
     Enums::UserType getUserType() const;
 
     QVariantMap userData() const;
@@ -33,16 +34,22 @@ public slots:
     void parseLoginData(const QJsonDocument &doc);
 
 signals:
-    void loginChanged(const QString &getLogin) const;
+    void tokenChanged(const QString &token) const;
+
+    void loginChanged(QString login);
+    void companyIdChanged(QString companyId);
+    void userDataChanged(const QVariantMap &userData) const;
+
     void userTypeChanged(Enums::UserType userType) const;
     void loggedInChanged(bool isLoggedIn) const;
-    void tokenChanged(const QString &token) const;
 
 private:
     Enums::UserType m_userType = Enums::UserType::Annonymous;
     QVariantMap m_userData;
 
     void setUserType(const Enums::UserType userType);
+    QString m_login;
+    QString m_company;
 };
 
 #endif // USERMANAGER_H

@@ -16,4 +16,8 @@ template<typename V> struct is_qt_dictionary_type : std::false_type{};
 template<typename K, typename V> struct is_qt_dictionary_type<QMap<K, V>> : std::true_type{};
 template<typename K, typename V> struct is_qt_dictionary_type<QHash<K, V>> : std::true_type{};
 
+template<typename V> struct is_qt_multi_dictionary_type : std::false_type{};
+template<typename K, typename V> struct is_qt_multi_dictionary_type<QMultiMap<K, V>> : std::true_type{};
+template<typename K, typename V> struct is_qt_multi_dictionary_type<QMultiHash<K, V>> : std::true_type{};
+
 #endif // TYPETRAITS_H
