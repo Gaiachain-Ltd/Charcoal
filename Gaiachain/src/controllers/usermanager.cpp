@@ -14,7 +14,15 @@
 
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
-{}
+{
+    connect(this, &UserManager::userDataChanged,
+            this, [this]() {
+        emit loginChanged(getLogin());
+        emit companyIdChanged(getCompanyId());
+    });
+    connect(this, &UserManager::loggedInChanged,
+            this, [this]() { emit loginChanged(getLogin()); });
+}
 
 bool UserManager::isLoggedIn() const
 {
@@ -26,20 +34,23 @@ QString UserManager::getLogin() const
     return isLoggedIn() ? m_userData[Tags::email].toString() : QString{};
 }
 
+QString UserManager::getCompanyId() const
+{
+    return m_userData[Tags::companyId].toString();
+}
+
 void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("userManager"), this);
 }
 
-void UserManager::skipLogin()
-{
-    setUserType(Enums::UserType::Annonymous);
-}
-
 void UserManager::logOut()
 {
-    setUserType(Enums::UserType::Annonymous);
     m_userData.clear();
+
+    setUserType(Enums::UserType::Annonymous);
+    emit tokenChanged({});
+    emit userDataChanged(m_userData);
 }
 
 Enums::UserType UserManager::getUserType() const
@@ -54,18 +65,17 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
     m_userData.insert(Tags::email, obj.value(Tags::email).toString());
     m_userData.insert(Tags::companyId, obj.value(Tags::companyId).toString());
     m_userData.insert(Tags::companyName, obj.value(Tags::companyName).toString());
-    const QJsonArray locationArray = obj.value(Tags::companyLocation).toArray();
-    Location location;
-    location.lat = locationArray.at(0).toDouble();
-    location.lon = locationArray.at(1).toDouble();
-    m_userData.insert(Tags::companyLocation, QVariant::fromValue(location));
-    const QString &role = obj.value(Tags::role).toString();
-    const Enums::UserType userType = DataGlobals::userTypeFromString(role);
 
-    emit tokenChanged(obj.value(Tags::token).toString());
+    const auto locationArray = obj.value(Tags::companyLocation).toArray();
+    m_userData.insert(Tags::companyLocation, QVariant::fromValue(Location{ locationArray.at(0).toDouble(),
+                                                                    locationArray.at(1).toDouble() }));
+
+    const auto role = obj.value(Tags::role).toString();
+    const auto userType = DataGlobals::userTypeFromString(role);
 
     setUserType(userType);
-    emit loginChanged(getLogin());
+    emit tokenChanged(obj.value(Tags::token).toString());
+    emit userDataChanged(m_userData);
 }
 
 QVariantMap UserManager::userData() const
@@ -85,6 +95,5 @@ void UserManager::setUserType(const Enums::UserType userType)
     if (prevUserType == Enums::UserType::Annonymous ||
             userType == Enums::UserType::Annonymous) {
         emit loggedInChanged(isLoggedIn());
-        emit loginChanged(getLogin());
     }
 }

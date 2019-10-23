@@ -33,35 +33,14 @@ void SessionManager::login(const QString &email, const QString &password)
     sendRequest(request);
 }
 
-void SessionManager::getEntity()
+void SessionManager::getRelations(const QString &id)
 {
-    emit beforeGetEntity();
-    auto request = QSharedPointer<EntityRequest>::create(m_token);
+    // TODO implement
+}
 
-    auto errorLambda = [&](const QString &, const int code) {
-        emit entityLoadError(code);
-    };
-
-    auto finishLambda = [&](const QJsonDocument &reply) {
-        const QJsonArray &array = reply.array();
-        QJsonArray::const_iterator it = array.constBegin();
-        QJsonArray batchArray;
-        while(it != array.constEnd()) {
-            batchArray.push_back(*it);
-            if (batchArray.size() > MAX_BATCH_SIZE) {
-                this->getEntities(batchArray);
-                batchArray = QJsonArray();
-            }
-            ++it;
-        }
-        if (batchArray.size() > 0)
-            this->getEntities(batchArray);
-    };
-
-    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-    connect(request.data(), &BaseRequest::replyError, errorLambda);
-
-    sendRequest(request);
+void SessionManager::getEntities(const QStringList &ids)
+{
+    // TODO implement
 }
 
 void SessionManager::getEntity(const QString &id)
@@ -109,14 +88,51 @@ void SessionManager::getEntities(const QJsonArray &ids)
 
 void SessionManager::putEntity(const QString &id, const Enums::SupplyChainAction &action, const QVariantMap &properties)
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, properties);
+    if (checkValidToken()) {
+        auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, properties);
 
-    auto errorLambda = [&, id](const QString &, const int) {
-        emit entitySaveResult(id, false);
+        auto errorLambda = [&, id](const QString &, const int) {
+            emit entitySaveResult(id, false);
+        };
+
+        auto finishLambda = [&, id](const QJsonDocument &) {
+            emit entitySaveResult(id, true);
+        };
+
+        connect(request.data(), &BaseRequest::requestFinished, finishLambda);
+        connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+        sendRequest(request);
+    }
+}
+
+void SessionManager::getAllRelations()
+{
+    // TODO implement
+}
+
+void SessionManager::getAllEntities()
+{
+    auto request = QSharedPointer<EntityRequest>::create(m_token);
+
+    auto errorLambda = [&](const QString &, const int code) {
+        emit entityLoadError(code);
     };
 
-    auto finishLambda = [&, id](const QJsonDocument &) {
-        emit entitySaveResult(id, true);
+    auto finishLambda = [&](const QJsonDocument &reply) {
+        const QJsonArray &array = reply.array();
+        QJsonArray::const_iterator it = array.constBegin();
+        QJsonArray batchArray;
+        while(it != array.constEnd()) {
+            batchArray.push_back(*it);
+            if (batchArray.size() > MAX_BATCH_SIZE) {
+                this->getEntities(batchArray);
+                batchArray = QJsonArray();
+            }
+            ++it;
+        }
+        if (batchArray.size() > 0)
+            this->getEntities(batchArray);
     };
 
     connect(request.data(), &BaseRequest::requestFinished, finishLambda);

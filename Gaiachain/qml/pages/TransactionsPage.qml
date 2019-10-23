@@ -22,8 +22,9 @@ BasePage {
             var availablePackageTypes = DataGlobals.availablePackageTypes
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                 var packageType = availablePackageTypes[idx]
-                append({"packageColor": String(Helpers.packageTypeColor(packageType)),
-                        "packageName": Helpers.packageTypeName(packageType)})
+                append({"packageType": packageType,
+                           "packageColor": String(Helpers.packageTypeColor(packageType)),
+                           "packageName": Helpers.packageTypeName(packageType)})
             }
         }
 
@@ -48,14 +49,23 @@ BasePage {
             placeholderText: Strings.searchForTransaction
             iconSource: Style.searchImgUrl
             iconEdge: Enums.Edge.RightEdge
+
+            onTextChanged: searchLatestEventsModel.search(text)
         }
 
 
         Items.BasicCheckBox {
+            function updateCompanyOnlyFiltering() {
+                companySearchLatestEventsModel.active = checked
+            }
+
             checked: true
             visible: userManager.loggedIn
 
             text: Strings.onlyMyTransactions
+
+            Component.onCompleted: updateCompanyOnlyFiltering()
+            onCheckedChanged: updateCompanyOnlyFiltering()
         }
 
         RowLayout {
@@ -91,7 +101,12 @@ BasePage {
             Layout.fillWidth: true
 
             Repeater {
+                id: packagesFilteringRepeater
                 model: packageModel
+
+                function updatePackageTypeFiltering(packageType, checked) {
+                    packagesTypeCompanySearchLatestEventsModel.setPackageTypeFiltering(packageType, checked)
+                }
 
                 Items.RectCheckBox {
                     Layout.fillWidth: true
@@ -102,6 +117,9 @@ BasePage {
                     checkedColor: packageColor
 
                     text: packageName
+
+                    Component.onCompleted: packagesFilteringRepeater.updatePackageTypeFiltering(packageType, checked)
+                    onCheckedChanged: packagesFilteringRepeater.updatePackageTypeFiltering(packageType, checked)
                 }
             }
         }
@@ -110,7 +128,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: latestEventsModel
+            viewModel: packagesTypeCompanySearchLatestEventsModel
 
             onDelegateClicked: pageManager.enter(Enums.Page.PackageData, data)
         }

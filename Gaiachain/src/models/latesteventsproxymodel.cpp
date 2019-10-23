@@ -1,10 +1,10 @@
-#include "latesteventsproxy.h"
+#include "latesteventsproxymodel.h"
 
 #include "eventmodel.h"
 
 #include "../common/logs.h"
 
-LatestEventsProxy::LatestEventsProxy(QObject *parent)
+LatestEventsProxyModel::LatestEventsProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
 {
     setSortRole(EventModel::Timestamp);

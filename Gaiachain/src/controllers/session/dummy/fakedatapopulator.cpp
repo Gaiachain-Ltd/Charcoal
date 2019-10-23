@@ -136,9 +136,29 @@ void FakeDataPopulator::populateFakeData(const QDate &startDate)
     }
 }
 
+QVariantMap FakeDataPopulator::getPackagesRelations() const
+{
+    return Utility::toVariantsMap(m_packagesRelations);
+}
+
+QVariantList FakeDataPopulator::getPackageRelations(const QString &packageId) const
+{
+    return Utility::toVariantList(m_packagesRelations.values(packageId));
+}
+
 QVariantList FakeDataPopulator::getEventsHistory() const
 {
     return Utility::toVariantList(m_eventsHistory.values());
+}
+
+QVariantList FakeDataPopulator::getEventHistory(const QStringList &packagesId) const
+{
+    auto history = QList<QVariantMap>{};
+    for (const auto &packageId : packagesId) {
+        history.append(m_eventsHistory.values(packageId));
+    }
+
+    return Utility::toVariantList(history);
 }
 
 QVariantList FakeDataPopulator::getEventHistory(const QString &packageId) const
@@ -414,7 +434,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
         if (lastBaggingDate < actionDate) {
             lastBaggingDate = actionDate;
         }
-        if (sacsData.count() <= sacsCount) {
+        if (sacsData.count() >= sacsCount) {
             action = Enums::SupplyChainAction::LotCreation;
             actionDate = lastBaggingDate.addDays((qrand() % actionsDayShift) + sc_minDayShift);
             if (actionDate <= endDate) {
@@ -427,6 +447,8 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
             lotId = generateLotId(cooperative.value("id").toString(), actionDate);
             sacsData.clear();
         }
+
+        ids.clear();
     }
 
     // LOTS

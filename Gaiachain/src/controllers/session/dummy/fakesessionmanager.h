@@ -13,7 +13,9 @@ public:
 
     Q_INVOKABLE void login(const QString &email, const QString &password) override;
 
-    Q_INVOKABLE void getEntity() override;
+    Q_INVOKABLE void getRelations(const QString &id) override;
+
+    Q_INVOKABLE void getEntities(const QStringList &ids) override;
     Q_INVOKABLE void getEntity(const QString &id) override;
     Q_INVOKABLE void putEntity(const QString &id, const Enums::SupplyChainAction &action, const QVariantMap &properties) override;
 
@@ -23,13 +25,21 @@ private:
     FakeDataPopulator m_populator;
     Enums::UserType m_currentUserType;
 
+    void getAllRelations() override;
+    void getAllEntities() override;
+
     int randomWaitTime();
 
-    void onLogin(const QString &email, const QString &password);
     void onLoginError();
+    void onLogin(const QString &email, const QString &password);
+
+    void onRelationsError();
+    void onRelationsAll();
+    void onRelationsSingle(const QString &packageId);
 
     void onEntityError();
     void onEntityAll();
+    void onEntityMultiple(const QStringList &packagesId);
     void onEntitySingle(const QString &packageId);
 
     void onEntitySaveError(const QString &packageId);

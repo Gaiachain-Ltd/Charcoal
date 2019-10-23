@@ -26,8 +26,13 @@ public:
 
     void populateFakeData(const QDate &startDate);
 
+    QVariantMap getPackagesRelations() const;
+    QVariantList getPackageRelations(const QString &packageId) const;
+
     QVariantList getEventsHistory() const;
+    QVariantList getEventHistory(const QStringList &packagesId) const;
     QVariantList getEventHistory(const QString &packageId) const;
+
     bool canAddAction(const QString &packageId, const Enums::SupplyChainAction &action, const Enums::UserType &user) const;
     bool addAction(const QString &packageId, const Enums::SupplyChainAction &action);
 

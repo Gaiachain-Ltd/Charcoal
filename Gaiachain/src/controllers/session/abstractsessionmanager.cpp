@@ -3,6 +3,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QDebug>
+
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(sessionManager, "session.manager")
 
@@ -20,9 +22,27 @@ Enums::ConnectionState AbstractSessionManager::connectionState() const
     return m_connectionState;
 }
 
-void AbstractSessionManager::onTokenChanged(const QString &token)
+void AbstractSessionManager::getFullData()
+{
+    // INFO temporary solution
+    emit beforeGetFullData();
+
+    getAllRelations();
+    getAllEntities();
+}
+
+void AbstractSessionManager::updateToken(const QString &token)
 {
     m_token = token;
+}
+
+bool AbstractSessionManager::checkValidToken() const
+{
+    if (m_token.isEmpty()) {
+       qCWarning(sessionManager) << "Token is invalid!";
+       return false;
+    }
+    return true;
 }
 
 void AbstractSessionManager::updateConnectionStateBeforeRequest()
