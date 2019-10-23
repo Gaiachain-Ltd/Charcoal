@@ -46,6 +46,7 @@
         <file>components/dummy/DummyLoginCombobox.qml</file>
         <file>items/BasicCheckBox.qml</file>
         <file>items/RectCheckBox.qml</file>
-        <file>pages/PackageDataPage.qml</file>
+        <file>pages/CalendarYearPage.qml</file>
+        <file>components/CalendarYearItem.qml</file>
     </qresource>
 </RCC>

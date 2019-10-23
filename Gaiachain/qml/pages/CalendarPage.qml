@@ -23,6 +23,8 @@ CalendarPageBase {
                               "currentYear": dayDate.getFullYear() })
     }
 
+    onMonthHeaderClicked: pageManager.enter(Enums.Page.CalendarYear)
+
     Components.CalendarPackageEventsBars {
         Layout.fillWidth: true
     }

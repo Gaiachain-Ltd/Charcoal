@@ -10,6 +10,8 @@ QtObject {
     // Colors
     readonly property color primaryColor: "#65cb00"
 
+    readonly property color blank: "transparent"
+
     readonly property color backgroundColor: "white"
     readonly property color backgroundSecondaryColor: "#f6f6f6"
     readonly property color headerBackgroundColor: "#667176"
@@ -176,4 +178,7 @@ QtObject {
     readonly property int calendarNumberPixelSize: smallPixelSize
     readonly property int calendarDayMinHeight: calendarNumberPixelSize + calendarDotSize + 2 * smallMargin
     readonly property int calendarDayChangeDuration: 1000
+    readonly property int calendarMonthMinWidth: 150
+    readonly property int calendarMonthMinHeight: 120
+    readonly property int calendarYearStartYear: 2018
 }
