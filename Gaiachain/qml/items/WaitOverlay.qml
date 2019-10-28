@@ -3,7 +3,9 @@ import QtQuick.Controls 2.5
 
 import com.gaiachain.style 1.0
 
-GenericPopup
+import "../popups" as Popups
+
+Popups.GenericPopup
 {
     id: top
     height: s(Style.buttonHeight)

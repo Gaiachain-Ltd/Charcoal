@@ -46,7 +46,7 @@ void PageManager::enter(const Enums::Page page, QVariantMap properties, const bo
 
     m_pageStack.append(page);
     properties.insert(QStringLiteral("page"), static_cast<int>(page));
-    emit stackViewPush(pageToQString(page), properties, immediate);
+    emit stackViewPush(toFilePath(page), properties, immediate);
 }
 
 void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, const bool immediate)
@@ -69,7 +69,7 @@ void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, c
     m_pageStack.removeLast();
     m_pageStack.append(page);
     properties.insert(QStringLiteral("page"), static_cast<int>(page));
-    emit stackViewReplace(pageToQString(page), properties, immediate);
+    emit stackViewReplace(toFilePath(page), properties, immediate);
 }
 
 void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties)
@@ -78,7 +78,7 @@ void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties)
     qCDebug(corePageManager) << CYAN("[POPUP] Enter:") << popup << "properties:" << properties;
 
     m_popupStack.append(popup);
-    emit popupManagerOpen(pageToQString(popup), properties);
+    emit popupManagerOpen(toFilePath(popup), properties);
 }
 
 void PageManager::closePopup()
@@ -92,7 +92,7 @@ void PageManager::closePopup()
     }
 
     auto poppedPopup = m_popupStack.takeLast();
-    qCDebug(corePageManager) << "Closing popup" << pageToQString(poppedPopup);
+    qCDebug(corePageManager) << "Closing popup" << toFilePath(poppedPopup);
     emit popupManagerClose();
 }
 
@@ -124,7 +124,7 @@ void PageManager::back(const bool immediate)
         return;
 
     auto poppedPage = m_pageStack.takeLast();
-    qCDebug(corePageManager) << "Popped page" << pageToQString(poppedPage);
+    qCDebug(corePageManager) << "Popped page" << toFilePath(poppedPage);
     emit stackViewPop(immediate);
 }
 
@@ -146,14 +146,14 @@ bool PageManager::backTo(const Enums::Page page, const QVariantMap properties, c
         currentTop = m_pageStack.last();
     }
 
-    qCDebug(corePageManager) << "Going back to page" << pageToQString(page) << "properties:" << properties;
+    qCDebug(corePageManager) << "Going back to page" << toFilePath(page) << "properties:" << properties;
     emit stackViewPopTo(page, properties, immediate);
     return true;
 }
 
 QString PageManager::getInitialPageUrl() const
 {
-    return pageToQString(m_initialPage);
+    return toFilePath(m_initialPage);
 }
 
 Enums::Page PageManager::homePage() const

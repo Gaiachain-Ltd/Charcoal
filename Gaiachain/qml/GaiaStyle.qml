@@ -156,6 +156,8 @@ QtObject {
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
     readonly property int requestOverlayInterval: 2000
+    readonly property int notificationPopupOpenedDefaultInterval: 2600
+    readonly property int transitionMoveYRange: 100
 
     // none
     readonly property int none: 0

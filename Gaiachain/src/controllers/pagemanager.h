@@ -49,6 +49,7 @@ public slots:
 
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
+    const QString m_popupsPrefix = QStringLiteral("qrc:/popups/");
     const Enums::Page m_initialPage = Enums::Page::Login;
     const Enums::Page m_homePage = Enums::Page::MainMenu;
 
@@ -58,17 +59,17 @@ private:
     void prepareConnections();
 
     template<typename T>
-    QString pageToQString(const T p, const char* enumName) const {
+    QString toFilePath(const T p, const char* enumName) const {
         const QString pageStr = Utility::enumToQString<T>(p, enumName);
-        return  m_pagePrefix + pageStr + enumName + QStringLiteral(".qml");
+        return pageStr + enumName + QStringLiteral(".qml");
     }
 
-    QString pageToQString(Enums::Page p) const {
-        return pageToQString<Enums::Page>(p, "Page");
+    QString toFilePath(Enums::Page p) const {
+        return m_pagePrefix + toFilePath<Enums::Page>(p, "Page");
     }
 
-    QString pageToQString(Enums::Popup p) const {
-        return pageToQString<Enums::Popup>(p, "Popup");
+    QString toFilePath(Enums::Popup p) const {
+        return m_popupsPrefix + toFilePath<Enums::Popup>(p, "Popup");
     }
 };
 

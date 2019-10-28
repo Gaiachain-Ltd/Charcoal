@@ -7,7 +7,6 @@
         <file>pages/CalendarEventsPage.qml</file>
         <file>pages/BasePage.qml</file>
         <file>pages/QRScannerPage.qml</file>
-        <file>pages/InformationPopup.qml</file>
         <file>items/GenericPanel.qml</file>
         <file>items/ImageButton.qml</file>
         <file>items/ImageItem.qml</file>
@@ -24,8 +23,6 @@
         <file>common/Helpers.qml</file>
         <file>pages/MapPage.qml</file>
         <file>items/GenericButton.qml</file>
-        <file>items/GenericPopup.qml</file>
-        <file>items/BasePopup.qml</file>
         <file>pages/LoginLoadingPage.qml</file>
         <file>items/PureImageButton.qml</file>
         <file>components/ConnectionStateItem.qml</file>
@@ -45,7 +42,9 @@
         <file>components/dummy/DummyLoginCombobox.qml</file>
         <file>items/BasicCheckBox.qml</file>
         <file>items/RectCheckBox.qml</file>
-        <file>pages/CalendarYearPage.qml</file>
-        <file>components/CalendarYearItem.qml</file>
+        <file>popups/BasePopup.qml</file>
+        <file>popups/GenericPopup.qml</file>
+        <file>popups/InformationPopup.qml</file>
+        <file>popups/NotificationPopup.qml</file>
     </qresource>
 </RCC>
