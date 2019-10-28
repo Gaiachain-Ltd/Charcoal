@@ -47,6 +47,16 @@ BasePage {
         }
     }
 
+    function returnToCurrentMonth() {
+        var date = new Date
+
+        var month = date.getMonth()
+        var year = date.getFullYear()
+
+        currentYear = year
+        currentMonth = monthModel[month]
+    }
+
     Component.onCompleted: updateModelRange()
     onCurrentDayChanged: updateModelRange()
     onCurrentMonthChanged: updateModelRange()
@@ -71,7 +81,6 @@ BasePage {
 
                 Items.BasicText {
                     id: monthYearText
-                    Layout.fillWidth: true
                     Layout.alignment: Qt.AlignVCenter
 
                     horizontalAlignment: Text.AlignLeft
@@ -84,6 +93,18 @@ BasePage {
                         onClicked: top.monthHeaderClicked()
                     }
                 }
+
+                Items.ImageButton {
+                    Layout.preferredHeight: s(Style.buttonImageSmallHeight)
+                    Layout.preferredWidth: height
+
+                    palette.button: Style.calendarArrowButtonColor
+                    source: Style.returnCurrentMonthImgUrl
+                    padding: s(Style.tinyMargin)
+
+                    onClicked: returnToCurrentMonth()
+                }
+
 
                 Items.LayoutSpacer { preferredHeight: top.bottomSpacing }
 

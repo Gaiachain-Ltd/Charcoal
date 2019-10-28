@@ -23,10 +23,30 @@ CalendarPageBase {
                               "currentYear": dayDate.getFullYear() })
     }
 
-    onMonthHeaderClicked: pageManager.enter(Enums.Page.CalendarYear)
+    ColumnLayout {
+        spacing: s(Style.hugeMargin) * 3
 
-    Components.CalendarPackageEventsBars {
-        Layout.fillWidth: true
+        Components.CalendarPackageEventsBars {
+            Layout.fillWidth: true
+        }
+
+        Items.BasicCheckBox {
+            function updateCompanyOnlyFiltering() {
+                companyCalendarModel.active = checked
+            }
+
+            Layout.fillWidth: true
+            Layout.leftMargin: s(Style.hugeMargin) * 2
+            Layout.bottomMargin: s(Style.hugeMargin)
+
+            enabled: userManager.loggedIn
+            opacity: userManager.loggedIn ? 1 : 0
+
+            text: Strings.onlyMyTransactions
+
+            Component.onCompleted: updateCompanyOnlyFiltering()
+            onCheckedChanged: updateCompanyOnlyFiltering()
+        }
     }
 
     calendarWidgets: Flickable {
@@ -51,5 +71,4 @@ CalendarPageBase {
             onDayClicked: top.enterDayPage(dayDate)
         }
     }
-
 }

@@ -91,7 +91,7 @@ void DataManager::setupModels()
 
     m_dateEventsModel.setSourceModel(&m_eventModel);
     m_latestDateEventsModel.setSourceModel(&m_dateEventsModel);
-    m_companyLatestDateEventsModel.setSourceModel(&m_latestEventsModel);
+    m_companyLatestDateEventsModel.setSourceModel(&m_latestDateEventsModel);
 
     m_latestEventsModel.setSourceModel(&m_eventModel);
     m_searchLatestEventsModel.setSourceModel(&m_latestEventsModel);

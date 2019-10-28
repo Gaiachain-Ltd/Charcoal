@@ -14,6 +14,7 @@ Item {
     property alias delegateHeight: mainView.delegateHeight
 
     property bool displayDate: true
+    property bool displayLastItemSeparator: false
 
     function actionDescriptionStatusText(action) {
         switch(action) {
@@ -94,7 +95,7 @@ Item {
                 Items.LayoutSeparator {
                     Layout.fillWidth: true
 
-                    visible: !delegate.isLast
+                    visible: !delegate.isLast || displayLastItemSeparator
                 }
             }
 
