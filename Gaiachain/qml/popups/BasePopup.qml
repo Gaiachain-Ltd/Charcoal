@@ -3,11 +3,12 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 
 import "../items" as Items
+import "../popups" as Popups
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
-Items.GenericPopup
+Popups.GenericPopup
 {
     id: top
 
@@ -39,7 +40,7 @@ Items.GenericPopup
 
             Repeater {
                 model: buttons
-                GenericButton {
+                Items.GenericButton {
                     Layout.fillWidth: true
                     Layout.preferredWidth: 0    // this is to keep buttons size equal for all texts
 
