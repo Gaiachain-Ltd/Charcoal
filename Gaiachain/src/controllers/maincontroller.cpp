@@ -39,12 +39,14 @@ MainController::MainController(QObject *parent)
 void MainController::setupConnections()
 {
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
-    connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData, Qt::DirectConnection);
-    connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded, Qt::DirectConnection);
-    connect(&m_sessionManager, &AbstractSessionManager::packagesRelationsLoaded, &m_dataManager, &DataManager::onRelationsLoaded, Qt::DirectConnection);
-    connect(&m_sessionManager, &AbstractSessionManager::beforeGetFullData, &m_dataManager, &DataManager::clearModels, Qt::DirectConnection);
+    connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData);
+    connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
+    connect(&m_sessionManager, &AbstractSessionManager::packagesRelationsLoaded, &m_dataManager, &DataManager::onRelationsLoaded);
+    connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
+    connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
+    connect(&m_sessionManager, &AbstractSessionManager::beforeGetFullData, &m_dataManager, &DataManager::clearModels);
 
-    connect(&m_userManager, &UserManager::companyIdChanged, &m_dataManager, &DataManager::updateCompanyId);
+    connect(&m_userManager, &UserManager::cooperativeIdChanged, &m_dataManager, &DataManager::updateCooperativeId);
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)

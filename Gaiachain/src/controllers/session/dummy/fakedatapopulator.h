@@ -8,7 +8,6 @@
 #include <tuple>
 
 #include "../../../common/enums.h"
-#include "../../../common/location.h"
 
 class EventModel;
 
@@ -28,13 +27,27 @@ public:
 
     QVariantMap getPackagesRelations() const;
     QVariantList getPackageRelations(const QString &packageId) const;
+    void addPackageRelation(const QString &packageId, const QStringList &relatedIds);
 
     QVariantList getEventsHistory() const;
     QVariantList getEventHistory(const QStringList &packagesId) const;
     QVariantList getEventHistory(const QString &packageId) const;
 
-    bool canAddAction(const QString &packageId, const Enums::SupplyChainAction &action, const Enums::UserType &user) const;
-    bool addAction(const QString &packageId, const Enums::SupplyChainAction &action);
+    QVariantList unusedLotIds(const QString &cooperativeId) const;
+    QString createUnusedLotId(const QString &cooperativeId);
+
+    bool canAddAction(const QString &packageId, const Enums::SupplyChainAction &action, const Enums::UserType &user, const QString &cooperativeId) const;
+    bool addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData,
+                   const Enums::UserType &user, const QString &cooperativeId);
+
+    bool canAddNewAction(const Enums::SupplyChainAction &action, const QByteArray &codeData, const Enums::UserType &user) const;
+    QString addNewAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData,
+                         const Enums::UserType &user, const QString &cooperativeId);
+
+    QVariantList getProducers() const;
+    QVariantList getBuyers() const;
+    QVariantList getTransporters() const;
+    QVariantList getDestinations() const;
 
 private:
     static const QString sc_loginPassword;
@@ -43,11 +56,13 @@ private:
 
     static const QList<QVariantHash> sc_producers;
     static const QList<QVariantHash> sc_cooperatives;
-    static const QList<QVariantHash> sc_buyers;
-    static const QList<QVariantHash> sc_transporter;
+    static const QStringList sc_buyers;
+    static const QStringList sc_transporters;
+    static const QStringList sc_destinations;
 
     QMultiMap<QString, QVariantMap> m_eventsHistory;
     QMultiMap<QString, QString> m_packagesRelations;
+    QHash<QString, QStringList> m_cooperativeUnusedLotIds;
 
     static const auto sc_minDayShift = static_cast<int>(Qt::DayOfWeek::Tuesday);
 
@@ -58,25 +73,29 @@ private:
     QVariantHash randomCooperative() const;
     QVariantHash randomProducer() const;
     QString randomParcel(const QVariantHash &producer) const;
-    QVariantHash randomBuyer() const;
+    QString randomBuyer() const;
+    QString randomTransporter() const;
+    QString randomDestination() const;
+
+    QVariantHash cooperativeById(const QString &cooperativeId) const;
 
     QString generateHarvestId(const QString &parceleCode, const QDate &date) const;
     QString generateSackId(const QString &cooperativeId, const QDate &date) const;
     QString generateLotId(const QString &cooperativeId, const QDate &date) const;
 
-    std::tuple<QString, QVariantHash> generateHarvestAction(const QDate &harvestDate) const;
-    QVariantHash generateGrainProcessingProperties(const QDate &harvestDate, const QDate &actionDate) const;
-    QVariantHash generateReceptionProperties(const QDate &processingDate, const QDate &actionDate) const;
-    QVariantHash generateBaggingProperties(const QStringList &harvestIds) const;
-    QVariantHash generateLotCreationProperties() const;
-    QVariantHash generateWarehouseTransportProperties() const;
-    QVariantHash generateExportReceptionProperties() const;
+    std::tuple<QString, QVariantMap> generateHarvestAction(const QDate &harvestDate) const;
+    QVariantMap generateGrainProcessingProperties(const QDate &harvestDate, const QDate &actionDate) const;
+    QVariantMap generateReceptionProperties(const QDate &processingDate, const QDate &actionDate) const;
+    QVariantMap generateBaggingProperties(const QStringList &harvestIds) const;
+    QVariantMap generateLotCreationProperties() const;
+    QVariantMap generateWarehouseTransportProperties() const;
+    QVariantMap generateExportReceptionProperties() const;
 
     void addHarvestRelation(const QString &sacId, const QStringList &harvestIds);
     void addLotRelation(const QString &sacId, const QString &lotId);
 
-    void addEvent(const QString &id, const QDate &actionDate, const Enums::SupplyChainAction &action,
-                  const QVariantHash &cooperative, const QVariantHash &properties);
+    void addEvent(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                  const QVariantMap &properties, const QVariantHash &cooperative);
 
     void generateCooperativeData(const QVariantHash &cooperative, const QDate &startDate, const QDate &endDate);
 };

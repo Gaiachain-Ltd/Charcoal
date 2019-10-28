@@ -29,66 +29,57 @@ const QHash<Enums::PlaceType, Enums::UserType> FakeDataPopulator::sc_placesUser 
 
 const QList<QVariantHash> FakeDataPopulator::sc_producers = {
     {
-        { "id", "DIA_001" },
-        { "name", "ACHO NEHUIE GREGOIRE" },
-        { "village", "Diason" },
-        { "parcels", QStringList{ "PDIA_001", "PDIA_002" } },
+        { Tags::id, "DIA_001" },
+        { Tags::name, "ACHO NEHUIE GREGOIRE" },
+        { Tags::village, "Diason" },
+        { Tags::parcels, QStringList{ "PDIA_001", "PDIA_002" } },
     },
     {
-        { "id", "DIA_002" },
-        { "name", "ADON  KOFFI PIERRE CLAVER " },
-        { "village", "Diason" },
-        { "parcels", QStringList{ "PDIA_003", "PDIA_003", "PDIA_005" } },
+        { Tags::id, "DIA_002" },
+        { Tags::name, "ADON  KOFFI PIERRE CLAVER " },
+        { Tags::village, "Diason" },
+        { Tags::parcels, QStringList{ "PDIA_003", "PDIA_003", "PDIA_005" } },
     },
     {
-        { "id", "MEB_001" },
-        { "name", "Abeu Jean Jacques" },
-        { "village", "Mebifon" },
-        { "parcels", QStringList{ "PMEB_001", "PMEB_003" } },
+        { Tags::id, "MEB_001" },
+        { Tags::name, "Abeu Jean Jacques" },
+        { Tags::village, "Mebifon" },
+        { Tags::parcels, QStringList{ "PMEB_001", "PMEB_003" } },
     },
     {
-        { "id", "MEB_002" },
-        { "name", "Abeu Yebi Joël" },
-        { "village", "Mebifon" },
-        { "parcels", QStringList{ "PMEB_007" } },
+        { Tags::id, "MEB_002" },
+        { Tags::name, "Abeu Yebi Joël" },
+        { Tags::village, "Mebifon" },
+        { Tags::parcels, QStringList{ "PMEB_007" } },
     },
     {
-        { "id", "MEB_003" },
-        { "name", "Abeu Yeffe Georges" },
-        { "village", "Mebifon" },
-        { "parcels", QStringList{ "PMEB_004", "PMEB_005", "PMEB_008" } },
+        { Tags::id, "MEB_003" },
+        { Tags::name, "Abeu Yeffe Georges" },
+        { Tags::village, "Mebifon" },
+        { Tags::parcels, QStringList{ "PMEB_004", "PMEB_005", "PMEB_008" } },
     },
     {
-        { "id", "BIE_001" },
-        { "name", "N'cho N'cho Roger" },
-        { "village", "Bieby" },
-        { "parcels", QStringList{ "PBIE_001", "PBIE_002", "PBIE_003", "PBIE_004" } },
+        { Tags::id, "BIE_001" },
+        { Tags::name, "N'cho N'cho Roger" },
+        { Tags::village, "Bieby" },
+        { Tags::parcels, QStringList{ "PBIE_001", "PBIE_002", "PBIE_003", "PBIE_004" } },
     }
 };
 
 const QList<QVariantHash> FakeDataPopulator::sc_cooperatives = {
     {
         { "id", "PCMB" },
-        { "name", "Coop MB" },
-        { "location", QVariant::fromValue(Location { 9.665145, 7.324432 }) }
+        { "name", "Coop MB" }
     },
     {
         { "id", "PCXD" },
-        { "name", "Coop XD" },
-        { "location", QVariant::fromValue(Location { 9.665643, 7.324432 }) }
+        { "name", "Coop XD" }
     }
 };
 
-const QList<QVariantHash> FakeDataPopulator::sc_buyers = {
-    {
-        { "name", "Nestle" },
-        { "destination", "Switzerland" }
-    },
-    {
-        { "name", "Cacao decoMoreno" },
-        { "destination", "Wadowice" }
-    }
-};
+const QStringList FakeDataPopulator::sc_buyers = { "Nestle", "Cacao decoMoreno" };
+const QStringList FakeDataPopulator::sc_transporters = { "TransportWithUs", "TranTrans", "Move4You" };
+const QStringList FakeDataPopulator::sc_destinations = { "Switzerland", "Germany", "Poland" };
 
 FakeDataPopulator::FakeDataPopulator()
 {}
@@ -117,22 +108,29 @@ QVariantMap FakeDataPopulator::generateUserData(const QString &email)
 
     auto userType = sc_usersLogin.value(email);
     auto cooperative = randomCooperative();
-    auto location = cooperative.value("location").value<Location>();
 
     auto obj = QVariantMap{};
     obj.insert(Tags::email, email);
-    obj.insert(Tags::companyId, cooperative.value("id"));
-    obj.insert(Tags::companyName, cooperative.value("name"));
-    obj.insert(Tags::companyLocation, QVariantList{ location.lat, location.lon });
+    obj.insert(Tags::cooperativeId, cooperative.value("id"));
+    obj.insert(Tags::cooperativeName, cooperative.value("name"));
     obj.insert(Tags::role, DataGlobals::userTypeToString(userType));
     return obj;
 }
 
 void FakeDataPopulator::populateFakeData(const QDate &startDate)
 {
+    static const auto unusedLotIdsCount = qrand() % 2 + 3;
+    auto unusedIds = QVector<QString>(unusedLotIdsCount).toList();
+
     const QDate endDate = QDate::currentDate();
     for (const auto &cooperative : sc_cooperatives) {
+        // populate events
         generateCooperativeData(cooperative, startDate, endDate);
+
+        auto cooperativeId = cooperative.value("id").toString();
+        // populate lot ids
+        std::generate(unusedIds.begin(), unusedIds.end(), std::bind(&FakeDataPopulator::generateLotId, this, cooperativeId, QDate::currentDate()));
+        m_cooperativeUnusedLotIds.insert(cooperativeId, unusedIds);
     }
 }
 
@@ -144,6 +142,13 @@ QVariantMap FakeDataPopulator::getPackagesRelations() const
 QVariantList FakeDataPopulator::getPackageRelations(const QString &packageId) const
 {
     return Utility::toVariantList(m_packagesRelations.values(packageId));
+}
+
+void FakeDataPopulator::addPackageRelation(const QString &packageId, const QStringList &relatedIds)
+{
+    for (const auto &relatedId : relatedIds) {
+        m_packagesRelations.insert(packageId, relatedId);
+    }
 }
 
 QVariantList FakeDataPopulator::getEventsHistory() const
@@ -166,23 +171,110 @@ QVariantList FakeDataPopulator::getEventHistory(const QString &packageId) const
     return Utility::toVariantList(m_eventsHistory.values(packageId));
 }
 
-bool FakeDataPopulator::canAddAction(const QString &packageId, const Enums::SupplyChainAction &action, const Enums::UserType &user) const
+QVariantList FakeDataPopulator::unusedLotIds(const QString &cooperativeId) const
 {
-    Q_UNUSED(packageId)
-    Q_UNUSED(action)
-    Q_UNUSED(user)
-
-    // TODO implement later
-    return false;
+    return Utility::toVariantList<QList<QString>>(m_cooperativeUnusedLotIds.value(cooperativeId));
 }
 
-bool FakeDataPopulator::addAction(const QString &packageId, const Enums::SupplyChainAction &action)
+QString FakeDataPopulator::createUnusedLotId(const QString &cooperativeId)
 {
-    Q_UNUSED(packageId)
-    Q_UNUSED(action)
+    auto lotId = generateLotId(cooperativeId, QDate::currentDate());
+    m_cooperativeUnusedLotIds[cooperativeId].append(lotId);
 
-    // TODO implement later
-    return false;
+    return lotId;
+}
+
+bool FakeDataPopulator::canAddAction(const QString &packageId, const Enums::SupplyChainAction &action, const Enums::UserType &user, const QString &cooperativeId) const
+{
+    if (!DataGlobals::userActions(user).contains(action)) {
+        qCWarning(dataFake) << "Trying to add action for wrong user:" << action << user;
+        return false;
+    }
+
+    auto actionsForPackage = m_eventsHistory.values(packageId);
+    if (actionsForPackage.isEmpty()) {
+        return (action == DataGlobals::availableActions().constFirst());
+    }
+
+    qSort(actionsForPackage.begin(), actionsForPackage.end(),
+          [](const QVariantMap &left, const QVariantMap &right) {
+        auto leftAction = DataGlobals::supplyChainActionFromString(left.value(Tags::action).toString());
+        auto rightAction = DataGlobals::supplyChainActionFromString(right.value(Tags::action).toString());
+        return leftAction < rightAction;
+    });
+
+    auto historyCooperativeId = actionsForPackage.constFirst().value(Tags::agent).toMap().value(Tags::cooperativeId).toString();
+    if (historyCooperativeId != cooperativeId) {
+        qCWarning(dataFake) << "Trying to add action for different cooperative:" << "history" << historyCooperativeId << "new" << cooperativeId;
+        return false;
+    }
+
+    auto lastAction = DataGlobals::supplyChainActionFromString(actionsForPackage.constLast().value(Tags::action).toString());
+    return (static_cast<int>(lastAction) + 1 == static_cast<int>(action));
+}
+
+bool FakeDataPopulator::addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                                  const QVariantMap &properties,const QByteArray &codeData, const Enums::UserType &user, const QString &cooperativeId)
+{
+    Q_UNUSED(codeData)  // unused for fake data
+    if (!canAddAction(packageId, action, user, cooperativeId)) {
+        return false;
+    }
+
+    addEvent(packageId, action, timestamp, properties, cooperativeById(cooperativeId));
+    return true;
+}
+
+bool FakeDataPopulator::canAddNewAction(const Enums::SupplyChainAction &action, const QByteArray &codeData, const Enums::UserType &user) const
+{
+    if (!DataGlobals::userActions(user).contains(action)) {
+        qCWarning(dataFake) << "Trying to add action for wrong user:" << action << user;
+        return false;
+    }
+
+    if (action != DataGlobals::packageTypeCreationAction(Enums::PackageType::Sac)) {
+        // currently only create sac can be created without an id
+        qCWarning(dataFake) << "Trying to add new package action with wrong action:" << action;
+        return false;
+    }
+
+    return !codeData.isEmpty();
+}
+
+QString FakeDataPopulator::addNewAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties,
+                                        const QByteArray &codeData, const Enums::UserType &user, const QString &cooperativeId)
+{
+    if (!canAddNewAction(action, codeData, user)) {
+        return {};
+    }
+
+    auto packageId = generateSackId(cooperativeId, timestamp.date());
+    addEvent(packageId, action, timestamp, properties, cooperativeById(cooperativeId));
+    return packageId;
+}
+
+QVariantList FakeDataPopulator::getProducers() const
+{
+    static const auto list = Utility::toVariantList(sc_producers, QMetaType::QVariantMap);
+    return list;
+}
+
+QVariantList FakeDataPopulator::getBuyers() const
+{
+    static const auto list = Utility::toVariantList<QList<QString>>(sc_buyers);
+    return list;
+}
+
+QVariantList FakeDataPopulator::getTransporters() const
+{
+    static const auto list = Utility::toVariantList<QList<QString>>(sc_transporters);
+    return list;
+}
+
+QVariantList FakeDataPopulator::getDestinations() const
+{
+    static const auto list = Utility::toVariantList<QList<QString>>(sc_destinations);
+    return list;
 }
 
 QList<QString> FakeDataPopulator::sortedLogins()
@@ -217,9 +309,26 @@ QString FakeDataPopulator::randomParcel(const QVariantHash &producer) const
     return parcels.at(qrand() % parcels.count());
 }
 
-QVariantHash FakeDataPopulator::randomBuyer() const
+QString FakeDataPopulator::randomBuyer() const
 {
     return sc_buyers.at(qrand() % sc_buyers.count());
+}
+
+QString FakeDataPopulator::randomTransporter() const
+{
+    return sc_transporters.at(qrand() % sc_transporters.count());
+}
+
+QString FakeDataPopulator::randomDestination() const
+{
+    return sc_destinations.at(qrand() % sc_destinations.count());
+}
+
+QVariantHash FakeDataPopulator::cooperativeById(const QString &cooperativeId) const
+{
+    auto result = std::find_if(sc_cooperatives.constBegin(), sc_cooperatives.constEnd(),
+                                 [=](const QVariantHash &cooperative) { return cooperative.value("id").toString() == cooperativeId; });
+    return result == sc_cooperatives.constEnd() ? QVariantHash{} : *result;
 }
 
 QString FakeDataPopulator::generateHarvestId(const QString &parceleCode, const QDate &date) const
@@ -239,20 +348,20 @@ QString FakeDataPopulator::generateLotId(const QString &cooperativeId, const QDa
     return date.toString(QStringLiteral("%1-yyyy-L%2")).arg(cooperativeId).arg(counter++, 3, 10, QChar('0'));
 }
 
-std::tuple<QString, QVariantHash> FakeDataPopulator::generateHarvestAction(const QDate &harvestDate) const
+std::tuple<QString, QVariantMap> FakeDataPopulator::generateHarvestAction(const QDate &harvestDate) const
 {
     auto producer = randomProducer();
     auto parcel = randomParcel(producer);
     auto harvestId = generateHarvestId(parcel, harvestDate);
 
-    auto properties = QVariantHash{ { "parcelCode", parcel } };
-    properties.unite(producer);
+    auto properties = QVariantMap{ { "parcelCode", parcel } };
+    properties.unite(QVariant::fromValue(producer).toMap());
     properties.remove("parcels");
 
     return std::make_tuple(harvestId, properties);
 }
 
-QVariantHash FakeDataPopulator::generateGrainProcessingProperties(const QDate &harvestDate, const QDate &actionDate) const
+QVariantMap FakeDataPopulator::generateGrainProcessingProperties(const QDate &harvestDate, const QDate &actionDate) const
 {
     auto dayDiff = harvestDate.daysTo(actionDate);
     auto breakingDate = qMin(harvestDate.addDays((qrand() % dayDiff) + sc_minDayShift), actionDate);
@@ -265,20 +374,19 @@ QVariantHash FakeDataPopulator::generateGrainProcessingProperties(const QDate &h
     };
 }
 
-QVariantHash FakeDataPopulator::generateReceptionProperties(const QDate &processingDate, const QDate &actionDate) const
+QVariantMap FakeDataPopulator::generateReceptionProperties(const QDate &processingDate, const QDate &actionDate) const
 {
     auto dayDiff = processingDate.daysTo(actionDate);
     auto departureDate = qMax(processingDate, actionDate.addDays(-((qrand() % dayDiff) + sc_minDayShift)));
-    auto buyer = randomBuyer().value("name").toString();
 
     return {
         { "departure_date", departureDate },
         { "departure_place", {} },
-        { "buyer", buyer },
+        { "buyer", randomBuyer() },
     };
 }
 
-QVariantHash FakeDataPopulator::generateBaggingProperties(const QStringList &harvestIds) const
+QVariantMap FakeDataPopulator::generateBaggingProperties(const QStringList &harvestIds) const
 {
     auto weights = QVariantMap{};
     for (const auto &harvestId : harvestIds) {
@@ -291,24 +399,22 @@ QVariantHash FakeDataPopulator::generateBaggingProperties(const QStringList &har
     };
 }
 
-QVariantHash FakeDataPopulator::generateLotCreationProperties() const
+QVariantMap FakeDataPopulator::generateLotCreationProperties() const
 {
     return {
         { "scanned_code", QUuid::createUuid() }
     };
 }
 
-QVariantHash FakeDataPopulator::generateWarehouseTransportProperties() const
+QVariantMap FakeDataPopulator::generateWarehouseTransportProperties() const
 {
-    auto destination = randomBuyer().value("destination").toString();
-
     return {
-        { "transporter", QStringLiteral("transporter-%1").arg((qrand() % 10) + 1) },
-        { "destination", destination },
+        { "transporter", randomTransporter() },
+        { "destination", randomDestination() },
     };
 }
 
-QVariantHash FakeDataPopulator::generateExportReceptionProperties() const
+QVariantMap FakeDataPopulator::generateExportReceptionProperties() const
 {
     return {
         { "weight", qrand() % 1000 + 2000 }
@@ -327,17 +433,15 @@ void FakeDataPopulator::addLotRelation(const QString &sacId, const QString &lotI
     m_packagesRelations.insert(lotId, sacId);
 }
 
-void FakeDataPopulator::addEvent(const QString &id, const QDate &actionDate, const Enums::SupplyChainAction &action, const QVariantHash &cooperative, const QVariantHash &properties)
+void FakeDataPopulator::addEvent(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                                 const QVariantMap &properties, const QVariantHash &cooperative)
 {
     auto placeType = DataGlobals::placeType(action);
     auto userType = sc_placesUser.value(placeType);
-    auto location = cooperative.value("location").value<Location>();
     auto agentInfo = QVariantMap({ { Tags::role, DataGlobals::userTypeToString(userType) },
-                                   { Tags::companyId, cooperative.value("id") },
-                                   { Tags::companyName, cooperative.value("name") },
-                                   { Tags::companyLocation, QVariantList({ location.lat, location.lon }) }});
+                                   { Tags::cooperativeId, cooperative.value("id") },
+                                   { Tags::cooperativeName, cooperative.value("name") } });
 
-    auto timestamp = QDateTime(actionDate, randomTime());
     auto eventData = QVariantMap({ { Tags::id, id },
                                    { Tags::timestamp, timestamp.toSecsSinceEpoch() },
                                    { Tags::agent, agentInfo },
@@ -354,7 +458,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
     auto action = Enums::SupplyChainAction::Unknown;
     auto actionDate = QDate{};
     auto id = QString{};
-    auto properties = QVariantHash{};
+    auto properties = QVariantMap{};
     auto idData = QPair<QString, QDate>{};
 
     auto harvestsData = QList<QPair<QString, QDate>>{};     // harvest ids with processing date
@@ -367,7 +471,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
 
         action = Enums::SupplyChainAction::Harvest;
         std::tie(id, properties) = generateHarvestAction(harvestDate);
-        addEvent(id, harvestDate, action, cooperative, properties);
+        addEvent(id, action, QDateTime(harvestDate, randomTime()), properties, cooperative);
 
         action = Enums::SupplyChainAction::GrainProcessing;
         actionDate = harvestDate.addDays((qrand() % actionsDayShift) + sc_minDayShift);
@@ -375,7 +479,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
             harvestsData.append({ id, QDate{} });
             continue;
         }
-        addEvent(id, actionDate, action, cooperative, generateGrainProcessingProperties(harvestDate, actionDate));
+        addEvent(id, action, QDateTime(actionDate, randomTime()), generateGrainProcessingProperties(harvestDate, actionDate), cooperative);
 
         harvestsData.append({ id, actionDate });
     }
@@ -409,7 +513,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
             if (actionDate > endDate) {
                 continue;
             }
-            addEvent(idData.first, actionDate, action, cooperative, generateReceptionProperties(idData.second, actionDate));
+            addEvent(idData.first, action, QDateTime(actionDate, randomTime()), generateReceptionProperties(idData.second, actionDate), cooperative);
 
             ids.append(idData.first);
             if (lastReceptionDate < actionDate) {
@@ -427,7 +531,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
         id = generateSackId(cooperative.value("id").toString(), actionDate);
         addHarvestRelation(id, ids);
         addLotRelation(id, lotId);
-        addEvent(id, actionDate, action, cooperative, generateBaggingProperties(ids));
+        addEvent(id, action, QDateTime(actionDate, randomTime()), generateBaggingProperties(ids), cooperative);
 
         // LOT creation
         sacsData.append({ id, actionDate });
@@ -438,7 +542,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
             action = Enums::SupplyChainAction::LotCreation;
             actionDate = lastBaggingDate.addDays((qrand() % actionsDayShift) + sc_minDayShift);
             if (actionDate <= endDate) {
-                addEvent(lotId, actionDate, action, cooperative, generateLotCreationProperties());
+                addEvent(lotId, action, QDateTime(actionDate, randomTime()), generateLotCreationProperties(), cooperative);
                 lotsData.append({ lotId, actionDate });
             }
 
@@ -462,7 +566,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
         if (actionDate > endDate) {
             continue;
         }
-        addEvent(id, actionDate, action, cooperative, generateWarehouseTransportProperties());
+        addEvent(id, action, QDateTime(actionDate, randomTime()), generateWarehouseTransportProperties(), cooperative);
 
         // export reception
         action = Enums::SupplyChainAction::ExportReception;
@@ -470,6 +574,6 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
         if (actionDate > endDate) {
             continue;
         }
-        addEvent(id, actionDate, action, cooperative, generateExportReceptionProperties());
+        addEvent(id, action, QDateTime(actionDate, randomTime()), generateExportReceptionProperties(), cooperative);
     }
 }

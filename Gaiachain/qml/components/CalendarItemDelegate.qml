@@ -58,7 +58,7 @@ Item {
             }
 
             function updateData() {
-                var datePackageTypes = packagesCompanyCalendarModel.datePackageTypesQml(model.date);
+                var datePackageTypes = packagesCalendarModel.datePackageTypesQml(model.date);
 
                 var availablePackageTypes = DataGlobals.availablePackageTypes
                 for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
@@ -74,7 +74,7 @@ Item {
         }
 
         Connections {
-            target: packagesCompanyCalendarModel
+            target: packagesCalendarModel
             onDatePackageTypesChanged: {
                 if ( (date.getFullYear() === model.year)
                         && (date.getMonth() === model.month)
@@ -83,6 +83,7 @@ Item {
                 }
             }
         }
+
         Connections {
             target: model
             onMonthChanged: packageTypesModel.updateData()

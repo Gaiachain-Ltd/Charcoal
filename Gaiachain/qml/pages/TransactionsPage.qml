@@ -55,8 +55,8 @@ BasePage {
 
 
         Items.BasicCheckBox {
-            function updateCompanyOnlyFiltering() {
-                companySearchLatestEventsModel.active = checked
+            function updateCooperativeOnlyFiltering() {
+                cooperativeFilteringEvents.active = checked
             }
 
             checked: true
@@ -64,8 +64,8 @@ BasePage {
 
             text: Strings.onlyMyTransactions
 
-            Component.onCompleted: updateCompanyOnlyFiltering()
-            onCheckedChanged: updateCompanyOnlyFiltering()
+            Component.onCompleted: updateCooperativeOnlyFiltering()
+            onCheckedChanged: updateCooperativeOnlyFiltering()
         }
 
         RowLayout {
@@ -105,7 +105,7 @@ BasePage {
                 model: packageModel
 
                 function updatePackageTypeFiltering(packageType, checked) {
-                    packagesTypeCompanySearchLatestEventsModel.setPackageTypeFiltering(packageType, checked)
+                    packagesTypeSearchLatestEventsModel.setPackageTypeFiltering(packageType, checked)
                 }
 
                 Items.RectCheckBox {
@@ -128,7 +128,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: packagesTypeCompanySearchLatestEventsModel
+            viewModel: packagesTypeSearchLatestEventsModel
 
             onDelegateClicked: pageManager.enter(Enums.Page.PackageData, data)
         }

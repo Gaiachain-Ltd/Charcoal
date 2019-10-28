@@ -31,8 +31,8 @@ CalendarPageBase {
         }
 
         Items.BasicCheckBox {
-            function updateCompanyOnlyFiltering() {
-                companyCalendarModel.active = checked
+            function updateCooperativeOnlyFiltering() {
+                cooperativeFilteringEvents.active = checked
             }
 
             Layout.fillWidth: true
@@ -43,9 +43,10 @@ CalendarPageBase {
             opacity: userManager.loggedIn ? 1 : 0
 
             text: Strings.onlyMyTransactions
+            checked: true
 
-            Component.onCompleted: updateCompanyOnlyFiltering()
-            onCheckedChanged: updateCompanyOnlyFiltering()
+            Component.onCompleted: updateCooperativeOnlyFiltering()
+            onCheckedChanged: updateCooperativeOnlyFiltering()
         }
     }
 

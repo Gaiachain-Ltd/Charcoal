@@ -29,6 +29,7 @@ public:
     Q_INVOKABLE static Enums::PlaceType placeType(const Enums::SupplyChainAction &action);
     Q_INVOKABLE static Enums::PlaceType userPlaceType(const Enums::UserType &user);
     static QList<Enums::SupplyChainAction> userActions(const Enums::UserType &user);
+    static Enums::SupplyChainAction packageTypeCreationAction(const Enums::PackageType &type);
 
     static QList<Enums::UserType> availableUserTypes();
     static QList<Enums::PlaceType> availablePlaceTypes();
@@ -53,6 +54,7 @@ private:
     static const QHash<Enums::SupplyChainAction, Enums::PlaceType> sc_supplyChainActionPlaceType;
     static const QHash<Enums::UserType, QList<Enums::SupplyChainAction>> sc_supplyChainActionPerUser;
     static const QHash<Enums::UserType, Enums::PlaceType> sc_userPlaceType;
+    static const QHash<Enums::PackageType, Enums::SupplyChainAction> sc_packageTypeCreationAction;
 };
 
 #endif // DATAGLOBALS_H

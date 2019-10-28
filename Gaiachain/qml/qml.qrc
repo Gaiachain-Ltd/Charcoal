@@ -5,7 +5,6 @@
         <file>pages/MainMenuPage.qml</file>
         <file>pages/CalendarPage.qml</file>
         <file>pages/CalendarEventsPage.qml</file>
-        <file>pages/EventDetailsPage.qml</file>
         <file>pages/BasePage.qml</file>
         <file>pages/QRScannerPage.qml</file>
         <file>pages/InformationPopup.qml</file>

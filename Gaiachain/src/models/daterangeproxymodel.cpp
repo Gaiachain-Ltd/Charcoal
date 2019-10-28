@@ -49,5 +49,5 @@ bool DateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sou
 
 bool DateRangeProxyModel::isInDateTimeRange(const QDateTime &dt) const
 {
-    return m_startDateTime <= dt && dt < m_endDateTime;
+    return m_startDateTime <= dt && dt <= m_endDateTime;
 }

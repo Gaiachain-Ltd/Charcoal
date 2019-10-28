@@ -27,7 +27,7 @@ Item {
         }
 
         function updateData() {
-            var packageTypeEvents = packagesCompanyCalendarModel.packageTypeEventsQml();
+            var packageTypeEvents = packagesCalendarModel.packageTypeEventsQml();
 
             var availablePackageTypes = DataGlobals.availablePackageTypes
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
@@ -43,7 +43,7 @@ Item {
     }
 
     Connections {
-        target: packagesCompanyCalendarModel
+        target: packagesCalendarModel
         onPackageTypeEventsChanged: {
             packageTypeActionsModel.updateData()
         }

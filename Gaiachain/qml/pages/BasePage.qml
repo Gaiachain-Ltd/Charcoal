@@ -34,7 +34,7 @@ Items.GenericPanel
     function refreshData() {
         showOverlay()
         dataManager.clearModels()
-        sessionManager.getAllEntities()
+        sessionManager.getFullData()
         refreshDataTimer.start()
     }
 
