@@ -8,7 +8,6 @@
 #include <QJsonArray>
 
 #include "../common/tags.h"
-#include "../common/location.h"
 #include "../common/dataglobals.h"
 #include "../common/logs.h"
 
@@ -18,7 +17,7 @@ UserManager::UserManager(QObject *parent)
     connect(this, &UserManager::userDataChanged,
             this, [this]() {
         emit loginChanged(getLogin());
-        emit companyIdChanged(getCompanyId());
+        emit cooperativeIdChanged(getCooperativeId());
     });
     connect(this, &UserManager::loggedInChanged,
             this, [this]() { emit loginChanged(getLogin()); });
@@ -34,9 +33,9 @@ QString UserManager::getLogin() const
     return isLoggedIn() ? m_userData[Tags::email].toString() : QString{};
 }
 
-QString UserManager::getCompanyId() const
+QString UserManager::getCooperativeId() const
 {
-    return m_userData[Tags::companyId].toString();
+    return m_userData[Tags::cooperativeId].toString();
 }
 
 void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -63,12 +62,8 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
     const QJsonObject obj = doc.object();
 
     m_userData.insert(Tags::email, obj.value(Tags::email).toString());
-    m_userData.insert(Tags::companyId, obj.value(Tags::companyId).toString());
-    m_userData.insert(Tags::companyName, obj.value(Tags::companyName).toString());
-
-    const auto locationArray = obj.value(Tags::companyLocation).toArray();
-    m_userData.insert(Tags::companyLocation, QVariant::fromValue(Location{ locationArray.at(0).toDouble(),
-                                                                    locationArray.at(1).toDouble() }));
+    m_userData.insert(Tags::cooperativeId, obj.value(Tags::cooperativeId).toString());
+    m_userData.insert(Tags::cooperativeName, obj.value(Tags::cooperativeName).toString());
 
     const auto role = obj.value(Tags::role).toString();
     const auto userType = DataGlobals::userTypeFromString(role);

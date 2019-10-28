@@ -10,10 +10,10 @@
 
 #include "../common/enums.h"
 #include "../common/globals.h"
-#include "../common/location.h"
 #include "../common/tags.h"
 #include "../common/dataglobals.h"
 #include "../common/logs.h"
+#include "../helpers/utility.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataManager, "data.manager")
@@ -27,23 +27,32 @@ DataManager::DataManager(QObject *parent)
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("dataManager"), this);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("packageTypeCooperativeIdsModel"), &m_packageTypeCooperativeIdsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsModel);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("cooperativeFilteringEvents"), &m_cooperativeFilteringEventsModel);
+
     engine.rootContext()->setContextProperty(QStringLiteral("calendarModel"), &m_calendarModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("companyCalendarModel"), &m_companyCalendarModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("packagesCompanyCalendarModel"), &m_packagesCalendarModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("packagesCalendarModel"), &m_packagesCalendarModel);
+
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsModel"), &m_dateEventsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("latestDateEventsModel"), &m_latestDateEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("companyLatestDateEventsModel"), &m_companyLatestDateEventsModel);
+
     engine.rootContext()->setContextProperty(QStringLiteral("latestEventsModel"), &m_latestEventsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("searchLatestEventsModel"), &m_searchLatestEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("companySearchLatestEventsModel"), &m_companySearchLatestEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeCompanySearchLatestEventsModel"), &m_packagesTypeCompanySearchLatestEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeSearchLatestEventsModel"), &m_packagesTypeSearchLatestEventsModel);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("producersModel"), &m_producersModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("buyersModel"), &m_buyersModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("transportersModel"), &m_transportersModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("destinationsModel"), &m_destinationsModel);
 }
 
-void DataManager::updateCompanyId(const QString &companyId)
+void DataManager::updateCooperativeId(const QString &cooperativeId)
 {
-    m_companyCalendarModel.setCompanyId(companyId);
-    m_companyLatestDateEventsModel.setCompanyId(companyId);
-    m_companySearchLatestEventsModel.setCompanyId(companyId);
+    m_cooperativeEventsModel.setCooperativeId(cooperativeId);
+    m_cooperativeFilteringEventsModel.setCooperativeId(cooperativeId);
 }
 
 void DataManager::clearModels()
@@ -52,14 +61,21 @@ void DataManager::clearModels()
     m_eventModel.clearModel();
 }
 
-void DataManager::onEntitiesLoaded(const QJsonArray &entities)
+void DataManager::onAdditionalDataLoaded(const QJsonObject &additionalData)
 {
-    QJsonArray::const_iterator it = entities.constBegin();
-    while (it != entities.constEnd()) {
-        const QJsonObject &obj = (*it).toObject();
-        loadEntity(obj);
-        ++it;
+    auto producersModelData = Gaia::ModelData{};
+    for (auto producerValue : additionalData.value(Tags::producers).toArray()) {
+        auto producerObj = producerValue.toObject();
+        producersModelData.append({ producerObj.value(Tags::id).toString(),
+                                    producerObj.value(Tags::name).toString(),
+                                    producerObj.value(Tags::village).toString(),
+                                    producerObj.value(Tags::parcels).toVariant().toStringList() });
     }
+    m_producersModel.appendData(producersModelData);
+
+    m_buyersModel.setStringList(additionalData.value(Tags::buyers).toVariant().toStringList());
+    m_transportersModel.setStringList(additionalData.value(Tags::transporters).toVariant().toStringList());
+    m_destinationsModel.setStringList(additionalData.value(Tags::destinations).toVariant().toStringList());
 }
 
 void DataManager::onRelationsLoaded(const QJsonObject &relations)
@@ -69,6 +85,19 @@ void DataManager::onRelationsLoaded(const QJsonObject &relations)
             m_relationsModel.insert(key, value.toString());
         }
     }
+}
+
+void DataManager::onEntitiesLoaded(const QJsonArray &entities)
+{
+    std::for_each(entities.constBegin(), entities.constEnd(),
+                  [this](const QJsonValue &value) {
+        loadEntity(value.toObject());
+    });
+}
+
+void DataManager::onUnusedLotIdsLoaded(const QJsonArray &ids)
+{
+    m_unusedLotIdsModel.setStringList(QVariant::fromValue(ids.toVariantList()).toStringList());
 }
 
 PackageData DataManager::getPackageData(const QString &packageId) const
@@ -85,18 +114,19 @@ void DataManager::setupModels()
 {
     m_packageDataModel.setSourceModel(&m_eventModel);
 
-    m_calendarModel.setSourceModel(&m_eventModel);
-    m_companyCalendarModel.setSourceModel(&m_calendarModel);
-    m_packagesCalendarModel.setSourceModel(&m_companyCalendarModel);
+    m_cooperativeEventsModel.setSourceModel(&m_eventModel);
+    m_packageTypeCooperativeIdsModel.setSourceModel(&m_cooperativeEventsModel);
 
-    m_dateEventsModel.setSourceModel(&m_eventModel);
+    m_cooperativeFilteringEventsModel.setSourceModel(&m_eventModel);
+    m_calendarModel.setSourceModel(&m_cooperativeFilteringEventsModel);
+    m_packagesCalendarModel.setSourceModel(&m_calendarModel);
+
+    m_dateEventsModel.setSourceModel(&m_calendarModel);
     m_latestDateEventsModel.setSourceModel(&m_dateEventsModel);
-    m_companyLatestDateEventsModel.setSourceModel(&m_latestDateEventsModel);
 
-    m_latestEventsModel.setSourceModel(&m_eventModel);
+    m_latestEventsModel.setSourceModel(&m_cooperativeFilteringEventsModel);
     m_searchLatestEventsModel.setSourceModel(&m_latestEventsModel);
-    m_companySearchLatestEventsModel.setSourceModel(&m_searchLatestEventsModel);
-    m_packagesTypeCompanySearchLatestEventsModel.setSourceModel(&m_companySearchLatestEventsModel);
+    m_packagesTypeSearchLatestEventsModel.setSourceModel(&m_searchLatestEventsModel);
 }
 
 QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)
@@ -115,7 +145,7 @@ void DataManager::loadEntity(const QJsonObject &entityObj)
     const auto packageId = checkAndValue(entityObj, Tags::id).toString();
 
     const auto agentObj = checkAndValue(entityObj, Tags::agent).toObject();
-    const auto companyId = checkAndValue(agentObj, Tags::companyId).toString();
+    const auto cooperativeId = checkAndValue(agentObj, Tags::cooperativeId).toString();
     const auto agentRole = DataGlobals::userTypeFromString(
                 checkAndValue(agentObj, Tags::role).toString());
 
@@ -127,7 +157,7 @@ void DataManager::loadEntity(const QJsonObject &entityObj)
 
     eventData.append(QVariantList({ packageId,
                                     QVariant::fromValue(agentRole),
-                                    companyId,
+                                    cooperativeId,
                                     date,
                                     QVariant::fromValue(action),
                                     properties

@@ -11,7 +11,7 @@ class UserManager : public AbstractManager
 {
     Q_OBJECT
     Q_PROPERTY(QString login READ getLogin NOTIFY loginChanged)
-    Q_PROPERTY(QString companyId READ getCompanyId NOTIFY companyIdChanged)
+    Q_PROPERTY(QString cooperativeId READ getCooperativeId NOTIFY cooperativeIdChanged)
     Q_PROPERTY(Enums::UserType userType READ getUserType NOTIFY userTypeChanged)
     Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
 public:
@@ -24,7 +24,7 @@ public:
     bool isLoggedIn() const;
 
     QString getLogin() const;
-    QString getCompanyId() const;
+    QString getCooperativeId() const;
 
     Enums::UserType getUserType() const;
 
@@ -37,7 +37,7 @@ signals:
     void tokenChanged(const QString &token) const;
 
     void loginChanged(QString login);
-    void companyIdChanged(QString companyId);
+    void cooperativeIdChanged(QString cooperativeId);
     void userDataChanged(const QVariantMap &userData) const;
 
     void userTypeChanged(Enums::UserType userType) const;
@@ -49,7 +49,6 @@ private:
 
     void setUserType(const Enums::UserType userType);
     QString m_login;
-    QString m_company;
 };
 
 #endif // USERMANAGER_H

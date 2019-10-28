@@ -29,6 +29,8 @@ void AbstractSessionManager::getFullData()
 
     getAllRelations();
     getAllEntities();
+    getAdditionalData();
+    getUnusedLotIds();
 }
 
 void AbstractSessionManager::updateToken(const QString &token)

@@ -16,8 +16,6 @@ class PackageTypeEventsProxyModel : public AbstractIdentityProxyModel
 public:
     explicit PackageTypeEventsProxyModel(QObject *parent = nullptr);
 
-    static QVector<Enums::PackageType> availablePackageTypes();
-
     QHash<Enums::PackageType, int> packageTypeEvents() const;
     QList<Enums::PackageType> datePackageTypes(const QDate &date) const;
 

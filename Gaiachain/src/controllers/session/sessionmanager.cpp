@@ -33,13 +33,41 @@ void SessionManager::login(const QString &email, const QString &password)
     sendRequest(request);
 }
 
+void SessionManager::getAdditionalData()
+{
+    // TODO implement
+}
+
 void SessionManager::getRelations(const QString &id)
 {
+    Q_UNUSED(id)
+    // TODO implement
+}
+
+void SessionManager::addRelation(const QString &id, const QStringList &ids)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(ids)
+    // TODO implement
+}
+
+void SessionManager::getEntitiesInfo(int count, const QDateTime &from)
+{
+    Q_UNUSED(count)
+    Q_UNUSED(from)
+    // TODO implement
+}
+
+void SessionManager::getEntitiesInfo(const QDateTime &to, const QDateTime &from)
+{
+    Q_UNUSED(to)
+    Q_UNUSED(from)
     // TODO implement
 }
 
 void SessionManager::getEntities(const QStringList &ids)
 {
+    Q_UNUSED(ids)
     // TODO implement
 }
 
@@ -59,6 +87,60 @@ void SessionManager::getEntity(const QString &id)
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     sendRequest(request);
+}
+
+void SessionManager::getEntitId(const QByteArray &codeData)
+{
+    Q_UNUSED(codeData)
+    // TODO implement
+}
+
+void SessionManager::putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+{
+    Q_UNUSED(timestamp)
+    Q_UNUSED(codeData)
+    // TODO update
+
+    if (checkValidToken()) {
+        auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, properties);
+
+        auto errorLambda = [&, id](const QString &, const int) {
+            emit entitySaveResult(id, false);
+        };
+
+        auto finishLambda = [&, id](const QJsonDocument &) {
+            emit entitySaveResult(id, true);
+        };
+
+        connect(request.data(), &BaseRequest::requestFinished, finishLambda);
+        connect(request.data(), &BaseRequest::replyError, errorLambda);
+
+        sendRequest(request);
+    }
+}
+
+void SessionManager::putEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+{
+    Q_UNUSED(action)
+    Q_UNUSED(timestamp)
+    Q_UNUSED(properties)
+    Q_UNUSED(codeData)
+    // TODO implement
+}
+
+void SessionManager::getUnusedLotIds()
+{
+    // TODO implement
+}
+
+void SessionManager::createUnusedLotId()
+{
+    // TODO implement
+}
+
+void SessionManager::getAllRelations()
+{
+    // TODO implement
 }
 
 void SessionManager::getEntities(const QJsonArray &ids)
@@ -84,31 +166,6 @@ void SessionManager::getEntities(const QJsonArray &ids)
     connect(request.data(), &BaseRequest::replyError, errorLambda);
 
     sendRequest(request);
-}
-
-void SessionManager::putEntity(const QString &id, const Enums::SupplyChainAction &action, const QVariantMap &properties)
-{
-    if (checkValidToken()) {
-        auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, properties);
-
-        auto errorLambda = [&, id](const QString &, const int) {
-            emit entitySaveResult(id, false);
-        };
-
-        auto finishLambda = [&, id](const QJsonDocument &) {
-            emit entitySaveResult(id, true);
-        };
-
-        connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-        connect(request.data(), &BaseRequest::replyError, errorLambda);
-
-        sendRequest(request);
-    }
-}
-
-void SessionManager::getAllRelations()
-{
-    // TODO implement
 }
 
 void SessionManager::getAllEntities()

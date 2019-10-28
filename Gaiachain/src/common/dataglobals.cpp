@@ -40,6 +40,12 @@ const QHash<Enums::SupplyChainAction, Enums::PlaceType> DataGlobals::sc_supplyCh
     { Enums::SupplyChainAction::ExportReception, Enums::PlaceType::CooperativeHQ }
 };
 
+const QHash<Enums::PackageType, Enums::SupplyChainAction> DataGlobals::sc_packageTypeCreationAction = {
+    { Enums::PackageType::Harvest, Enums::SupplyChainAction::Harvest},
+    { Enums::PackageType::Sac, Enums::SupplyChainAction::Bagging },
+    { Enums::PackageType::Lot, Enums::SupplyChainAction::LotCreation }
+};
+
 const QHash<Enums::UserType, QList<Enums::SupplyChainAction>> DataGlobals::sc_supplyChainActionPerUser = {
     { Enums::UserType::SuperUser, QList<Enums::SupplyChainAction>{ Enums::SupplyChainAction::Harvest,
                                                                    Enums::SupplyChainAction::GrainProcessing,
@@ -107,6 +113,11 @@ Enums::PlaceType DataGlobals::placeType(const Enums::SupplyChainAction &action)
 QList<Enums::SupplyChainAction> DataGlobals::userActions(const Enums::UserType &user)
 {
     return sc_supplyChainActionPerUser.value(user);
+}
+
+Enums::SupplyChainAction DataGlobals::packageTypeCreationAction(const Enums::PackageType &type)
+{
+    return sc_packageTypeCreationAction.value(type);
 }
 
 Enums::PlaceType DataGlobals::userPlaceType(const Enums::UserType &user)

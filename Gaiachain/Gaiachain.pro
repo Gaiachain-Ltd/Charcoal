@@ -45,7 +45,7 @@ HEADERS += \
     src/helpers/typetraits.h \
     src/models/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
-    src/models/companyeventsproxymodel.h \
+    src/models/cooperativeeventsproxymodel.h \
     src/models/daterangeproxymodel.h \
     src/models/latesteventsproxymodel.h \
     src/models/modelchangedextension.h \
@@ -58,6 +58,7 @@ HEADERS += \
     src/common/enums.h \
     src/common/globals.h \
     src/controllers/pagemanager.h \
+    src/models/packagetypeidsproxymodel.h \
     src/models/packagetypeproxymodel.h \
     src/models/producermodel.h \
     src/models/searcheventsproxymodel.h \
@@ -68,7 +69,6 @@ HEADERS += \
     src/controllers/session/sessionmanager.h \
     src/controllers/usermanager.h \
     src/controllers/abstractmanager.h \
-    src/common/location.h \
     src/models/abstractsortfilterproxymodel.h \
     src/common/tags.h \
     src/rest/entityrequest.h \
@@ -83,7 +83,7 @@ SOURCES += src/main.cpp \
     src/controllers/session/dummy/fakesessionmanager.cpp \
     src/models/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
-    src/models/companyeventsproxymodel.cpp \
+    src/models/cooperativeeventsproxymodel.cpp \
     src/models/daterangeproxymodel.cpp \
     src/models/latesteventsproxymodel.cpp \
     src/models/modelchangedextension.cpp \
@@ -94,6 +94,7 @@ SOURCES += src/main.cpp \
     src/controllers/maincontroller.cpp \
     src/controllers/datamanager.cpp \
     src/controllers/pagemanager.cpp \
+    src/models/packagetypeidsproxymodel.cpp \
     src/models/packagetypeproxymodel.cpp \
     src/models/producermodel.cpp \
     src/models/searcheventsproxymodel.cpp \

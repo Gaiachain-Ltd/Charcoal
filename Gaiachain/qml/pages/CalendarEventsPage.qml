@@ -58,14 +58,14 @@ CalendarPageBase {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: companyLatestDateEventsModel
+            viewModel: latestDateEventsModel
             displayDate: false
             displayLastItemSeparator: true
         }
 
         Items.BasicCheckBox {
-            function updateCompanyOnlyFiltering() {
-                companyLatestDateEventsModel.active = checked
+            function updateCooperativeOnlyFiltering() {
+                cooperativeFilteringEvents.active = checked
             }
 
             Layout.fillWidth: true
@@ -74,9 +74,10 @@ CalendarPageBase {
             visible: userManager.loggedIn
 
             text: Strings.onlyMyTransactions
+            checked: true
 
-            Component.onCompleted: updateCompanyOnlyFiltering()
-            onCheckedChanged: updateCompanyOnlyFiltering()
+            Component.onCompleted: updateCooperativeOnlyFiltering()
+            onCheckedChanged: updateCooperativeOnlyFiltering()
         }
     }
 }
