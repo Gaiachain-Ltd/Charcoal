@@ -25,7 +25,7 @@ Item {
         radius: s(Style.tinyMargin)
         border {
             width: s(Style.calendarCurrentDayBorderWidth)
-            color: numberText.color
+            color: Style.inputBorderColor
         }
         color: "transparent"
     }
@@ -58,7 +58,7 @@ Item {
             }
 
             function updateData() {
-                var datePackageTypes = packageTypesCompanyCalendarModel.datePackageTypesQml(model.date);
+                var datePackageTypes = packagesCompanyCalendarModel.datePackageTypesQml(model.date);
 
                 var availablePackageTypes = DataGlobals.availablePackageTypes
                 for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
@@ -74,7 +74,7 @@ Item {
         }
 
         Connections {
-            target: calendarPackageTypesModel
+            target: packagesCompanyCalendarModel
             onDatePackageTypesChanged: {
                 if ( (date.getFullYear() === model.year)
                         && (date.getMonth() === model.month)

@@ -124,6 +124,8 @@ QtObject {
     readonly property url searchImgUrl: "qrc:/ui/search"
     readonly property url calendarBlackImgUrl: "qrc:/ui/calendarBlack"
 
+    readonly property url returnCurrentMonthImgUrl: "qrc:/ui/returnCurrentMonth"
+
     readonly property url supplyChainSubmenuHarvestImgUrl: "qrc:/ui/submenuHarvest"
     readonly property url supplyChainSubmenuGrainProcessingImgUrl: "qrc:/ui/submenuGrainProcessing"
     readonly property url supplyChainSubmenuBaggingImgUrl: "qrc:/ui/submenuBagging"
@@ -172,7 +174,7 @@ QtObject {
 
     // calendar pages
     readonly property color calendarArrowButtonColor: "#e8eaec"
-    readonly property int calendarDotSize: 15
+    readonly property int calendarDotSize: 10
     readonly property int calendarCurrentDayBorderWidth: 3
     readonly property int calendarNamePixelSize: tinyPixelSize
     readonly property int calendarNumberPixelSize: smallPixelSize

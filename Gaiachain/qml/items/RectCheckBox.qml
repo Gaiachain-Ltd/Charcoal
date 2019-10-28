@@ -10,6 +10,8 @@ import "../items" as Items
 CheckBox {
     id: top
 
+    property alias elide: contentText.elide
+
     property string defaultColor: Style.inputBorderColor
     property string checkedColor: palette.text
 
@@ -33,6 +35,8 @@ CheckBox {
     }
 
     contentItem: Items.BasicText {
+        id: contentText
+
         font {
             pixelSize: s(Style.smallPixelSize)
             weight: top.checked ? Font.Bold : Font.Normal

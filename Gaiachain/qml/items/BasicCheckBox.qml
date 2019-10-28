@@ -36,7 +36,9 @@ CheckBox {
     }
 
     contentItem: Items.BasicText {
-        text: top.text
+        horizontalAlignment: Qt.AlignLeft
         leftPadding: (top.indicator.width + top.spacing)
+
+        text: top.text
     }
 }

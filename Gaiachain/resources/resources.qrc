@@ -29,6 +29,7 @@
         <file alias="dummy/testIcon">ui/dummy/gaia-test-icon.svg</file>
         <file alias="calendarBlack">ui/calendar-icon-black.svg</file>
         <file alias="search">ui/icon-search.svg</file>
+        <file alias="returnCurrentMonth">ui/button-return-current-month.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

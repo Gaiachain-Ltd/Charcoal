@@ -41,9 +41,7 @@ CalendarPageBase {
         Layout.topMargin: 0
         Layout.bottomMargin: 0
         Layout.margins: 1.5 * s(Style.hugeMargin)
-        spacing: 1.5 * s(Style.hugeMargin)
-
-        Items.LayoutSeparator {}
+        spacing: 1.5 * s(Style.smallMargin)
 
         Items.BasicText {
             Layout.fillWidth: true
@@ -55,16 +53,30 @@ CalendarPageBase {
             text: new Date(top.currentYear, top.currentMonth, top.currentDay).toLocaleDateString(Qt.locale(), 'MMMM dd (dddd)')
         }
 
-        Items.LayoutSeparator {}
-
         Components.EventsListView {
             Layout.topMargin: -parent.spacing + s(Style.middleMargin)
-            Layout.bottomMargin: s(Style.middleMargin)
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: latestDateEventsModel
+            viewModel: companyLatestDateEventsModel
             displayDate: false
+            displayLastItemSeparator: true
+        }
+
+        Items.BasicCheckBox {
+            function updateCompanyOnlyFiltering() {
+                companyLatestDateEventsModel.active = checked
+            }
+
+            Layout.fillWidth: true
+            Layout.bottomMargin: s(Style.hugeMargin)
+
+            visible: userManager.loggedIn
+
+            text: Strings.onlyMyTransactions
+
+            Component.onCompleted: updateCompanyOnlyFiltering()
+            onCheckedChanged: updateCompanyOnlyFiltering()
         }
     }
 }

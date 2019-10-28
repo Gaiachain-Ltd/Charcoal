@@ -9,8 +9,8 @@ import "../items" as Items
 
 Item {
     id: top
-    implicitHeight: topColumn.implicitHeight
-    implicitWidth: topColumn.implicitWidth
+    implicitHeight: topRow.implicitHeight
+    implicitWidth: topRow.implicitWidth
 
     ListModel {
         id: packageTypeActionsModel
@@ -27,7 +27,7 @@ Item {
         }
 
         function updateData() {
-            var packageTypeEvents = packageTypesCompanyCalendarModel.packageTypeEventsQml();
+            var packageTypeEvents = packagesCompanyCalendarModel.packageTypeEventsQml();
 
             var availablePackageTypes = DataGlobals.availablePackageTypes
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
@@ -43,59 +43,36 @@ Item {
     }
 
     Connections {
-        target: packageTypesCompanyCalendarModel
+        target: packagesCompanyCalendarModel
         onPackageTypeEventsChanged: {
             packageTypeActionsModel.updateData()
         }
     }
 
-    Column {
-        id: topColumn
+    RowLayout {
+        id: topRow
         anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
+            fill: parent
+            margins: s(Style.hugeMargin)
         }
 
         Repeater {
+            id: packagesFilteringRepeater
             model: packageTypeActionsModel
 
-            Rectangle {
-                id: barTop
-                property int verticalPadding: s(Style.middleMargin);
-                property int horizontalPadding: s(Style.hugeMargin);
 
-                width: parent.width
-                height: layout.implicitHeight + 2 * barTop.verticalPadding
+           Items.RectCheckBox {
+               Layout.fillWidth: true
+               Layout.preferredWidth: Style.none
 
-                color: typeColor
+               enabled: false
 
-                RowLayout {
-                    id: layout
-                    anchors{
-                        fill: parent
-                        topMargin: barTop.verticalPadding
-                        bottomMargin: barTop.verticalPadding
-                        leftMargin: barTop.horizontalPadding
-                        rightMargin: barTop.horizontalPadding
-                    }
+               elide: Text.ElideMiddle
+               checked: true
+               checkedColor: typeColor
 
-                    Items.BasicText {
-                        text: typeName
-
-                        font.weight: Font.DemiBold
-                        color: Style.textSecondaryColor
-                    }
-
-                    Items.LayoutSpacer { horizontal: true }
-
-                    Items.BasicText {
-                        text: eventsCount + " " + Strings.activities
-
-                        color: Style.textSecondaryColor
-                    }
-                }
-            }
+               text: "%1 (%2)".arg(typeName).arg(eventsCount)
+           }
         }
     }
 }
