@@ -19,6 +19,7 @@ TextField
 
     property Item nextInput: null
     signal moveToNextInput()
+    signal iconClicked
 
     onMoveToNextInput: {
         if (nextInput !== null)
@@ -72,5 +73,10 @@ TextField
         width: height
 
         visible: status != Image.Null && showIcon
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: top.iconClicked()
+        }
     }
 }

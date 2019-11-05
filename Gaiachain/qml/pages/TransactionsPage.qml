@@ -130,7 +130,10 @@ BasePage {
 
             viewModel: packagesTypeSearchLatestEventsModel
 
-            onDelegateClicked: pageManager.enter(Enums.Page.PackageData, data)
+            onDelegateClicked:  {
+                var packageData = dataManager.getPackageData(packageId)
+                pageManager.enter(Enums.Page.PackageData, { "packageData": packageData })
+            }
         }
     }
 }

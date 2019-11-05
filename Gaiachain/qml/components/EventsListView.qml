@@ -32,7 +32,7 @@ Item {
         }
     }
 
-    signal delegateClicked(var data)
+    signal delegateClicked(string packageId)
 
     ListView {
         id: mainView
@@ -101,7 +101,7 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: delegateClicked({ "packageId": packageId })
+                onClicked: delegateClicked(packageId)
             }
         }
     }
