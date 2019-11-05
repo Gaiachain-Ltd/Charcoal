@@ -7,18 +7,18 @@
 #include "../common/tags.h"
 
 LoginRequest::LoginRequest(const QString &email, const QString &password)
-    : BaseRequest(QStringLiteral("/auth/login/"))
+    : BaseRequest(QStringLiteral("/auth/login/"), Type::Post)
 {
     if (!email.isEmpty() && !password.isEmpty()) {
-        QJsonObject object;
-        object.insert(Tags::email, QJsonValue(email));
-        object.insert(Tags::password, QJsonValue(password));
-        mRequestDocument.setObject(object);
-
-        mType = Type::Post;
-
+        mRequestDocument.setObject({ { Tags::email, email },
+                                     { Tags::password, password } });
     } else {
         qCCritical(sessionRequest) << "Error: missing login info"
-                                 << email << password.length();
+                                   << email << password.length();
     }
+}
+
+bool LoginRequest::isTokenRequired() const
+{
+    return false;
 }

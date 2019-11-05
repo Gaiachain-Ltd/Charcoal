@@ -42,6 +42,7 @@ HEADERS += \
     src/common/dataglobals.h \
     src/controllers/session/abstractsessionmanager.h \
     src/controllers/session/dummy/fakesessionmanager.h \
+    src/helpers/requestshelper.h \
     src/helpers/typetraits.h \
     src/models/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
@@ -63,8 +64,10 @@ HEADERS += \
     src/models/producermodel.h \
     src/models/searcheventsproxymodel.h \
     src/common/packagedata.h \
+    src/rest/additionaldatarequest.h \
     src/rest/baserequest.h \
     src/rest/loginrequest.h \
+    src/rest/relationrequest.h \
     src/rest/restapiclient.h \
     src/controllers/session/sessionmanager.h \
     src/controllers/usermanager.h \
@@ -81,6 +84,7 @@ SOURCES += src/main.cpp \
     src/common/globals.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/dummy/fakesessionmanager.cpp \
+    src/helpers/requestshelper.cpp \
     src/models/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
     src/models/cooperativeeventsproxymodel.cpp \
@@ -98,8 +102,10 @@ SOURCES += src/main.cpp \
     src/models/packagetypeproxymodel.cpp \
     src/models/producermodel.cpp \
     src/models/searcheventsproxymodel.cpp \
+    src/rest/additionaldatarequest.cpp \
     src/rest/baserequest.cpp \
     src/rest/loginrequest.cpp \
+    src/rest/relationrequest.cpp \
     src/rest/restapiclient.cpp \
     src/controllers/session/sessionmanager.cpp \
     src/controllers/usermanager.cpp \

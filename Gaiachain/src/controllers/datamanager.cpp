@@ -11,9 +11,9 @@
 #include "../common/enums.h"
 #include "../common/globals.h"
 #include "../common/tags.h"
-#include "../common/dataglobals.h"
 #include "../common/logs.h"
 #include "../helpers/utility.h"
+#include "../helpers/requestshelper.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataManager, "data.manager")
@@ -146,12 +146,12 @@ void DataManager::loadEntity(const QJsonObject &entityObj)
 
     const auto agentObj = checkAndValue(entityObj, Tags::agent).toObject();
     const auto cooperativeId = checkAndValue(agentObj, Tags::cooperativeId).toString();
-    const auto agentRole = DataGlobals::userTypeFromString(
+    const auto agentRole = RequestsHelper::userTypeFromString(
                 checkAndValue(agentObj, Tags::role).toString());
 
     const auto date = QDateTime::fromSecsSinceEpoch(
                 checkAndValue(entityObj, Tags::timestamp).toVariant().value<qint64>());
-    const auto action = DataGlobals::supplyChainActionFromString(
+    const auto action = RequestsHelper::supplyChainActionFromString(
                 checkAndValue(entityObj, Tags::action).toString());
     const auto properties = checkAndValue(entityObj, Tags::properties).toVariant().toHash();
 

@@ -19,12 +19,6 @@ class DataGlobals : public QObject
 public:
     static DataGlobals *instance();
 
-    static Enums::UserType userTypeFromString(const QString &text);
-    static QString userTypeToString(const Enums::UserType &userType);
-
-    static Enums::SupplyChainAction supplyChainActionFromString(const QString &text);
-    static QString supplyChainActionToString(const Enums::SupplyChainAction &action);
-
     Q_INVOKABLE static Enums::PackageType packageType(const Enums::SupplyChainAction &action);
     Q_INVOKABLE static Enums::PlaceType placeType(const Enums::SupplyChainAction &action);
     Q_INVOKABLE static Enums::PlaceType userPlaceType(const Enums::UserType &user);
@@ -46,9 +40,6 @@ public:
 
 private:
     DataGlobals();
-
-    static const QHash<Enums::UserType, QString> sc_userTypeStrings;
-    static const QHash<Enums::SupplyChainAction, QString> sc_supplyChainActionStrings;
 
     static const QHash<Enums::SupplyChainAction, Enums::PackageType> sc_supplyChainActionPackageType;
     static const QHash<Enums::SupplyChainAction, Enums::PlaceType> sc_supplyChainActionPlaceType;

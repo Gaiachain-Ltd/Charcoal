@@ -37,11 +37,13 @@ public:
     Q_INVOKABLE virtual void getEntitId(const QByteArray &codeData) = 0;
     Q_INVOKABLE virtual void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                              const QVariantMap &properties, const QByteArray &codeData = {}) = 0;
-    Q_INVOKABLE virtual void putEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                                       const QVariantMap &properties, const QByteArray &codeData) = 0;
+    Q_INVOKABLE virtual void putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                                             const QDateTime &timestamp, const QVariantMap &properties) = 0;
+    Q_INVOKABLE virtual void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                                           const QVariantMap &properties, const QByteArray &codeData) = 0;
 
     Q_INVOKABLE virtual void getUnusedLotIds() = 0;
-    Q_INVOKABLE virtual void createUnusedLotId() = 0;
+    Q_INVOKABLE virtual void postUnusedLotId() = 0;
 
     void updateToken(const QString &token);
 
@@ -50,26 +52,29 @@ signals:
 
     void beforeGetFullData() const;
 
-    void loginError(const int code) const;
+    void loginError(const int &code) const;
     void loginFinished(const QJsonDocument &doc) const;
 
-    void additionalDataLoadError(const int code) const;
-    void additionalDataLoaded(const QJsonObject &fixesValues) const;
+    void additionalDataLoadError(const int &code) const;
+    void additionalDataLoaded(const QJsonObject &data) const;
 
-    void relationsLoadError(const int code) const;
+    void relationsLoadError(const int &code) const;
     void packageRelationsLoaded(const QJsonArray &packages) const;
     void packagesRelationsLoaded(const QJsonObject &relations) const;
-    void packageRelationsSaveResult(const QString &id, const bool &result) const;
+    void packageRelationsSaveError(const int &code) const;
+    void packageRelationsSaved(const QString &id) const;
 
-    void entityLoadError(const int code) const;
+    void entityLoadError(const int &code) const;
     void entitiesLoaded(const QJsonArray &entities) const;
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
     void entityIdLoaded(const QString &id) const;
-    void entitySaveResult(const QString &id, const bool &result) const;
+    void entitySaveError(const int &code) const;
+    void entitySaved(const QString &id) const;
 
-    void unusedLotIdsLoadError(const int code) const;
+    void unusedLotIdsLoadError(const int &code) const;
     void unusedLotIdsLoaded(const QJsonArray &ids) const;
-    void createUnusedLotIdResult(const QString &id, const bool &result) const;
+    void unusedLotIdCreateError(const int &code) const;
+    void unusedLotIdCreated(const QString &id) const;
 
 protected:
     Enums::ConnectionState m_connectionState = Enums::ConnectionState::Unknown;

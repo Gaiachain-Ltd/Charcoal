@@ -1,6 +1,6 @@
 #include "baserequest.h"
 
-#include <QMetaObject>
+#include <QMetaEnum>
 
 #include "../common/globals.h"
 #include "../common/tags.h"
@@ -8,38 +8,45 @@
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(sessionRequest, "session.request")
 
-BaseRequest::BaseRequest(const QString &method, const QString &token)
+BaseRequest::BaseRequest(const QString &path, const Type &type, const QString &token)
     : MRestRequest()
     , mToken(token)
 {
-    Q_ASSERT_X(isTokenRequired() ? token.isEmpty() == false : true,
-               this->metaObject()->className(),
-               "This request require token!");
-    setMethod(method);
+    setObjectName(QStringLiteral("%1 [%2]").arg(path)
+                  .arg(QMetaEnum::fromType<Type>().valueToKey(static_cast<int>(type))));
+
+    mType = type;
+    setPath(path);
     setPriority(Priority::Normal);
 }
 
-void BaseRequest::setMethod(const QString &apiMethodPath)
+void BaseRequest::setPath(const QString &path)
 {
-    Q_ASSERT_X(apiMethodPath.isEmpty() == false,
-               this->metaObject()->className(),
-               "Method address not provided!");
-    mApiMethod = apiMethodPath;
-    setAddress(QUrl(SERVER_ADDRESS + mApiMethod));
+    Q_ASSERT_X(!path.isEmpty(), __PRETTY_FUNCTION__, "Path address not provided!");
+    setAddress(QUrl(SERVER_ADDRESS + path));
 }
 
 void BaseRequest::customizeRequest(QNetworkRequest &request)
 {
-    if (!mToken.isEmpty())
+    Q_ASSERT_X(!isTokenRequired() || !mToken.isEmpty(), objectName().toLatin1(),
+               "This request require token and it's not provided!");
+
+    if (!mToken.isEmpty()) {
         request.setRawHeader(QByteArray("Authorization"), QStringLiteral("%1 %2").arg(Tags::bearerHeader, mToken).toLatin1());
+    }
 }
 
 void BaseRequest::parse()
 {
+    if (mElapsedTimer.isValid()) {
+        qCDebug(sessionRequest) << "Request (" << objectName() << ") finished. Elapsed time:" << mElapsedTimer.elapsed();
+    }
+
     emit requestFinished(mReplyDocument);
 }
 
 bool BaseRequest::isTokenRequired() const
 {
-    return false;
+    return (mType != Type::None &&
+            mType != Type::Get);
 }

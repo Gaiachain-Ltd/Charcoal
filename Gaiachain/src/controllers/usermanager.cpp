@@ -8,8 +8,8 @@
 #include <QJsonArray>
 
 #include "../common/tags.h"
-#include "../common/dataglobals.h"
 #include "../common/logs.h"
+#include "../helpers/requestshelper.h"
 
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
@@ -66,7 +66,7 @@ void UserManager::parseLoginData(const QJsonDocument &doc)
     m_userData.insert(Tags::cooperativeName, obj.value(Tags::cooperativeName).toString());
 
     const auto role = obj.value(Tags::role).toString();
-    const auto userType = DataGlobals::userTypeFromString(role);
+    const auto userType = RequestsHelper::userTypeFromString(role);
 
     setUserType(userType);
     emit tokenChanged(obj.value(Tags::token).toString());
