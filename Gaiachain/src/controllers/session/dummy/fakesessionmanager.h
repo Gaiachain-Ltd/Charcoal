@@ -26,11 +26,13 @@ public:
 
     Q_INVOKABLE void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                              const QVariantMap &properties, const QByteArray &codeData = {}) override;
-    Q_INVOKABLE void putEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                                       const QVariantMap &properties, const QByteArray &codeData) override;
+    Q_INVOKABLE void putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                                     const QDateTime &timestamp, const QVariantMap &properties) override;
+    Q_INVOKABLE void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                                   const QVariantMap &properties, const QByteArray &codeData) override;
 
     Q_INVOKABLE void getUnusedLotIds() override;
-    Q_INVOKABLE void createUnusedLotId() override;
+    Q_INVOKABLE void postUnusedLotId() override;
 
 private:
     static const int sc_firstHarvestShift = 90;    // more or less a quarter
@@ -54,7 +56,7 @@ private:
     void onRelationsAll();
     void onRelationsSingle(const QString &packageId);
 
-    void onRelationSaveError(const QString &packageId);
+    void onRelationSaveError();
     void onRelationSaved(const QString &packageId, const QStringList &relatedIds);
 
     void onEntityError();
@@ -63,11 +65,11 @@ private:
     void onEntitySingle(const QString &packageId);
     void onEntityId(const QByteArray &codeData);
 
-    void onEntitySaveError(const QString &packageId);
+    void onEntitySaveError();
     void onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                        const QVariantMap &properties, const QByteArray &codeData);
-    void onEntitySaved(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                       const QVariantMap &properties, const QByteArray &codeData);
+    void onEntitySaved(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                       const QVariantMap &properties);
 
     void onUnusedLotIdsError();
     void onUnusedLotIds();

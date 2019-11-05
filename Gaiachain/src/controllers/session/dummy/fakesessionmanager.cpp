@@ -44,21 +44,21 @@ void FakeSessionManager::addRelation(const QString &id, const QStringList &ids)
     bool error = (qrand() % 100 == 1);
 
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationSaveError(id) : onRelationSaved(id, ids); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationSaveError() : onRelationSaved(id, ids); });
 }
 
 void FakeSessionManager::getEntitiesInfo(int count, const QDateTime &from)
 {
     Q_UNUSED(count)
     Q_UNUSED(from)
-    Q_ASSERT_X(false, "Not implemented", "Not implemented for fake data");
+    Q_ASSERT_X(false, __PRETTY_FUNCTION__, "Not implemented for fake data");
 }
 
 void FakeSessionManager::getEntitiesInfo(const QDateTime &to, const QDateTime &from)
 {
     Q_UNUSED(to)
     Q_UNUSED(from)
-    Q_ASSERT_X(false, "Not implemented", "Not implemented for fake data");
+    Q_ASSERT_X(false, __PRETTY_FUNCTION__, "Not implemented for fake data");
 }
 
 void FakeSessionManager::getEntities(const QStringList &ids)
@@ -80,7 +80,7 @@ void FakeSessionManager::getEntity(const QString &id)
 void FakeSessionManager::getEntitId(const QByteArray &codeData)
 {
     Q_UNUSED(codeData)
-    Q_ASSERT_X(false, "Not implemented", "Not implemented for fake data");
+    Q_ASSERT_X(false, __PRETTY_FUNCTION__, "Not implemented for fake data");
 }
 
 void FakeSessionManager::putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
@@ -88,15 +88,23 @@ void FakeSessionManager::putEntityAction(const QString &id, const Enums::SupplyC
     bool error = (qrand() % 100 == 1);
 
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError(id) : onEntitySaved(id, action, timestamp, properties, codeData); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(id, action, timestamp, properties, codeData); });
 }
 
-void FakeSessionManager::putEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void FakeSessionManager::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
     bool error = (qrand() % 100 == 1);
 
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError({}) : onEntitySaved(action, timestamp, properties, codeData); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(QString{}, action, timestamp, properties, codeData); });
+}
+
+void FakeSessionManager::postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+{
+    bool error = (qrand() % 100 == 1);
+
+    updateConnectionStateBeforeRequest();
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(codeData, action, timestamp, properties); });
 }
 
 void FakeSessionManager::getUnusedLotIds()
@@ -107,7 +115,7 @@ void FakeSessionManager::getUnusedLotIds()
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onUnusedLotIdsError() : onUnusedLotIds(); });
 }
 
-void FakeSessionManager::createUnusedLotId()
+void FakeSessionManager::postUnusedLotId()
 {
     bool error = (qrand() % 100 == 1);
 
@@ -211,10 +219,12 @@ void FakeSessionManager::onRelationsSingle(const QString &packageId)
     emit packageRelationsLoaded(QJsonArray::fromVariantList(m_populator.getPackageRelations(packageId)) );
 }
 
-void FakeSessionManager::onRelationSaveError(const QString &packageId)
+void FakeSessionManager::onRelationSaveError()
 {
+    const auto error = QNetworkReply::HostNotFoundError;
+
     updateConnectionStateAfterRequest(QNetworkReply::HostNotFoundError);
-    emit packageRelationsSaveResult(packageId, false);
+    emit packageRelationsSaveError(error);
 }
 
 void FakeSessionManager::onRelationSaved(const QString &packageId, const QStringList &relatedIds)
@@ -222,7 +232,7 @@ void FakeSessionManager::onRelationSaved(const QString &packageId, const QString
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
     m_populator.addPackageRelation(packageId, relatedIds);
-    emit packageRelationsSaveResult(packageId, true);
+    emit packageRelationsSaved(packageId);
 }
 
 void FakeSessionManager::onEntityError()
@@ -254,26 +264,38 @@ void FakeSessionManager::onEntitySingle(const QString &packageId)
     emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventHistory(packageId)) );
 }
 
-void FakeSessionManager::onEntitySaveError(const QString &packageId)
+void FakeSessionManager::onEntitySaveError()
 {
+    const auto error = QNetworkReply::HostNotFoundError;
+
     updateConnectionStateAfterRequest(QNetworkReply::HostNotFoundError);
-    emit entitySaveResult(packageId, false);
+    emit entitySaveError(error);
 }
 
 void FakeSessionManager::onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
+    Q_ASSERT_X(!packageId.isEmpty(), __PRETTY_FUNCTION__, "Empty package id not implemented for fake data");
+
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
     auto result = m_populator.addAction(packageId, action, timestamp, properties, codeData, m_currentUserType, m_currentCooperativeId);
-    emit entitySaveResult(packageId, result);
+    if (!result) {
+        emit entitySaveError(-1);
+    } else {
+        emit entitySaved(packageId);
+    }
 }
 
-void FakeSessionManager::onEntitySaved(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void FakeSessionManager::onEntitySaved(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
     auto packageId = m_populator.addNewAction(action, timestamp, properties, codeData, m_currentUserType, m_currentCooperativeId);
-    emit entitySaveResult(packageId, !packageId.isEmpty());
+    if (packageId.isEmpty()) {
+        emit entitySaveError(-1);
+    } else {
+        emit entitySaved(packageId);
+    }
 }
 
 void FakeSessionManager::onUnusedLotIdsError()
@@ -293,13 +315,15 @@ void FakeSessionManager::onUnusedLotIds()
 
 void FakeSessionManager::onUnusedLotIdCreationError()
 {
+    const auto error = QNetworkReply::HostNotFoundError;
+
     updateConnectionStateAfterRequest(QNetworkReply::HostNotFoundError);
-    emit createUnusedLotIdResult({}, false);
+    emit unusedLotIdCreateError(error);
 }
 
 void FakeSessionManager::onUnusedLotIdCreated()
 {
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
-    emit createUnusedLotIdResult(m_populator.createUnusedLotId(m_currentCooperativeId), true);
+    emit unusedLotIdCreated(m_populator.createUnusedLotId(m_currentCooperativeId));
 }

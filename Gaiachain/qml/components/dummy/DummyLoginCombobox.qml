@@ -20,7 +20,7 @@ ComboBox
     Component.onCompleted: updateInputsProperties()
     onUseDummyChanged: updateInputsProperties()
 
-    model: fakeLogins
+    model: typeof (fakeLogins) !== "undefined" ? fakeLogins : {}
     visible: useDummy
 
     anchors.centerIn: parent

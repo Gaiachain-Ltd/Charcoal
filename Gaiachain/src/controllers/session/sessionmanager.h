@@ -27,11 +27,13 @@ public:
 
     Q_INVOKABLE void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                      const QVariantMap &properties, const QByteArray &codeData = {}) override;
-    Q_INVOKABLE void putEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                               const QVariantMap &properties, const QByteArray &codeData) override;
+    Q_INVOKABLE void putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                                     const QDateTime &timestamp, const QVariantMap &properties) override;
+    Q_INVOKABLE void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                                   const QVariantMap &properties, const QByteArray &codeData) override;
 
     Q_INVOKABLE void getUnusedLotIds() override;
-    Q_INVOKABLE void createUnusedLotId() override;
+    Q_INVOKABLE void postUnusedLotId() override;
 
 private:
     RestAPIClient m_client;
@@ -39,8 +41,10 @@ private:
     void getAllRelations() override;
     void getAllEntities() override;
 
+    void sendRequest(const QSharedPointer<BaseRequest> &request,
+                     std::function<void(const QString &, const int &)> const& errorHandler,
+                     std::function<void(const QJsonDocument &)> const& replyHandler);
     void sendRequest(const QSharedPointer<BaseRequest> &request);
-    void getEntities(const QJsonArray &ids);
 };
 
 #endif // SESSIONMANAGER_H

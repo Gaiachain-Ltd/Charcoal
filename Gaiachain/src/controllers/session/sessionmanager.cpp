@@ -10,6 +10,8 @@
 #include "../../helpers/utility.h"
 #include "../../rest/loginrequest.h"
 #include "../../rest/entityrequest.h"
+#include "../../rest/relationrequest.h"
+#include "../../rest/additionaldatarequest.h"
 
 SessionManager::SessionManager(QObject *parent)
     : AbstractSessionManager(parent)
@@ -17,183 +19,205 @@ SessionManager::SessionManager(QObject *parent)
 
 void SessionManager::login(const QString &email, const QString &password)
 {
-    auto request = QSharedPointer<LoginRequest>::create(email, password);
-
-    auto finishLambda = [&](const QJsonDocument &reply) {
-        emit loginFinished(reply);
-    };
-
-    auto errorLambda = [&](const QString &, const int code) {
+    const auto errorHandler = [this](const QString &, const int &code) {
         emit loginError(code);
     };
-
-    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-    connect(request.data(), &BaseRequest::replyError, errorLambda);
-
-    sendRequest(request);
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit loginFinished(reply);
+    };
+    sendRequest(QSharedPointer<LoginRequest>::create(email, password), errorHandler, replyHandler);
 }
 
 void SessionManager::getAdditionalData()
 {
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit additionalDataLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit additionalDataLoaded(reply.object());
+    };
+    sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::All),
+                errorHandler, replyHandler);
 }
 
 void SessionManager::getRelations(const QString &id)
 {
-    Q_UNUSED(id)
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit relationsLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit packageRelationsLoaded(reply.object().value(Tags::ids).toArray());
+    };
+    sendRequest(QSharedPointer<RelationRequest>::create(id), errorHandler, replyHandler);
 }
 
 void SessionManager::addRelation(const QString &id, const QStringList &ids)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(ids)
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit relationsLoadError(code);
+    };
+    const auto replyHandler = [this, id](const QJsonDocument &) {
+        emit packageRelationsSaved(id);
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<RelationRequest>::create(m_token, id, ids), errorHandler, replyHandler);
+    }
 }
 
 void SessionManager::getEntitiesInfo(int count, const QDateTime &from)
 {
-    Q_UNUSED(count)
-    Q_UNUSED(from)
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit entityLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
+    };
+    sendRequest(QSharedPointer<EntityRequest>::create(count, from), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntitiesInfo(const QDateTime &to, const QDateTime &from)
 {
-    Q_UNUSED(to)
-    Q_UNUSED(from)
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit entityLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
+    };
+    sendRequest(QSharedPointer<EntityRequest>::create(to, from), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntities(const QStringList &ids)
 {
-    Q_UNUSED(ids)
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit entityLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
+    };
+    sendRequest(QSharedPointer<EntityRequest>::create(ids), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntity(const QString &id)
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token, id);
-
-    auto errorLambda = [&](const QString &, const int code) {
+    const auto errorHandler = [this](const QString &, const int &code) {
         emit entityLoadError(code);
     };
-
-    auto finishLambda = [&](const QJsonDocument &reply) {
-        emit entitiesLoaded(reply.array());
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
     };
-
-    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-    connect(request.data(), &BaseRequest::replyError, errorLambda);
-
-    sendRequest(request);
+    sendRequest(QSharedPointer<EntityRequest>::create(QStringList{ id, }), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntitId(const QByteArray &codeData)
 {
-    Q_UNUSED(codeData)
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit entityLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entityIdLoaded(reply.object().value(Tags::id).toString());
+    };
+    sendRequest(QSharedPointer<EntityRequest>::create(codeData), errorHandler, replyHandler);
 }
 
 void SessionManager::putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
-    Q_UNUSED(timestamp)
-    Q_UNUSED(codeData)
-    // TODO update
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit entitySaveError(code);
+    };
+    const auto replyHandler = [this, id](const QJsonDocument &) {
+        emit entitySaved(id);
+    };
 
     if (checkValidToken()) {
-        auto request = QSharedPointer<EntityRequest>::create(m_token, id, action, properties);
-
-        auto errorLambda = [&, id](const QString &, const int) {
-            emit entitySaveResult(id, false);
-        };
-
-        auto finishLambda = [&, id](const QJsonDocument &) {
-            emit entitySaveResult(id, true);
-        };
-
-        connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-        connect(request.data(), &BaseRequest::replyError, errorLambda);
-
-        sendRequest(request);
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, id, EntityRequest::EntityData{ action, timestamp, properties }, codeData),
+                    errorHandler, replyHandler);
     }
 }
 
-void SessionManager::putEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void SessionManager::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
-    Q_UNUSED(action)
-    Q_UNUSED(timestamp)
-    Q_UNUSED(properties)
-    Q_UNUSED(codeData)
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit entitySaveError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::id).toString());
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, codeData, EntityRequest::EntityData{ action, timestamp, properties }, false),
+                    errorHandler, replyHandler);
+    }
+}
+
+void SessionManager::postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+{
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit entitySaveError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::id).toString());
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, codeData, EntityRequest::EntityData{ action, timestamp, properties }, true),
+                    errorHandler, replyHandler);
+    }
 }
 
 void SessionManager::getUnusedLotIds()
 {
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit unusedLotIdsLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit unusedLotIdsLoaded(reply.object().value(Tags::ids).toArray());
+    };
+    sendRequest(QSharedPointer<EntityRequest>::create(Enums::PackageType::Lot), errorHandler, replyHandler);
 }
 
-void SessionManager::createUnusedLotId()
+void SessionManager::postUnusedLotId()
 {
-    // TODO implement
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit unusedLotIdCreateError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit unusedLotIdCreated(reply.object().value(Tags::id).toString());
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot), errorHandler, replyHandler);
+    }
 }
 
 void SessionManager::getAllRelations()
 {
-    // TODO implement
-}
-
-void SessionManager::getEntities(const QJsonArray &ids)
-{
-    auto request = QSharedPointer<EntityRequest>::create(m_token, ids);
-
-    auto errorLambda = [&](const QString &, const int code) {
-        emit entityLoadError(code);
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit relationsLoadError(code);
     };
-
-    auto finishLambda = [&](const QJsonDocument &reply) {
-        QJsonArray array;
-        const QJsonObject &obj = reply.object();
-        QJsonObject::const_iterator it = obj.constBegin();
-        while (it != obj.constEnd()) {
-            array.push_back(*it);
-            ++it;
-        }
-        emit entitiesLoaded(array);
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit packagesRelationsLoaded(reply.object().value(Tags::relations).toObject());
     };
-
-    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-    connect(request.data(), &BaseRequest::replyError, errorLambda);
-
-    sendRequest(request);
+    sendRequest(QSharedPointer<RelationRequest>::create(QStringList{}), errorHandler, replyHandler);
 }
 
 void SessionManager::getAllEntities()
 {
-    auto request = QSharedPointer<EntityRequest>::create(m_token);
-
-    auto errorLambda = [&](const QString &, const int code) {
+    const auto errorHandler = [this](const QString &, const int &code) {
         emit entityLoadError(code);
     };
-
-    auto finishLambda = [&](const QJsonDocument &reply) {
-        const QJsonArray &array = reply.array();
-        QJsonArray::const_iterator it = array.constBegin();
-        QJsonArray batchArray;
-        while(it != array.constEnd()) {
-            batchArray.push_back(*it);
-            if (batchArray.size() > MAX_BATCH_SIZE) {
-                this->getEntities(batchArray);
-                batchArray = QJsonArray();
-            }
-            ++it;
-        }
-        if (batchArray.size() > 0)
-            this->getEntities(batchArray);
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
     };
+    sendRequest(QSharedPointer<EntityRequest>::create(QStringList{}), errorHandler, replyHandler);
+}
 
-    connect(request.data(), &BaseRequest::requestFinished, finishLambda);
-    connect(request.data(), &BaseRequest::replyError, errorLambda);
+void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,
+                                 const std::function<void (const QString &, const int &)> &errorHandler,
+                                 const std::function<void (const QJsonDocument &)> &replyHandler)
+{
+    connect(request.data(), &BaseRequest::replyError, this, errorHandler);
+    connect(request.data(), &BaseRequest::requestFinished, this, replyHandler);
 
     sendRequest(request);
 }
@@ -201,9 +225,13 @@ void SessionManager::getAllEntities()
 void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
 {
     connect(request.data(), &BaseRequest::requestFinished,
-            this, [this](const QJsonDocument &) { updateConnectionStateAfterRequest(); });
+            this, [this](const QJsonDocument &) {
+        updateConnectionStateAfterRequest();
+    });
     connect(request.data(), &BaseRequest::replyError,
-            this, [this](const QString &, const int errorCode) { updateConnectionStateAfterRequest(QNetworkReply::NetworkError(errorCode)); });
+            this, [this](const QString &, const int errorCode) {
+        updateConnectionStateAfterRequest(QNetworkReply::NetworkError(errorCode));
+    });
 
     updateConnectionStateBeforeRequest();
     m_client.send(request);

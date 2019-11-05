@@ -7,6 +7,7 @@
 #include "../../../common/globals.h"
 #include "../../../common/tags.h"
 #include "../../../helpers/utility.h"
+#include "../../../helpers/requestshelper.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataFake, "data.fake")
@@ -113,7 +114,7 @@ QVariantMap FakeDataPopulator::generateUserData(const QString &email)
     obj.insert(Tags::email, email);
     obj.insert(Tags::cooperativeId, cooperative.value("id"));
     obj.insert(Tags::cooperativeName, cooperative.value("name"));
-    obj.insert(Tags::role, DataGlobals::userTypeToString(userType));
+    obj.insert(Tags::role, RequestsHelper::userTypeToString(userType));
     return obj;
 }
 
@@ -198,8 +199,8 @@ bool FakeDataPopulator::canAddAction(const QString &packageId, const Enums::Supp
 
     qSort(actionsForPackage.begin(), actionsForPackage.end(),
           [](const QVariantMap &left, const QVariantMap &right) {
-        auto leftAction = DataGlobals::supplyChainActionFromString(left.value(Tags::action).toString());
-        auto rightAction = DataGlobals::supplyChainActionFromString(right.value(Tags::action).toString());
+        auto leftAction = RequestsHelper::supplyChainActionFromString(left.value(Tags::action).toString());
+        auto rightAction = RequestsHelper::supplyChainActionFromString(right.value(Tags::action).toString());
         return leftAction < rightAction;
     });
 
@@ -209,7 +210,7 @@ bool FakeDataPopulator::canAddAction(const QString &packageId, const Enums::Supp
         return false;
     }
 
-    auto lastAction = DataGlobals::supplyChainActionFromString(actionsForPackage.constLast().value(Tags::action).toString());
+    auto lastAction = RequestsHelper::supplyChainActionFromString(actionsForPackage.constLast().value(Tags::action).toString());
     return (static_cast<int>(lastAction) + 1 == static_cast<int>(action));
 }
 
@@ -438,14 +439,14 @@ void FakeDataPopulator::addEvent(const QString &id, const Enums::SupplyChainActi
 {
     auto placeType = DataGlobals::placeType(action);
     auto userType = sc_placesUser.value(placeType);
-    auto agentInfo = QVariantMap({ { Tags::role, DataGlobals::userTypeToString(userType) },
+    auto agentInfo = QVariantMap({ { Tags::role, RequestsHelper::userTypeToString(userType) },
                                    { Tags::cooperativeId, cooperative.value("id") },
                                    { Tags::cooperativeName, cooperative.value("name") } });
 
     auto eventData = QVariantMap({ { Tags::id, id },
                                    { Tags::timestamp, timestamp.toSecsSinceEpoch() },
                                    { Tags::agent, agentInfo },
-                                   { Tags::action, DataGlobals::supplyChainActionToString(action) },
+                                   { Tags::action, RequestsHelper::supplyChainActionToString(action) },
                                    { Tags::properties, properties } });
     m_eventsHistory.insert(id, eventData);
 }

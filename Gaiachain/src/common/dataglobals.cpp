@@ -2,24 +2,6 @@
 
 #include "../helpers/utility.h"
 
-const QHash<Enums::UserType, QString> DataGlobals::sc_userTypeStrings = {
-    { Enums::UserType::SuperUser, QStringLiteral("SUPER_USER") },
-    { Enums::UserType::Inspector, QStringLiteral("INSPECTOR") },
-    { Enums::UserType::PCA, QStringLiteral("PCA") },
-    { Enums::UserType::Warehouseman, QStringLiteral("WAREHOUSEMAN") },
-    { Enums::UserType::CooperativeRepresentative, QStringLiteral("COOPERATIVE_REPRESENTATIVE") },
-    { Enums::UserType::Annonymous, {} }
-};
-const QHash<Enums::SupplyChainAction, QString> DataGlobals::sc_supplyChainActionStrings = {
-    { Enums::SupplyChainAction::Harvest, QStringLiteral("HARVEST") },
-    { Enums::SupplyChainAction::GrainProcessing, QStringLiteral("GRAIN_PROCESSING") },
-    { Enums::SupplyChainAction::SectionReception, QStringLiteral("SECTION_RECEPTION") },
-    { Enums::SupplyChainAction::Bagging, QStringLiteral("BAGGING") },
-    { Enums::SupplyChainAction::LotCreation, QStringLiteral("LOT_CREATION") },
-    { Enums::SupplyChainAction::WarehouseTransport, QStringLiteral("WAREHOUSE_TRANSPORT") },
-    { Enums::SupplyChainAction::ExportReception, QStringLiteral("EXPORT_RECEPTION") }
-};
-
 const QHash<Enums::SupplyChainAction, Enums::PackageType> DataGlobals::sc_supplyChainActionPackageType = {
     { Enums::SupplyChainAction::Harvest, Enums::PackageType::Harvest },
     { Enums::SupplyChainAction::GrainProcessing, Enums::PackageType::Harvest },
@@ -78,26 +60,6 @@ DataGlobals *DataGlobals::instance()
 {
     static DataGlobals dg;
     return &dg;
-}
-
-Enums::UserType DataGlobals::userTypeFromString(const QString &text)
-{
-    return sc_userTypeStrings.key(text);
-}
-
-QString DataGlobals::userTypeToString(const Enums::UserType &userType)
-{
-    return sc_userTypeStrings.value(userType);
-}
-
-Enums::SupplyChainAction DataGlobals::supplyChainActionFromString(const QString &text)
-{
-    return sc_supplyChainActionStrings.key(text);
-}
-
-QString DataGlobals::supplyChainActionToString(const Enums::SupplyChainAction &action)
-{
-    return sc_supplyChainActionStrings.value(action);
 }
 
 Enums::PackageType DataGlobals::packageType(const Enums::SupplyChainAction &action)

@@ -16,7 +16,7 @@ class MainController : public AbstractManager
 public:
     explicit MainController(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
+    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
 signals:
 

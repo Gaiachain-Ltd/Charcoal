@@ -1,118 +1,128 @@
 #include "entityrequest.h"
 
+#include <QDebug>
 #include <QJsonObject>
-#include <QJsonArray>
 
 #include "../common/logs.h"
-#include "../common/dataglobals.h"
 #include "../common/tags.h"
+#include "../common/dataglobals.h"
+#include "../helpers/requestshelper.h"
 
-#define ADDRESS_BASE QStringLiteral("/entities")
-#define ADDRESS QStringLiteral("/entities/")
-#define ADDRESS_DATA QStringLiteral("%1/%2/").arg(ADDRESS_BASE)
-#define ADDRESS_UNINITIALIZED QStringLiteral("%1/uninitialized/").arg(ADDRESS_BASE)
-#define ADDRESS_CALENDAR QStringLiteral("%1/calendar/").arg(ADDRESS_BASE)
-#define ADDRESS_BATCH QStringLiteral("%1/batch/").arg(ADDRESS_BASE)
+const QString EntityRequest::sc_basePath = QStringLiteral("/entities/%1/");
 
-EntityRequest::EntityRequest(const QString &token, const RequestType requestType)
-    : BaseRequest(requestType == RequestType::RequestUninitializedGet ? ADDRESS_UNINITIALIZED : ADDRESS, token)
-    , m_requestType(static_cast<RequestType>(requestType))
+const QMap<EntityRequest::RequestType, MRestRequest::Type> EntityRequest::sc_requestsType = {
+    { EntityRequest::RequestType::GetBatch, Type::Get },
+    { EntityRequest::RequestType::GetFilterCount, Type::Get },
+    { EntityRequest::RequestType::GetFilterTo, Type::Get },
+    { EntityRequest::RequestType::GetId, Type::Get },
+    { EntityRequest::RequestType::GetUnused, Type::Get },
+    { EntityRequest::RequestType::PutActionId, Type::Put },
+    { EntityRequest::RequestType::PutActionCode, Type::Put },
+    { EntityRequest::RequestType::PostNewPackage, Type::Post },
+    { EntityRequest::RequestType::PostUnused, Type::Post }
+};
+
+const QMap<EntityRequest::RequestType, QString> EntityRequest::sc_requestsPath = {
+    { EntityRequest::RequestType::GetBatch, sc_basePath.arg(QStringLiteral("batch")) },
+    { EntityRequest::RequestType::GetFilterCount, sc_basePath.arg(QStringLiteral("filter")) },
+    { EntityRequest::RequestType::GetFilterTo, sc_basePath.arg(QStringLiteral("filter")) },
+    { EntityRequest::RequestType::GetId, sc_basePath.arg(QStringLiteral("id")) },
+    { EntityRequest::RequestType::GetUnused, sc_basePath.arg(QStringLiteral("unused")) },
+    { EntityRequest::RequestType::PutActionId, sc_basePath.arg(QStringLiteral("%1")) },
+    { EntityRequest::RequestType::PutActionCode, sc_basePath.arg(QStringLiteral("code/%1")) },
+    { EntityRequest::RequestType::PostNewPackage, sc_basePath.arg(QStringLiteral("new/%1")) },
+    { EntityRequest::RequestType::PostUnused, sc_basePath.arg(QStringLiteral("unused")) }
+};
+
+EntityRequest::EntityRequest(const EntityRequest::RequestType &requestType, const QString &token)
+    : EntityRequest(sc_requestsPath.value(requestType), requestType, token)
+{}
+
+EntityRequest::EntityRequest(const QString &customPath, const EntityRequest::RequestType &requestType, const QString &token)
+    : BaseRequest(customPath, sc_requestsType.value(requestType), token),
+      m_requestType(requestType)
 {
-    mType = Type::Get;
-}
-
-EntityRequest::EntityRequest(const QString &token, const int count, const QString &type)
-    : BaseRequest(ADDRESS_UNINITIALIZED, token)
-    , m_requestType(RequestUninitializedPost)
-{
-    if (!token.isEmpty() && count > 0 && !type.isEmpty()) {
-        m_timer.start();
-        QJsonObject object;
-        object.insert(Tags::count, QJsonValue(count));
-        mRequestDocument.setObject(object);
-
-        mType = Type::Post;
-    } else {
-        qCCritical(sessionRequest) << "Error: missing entities POST info" << count << type.length();
+    if (m_requestType == RequestType::Invalid) {
+        qCWarning(sessionRequest) << "Invalid request provided";
     }
 }
 
-EntityRequest::EntityRequest(const QString &token, const QString &id)
-    : BaseRequest(ADDRESS_DATA.arg(id), token)
-    , m_requestType(RequestEntityGet)
+EntityRequest::EntityRequest(const QStringList &ids)
+    : EntityRequest(RequestType::GetBatch)
 {
-    if (!id.isEmpty()) {
-        m_timer.start();
-        mType = Type::Get;
-    } else {
-        qCCritical(sessionRequest) << "Error: missing entity GET info" << id;
-    }
+    auto docObj = QJsonObject{ { Tags::ids, ids.isEmpty() ? QJsonValue(StaticValues::all)
+                                                          : QJsonValue::fromVariant(ids) } };
+
+    mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QString &token, const QJsonArray &ids)
-    : BaseRequest(ADDRESS_BATCH, token)
-    , m_requestType(RequestBatch)
+EntityRequest::EntityRequest(int count, const QDateTime &from)
+    : EntityRequest(RequestType::GetFilterCount)
 {
-    if (!ids.isEmpty()) {
-        m_timer.start();
-        QJsonObject object;
-        object.insert(Tags::ids, QJsonValue(ids));
-        mRequestDocument.setObject(object);
-        mType = Type::Post;
-    } else {
-        qCCritical(sessionRequest) << "Error: missing entity GET info" << ids;
+    auto docObj = QJsonObject{ { Tags::count, count } };
+    if (from.isValid()) {
+        docObj.insert(Tags::timestampFrom, static_cast<qint64>(from.toTime_t()) );
     }
+
+    mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QString &token, const QString &dateFrom, const QString &dateTo)
-    : BaseRequest(ADDRESS_CALENDAR, token)
-    , m_requestType(RequestCalendar)
+EntityRequest::EntityRequest(const QDateTime &to, const QDateTime &from)
+    : EntityRequest(RequestType::GetFilterTo)
 {
-    m_timer.start();
-    QJsonObject object;
-    if (!dateFrom.isEmpty()) {
-        const int timestampFrom = dateFrom.toInt();
-        if (timestampFrom > 0) {
-            object.insert(Tags::timestampFrom, QJsonValue(timestampFrom));
-        } else {
-            object.insert(Tags::dateFrom, QJsonValue(dateFrom));
-        }
-    }
-    if (!dateTo.isEmpty()) {
-        const int timestampTo = dateFrom.toInt();
-        if (timestampTo > 0) {
-            object.insert(Tags::timestampTo, QJsonValue(timestampTo));
-        } else {
-            object.insert(Tags::dateTo, QJsonValue(dateTo));
-        }
-        mRequestDocument.setObject(object);
+    auto docObj = QJsonObject{ { Tags::timestampTo, static_cast<qint64>(to.toTime_t()) } };
+    if (from.isValid()) {
+        docObj.insert(Tags::timestampFrom, static_cast<qint64>(from.toTime_t()) );
     }
 
-    mType = Type::Get;
+    mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QString &token, const QString &id, const Enums::SupplyChainAction action, const QVariantMap &properties)
-    : BaseRequest(ADDRESS_DATA.arg(id), token)
-    , m_requestType(RequestEntityPut)
+EntityRequest::EntityRequest(const QByteArray &codeData)
+    : EntityRequest(RequestType::GetId)
 {
-    if (!token.isEmpty() && !id.isEmpty()) {
-        m_timer.start();
-        QJsonObject object;
-        QString actionString;
-        object.insert(Tags::action, DataGlobals::supplyChainActionToString(action));
-        object.insert(Tags::properties, QJsonObject::fromVariantMap(properties));
-        mRequestDocument.setObject(object);
-
-        mType = Type::Put;
-    } else {
-        qCCritical(sessionRequest) << "Error: missing entity PUT info" << id << action;
-    }
-
+    auto docObj = QJsonObject{ { Tags::code, codeData.data() } };
+    mRequestDocument.setObject(docObj);
 }
 
-void EntityRequest::parse()
+EntityRequest::EntityRequest(const Enums::PackageType &packageType)
+    : EntityRequest(RequestType::GetUnused)
 {
-    if (m_timer.isValid())
-        qCDebug(sessionRequest) << "Request" << m_requestType << "elapsed time:" << m_timer.elapsed();
-    BaseRequest::parse();
+    auto docObj = QJsonObject{ { Tags::packageType, RequestsHelper::packageTypeToString(packageType) } };
+    mRequestDocument.setObject(docObj);
+}
+
+EntityRequest::EntityRequest(const QString &token, const QString &packageId, const EntityRequest::EntityData &entityData, const QByteArray &codeData)
+    : EntityRequest(sc_requestsPath.value(RequestType::PutActionId).arg(packageId), RequestType::PutActionId, token)
+{
+    auto docObj = QJsonObject{
+        { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
+        { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
+        { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
+        { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
+    };
+    if (!codeData.isEmpty()) {
+        docObj.insert(Tags::code, codeData.data());
+    }
+    mRequestDocument.setObject(docObj);
+}
+
+EntityRequest::EntityRequest(const QString &token, const QByteArray &codeData, const EntityRequest::EntityData &entityData, bool newPackage)
+    : EntityRequest(sc_requestsPath.value(newPackage ? RequestType::PostNewPackage : RequestType::PutActionCode).arg(codeData.data()),
+                    newPackage ? RequestType::PostNewPackage : RequestType::PutActionCode, token)
+{
+    auto docObj = QJsonObject{
+        { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
+        { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
+        { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
+        { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
+    };
+    mRequestDocument.setObject(docObj);
+}
+
+EntityRequest::EntityRequest(const QString &token, const Enums::PackageType &packageType)
+    : EntityRequest(RequestType::PostUnused, token)
+{
+    auto docObj = QJsonObject{ { Tags::packageType, RequestsHelper::packageTypeToString(packageType) } };
+    mRequestDocument.setObject(docObj);
 }
