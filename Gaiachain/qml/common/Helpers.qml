@@ -78,7 +78,6 @@ QtObject {
         return ""
     }
 
-
     function packageTypeName(packageType) {
         switch(packageType) {
         case Enums.PackageType.Harvest: return Strings.harvestId

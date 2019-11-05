@@ -14,7 +14,10 @@ QtObject {
     readonly property string harvestId: qsTr("Harvest ID")
     readonly property string sacId: qsTr("Sac ID")
     readonly property string lotId: qsTr("Lot ID")
-    readonly property string arrivalId: qsTr("Arrival ID")
+
+    readonly property string details: qsTr("%1 details")
+
+    readonly property string kg: qsTr("%1 kg")
 
     readonly property string january: qsTr("January")
     readonly property string february: qsTr("February")
@@ -74,6 +77,18 @@ QtObject {
     readonly property string searchForTransaction: qsTr("Search for a transaction")
     readonly property string onlyMyTransactions: qsTr("Only my transactions")
     readonly property string recentTransactions: qsTr("Recent transactions")
+
+    // package data details pages
+    readonly property string nameOfProducer: qsTr("Name of the producer")
+    readonly property string producerIdNumber: qsTr("Producer ID Number")
+    readonly property string village: qsTr("Village")
+    readonly property string fieldCode: qsTr("Field code")
+    readonly property string harvestDate: qsTr("Harvest date")
+    readonly property string dateOfBreaking: qsTr("Date of the breaking")
+
+    readonly property string organicCocoaTransporter: qsTr("Organic cocoa transporter")
+    readonly property string destination: qsTr("Destination")
+    readonly property string dateOfTransport: qsTr("Date of transport")
 
     // calendar
     readonly property string activities: qsTr("activities")

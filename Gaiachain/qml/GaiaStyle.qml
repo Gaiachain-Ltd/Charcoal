@@ -137,6 +137,9 @@ QtObject {
     readonly property url leftArrowImgUrl: "qrc:/ui/leftArrow"
     readonly property url rightArrowImgUrl: "qrc:/ui/rightArrow"
 
+    readonly property url expandUpImgUrl: "qrc:/ui/expandUp"
+    readonly property url expandDownImgUrl: "qrc:/ui/expandDown"
+
     // control
     readonly property int controlDefaultBorderWidth: 1
     readonly property int controlBoldBorderWidth: 2
@@ -158,6 +161,10 @@ QtObject {
     readonly property int requestOverlayInterval: 2000
     readonly property int notificationPopupOpenedDefaultInterval: 2600
     readonly property int transitionMoveYRange: 100
+
+    // logical
+    readonly property int visible: 1
+    readonly property int hidden: 0
 
     // none
     readonly property int none: 0

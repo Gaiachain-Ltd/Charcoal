@@ -42,9 +42,18 @@
         <file>components/dummy/DummyLoginCombobox.qml</file>
         <file>items/BasicCheckBox.qml</file>
         <file>items/RectCheckBox.qml</file>
+        <file>pages/CalendarYearPage.qml</file>
+        <file>components/CalendarYearItem.qml</file>
         <file>popups/BasePopup.qml</file>
         <file>popups/GenericPopup.qml</file>
         <file>popups/InformationPopup.qml</file>
         <file>popups/NotificationPopup.qml</file>
+        <file>items/InputHeader.qml</file>
+        <file>items/InputHeaderWithExpandList.qml</file>
+        <file>pages/PackageDataPage.qml</file>
+        <file>components/PackageDataDetails.qml</file>
+        <file>components/PackageDataHarvestDetails.qml</file>
+        <file>components/PackageDataLotDetails.qml</file>
+        <file>components/PackageDataSacDetails.qml</file>
     </qresource>
 </RCC>
