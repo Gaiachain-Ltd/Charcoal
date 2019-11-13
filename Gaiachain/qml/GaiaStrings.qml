@@ -19,6 +19,9 @@ QtObject {
 
     readonly property string kg: qsTr("%1 kg")
 
+    readonly property string transport: qsTr("Transport")
+    readonly property string reception: qsTr("Reception")
+
     readonly property string january: qsTr("January")
     readonly property string february: qsTr("February")
     readonly property string march: qsTr("March")

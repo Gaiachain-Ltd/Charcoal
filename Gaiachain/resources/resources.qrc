@@ -29,6 +29,8 @@
         <file alias="dummy/testIcon">ui/dummy/gaia-test-icon.svg</file>
         <file alias="calendarBlack">ui/calendar-icon-black.svg</file>
         <file alias="search">ui/icon-search.svg</file>
+        <file alias="arrowDown">ui/arrow-down.svg</file>
+        <file alias="arrowUp">ui/arrow-up.svg</file>
         <file alias="returnCurrentMonth">ui/button-return-current-month.svg</file>
         <file alias="expandDown">ui/icon-expand-down.svg</file>
         <file alias="expandUp">ui/icon-expand-up.svg</file>
@@ -52,5 +54,5 @@
         <file>fonts/PublicSans/PublicSans-SemiBoldItalic.otf</file>
         <file>fonts/PublicSans/PublicSans-Thin.otf</file>
         <file>fonts/PublicSans/PublicSans-ThinItalic.otf</file>
-    </qresource> 
+    </qresource>
 </RCC>

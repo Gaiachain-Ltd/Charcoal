@@ -1,92 +1,150 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
 import "../items" as Items
+import "../components" as Components
 
-ListView {
+Item {
+    id: top
+
+    readonly property int contentHeight: mainLayout.implicitHeight
+
+    readonly property var actionsModel: {
+        "": [Enums.SupplyChainAction.Harvest, Enums.SupplyChainAction.GrainProcessing,
+             Enums.SupplyChainAction.Bagging, Enums.SupplyChainAction.LotCreation],
+        "Transport": [Enums.SupplyChainAction.WarehouseTransport],
+        "Reception": [Enums.SupplyChainAction.SectionReception, Enums.SupplyChainAction.ExportReception]
+    }
+
     signal actionClicked(int action)
 
-    spacing: s(Style.middleBigMargin)
-    interactive: false
+    implicitWidth: mainLayout.implicitWidth
+    implicitHeight: mainLayout.implicitHeight
 
-    // TODO update with current solution
-    model: ListModel {
-        ListElement {
-            actionType: Enums.SupplyChainAction.Harvest
-            userType: Enums.UserType.SuperUser
-        }
-        ListElement {
-            actionType: Enums.SupplyChainAction.GrainProcessing
-            userType: Enums.UserType.SuperUser
-        }
-        ListElement {
-            actionType: Enums.SupplyChainAction.SectionReception
-            userType: Enums.UserType.SuperUser
-        }
-        ListElement {
-            actionType: Enums.SupplyChainAction.Bagging
-            userType: Enums.UserType.SuperUser
-        }
-        ListElement {
-            actionType: Enums.SupplyChainAction.LotCreation
-            userType: Enums.UserType.SuperUser
-        }
-        ListElement {
-            actionType: Enums.SupplyChainAction.WarehouseTransport
-            userType: Enums.UserType.SuperUser
-        }
-        ListElement {
-            actionType: Enums.SupplyChainAction.ExportReception
-            userType: Enums.UserType.SuperUser
-        }
-    }
+    function filterData(actions) {
+        var availableActions = DataGlobals.userActionsQml(Number(userManager.userType))
+        var filteredData = []
 
-    Component.onCompleted: {
-        for (var index = model.count - 1; index >= 0; --index) {
-            if (model.get(index).userType !== Number(userManager.userType)) {
-                model.remove(index)
+        for (var i = 0; i < actions.length; ++i) {
+            if (availableActions.includes(actions[i])){
+                filteredData.push(actions[i])
             }
         }
+
+        return filteredData
     }
 
-    delegate: MenuButton {
-        padding: s(Style.middleMargin)
-        spacing: s(Style.middleMargin)
+    function getFilteredActions(category) {
+        var actions = filterData(actionsModel[category])
+        var actionsDict = []
 
-        icon.height: s(Style.submenuButtonImageHeight)
-        icon.width: s(Style.submenuButtonImageHeight)
-        icon.source: Helpers.supplyChainActionIcon(actionType)
+        for (var i = 0; i < actions.length; ++i) {
+            actionsDict.push({ "actionName": String(Helpers.supplyChainActionMenuString(actions[i])),
+                               "actionColor": String(Helpers.packageTypeColor(DataGlobals.packageType(actions[i]))),
+                               "actionType": actions[i] })
+        }
 
-        width: ListView.view.width
-        height: s(Style.submenuButtonHeight)
+        return actionsDict
+    }
 
-        font.pixelSize: s(Style.submenuButtonPixelSize)
+    ListModel {
+        id: nonCategoryActions
 
-        text: Helpers.supplyChainActionMenuString(actionType)
+        Component.onCompleted: {
+            append(getFilteredActions(Strings.empty))
+        }
+    }
+
+    ListModel {
+        id: transportActions
+
+        Component.onCompleted: {
+            append(getFilteredActions(Strings.transport))
+        }
+    }
+
+    ListModel {
+        id: receptionActions
+
+        Component.onCompleted: {
+            append(getFilteredActions(Strings.reception))
+        }
+    }
+
+    ColumnLayout {
+        id: mainLayout
+
+        anchors.fill: parent
+        spacing: s(Style.middleBigMargin)
 
         clip: true
 
-        onClicked: ListView.view.actionClicked(actionType)
+        Repeater {
+            model: nonCategoryActions
 
-        Rectangle {
-            anchors {
-                top: parent.top
-                topMargin: radius
-                bottom: parent.bottom
-                bottomMargin: radius
+            Components.SupplyChainSubmenuButton {
+                Layout.fillWidth: true
+                onClicked: mainLayout.parent.actionClicked(actionType)
+                color: actionColor
+                text: actionName
+            }
+        }
 
-                right: parent.right
-                rightMargin: -radius
+        Items.LayoutSeparator {
+            Layout.fillWidth: true
+
+            visible: (transportExpandButton.visible && receptionExpandButton.visible)
+        }
+
+        Components.SupplyChainSubmenuExpandButton {
+            id: transportExpandButton
+
+            function closeOtherButtons() {
+                if (opened) {
+                    receptionExpandButton.opened = false
+                }
             }
 
-            radius: s(Style.buttonRadius)
-            width: 2 * radius
+            Layout.fillWidth: true
 
-            color: Helpers.packageTypeColor(DataGlobals.packageType(actionType))
+            visible: (model.count !== 0)
+
+            text: Strings.transport
+            iconSource: Style.supplyChainSubmenuTransportImgUrl
+
+            model: transportActions
+
+            onClicked: mainLayout.parent.actionClicked(actionType)
+
+            onOpenedChanged: closeOtherButtons()
+        }
+
+        Components.SupplyChainSubmenuExpandButton {
+            id: receptionExpandButton
+
+            function closeOtherButtons() {
+                if (opened) {
+                    transportExpandButton.opened = false
+                }
+            }
+
+            Layout.fillWidth: true
+
+            visible: (model.count !== 0)
+
+            text: Strings.reception
+            iconSource: Style.supplyChainSubmenuReceptionImgUrl
+
+            model: receptionActions
+
+            onClicked: mainLayout.parent.actionClicked(actionType)
+
+            onOpenedChanged: closeOtherButtons()
         }
     }
 }
