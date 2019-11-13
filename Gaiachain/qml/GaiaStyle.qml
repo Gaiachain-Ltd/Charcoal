@@ -33,6 +33,8 @@ QtObject {
     readonly property color buttonBorderColor: "#d8d8d8"
     readonly property color inputBorderColor: "#d6d6d6"
 
+    readonly property color expandButtonSubmenuColor: "#e6e6e6"
+
     readonly property color separatorColor: "#d6d6d6"
 
     readonly property color disabledColorTint: "#C0a4a4a4"
@@ -136,6 +138,8 @@ QtObject {
 
     readonly property url leftArrowImgUrl: "qrc:/ui/leftArrow"
     readonly property url rightArrowImgUrl: "qrc:/ui/rightArrow"
+    readonly property url upArrowImgUrl: "qrc:/ui/arrowUp"
+    readonly property url downArrowImgUrl: "qrc:/ui/arrowDown"
 
     readonly property url expandUpImgUrl: "qrc:/ui/expandUp"
     readonly property url expandDownImgUrl: "qrc:/ui/expandDown"
@@ -150,6 +154,7 @@ QtObject {
     // button
     readonly property int buttonRadius: smallMargin
     readonly property int buttonSmallRadius: 10
+    readonly property int buttonImageTinyHeight: 30
     readonly property int buttonImageSmallHeight: 55
     readonly property int buttonImageHeight: 95
     readonly property int buttonImageBigHeight: 125

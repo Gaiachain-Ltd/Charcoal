@@ -48,14 +48,23 @@ BasePage {
 
                 Components.SupplyChainSubmenu {
                     id: supplyChainSubmenu
-                    Layout.fillWidth: true
 
+                    property int initialHeight: Style.none
                     property bool menuVisible: false
 
-                    opacity: 0
-                    implicitHeight: 0
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: initialHeight
+
+                    opacity: Style.none
+                    implicitHeight: initialHeight
 
                     onMenuVisibleChanged: menuVisibleAnimation.start()
+
+                    onContentHeightChanged: {
+                        if (menuVisible) {
+                            initialHeight = contentHeight
+                        }
+                    }
 
                     onActionClicked: console.log("SUPPLY CHAIN ACTION CHOOSEN:", action)    // TODO open pages
 
@@ -71,16 +80,16 @@ BasePage {
                         }
                         NumberAnimation {
                             target: supplyChainSubmenu
-                            property: "implicitHeight"
-                            from: supplyChainSubmenu.menuVisible ? supplyChainSubmenu.contentHeight : 0
-                            to: supplyChainSubmenu.menuVisible ? 0 : supplyChainSubmenu.contentHeight
+                            property: "initialHeight"
+                            from: supplyChainSubmenu.menuVisible ? supplyChainSubmenu.contentHeight : Style.none
+                            to: supplyChainSubmenu.menuVisible ? Style.none : supplyChainSubmenu.contentHeight
                             duration: 300
                         }
                         NumberAnimation {
                             target: supplyChainButtonColumn
                             property: "spacing"
-                            from: supplyChainSubmenu.menuVisible ? menuColumn.spacing : 0
-                            to: supplyChainSubmenu.menuVisible ? 0 : menuColumn.spacing
+                            from: supplyChainSubmenu.menuVisible ? menuColumn.spacing : Style.none
+                            to: supplyChainSubmenu.menuVisible ? Style.none : menuColumn.spacing
                             duration: 300
                         }
                     }
