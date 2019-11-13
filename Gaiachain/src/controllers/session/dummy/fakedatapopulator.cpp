@@ -369,8 +369,8 @@ QVariantMap FakeDataPopulator::generateGrainProcessingProperties(const QDate &ha
     auto dryingDate = qMin(breakingDate.addDays((qrand() % dayDiff) + sc_minDayShift), actionDate);
 
     return {
-        { "breaking_date", breakingDate },
-        { "drying_date", dryingDate },
+        { "breaking_date", QDateTime(breakingDate) },
+        { "drying_date", QDateTime(dryingDate) },
         { "estimatedVolume", qrand() % 100 + 50 }
     };
 }

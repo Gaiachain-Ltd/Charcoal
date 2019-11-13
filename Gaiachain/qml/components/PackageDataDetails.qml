@@ -31,6 +31,19 @@ Item {
         return Strings.empty
     }
 
+    function emptyIfNotDefnied(data) {
+        return data ? data : Strings.empty
+    }
+
+    function emptyIfNotDate(date) {
+        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy")) : Strings.empty
+    }
+
+    function emptyIfNotIncludesAction(action) {
+        return packageData.actions().includes(action) ? Helpers.convertTimestampToDate(Number(packageData.actionDate(Number(action))))
+                                                      : Strings.empty
+    }
+
     ColumnLayout {
         id: topLayout
 

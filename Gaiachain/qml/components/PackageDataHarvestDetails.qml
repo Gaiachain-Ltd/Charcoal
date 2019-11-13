@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
+import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -12,12 +14,12 @@ Components.PackageDataDetails {
 
     onPackageDataChanged: {
         const data = [
-           { "headerValue": Strings.nameOfProducer,      "inputValue": packageData.properties.name },
-           { "headerValue": Strings.producerIdNumber,    "inputValue": packageData.properties.id },
-           { "headerValue": Strings.village,             "inputValue": packageData.properties.village },
-           { "headerValue": Strings.fieldCode,           "inputValue": packageData.properties.parcelCode },
-           { "headerValue": Strings.harvestDate,         "inputValue": packageData.properties.breaking_date },
-           { "headerValue": Strings.dateOfBreaking,      "inputValue": packageData.properties.departure_date }
+           { "headerValue": Strings.nameOfProducer,      "inputValue": emptyIfNotDefnied(packageData.properties.name) },
+           { "headerValue": Strings.producerIdNumber,    "inputValue": emptyIfNotDefnied(packageData.properties.id) },
+           { "headerValue": Strings.village,             "inputValue": emptyIfNotDefnied(packageData.properties.village) },
+           { "headerValue": Strings.fieldCode,           "inputValue": emptyIfNotDefnied(packageData.properties.parcelCode) },
+           { "headerValue": Strings.harvestDate,         "inputValue": emptyIfNotIncludesAction(Enums.SupplyChainAction.Harvest) },
+           { "headerValue": Strings.dateOfBreaking,      "inputValue": emptyIfNotDate(packageData.properties.breaking_date) }
        ]
 
         for (var i = 0; i < data.length; ++i) {

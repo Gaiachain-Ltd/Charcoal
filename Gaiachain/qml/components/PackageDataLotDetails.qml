@@ -16,10 +16,9 @@ Components.PackageDataDetails {
 
     onPackageDataChanged: {
         const data = [
-           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": packageData.properties.transporter },
-           { "headerValue": Strings.destination,                "inputValue": packageData.properties.destination },
-           { "headerValue": Strings.dateOfTransport,            "inputValue": Helpers.convertTimestampToDate(Number(packageData.actionDate(
-                                                                                                                        Number(Enums.SupplyChainAction.WarehouseTransport)))) }
+           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties.transporter) },
+           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties.destination) },
+           { "headerValue": Strings.dateOfTransport,            "inputValue": emptyIfNotIncludesAction(Enums.SupplyChainAction.WarehouseTransport) }
        ]
 
         for (var i = 0; i < data.length; ++i) {
