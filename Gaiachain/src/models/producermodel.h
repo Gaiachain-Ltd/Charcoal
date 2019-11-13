@@ -10,21 +10,27 @@ class ProducerModel : public AbstractModel
     Q_OBJECT
 
 public:
-    enum ModelRole {
-        ProducerId = Qt::UserRole,
+    enum Columns {
+        ProducerId = Qt::UserRole + 1, // 1 as 0 column is id column not used in UI
         Name,
         Village,
         ParcelCodes,
-        LastRole
-    }; //!!! Add new roles at the end
+        LastColumn
+    }; //!!! Keep the lastcolumn, a last entry in the enum
 
-    explicit ProducerModel(QObject *parent = nullptr);
+    ProducerModel(QSqlDatabase db, QObject *parent = nullptr);
 
-    int lastRole() const override;
+    int firstColumn() const override;
+    int lastColumn() const override;
+
     QHash<int, QByteArray> roleNames() const override;
+    QHash<int, QVariant::Type> roleDatabaseTypes() const override;
+    QHash<int, QVariant::Type> roleAppTypes() const override;
 
 private:
     static const QHash<int, QByteArray> sc_roleNames;
+    static const QHash<int, QVariant::Type> sc_roleDatabaseTypes;
+    static const QHash<int, QVariant::Type> sc_roleAppTypes;
 };
 
 #endif // PRODUCERMODEL_H

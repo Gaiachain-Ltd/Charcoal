@@ -61,17 +61,17 @@ public:
 
     template <typename C, std::enable_if_t<is_qt_dictionary_type<C>::value, int> = 0>
     static QVariantMap toVariantsMap(const C &dictionaryType,
-                                     QMetaType::Type converToTypeKey = QMetaType::Void, QMetaType::Type converToTypeValue = QMetaType::Void)
+                                     QMetaType::Type convertToTypeKey = QMetaType::Void, QMetaType::Type convertToTypeValue = QMetaType::Void)
     {
         auto variantsMap = QVariantMap{};
         for (const auto &key : dictionaryType.keys()) {
             auto variantKey = QVariant::fromValue(key);
-            if (converToTypeKey != QMetaType::Void) {
-                variantKey.convert(converToTypeKey);
+            if (convertToTypeKey != QMetaType::Void) {
+                variantKey.convert(convertToTypeKey);
             }
             auto variantValue = QVariant::fromValue(dictionaryType.value(key));
-            if (converToTypeValue != QMetaType::Void) {
-                variantValue.convert(converToTypeValue);
+            if (convertToTypeValue != QMetaType::Void) {
+                variantValue.convert(convertToTypeValue);
             }
 
             variantsMap.insert(variantKey.toString(), variantValue);
@@ -81,16 +81,16 @@ public:
 
     template <typename C, std::enable_if_t<is_qt_multi_dictionary_type<C>::value, int> = 0>
     static QVariantMap toVariantsMap(const C &dictionaryType,
-                                     QMetaType::Type converToTypeKey = QMetaType::Void, QMetaType::Type converToTypeValue = QMetaType::Void)
+                                     QMetaType::Type convertToTypeKey = QMetaType::Void, QMetaType::Type convertToTypeValue = QMetaType::Void)
     {
         auto variantsMap = QVariantMap{};
         for (const auto &key : dictionaryType.uniqueKeys()) {
             auto variantKey = QVariant::fromValue(key);
-            if (converToTypeKey != QMetaType::Void) {
-                variantKey.convert(converToTypeKey);
+            if (convertToTypeKey != QMetaType::Void) {
+                variantKey.convert(convertToTypeKey);
             }
 
-            auto variantListValue = toVariantList(dictionaryType.values(key), converToTypeValue);
+            auto variantListValue = toVariantList(dictionaryType.values(key), convertToTypeValue);
             variantsMap.insert(variantKey.toString(), variantListValue);
         }
         return variantsMap;

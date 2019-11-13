@@ -16,7 +16,6 @@
         <file>items/TextWithTitle.qml</file>
         <file>items/ItemBorder.qml</file>
         <file>items/GenericInput.qml</file>
-        <file>items/WaitOverlay.qml</file>
         <file>MainStackView.qml</file>
         <file>GaiaStrings.qml</file>
         <file>GaiaStyle.qml</file>
@@ -48,6 +47,7 @@
         <file>popups/GenericPopup.qml</file>
         <file>popups/InformationPopup.qml</file>
         <file>popups/NotificationPopup.qml</file>
+        <file>popups/WaitOverlayPopup.qml</file>
         <file>components/CalendarYearItem.qml</file>
         <file>components/SupplyChainCategorySubmenuButton.qml</file>
         <file>components/SupplyChainCategorySubmenu.qml</file>

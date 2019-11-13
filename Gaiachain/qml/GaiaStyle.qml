@@ -39,6 +39,7 @@ QtObject {
 
     readonly property color disabledColorTint: "#C0a4a4a4"
     readonly property color backgroundShadowColor: "#99000000"
+    readonly property color backgroundDarkShadowColor: "#CC000000"
 
     readonly property color unknownColor: "#8f8f8f"
     readonly property color okColor: "#65cb00"

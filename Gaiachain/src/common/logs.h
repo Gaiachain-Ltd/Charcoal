@@ -8,4 +8,7 @@
 #define RED(x) "\033[1;31m" << x << "\033[0m"
 #define GREEN(x) "\033[1;32m" << x << "\033[0m"
 
+QDebug qLog(const QtMsgType &type);
+QDebug qCLog(const QtMsgType &type, const QLoggingCategory &category);
+
 #endif // LOGS_H

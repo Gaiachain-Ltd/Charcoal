@@ -24,16 +24,16 @@ Items.GenericPanel
         return header.backHandler() // calling back button
     }
 
-    function showOverlay() {
-        mainOverlay.open()
+    function showOverlay(message = "") {
+        pageManager.openPopup(Enums.Popup.WaitOverlay,
+                              { "message" : message, })
     }
     function hideOverlay() {
-        mainOverlay.close()
+        pageManager.closePopup()
     }
 
     function refreshData() {
         showOverlay()
-        dataManager.clearModels()
         sessionManager.getFullData()
         refreshDataTimer.start()
     }
@@ -50,10 +50,6 @@ Items.GenericPanel
         Layout.fillWidth: true
     }
 
-    Items.WaitOverlay {
-        id: mainOverlay
-    }
-
     // TODO wait for real server answer or error
     Timer {
         id: refreshDataTimer
@@ -61,4 +57,19 @@ Items.GenericPanel
         onTriggered: hideOverlay()
     }
 
+    Connections {
+        target: dbManager
+
+        onDatabaseUpdateStarted: {
+            showOverlay(Strings.dbUpdateProgress)
+        }
+        onDatabaseUpdateFinished: {
+            hideOverlay()
+
+            if (!success) {
+                pageManager.openPopup(Enums.Popup.Information,
+                                      { "text": Strings.dbUpdateError })
+            }
+        }
+    }
 }

@@ -38,15 +38,21 @@ MainController::MainController(QObject *parent)
 
 void MainController::setupConnections()
 {
+    connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupModels);
+
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData);
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::packagesRelationsLoaded, &m_dataManager, &DataManager::onRelationsLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
-    connect(&m_sessionManager, &AbstractSessionManager::beforeGetFullData, &m_dataManager, &DataManager::clearModels);
 
     connect(&m_userManager, &UserManager::cooperativeIdChanged, &m_dataManager, &DataManager::updateCooperativeId);
+}
+
+void MainController::initialWork()
+{
+    m_dbManager.setupDatabase();
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
@@ -89,11 +95,17 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 
     // setup other components
     m_pageManager.setupQmlContext(engine);
-    m_dataManager.setupQmlContext(engine);
     m_userManager.setupQmlContext(engine);
+    m_dbManager.setupQmlContext(engine);
+    m_dataManager.setupQmlContext(engine);
     m_sessionManager.setupQmlContext(engine);
 
     setupQZXing(engine);
+}
+
+void MainController::startInitialWork()
+{
+    QMetaObject::invokeMethod(this, &MainController::initialWork);
 }
 
 void MainController::setupQZXing(QQmlApplicationEngine &engine)

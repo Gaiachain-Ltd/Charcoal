@@ -3,7 +3,7 @@
 #
 ## (c) Milo Solutions, 2016
 
-QT += core gui qml quick svg
+QT += core gui qml quick svg sql
 
 exists(../local.pri) {
     include(../local.pri)
@@ -40,16 +40,23 @@ TARGET = Gaiachain
 
 HEADERS += \
     src/common/dataglobals.h \
+    src/common/types.h \
+    src/controllers/databasemanager.h \
     src/controllers/session/abstractsessionmanager.h \
     src/controllers/session/dummy/fakesessionmanager.h \
+    src/database/dbhelpers.h \
+    src/database/dbmigrationmanager.h \
+    src/database/dbmigrations.h \
     src/helpers/requestshelper.h \
     src/helpers/typetraits.h \
     src/models/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
     src/models/cooperativeeventsproxymodel.h \
     src/models/daterangeproxymodel.h \
+    src/models/existsquerymodel.h \
     src/models/latesteventsproxymodel.h \
     src/models/modelchangedextension.h \
+    src/models/namemodel.h \
     src/models/packagedataproxymodel.h \
     src/models/packagetypeeventsproxymodel.h \
     src/models/eventmodel.h \
@@ -62,8 +69,11 @@ HEADERS += \
     src/models/packagetypeidsproxymodel.h \
     src/models/packagetypeproxymodel.h \
     src/models/producermodel.h \
+    src/models/relationmodel.h \
+    src/models/relationslistproxymodel.h \
     src/models/searcheventsproxymodel.h \
     src/common/packagedata.h \
+    src/models/unusedidsmodel.h \
     src/rest/additionaldatarequest.h \
     src/rest/baserequest.h \
     src/rest/loginrequest.h \
@@ -79,18 +89,26 @@ HEADERS += \
     src/controllers/session/dummy/fakedatapopulator.h
 
 SOURCES += src/main.cpp \
+    src/common/logs.cpp \
     src/common/packagedata.cpp \
     src/common/dataglobals.cpp \
     src/common/globals.cpp \
+    src/common/types.cpp \
+    src/controllers/databasemanager.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/dummy/fakesessionmanager.cpp \
+    src/database/dbhelpers.cpp \
+    src/database/dbmigrationmanager.cpp \
+    src/database/dbmigrations.cpp \
     src/helpers/requestshelper.cpp \
     src/models/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
     src/models/cooperativeeventsproxymodel.cpp \
     src/models/daterangeproxymodel.cpp \
+    src/models/existsquerymodel.cpp \
     src/models/latesteventsproxymodel.cpp \
     src/models/modelchangedextension.cpp \
+    src/models/namemodel.cpp \
     src/models/packagedataproxymodel.cpp \
     src/models/packagetypeeventsproxymodel.cpp \
     src/models/eventmodel.cpp \
@@ -101,7 +119,10 @@ SOURCES += src/main.cpp \
     src/models/packagetypeidsproxymodel.cpp \
     src/models/packagetypeproxymodel.cpp \
     src/models/producermodel.cpp \
+    src/models/relationmodel.cpp \
+    src/models/relationslistproxymodel.cpp \
     src/models/searcheventsproxymodel.cpp \
+    src/models/unusedidsmodel.cpp \
     src/rest/additionaldatarequest.cpp \
     src/rest/baserequest.cpp \
     src/rest/loginrequest.cpp \

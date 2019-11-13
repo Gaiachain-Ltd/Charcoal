@@ -83,7 +83,11 @@ const QStringList FakeDataPopulator::sc_transporters = { "TransportWithUs", "Tra
 const QStringList FakeDataPopulator::sc_destinations = { "Switzerland", "Germany", "Poland" };
 
 FakeDataPopulator::FakeDataPopulator()
-{}
+{
+    // use constant number to keep fake data consistent between runs
+    static const uint MAGIC_NUMBER = 42;
+    qsrand(MAGIC_NUMBER);
+}
 
 QStringList FakeDataPopulator::availableLogins()
 {
@@ -506,6 +510,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
             idData = harvestsData.takeFirst();
             if (!idData.second.isValid()) {
                 // processing not done
+                lastReceptionDate = {};
                 continue;
             }
 
@@ -520,6 +525,11 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
             if (lastReceptionDate < actionDate) {
                 lastReceptionDate = actionDate;
             }
+        }
+
+        if (!lastReceptionDate.isValid()) {
+            // processing not done
+            continue;
         }
 
         // SACS

@@ -42,8 +42,8 @@ private:
     void getAllEntities() override;
 
     void sendRequest(const QSharedPointer<BaseRequest> &request,
-                     std::function<void(const QString &, const int &)> const& errorHandler,
-                     std::function<void(const QJsonDocument &)> const& replyHandler);
+                     const std::function<void(const QString &, const int &)> &errorHandler,
+                     const std::function<void(const QJsonDocument &)> &replyHandler);
     void sendRequest(const QSharedPointer<BaseRequest> &request);
 };
 

@@ -1,6 +1,7 @@
 #ifndef MAINCONTROLLER_H
 #define MAINCONTROLLER_H
 
+#include "databasemanager.h"
 #include "datamanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
@@ -16,7 +17,8 @@ class MainController : public AbstractManager
 public:
     explicit MainController(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void startInitialWork();
 
 signals:
 
@@ -24,10 +26,14 @@ public slots:
 
 private:
     void setupConnections();
+    void initialWork();
 
-    DataManager m_dataManager;
     PageManager m_pageManager;
     UserManager m_userManager;
+
+    DatabaseManager m_dbManager;
+    DataManager m_dataManager;
+
 #ifndef FAKE_DATA
     SessionManager m_sessionManager;
 #else
