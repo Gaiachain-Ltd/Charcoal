@@ -23,6 +23,12 @@ CalendarPageBase {
                               "currentYear": dayDate.getFullYear() })
     }
 
+    onMonthHeaderClicked: {
+        pageManager.enter(Enums.Page.CalendarYear, {
+                              "currentMonth": currentMonth,
+                              "currentYear": currentYear })
+    }
+
     ColumnLayout {
         spacing: s(Style.hugeMargin) * 3
 
