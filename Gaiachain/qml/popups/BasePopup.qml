@@ -32,14 +32,22 @@ Popups.GenericPopup
                 weight: Font.DemiBold
             }
             horizontalAlignment: Qt.AlignHCenter
+            wrapMode: Text.Wrap
 
             text: top.text
         }
         RowLayout {
+            id: buttonsRow
+
+            // required to keep proper size of the popup
+            property int buttonHeight: 0
+            Layout.preferredHeight: buttonHeight
+
             spacing: s(Style.bigMargin)
 
             Repeater {
                 model: buttons
+
                 Items.GenericButton {
                     Layout.fillWidth: true
                     Layout.preferredWidth: 0    // this is to keep buttons size equal for all texts
@@ -52,6 +60,10 @@ Popups.GenericPopup
                     text: modelData.text
 
                     onClicked: pageManager.sendAction(modelData.Action)
+
+                    Component.onCompleted: {
+                        buttonsRow.buttonHeight = implicitHeight
+                    }
                 }
             }
         }

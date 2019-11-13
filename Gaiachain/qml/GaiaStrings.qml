@@ -50,6 +50,9 @@ QtObject {
     readonly property string noInternetError: qsTr("No internet connection.")
     readonly property string loginError: qsTr("Login failed. Try again.")
 
+    readonly property string dbUpdateProgress: qsTr("Database updating. Please wait...")
+    readonly property string dbUpdateError: qsTr("Database update failed. If the error repeats, try to reainstall the application.")
+
     // main menu
     readonly property string supplyChain: qsTr("Supply chain")
     readonly property string transactions: qsTr("Transactions")

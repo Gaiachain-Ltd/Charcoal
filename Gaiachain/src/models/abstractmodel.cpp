@@ -1,87 +1,135 @@
 #include "abstractmodel.h"
 
-AbstractModel::AbstractModel(QObject *parent)
-    : QAbstractListModel(parent)
+#include <QSqlError>
+#include <QSqlRecord>
+#include <QSqlField>
+
+#include "../common/types.h"
+
+AbstractModel::AbstractModel(const QLatin1String &tableName, QSqlDatabase db, QObject *parent)
+    : QSqlTableModel(parent, db)
 {
     ModelChangedExtension::setupConnections(this);
+    setTable(tableName);
+    setEditStrategy(QSqlTableModel::OnRowChange);
+
+    initialize();
 }
 
-int AbstractModel::rowCount(const QModelIndex &parent) const
+int AbstractModel::firstColumn() const
 {
-    Q_UNUSED(parent)
+    return 0;
+}
 
-    return m_data.count();
+QList<int> AbstractModel::editableRoles() const
+{
+    return {};
 }
 
 bool AbstractModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role < Qt::UserRole || role >= lastRole())
-        return false;
+    if (role >= Qt::UserRole) {
+        if (!editableRoles().contains(role)) {
+            return false;
+        }
+    } else {
+        if (index.column() < firstColumn() || index.column() >= lastColumn()) {
+            return QSqlTableModel::setData(index, value);
+        }
+    }
 
-    if (index.row() < 0 || index.row() > m_data.count())
-        return {};
+    auto column = role >= Qt::UserRole ? columnShift(role) : index.column();
+    auto updatedIndex = this->index(index.row(), column, index.parent());
 
-    m_data[index.row()][roleShift(role)] = value;
-    emit dataChanged(index, index, {role});
-    return true;
+    auto updatedValue = value;
+    auto targetType = static_cast<int>(roleDatabaseTypes().value(roleShift(column)) );
+    if (!types::canCustomConvert(value, targetType)) {
+        if (!value.canConvert(targetType)) {
+            qCWarning(dataModels) << "Error while setting data. Cannot convert column data:" << QString(roleNames().value(roleShift(column)) );
+        } else {
+            updatedValue.convert(targetType);
+        }
+    } else {
+        types::customConvert(updatedValue, targetType);
+    }
+
+    return QSqlTableModel::setData(updatedIndex, updatedValue);
 }
 
 QVariant AbstractModel::data(const QModelIndex &index, int role) const
 {
-    if (role < Qt::UserRole || role >= lastRole())
-        return {};
-
-    if (index.row() < 0 || index.row() > m_data.count())
-        return {};
-
-    auto shiftedRole = roleShift(role);
-    auto values = m_data[index.row()];
-    if (0 <= shiftedRole && shiftedRole < values.count()) {
-        return values[shiftedRole];
+    if (role >= Qt::UserRole) {
+        if (columnShift(role) < firstColumn() || columnShift(role) >= lastColumn()) {
+            return {};
+        }
+    } else {
+        if (index.column() < firstColumn() || index.column() >= lastColumn()) {
+            return QSqlTableModel::data(index);
+        }
     }
 
-    Q_ASSERT(false);
-    return {};
+
+    auto column = role >= Qt::UserRole ? columnShift(role) : index.column();
+    auto updatedIndex = this->index(index.row(), column, index.parent());
+
+    auto value = QSqlTableModel::data(updatedIndex);
+    if (!value.isNull()) {
+        auto targetType = static_cast<int>(roleAppTypes().value(roleShift(column)));
+        if (!types::canCustomConvert(value, targetType)) {
+            if (!value.canConvert(targetType)) {
+                qCWarning(dataModels) << "Error while getting data. Cannot convert column data:" << QString(roleNames().value(roleShift(column)));
+            } else {
+                value.convert(targetType);
+            }
+        } else {
+            types::customConvert(value, targetType);
+        }
+    }
+
+    return value;
 }
 
-void AbstractModel::clearModel()
+void AbstractModel::initialize()
 {
-    beginResetModel();
-    m_data.clear();
-    endResetModel();
+    select();
 }
 
 void AbstractModel::appendData(const Gaia::ModelData &inData)
 {
-    int modelCount = rowCount();
-    int newDataCount = inData.count();
+    const int FirstColumn = firstColumn();
+    const int LastColumn = lastColumn();
+    const int ColumnCount = LastColumn - FirstColumn;
 
-    beginInsertRows(QModelIndex(), modelCount, modelCount + newDataCount - 1);
-
-    int newIndex = modelCount;
-    for (const auto &dataRow : inData) {
-        QVariantList rowToInsert;
-        int currentRole = Qt::UserRole;
-        for (const auto &data : dataRow) {
-            if (currentRole == lastRole())
-                break;
-
-            rowToInsert.append(data);
-            ++currentRole;
-        }
-
-        while (currentRole != lastRole()) {
-            rowToInsert.append(QVariant());
-            ++currentRole;
-        }
-
-        m_data.insert(newIndex++, rowToInsert);
+    auto record = QSqlRecord{};
+    for (auto column = FirstColumn; column < LastColumn; ++column) {
+        auto role = roleShift(column);
+        record.append(QSqlField{ roleNames().value(role), roleDatabaseTypes().value(role) });
     }
 
-    endInsertRows();
+    for (const auto &dataRow : inData) {
+        if (dataRow.count() > ColumnCount) {
+            qCWarning(dataModels) << "Wrong input fields count:" << dataRow.count() << " > " << ColumnCount;
+            break;
+        }
+
+        for (auto column = FirstColumn; (column < LastColumn && (column - FirstColumn) < dataRow.count()); ++column) {
+            auto name = roleNames().value(roleShift(column));
+            auto value = dataRow.value(column - FirstColumn);
+            record.setValue(QString::fromLatin1(name), value);
+        }
+
+        if (!insertRecord(rowCount(), record)) {
+            qCWarning(dataModels) << "Error while inserting data:" << lastError().text();
+        }
+    }
 }
 
-int AbstractModel::roleShift(const int role) const
+int AbstractModel::columnShift(const int &role) const
 {
-    return role - static_cast<int>(Qt::UserRole);
+    return role - Qt::UserRole;
+}
+
+int AbstractModel::roleShift(const int &column) const
+{
+    return column + Qt::UserRole;
 }

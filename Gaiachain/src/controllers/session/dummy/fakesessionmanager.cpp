@@ -209,7 +209,17 @@ void FakeSessionManager::onRelationsAll()
 {
     updateConnectionStateAfterRequest(QNetworkReply::NoError);
 
-    emit packagesRelationsLoaded(QJsonObject::fromVariantMap(m_populator.getPackagesRelations()) );
+    auto relationsMap = m_populator.getPackagesRelations();
+    auto relationsArray = QJsonArray{};
+    std::transform(relationsMap.constKeyValueBegin(), relationsMap.constKeyValueEnd(),
+                   std::back_inserter(relationsArray),
+                   [](const std::pair<QString, QVariant> &data) -> QJsonValue {
+        return QJsonObject::fromVariantMap({
+            { Tags::id, data.first },
+            { Tags::ids, data.second }
+        });
+    });
+    emit packagesRelationsLoaded(relationsArray);
 }
 
 void FakeSessionManager::onRelationsSingle(const QString &packageId)

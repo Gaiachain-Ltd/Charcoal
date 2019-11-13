@@ -1,35 +1,26 @@
-#ifndef EVENTMODEL_H
-#define EVENTMODEL_H
+#ifndef NAMEMODEL_H
+#define NAMEMODEL_H
 
 #include "abstractmodel.h"
 
 #include <QHash>
 
-class EventModel : public AbstractModel
+class NameModel : public AbstractModel
 {
     Q_OBJECT
 
 public:
     enum Columns {
-        PackageId = Qt::UserRole + 1, // 1 as 0 column is id column not used in UI
-        Action,
-        Timestamp,
-        UserRole,
-        CooperativeId,
-        Properties,
-        LocationLat,
-        LocationLon,
-        IsLocal,
-        LastUsed,
+        Name = Qt::UserRole + 1, // 1 as 0 column is id column not used in UI
         LastColumn
     }; //!!! Keep the lastcolumn, a last entry in the enum
 
-    EventModel(QSqlDatabase db, QObject *parent = nullptr);
+    NameModel(const QLatin1String &tableName, QSqlDatabase db, QObject *parent = nullptr);
+
+    static const QString columnName();
 
     int firstColumn() const override;
     int lastColumn() const override;
-
-    QList<int> editableRoles() const override;
 
     QHash<int, QByteArray> roleNames() const override;
     QHash<int, QVariant::Type> roleDatabaseTypes() const override;
@@ -41,4 +32,4 @@ private:
     static const QHash<int, QVariant::Type> sc_roleAppTypes;
 };
 
-#endif // EVENTMODEL_H
+#endif // NAMEMODEL_H

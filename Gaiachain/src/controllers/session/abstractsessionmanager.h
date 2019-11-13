@@ -50,8 +50,6 @@ public:
 signals:
     void connectionStateChanged(Enums::ConnectionState connectionState);
 
-    void beforeGetFullData() const;
-
     void loginError(const int &code) const;
     void loginFinished(const QJsonDocument &doc) const;
 
@@ -60,7 +58,7 @@ signals:
 
     void relationsLoadError(const int &code) const;
     void packageRelationsLoaded(const QJsonArray &packages) const;
-    void packagesRelationsLoaded(const QJsonObject &relations) const;
+    void packagesRelationsLoaded(const QJsonArray &relations) const;
     void packageRelationsSaveError(const int &code) const;
     void packageRelationsSaved(const QString &id) const;
 

@@ -45,6 +45,7 @@ namespace Enums {
     enum class Popup {
         InvalidPopup = -1,
         Information,
+        WaitOverlay,
         Notification,
 
         PopupCount

@@ -25,8 +25,6 @@ Enums::ConnectionState AbstractSessionManager::connectionState() const
 void AbstractSessionManager::getFullData()
 {
     // INFO temporary solution
-    emit beforeGetFullData();
-
     getAllRelations();
     getAllEntities();
     getAdditionalData();

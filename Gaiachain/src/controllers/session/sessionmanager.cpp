@@ -196,7 +196,7 @@ void SessionManager::getAllRelations()
         emit relationsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit packagesRelationsLoaded(reply.object().value(Tags::relations).toObject());
+        emit packagesRelationsLoaded(reply.object().value(Tags::relations).toArray());
     };
     sendRequest(QSharedPointer<RelationRequest>::create(QStringList{}), errorHandler, replyHandler);
 }
