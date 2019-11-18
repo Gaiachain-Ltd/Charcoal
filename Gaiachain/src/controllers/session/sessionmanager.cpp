@@ -165,6 +165,20 @@ void SessionManager::postNewEntity(const Enums::SupplyChainAction &action, const
     }
 }
 
+void SessionManager::getCreatedHarvestIds()
+{
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit createdHarvestIdsLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit createdHarvestIdsLoaded(reply.object().value(Tags::ids).toArray());
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Harvest), errorHandler, replyHandler);
+    }
+}
+
 void SessionManager::getUnusedLotIds()
 {
     const auto errorHandler = [this](const QString &, const int &code) {
@@ -173,7 +187,10 @@ void SessionManager::getUnusedLotIds()
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit unusedLotIdsLoaded(reply.object().value(Tags::ids).toArray());
     };
-    sendRequest(QSharedPointer<EntityRequest>::create(Enums::PackageType::Lot), errorHandler, replyHandler);
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot), errorHandler, replyHandler);
+    }
 }
 
 void SessionManager::postUnusedLotId()
@@ -186,7 +203,7 @@ void SessionManager::postUnusedLotId()
     };
 
     if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot), errorHandler, replyHandler);
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot, true), errorHandler, replyHandler);
     }
 }
 

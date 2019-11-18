@@ -42,6 +42,8 @@ public:
     Q_INVOKABLE virtual void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                            const QVariantMap &properties, const QByteArray &codeData) = 0;
 
+    Q_INVOKABLE virtual void getCreatedHarvestIds() = 0;
+
     Q_INVOKABLE virtual void getUnusedLotIds() = 0;
     Q_INVOKABLE virtual void postUnusedLotId() = 0;
 
@@ -68,6 +70,9 @@ signals:
     void entityIdLoaded(const QString &id) const;
     void entitySaveError(const int &code) const;
     void entitySaved(const QString &id) const;
+
+    void createdHarvestIdsLoadError(const int &code) const;
+    void createdHarvestIdsLoaded(const QJsonArray &ids) const;
 
     void unusedLotIdsLoadError(const int &code) const;
     void unusedLotIdsLoaded(const QJsonArray &ids) const;

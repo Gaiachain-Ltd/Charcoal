@@ -48,12 +48,10 @@
         <file>popups/InformationPopup.qml</file>
         <file>popups/NotificationPopup.qml</file>
         <file>popups/WaitOverlayPopup.qml</file>
-        <file>components/CalendarYearItem.qml</file>
         <file>components/SupplyChainCategorySubmenuButton.qml</file>
         <file>components/SupplyChainCategorySubmenu.qml</file>
         <file>components/SupplyChainSubmenuButton.qml</file>
         <file>components/SupplyChainSubmenuExpandButton.qml</file>
-        <file>pages/CalendarYearPage.qml</file>
         <file>pages/PackageDataPage.qml</file>
         <file>components/PackageDataDetails.qml</file>
         <file>components/PackageDataHarvestDetails.qml</file>

@@ -32,6 +32,8 @@ public:
     Q_INVOKABLE void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                    const QVariantMap &properties, const QByteArray &codeData) override;
 
+    Q_INVOKABLE void getCreatedHarvestIds() override;
+
     Q_INVOKABLE void getUnusedLotIds() override;
     Q_INVOKABLE void postUnusedLotId() override;
 

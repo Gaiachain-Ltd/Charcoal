@@ -32,6 +32,7 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("transportersModel"), &m_transportersModel);
     engine.rootContext()->setContextProperty(QStringLiteral("destinationsModel"), &m_destinationsModel);
 
+    engine.rootContext()->setContextProperty(QStringLiteral("createdHarvestIdsModel"), &m_createdHarvestIdsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("packageTypeCooperativeIdsModel"), &m_packageTypeCooperativeIdsModel);
 
@@ -155,6 +156,15 @@ void DataManager::onEntitiesLoaded(const QJsonArray &entities)
     });
 }
 
+void DataManager::onCreatedHarvestIdsLoaded(const QJsonArray &idsArray)
+{
+    auto ids = QStringList{};
+    std::transform(idsArray.constBegin(), idsArray.constEnd(), std::back_inserter(ids),
+                   [](const auto &idValue) { return idValue.toString(); });   // only lots handled now
+
+    m_createdHarvestIdsModel.setPackageIds(ids);
+}
+
 void DataManager::onUnusedLotIdsLoaded(const QJsonArray &idsArray)
 {
     Q_ASSERT(m_existsQueryModel && m_unusedIdsSourceModel);
@@ -203,6 +213,7 @@ void DataManager::setupModels(QSqlDatabase db)
     m_relationSourceModel.reset(new RelationModel(db));
     m_unusedIdsSourceModel.reset(new UnusedIdsModel(db));
 
+    m_createdHarvestIdsModel.setSourceModel(m_eventsSourceModel.data());
     m_unusedLotIdsModel.setSourceModel(m_unusedIdsSourceModel.data());
 
     m_cooperativeEventsModel.setSourceModel(m_eventsSourceModel.data());

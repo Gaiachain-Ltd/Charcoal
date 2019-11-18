@@ -31,6 +31,8 @@ public:
     Q_INVOKABLE void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                    const QVariantMap &properties, const QByteArray &codeData) override;
 
+    Q_INVOKABLE void getCreatedHarvestIds() override;
+
     Q_INVOKABLE void getUnusedLotIds() override;
     Q_INVOKABLE void postUnusedLotId() override;
 
@@ -70,6 +72,9 @@ private:
                        const QVariantMap &properties, const QByteArray &codeData);
     void onEntitySaved(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                        const QVariantMap &properties);
+
+    void onCreatedHarvestIdsError();
+    void onCreatedHarvestIds();
 
     void onUnusedLotIdsError();
     void onUnusedLotIds();

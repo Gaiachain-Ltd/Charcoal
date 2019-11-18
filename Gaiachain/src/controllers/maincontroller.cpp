@@ -45,6 +45,7 @@ void MainController::setupConnections()
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::packagesRelationsLoaded, &m_dataManager, &DataManager::onRelationsLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
+    connect(&m_sessionManager, &AbstractSessionManager::createdHarvestIdsLoaded, &m_dataManager, &DataManager::onCreatedHarvestIdsLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
 
     connect(&m_userManager, &UserManager::cooperativeIdChanged, &m_dataManager, &DataManager::updateCooperativeId);

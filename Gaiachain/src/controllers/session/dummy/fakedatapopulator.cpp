@@ -176,6 +176,33 @@ QVariantList FakeDataPopulator::getEventHistory(const QString &packageId) const
     return Utility::toVariantList(m_eventsHistory.values(packageId));
 }
 
+QVariantList FakeDataPopulator::createdHarvestIds(const QString &cooperativeId) const
+{
+    auto ids = QStringList{};
+    std::copy_if(m_eventsHistory.keyBegin(), m_eventsHistory.keyEnd(),
+                 std::back_inserter(ids), [this, &cooperativeId](const auto &id) {
+        const auto entry = m_eventsHistory.value(id);
+        const auto entryCooperativeId = entry.value(Tags::agent).toMap().value(Tags::cooperativeId).toString();
+        const auto entryAction = RequestsHelper::supplyChainActionFromString(entry.value(Tags::action).toString());
+        auto isCooperativeHarvestAction = (entryCooperativeId == cooperativeId) && (entryAction == Enums::SupplyChainAction::Harvest);
+        if (isCooperativeHarvestAction) {
+            auto otherIdActions = std::find_if(m_eventsHistory.keyBegin(), m_eventsHistory.keyEnd(),
+                                               [this, id](const auto &searchId) {
+                if (searchId == id) {
+                    const auto entry = m_eventsHistory.value(id);
+                    const auto entryAction = RequestsHelper::supplyChainActionFromString(entry.value(Tags::action).toString());
+                    return (entryAction != Enums::SupplyChainAction::Harvest);
+                }
+                return false;
+            });
+            return otherIdActions == m_eventsHistory.keyEnd();  // no other actions
+        }
+        return false;
+    });
+
+    return Utility::toVariantList<QList<QString>>(ids);
+}
+
 QVariantList FakeDataPopulator::unusedLotIds(const QString &cooperativeId) const
 {
     return Utility::toVariantList<QList<QString>>(m_cooperativeUnusedLotIds.value(cooperativeId));
