@@ -57,6 +57,8 @@
         <file>components/PackageDataHarvestDetails.qml</file>
         <file>components/PackageDataLotDetails.qml</file>
         <file>components/PackageDataSacDetails.qml</file>
+        <file>components/CommunicationStateItem.qml</file>
+        <file>items/SpinnerItem.qml</file>
         <file>items/InputHeader.qml</file>
         <file>items/InputHeaderWithExpandList.qml</file>
     </qresource>

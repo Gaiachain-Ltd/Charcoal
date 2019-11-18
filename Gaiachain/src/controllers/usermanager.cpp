@@ -21,6 +21,8 @@ UserManager::UserManager(QObject *parent)
     });
     connect(this, &UserManager::loggedInChanged,
             this, [this]() { emit loginChanged(getLogin()); });
+    connect(this, &UserManager::loggedInChanged,
+            this, [this](bool loggedId) { if (loggedId) { emit loggedIn(); } });
 }
 
 bool UserManager::isLoggedIn() const

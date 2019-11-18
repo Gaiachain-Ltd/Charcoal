@@ -15,7 +15,8 @@
 Q_DECLARE_LOGGING_CATEGORY(dataModels)
 
 namespace Gaia {
-    using ModelData = QVector<QVariantList>;
+    using ModelEntry = QVariantList;
+    using ModelData = QVector<ModelEntry>;
 }
 
 #endif // GLOBALS_H

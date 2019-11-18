@@ -1,4 +1,4 @@
-#include "loginrequest.h"
+#include "authrequest.h"
 
 #include <QJsonObject>
 #include <QLoggingCategory>
@@ -6,8 +6,17 @@
 #include "../common/logs.h"
 #include "../common/tags.h"
 
-LoginRequest::LoginRequest(const QString &email, const QString &password)
-    : BaseRequest(QStringLiteral("/auth/login/"), Type::Post)
+namespace {
+const auto PING_PATH = QStringLiteral("/auth/ping/");
+const auto LOGIN_PATH = QStringLiteral("/auth/login/");
+}
+
+AuthRequest::AuthRequest()
+    : BaseRequest(PING_PATH, Type::Get)
+{}
+
+AuthRequest::AuthRequest(const QString &email, const QString &password)
+    : BaseRequest(LOGIN_PATH, Type::Post)
 {
     if (!email.isEmpty() && !password.isEmpty()) {
         mRequestDocument.setObject({ { Tags::email, email },
@@ -18,7 +27,7 @@ LoginRequest::LoginRequest(const QString &email, const QString &password)
     }
 }
 
-bool LoginRequest::isTokenRequired() const
+bool AuthRequest::isTokenRequired() const
 {
     return false;
 }

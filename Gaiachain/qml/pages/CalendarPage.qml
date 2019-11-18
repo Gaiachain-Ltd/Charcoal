@@ -10,10 +10,19 @@ import "../components" as Components
 CalendarPageBase {
     id: top
 
+    function refreshData() {
+        // called from BasePage
+        dataManager.fetchRangeEvents(new Date(currentYear, currentMonth, 1),
+                                     new Date(currentYear, currentMonth + 1, 0))
+    }
+
     function updateModelRange() {
         // called from CalendarPageBase
-        calendarModel.setDateRange(new Date(currentYear, currentMonth, 1),
-                                   new Date(currentYear, currentMonth + 1, 0) )
+        var from = new Date(currentYear, currentMonth, 1)
+        var to = new Date(currentYear, currentMonth + 1, 0)
+
+        calendarModel.setDateRange(from, to)
+        dataManager.fetchRangeEvents(from, to)
     }
 
     function enterDayPage(dayDate) {

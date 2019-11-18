@@ -24,9 +24,9 @@ BasePage {
         Calendar.October, Calendar.November, Calendar.December
     ]
 
-    property int currentDay
-    property int currentMonth
-    property int currentYear
+    property int currentDay: 0
+    property int currentMonth: -1
+    property int currentYear: 0
 
     signal monthHeaderClicked()
 
@@ -57,10 +57,16 @@ BasePage {
         currentMonth = monthModel[month]
     }
 
-    Component.onCompleted: updateModelRange()
-    onCurrentDayChanged: updateModelRange()
-    onCurrentMonthChanged: updateModelRange()
-    onCurrentYearChanged: updateModelRange()
+    function onDateChanged() {
+        if (currentDay > 0 && currentMonth >= 0 && currentYear > 0) {
+            updateModelRange()
+        }
+    }
+
+    Component.onCompleted: onDateChanged()
+    onCurrentDayChanged: onDateChanged()
+    onCurrentMonthChanged: onDateChanged()
+    onCurrentYearChanged: onDateChanged()
 
     ColumnLayout {
         id: topLayout

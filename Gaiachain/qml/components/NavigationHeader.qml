@@ -15,10 +15,6 @@ Item {
 
     signal headerClicked()
 
-    function backHandler() {
-        pageManager.back()
-        return false    // do not close application
-    }
     function logout() {
         pageManager.backTo(Enums.Page.Login)
         userManager.logOut()

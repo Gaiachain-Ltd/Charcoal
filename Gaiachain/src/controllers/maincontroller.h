@@ -26,6 +26,7 @@ public slots:
 
 private:
     void setupConnections();
+    void setupDataConnections();
     void initialWork();
 
     PageManager m_pageManager;

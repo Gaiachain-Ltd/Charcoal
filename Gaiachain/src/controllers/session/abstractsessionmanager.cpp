@@ -22,11 +22,8 @@ Enums::ConnectionState AbstractSessionManager::connectionState() const
     return m_connectionState;
 }
 
-void AbstractSessionManager::getFullData()
+void AbstractSessionManager::getInitialData()
 {
-    // INFO temporary solution
-    getAllRelations();
-    getAllEntities();
     getAdditionalData();
     getCreatedHarvestIds();
     getUnusedLotIds();

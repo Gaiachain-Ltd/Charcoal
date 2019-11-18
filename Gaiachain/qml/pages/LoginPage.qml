@@ -128,9 +128,8 @@ BasePage {
             text: Strings.skipLogin
 
             onClicked: {
+                sessionManager.ping()
                 pageManager.enter(Enums.Page.LoginLoading, { "skipLogin": true })
-
-                sessionManager.getFullData()
             }
         }
 

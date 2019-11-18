@@ -1,8 +1,7 @@
 #ifndef FAKESESSIONMANAGER_H
 #define FAKESESSIONMANAGER_H
 
-#include "../abstractsessionmanager.h"
-#include "fakedatapopulator.h"
+#include "fakeserver.h"
 
 class FakeSessionManager : public AbstractSessionManager
 {
@@ -11,18 +10,20 @@ class FakeSessionManager : public AbstractSessionManager
 public:
     explicit FakeSessionManager(QObject *parent = nullptr);
 
+    Q_INVOKABLE void ping() override;
     Q_INVOKABLE void login(const QString &email, const QString &password) override;
 
     Q_INVOKABLE void getAdditionalData() override;
 
     Q_INVOKABLE void getRelations(const QString &id) override;
+    Q_INVOKABLE void getRelations(const QStringList &ids) override;
     Q_INVOKABLE void addRelation(const QString &id, const QStringList &ids) override;
 
     Q_INVOKABLE void getEntitiesInfo(int count, const QDateTime &from = {}) override;
-    Q_INVOKABLE void getEntitiesInfo(const QDateTime &to, const QDateTime &from = {}) override;
+    Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to) override;
     Q_INVOKABLE void getEntities(const QStringList &ids) override;
     Q_INVOKABLE void getEntity(const QString &id) override;
-    Q_INVOKABLE void getEntitId(const QByteArray &codeData) override;
+    Q_INVOKABLE void getEntityId(const QByteArray &codeData) override;
 
     Q_INVOKABLE void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                              const QVariantMap &properties, const QByteArray &codeData = {}) override;
@@ -37,50 +38,7 @@ public:
     Q_INVOKABLE void postUnusedLotId() override;
 
 private:
-    static const int sc_firstHarvestShift = 90;    // more or less a quarter
-
-    FakeDataPopulator m_populator;
-    Enums::UserType m_currentUserType;
-    QString m_currentCooperativeId;
-
-    void getAllRelations() override;
-    void getAllEntities() override;
-
-    int randomWaitTime();
-
-    void onLoginError();
-    void onLogin(const QString &email, const QString &password);
-
-    void onAdditionalDataError();
-    void onAdditionalData();
-
-    void onRelationsError();
-    void onRelationsAll();
-    void onRelationsSingle(const QString &packageId);
-
-    void onRelationSaveError();
-    void onRelationSaved(const QString &packageId, const QStringList &relatedIds);
-
-    void onEntityError();
-    void onEntityAll();
-    void onEntityMultiple(const QStringList &packagesId);
-    void onEntitySingle(const QString &packageId);
-    void onEntityId(const QByteArray &codeData);
-
-    void onEntitySaveError();
-    void onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                       const QVariantMap &properties, const QByteArray &codeData);
-    void onEntitySaved(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                       const QVariantMap &properties);
-
-    void onCreatedHarvestIdsError();
-    void onCreatedHarvestIds();
-
-    void onUnusedLotIdsError();
-    void onUnusedLotIds();
-
-    void onUnusedLotIdCreationError();
-    void onUnusedLotIdCreated();
+    FakeServer m_fakeServer;
 };
 
 #endif // FAKESESSIONMANAGER_H

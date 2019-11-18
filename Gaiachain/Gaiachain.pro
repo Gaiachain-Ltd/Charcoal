@@ -42,6 +42,7 @@ HEADERS += \
     src/common/types.h \
     src/controllers/databasemanager.h \
     src/controllers/session/abstractsessionmanager.h \
+    src/controllers/session/dummy/fakeserver.h \
     src/controllers/session/dummy/fakesessionmanager.h \
     src/database/dbhelpers.h \
     src/database/dbmigrationmanager.h \
@@ -51,9 +52,11 @@ HEADERS += \
     src/models/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
     src/models/cooperativeeventsproxymodel.h \
+    src/models/createdharvestidsproxymodel.h \
     src/models/daterangeproxymodel.h \
     src/models/existsquerymodel.h \
     src/models/latesteventsproxymodel.h \
+    src/models/latestrangeeventsproxymodel.h \
     src/models/modelchangedextension.h \
     src/models/namemodel.h \
     src/models/packagedataproxymodel.h \
@@ -75,8 +78,8 @@ HEADERS += \
     src/models/selectedidsproxymodel.h \
     src/models/unusedidsmodel.h \
     src/rest/additionaldatarequest.h \
+    src/rest/authrequest.h \
     src/rest/baserequest.h \
-    src/rest/loginrequest.h \
     src/rest/relationrequest.h \
     src/rest/restapiclient.h \
     src/controllers/session/sessionmanager.h \
@@ -96,6 +99,7 @@ SOURCES += src/main.cpp \
     src/common/types.cpp \
     src/controllers/databasemanager.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
+    src/controllers/session/dummy/fakeserver.cpp \
     src/controllers/session/dummy/fakesessionmanager.cpp \
     src/database/dbhelpers.cpp \
     src/database/dbmigrationmanager.cpp \
@@ -104,9 +108,11 @@ SOURCES += src/main.cpp \
     src/models/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
     src/models/cooperativeeventsproxymodel.cpp \
+    src/models/createdharvestidsproxymodel.cpp \
     src/models/daterangeproxymodel.cpp \
     src/models/existsquerymodel.cpp \
     src/models/latesteventsproxymodel.cpp \
+    src/models/latestrangeeventsproxymodel.cpp \
     src/models/modelchangedextension.cpp \
     src/models/namemodel.cpp \
     src/models/packagedataproxymodel.cpp \
@@ -125,8 +131,8 @@ SOURCES += src/main.cpp \
     src/models/selectedidsproxymodel.cpp \
     src/models/unusedidsmodel.cpp \
     src/rest/additionaldatarequest.cpp \
+    src/rest/authrequest.cpp \
     src/rest/baserequest.cpp \
-    src/rest/loginrequest.cpp \
     src/rest/relationrequest.cpp \
     src/rest/restapiclient.cpp \
     src/controllers/session/sessionmanager.cpp \

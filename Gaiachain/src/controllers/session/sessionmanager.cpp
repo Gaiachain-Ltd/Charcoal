@@ -8,7 +8,7 @@
 #include "../../common/tags.h"
 #include "../../common/globals.h"
 #include "../../helpers/utility.h"
-#include "../../rest/loginrequest.h"
+#include "../../rest/authrequest.h"
 #include "../../rest/entityrequest.h"
 #include "../../rest/relationrequest.h"
 #include "../../rest/additionaldatarequest.h"
@@ -16,6 +16,17 @@
 SessionManager::SessionManager(QObject *parent)
     : AbstractSessionManager(parent)
 {}
+
+void SessionManager::ping()
+{
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit pingError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &) {
+        emit pingSuccess();
+    };
+    sendRequest(QSharedPointer<AuthRequest>::create(), errorHandler, replyHandler);
+}
 
 void SessionManager::login(const QString &email, const QString &password)
 {
@@ -25,7 +36,7 @@ void SessionManager::login(const QString &email, const QString &password)
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit loginFinished(reply);
     };
-    sendRequest(QSharedPointer<LoginRequest>::create(email, password), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<AuthRequest>::create(email, password), errorHandler, replyHandler);
 }
 
 void SessionManager::getAdditionalData()
@@ -46,9 +57,20 @@ void SessionManager::getRelations(const QString &id)
         emit relationsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit packageRelationsLoaded(reply.object().value(Tags::ids).toArray());
+        emit relationsLoaded(reply.object().value(Tags::ids).toArray());
     };
     sendRequest(QSharedPointer<RelationRequest>::create(id), errorHandler, replyHandler);
+}
+
+void SessionManager::getRelations(const QStringList &ids)
+{
+    const auto errorHandler = [this](const QString &, const int &code) {
+        emit relationsLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit relationsLoaded(reply.object().value(Tags::relations).toArray());
+    };
+    sendRequest(QSharedPointer<RelationRequest>::create(ids), errorHandler, replyHandler);
 }
 
 void SessionManager::addRelation(const QString &id, const QStringList &ids)
@@ -57,7 +79,7 @@ void SessionManager::addRelation(const QString &id, const QStringList &ids)
         emit relationsLoadError(code);
     };
     const auto replyHandler = [this, id](const QJsonDocument &) {
-        emit packageRelationsSaved(id);
+        emit relationsSaved(id);
     };
 
     if (checkValidToken()) {
@@ -68,29 +90,32 @@ void SessionManager::addRelation(const QString &id, const QStringList &ids)
 void SessionManager::getEntitiesInfo(int count, const QDateTime &from)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
-        emit entityLoadError(code);
+        emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
     };
-    sendRequest(QSharedPointer<EntityRequest>::create(count, from), errorHandler, replyHandler);
+
+    auto fromDate = from.isNull() ? QDateTime::currentDateTime() : from;
+    sendRequest(QSharedPointer<EntityRequest>::create(count, fromDate), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntitiesInfo(const QDateTime &to, const QDateTime &from)
+void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
-        emit entityLoadError(code);
+        emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
     };
-    sendRequest(QSharedPointer<EntityRequest>::create(to, from), errorHandler, replyHandler);
+
+    sendRequest(QSharedPointer<EntityRequest>::create(from, to), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntities(const QStringList &ids)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
-        emit entityLoadError(code);
+        emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
@@ -101,7 +126,7 @@ void SessionManager::getEntities(const QStringList &ids)
 void SessionManager::getEntity(const QString &id)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
-        emit entityLoadError(code);
+        emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
@@ -109,10 +134,10 @@ void SessionManager::getEntity(const QString &id)
     sendRequest(QSharedPointer<EntityRequest>::create(QStringList{ id, }), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntitId(const QByteArray &codeData)
+void SessionManager::getEntityId(const QByteArray &codeData)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
-        emit entityLoadError(code);
+        emit entityIdLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit entityIdLoaded(reply.object().value(Tags::id).toString());
@@ -205,28 +230,6 @@ void SessionManager::postUnusedLotId()
     if (checkValidToken()) {
         sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot, true), errorHandler, replyHandler);
     }
-}
-
-void SessionManager::getAllRelations()
-{
-    const auto errorHandler = [this](const QString &, const int &code) {
-        emit relationsLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit packagesRelationsLoaded(reply.object().value(Tags::relations).toArray());
-    };
-    sendRequest(QSharedPointer<RelationRequest>::create(QStringList{}), errorHandler, replyHandler);
-}
-
-void SessionManager::getAllEntities()
-{
-    const auto errorHandler = [this](const QString &, const int &code) {
-        emit entityLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
-    };
-    sendRequest(QSharedPointer<EntityRequest>::create(QStringList{}), errorHandler, replyHandler);
 }
 
 void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,

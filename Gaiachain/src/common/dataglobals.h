@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE static Enums::PlaceType placeType(const Enums::SupplyChainAction &action);
     Q_INVOKABLE static Enums::PlaceType userPlaceType(const Enums::UserType &user);
     static QList<Enums::SupplyChainAction> userActions(const Enums::UserType &user);
+    static QList<Enums::SupplyChainAction> packageActions(const Enums::PackageType &type);
     static Enums::SupplyChainAction packageTypeCreationAction(const Enums::PackageType &type);
 
     static QList<Enums::UserType> availableUserTypes();

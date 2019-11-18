@@ -68,7 +68,7 @@ EntityRequest::EntityRequest(int count, const QDateTime &from)
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QDateTime &to, const QDateTime &from)
+EntityRequest::EntityRequest(const QDateTime &from, const QDateTime &to)
     : EntityRequest(RequestType::GetFilterTo)
 {
     auto docObj = QJsonObject{ { Tags::timestampTo, static_cast<qint64>(to.toTime_t()) } };

@@ -42,6 +42,7 @@ signals:
 
     void userTypeChanged(Enums::UserType userType) const;
     void loggedInChanged(bool isLoggedIn) const;
+    void loggedIn() const;
 
 private:
     Enums::UserType m_userType = Enums::UserType::Annonymous;
