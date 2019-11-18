@@ -33,6 +33,7 @@ public:
     QVariantList getEventHistory(const QStringList &packagesId) const;
     QVariantList getEventHistory(const QString &packageId) const;
 
+    QVariantList createdHarvestIds(const QString &cooperativeId) const;
     QVariantList unusedLotIds(const QString &cooperativeId) const;
     QString createUnusedLotId(const QString &cooperativeId);
 

@@ -15,11 +15,12 @@ public:
         GetFilterCount,
         GetFilterTo,
         GetId,
-        GetUnused,
+        GetCreatedHarvests,
+        GetUnusedLots,
         PutActionId,
         PutActionCode,
         PostNewPackage,
-        PostUnused
+        PostUnusedLot
     };
     Q_ENUM(RequestType)
 
@@ -32,24 +33,23 @@ public:
     EntityRequest(const RequestType &requestType, const QString &token = {});
     EntityRequest(const QString &customPath, const RequestType &requestType, const QString &token = {});
 
-    // reading data
     EntityRequest(const QStringList &ids = {});
     EntityRequest(int count, const QDateTime &from);
     EntityRequest(const QDateTime &to, const QDateTime &from);
     EntityRequest(const QByteArray &codeData);
-    EntityRequest(const Enums::PackageType &packageType);
 
-    // writing data
     EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData, const QByteArray &codeData = {});
     EntityRequest(const QString &token, const QByteArray &codeData, const EntityData &entityData, bool newPackage);
-    EntityRequest(const QString &token, const Enums::PackageType &packageType);
 
+    EntityRequest(const QString &token, const Enums::PackageType &packageType, bool create = false);
 private:
     const RequestType m_requestType = RequestType::Invalid;
 
     static const QString sc_basePath;
     static const QMap<RequestType, Type> sc_requestsType;
     static const QMap<RequestType, QString> sc_requestsPath;
+
+    static RequestType requestForPackageType(const Enums::PackageType &type, const Type &requestType);
 };
 
 

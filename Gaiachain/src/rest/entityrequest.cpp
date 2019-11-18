@@ -15,11 +15,12 @@ const QMap<EntityRequest::RequestType, MRestRequest::Type> EntityRequest::sc_req
     { EntityRequest::RequestType::GetFilterCount, Type::Get },
     { EntityRequest::RequestType::GetFilterTo, Type::Get },
     { EntityRequest::RequestType::GetId, Type::Get },
-    { EntityRequest::RequestType::GetUnused, Type::Get },
+    { EntityRequest::RequestType::GetCreatedHarvests, Type::Get },
+    { EntityRequest::RequestType::GetUnusedLots, Type::Get },
     { EntityRequest::RequestType::PutActionId, Type::Put },
     { EntityRequest::RequestType::PutActionCode, Type::Put },
     { EntityRequest::RequestType::PostNewPackage, Type::Post },
-    { EntityRequest::RequestType::PostUnused, Type::Post }
+    { EntityRequest::RequestType::PostUnusedLot, Type::Post }
 };
 
 const QMap<EntityRequest::RequestType, QString> EntityRequest::sc_requestsPath = {
@@ -27,11 +28,12 @@ const QMap<EntityRequest::RequestType, QString> EntityRequest::sc_requestsPath =
     { EntityRequest::RequestType::GetFilterCount, sc_basePath.arg(QStringLiteral("filter")) },
     { EntityRequest::RequestType::GetFilterTo, sc_basePath.arg(QStringLiteral("filter")) },
     { EntityRequest::RequestType::GetId, sc_basePath.arg(QStringLiteral("id")) },
-    { EntityRequest::RequestType::GetUnused, sc_basePath.arg(QStringLiteral("unused")) },
+    { EntityRequest::RequestType::GetCreatedHarvests, sc_basePath.arg(QStringLiteral("harvest")) },
+    { EntityRequest::RequestType::GetUnusedLots, sc_basePath.arg(QStringLiteral("lots")) },
     { EntityRequest::RequestType::PutActionId, sc_basePath.arg(QStringLiteral("%1")) },
     { EntityRequest::RequestType::PutActionCode, sc_basePath.arg(QStringLiteral("code/%1")) },
     { EntityRequest::RequestType::PostNewPackage, sc_basePath.arg(QStringLiteral("new/%1")) },
-    { EntityRequest::RequestType::PostUnused, sc_basePath.arg(QStringLiteral("unused")) }
+    { EntityRequest::RequestType::PostUnusedLot, sc_basePath.arg(QStringLiteral("lots")) }
 };
 
 EntityRequest::EntityRequest(const EntityRequest::RequestType &requestType, const QString &token)
@@ -52,7 +54,6 @@ EntityRequest::EntityRequest(const QStringList &ids)
 {
     auto docObj = QJsonObject{ { Tags::ids, ids.isEmpty() ? QJsonValue(StaticValues::all)
                                                           : QJsonValue::fromVariant(ids) } };
-
     mRequestDocument.setObject(docObj);
 }
 
@@ -85,22 +86,15 @@ EntityRequest::EntityRequest(const QByteArray &codeData)
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const Enums::PackageType &packageType)
-    : EntityRequest(RequestType::GetUnused)
-{
-    auto docObj = QJsonObject{ { Tags::packageType, RequestsHelper::packageTypeToString(packageType) } };
-    mRequestDocument.setObject(docObj);
-}
-
 EntityRequest::EntityRequest(const QString &token, const QString &packageId, const EntityRequest::EntityData &entityData, const QByteArray &codeData)
     : EntityRequest(sc_requestsPath.value(RequestType::PutActionId).arg(packageId), RequestType::PutActionId, token)
 {
     auto docObj = QJsonObject{
-        { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
-        { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
-        { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
-        { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
-    };
+    { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
+    { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
+    { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
+    { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
+};
     if (!codeData.isEmpty()) {
         docObj.insert(Tags::code, codeData.data());
     }
@@ -112,17 +106,45 @@ EntityRequest::EntityRequest(const QString &token, const QByteArray &codeData, c
                     newPackage ? RequestType::PostNewPackage : RequestType::PutActionCode, token)
 {
     auto docObj = QJsonObject{
-        { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
-        { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
-        { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
-        { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
-    };
+    { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
+    { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
+    { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
+    { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
+};
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QString &token, const Enums::PackageType &packageType)
-    : EntityRequest(RequestType::PostUnused, token)
+EntityRequest::EntityRequest(const QString &token, const Enums::PackageType &packageType, bool create)
+    : EntityRequest(requestForPackageType(packageType, create ? Type::Post : Type::Get), token)
+{}
+
+EntityRequest::RequestType EntityRequest::requestForPackageType(const Enums::PackageType &type, const Type &requestType)
 {
-    auto docObj = QJsonObject{ { Tags::packageType, RequestsHelper::packageTypeToString(packageType) } };
-    mRequestDocument.setObject(docObj);
+    switch (type) {
+    case Enums::PackageType::Harvest:
+    {
+        switch (requestType) {
+        case Type::Get:
+            return RequestType::GetCreatedHarvests;
+        default:
+            ;
+        }
+        break;
+    }
+    case Enums::PackageType::Lot:
+    {
+        switch (requestType) {
+        case Type::Get:
+            return RequestType::GetUnusedLots;
+        case Type::Post:
+            return RequestType::PostUnusedLot;
+        default:
+            ;
+        }
+        break;
+    }
+    default:
+        ;
+    }
+    return RequestType::Invalid;
 }

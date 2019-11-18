@@ -107,6 +107,14 @@ void FakeSessionManager::postNewEntity(const Enums::SupplyChainAction &action, c
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(codeData, action, timestamp, properties); });
 }
 
+void FakeSessionManager::getCreatedHarvestIds()
+{
+    bool error = (qrand() % 100 == 1);
+
+    updateConnectionStateBeforeRequest();
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onCreatedHarvestIdsError() : onCreatedHarvestIds(); });
+}
+
 void FakeSessionManager::getUnusedLotIds()
 {
     bool error = (qrand() % 100 == 1);
@@ -306,6 +314,21 @@ void FakeSessionManager::onEntitySaved(const QByteArray &codeData, const Enums::
     } else {
         emit entitySaved(packageId);
     }
+}
+
+void FakeSessionManager::onCreatedHarvestIdsError()
+{
+    const auto error = QNetworkReply::HostNotFoundError;
+
+    updateConnectionStateAfterRequest(error);
+    emit createdHarvestIdsLoadError(error);
+}
+
+void FakeSessionManager::onCreatedHarvestIds()
+{
+    updateConnectionStateAfterRequest(QNetworkReply::NoError);
+
+    emit createdHarvestIdsLoaded(QJsonArray::fromVariantList(m_populator.createdHarvestIds(m_currentCooperativeId)) );
 }
 
 void FakeSessionManager::onUnusedLotIdsError()

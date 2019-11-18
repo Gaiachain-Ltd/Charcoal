@@ -28,6 +28,7 @@ void AbstractSessionManager::getFullData()
     getAllRelations();
     getAllEntities();
     getAdditionalData();
+    getCreatedHarvestIds();
     getUnusedLotIds();
 }
 

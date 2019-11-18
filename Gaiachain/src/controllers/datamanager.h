@@ -15,6 +15,7 @@
 #include "../models/relationmodel.h"
 #include "../models/unusedidsmodel.h"
 
+#include "../models/selectedidsproxymodel.h"
 #include "../models/daterangeproxymodel.h"
 #include "../models/latesteventsproxymodel.h"
 #include "../models/packagetypeeventsproxymodel.h"
@@ -45,7 +46,8 @@ public slots:
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onRelationsLoaded(const QJsonArray &relations);
     void onEntitiesLoaded(const QJsonArray &entities);
-    void onUnusedLotIdsLoaded(const QJsonArray &ids);
+    void onCreatedHarvestIdsLoaded(const QJsonArray &idsArray);
+    void onUnusedLotIdsLoaded(const QJsonArray &idsArray);
 
 private:
     QSqlDatabase m_db;
@@ -65,6 +67,9 @@ private:
     // proxy models
     PackageDataProxyModel m_packageDataModel;
 
+    SelectedIdsProxyModel m_createdHarvestIdsModel;
+    QIdentityProxyModel m_unusedLotIdsModel;
+
     CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
     PackageTypeIdsProxyModel m_packageTypeCooperativeIdsModel;
 
@@ -82,7 +87,6 @@ private:
     PackageTypeProxyModel m_packagesTypeSearchLatestEventsModel;
 
     RelationsListProxyModel m_relationsListModel;
-    QIdentityProxyModel m_unusedLotIdsModel;
 
     QIdentityProxyModel m_producersModel;
     QIdentityProxyModel m_buyersModel;

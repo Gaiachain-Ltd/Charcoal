@@ -27,12 +27,11 @@ QZXING_PATH=$$PWD/3rdparty/qzxing
 INCLUDEPATH += $$QZXING_PATH
 include($$QZXING_PATH/QZXing.pri)
 
-
 # Warning! QStringBuilder can crash your app! See last point here:
 # https://www.kdab.com/uncovering-32-qt-best-practices-compile-time-clazy/
 # !!!
 DEFINES *= QT_USE_QSTRINGBUILDER
-#QMAKE_CXXFLAGS += -Werror
+QMAKE_CXXFLAGS += -Wno-deprecated-copy # because of QTBUG-75210
 
 TEMPLATE = app
 CONFIG += c++14
@@ -73,6 +72,7 @@ HEADERS += \
     src/models/relationslistproxymodel.h \
     src/models/searcheventsproxymodel.h \
     src/common/packagedata.h \
+    src/models/selectedidsproxymodel.h \
     src/models/unusedidsmodel.h \
     src/rest/additionaldatarequest.h \
     src/rest/baserequest.h \
@@ -122,6 +122,7 @@ SOURCES += src/main.cpp \
     src/models/relationmodel.cpp \
     src/models/relationslistproxymodel.cpp \
     src/models/searcheventsproxymodel.cpp \
+    src/models/selectedidsproxymodel.cpp \
     src/models/unusedidsmodel.cpp \
     src/rest/additionaldatarequest.cpp \
     src/rest/baserequest.cpp \
