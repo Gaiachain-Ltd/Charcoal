@@ -9,7 +9,7 @@
 #include "../helpers/requestshelper.h"
 
 const QString RelationRequest::sc_basePath = QStringLiteral("/relations/");
-const QString RelationRequest::sc_multiplePath = sc_basePath;
+const QString RelationRequest::sc_multiplePath = sc_basePath + QStringLiteral("batch/");
 const QString RelationRequest::sc_singlePath = sc_basePath + QStringLiteral("%1/");
 
 RelationRequest::RelationRequest(const QStringList &ids)
@@ -26,12 +26,12 @@ RelationRequest::RelationRequest(const QStringList &ids)
 }
 
 RelationRequest::RelationRequest(const QString &id)
-    : BaseRequest(sc_multiplePath.arg(id), Type::Get)
+    : BaseRequest(sc_singlePath.arg(id), Type::Get)
 {
 }
 
 RelationRequest::RelationRequest(const QString &token, const QString &id, const QStringList &relatedIds)
-    : BaseRequest(sc_multiplePath.arg(id), Type::Post, token)
+    : BaseRequest(sc_singlePath.arg(id), Type::Post, token)
 {
     auto docObj = QJsonObject{};
     if (relatedIds.isEmpty()) {

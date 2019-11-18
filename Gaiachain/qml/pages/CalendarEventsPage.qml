@@ -10,20 +10,36 @@ import "../components" as Components
 CalendarPageBase {
     id: top
 
-    function updateModelRange() {
-        // called from CalendarPageBase
-        calendarModel.setDateRange(new Date(currentYear, currentMonth, 1),
-                                   new Date(currentYear, currentMonth + 1, 0) )
-
-        dateEventsModel.setSingleDateRange(new Date(currentYear, currentMonth, currentDay))
+    function backHandler() {
+        // called from BasePage
+        enterMonthPage()
+        return false    // do not close application
     }
 
-    onMonthHeaderClicked: {
+    function refreshData() {
+        // called from BasePage
+        dataManager.fetchRangeEvents(new Date(currentYear, currentMonth, 1),
+                                     new Date(currentYear, currentMonth + 1, 0))
+    }
+
+    function updateModelRange() {
+        // called from CalendarPageBase
+        var from = new Date(currentYear, currentMonth, 1)
+        var to = new Date(currentYear, currentMonth + 1, 0)
+
+        calendarModel.setDateRange(from, to)
+        dateEventsModel.setSingleDateRange(new Date(currentYear, currentMonth, currentDay))
+        dataManager.fetchRangeEvents(from, to)
+    }
+
+    function enterMonthPage() {
         pageManager.enter(Enums.Page.Calendar, {
                               "currentDay": currentDay,
                               "currentMonth": currentMonth,
                               "currentYear": currentYear })
     }
+
+    onMonthHeaderClicked: enterMonthPage()
 
     calendarWidgets: Components.CalendarWeekItem {
         Layout.fillWidth: true
@@ -61,6 +77,11 @@ CalendarPageBase {
             viewModel: latestDateEventsModel
             displayDate: false
             displayLastItemSeparator: true
+
+            onDelegateClicked:  {
+                var packageData = dataManager.getPackageData(packageId)
+                pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageData": packageData })
+            }
         }
 
         Items.BasicCheckBox {

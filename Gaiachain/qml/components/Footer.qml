@@ -34,14 +34,12 @@ Item {
             connectionState: sessionManager.connectionState
         }
 
-        Items.ImageButton {
+        Components.CommunicationStateItem {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(Style.buttonImageHeight)
+            Layout.fillWidth: true
 
-            source: Style.refreshImgUrl
-            palette.button: Style.unknownColor
-
-            onClicked: refreshData()
+            communicationInProgress: dataManager.collectingData
         }
     }
 }

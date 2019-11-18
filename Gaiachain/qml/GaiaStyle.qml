@@ -153,6 +153,7 @@ QtObject {
     readonly property int inputHeight: 90
 
     // button
+    readonly property int buttonHeight: 90
     readonly property int buttonRadius: smallMargin
     readonly property int buttonSmallRadius: 10
     readonly property int buttonImageTinyHeight: 30

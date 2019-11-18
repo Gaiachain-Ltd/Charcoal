@@ -21,7 +21,12 @@ Items.GenericPanel
     property bool errorDisplayed: false
 
     function closeEventHandler() {
-        return header.backHandler() // calling back button
+        return backHandler() // calling back button
+    }
+
+    function backHandler() {
+        pageManager.back()
+        return false    // do not close application
     }
 
     function showOverlay(message = "") {
@@ -33,9 +38,7 @@ Items.GenericPanel
     }
 
     function refreshData() {
-        showOverlay()
-        sessionManager.getFullData()
-        refreshDataTimer.start()
+        sessionManager.ping()
     }
 
     header: Components.NavigationHeader {

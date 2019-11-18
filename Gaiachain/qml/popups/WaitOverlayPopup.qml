@@ -21,24 +21,12 @@ GenericPopup
 
         spacing: Style.none
 
-        Items.SvgImage {
-            id: spinner
+        Items.SpinnerItem {
             Layout.alignment: Qt.AlignHCenter
             Layout.margins: contentLayout.margins
 
-            height: s(Style.buttonHeight)
-            width: s(Style.buttonHeight)
-
-            source: Style.spinnerImgUrl
-
-            RotationAnimator {
-                target: spinner
-                from: 0
-                to: 360
-                duration: 1000
-                running: top.visible
-                loops: Animation.Infinite
-            }
+            Layout.preferredHeight: height
+            Layout.preferredWidth: width
         }
 
         Items.BasicText {

@@ -44,6 +44,10 @@ Item {
         spacing: s(Style.smallMargin)
         clip: true
 
+        currentIndex: 0
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        boundsBehavior: Flickable.StopAtBounds
+
         delegate: Item {
             id: delegate
 

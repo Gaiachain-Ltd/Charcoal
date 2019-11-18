@@ -1,362 +1,140 @@
 #include "fakesessionmanager.h"
 
-#include <QQmlApplicationEngine>
-#include <QTimer>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
-
-#include "../../../common/tags.h"
-#include "../../../helpers/utility.h"
-
 FakeSessionManager::FakeSessionManager(QObject *parent)
     : AbstractSessionManager(parent)
 {
-    m_populator.populateFakeData(QDate::currentDate().addDays(-sc_firstHarvestShift));
+    connect(&m_fakeServer, &FakeServer::connectionState,
+            this, [this](const int &error) { updateConnectionStateAfterRequest(static_cast<QNetworkReply::NetworkError>(error)); });
+
+    connect(&m_fakeServer, &FakeServer::pingError, this, &FakeSessionManager::pingError);
+    connect(&m_fakeServer, &FakeServer::pingSuccess, this, &FakeSessionManager::pingSuccess);
+
+    connect(&m_fakeServer, &FakeServer::loginError, this, &FakeSessionManager::loginError);
+    connect(&m_fakeServer, &FakeServer::loginFinished, this, &FakeSessionManager::loginFinished);
+
+    connect(&m_fakeServer, &FakeServer::additionalDataLoadError, this, &FakeSessionManager::additionalDataLoadError);
+    connect(&m_fakeServer, &FakeServer::additionalDataLoaded, this, &FakeSessionManager::additionalDataLoaded);
+
+    connect(&m_fakeServer, &FakeServer::relationsLoadError, this, &FakeSessionManager::relationsLoadError);
+    connect(&m_fakeServer, &FakeServer::relationsLoaded, this, &FakeSessionManager::relationsLoaded);
+    connect(&m_fakeServer, &FakeServer::relationsSaveError, this, &FakeSessionManager::relationsSaveError);
+    connect(&m_fakeServer, &FakeServer::relationsSaved, this, &FakeSessionManager::relationsSaved);
+
+    connect(&m_fakeServer, &FakeServer::entitiesLoadError, this, &FakeSessionManager::entitiesLoadError);
+    connect(&m_fakeServer, &FakeServer::entitiesLoaded, this, &FakeSessionManager::entitiesLoaded);
+    connect(&m_fakeServer, &FakeServer::entitiesInfoLoaded, this, &FakeSessionManager::entitiesInfoLoaded);
+    connect(&m_fakeServer, &FakeServer::entityIdLoadError, this, &FakeSessionManager::entityIdLoadError);
+    connect(&m_fakeServer, &FakeServer::entityIdLoaded, this, &FakeSessionManager::entityIdLoaded);
+    connect(&m_fakeServer, &FakeServer::entitySaveError, this, &FakeSessionManager::entitySaveError);
+    connect(&m_fakeServer, &FakeServer::entitySaved, this, &FakeSessionManager::entitySaved);
+
+    connect(&m_fakeServer, &FakeServer::createdHarvestIdsLoadError, this, &FakeSessionManager::createdHarvestIdsLoadError);
+    connect(&m_fakeServer, &FakeServer::createdHarvestIdsLoaded, this, &FakeSessionManager::createdHarvestIdsLoaded);
+
+    connect(&m_fakeServer, &FakeServer::unusedLotIdsLoadError, this, &FakeSessionManager::unusedLotIdsLoadError);
+    connect(&m_fakeServer, &FakeServer::unusedLotIdsLoaded, this, &FakeSessionManager::unusedLotIdsLoaded);
+    connect(&m_fakeServer, &FakeServer::unusedLotIdCreateError, this, &FakeSessionManager::unusedLotIdCreateError);
+    connect(&m_fakeServer, &FakeServer::unusedLotIdCreated, this, &FakeSessionManager::unusedLotIdCreated);
+}
+
+void FakeSessionManager::ping()
+{
+    updateConnectionStateBeforeRequest();
+    m_fakeServer.ping();
 }
 
 void FakeSessionManager::login(const QString &email, const QString &password)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onLoginError() : onLogin(email, password); });
+    m_fakeServer.login(email, password);
 }
 
 void FakeSessionManager::getAdditionalData()
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onAdditionalDataError() : onAdditionalData(); });
+    m_fakeServer.getAdditionalData();
 }
 
 void FakeSessionManager::getRelations(const QString &id)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelationsSingle(id); });
+    m_fakeServer.getRelations(id);
+}
+
+void FakeSessionManager::getRelations(const QStringList &ids)
+{
+    updateConnectionStateBeforeRequest();
+    m_fakeServer.getRelations(ids);
 }
 
 void FakeSessionManager::addRelation(const QString &id, const QStringList &ids)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationSaveError() : onRelationSaved(id, ids); });
+    m_fakeServer.addRelation(id, ids);
 }
 
 void FakeSessionManager::getEntitiesInfo(int count, const QDateTime &from)
 {
-    Q_UNUSED(count)
-    Q_UNUSED(from)
-    Q_ASSERT_X(false, __PRETTY_FUNCTION__, "Not implemented for fake data");
+    updateConnectionStateBeforeRequest();
+    m_fakeServer.getEntitiesInfo(count, from.isNull() ? QDateTime::currentDateTime() : from);
 }
 
-void FakeSessionManager::getEntitiesInfo(const QDateTime &to, const QDateTime &from)
+void FakeSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
 {
-    Q_UNUSED(to)
-    Q_UNUSED(from)
-    Q_ASSERT_X(false, __PRETTY_FUNCTION__, "Not implemented for fake data");
+    updateConnectionStateBeforeRequest();
+    m_fakeServer.getEntitiesInfo(from, to);
 }
 
 void FakeSessionManager::getEntities(const QStringList &ids)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityMultiple(ids); });
+    m_fakeServer.getEntities(ids);
 }
 
 void FakeSessionManager::getEntity(const QString &id)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntitySingle(id); });
+    m_fakeServer.getEntity(id);
 }
 
-void FakeSessionManager::getEntitId(const QByteArray &codeData)
+void FakeSessionManager::getEntityId(const QByteArray &codeData)
 {
-    Q_UNUSED(codeData)
-    Q_ASSERT_X(false, __PRETTY_FUNCTION__, "Not implemented for fake data");
+    updateConnectionStateBeforeRequest();
+    m_fakeServer.getEntityId(codeData);
 }
 
 void FakeSessionManager::putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(id, action, timestamp, properties, codeData); });
+    m_fakeServer.putEntityAction(id, action, timestamp, properties, codeData);
 }
 
 void FakeSessionManager::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(QString{}, action, timestamp, properties, codeData); });
+    m_fakeServer.putEntityAction(codeData, action, timestamp, properties);
 }
 
 void FakeSessionManager::postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(codeData, action, timestamp, properties); });
+    m_fakeServer.postNewEntity(action, timestamp, properties, codeData);
 }
 
 void FakeSessionManager::getCreatedHarvestIds()
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onCreatedHarvestIdsError() : onCreatedHarvestIds(); });
+    m_fakeServer.getCreatedHarvestIds();
 }
 
 void FakeSessionManager::getUnusedLotIds()
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onUnusedLotIdsError() : onUnusedLotIds(); });
+    m_fakeServer.getUnusedLotIds();
 }
 
 void FakeSessionManager::postUnusedLotId()
 {
-    bool error = (qrand() % 100 == 1);
-
     updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onUnusedLotIdCreationError() : onUnusedLotIdCreated(); });
-}
-
-void FakeSessionManager::getAllRelations()
-{
-    bool error = (qrand() % 100 == 1);
-
-    updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelationsAll(); });
-}
-
-void FakeSessionManager::getAllEntities()
-{
-    bool error = (qrand() % 100 == 1);
-
-    updateConnectionStateBeforeRequest();
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityAll(); });
-}
-
-int FakeSessionManager::randomWaitTime()
-{
-    return qrand() % 1000;
-}
-
-void FakeSessionManager::onLoginError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(error);
-
-    m_currentUserType = Enums::UserType::Annonymous;
-    m_currentCooperativeId = QString{};
-
-    emit loginError(error);
-}
-
-void FakeSessionManager::onLogin(const QString &email, const QString &password)
-{
-    auto isSuccess = m_populator.checkLogin(email, password);
-    auto error = isSuccess ? QNetworkReply::NoError : QNetworkReply::AuthenticationRequiredError;
-
-    updateConnectionStateAfterRequest(error);
-    if (isSuccess) {
-        auto userData = m_populator.generateUserData(email);
-        m_currentUserType = m_populator.userType(email);
-        m_currentCooperativeId = userData.value(Tags::cooperativeId).toString();
-
-        emit loginFinished(QJsonDocument::fromVariant(userData));
-    } else {
-        m_currentUserType = Enums::UserType::Annonymous;
-        m_currentCooperativeId = QString{};
-
-        emit loginError(error);
-    }
-}
-
-void FakeSessionManager::onAdditionalDataError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(error);
-    emit additionalDataLoadError(error);
-}
-
-void FakeSessionManager::onAdditionalData()
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    auto additionalData = QVariantMap{};
-    additionalData.insert(Tags::producers, m_populator.getProducers());
-    additionalData.insert(Tags::buyers, m_populator.getBuyers());
-    additionalData.insert(Tags::transporters, m_populator.getTransporters());
-    additionalData.insert(Tags::destinations, m_populator.getDestinations());
-
-    emit additionalDataLoaded(QJsonObject::fromVariantMap(additionalData));
-}
-
-void FakeSessionManager::onRelationsError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(error);
-    emit relationsLoadError(error);
-}
-
-void FakeSessionManager::onRelationsAll()
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    auto relationsMap = m_populator.getPackagesRelations();
-    auto relationsArray = QJsonArray{};
-    std::transform(relationsMap.constKeyValueBegin(), relationsMap.constKeyValueEnd(),
-                   std::back_inserter(relationsArray),
-                   [](const std::pair<QString, QVariant> &data) -> QJsonValue {
-        return QJsonObject::fromVariantMap({
-            { Tags::id, data.first },
-            { Tags::ids, data.second }
-        });
-    });
-    emit packagesRelationsLoaded(relationsArray);
-}
-
-void FakeSessionManager::onRelationsSingle(const QString &packageId)
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    emit packageRelationsLoaded(QJsonArray::fromVariantList(m_populator.getPackageRelations(packageId)) );
-}
-
-void FakeSessionManager::onRelationSaveError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(QNetworkReply::HostNotFoundError);
-    emit packageRelationsSaveError(error);
-}
-
-void FakeSessionManager::onRelationSaved(const QString &packageId, const QStringList &relatedIds)
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    m_populator.addPackageRelation(packageId, relatedIds);
-    emit packageRelationsSaved(packageId);
-}
-
-void FakeSessionManager::onEntityError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(error);
-    emit entityLoadError(error);
-}
-
-void FakeSessionManager::onEntityAll()
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventsHistory()) );
-}
-
-void FakeSessionManager::onEntityMultiple(const QStringList &packagesId)
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventHistory(packagesId)) );
-}
-
-void FakeSessionManager::onEntitySingle(const QString &packageId)
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventHistory(packageId)) );
-}
-
-void FakeSessionManager::onEntitySaveError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(QNetworkReply::HostNotFoundError);
-    emit entitySaveError(error);
-}
-
-void FakeSessionManager::onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
-{
-    Q_ASSERT_X(!packageId.isEmpty(), __PRETTY_FUNCTION__, "Empty package id not implemented for fake data");
-
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    auto result = m_populator.addAction(packageId, action, timestamp, properties, codeData, m_currentUserType, m_currentCooperativeId);
-    if (!result) {
-        emit entitySaveError(-1);
-    } else {
-        emit entitySaved(packageId);
-    }
-}
-
-void FakeSessionManager::onEntitySaved(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    auto packageId = m_populator.addNewAction(action, timestamp, properties, codeData, m_currentUserType, m_currentCooperativeId);
-    if (packageId.isEmpty()) {
-        emit entitySaveError(-1);
-    } else {
-        emit entitySaved(packageId);
-    }
-}
-
-void FakeSessionManager::onCreatedHarvestIdsError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(error);
-    emit createdHarvestIdsLoadError(error);
-}
-
-void FakeSessionManager::onCreatedHarvestIds()
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    emit createdHarvestIdsLoaded(QJsonArray::fromVariantList(m_populator.createdHarvestIds(m_currentCooperativeId)) );
-}
-
-void FakeSessionManager::onUnusedLotIdsError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(error);
-    emit unusedLotIdsLoadError(error);
-}
-
-void FakeSessionManager::onUnusedLotIds()
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    emit unusedLotIdsLoaded(QJsonArray::fromVariantList(m_populator.unusedLotIds(m_currentCooperativeId)) );
-}
-
-void FakeSessionManager::onUnusedLotIdCreationError()
-{
-    const auto error = QNetworkReply::HostNotFoundError;
-
-    updateConnectionStateAfterRequest(QNetworkReply::HostNotFoundError);
-    emit unusedLotIdCreateError(error);
-}
-
-void FakeSessionManager::onUnusedLotIdCreated()
-{
-    updateConnectionStateAfterRequest(QNetworkReply::NoError);
-
-    emit unusedLotIdCreated(m_populator.createUnusedLotId(m_currentCooperativeId));
+    m_fakeServer.postUnusedLotId();
 }

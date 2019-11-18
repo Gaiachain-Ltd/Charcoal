@@ -11,7 +11,10 @@ BasePage {
 
     property var packageData
 
-    title: Strings.transactions
+    function refreshData() {
+        // called from BasePage
+        dataManager.fetchEventData(packageData.id, packageData.type)
+    }
 
     function urlToDetails(packageType) {
         switch(packageType) {

@@ -77,6 +77,16 @@ QList<Enums::SupplyChainAction> DataGlobals::userActions(const Enums::UserType &
     return sc_supplyChainActionPerUser.value(user);
 }
 
+QList<Enums::SupplyChainAction> DataGlobals::packageActions(const Enums::PackageType &type)
+{
+    auto packageActions = QList<Enums::SupplyChainAction>{};
+    std::copy_if(sc_supplyChainActionPackageType.keyBegin(), sc_supplyChainActionPackageType.keyEnd(),
+                 std::back_inserter(packageActions),
+                 [&type](const auto &action) { return (sc_supplyChainActionPackageType.value(action) == type); });
+
+    return packageActions;
+}
+
 Enums::SupplyChainAction DataGlobals::packageTypeCreationAction(const Enums::PackageType &type)
 {
     return sc_packageTypeCreationAction.value(type);

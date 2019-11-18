@@ -35,7 +35,7 @@ public:
 
     EntityRequest(const QStringList &ids = {});
     EntityRequest(int count, const QDateTime &from);
-    EntityRequest(const QDateTime &to, const QDateTime &from);
+    EntityRequest(const QDateTime &from, const QDateTime &to);
     EntityRequest(const QByteArray &codeData);
 
     EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData, const QByteArray &codeData = {});

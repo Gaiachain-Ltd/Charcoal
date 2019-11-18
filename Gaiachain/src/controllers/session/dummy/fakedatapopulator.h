@@ -25,13 +25,13 @@ public:
 
     void populateFakeData(const QDate &startDate);
 
-    QVariantMap getPackagesRelations() const;
-    QVariantList getPackageRelations(const QString &packageId) const;
+    QVariantMap getRelations(const QStringList &packagesIds) const;
     void addPackageRelation(const QString &packageId, const QStringList &relatedIds);
 
-    QVariantList getEventsHistory() const;
+    QVariantList getEventsInfo(int count, const QDateTime &from) const;
+    QVariantList getEventsInfo(const QDateTime &from, const QDateTime &to) const;
+    QString getEventId(const QByteArray &codeData) const;
     QVariantList getEventHistory(const QStringList &packagesId) const;
-    QVariantList getEventHistory(const QString &packageId) const;
 
     QVariantList createdHarvestIds(const QString &cooperativeId) const;
     QVariantList unusedLotIds(const QString &cooperativeId) const;
@@ -63,6 +63,7 @@ private:
 
     QMultiMap<QString, QVariantMap> m_eventsHistory;
     QMultiMap<QString, QString> m_packagesRelations;
+    QMap<QByteArray, QString> m_packagesCodeData;
     QHash<QString, QStringList> m_cooperativeUnusedLotIds;
 
     static const auto sc_minDayShift = static_cast<int>(Qt::DayOfWeek::Tuesday);
@@ -96,7 +97,7 @@ private:
     void addLotRelation(const QString &sacId, const QString &lotId);
 
     void addEvent(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                  const QVariantMap &properties, const QVariantHash &cooperative);
+                  const QVariantMap &properties, const QVariantHash &cooperative, const QByteArray &codeData = {});
 
     void generateCooperativeData(const QVariantHash &cooperative, const QDate &startDate, const QDate &endDate);
 };

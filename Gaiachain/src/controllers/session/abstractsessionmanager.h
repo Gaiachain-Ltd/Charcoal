@@ -21,20 +21,23 @@ public:
 
     Enums::ConnectionState connectionState() const;
 
-    Q_INVOKABLE virtual void login(const QString &email, const QString &password) = 0;
+    Q_INVOKABLE void getInitialData();
 
-    Q_INVOKABLE virtual void getFullData();
+    Q_INVOKABLE virtual void ping() = 0;
+
+    Q_INVOKABLE virtual void login(const QString &email, const QString &password) = 0;
 
     Q_INVOKABLE virtual void getAdditionalData() = 0;
 
     Q_INVOKABLE virtual void getRelations(const QString &id) = 0;
+    Q_INVOKABLE virtual void getRelations(const QStringList &ids) = 0;
     Q_INVOKABLE virtual void addRelation(const QString &id, const QStringList &ids) = 0;
 
     Q_INVOKABLE virtual void getEntitiesInfo(int count, const QDateTime &from = {}) = 0;
-    Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &to, const QDateTime &from = {}) = 0;
+    Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to) = 0;
     Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;
     Q_INVOKABLE virtual void getEntity(const QString &id) = 0;
-    Q_INVOKABLE virtual void getEntitId(const QByteArray &codeData) = 0;
+    Q_INVOKABLE virtual void getEntityId(const QByteArray &codeData) = 0;
     Q_INVOKABLE virtual void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                              const QVariantMap &properties, const QByteArray &codeData = {}) = 0;
     Q_INVOKABLE virtual void putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
@@ -52,6 +55,9 @@ public:
 signals:
     void connectionStateChanged(Enums::ConnectionState connectionState);
 
+    void pingError(const int &code) const;
+    void pingSuccess() const;
+
     void loginError(const int &code) const;
     void loginFinished(const QJsonDocument &doc) const;
 
@@ -59,15 +65,17 @@ signals:
     void additionalDataLoaded(const QJsonObject &data) const;
 
     void relationsLoadError(const int &code) const;
-    void packageRelationsLoaded(const QJsonArray &packages) const;
-    void packagesRelationsLoaded(const QJsonArray &relations) const;
-    void packageRelationsSaveError(const int &code) const;
-    void packageRelationsSaved(const QString &id) const;
+    void relationsLoaded(const QJsonArray &relations) const;
+    void relationsSaveError(const int &code) const;
+    void relationsSaved(const QString &id) const;
 
-    void entityLoadError(const int &code) const;
-    void entitiesLoaded(const QJsonArray &entities) const;
+    void entitiesLoadError(const int &code) const;
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
+    void entitiesLoaded(const QJsonArray &entities) const;
+
+    void entityIdLoadError(const int &code) const;
     void entityIdLoaded(const QString &id) const;
+
     void entitySaveError(const int &code) const;
     void entitySaved(const QString &id) const;
 
@@ -82,9 +90,6 @@ signals:
 protected:
     Enums::ConnectionState m_connectionState = Enums::ConnectionState::Unknown;
     QString m_token;
-
-    virtual void getAllRelations() = 0;
-    virtual void getAllEntities() = 0;
 
     bool checkValidToken() const;
 

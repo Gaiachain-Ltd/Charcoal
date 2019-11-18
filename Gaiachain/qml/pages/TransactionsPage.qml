@@ -15,6 +15,16 @@ BasePage {
 
     title: Strings.transactions
 
+    function refreshData() {
+        // called from BasePage
+        dataManager.fetchRangeEvents(latestRangeEventsModel.oldestEventDate(),
+                                     new Date)
+    }
+
+    Component.onDestruction: {
+        latestRangeEventsModel.clearRowCount();
+    }
+
     ListModel {
         id: packageModel
 
@@ -132,7 +142,7 @@ BasePage {
 
             onDelegateClicked:  {
                 var packageData = dataManager.getPackageData(packageId)
-                pageManager.enter(Enums.Page.PackageData, { "packageData": packageData })
+                pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageData": packageData })
             }
         }
     }
