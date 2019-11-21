@@ -17,7 +17,7 @@ Components.PackageDataDetails {
         for (var i = 0; i < relatedPackages.length; ++i) {
             relatedPackagesModel.append({ "headerValue": Strings.empty,
                                           "inputValue": relatedPackages[i],
-                                          "inputSuffixValue": Strings.kg.arg(packageData.properties.weights[relatedPackages[i]]) })
+                                          "inputSuffixValue": Strings.kg.arg(packageData.properties[packageData.Weights][relatedPackages[i]]) })
         }
 
     }

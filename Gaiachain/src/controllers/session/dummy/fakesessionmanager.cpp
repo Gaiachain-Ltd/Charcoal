@@ -55,22 +55,22 @@ void FakeSessionManager::getAdditionalData()
     m_fakeServer.getAdditionalData();
 }
 
-void FakeSessionManager::getRelations(const QString &id)
+void FakeSessionManager::getRelations(const QString &packageId)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.getRelations(id);
+    m_fakeServer.getRelations(packageId);
 }
 
-void FakeSessionManager::getRelations(const QStringList &ids)
+void FakeSessionManager::getRelations(const QStringList &packageIds)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.getRelations(ids);
+    m_fakeServer.getRelations(packageIds);
 }
 
-void FakeSessionManager::addRelation(const QString &id, const QStringList &ids)
+void FakeSessionManager::addRelation(const QString &packageId, const QStringList &relatedIds)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.addRelation(id, ids);
+    m_fakeServer.addRelation(packageId, relatedIds);
 }
 
 void FakeSessionManager::getEntitiesInfo(int count, const QDateTime &from)
@@ -85,16 +85,16 @@ void FakeSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime 
     m_fakeServer.getEntitiesInfo(from, to);
 }
 
-void FakeSessionManager::getEntities(const QStringList &ids)
+void FakeSessionManager::getEntities(const QStringList &packageIds)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.getEntities(ids);
+    m_fakeServer.getEntities(packageIds);
 }
 
-void FakeSessionManager::getEntity(const QString &id)
+void FakeSessionManager::getEntity(const QString &packageId)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.getEntity(id);
+    m_fakeServer.getEntity(packageId);
 }
 
 void FakeSessionManager::getEntityId(const QByteArray &codeData)
@@ -103,10 +103,10 @@ void FakeSessionManager::getEntityId(const QByteArray &codeData)
     m_fakeServer.getEntityId(codeData);
 }
 
-void FakeSessionManager::putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void FakeSessionManager::putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.putEntityAction(id, action, timestamp, properties, codeData);
+    m_fakeServer.putEntityAction(packageId, action, timestamp, properties, codeData);
 }
 
 void FakeSessionManager::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)

@@ -20,6 +20,10 @@
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataManager, "data.manager")
 
+namespace {
+const QList<Enums::SupplyChainAction> OfflineActions = { Enums::SupplyChainAction::Harvest, Enums::SupplyChainAction::GrainProcessing };
+}
+
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
 {
@@ -52,10 +56,10 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeSearchLatestEventsModel"), &m_packagesTypeSearchLatestEventsModel);
 }
 
-void DataManager::updateCooperativeId(const QString &cooperativeId)
+void DataManager::updateUserData(const UserData &userData)
 {
-    m_cooperativeEventsModel.setCooperativeId(cooperativeId);
-    m_cooperativeFilteringEventsModel.setCooperativeId(cooperativeId);
+    m_userData = userData;
+    updateCooperativeId();
 }
 
 void DataManager::onAdditionalDataLoaded(const QJsonObject &additionalData)
@@ -158,6 +162,12 @@ void DataManager::onUnusedLotIdsLoaded(const QJsonArray &ids)
     m_unusedIdsSourceModel->appendData(modelData);
 }
 
+void DataManager::updateCooperativeId()
+{
+    m_cooperativeEventsModel.setCooperativeId(m_userData.cooperativeId);
+    m_cooperativeFilteringEventsModel.setCooperativeId(m_userData.cooperativeId);
+}
+
 void DataManager::dataRequestSent()
 {
     if (++m_dataRequestsCount == 1) {   // first action
@@ -213,6 +223,27 @@ bool DataManager::collectingData() const
     return (m_dataRequestsCount > 0);
 }
 
+void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+{
+    handleActionAdd(packageId, action, timestamp, properties);
+    emit addActionRequest(packageId, action, timestamp, properties, codeData);
+}
+
+void DataManager::addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
+{
+    emit addActionRequest(codeData, action, timestamp, properties);
+}
+
+void DataManager::addAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+{
+    if (action == Enums::SupplyChainAction::Harvest) {
+        auto id = generateHarvestId(timestamp.date(), properties.value(PackageData::ParcelCode).toString());
+        addAction(id, action, timestamp, properties, codeData);
+    } else {
+        emit addActionRequest(action, timestamp, properties, codeData);
+    }
+}
+
 void DataManager::fetchEventData(const QString &packageId, const Enums::PackageType &type)
 {
     auto eventsInfo = Gaia::ModelData{};
@@ -234,6 +265,13 @@ void DataManager::fetchCountEvents(int count, const QDateTime &from)
 {
     dataRequestSent();
     emit eventsInfoNeeded(count, from);
+}
+
+void DataManager::onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action)
+{
+    Q_ASSERT(m_eventsSourceModel);
+
+    m_eventsSourceModel->updateLocal(packageId, action, false);
 }
 
 void DataManager::onDataRequestError()
@@ -289,6 +327,31 @@ QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1St
         return {};
     }
     return object.value(tag);
+}
+
+void DataManager::handleActionAdd(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
+{
+    Q_ASSERT(m_eventsSourceModel);
+
+    if (OfflineActions.contains(action) &&
+            !m_userData.isAnonymous()) {
+        m_eventsSourceModel->appendData({ Gaia::ModelEntry {
+                                              packageId,
+                                              QVariant::fromValue(action),
+                                              timestamp,
+                                              QVariant::fromValue(m_userData.type),
+                                              m_userData.cooperativeId,
+                                              properties,
+                                              0.0,    // location not handled yet
+                                              0.0,    // location not handled yet
+                                              true
+                                          }, });
+    }
+}
+
+QString DataManager::generateHarvestId(const QDate &date, const QString &parcelCode)
+{
+    return date.toString(QStringLiteral("%1/d-M-yyyy")).arg(parcelCode);
 }
 
 Gaia::ModelEntry DataManager::processProducer(const QJsonValue &value)

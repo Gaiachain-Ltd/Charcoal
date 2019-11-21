@@ -44,13 +44,27 @@ void MainController::setupConnections()
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData);
 
-    connect(&m_userManager, &UserManager::cooperativeIdChanged, &m_dataManager, &DataManager::updateCooperativeId);
+    connect(&m_userManager, &UserManager::userDataChanged, &m_dataManager, &DataManager::updateUserData);
 
     setupDataConnections();
 }
 
 void MainController::setupDataConnections()
 {
+    connect(&m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
+            const QDateTime &, const QVariantMap &, const QByteArray &>(&DataManager::addActionRequest),
+            &m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
+            const QDateTime &, const QVariantMap &, const QByteArray &>(&AbstractSessionManager::putEntityAction));
+    connect(&m_dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
+            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            &m_sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
+            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::putEntityAction));
+    connect(&m_dataManager, qOverload<const Enums::SupplyChainAction &,
+            const QDateTime &, const QVariantMap &, const QByteArray &>(&DataManager::addActionRequest),
+            &m_sessionManager, &AbstractSessionManager::postNewEntity);
+    connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
+            &m_dataManager, &DataManager::onActionAdded);
+
     connect(&m_dataManager, qOverload<const QDateTime &, const QDateTime &>(&DataManager::eventsInfoNeeded),
             &m_sessionManager, qOverload<const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
     connect(&m_dataManager, qOverload<int, const QDateTime &>(&DataManager::eventsInfoNeeded),

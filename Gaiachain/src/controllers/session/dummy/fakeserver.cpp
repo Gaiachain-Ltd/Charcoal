@@ -39,25 +39,25 @@ void FakeServer::getAdditionalData()
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onAdditionalDataError() : onAdditionalData(); });
 }
 
-void FakeServer::getRelations(const QString &id)
+void FakeServer::getRelations(const QString &packageId)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelations({id, }); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelations({packageId, }); });
 }
 
-void FakeServer::getRelations(const QStringList &ids)
+void FakeServer::getRelations(const QStringList &packageIds)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelations(ids); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationsError() : onRelations(packageIds); });
 }
 
-void FakeServer::addRelation(const QString &id, const QStringList &ids)
+void FakeServer::addRelation(const QString &packageId, const QStringList &relatedIds)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationSaveError() : onRelationSaved(id, ids); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationSaveError() : onRelationSaved(packageId, relatedIds); });
 }
 
 void FakeServer::getEntitiesInfo(int count, const QDateTime &from)
@@ -74,18 +74,18 @@ void FakeServer::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityInfo(from, to); });
 }
 
-void FakeServer::getEntities(const QStringList &ids)
+void FakeServer::getEntities(const QStringList &packageIds)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntity(ids); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntity(packageIds); });
 }
 
-void FakeServer::getEntity(const QString &id)
+void FakeServer::getEntity(const QString &packageId)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntity({ id, }); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntity({ packageId, }); });
 }
 
 void FakeServer::getEntityId(const QByteArray &codeData)
@@ -95,11 +95,11 @@ void FakeServer::getEntityId(const QByteArray &codeData)
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityId(codeData); });
 }
 
-void FakeServer::putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void FakeServer::putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(id, action, timestamp, properties, codeData); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntitySaveError() : onEntitySaved(packageId, action, timestamp, properties, codeData); });
 }
 
 void FakeServer::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
@@ -313,7 +313,7 @@ void FakeServer::onEntitySaved(const QString &packageId, const Enums::SupplyChai
     if (!result) {
         emit entitySaveError(-1);
     } else {
-        emit entitySaved(packageId);
+        emit entitySaved(packageId, action);
     }
 }
 
@@ -325,7 +325,7 @@ void FakeServer::onEntitySaved(const QByteArray &codeData, const Enums::SupplyCh
     if (packageId.isEmpty()) {
         emit entitySaveError(-1);
     } else {
-        emit entitySaved(packageId);
+        emit entitySaved(packageId, action);
     }
 }
 

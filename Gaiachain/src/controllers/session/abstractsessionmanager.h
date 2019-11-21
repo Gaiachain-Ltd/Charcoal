@@ -67,17 +67,17 @@ signals:
     void relationsLoadError(const int &code) const;
     void relationsLoaded(const QJsonArray &relations) const;
     void relationsSaveError(const int &code) const;
-    void relationsSaved(const QString &id) const;
+    void relationsSaved(const QString &packageId) const;
 
     void entitiesLoadError(const int &code) const;
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
     void entitiesLoaded(const QJsonArray &entities) const;
 
     void entityIdLoadError(const int &code) const;
-    void entityIdLoaded(const QString &id) const;
+    void entityIdLoaded(const QString &packageId) const;
 
     void entitySaveError(const int &code) const;
-    void entitySaved(const QString &id) const;
+    void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;
 
     void createdHarvestIdsLoadError(const int &code) const;
     void createdHarvestIdsLoaded(const QJsonArray &ids) const;

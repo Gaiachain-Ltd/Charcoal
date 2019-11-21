@@ -19,22 +19,22 @@ public slots:
 
     void getAdditionalData();
 
-    void getRelations(const QString &id);
-    void getRelations(const QStringList &ids);
-    void addRelation(const QString &id, const QStringList &ids);
+    void getRelations(const QString &packageId);
+    void getRelations(const QStringList &packageIds);
+    void addRelation(const QString &packageId, const QStringList &relatedIds);
 
     void getEntitiesInfo(int count, const QDateTime &from);
     void getEntitiesInfo(const QDateTime &from, const QDateTime &to);
-    void getEntities(const QStringList &ids);
-    void getEntity(const QString &id);
+    void getEntities(const QStringList &packageIds);
+    void getEntity(const QString &packageId);
     void getEntityId(const QByteArray &codeData);
 
-    void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                                             const QVariantMap &properties, const QByteArray &codeData = {});
+    void putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                         const QVariantMap &properties, const QByteArray &codeData = {});
     void putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                     const QDateTime &timestamp, const QVariantMap &properties);
+                         const QDateTime &timestamp, const QVariantMap &properties);
     void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                                   const QVariantMap &properties, const QByteArray &codeData);
+                       const QVariantMap &properties, const QByteArray &codeData);
 
     void getCreatedHarvestIds();
 
@@ -56,17 +56,17 @@ signals:
     void relationsLoadError(const int &code) const;
     void relationsLoaded(const QJsonArray &relations) const;
     void relationsSaveError(const int &code) const;
-    void relationsSaved(const QString &id) const;
+    void relationsSaved(const QString &packageId) const;
 
     void entitiesLoadError(const int &code) const;
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
     void entitiesLoaded(const QJsonArray &entities) const;
 
     void entityIdLoadError(const int &code) const;
-    void entityIdLoaded(const QString &id) const;
+    void entityIdLoaded(const QString &packageId) const;
 
     void entitySaveError(const int &code) const;
-    void entitySaved(const QString &id) const;
+    void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;
 
     void createdHarvestIdsLoadError(const int &code) const;
     void createdHarvestIdsLoaded(const QJsonArray &ids) const;

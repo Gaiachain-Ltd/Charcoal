@@ -16,8 +16,8 @@ Components.PackageDataDetails {
 
     onPackageDataChanged: {
         const data = [
-           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties.transporter) },
-           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties.destination) },
+           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties[packageData.Transporter]) },
+           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties[packageData.Destination]) },
            { "headerValue": Strings.dateOfTransport,            "inputValue": emptyIfNotIncludesAction(Enums.SupplyChainAction.WarehouseTransport) }
        ]
 

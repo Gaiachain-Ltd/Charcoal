@@ -5,6 +5,8 @@
 
 #include <QHash>
 
+#include "../common/enums.h"
+
 class EventModel : public AbstractModel
 {
     Q_OBJECT
@@ -34,6 +36,8 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     QHash<int, QVariant::Type> roleDatabaseTypes() const override;
     QHash<int, QVariant::Type> roleAppTypes() const override;
+
+    void updateLocal(const QString &packageId, const Enums::SupplyChainAction &action, bool isLocal);
 
 private:
     static const QHash<int, QByteArray> sc_roleNames;

@@ -14,30 +14,23 @@
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
 {
-    connect(this, &UserManager::userDataChanged,
-            this, [this]() {
-        emit loginChanged(getLogin());
-        emit cooperativeIdChanged(getCooperativeId());
-    });
-    connect(this, &UserManager::loggedInChanged,
-            this, [this]() { emit loginChanged(getLogin()); });
     connect(this, &UserManager::loggedInChanged,
             this, [this](bool loggedId) { if (loggedId) { emit loggedIn(); } });
 }
 
 bool UserManager::isLoggedIn() const
 {
-    return m_userType != Enums::UserType::Annonymous;
+    return !m_userData.isAnonymous();
 }
 
 QString UserManager::getLogin() const
 {
-    return isLoggedIn() ? m_userData[Tags::email].toString() : QString{};
+    return m_userData.email;
 }
 
-QString UserManager::getCooperativeId() const
+UserData UserManager::getUserData() const
 {
-    return m_userData[Tags::cooperativeId].toString();
+    return m_userData;
 }
 
 void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -47,50 +40,27 @@ void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
 
 void UserManager::logOut()
 {
-    m_userData.clear();
+    if (isLoggedIn()) {
+        m_userData = {};
 
-    setUserType(Enums::UserType::Annonymous);
-    emit tokenChanged({});
-    emit userDataChanged(m_userData);
-}
-
-Enums::UserType UserManager::getUserType() const
-{
-    return m_userType;
+        emit tokenChanged({});
+        emit userDataChanged(m_userData);
+        emit loggedInChanged(false);
+    }
 }
 
 void UserManager::parseLoginData(const QJsonDocument &doc)
 {
     const QJsonObject obj = doc.object();
 
-    m_userData.insert(Tags::email, obj.value(Tags::email).toString());
-    m_userData.insert(Tags::cooperativeId, obj.value(Tags::cooperativeId).toString());
-    m_userData.insert(Tags::cooperativeName, obj.value(Tags::cooperativeName).toString());
+    m_userData.email = obj.value(Tags::email).toString();
+    m_userData.cooperativeId = obj.value(Tags::cooperativeId).toString();
+    m_userData.cooperativeName = obj.value(Tags::cooperativeName).toString();
 
     const auto role = obj.value(Tags::role).toString();
-    const auto userType = RequestsHelper::userTypeFromString(role);
+    m_userData.type = RequestsHelper::userTypeFromString(role);
 
-    setUserType(userType);
+    emit loggedInChanged(true);
     emit tokenChanged(obj.value(Tags::token).toString());
     emit userDataChanged(m_userData);
-}
-
-QVariantMap UserManager::userData() const
-{
-    return m_userData;
-}
-
-void UserManager::setUserType(const Enums::UserType userType)
-{
-    if (m_userType == userType)
-        return;
-
-    auto prevUserType = m_userType;
-    m_userType = userType;
-    emit userTypeChanged(userType);
-
-    if (prevUserType == Enums::UserType::Annonymous ||
-            userType == Enums::UserType::Annonymous) {
-        emit loggedInChanged(isLoggedIn());
-    }
 }
