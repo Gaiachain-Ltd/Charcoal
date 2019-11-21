@@ -14,12 +14,12 @@ Components.PackageDataDetails {
 
     onPackageDataChanged: {
         const data = [
-           { "headerValue": Strings.nameOfProducer,      "inputValue": emptyIfNotDefnied(packageData.properties.name) },
-           { "headerValue": Strings.producerIdNumber,    "inputValue": emptyIfNotDefnied(packageData.properties.id) },
-           { "headerValue": Strings.village,             "inputValue": emptyIfNotDefnied(packageData.properties.village) },
-           { "headerValue": Strings.fieldCode,           "inputValue": emptyIfNotDefnied(packageData.properties.parcelCode) },
+           { "headerValue": Strings.nameOfProducer,      "inputValue": emptyIfNotDefnied(packageData.properties[packageData.ProducerName]) },
+           { "headerValue": Strings.producerIdNumber,    "inputValue": emptyIfNotDefnied(packageData.properties[packageData.ProducerId]) },
+           { "headerValue": Strings.village,             "inputValue": emptyIfNotDefnied(packageData.properties[packageData.Village]) },
+           { "headerValue": Strings.fieldCode,           "inputValue": emptyIfNotDefnied(packageData.properties[packageData.ParcelCode]) },
            { "headerValue": Strings.harvestDate,         "inputValue": emptyIfNotIncludesAction(Enums.SupplyChainAction.Harvest) },
-           { "headerValue": Strings.dateOfBreaking,      "inputValue": emptyIfNotDate(packageData.properties.breaking_date) }
+           { "headerValue": Strings.dateOfBreaking,      "inputValue": emptyIfNotDate(packageData.properties[packageData.BreakingDate]) }
        ]
 
         for (var i = 0; i < data.length; ++i) {

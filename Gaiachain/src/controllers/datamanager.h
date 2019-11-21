@@ -26,6 +26,7 @@
 #include "../models/packagetypeidsproxymodel.h"
 #include "../models/createdharvestidsproxymodel.h"
 
+#include "../common/userdata.h"
 #include "../common/packagedata.h"
 #include "../models/packagedataproxymodel.h"
 #include "../models/relationslistproxymodel.h"
@@ -40,13 +41,20 @@ public:
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
-    void setupModels(QSqlDatabase db);
+    void updateUserData(const UserData &userData);
 
-    void updateCooperativeId(const QString &cooperativeId);
+    bool collectingData() const;
+
+    void setupModels(QSqlDatabase db);
 
     Q_INVOKABLE PackageData getPackageData(const QString &packageId) const;
 
-    bool collectingData() const;
+    Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                               const QVariantMap &properties, const QByteArray &codeData = {});
+    Q_INVOKABLE void addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                               const QDateTime &timestamp, const QVariantMap &properties);
+    Q_INVOKABLE void addAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                               const QVariantMap &properties, const QByteArray &codeData = {});
 
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to);
@@ -55,14 +63,22 @@ public:
 signals:
     void collectingDataChanged(bool collectingData) const;
 
+    void addActionRequest(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                          const QVariantMap &properties, const QByteArray &codeData = {});
+    void addActionRequest(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                          const QDateTime &timestamp, const QVariantMap &properties);
+    void addActionRequest(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+                          const QVariantMap &properties, const QByteArray &codeData);
+
     void eventsInfoNeeded(const QDateTime &from, const QDateTime &to) const;
     void eventsInfoNeeded(int count, const QDateTime &from) const;
     void eventsNeeded(const QStringList &ids) const;
     void relationsNeeded(const QStringList &ids) const;
 
 public slots:
-    void onDataRequestError();
+    void onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
 
+    void onDataRequestError();
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);
     void onEntitiesLoaded(const QJsonArray &entities);
@@ -73,6 +89,8 @@ public slots:
 private:
     QSqlDatabase m_db;
     int m_dataRequestsCount = 0;
+
+    UserData m_userData;
 
     QScopedPointer<ExistsQueryModel> m_existsQueryModel;
 
@@ -115,12 +133,17 @@ private:
     QIdentityProxyModel m_transportersModel;
     QIdentityProxyModel m_destinationsModel;
 
+    void updateCooperativeId();
+
     void dataRequestSent();
     void dataRequestProcessed();
 
     void fetchMissingEvents(const Gaia::ModelData &eventsInfo);
 
     QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
+
+    void handleActionAdd(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties);
+    QString generateHarvestId(const QDate &date, const QString &parcelCode);
 
     Gaia::ModelEntry processProducer(const QJsonValue &value);
     Gaia::ModelEntry processNameData(const QJsonValue &value);

@@ -17,17 +17,17 @@ public:
 
     Q_INVOKABLE void getAdditionalData() override;
 
-    Q_INVOKABLE void getRelations(const QString &id) override;
-    Q_INVOKABLE void getRelations(const QStringList &ids) override;
-    Q_INVOKABLE void addRelation(const QString &id, const QStringList &ids) override;
+    Q_INVOKABLE void getRelations(const QString &packageId) override;
+    Q_INVOKABLE void getRelations(const QStringList &packageIds) override;
+    Q_INVOKABLE void addRelation(const QString &packageId, const QStringList &relatedIds) override;
 
     Q_INVOKABLE void getEntitiesInfo(int count, const QDateTime &from = {}) override;
     Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to) override;
-    Q_INVOKABLE void getEntities(const QStringList &ids) override;
-    Q_INVOKABLE void getEntity(const QString &id) override;
+    Q_INVOKABLE void getEntities(const QStringList &packageIds) override;
+    Q_INVOKABLE void getEntity(const QString &packageId) override;
     Q_INVOKABLE void getEntityId(const QByteArray &codeData) override;
 
-    Q_INVOKABLE void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+    Q_INVOKABLE void putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                      const QVariantMap &properties, const QByteArray &codeData = {}) override;
     Q_INVOKABLE void putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
                                      const QDateTime &timestamp, const QVariantMap &properties) override;

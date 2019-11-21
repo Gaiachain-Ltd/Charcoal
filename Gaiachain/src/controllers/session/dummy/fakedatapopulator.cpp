@@ -6,6 +6,7 @@
 #include "../../../common/dataglobals.h"
 #include "../../../common/globals.h"
 #include "../../../common/tags.h"
+#include "../../../common/packagedata.h"
 #include "../../../helpers/utility.h"
 #include "../../../helpers/requestshelper.h"
 
@@ -143,7 +144,7 @@ QVariantMap FakeDataPopulator::getRelations(const QStringList &packagesIds) cons
 {
     auto filteredRelations = QMultiMap<QString, QString>{};
     std::for_each(m_packagesRelations.constKeyValueBegin(), m_packagesRelations.constKeyValueEnd(),
-                 [&packagesIds, &filteredRelations](const auto &relation) {
+                  [&packagesIds, &filteredRelations](const auto &relation) {
         if (packagesIds.contains(relation.first)) {
             filteredRelations.insert(relation.first, relation.second);
         }
@@ -441,9 +442,12 @@ std::tuple<QString, QVariantMap> FakeDataPopulator::generateHarvestAction(const 
     auto parcel = randomParcel(producer);
     auto harvestId = generateHarvestId(parcel, harvestDate);
 
-    auto properties = QVariantMap{ { "parcelCode", parcel } };
-    properties.unite(QVariant::fromValue(producer).toMap());
-    properties.remove("parcels");
+    auto properties = QVariantMap{
+        { PackageData::ProducerId, producer.value(Tags::id) },
+        { PackageData::ProducerName, producer.value(Tags::name) },
+        { PackageData::Village, producer.value(Tags::village) },
+        { PackageData::ParcelCode, parcel }
+    };
 
     return std::make_tuple(harvestId, properties);
 }
@@ -455,9 +459,9 @@ QVariantMap FakeDataPopulator::generateGrainProcessingProperties(const QDate &ha
     auto dryingDate = qMin(breakingDate.addDays((qrand() % dayDiff) + sc_minDayShift), actionDate);
 
     return {
-        { "breaking_date", QDateTime(breakingDate) },
-        { "drying_date", QDateTime(dryingDate) },
-        { "estimatedVolume", qrand() % 100 + 50 }
+        { PackageData::BreakingDate, QDateTime(breakingDate) },
+        { PackageData::DryingDate, QDateTime(dryingDate) },
+        { PackageData::EstimatedVolume, qrand() % 100 + 50 }
     };
 }
 
@@ -467,9 +471,9 @@ QVariantMap FakeDataPopulator::generateReceptionProperties(const QDate &processi
     auto departureDate = qMax(processingDate, actionDate.addDays(-((qrand() % dayDiff) + sc_minDayShift)));
 
     return {
-        { "departure_date", departureDate },
-        { "departure_place", {} },
-        { "buyer", randomBuyer() },
+        { PackageData::DepartureDate, QDateTime(departureDate) },
+        { PackageData::DeparturePlace, {} },
+        { PackageData::Buyer, randomBuyer() },
     };
 }
 
@@ -481,30 +485,27 @@ QVariantMap FakeDataPopulator::generateBaggingProperties(const QStringList &harv
     }
 
     return {
-        { "scanned_code", QUuid::createUuid() },
-        { "weights", weights }
+        { PackageData::Weights, weights },
     };
 }
 
 QVariantMap FakeDataPopulator::generateLotCreationProperties() const
 {
-    return {
-        { "scanned_code", QUuid::createUuid() }
-    };
+    return {};
 }
 
 QVariantMap FakeDataPopulator::generateWarehouseTransportProperties() const
 {
     return {
-        { "transporter", randomTransporter() },
-        { "destination", randomDestination() },
+        { PackageData::Transporter, randomTransporter() },
+        { PackageData::Destination, randomDestination() },
     };
 }
 
 QVariantMap FakeDataPopulator::generateExportReceptionProperties() const
 {
     return {
-        { "weight", qrand() % 1000 + 2000 }
+        { PackageData::Weight, qrand() % 1000 + 2000 }
     };
 }
 

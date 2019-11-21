@@ -51,7 +51,7 @@ void SessionManager::getAdditionalData()
                 errorHandler, replyHandler);
 }
 
-void SessionManager::getRelations(const QString &id)
+void SessionManager::getRelations(const QString &packageId)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit relationsLoadError(code);
@@ -59,10 +59,10 @@ void SessionManager::getRelations(const QString &id)
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit relationsLoaded(reply.object().value(Tags::ids).toArray());
     };
-    sendRequest(QSharedPointer<RelationRequest>::create(id), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<RelationRequest>::create(packageId), errorHandler, replyHandler);
 }
 
-void SessionManager::getRelations(const QStringList &ids)
+void SessionManager::getRelations(const QStringList &packageIds)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit relationsLoadError(code);
@@ -70,20 +70,20 @@ void SessionManager::getRelations(const QStringList &ids)
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit relationsLoaded(reply.object().value(Tags::relations).toArray());
     };
-    sendRequest(QSharedPointer<RelationRequest>::create(ids), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<RelationRequest>::create(packageIds), errorHandler, replyHandler);
 }
 
-void SessionManager::addRelation(const QString &id, const QStringList &ids)
+void SessionManager::addRelation(const QString &packageId, const QStringList &relatedIds)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit relationsLoadError(code);
     };
-    const auto replyHandler = [this, id](const QJsonDocument &) {
-        emit relationsSaved(id);
+    const auto replyHandler = [this, packageId](const QJsonDocument &) {
+        emit relationsSaved(packageId);
     };
 
     if (checkValidToken()) {
-        sendRequest(QSharedPointer<RelationRequest>::create(m_token, id, ids), errorHandler, replyHandler);
+        sendRequest(QSharedPointer<RelationRequest>::create(m_token, packageId, relatedIds), errorHandler, replyHandler);
     }
 }
 
@@ -112,7 +112,7 @@ void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
     sendRequest(QSharedPointer<EntityRequest>::create(from, to), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntities(const QStringList &ids)
+void SessionManager::getEntities(const QStringList &packageIds)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit entitiesLoadError(code);
@@ -120,10 +120,10 @@ void SessionManager::getEntities(const QStringList &ids)
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
     };
-    sendRequest(QSharedPointer<EntityRequest>::create(ids), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<EntityRequest>::create(packageIds), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntity(const QString &id)
+void SessionManager::getEntity(const QString &packageId)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit entitiesLoadError(code);
@@ -131,7 +131,7 @@ void SessionManager::getEntity(const QString &id)
     const auto replyHandler = [this](const QJsonDocument &reply) {
         emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
     };
-    sendRequest(QSharedPointer<EntityRequest>::create(QStringList{ id, }), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<EntityRequest>::create(QStringList{ packageId, }), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntityId(const QByteArray &codeData)
@@ -145,17 +145,17 @@ void SessionManager::getEntityId(const QByteArray &codeData)
     sendRequest(QSharedPointer<EntityRequest>::create(codeData), errorHandler, replyHandler);
 }
 
-void SessionManager::putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void SessionManager::putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit entitySaveError(code);
     };
-    const auto replyHandler = [this, id](const QJsonDocument &) {
-        emit entitySaved(id);
+    const auto replyHandler = [this, packageId, action](const QJsonDocument &) {
+        emit entitySaved(packageId, action);
     };
 
     if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, id, EntityRequest::EntityData{ action, timestamp, properties }, codeData),
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, packageId, EntityRequest::EntityData{ action, timestamp, properties }, codeData),
                     errorHandler, replyHandler);
     }
 }
@@ -165,8 +165,8 @@ void SessionManager::putEntityAction(const QByteArray &codeData, const Enums::Su
     const auto errorHandler = [this](const QString &, const int &code) {
         emit entitySaveError(code);
     };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit entitySaved(reply.object().value(Tags::id).toString());
+    const auto replyHandler = [this, action](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::id).toString(), action);
     };
 
     if (checkValidToken()) {
@@ -180,8 +180,8 @@ void SessionManager::postNewEntity(const Enums::SupplyChainAction &action, const
     const auto errorHandler = [this](const QString &, const int &code) {
         emit entitySaveError(code);
     };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit entitySaved(reply.object().value(Tags::id).toString());
+    const auto replyHandler = [this, action](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::id).toString(), action);
     };
 
     if (checkValidToken()) {

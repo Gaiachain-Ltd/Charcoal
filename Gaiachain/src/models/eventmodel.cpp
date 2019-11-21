@@ -1,7 +1,5 @@
 #include "eventmodel.h"
 
-#include "../common/enums.h"
-
 namespace {
     const QLatin1String TableName = QLatin1String("Events");
 }
@@ -77,4 +75,19 @@ QHash<int, QVariant::Type> EventModel::roleDatabaseTypes() const
 QHash<int, QVariant::Type> EventModel::roleAppTypes() const
 {
     return sc_roleAppTypes;
+}
+
+void EventModel::updateLocal(const QString &packageId, const Enums::SupplyChainAction &action, bool isLocal)
+{
+    auto packageIndexes = match(index(0, 0), Columns::PackageId, packageId, -1, Qt::MatchExactly);
+    auto packageActionIndex = std::find_if(packageIndexes.constBegin(), packageIndexes.constEnd(),
+                                           [this, &action](const auto &index) {
+        return (this->data(index, Columns::Action).template value<Enums::SupplyChainAction>() == action);
+    });
+
+    if (packageActionIndex != packageIndexes.constEnd()) {
+        if (setData(*packageActionIndex, isLocal, Columns::IsLocal)) {
+            submitAll();
+        }
+    }
 }

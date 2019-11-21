@@ -40,6 +40,7 @@ TARGET = Gaiachain
 HEADERS += \
     src/common/dataglobals.h \
     src/common/types.h \
+    src/common/userdata.h \
     src/controllers/databasemanager.h \
     src/controllers/session/abstractsessionmanager.h \
     src/controllers/session/dummy/fakeserver.h \
@@ -97,6 +98,7 @@ SOURCES += src/main.cpp \
     src/common/dataglobals.cpp \
     src/common/globals.cpp \
     src/common/types.cpp \
+    src/common/userdata.cpp \
     src/controllers/databasemanager.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/dummy/fakeserver.cpp \

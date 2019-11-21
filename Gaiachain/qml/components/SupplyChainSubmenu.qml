@@ -27,7 +27,7 @@ Item {
     implicitHeight: mainLayout.implicitHeight
 
     function filterData(actions) {
-        var availableActions = DataGlobals.userActionsQml(Number(userManager.userType))
+        var availableActions = DataGlobals.userActionsQml(Number(userManager.userData.type))
         var filteredData = []
 
         for (var i = 0; i < actions.length; ++i) {

@@ -82,7 +82,7 @@ BasePage {
 
     onScannedIdChanged: {
         if (scannedId.length > 0 && !wrongCodeError) {
-            sessionManager.getEntityAction(scannedId, userManager.userType)
+            sessionManager.getEntityAction(scannedId, userManager.userData.type)
         }
     }
 
