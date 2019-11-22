@@ -23,8 +23,8 @@ public slots:
     void getRelations(const QStringList &packageIds);
     void addRelation(const QString &packageId, const QStringList &relatedIds);
 
-    void getEntitiesInfo(int count, const QDateTime &from);
-    void getEntitiesInfo(const QDateTime &from, const QDateTime &to);
+    void getEntitiesInfo(int count, const QDateTime &from, const QString &);
+    void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &);
     void getEntities(const QStringList &packageIds);
     void getEntity(const QString &packageId);
     void getEntityId(const QByteArray &codeData);
@@ -104,8 +104,8 @@ private:
 
     void onEntityError();
 
-    void onEntityInfo(int count, const QDateTime &from);
-    void onEntityInfo(const QDateTime &from, const QDateTime &to);
+    void onEntityInfo(int count, const QDateTime &from, const QString &keyword);
+    void onEntityInfo(const QDateTime &from, const QDateTime &to, const QString &keyword);
 
     void onEntityAll();
     void onEntity(const QStringList &packagesId);

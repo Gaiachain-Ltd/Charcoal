@@ -12,6 +12,7 @@ void LatestRangeEventsProxyModel::clearRowCount()
 {
     m_availableEvents = 0;
     invalidateFilter();
+    fetchMore({});
 }
 
 void LatestRangeEventsProxyModel::setSourceModel(QAbstractItemModel *sourceModel)

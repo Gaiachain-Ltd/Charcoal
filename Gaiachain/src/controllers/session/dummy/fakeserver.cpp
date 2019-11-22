@@ -60,18 +60,18 @@ void FakeServer::addRelation(const QString &packageId, const QStringList &relate
     QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onRelationSaveError() : onRelationSaved(packageId, relatedIds); });
 }
 
-void FakeServer::getEntitiesInfo(int count, const QDateTime &from)
+void FakeServer::getEntitiesInfo(int count, const QDateTime &from, const QString &keyword)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityInfo(count, from); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityInfo(count, from, keyword); });
 }
 
-void FakeServer::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
+void FakeServer::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
 {
     bool error = (qrand() % 100 == 1);
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityInfo(from, to); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() { error ? onEntityError() : onEntityInfo(from, to, keyword); });
 }
 
 void FakeServer::getEntities(const QStringList &packageIds)
@@ -256,18 +256,18 @@ void FakeServer::onEntityError()
     emit entitiesLoadError(error);
 }
 
-void FakeServer::onEntityInfo(int count, const QDateTime &from)
+void FakeServer::onEntityInfo(int count, const QDateTime &from, const QString &keyword)
 {
     emit connectionState(QNetworkReply::NoError);
 
-    emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getEventsInfo(count, from)) );
+    emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getEventsInfo(count, from, keyword)) );
 }
 
-void FakeServer::onEntityInfo(const QDateTime &from, const QDateTime &to)
+void FakeServer::onEntityInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
 {
     emit connectionState(QNetworkReply::NoError);
 
-    emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getEventsInfo(from, to)) );
+    emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getEventsInfo(from, to, keyword)) );
 }
 
 void FakeServer::onEntity(const QStringList &packagesId)

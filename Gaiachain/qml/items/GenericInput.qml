@@ -22,8 +22,11 @@ TextField
     signal iconClicked
 
     onMoveToNextInput: {
-        if (nextInput !== null)
+        if (nextInput !== null) {
             nextInput.focus = true
+        } else {
+            Qt.inputMethod.hide();
+        }
     }
 
     focus: true
@@ -42,10 +45,9 @@ TextField
     echoMode: isPassword ? TextInput.Password : TextInput.Normal
     inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
 
-    Keys.onReturnPressed: moveToNextInput()
-    Keys.onEnterPressed: moveToNextInput()
+    Keys.onReturnPressed: { accepted(); moveToNextInput() }
+    Keys.onEnterPressed: { accepted(); moveToNextInput() }
     Keys.onTabPressed: moveToNextInput()
-
 
     background: Rectangle {
         radius: s(Style.tinyMargin)

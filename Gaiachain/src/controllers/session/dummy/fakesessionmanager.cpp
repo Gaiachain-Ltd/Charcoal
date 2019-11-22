@@ -73,16 +73,16 @@ void FakeSessionManager::addRelation(const QString &packageId, const QStringList
     m_fakeServer.addRelation(packageId, relatedIds);
 }
 
-void FakeSessionManager::getEntitiesInfo(int count, const QDateTime &from)
+void FakeSessionManager::getEntitiesInfo(int count, const QDateTime &from, const QString &keyword)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.getEntitiesInfo(count, from.isNull() ? QDateTime::currentDateTime() : from);
+    m_fakeServer.getEntitiesInfo(count, from.isNull() ? QDateTime::currentDateTime() : from, keyword);
 }
 
-void FakeSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
+void FakeSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
 {
     updateConnectionStateBeforeRequest();
-    m_fakeServer.getEntitiesInfo(from, to);
+    m_fakeServer.getEntitiesInfo(from, to, keyword);
 }
 
 void FakeSessionManager::getEntities(const QStringList &packageIds)

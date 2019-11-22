@@ -17,12 +17,24 @@ BasePage {
 
     function refreshData() {
         // called from BasePage
-        dataManager.fetchRangeEvents(latestRangeEventsModel.oldestEventDate(),
-                                     new Date)
+        dataManager.fetchRangeEvents(latestRangePackagesTypeSearchEventsModel.oldestEventDate(),
+                                     new Date, searchEventsModel.keyword)
+    }
+
+    function updateSearch() {
+        searchEventsModel.search(searchInput.text)
+        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+    }
+
+    function updatePackageTypeFiltering(packageType, checked) {
+        packagesTypeSearchEventsModel.setPackageTypeFiltering(packageType, checked)
+        latestRangePackagesTypeSearchEventsModel.clearRowCount()
     }
 
     Component.onDestruction: {
-        latestRangeEventsModel.clearRowCount();
+        searchEventsModel.clearSearch()
+        packagesTypeSearchEventsModel.clearFiltering()
+        latestRangePackagesTypeSearchEventsModel.clearRowCount()
     }
 
     ListModel {
@@ -53,6 +65,7 @@ BasePage {
         }
 
         Items.GenericInput {
+            id: searchInput
             Layout.fillWidth: true
 
             focus: false
@@ -60,7 +73,8 @@ BasePage {
             iconSource: Style.searchImgUrl
             iconEdge: Enums.Edge.RightEdge
 
-            onTextChanged: searchLatestEventsModel.search(text)
+            onIconClicked: top.updateSearch()
+            onAccepted: top.updateSearch()
         }
 
 
@@ -115,7 +129,7 @@ BasePage {
                 model: packageModel
 
                 function updatePackageTypeFiltering(packageType, checked) {
-                    packagesTypeSearchLatestEventsModel.setPackageTypeFiltering(packageType, checked)
+                    top.updatePackageTypeFiltering(packageType, checked)
                 }
 
                 Items.RectCheckBox {
@@ -138,7 +152,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: packagesTypeSearchLatestEventsModel
+            viewModel: latestRangePackagesTypeSearchEventsModel
 
             onDelegateClicked:  {
                 var packageData = dataManager.getPackageData(packageId)

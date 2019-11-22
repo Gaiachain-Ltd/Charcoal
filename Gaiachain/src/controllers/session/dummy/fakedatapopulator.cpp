@@ -159,7 +159,7 @@ void FakeDataPopulator::addPackageRelation(const QString &packageId, const QStri
     }
 }
 
-QVariantList FakeDataPopulator::getEventsInfo(int count, const QDateTime &from) const
+QVariantList FakeDataPopulator::getEventsInfo(int count, const QDateTime &from, const QString &keyword) const
 {
     auto sortedHistory = m_eventsHistory.values();
     std::sort(sortedHistory.begin(), sortedHistory.end(),
@@ -167,8 +167,15 @@ QVariantList FakeDataPopulator::getEventsInfo(int count, const QDateTime &from) 
         return left.value(Tags::timestamp) > right.value(Tags::timestamp);
     });
 
+    auto searchedHistory = QList<QVariantMap>{};
+    std::copy_if(sortedHistory.constBegin(), sortedHistory.constEnd(), std::back_inserter(searchedHistory),
+                 [&keyword](const auto &event) {
+        auto packageId = event.value(Tags::id).toString();
+        return packageId.contains(keyword);
+    });
+
     auto filteredHistory = QList<QVariantMap>{};
-    std::copy_if(sortedHistory.constBegin(), sortedHistory.constEnd(), std::back_inserter(filteredHistory),
+    std::copy_if(searchedHistory.constBegin(), searchedHistory.constEnd(), std::back_inserter(filteredHistory),
                  [&from](const auto &event) {
         auto eventDate = QDateTime::fromSecsSinceEpoch(event.value(Tags::timestamp).toLongLong());
         return (from >= eventDate);
@@ -188,12 +195,19 @@ QVariantList FakeDataPopulator::getEventsInfo(int count, const QDateTime &from) 
     return eventsInfo;
 }
 
-QVariantList FakeDataPopulator::getEventsInfo(const QDateTime &from, const QDateTime &to) const
+QVariantList FakeDataPopulator::getEventsInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) const
 {
     const auto &history = m_eventsHistory.values();
 
+    auto searchedHistory = QList<QVariantMap>{};
+    std::copy_if(history.constBegin(), history.constEnd(), std::back_inserter(searchedHistory),
+                 [&keyword](const auto &event) {
+        auto packageId = event.value(Tags::id).toString();
+        return packageId.contains(keyword);
+    });
+
     auto filteredHistory = QList<QVariantMap>{};
-    std::copy_if(history.constBegin(), history.constEnd(), std::back_inserter(filteredHistory),
+    std::copy_if(searchedHistory.constBegin(), searchedHistory.constEnd(), std::back_inserter(filteredHistory),
                  [&from, &to](const auto &event) {
         auto eventDate = QDateTime::fromSecsSinceEpoch(event.value(Tags::timestamp).toLongLong());
         return (from <= eventDate) && (eventDate <= to);

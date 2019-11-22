@@ -65,10 +65,10 @@ void MainController::setupDataConnections()
     connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
             &m_dataManager, &DataManager::onActionAdded);
 
-    connect(&m_dataManager, qOverload<const QDateTime &, const QDateTime &>(&DataManager::eventsInfoNeeded),
-            &m_sessionManager, qOverload<const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
-    connect(&m_dataManager, qOverload<int, const QDateTime &>(&DataManager::eventsInfoNeeded),
-            &m_sessionManager, qOverload<int, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
+    connect(&m_dataManager, qOverload<const QDateTime &, const QDateTime &, const QString &>(&DataManager::eventsInfoNeeded),
+            &m_sessionManager, qOverload<const QDateTime &, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
+    connect(&m_dataManager, qOverload<int, const QDateTime &, const QString &>(&DataManager::eventsInfoNeeded),
+            &m_sessionManager, qOverload<int, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
     connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
     connect(&m_dataManager, &DataManager::relationsNeeded,
             &m_sessionManager, qOverload<const QStringList &>(&AbstractSessionManager::getRelations));

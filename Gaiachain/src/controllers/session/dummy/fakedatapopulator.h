@@ -28,8 +28,8 @@ public:
     QVariantMap getRelations(const QStringList &packagesIds) const;
     void addPackageRelation(const QString &packageId, const QStringList &relatedIds);
 
-    QVariantList getEventsInfo(int count, const QDateTime &from) const;
-    QVariantList getEventsInfo(const QDateTime &from, const QDateTime &to) const;
+    QVariantList getEventsInfo(int count, const QDateTime &from, const QString &keyword) const;
+    QVariantList getEventsInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
     QString getEventId(const QByteArray &codeData) const;
     QVariantList getEventHistory(const QStringList &packagesId) const;
 

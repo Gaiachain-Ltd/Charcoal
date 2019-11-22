@@ -17,6 +17,7 @@ namespace Tags {
     const QLatin1String timestampFrom = QLatin1String("from_timestamp");
     const QLatin1String timestampTo = QLatin1String("to_timestamp");
     const QLatin1String count = QLatin1String("count");
+    const QLatin1String keyword = QLatin1String("keyword");
     const QLatin1String packageType = QLatin1String("package_type");
     const QLatin1String action = QLatin1String("action");
     const QLatin1String timestamp = QLatin1String("timestamp");

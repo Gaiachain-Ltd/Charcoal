@@ -12,6 +12,7 @@ public:
     explicit PackageTypeProxyModel(QObject *parent = nullptr);
 
     Q_INVOKABLE void setPackageTypeFiltering(const Enums::PackageType &type, bool active);
+    Q_INVOKABLE void clearFiltering();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
