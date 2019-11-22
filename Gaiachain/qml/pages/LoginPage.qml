@@ -36,7 +36,6 @@ BasePage {
             preferredHeight: parent.height * 0.42 - 2 * layout.spacing   // remove spacing for LayoutSpacer
             Layout.maximumHeight: preferredHeight
 
-            // FIXME biding loops
             Items.SvgImage
             {
                 id: logoImage
@@ -87,7 +86,7 @@ BasePage {
             iconSource: Style.passwordImgUrl
             isPassword: true
 
-            onMoveToNextInput: {
+            onAccepted: {
                 if (loginButton.enabled) {
                     loginButton.clicked()
                 }

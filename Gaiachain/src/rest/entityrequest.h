@@ -34,8 +34,8 @@ public:
     EntityRequest(const QString &customPath, const RequestType &requestType, const QString &token = {});
 
     EntityRequest(const QStringList &ids = {});
-    EntityRequest(int count, const QDateTime &from);
-    EntityRequest(const QDateTime &from, const QDateTime &to);
+    EntityRequest(int count, const QDateTime &from, const QString &keyword = {});
+    EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     EntityRequest(const QByteArray &codeData);
 
     EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData, const QByteArray &codeData = {});

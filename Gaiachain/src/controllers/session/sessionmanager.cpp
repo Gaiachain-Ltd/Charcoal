@@ -87,7 +87,7 @@ void SessionManager::addRelation(const QString &packageId, const QStringList &re
     }
 }
 
-void SessionManager::getEntitiesInfo(int count, const QDateTime &from)
+void SessionManager::getEntitiesInfo(int count, const QDateTime &from, const QString &keyword)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit entitiesLoadError(code);
@@ -97,10 +97,10 @@ void SessionManager::getEntitiesInfo(int count, const QDateTime &from)
     };
 
     auto fromDate = from.isNull() ? QDateTime::currentDateTime() : from;
-    sendRequest(QSharedPointer<EntityRequest>::create(count, fromDate), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<EntityRequest>::create(count, fromDate, keyword), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
+void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
 {
     const auto errorHandler = [this](const QString &, const int &code) {
         emit entitiesLoadError(code);
@@ -109,7 +109,7 @@ void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
         emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
     };
 
-    sendRequest(QSharedPointer<EntityRequest>::create(from, to), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<EntityRequest>::create(from, to, keyword), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntities(const QStringList &packageIds)

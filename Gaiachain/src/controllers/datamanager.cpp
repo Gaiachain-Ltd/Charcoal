@@ -27,7 +27,8 @@ const QList<Enums::SupplyChainAction> OfflineActions = { Enums::SupplyChainActio
 DataManager::DataManager(QObject *parent)
     : AbstractManager(parent)
 {
-    connect(&m_latestRangeEventsModel, &LatestRangeEventsProxyModel::fetchEvents, this, &DataManager::fetchCountEvents);
+    connect(&m_latestRangePackagesTypeSearchEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
+            this, [this](int count, const QDateTime &from) { fetchCountEvents(count, from, m_searchEventsModel.keyword()); });
 }
 
 void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -51,9 +52,9 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsModel"), &m_dateEventsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("latestDateEventsModel"), &m_latestDateEventsModel);
 
-    engine.rootContext()->setContextProperty(QStringLiteral("latestRangeEventsModel"), &m_latestRangeEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("searchLatestEventsModel"), &m_searchLatestEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeSearchLatestEventsModel"), &m_packagesTypeSearchLatestEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("searchEventsModel"), &m_searchEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeSearchEventsModel"), &m_packagesTypeSearchEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("latestRangePackagesTypeSearchEventsModel"), &m_latestRangePackagesTypeSearchEventsModel);
 }
 
 void DataManager::updateUserData(const UserData &userData)
@@ -255,16 +256,16 @@ void DataManager::fetchEventData(const QString &packageId, const Enums::PackageT
     fetchMissingEvents(eventsInfo);
 }
 
-void DataManager::fetchRangeEvents(const QDateTime &from, const QDateTime &to)
+void DataManager::fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword)
 {
     dataRequestSent();
-    emit eventsInfoNeeded(from, to);
+    emit eventsInfoNeeded(from, to, keyword);
 }
 
-void DataManager::fetchCountEvents(int count, const QDateTime &from)
+void DataManager::fetchCountEvents(int count, const QDateTime &from, const QString &keyword)
 {
     dataRequestSent();
-    emit eventsInfoNeeded(count, from);
+    emit eventsInfoNeeded(count, from, keyword);
 }
 
 void DataManager::onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action)
@@ -312,9 +313,9 @@ void DataManager::setupModels(QSqlDatabase db)
     m_dateEventsModel.setSourceModel(&m_calendarModel);
     m_latestDateEventsModel.setSourceModel(&m_dateEventsModel);
 
-    m_latestRangeEventsModel.setSourceModel(&m_cooperativeFilteringEventsModel);
-    m_searchLatestEventsModel.setSourceModel(&m_latestRangeEventsModel);
-    m_packagesTypeSearchLatestEventsModel.setSourceModel(&m_searchLatestEventsModel);
+    m_searchEventsModel.setSourceModel(&m_cooperativeFilteringEventsModel);
+    m_packagesTypeSearchEventsModel.setSourceModel(&m_searchEventsModel);
+    m_latestRangePackagesTypeSearchEventsModel.setSourceModel(&m_packagesTypeSearchEventsModel);
 
     m_packageDataModel.setSourceModel(m_eventsSourceModel.data());
     m_relationsListModel.setSourceModel(m_relationsSourceModel.data());

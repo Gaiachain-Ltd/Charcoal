@@ -57,8 +57,8 @@ public:
                                const QVariantMap &properties, const QByteArray &codeData = {});
 
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
-    Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to);
-    Q_INVOKABLE void fetchCountEvents(int count, const QDateTime &from);
+    Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
+    Q_INVOKABLE void fetchCountEvents(int count, const QDateTime &from, const QString &keyword = {});
 
 signals:
     void collectingDataChanged(bool collectingData) const;
@@ -70,8 +70,8 @@ signals:
     void addActionRequest(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                           const QVariantMap &properties, const QByteArray &codeData);
 
-    void eventsInfoNeeded(const QDateTime &from, const QDateTime &to) const;
-    void eventsInfoNeeded(int count, const QDateTime &from) const;
+    void eventsInfoNeeded(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
+    void eventsInfoNeeded(int count, const QDateTime &from, const QString &keyword) const;
     void eventsNeeded(const QStringList &ids) const;
     void relationsNeeded(const QStringList &ids) const;
 
@@ -122,9 +122,9 @@ private:
     DateRangeProxyModel m_dateEventsModel;
     LatestEventsProxyModel m_latestDateEventsModel;
 
-    LatestRangeEventsProxyModel m_latestRangeEventsModel;
-    SearchEventsProxyModel m_searchLatestEventsModel;
-    PackageTypeProxyModel m_packagesTypeSearchLatestEventsModel;
+    SearchEventsProxyModel m_searchEventsModel;
+    PackageTypeProxyModel m_packagesTypeSearchEventsModel;
+    LatestRangeEventsProxyModel m_latestRangePackagesTypeSearchEventsModel;
 
     RelationsListProxyModel m_relationsListModel;
 

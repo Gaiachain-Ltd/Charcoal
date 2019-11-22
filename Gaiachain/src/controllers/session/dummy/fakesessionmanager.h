@@ -19,8 +19,8 @@ public:
     Q_INVOKABLE void getRelations(const QStringList &packageIds) override;
     Q_INVOKABLE void addRelation(const QString &packageId, const QStringList &relatedIds) override;
 
-    Q_INVOKABLE void getEntitiesInfo(int count, const QDateTime &from = {}) override;
-    Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to) override;
+    Q_INVOKABLE void getEntitiesInfo(int count, const QDateTime &from, const QString &keyword) override;
+    Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) override;
     Q_INVOKABLE void getEntities(const QStringList &packageIds) override;
     Q_INVOKABLE void getEntity(const QString &packageId) override;
     Q_INVOKABLE void getEntityId(const QByteArray &codeData) override;

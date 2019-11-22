@@ -57,23 +57,29 @@ EntityRequest::EntityRequest(const QStringList &ids)
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(int count, const QDateTime &from)
+EntityRequest::EntityRequest(int count, const QDateTime &from, const QString &keyword)
     : EntityRequest(RequestType::GetFilterCount)
 {
     auto docObj = QJsonObject{ { Tags::count, count } };
     if (from.isValid()) {
         docObj.insert(Tags::timestampFrom, static_cast<qint64>(from.toTime_t()) );
     }
+    if (!keyword.isEmpty()) {
+        docObj.insert(Tags::keyword, keyword);
+    }
 
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QDateTime &from, const QDateTime &to)
+EntityRequest::EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword)
     : EntityRequest(RequestType::GetFilterTo)
 {
     auto docObj = QJsonObject{ { Tags::timestampTo, static_cast<qint64>(to.toTime_t()) } };
     if (from.isValid()) {
         docObj.insert(Tags::timestampFrom, static_cast<qint64>(from.toTime_t()) );
+    }
+    if (!keyword.isEmpty()) {
+        docObj.insert(Tags::keyword, keyword);
     }
 
     mRequestDocument.setObject(docObj);

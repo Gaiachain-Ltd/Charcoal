@@ -33,8 +33,8 @@ public:
     Q_INVOKABLE virtual void getRelations(const QStringList &ids) = 0;
     Q_INVOKABLE virtual void addRelation(const QString &id, const QStringList &ids) = 0;
 
-    Q_INVOKABLE virtual void getEntitiesInfo(int count, const QDateTime &from = {}) = 0;
-    Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to) = 0;
+    Q_INVOKABLE virtual void getEntitiesInfo(int count, const QDateTime &from, const QString &keyword) = 0;
+    Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) = 0;
     Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;
     Q_INVOKABLE virtual void getEntity(const QString &id) = 0;
     Q_INVOKABLE virtual void getEntityId(const QByteArray &codeData) = 0;

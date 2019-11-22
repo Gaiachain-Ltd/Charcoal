@@ -18,6 +18,16 @@ void PackageTypeProxyModel::setPackageTypeFiltering(const Enums::PackageType &ty
     invalidateFilter();
 }
 
+void PackageTypeProxyModel::clearFiltering()
+{
+    auto filteringValues = m_packageTypesActivity.values().toSet();
+    if (filteringValues.size() > 1 ||
+            (!filteringValues.isEmpty() && filteringValues.contains(true))) {
+        m_packageTypesActivity = {};
+        invalidateFilter();
+    }
+}
+
 bool PackageTypeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
