@@ -83,7 +83,7 @@ Item {
             source: Style.closeImgUrl
             visible: !isOnHomePage
 
-            onClicked: pageManager.backTo(pageManager.homePage())
+            onClicked: backToHomeHandler()
         }
         Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter

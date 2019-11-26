@@ -13,6 +13,16 @@ BasePage {
     title: Strings.gaiachain
     logoVisible: true
 
+    function navigateSupplyChainPages(action) {
+        switch (Number(action)) {
+        case Enums.SupplyChainAction.Harvest:
+            pageManager.enter(Enums.Page.SupplyChainHarvest)
+            break
+        default:
+            console.warn("navigateSupplyChainPages: Invalid action provided!")
+        }
+    }
+
     Flickable {
         anchors.fill: parent
 
@@ -66,7 +76,7 @@ BasePage {
                         }
                     }
 
-                    onActionClicked: console.log("SUPPLY CHAIN ACTION CHOOSEN:", action)    // TODO open pages
+                    onActionClicked: navigateSupplyChainPages(action)
 
                     ParallelAnimation {
                         id: menuVisibleAnimation

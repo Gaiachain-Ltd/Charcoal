@@ -9,6 +9,7 @@ import "../items" as Items
 
 Item {
     id: top
+
     implicitWidth: row.implicitWidth
     implicitHeight: row.implicitHeight
 
@@ -27,7 +28,7 @@ Item {
             readonly property int month: date.getMonth()
             readonly property int year: date.getFullYear()
             readonly property bool today: day === top.currentDay
-            readonly property int weekNumber: -1   // unsupported, not used in CalendarItemDelegate
+            readonly property int weekNumber: -1   // unsupported, not used in CalendarItem
         }
     }
 
@@ -147,7 +148,7 @@ Item {
                 text: daysNamesModel.get(model.date.getDay()).shortName
             }
 
-            CalendarItemDelegate {
+            CalendarPageItem {
                 Layout.preferredWidth: row.cellWidth
                 Layout.preferredHeight: row.cellWidth
 

@@ -6,10 +6,10 @@
 #include "../common/logs.h"
 #include "../common/globals.h"
 
-Utility *Utility::instance()
+Utility &Utility::instance()
 {
     static Utility u;
-    return &u;
+    return u;
 }
 
 qreal Utility::scaleByDpi(qreal num) const

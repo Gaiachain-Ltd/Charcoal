@@ -3,6 +3,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Window 2.2
 
 import com.gaiachain.style 1.0
+import com.gaiachain.helpers 1.0
 
 import "./items" as Items
 

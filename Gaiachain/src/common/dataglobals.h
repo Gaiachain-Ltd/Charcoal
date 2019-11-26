@@ -17,7 +17,7 @@ class DataGlobals : public QObject
     Q_PROPERTY(QVariantList availableActions READ availableActionsQml CONSTANT)
 
 public:
-    static DataGlobals *instance();
+    static DataGlobals &instance();
 
     Q_INVOKABLE static Enums::PackageType packageType(const Enums::SupplyChainAction &action);
     Q_INVOKABLE static Enums::PlaceType placeType(const Enums::SupplyChainAction &action);

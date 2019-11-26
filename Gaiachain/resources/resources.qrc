@@ -34,6 +34,7 @@
         <file alias="returnCurrentMonth">ui/button-return-current-month.svg</file>
         <file alias="expandDown">ui/icon-expand-down.svg</file>
         <file alias="expandUp">ui/icon-expand-up.svg</file>
+        <file alias="downArrow">ui/arrow-down.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

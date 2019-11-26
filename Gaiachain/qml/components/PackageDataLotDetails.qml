@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.packagedata 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -16,8 +17,8 @@ Components.PackageDataDetails {
 
     onPackageDataChanged: {
         const data = [
-           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties[packageData.Transporter]) },
-           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties[packageData.Destination]) },
+           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Transporter]) },
+           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Destination]) },
            { "headerValue": Strings.dateOfTransport,            "inputValue": emptyIfNotIncludesAction(Enums.SupplyChainAction.WarehouseTransport) }
        ]
 
@@ -47,6 +48,7 @@ Components.PackageDataDetails {
         Items.InputHeader {
             Layout.fillWidth: true
 
+            readOnly: true
             color: Style.headerBackgroundColor
             headerText: headerValue
             inputText: inputValue

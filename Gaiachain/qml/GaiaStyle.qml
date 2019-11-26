@@ -14,6 +14,7 @@ QtObject {
 
     readonly property color backgroundColor: "white"
     readonly property color backgroundSecondaryColor: "#f6f6f6"
+    readonly property color backgroundDisabledColor: "#f2f2f2"
     readonly property color headerBackgroundColor: "#667176"
     readonly property color footerBackgroundColor: "#e8eaec"
 
@@ -39,7 +40,10 @@ QtObject {
 
     readonly property color disabledColorTint: "#C0a4a4a4"
     readonly property color backgroundShadowColor: "#99000000"
+    readonly property color backgroundShadowMediumColor: "#99595959"
     readonly property color backgroundDarkShadowColor: "#CC000000"
+
+    readonly property color delegateHighlightColor: "#f2f2f2"
 
     readonly property color unknownColor: "#8f8f8f"
     readonly property color okColor: "#65cb00"

@@ -11,6 +11,9 @@ QtObject {
 
     readonly property string empty: ""
 
+    readonly property string success: qsTr("Success")
+    readonly property string failed: qsTr("Failed")
+
     readonly property string harvestId: qsTr("Harvest ID")
     readonly property string sacId: qsTr("Sac ID")
     readonly property string lotId: qsTr("Lot ID")
@@ -84,17 +87,26 @@ QtObject {
     readonly property string onlyMyTransactions: qsTr("Only my transactions")
     readonly property string recentTransactions: qsTr("Recent transactions")
 
+    // supply chain pages
+    readonly property string proceed: qsTr("Proceed")
+
+    readonly property string toSelect: qsTr("To select")
+    readonly property string askForExit: qsTr("Are you sure you want to exit?")
+
     // package data details pages
     readonly property string nameOfProducer: qsTr("Name of the producer")
-    readonly property string producerIdNumber: qsTr("Producer ID Number")
+    readonly property string producerIdNumber: qsTr("Producer ID number")
     readonly property string village: qsTr("Village")
-    readonly property string fieldCode: qsTr("Field code")
+    readonly property string parcelCode: qsTr("Parcel code")
     readonly property string harvestDate: qsTr("Harvest date")
-    readonly property string dateOfBreaking: qsTr("Date of the breaking")
+    readonly property string breakingDate: qsTr("Braking date")
 
     readonly property string organicCocoaTransporter: qsTr("Organic cocoa transporter")
     readonly property string destination: qsTr("Destination")
     readonly property string dateOfTransport: qsTr("Date of transport")
+
+    readonly property string selectedAutomatically: qsTr("[selected automatically]")
+    readonly property string selectProducer: qsTr("[select producer]")
 
     // calendar
     readonly property string activities: qsTr("activities")

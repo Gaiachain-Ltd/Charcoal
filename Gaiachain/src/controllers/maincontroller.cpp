@@ -8,6 +8,8 @@
 #include "../common/packagedata.h"
 #include "../common/dataglobals.h"
 #include "../helpers/utility.h"
+#include "../helpers/modelhelper.h"
+#include "../helpers/packagedataproperties.h"
 
 #include <QZXing.h>
 
@@ -120,12 +122,22 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helpers.qml"), "com.gaiachain.helpers", 1, 0, "Helpers");
 
+    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0, "ModelHelper",
+                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &ModelHelper::instance(); });
+
+    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0, "PackageDataProperties",
+                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &PackageDataProperties::instance(); });
+
+    qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0, "Utility",
+                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &Utility::instance(); });
+
+    qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0, "DataGlobals",
+                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &DataGlobals::instance(); });
+
     // add context properties
 #ifdef USE_COMBOBOX
     engine.rootContext()->setContextProperty(QStringLiteral("fakeLogins"), FakeDataPopulator::availableLogins());
 #endif
-    engine.rootContext()->setContextProperty(QStringLiteral("Utility"), Utility::instance());
-    engine.rootContext()->setContextProperty(QStringLiteral("DataGlobals"), DataGlobals::instance());
 
     // setup other components
     m_pageManager.setupQmlContext(engine);
