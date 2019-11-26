@@ -11,11 +11,17 @@ import "../items" as Items
 
 Item {
     id: top
+
     implicitWidth: topColumn.implicitWidth
     implicitHeight: topColumn.implicitHeight
 
-    property int currentMonth
-    property int currentYear
+    property alias delegate: grid.delegate
+    property alias gridItem: grid
+
+    property date currentDate
+
+    property int currentMonth: currentDate.getMonth()
+    property int currentYear: currentDate.getFullYear()
 
     signal dayClicked(date dayDate)
 
@@ -39,6 +45,7 @@ Item {
                 text: model.shortName
             }
         }
+
         MonthGrid {
             id: grid
             Layout.alignment: Qt.AlignHCenter
@@ -46,6 +53,9 @@ Item {
             property int minHeight: 0
             property int minWidth: 0
             property real scaleRatio: 1
+
+            readonly property int monthLastDay: Helpers.daysInMonth(grid.year, grid.month)
+            property int lastDayWeekNumber: -1
 
             implicitWidth: minWidth
             implicitHeight: minHeight
@@ -58,7 +68,7 @@ Item {
             month: currentMonth
             year: currentYear
 
-            spacing: 0
+            spacing: Style.none
 
             onClicked: top.dayClicked(date)
 
@@ -66,27 +76,6 @@ Item {
                 grid.minHeight = (s(Style.calendarDayMinHeight) + spacing) * grid.contentItem.rows
                 grid.minWidth = (s(Style.calendarDayMinHeight) + spacing) * grid.contentItem.columns
                 grid.scaleRatio = grid.contentItem.columns / grid.contentItem.rows
-            }
-
-            readonly property int monthLastDay: Helpers.daysInMonth(grid.year, grid.month)
-            property int lastDayWeekNumber: -1
-
-            delegate: CalendarItemDelegate {
-                currentMonth: grid.month
-
-                function isAdditionalRow() {
-                    if (model.month <= grid.month) {
-                        if (model.day === grid.monthLastDay) {
-                            grid.lastDayWeekNumber = model.weekNumber
-                        }
-                        return false
-                    }
-
-                    // a day from next month
-                    return (model.weekNumber > grid.lastDayWeekNumber) ||
-                            (model.date.getDay() === 0 && grid.locale.firstDayOfWeek === Locale.Sunday)
-                }
-                visible: !isAdditionalRow()
             }
         }
     }

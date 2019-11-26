@@ -29,10 +29,15 @@ Items.GenericPanel
         return false    // do not close application
     }
 
-    function showOverlay(message = "") {
-        pageManager.openPopup(Enums.Popup.WaitOverlay,
-                              { "message" : message, })
+    function backToHomeHandler() {
+        pageManager.backTo(pageManager.homePage())
     }
+
+    function showOverlay(message = "") {
+          pageManager.openPopup(Enums.Popup.WaitOverlay,
+                                { "message" : message, })
+      }
+
     function hideOverlay() {
         pageManager.closePopup()
     }

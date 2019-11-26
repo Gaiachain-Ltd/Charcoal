@@ -16,6 +16,7 @@ TextField
     property bool showIcon: true
 
     property color borderColor: Style.inputBorderColor
+    property color backgroundColor: Style.backgroundColor
 
     property Item nextInput: null
     signal moveToNextInput()
@@ -50,6 +51,7 @@ TextField
     Keys.onTabPressed: moveToNextInput()
 
     background: Rectangle {
+        color: enabled ? top.backgroundColor : Style.backgroundDisabledColor
         radius: s(Style.tinyMargin)
         border {
             width: sr(1)

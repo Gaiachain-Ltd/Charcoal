@@ -34,16 +34,26 @@ Item {
 
             onShowRelatedPackagesChanged: relatedPackagesListVisibleAnimation.start()
 
+            readOnly: true
             headerText: top.headerText
             inputText: top.inputText
 
-            showIcon: (expandList.count !== 0)
+            showIcon: !expandList.empty()
             iconSource: showRelatedPackages ? Style.expandUpImgUrl : Style.expandDownImgUrl
-            onIconClicked: showRelatedPackages = !showRelatedPackages
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: inputHeader.showRelatedPackages = !inputHeader.showRelatedPackages
+                enabled: !expandList.empty()
+            }
         }
 
         ListView {
             id: expandList
+
+            function empty() {
+                return (count === 0)
+            }
 
             Layout.fillWidth: true
 
@@ -57,6 +67,7 @@ Item {
             delegate: Items.InputHeader {
                 width: parent.width
 
+                readOnly: true
                 color: Style.headerBackgroundColor
                 headerText: headerValue
                 inputText: inputValue

@@ -56,10 +56,10 @@ const QHash<Enums::UserType, Enums::PlaceType> DataGlobals::sc_userPlaceType = {
     { Enums::UserType::CooperativeRepresentative, Enums::PlaceType::CooperativeHQ }
 };
 
-DataGlobals *DataGlobals::instance()
+DataGlobals &DataGlobals::instance()
 {
     static DataGlobals dg;
-    return &dg;
+    return dg;
 }
 
 Enums::PackageType DataGlobals::packageType(const Enums::SupplyChainAction &action)

@@ -2,6 +2,7 @@ import QtQuick 2.11
 import QtQuick.Controls 2.12
 
 import com.gaiachain.style 1.0
+import com.gaiachain.helpers 1.0
 
 // this is for testing only !!!
 ComboBox

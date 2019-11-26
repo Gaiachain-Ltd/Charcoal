@@ -16,6 +16,7 @@
 #include "../common/dataglobals.h"
 #include "../helpers/utility.h"
 #include "../helpers/requestshelper.h"
+#include "../helpers/packagedataproperties.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataManager, "data.manager")
@@ -219,6 +220,11 @@ PackageData DataManager::getPackageData(const QString &packageId) const
     return packageData;
 }
 
+QString DataManager::generateHarvestId(const QDate &date, const QString &parcelCode) {
+    Q_ASSERT(!parcelCode.isEmpty());
+    return date.toString(QStringLiteral("%1/d-M-yyyy")).arg(parcelCode);
+}
+
 bool DataManager::collectingData() const
 {
     return (m_dataRequestsCount > 0);
@@ -238,7 +244,7 @@ void DataManager::addAction(const QByteArray &codeData, const Enums::SupplyChain
 void DataManager::addAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
     if (action == Enums::SupplyChainAction::Harvest) {
-        auto id = generateHarvestId(timestamp.date(), properties.value(PackageData::ParcelCode).toString());
+        auto id = generateHarvestId(timestamp.date(), properties.value(PackageDataProperties::ParcelCode).toString());
         addAction(id, action, timestamp, properties, codeData);
     } else {
         emit addActionRequest(action, timestamp, properties, codeData);
@@ -348,11 +354,6 @@ void DataManager::handleActionAdd(const QString &packageId, const Enums::SupplyC
                                               true
                                           }, });
     }
-}
-
-QString DataManager::generateHarvestId(const QDate &date, const QString &parcelCode)
-{
-    return date.toString(QStringLiteral("%1/d-M-yyyy")).arg(parcelCode);
 }
 
 Gaia::ModelEntry DataManager::processProducer(const QJsonValue &value)

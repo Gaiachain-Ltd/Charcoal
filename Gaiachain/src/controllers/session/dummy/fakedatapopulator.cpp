@@ -6,9 +6,9 @@
 #include "../../../common/dataglobals.h"
 #include "../../../common/globals.h"
 #include "../../../common/tags.h"
-#include "../../../common/packagedata.h"
 #include "../../../helpers/utility.h"
 #include "../../../helpers/requestshelper.h"
+#include "../../../helpers/packagedataproperties.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataFake, "data.fake")
@@ -457,10 +457,10 @@ std::tuple<QString, QVariantMap> FakeDataPopulator::generateHarvestAction(const 
     auto harvestId = generateHarvestId(parcel, harvestDate);
 
     auto properties = QVariantMap{
-        { PackageData::ProducerId, producer.value(Tags::id) },
-        { PackageData::ProducerName, producer.value(Tags::name) },
-        { PackageData::Village, producer.value(Tags::village) },
-        { PackageData::ParcelCode, parcel }
+        { PackageDataProperties::ProducerId, producer.value(Tags::id) },
+        { PackageDataProperties::ProducerName, producer.value(Tags::name) },
+        { PackageDataProperties::Village, producer.value(Tags::village) },
+        { PackageDataProperties::ParcelCode, parcel }
     };
 
     return std::make_tuple(harvestId, properties);
@@ -473,9 +473,9 @@ QVariantMap FakeDataPopulator::generateGrainProcessingProperties(const QDate &ha
     auto dryingDate = qMin(breakingDate.addDays((qrand() % dayDiff) + sc_minDayShift), actionDate);
 
     return {
-        { PackageData::BreakingDate, QDateTime(breakingDate) },
-        { PackageData::DryingDate, QDateTime(dryingDate) },
-        { PackageData::EstimatedVolume, qrand() % 100 + 50 }
+        { PackageDataProperties::BreakingDate, QDateTime(breakingDate) },
+        { PackageDataProperties::DryingDate, QDateTime(dryingDate) },
+        { PackageDataProperties::EstimatedVolume, qrand() % 100 + 50 }
     };
 }
 
@@ -485,9 +485,9 @@ QVariantMap FakeDataPopulator::generateReceptionProperties(const QDate &processi
     auto departureDate = qMax(processingDate, actionDate.addDays(-((qrand() % dayDiff) + sc_minDayShift)));
 
     return {
-        { PackageData::DepartureDate, QDateTime(departureDate) },
-        { PackageData::DeparturePlace, {} },
-        { PackageData::Buyer, randomBuyer() },
+        { PackageDataProperties::DepartureDate, QDateTime(departureDate) },
+        { PackageDataProperties::DeparturePlace, {} },
+        { PackageDataProperties::Buyer, randomBuyer() },
     };
 }
 
@@ -499,7 +499,7 @@ QVariantMap FakeDataPopulator::generateBaggingProperties(const QStringList &harv
     }
 
     return {
-        { PackageData::Weights, weights },
+        { PackageDataProperties::Weights, weights },
     };
 }
 
@@ -511,15 +511,15 @@ QVariantMap FakeDataPopulator::generateLotCreationProperties() const
 QVariantMap FakeDataPopulator::generateWarehouseTransportProperties() const
 {
     return {
-        { PackageData::Transporter, randomTransporter() },
-        { PackageData::Destination, randomDestination() },
+        { PackageDataProperties::Transporter, randomTransporter() },
+        { PackageDataProperties::Destination, randomDestination() },
     };
 }
 
 QVariantMap FakeDataPopulator::generateExportReceptionProperties() const
 {
     return {
-        { PackageData::Weight, qrand() % 1000 + 2000 }
+        { PackageDataProperties::Weight, qrand() % 1000 + 2000 }
     };
 }
 

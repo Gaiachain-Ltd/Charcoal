@@ -80,60 +80,16 @@ BasePage {
 
             spacing: s(Style.normalMargin)
 
-            RowLayout {
-                Layout.fillHeight: false
+            Components.CalendarNavigator {
+                Layout.fillWidth: true
 
-                spacing: s(Style.smallMargin)
+                currentMonth: top.currentMonth
+                currentYear: top.currentYear
 
-                Items.BasicText {
-                    id: monthYearText
-                    Layout.alignment: Qt.AlignVCenter
-
-                    horizontalAlignment: Text.AlignLeft
-                    text: Helpers.getMonthName(currentMonth) + " " + currentYear
-                    font.weight: Font.DemiBold
-                    font.pixelSize: s(Style.subtitlePixelSize)
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: top.monthHeaderClicked()
-                    }
-                }
-
-                Items.ImageButton {
-                    Layout.preferredHeight: s(Style.buttonImageSmallHeight)
-                    Layout.preferredWidth: height
-
-                    palette.button: Style.calendarArrowButtonColor
-                    source: Style.returnCurrentMonthImgUrl
-                    padding: s(Style.tinyMargin)
-
-                    onClicked: returnToCurrentMonth()
-                }
-
-
-                Items.LayoutSpacer { preferredHeight: top.bottomSpacing }
-
-                Items.ImageButton {
-                    Layout.preferredHeight: s(Style.buttonImageSmallHeight)
-                    Layout.preferredWidth: height
-
-                    palette.button: Style.calendarArrowButtonColor
-                    source: Style.leftArrowImgUrl
-                    padding: s(Style.tinyMargin)
-
-                    onClicked: previousMonth()
-                }
-                Items.ImageButton {
-                    Layout.preferredHeight: s(Style.buttonImageSmallHeight)
-                    Layout.preferredWidth: height
-
-                    palette.button: Style.calendarArrowButtonColor
-                    source: Style.rightArrowImgUrl
-                    padding: s(Style.tinyMargin)
-
-                    onClicked: nextMonth()
-                }
+                onNext: nextMonth()
+                onPrevious: previousMonth()
+                onReturnToCurrent: returnToCurrentMonth()
+                onHeaderClicked: top.monthHeaderClicked()
             }
 
             // calendar widgets goes here

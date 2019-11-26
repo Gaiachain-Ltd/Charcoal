@@ -6,73 +6,50 @@ import com.gaiachain.enums 1.0
 
 import "../items" as Items
 
-Item {
+Items.GenericHeader {
     id: top
 
     property alias color: input.color
     property alias iconSource: input.iconSource
+    property alias placeholderText: input.placeholderText
 
-    property string headerText
+    property bool readOnly: false
+
     property string inputText
     property string suffixText
 
     property bool showIcon: false
 
-    readonly property bool headerIsEmpty: (headerText === Strings.empty)
+    widget: Items.GenericInput {
+        id: input
 
-    signal iconClicked()
+        Layout.fillWidth: true
 
-    implicitWidth: mainLayout.implicitWidth
-    implicitHeight: mainLayout.implicitHeight
+        readOnly: top.readOnly
+        focus: false
 
-    ColumnLayout {
-        id: mainLayout
+        rightPadding: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2 : padding
 
-        anchors.fill: parent
-        spacing: headerIsEmpty ? Style.none : s(Style.smallMargin)
+        showIcon: top.showIcon
+        iconEdge: Enums.Edge.RightEdge
+
+        text: inputText
 
         Items.BasicText {
-            Layout.fillWidth: true
+            id: suffix
 
-            font.bold: true
-            horizontalAlignment: Text.AlignLeft
-
-            visible: !headerIsEmpty
-
-            text: headerText
-        }
-
-        Items.GenericInput {
-            id: input
-
-            Layout.fillWidth: true
-
-            readOnly: true
-
-            rightPadding: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2 : padding
-
-            showIcon: top.showIcon
-            iconEdge: Enums.Edge.RightEdge
-            onIconClicked: top.iconClicked()
-
-            text: inputText
-
-            Items.BasicText {
-                id: suffix
-
-                anchors {
-                    right: parent.right
-                    rightMargin: s(Style.hugeMargin)
-                    top: parent.top
-                    bottom: parent.bottom
-                }
-
-                font: parent.font
-                color: parent.color
-                visible: (suffixText !== Strings.empty && !showIcon)
-
-                text: suffixText
+            anchors {
+                right: parent.right
+                rightMargin: s(Style.hugeMargin)
+                top: parent.top
+                bottom: parent.bottom
             }
+
+            font: parent.font
+            color: parent.color
+            visible: (suffixText !== Strings.empty && !showIcon)
+
+            text: suffixText
         }
     }
 }

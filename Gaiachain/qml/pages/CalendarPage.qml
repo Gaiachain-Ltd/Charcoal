@@ -84,6 +84,22 @@ CalendarPageBase {
             currentMonth: top.currentMonth
             currentYear: top.currentYear
 
+            delegate: Components.CalendarPageItem {
+                Components.CalendarItemGridExtension {
+                    id: gridExtension
+
+                    modelDate: model.date
+                    modelDay: model.day
+                    modelMonth: model.month
+                    modelWeekNumber: model.weekNumber
+
+                    gridItem: calendarMonthItem.gridItem
+                }
+
+                visible: !gridExtension.additionalRow
+                currentMonth: calendarMonthItem.currentMonth
+            }
+
             onDayClicked: top.enterDayPage(dayDate)
         }
     }

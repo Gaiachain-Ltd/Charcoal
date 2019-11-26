@@ -36,6 +36,7 @@ namespace Enums {
         Transactions,
         Tracking,
         PackageData,
+        SupplyChainHarvest,
 
         PageCount
     };
@@ -47,6 +48,7 @@ namespace Enums {
         Information,
         WaitOverlay,
         Notification,
+        Confirm,
 
         PopupCount
     };

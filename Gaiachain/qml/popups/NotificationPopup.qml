@@ -9,6 +9,8 @@ import "../popups" as Popups
 Popups.GenericPopup {
     id: top
 
+    property color backgroundColor: Style.primaryColor
+
     property string text
     property int openedInterval: Style.notificationPopupOpenedDefaultInterval
 
@@ -56,7 +58,7 @@ Popups.GenericPopup {
     }
 
     background: Rectangle {
-        color: Style.primaryColor
+        color: top.backgroundColor
         radius: top.height/2
     }
 

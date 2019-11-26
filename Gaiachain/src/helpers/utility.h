@@ -13,7 +13,7 @@ class Utility : public QObject
 {
     Q_OBJECT
 public:
-    static Utility *instance();
+    static Utility &instance();
 
     template<typename QEnum>
     static QString enumToQString(QEnum value, const char *enumName)
