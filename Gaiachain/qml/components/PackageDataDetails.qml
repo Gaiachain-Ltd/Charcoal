@@ -40,7 +40,7 @@ Item {
     }
 
     function emptyIfNotIncludesAction(action) {
-        return packageData.actions().includes(action) ? Helpers.convertTimestampToDate(Number(packageData.actionDate(Number(action))))
+        return packageData.actions().includes(action) ? Helper.convertTimestampToDate(Number(packageData.actionDate(Number(action))))
                                                       : Strings.empty
     }
 
@@ -56,7 +56,7 @@ Item {
 
             Layout.fillWidth: true
 
-            color: String(Helpers.packageTypeColor(Number(packageData.type)))
+            color: String(Helper.packageTypeColor(Number(packageData.type)))
             headerText: top.packageTypeDetailsName(Number(packageData.type))
             inputText: packageData.id
         }

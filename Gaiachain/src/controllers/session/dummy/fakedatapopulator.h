@@ -96,7 +96,7 @@ private:
     void addHarvestRelation(const QString &sacId, const QStringList &harvestIds);
     void addLotRelation(const QString &sacId, const QString &lotId);
 
-    void addEvent(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+    void addEvent(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                   const QVariantMap &properties, const QVariantHash &cooperative, const QByteArray &codeData = {});
 
     void generateCooperativeData(const QVariantHash &cooperative, const QDate &startDate, const QDate &endDate);

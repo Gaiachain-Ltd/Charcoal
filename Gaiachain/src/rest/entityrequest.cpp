@@ -49,11 +49,11 @@ EntityRequest::EntityRequest(const QString &customPath, const EntityRequest::Req
     }
 }
 
-EntityRequest::EntityRequest(const QStringList &ids)
+EntityRequest::EntityRequest(const QStringList &packageIds)
     : EntityRequest(RequestType::GetBatch)
 {
-    auto docObj = QJsonObject{ { Tags::ids, ids.isEmpty() ? QJsonValue(StaticValues::all)
-                                                          : QJsonValue::fromVariant(ids) } };
+    auto docObj = QJsonObject{ { Tags::packageIds, packageIds.isEmpty() ? QJsonValue(StaticValues::all)
+                                                                        : QJsonValue::fromVariant(packageIds) } };
     mRequestDocument.setObject(docObj);
 }
 

@@ -382,7 +382,7 @@ Gaia::ModelEntry DataManager::processEventInfo(const QJsonValue &value)
 {
     auto object = value.toObject();
 
-    const auto packageId = checkAndValue(object, Tags::id).toString();
+    const auto packageId = checkAndValue(object, Tags::packageId).toString();
     const auto action = RequestsHelper::supplyChainActionFromString(
                 checkAndValue(object, Tags::action).toString());
 
@@ -396,7 +396,7 @@ Gaia::ModelEntry DataManager::processEvent(const QJsonValue &value)
 {
     auto object = value.toObject();
 
-    const auto packageId = checkAndValue(object, Tags::id).toString();
+    const auto packageId = checkAndValue(object, Tags::packageId).toString();
     const auto action = RequestsHelper::supplyChainActionFromString(
                 checkAndValue(object, Tags::action).toString());
 
@@ -425,8 +425,8 @@ Gaia::ModelData DataManager::processRelations(const QJsonValue &value)
 {
     auto object = value.toObject();
 
-    const auto id = checkAndValue(object, Tags::id).toString();
-    const auto relatedIds = checkAndValue(object, Tags::ids).toVariant().toStringList();
+    const auto id = checkAndValue(object, Tags::packageId).toString();
+    const auto relatedIds = checkAndValue(object, Tags::packageIds).toVariant().toStringList();
 
     auto modelData = Gaia::ModelData{};
     std::transform(relatedIds.begin(), relatedIds.end(), std::back_inserter(modelData),

@@ -13,7 +13,8 @@ namespace Tags {
     const QLatin1String email = QLatin1String("email");
     const QLatin1String password = QLatin1String("password");
     const QLatin1String id = QLatin1String("id");
-    const QLatin1String ids = QLatin1String("ids");
+    const QLatin1String packageId = QLatin1String("pid");
+    const QLatin1String packageIds = QLatin1String("pids");
     const QLatin1String timestampFrom = QLatin1String("from_timestamp");
     const QLatin1String timestampTo = QLatin1String("to_timestamp");
     const QLatin1String count = QLatin1String("count");

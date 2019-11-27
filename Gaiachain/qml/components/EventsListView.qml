@@ -71,7 +71,7 @@ Item {
                         font.bold: true
                         visible: displayDate
 
-                        text: Helpers.convertTimestampToDate(Number(timestamp))
+                        text: Helper.convertTimestampToDate(Number(timestamp))
                     }
 
                     Items.BasicText {
@@ -81,7 +81,7 @@ Item {
                         horizontalAlignment: Text.AlignLeft
 
                         font.bold: true
-                        color: Helpers.packageTypeColor(DataGlobals.packageType(action))
+                        color: Helper.packageTypeColor(DataGlobals.packageType(action))
 
                         text: packageId
                     }

@@ -37,7 +37,7 @@ Item {
             Layout.alignment: Qt.AlignVCenter
 
             horizontalAlignment: Text.AlignLeft
-            text: Helpers.getMonthName(currentMonth) + " " + currentYear
+            text: Helper.getMonthName(currentMonth) + " " + currentYear
             font.weight: Font.DemiBold
             font.pixelSize: s(Style.subtitlePixelSize)
 

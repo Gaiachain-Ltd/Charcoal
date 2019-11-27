@@ -45,8 +45,8 @@ BasePage {
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                 var packageType = availablePackageTypes[idx]
                 append({"packageType": packageType,
-                           "packageColor": String(Helpers.packageTypeColor(packageType)),
-                           "packageName": Helpers.packageTypeName(packageType)})
+                           "packageColor": String(Helper.packageTypeColor(packageType)),
+                           "packageName": Helper.packageTypeName(packageType)})
             }
         }
 

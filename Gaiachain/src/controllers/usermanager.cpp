@@ -49,18 +49,16 @@ void UserManager::logOut()
     }
 }
 
-void UserManager::parseLoginData(const QJsonDocument &doc)
+void UserManager::readLoginData(const QJsonObject &userDataObj)
 {
-    const QJsonObject obj = doc.object();
+    m_userData.email = userDataObj.value(Tags::email).toString();
+    m_userData.cooperativeId = userDataObj.value(Tags::cooperativeId).toString();
+    m_userData.cooperativeName = userDataObj.value(Tags::cooperativeName).toString();
 
-    m_userData.email = obj.value(Tags::email).toString();
-    m_userData.cooperativeId = obj.value(Tags::cooperativeId).toString();
-    m_userData.cooperativeName = obj.value(Tags::cooperativeName).toString();
-
-    const auto role = obj.value(Tags::role).toString();
+    const auto role = userDataObj.value(Tags::role).toString();
     m_userData.type = RequestsHelper::userTypeFromString(role);
 
     emit loggedInChanged(true);
-    emit tokenChanged(obj.value(Tags::token).toString());
+    emit tokenChanged(userDataObj.value(Tags::token).toString());
     emit userDataChanged(m_userData);
 }

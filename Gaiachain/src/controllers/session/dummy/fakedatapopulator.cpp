@@ -13,7 +13,7 @@
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataFake, "data.fake")
 
-const QString FakeDataPopulator::sc_loginPassword = QStringLiteral("test1234");
+const QString FakeDataPopulator::sc_loginPassword = QStringLiteral("milo1024");
 
 const QHash<QString, Enums::UserType> FakeDataPopulator::sc_usersLogin = {
     { QStringLiteral("god@gaiachain.io"), Enums::UserType::SuperUser },
@@ -170,7 +170,7 @@ QVariantList FakeDataPopulator::getEventsInfo(int count, const QDateTime &from, 
     auto searchedHistory = QList<QVariantMap>{};
     std::copy_if(sortedHistory.constBegin(), sortedHistory.constEnd(), std::back_inserter(searchedHistory),
                  [&keyword](const auto &event) {
-        auto packageId = event.value(Tags::id).toString();
+        auto packageId = event.value(Tags::packageId).toString();
         return packageId.contains(keyword);
     });
 
@@ -189,7 +189,7 @@ QVariantList FakeDataPopulator::getEventsInfo(int count, const QDateTime &from, 
 
         auto eventDate = QDateTime::fromSecsSinceEpoch(event.value(Tags::timestamp).toLongLong());
         return QVariantMap{
-            { Tags::id, event.value(Tags::id) },
+            { Tags::packageId, event.value(Tags::packageId) },
             { Tags::action, event.value(Tags::action) } };
     });
     return eventsInfo;
@@ -202,7 +202,7 @@ QVariantList FakeDataPopulator::getEventsInfo(const QDateTime &from, const QDate
     auto searchedHistory = QList<QVariantMap>{};
     std::copy_if(history.constBegin(), history.constEnd(), std::back_inserter(searchedHistory),
                  [&keyword](const auto &event) {
-        auto packageId = event.value(Tags::id).toString();
+        auto packageId = event.value(Tags::packageId).toString();
         return packageId.contains(keyword);
     });
 
@@ -217,7 +217,7 @@ QVariantList FakeDataPopulator::getEventsInfo(const QDateTime &from, const QDate
     std::transform(filteredHistory.constBegin(), filteredHistory.constEnd(),
                    std::back_inserter(eventsInfo), [](const auto &event) {
         return QVariantMap{
-            { Tags::id, event.value(Tags::id) },
+            { Tags::packageId, event.value(Tags::packageId) },
             { Tags::action, event.value(Tags::action) } };
     });
     return eventsInfo;
@@ -535,7 +535,7 @@ void FakeDataPopulator::addLotRelation(const QString &sacId, const QString &lotI
     m_packagesRelations.insert(lotId, sacId);
 }
 
-void FakeDataPopulator::addEvent(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+void FakeDataPopulator::addEvent(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                  const QVariantMap &properties, const QVariantHash &cooperative, const QByteArray &codeData)
 {
     auto placeType = DataGlobals::placeType(action);
@@ -544,15 +544,15 @@ void FakeDataPopulator::addEvent(const QString &id, const Enums::SupplyChainActi
                                    { Tags::cooperativeId, cooperative.value("id") },
                                    { Tags::cooperativeName, cooperative.value("name") } });
 
-    auto eventData = QVariantMap({ { Tags::id, id },
+    auto eventData = QVariantMap({ { Tags::packageId, packageId },
                                    { Tags::timestamp, timestamp.toSecsSinceEpoch() },
                                    { Tags::agent, agentInfo },
                                    { Tags::action, RequestsHelper::supplyChainActionToString(action) },
                                    { Tags::properties, properties } });
-    m_eventsHistory.insert(id, eventData);
+    m_eventsHistory.insert(packageId, eventData);
 
     if (!codeData.isNull()) {
-        m_packagesCodeData.insert(codeData, id);
+        m_packagesCodeData.insert(codeData, packageId);
     }
 }
 

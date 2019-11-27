@@ -261,7 +261,12 @@ void MRestRequest::onReplyError(QNetworkReply::NetworkError code)
         reply->deleteLater();
         mRequestTimer->stop();
         mLastError = reply->errorString();
-        qCCritical(crequest) << mLastError;
+
+        const QString requestName(metaObject()->className());
+        const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
+                             .toString());
+        qCWarning(crequest) << requestName << status << "Error:" << mLastError;
+
         emit replyError(mLastError, code);
 
         if (code == QNetworkReply::TimeoutError) {
@@ -304,30 +309,18 @@ void MRestRequest::onReplyFinished()
     const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
                          .toString());
 
-    if (mReplyData.isEmpty()) {
+    if (!mReplyData.isEmpty()) {
+        // rawData can still be parsed in another formats
+        mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
+        if (parseError.error != QJsonParseError::NoError) {
+            qCDebug(crequest) << requestName << status
+                                << "Error while parsing json document:"
+                                << parseError.errorString();
+        } else {
+            qCDebug(crequest) << requestName << status << "Request reply is a valid JSON";
+        }
+    } else {
         qCDebug(crequest) << requestName << status << "Request reply is empty";
-        emit finished();
-        return;
-    }
-
-    // rawData can still be parsed in another formats
-    mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
-    if (parseError.error != QJsonParseError::NoError) {
-        qCWarning(crequest) << requestName << status
-                            << "Error while parsing json document:"
-                            << parseError.errorString();
-
-       emit finished();
-       return;
-    }
-
-    qCDebug(crequest) << requestName << "request response received";
-
-    if (mReplyDocument.isNull()) {
-        mLastError = "JSON document is invalid";
-        qCDebug(crequest) << requestName << mLastError;
-        emit finished(); // rawData can still be parsed in another formats
-        return;
     }
 
     //parse json document according to specific request reply format

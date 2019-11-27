@@ -7,7 +7,7 @@
 #include "../common/tags.h"
 
 namespace {
-const auto PING_PATH = QStringLiteral("/auth/ping/");
+const auto PING_PATH = QStringLiteral("/ping/");
 const auto LOGIN_PATH = QStringLiteral("/auth/login/");
 }
 

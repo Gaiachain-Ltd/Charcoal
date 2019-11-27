@@ -33,7 +33,7 @@ public:
     EntityRequest(const RequestType &requestType, const QString &token = {});
     EntityRequest(const QString &customPath, const RequestType &requestType, const QString &token = {});
 
-    EntityRequest(const QStringList &ids = {});
+    EntityRequest(const QStringList &packageIds = {});
     EntityRequest(int count, const QDateTime &from, const QString &keyword = {});
     EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     EntityRequest(const QByteArray &codeData);

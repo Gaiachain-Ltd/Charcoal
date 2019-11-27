@@ -22,7 +22,7 @@ Components.CalendarItem {
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                 var packageType = availablePackageTypes[idx]
                 append({ "packageType": packageType,
-                         "typeColor": String(Helpers.packageTypeColor(packageType)),
+                         "typeColor": String(Helper.packageTypeColor(packageType)),
                          "hasEvents": false })
             }
         }
