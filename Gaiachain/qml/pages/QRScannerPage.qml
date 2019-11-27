@@ -233,7 +233,7 @@ BasePage {
 
             Items.ImageButton
             {
-                text: Helpers.getCurrentIdText()
+                text: Helper.getCurrentIdText()
                 backgroundColor: Style.backgroundShadowColor
                 textColor: Style.textSecondaryColor
                 showIcon: false

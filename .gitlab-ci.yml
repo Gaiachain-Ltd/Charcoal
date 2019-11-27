@@ -5,7 +5,7 @@ stages:
 
 #Global variables
 variables:
-    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.5/android_armv7"
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.6/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
     ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r20"
     ANDROID_SIGN_COMMANDS: "--sign $CI_PROJECT_DIR/Gaiachain/platforms/android/cert/gaiachain_cert.keystore gaiachain --storepass $ANDROID_KEYSTORE_PASS"
@@ -29,6 +29,21 @@ variables:
     - tags
     - merge_requests
 
+# Linux
+linux_build:
+  <<: *common
+  <<: *only-common
+  tags:
+    - LinuxDesktop
+  stage: build
+  variables:
+    QT_PATH: "/home/tools/Qt-OpenSource/5.12.6/gcc_64"
+  script:
+    - cd $CI_PROJECT_DIR
+    - $QT_PATH/bin/qmake
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
+
 # Android
 android_build:
   <<: *common
@@ -42,7 +57,7 @@ android_build:
   script:
     - cd $CI_PROJECT_DIR
     - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake CONFIG+=fake_data
+    - $QT_PATH_ANDROID/bin/qmake
     - cat Makefile
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
@@ -53,8 +68,30 @@ android_build:
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
     - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
-# Android (combobox)
 android_combobox_build:
+  <<: *common
+  <<: *only-common
+  tags:
+    - LinuxAndroid
+  stage: build
+  variables:
+    BUILD_TYPE: "release"
+    PACKAGE_NAME: "Gaiachain_$CI_COMMIT_REF_SLUG.apk"
+  script:
+    - cd $CI_PROJECT_DIR
+    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=use_combobox
+    - cat Makefile
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
+    - cd $CI_PROJECT_DIR
+    - ls -la
+    - cd Gaiachain
+    - ls -la
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
+    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+
+android_fake-data_build:
   <<: *common
   <<: *only-common
   tags:
@@ -76,21 +113,6 @@ android_combobox_build:
     - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
     - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
-
-# Linux
-linux_build:
-  <<: *common
-  <<: *only-common
-  tags:
-    - LinuxDesktop
-  stage: build
-  variables:
-    QT_PATH: "/home/tools/Qt-OpenSource/5.12.0/gcc_64"
-  script:
-    - cd $CI_PROJECT_DIR
-    - $QT_PATH/bin/qmake
-    - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
 upload_job:
   <<: *common

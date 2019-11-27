@@ -177,7 +177,7 @@ void FakeServer::onLogin(const QString &email, const QString &password)
         m_currentUserType = m_populator.userType(email);
         m_currentCooperativeId = userData.value(Tags::cooperativeId).toString();
 
-        emit loginFinished(QJsonDocument::fromVariant(userData));
+        emit loginFinished(QJsonObject::fromVariantMap(userData));
     } else {
         m_currentUserType = Enums::UserType::Annonymous;
         m_currentCooperativeId = QString{};
@@ -225,8 +225,8 @@ void FakeServer::onRelations(const QStringList &packagesIds)
                    std::back_inserter(relationsArray),
                    [](const std::pair<QString, QVariant> &data) -> QJsonValue {
         return QJsonObject::fromVariantMap({
-                                               { Tags::id, data.first },
-                                               { Tags::ids, data.second }
+                                               { Tags::packageId, data.first },
+                                               { Tags::packageIds, data.second }
                                            });
     });
     emit relationsLoaded(relationsArray);

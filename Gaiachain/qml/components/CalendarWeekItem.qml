@@ -37,7 +37,7 @@ Item {
         property bool initFinished: false
 
         function updateCurrentDay() {
-            var daysCount = Helpers.daysInMonth(currentYear, currentMonth)
+            var daysCount = Helper.daysInMonth(currentYear, currentMonth)
             if (currentDay > daysCount) {
                 currentDay = daysCount
             }
@@ -63,7 +63,7 @@ Item {
                 return
             }
 
-            var daysCount = Helpers.daysInMonth(currentYear, currentMonth)
+            var daysCount = Helper.daysInMonth(currentYear, currentMonth)
             for (var day=1; day <= daysCount; ++day) {
                 appendDay(day)
             }
@@ -78,7 +78,7 @@ Item {
             }
 
             var oldDaysCount = daysModel.count
-            var daysCount = Helpers.daysInMonth(currentYear, currentMonth)
+            var daysCount = Helper.daysInMonth(currentYear, currentMonth)
 
             // adjust days number
             if (oldDaysCount > daysCount) {

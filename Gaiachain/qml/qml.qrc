@@ -19,7 +19,7 @@
         <file>MainStackView.qml</file>
         <file>GaiaStrings.qml</file>
         <file>GaiaStyle.qml</file>
-        <file>common/Helpers.qml</file>
+        <file>common/Helper.qml</file>
         <file>pages/MapPage.qml</file>
         <file>items/GenericButton.qml</file>
         <file>pages/LoginLoadingPage.qml</file>

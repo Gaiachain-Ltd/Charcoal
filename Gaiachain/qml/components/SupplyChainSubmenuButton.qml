@@ -18,7 +18,7 @@ MenuButton {
 
     icon.height: s(Style.submenuButtonImageHeight)
     icon.width: s(Style.submenuButtonImageHeight)
-    icon.source: Helpers.supplyChainActionIcon(actionType)
+    icon.source: Helper.supplyChainActionIcon(actionType)
 
     font.pixelSize: s(Style.submenuButtonPixelSize)
 

@@ -44,8 +44,8 @@ Item {
         var actionsDict = []
 
         for (var i = 0; i < actions.length; ++i) {
-            actionsDict.push({ "actionName": String(Helpers.supplyChainActionMenuString(actions[i])),
-                               "actionColor": String(Helpers.packageTypeColor(DataGlobals.packageType(actions[i]))),
+            actionsDict.push({ "actionName": String(Helper.supplyChainActionMenuString(actions[i])),
+                               "actionColor": String(Helper.packageTypeColor(DataGlobals.packageType(actions[i]))),
                                "actionType": actions[i] })
         }
 

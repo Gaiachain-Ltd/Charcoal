@@ -17,9 +17,9 @@ RelationRequest::RelationRequest(const QStringList &ids)
 {
     auto docObj = QJsonObject{};
     if (ids.isEmpty()) {
-        docObj.insert(Tags::ids, StaticValues::all);
+        docObj.insert(Tags::packageIds, StaticValues::all);
     } else {
-        docObj.insert(Tags::ids, QJsonValue::fromVariant(ids));
+        docObj.insert(Tags::packageIds, QJsonValue::fromVariant(ids));
     }
 
     mRequestDocument.setObject(docObj);
@@ -37,9 +37,9 @@ RelationRequest::RelationRequest(const QString &token, const QString &id, const 
     if (relatedIds.isEmpty()) {
         qCWarning(sessionRequest) << "Missing related ids to add!";
     } else if (relatedIds.count() == 1) {
-        docObj.insert(Tags::id, relatedIds.first());
+        docObj.insert(Tags::packageId, relatedIds.first());
     } else {
-        docObj.insert(Tags::ids, QJsonValue::fromVariant(relatedIds));
+        docObj.insert(Tags::packageIds, QJsonValue::fromVariant(relatedIds));
     }
 
     mRequestDocument.setObject(docObj);

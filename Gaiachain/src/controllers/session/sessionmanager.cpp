@@ -7,7 +7,6 @@
 
 #include "../../common/tags.h"
 #include "../../common/globals.h"
-#include "../../helpers/utility.h"
 #include "../../rest/authrequest.h"
 #include "../../rest/entityrequest.h"
 #include "../../rest/relationrequest.h"
@@ -34,7 +33,11 @@ void SessionManager::login(const QString &email, const QString &password)
         emit loginError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit loginFinished(reply);
+        if (reply.isObject()) {
+            emit loginFinished(reply.object());
+        } else {
+            emit loginError(QNetworkReply::NetworkError::UnknownContentError);
+        }
     };
     sendRequest(QSharedPointer<AuthRequest>::create(email, password), errorHandler, replyHandler);
 }
@@ -57,7 +60,7 @@ void SessionManager::getRelations(const QString &packageId)
         emit relationsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit relationsLoaded(reply.object().value(Tags::ids).toArray());
+        emit relationsLoaded(reply.object().value(Tags::packageIds).toArray());
     };
     sendRequest(QSharedPointer<RelationRequest>::create(packageId), errorHandler, replyHandler);
 }
@@ -140,7 +143,7 @@ void SessionManager::getEntityId(const QByteArray &codeData)
         emit entityIdLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit entityIdLoaded(reply.object().value(Tags::id).toString());
+        emit entityIdLoaded(reply.object().value(Tags::packageId).toString());
     };
     sendRequest(QSharedPointer<EntityRequest>::create(codeData), errorHandler, replyHandler);
 }
@@ -166,7 +169,7 @@ void SessionManager::putEntityAction(const QByteArray &codeData, const Enums::Su
         emit entitySaveError(code);
     };
     const auto replyHandler = [this, action](const QJsonDocument &reply) {
-        emit entitySaved(reply.object().value(Tags::id).toString(), action);
+        emit entitySaved(reply.object().value(Tags::packageId).toString(), action);
     };
 
     if (checkValidToken()) {
@@ -181,7 +184,7 @@ void SessionManager::postNewEntity(const Enums::SupplyChainAction &action, const
         emit entitySaveError(code);
     };
     const auto replyHandler = [this, action](const QJsonDocument &reply) {
-        emit entitySaved(reply.object().value(Tags::id).toString(), action);
+        emit entitySaved(reply.object().value(Tags::packageId).toString(), action);
     };
 
     if (checkValidToken()) {
@@ -196,7 +199,7 @@ void SessionManager::getCreatedHarvestIds()
         emit createdHarvestIdsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit createdHarvestIdsLoaded(reply.object().value(Tags::ids).toArray());
+        emit createdHarvestIdsLoaded(reply.object().value(Tags::packageIds).toArray());
     };
 
     if (checkValidToken()) {
@@ -210,7 +213,7 @@ void SessionManager::getUnusedLotIds()
         emit unusedLotIdsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit unusedLotIdsLoaded(reply.object().value(Tags::ids).toArray());
+        emit unusedLotIdsLoaded(reply.object().value(Tags::packageIds).toArray());
     };
 
     if (checkValidToken()) {
@@ -224,7 +227,7 @@ void SessionManager::postUnusedLotId()
         emit unusedLotIdCreateError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit unusedLotIdCreated(reply.object().value(Tags::id).toString());
+        emit unusedLotIdCreated(reply.object().value(Tags::packageId).toString());
     };
 
     if (checkValidToken()) {

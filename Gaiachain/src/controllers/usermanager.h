@@ -26,7 +26,7 @@ public:
     UserData getUserData() const;
 
 public slots:
-    void parseLoginData(const QJsonDocument &doc);
+    void readLoginData(const QJsonObject &userDataObj);
 
 signals:
     void tokenChanged(const QString &token) const;

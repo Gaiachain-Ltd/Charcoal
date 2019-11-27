@@ -3,7 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include <QDebug>
+#include "../../helpers/requestshelper.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(sessionManager, "session.manager")
@@ -37,8 +37,8 @@ void AbstractSessionManager::updateToken(const QString &token)
 bool AbstractSessionManager::checkValidToken() const
 {
     if (m_token.isEmpty()) {
-       qCWarning(sessionManager) << "Token is invalid!";
-       return false;
+        qCWarning(sessionManager) << "Token is invalid!";
+        return false;
     }
     return true;
 }
@@ -56,8 +56,9 @@ void AbstractSessionManager::updateConnectionStateBeforeRequest()
 
 void AbstractSessionManager::updateConnectionStateAfterRequest(const QNetworkReply::NetworkError &errorCode)
 {
-    auto newState = (errorCode == QNetworkReply::NoError) ? Enums::ConnectionState::ConnectionSuccessful
-                                                          : Enums::ConnectionState::ConnectionError;
+    auto newState = (RequestsHelper::isNetworkError(errorCode) ||
+                     RequestsHelper::isServerError(errorCode)) ? Enums::ConnectionState::ConnectionError
+                                                               : Enums::ConnectionState::ConnectionSuccessful;
     if (m_connectionState == newState) {
         return;
     }

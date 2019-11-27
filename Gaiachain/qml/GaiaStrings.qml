@@ -50,7 +50,7 @@ QtObject {
     readonly property string online: qsTr("Online")
     readonly property string offline: qsTr("Offline")
 
-    readonly property string noInternetError: qsTr("No internet connection.")
+    readonly property string serverConnectionError: qsTr("Server connection error.\nCheck your internet connection.")
     readonly property string loginError: qsTr("Login failed. Try again.")
 
     readonly property string dbUpdateProgress: qsTr("Database updating. Please wait...")

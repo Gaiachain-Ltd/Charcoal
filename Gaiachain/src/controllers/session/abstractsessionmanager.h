@@ -59,7 +59,7 @@ signals:
     void pingSuccess() const;
 
     void loginError(const int &code) const;
-    void loginFinished(const QJsonDocument &doc) const;
+    void loginFinished(const QJsonObject &userData) const;
 
     void additionalDataLoadError(const int &code) const;
     void additionalDataLoaded(const QJsonObject &data) const;

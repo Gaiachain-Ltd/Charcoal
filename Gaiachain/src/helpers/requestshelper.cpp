@@ -24,6 +24,47 @@ const QHash<Enums::SupplyChainAction, QString> RequestsHelper::sc_supplyChainAct
     { Enums::SupplyChainAction::ExportReception, StaticValues::actionExportReception }
 };
 
+RequestsHelper &RequestsHelper::instance()
+{
+    static RequestsHelper rh;
+    return rh;
+}
+
+bool RequestsHelper::isNetworkError(const QNetworkReply::NetworkError &error)
+{
+    switch (error) {
+    case QNetworkReply::RemoteHostClosedError:
+    case QNetworkReply::HostNotFoundError:
+    case QNetworkReply::TemporaryNetworkFailureError:
+    case QNetworkReply::NetworkSessionFailedError:
+        return true;
+    default:
+        ;
+    }
+    return false;
+}
+
+bool RequestsHelper::isServerError(const QNetworkReply::NetworkError &error)
+{
+    switch (error) {
+    case QNetworkReply::ConnectionRefusedError:
+    case QNetworkReply::RemoteHostClosedError:
+    case QNetworkReply::InternalServerError:
+    case QNetworkReply::ServiceUnavailableError:
+    case QNetworkReply::UnknownNetworkError:
+    case QNetworkReply::UnknownServerError:
+        return true;
+    default:
+        ;
+    }
+    return false;
+}
+
+bool RequestsHelper::isAuthenticationError(const QNetworkReply::NetworkError &error)
+{
+    return (error == QNetworkReply::NetworkError::AuthenticationRequiredError);
+}
+
 Enums::UserType RequestsHelper::userTypeFromString(const QString &text)
 {
     return sc_userTypeStrings.key(text);
@@ -55,4 +96,5 @@ QString RequestsHelper::supplyChainActionToString(const Enums::SupplyChainAction
 }
 
 RequestsHelper::RequestsHelper()
+    : QObject()
 {}

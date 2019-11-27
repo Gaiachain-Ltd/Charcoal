@@ -54,7 +54,7 @@ Item {
             property int minWidth: 0
             property real scaleRatio: 1
 
-            readonly property int monthLastDay: Helpers.daysInMonth(grid.year, grid.month)
+            readonly property int monthLastDay: Helper.daysInMonth(grid.year, grid.month)
             property int lastDayWeekNumber: -1
 
             implicitWidth: minWidth

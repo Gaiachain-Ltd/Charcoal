@@ -8,6 +8,7 @@
 #include "../common/packagedata.h"
 #include "../common/dataglobals.h"
 #include "../helpers/utility.h"
+#include "../helpers/requestshelper.h"
 #include "../helpers/modelhelper.h"
 #include "../helpers/packagedataproperties.h"
 
@@ -44,7 +45,7 @@ void MainController::setupConnections()
 
     connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getInitialData);
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
-    connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::parseLoginData);
+    connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
 
     connect(&m_userManager, &UserManager::userDataChanged, &m_dataManager, &DataManager::updateUserData);
 
@@ -120,8 +121,10 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // register singleton types
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
-    qmlRegisterSingletonType(QUrl("qrc:///common/Helpers.qml"), "com.gaiachain.helpers", 1, 0, "Helpers");
+    qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");
 
+    qmlRegisterSingletonType<RequestsHelper>("com.gaiachain.helpers", 1, 0, "RequestHelper",
+                                             [](QQmlEngine *, QJSEngine *) -> QObject * { return &RequestsHelper::instance(); });
     qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0, "ModelHelper",
                                                     [](QQmlEngine *, QJSEngine *) -> QObject* { return &ModelHelper::instance(); });
 

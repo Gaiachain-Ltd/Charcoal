@@ -20,8 +20,8 @@ Item {
             for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
                 var packageType = availablePackageTypes[idx]
                 append({ "packageType": packageType,
-                           "typeName": Helpers.packageTypeName(packageType),
-                           "typeColor": String(Helpers.packageTypeColor(packageType)),
+                           "typeName": Helper.packageTypeName(packageType),
+                           "typeColor": String(Helper.packageTypeColor(packageType)),
                            "eventsCount": 0 })
             }
         }

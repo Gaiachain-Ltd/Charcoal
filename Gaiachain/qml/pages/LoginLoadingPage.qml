@@ -23,6 +23,11 @@ Items.GenericPanel
         onLoginFinished: d.onLoginReady()
         onLoginError: d.showLoginError(code)
     }
+    Connections
+    {
+        target: pageManager
+        onPopupAction: pageManager.back()
+    }
 
     states: [
         State {
@@ -62,23 +67,13 @@ Items.GenericPanel
                 return false
             }
 
-            if (pageManager.isOnTop(top.page)) {
-                pageManager.enterReplace(Enums.Page.MainMenu)
-            } else {
-                console.warn("Login finished when", top.page, "is not on the top! Returning.")
-            }
+            pageManager.enterReplace(Enums.Page.MainMenu)
             return true
         }
         function showLoginError(code) {
             console.log("Login Error:", code)
-
-            if (pageManager.isOnTop(top.page)) {
-                pageManager.back()
-                pageManager.openPopup(Enums.Popup.Information,
-                                      { "text": Helpers.isNetworkError(code) ? Strings.noInternetError : Strings.loginError })
-            } else {
-                console.warn("Login error send when", top.page, "is not on the top! Returning.")
-            }
+            pageManager.openPopup(Enums.Popup.Information,
+                                  { "text": RequestHelper.isAuthenticationError(code) ? Strings.loginError : Strings.serverConnectionError })
         }
 
         // animation
