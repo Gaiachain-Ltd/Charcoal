@@ -18,8 +18,6 @@ Items.GenericHeader {
     property int currentYear: currentDate.getFullYear()
     property int currentMonth: currentDate.getMonth()
 
-    property string dateText: currentDate.toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy"))
-
     function previousMonth() {
         if (currentMonth === Calendar.January) {
             currentMonth = Calendar.December
@@ -41,7 +39,7 @@ Items.GenericHeader {
     widget: Items.GenericInput {
         Layout.fillWidth: true
 
-        text: top.dateText
+        text: top.currentDate.toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy"))
 
         readOnly: true
 
@@ -102,8 +100,7 @@ Items.GenericHeader {
                 currentYear: top.currentYear
 
                 onDayClicked: {
-                    currentDate = dayDate
-                    top.dateText = dayDate.toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy"))
+                    top.currentDate = dayDate
                     popup.visible = false
                 }
 

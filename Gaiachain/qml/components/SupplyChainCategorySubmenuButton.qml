@@ -14,7 +14,7 @@ Items.GenericButton {
     icon {
         height: s(Style.buttonImageTinyHeight)
         width: s(Style.buttonImageTinyHeight)
-        source: Style.rightArrowImgUrl
+        source: Style.rightBlackArrowImgUrl
     }
 
     font {

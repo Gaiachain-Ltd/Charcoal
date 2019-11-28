@@ -37,6 +37,7 @@ namespace Enums {
         Tracking,
         PackageData,
         SupplyChainHarvest,
+        SupplyChainGrainProcessing,
 
         PageCount
     };

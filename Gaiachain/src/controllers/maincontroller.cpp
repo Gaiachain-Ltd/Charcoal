@@ -75,6 +75,7 @@ void MainController::setupDataConnections()
     connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
     connect(&m_dataManager, &DataManager::relationsNeeded,
             &m_sessionManager, qOverload<const QStringList &>(&AbstractSessionManager::getRelations));
+    connect(&m_dataManager, &DataManager::createdHarvestIdEventsNeeded, &m_sessionManager, &AbstractSessionManager::getCreatedHarvestIds);
 
     connect(&m_sessionManager, &AbstractSessionManager::entitiesInfoLoaded, &m_dataManager, &DataManager::onEntitiesInfoLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);

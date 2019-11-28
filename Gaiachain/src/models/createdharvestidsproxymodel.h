@@ -9,6 +9,8 @@ class CreatedHarvestIdsProxyModel : public AbstractSortFilterProxyModel
 public:
     explicit CreatedHarvestIdsProxyModel(QObject *parent = nullptr);
 
+    void setSourceModel(QAbstractItemModel *sourceModel) override;
+
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 };

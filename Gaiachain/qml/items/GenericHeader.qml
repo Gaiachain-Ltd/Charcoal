@@ -12,6 +12,8 @@ Item {
     readonly property bool headerIsEmpty: (headerText === Strings.empty)
 
     property alias widget: mainLayout.data
+    property alias headerTextColor: header.color
+
     property string headerText
 
     implicitWidth: mainLayout.implicitWidth
@@ -24,12 +26,15 @@ Item {
         spacing: headerIsEmpty ? Style.none : s(Style.smallMargin)
 
         Items.BasicText {
+            id: header
+
             Layout.fillWidth: true
 
             font.bold: true
             horizontalAlignment: Text.AlignLeft
 
             visible: !headerIsEmpty
+            wrapMode: Text.WordWrap
 
             text: headerText
         }

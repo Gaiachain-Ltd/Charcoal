@@ -25,7 +25,7 @@ Pages.SupplyChainPage {
     function proceed() {
         pageManager.openPopup(Enums.Popup.WaitOverlay)
 
-        var harvestDate = new Date(inputHarvestDate.dateText)
+        var harvestDate = inputHarvestDate.currentDate
         var parcelCode = parcelCodesComboBox.currentText
 
         var properties = {

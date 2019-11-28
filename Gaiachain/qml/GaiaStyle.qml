@@ -22,6 +22,7 @@ QtObject {
     readonly property color textSecondaryColor: "white"
     readonly property color textDisabledColor: "#a4a4a4"
     readonly property color textLinkColor: primaryColor
+    readonly property color notRequiredTextInputColor: "#8c8c8c"
 
     readonly property color buttonPrimaryColor: primaryColor
     readonly property color buttonSecondaryColor: "white"
@@ -141,10 +142,11 @@ QtObject {
     readonly property url supplyChainSubmenuTransportImgUrl: "qrc:/ui/submenuTransport"
     readonly property url supplyChainSubmenuReceptionImgUrl: "qrc:/ui/submenuReception"
 
-    readonly property url leftArrowImgUrl: "qrc:/ui/leftArrow"
-    readonly property url rightArrowImgUrl: "qrc:/ui/rightArrow"
+    readonly property url leftBlackArrowImgUrl: "qrc:/ui/leftBlackArrow"
+    readonly property url rightBlackArrowImgUrl: "qrc:/ui/rightBlackArrow"
     readonly property url upArrowImgUrl: "qrc:/ui/arrowUp"
     readonly property url downArrowImgUrl: "qrc:/ui/arrowDown"
+    readonly property url rightArrowImgUrl: "qrc:/ui/arrowRight"
 
     readonly property url expandUpImgUrl: "qrc:/ui/expandUp"
     readonly property url expandDownImgUrl: "qrc:/ui/expandDown"

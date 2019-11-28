@@ -63,7 +63,11 @@ ComboBox {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: if (top.model !== undefined && top.model.count !== 0) top.popup.visible = !top.popup.visible
+            onClicked: {
+                if (top.model !== undefined && top.model.rowCount() > 0) {
+                    top.popup.visible = !top.popup.visible
+                }
+            }
         }
     }
 

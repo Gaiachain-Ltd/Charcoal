@@ -59,6 +59,7 @@ public:
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     Q_INVOKABLE void fetchCountEvents(int count, const QDateTime &from, const QString &keyword = {});
+    Q_INVOKABLE void fetchCreatedHarvestIdEvents();
 
 signals:
     void collectingDataChanged(bool collectingData) const;
@@ -74,6 +75,8 @@ signals:
     void eventsInfoNeeded(int count, const QDateTime &from, const QString &keyword) const;
     void eventsNeeded(const QStringList &ids) const;
     void relationsNeeded(const QStringList &ids) const;
+
+    void createdHarvestIdEventsNeeded() const;
 
 public slots:
     void onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);

@@ -8,6 +8,19 @@ CreatedHarvestIdsProxyModel::CreatedHarvestIdsProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
 {}
 
+void CreatedHarvestIdsProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
+{
+    if (this->sourceModel()) {
+        disconnect(this->sourceModel(), &QAbstractItemModel::rowsInserted, this, &QSortFilterProxyModel::invalidate);
+    }
+
+    AbstractSortFilterProxyModel::setSourceModel(sourceModel);
+
+    if (this->sourceModel()) {
+        connect(this->sourceModel(), &QAbstractItemModel::rowsInserted, this, &QSortFilterProxyModel::invalidate);
+    }
+}
+
 bool CreatedHarvestIdsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);

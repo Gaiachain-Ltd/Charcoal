@@ -274,6 +274,11 @@ void DataManager::fetchCountEvents(int count, const QDateTime &from, const QStri
     emit eventsInfoNeeded(count, from, keyword);
 }
 
+void DataManager::fetchCreatedHarvestIdEvents()
+{
+    emit createdHarvestIdEventsNeeded();
+}
+
 void DataManager::onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action)
 {
     Q_ASSERT(m_eventsSourceModel);

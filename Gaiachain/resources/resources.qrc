@@ -24,8 +24,6 @@
         <file alias="submenuTransport">ui/icon-submenu-icon-submenu-transport.svg</file>
         <file alias="submenuReception">ui/icon-submenu-reception.svg</file>
         <file alias="submenuHarvest">ui/icon-submenu-recolte.svg</file>
-        <file alias="leftArrow">ui/left-arrow-icon.svg</file>
-        <file alias="rightArrow">ui/right-arrow-icon.svg</file>
         <file alias="dummy/testIcon">ui/dummy/gaia-test-icon.svg</file>
         <file alias="calendarBlack">ui/calendar-icon-black.svg</file>
         <file alias="search">ui/icon-search.svg</file>
@@ -35,6 +33,9 @@
         <file alias="expandDown">ui/icon-expand-down.svg</file>
         <file alias="expandUp">ui/icon-expand-up.svg</file>
         <file alias="downArrow">ui/arrow-down.svg</file>
+        <file alias="leftBlackArrow">ui/left-black-arrow-icon.svg</file>
+        <file alias="rightBlackArrow">ui/right-black-arrow-icon.svg</file>
+        <file alias="arrowRight">ui/arrow-right.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

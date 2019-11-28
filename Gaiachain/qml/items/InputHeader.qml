@@ -12,28 +12,25 @@ Items.GenericHeader {
     property alias color: input.color
     property alias iconSource: input.iconSource
     property alias placeholderText: input.placeholderText
+    property alias validator: input.validator
 
-    property bool readOnly: false
+    property alias readOnly: input.readOnly
 
-    property string inputText
+    property alias inputText: input.text
     property string suffixText
 
-    property bool showIcon: false
+    property alias showIcon: input.showIcon
 
     widget: Items.GenericInput {
         id: input
 
         Layout.fillWidth: true
 
-        readOnly: top.readOnly
         focus: false
 
         rightPadding: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2 : padding
 
-        showIcon: top.showIcon
         iconEdge: Enums.Edge.RightEdge
-
-        text: inputText
 
         Items.BasicText {
             id: suffix

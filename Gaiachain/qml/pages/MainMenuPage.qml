@@ -18,6 +18,9 @@ BasePage {
         case Enums.SupplyChainAction.Harvest:
             pageManager.enter(Enums.Page.SupplyChainHarvest)
             break
+        case Enums.SupplyChainAction.GrainProcessing:
+            pageManager.enter(Enums.Page.SupplyChainGrainProcessing)
+            break
         default:
             console.warn("navigateSupplyChainPages: Invalid action provided!")
         }

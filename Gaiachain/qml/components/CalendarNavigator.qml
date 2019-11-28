@@ -67,7 +67,7 @@ Item {
             Layout.preferredWidth: s(Style.buttonImageSmallHeight)
 
             palette.button: Style.calendarArrowButtonColor
-            source: Style.leftArrowImgUrl
+            source: Style.leftBlackArrowImgUrl
             padding: s(Style.tinyMargin)
 
             onClicked: top.previous()
@@ -78,7 +78,7 @@ Item {
             Layout.preferredWidth: s(Style.buttonImageSmallHeight)
 
             palette.button: Style.calendarArrowButtonColor
-            source: Style.rightArrowImgUrl
+            source: Style.rightBlackArrowImgUrl
             padding: s(Style.tinyMargin)
 
             onClicked: top.next()
