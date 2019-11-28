@@ -99,7 +99,7 @@ QtObject {
     readonly property string village: qsTr("Village")
     readonly property string parcelCode: qsTr("Parcel code")
     readonly property string harvestDate: qsTr("Harvest date")
-    readonly property string breakingDate: qsTr("Braking date")
+    readonly property string breakingDate: qsTr("Breaking date")
 
     readonly property string organicCocoaTransporter: qsTr("Organic cocoa transporter")
     readonly property string destination: qsTr("Destination")
@@ -107,6 +107,12 @@ QtObject {
 
     readonly property string selectedAutomatically: qsTr("[selected automatically]")
     readonly property string selectProducer: qsTr("[select producer]")
+
+    readonly property string notRequired: qsTr("not required")
+
+    readonly property string endFermentationDate: qsTr("End of fermentation date")
+    readonly property string estimatedVolume: qsTr("Estimated volume on fresh beans kg")
+    readonly property string typeHere: qsTr("Type here")
 
     // calendar
     readonly property string activities: qsTr("activities")

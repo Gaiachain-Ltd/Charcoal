@@ -41,14 +41,12 @@
         <file>components/dummy/DummyLoginCombobox.qml</file>
         <file>items/BasicCheckBox.qml</file>
         <file>items/RectCheckBox.qml</file>
-        <file>pages/CalendarYearPage.qml</file>
         <file>components/CalendarYearItem.qml</file>
         <file>popups/BasePopup.qml</file>
         <file>popups/GenericPopup.qml</file>
         <file>popups/InformationPopup.qml</file>
         <file>popups/NotificationPopup.qml</file>
         <file>popups/WaitOverlayPopup.qml</file>
-        <file>components/CalendarYearItem.qml</file>
         <file>components/SupplyChainCategorySubmenuButton.qml</file>
         <file>components/SupplyChainCategorySubmenu.qml</file>
         <file>components/SupplyChainSubmenuButton.qml</file>
@@ -75,5 +73,6 @@
         <file>components/CommunicationStateItem.qml</file>
         <file>items/SpinnerItem.qml</file>
         <file>components/CalendarItemGridExtension.qml</file>
+        <file>pages/SupplyChainGrainProcessingPage.qml</file>
     </qresource>
 </RCC>

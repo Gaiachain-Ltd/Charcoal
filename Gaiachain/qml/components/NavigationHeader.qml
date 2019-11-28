@@ -67,9 +67,11 @@ Item {
         }
 
         Items.BasicText {
+            Layout.fillWidth: true
             text: title
             color: Style.textSecondaryColor
             font.pixelSize: s(Style.titlePixelSize)
+            wrapMode: Text.WordWrap
 
             visible: !logoVisible
         }
