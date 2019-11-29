@@ -48,6 +48,8 @@ BasePage {
                 height: s(Style.logoHeight)
 
                 source: Style.logoImgUrl
+
+                DummyComponents.ServerStateChanger {}
             }
         }
 
@@ -72,7 +74,7 @@ BasePage {
                 validInput = !length || Utility.validateEmail(text)
             }
 
-            DummyComponents.DummyLoginCombobox {
+            DummyComponents.LoginCombobox {
                 loginInput: loginInput
                 passwordInput: passwordInput
             }
@@ -109,7 +111,7 @@ BasePage {
             enabled: loginInput.text.length && passwordInput.text.length && loginInput.validInput
 
             onClicked: {
-                pageManager.enter(Enums.Page.LoginLoading)
+                pageManager.enter(Enums.Page.LoginLoading, { "login": loginInput.text, "password": passwordInput.text })
                 sessionManager.login(loginInput.text, passwordInput.text)
             }
         }

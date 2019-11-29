@@ -12,9 +12,11 @@
     #define Q_OS_LINUX_DESKTOP 1
 #endif
 
+Q_DECLARE_LOGGING_CATEGORY(dataTypes)
 Q_DECLARE_LOGGING_CATEGORY(dataModels)
 
 namespace Gaia {
+    using ModelEntryInfo = QMap<int, QVariant>;
     using ModelEntry = QVariantList;
     using ModelData = QVector<ModelEntry>;
 }

@@ -8,6 +8,8 @@ QtObject {
 
     readonly property string ok: qsTr("Ok")
     readonly property string cancel: qsTr("Cancel")
+    readonly property string yes: qsTr("Yes")
+    readonly property string no: qsTr("No")
 
     readonly property string empty: ""
 
@@ -52,6 +54,8 @@ QtObject {
 
     readonly property string serverConnectionError: qsTr("Server connection error.\nCheck your internet connection.")
     readonly property string loginError: qsTr("Login failed. Try again.")
+    readonly property string offlineModeQuestion: qsTr("There is no internet connection available at the moment. Would you like to continue with an offline mode?")
+    readonly property string onlineLogoutQuestion: qsTr("The internet connection is now available. Do you want to log in online mode?")
 
     readonly property string dbUpdateProgress: qsTr("Database updating. Please wait...")
     readonly property string dbUpdateError: qsTr("Database update failed. If the error repeats, try to reainstall the application.")
@@ -60,6 +64,7 @@ QtObject {
     readonly property string supplyChain: qsTr("Supply chain")
     readonly property string transactions: qsTr("Transactions")
     readonly property string calendar: qsTr("Calendar")
+    readonly property string waitingTransactions: qsTr("Waiting transactions")
 
     readonly property string supplyChainMenuActionHarvest: qsTr("Harvest")
     readonly property string supplyChainMenuActionGrainProcessing: qsTr("Breaking, Fermentation, Drying")
@@ -89,6 +94,9 @@ QtObject {
 
     // supply chain pages
     readonly property string proceed: qsTr("Proceed")
+
+    readonly property string addActionError: qsTr("Cannot add the action to the server. Please try again.")
+    readonly property string offlineActionAdded: qsTr("Cannot add the action to the server. It has been added to queue.")
 
     readonly property string toSelect: qsTr("To select")
     readonly property string askForExit: qsTr("Are you sure you want to exit?")

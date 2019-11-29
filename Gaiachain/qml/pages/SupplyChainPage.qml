@@ -13,6 +13,7 @@ import "../components" as Components
 BasePage {
     id: top
 
+    property var action: Enums.SupplyChainAction.Unknown
     property alias pageContent: contentLayout.data
     property alias proceedButtonEnabled: proceedButton.enabled
 
@@ -51,7 +52,14 @@ BasePage {
 
         onEntitySaveError: {
             pageManager.closePopup()
-            pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.failed, "backgroundColor": Style.errorColor})
+
+            if ((RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) &&
+                    DataGlobals.availableOfflineActionsQml().includes(Number(action)) ) {
+                pageManager.backTo(pageManager.homePage())
+                pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.offlineActionAdded, "backgroundColor": Style.warningColor})
+            } else {
+                pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.addActionError, "backgroundColor": Style.errorColor})
+            }
         }
     }
 

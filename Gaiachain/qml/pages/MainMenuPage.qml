@@ -13,16 +13,22 @@ BasePage {
     title: Strings.gaiachain
     logoVisible: true
 
-    function navigateSupplyChainPages(action) {
+    function supplyChainPageForAction(action) {
         switch (Number(action)) {
         case Enums.SupplyChainAction.Harvest:
-            pageManager.enter(Enums.Page.SupplyChainHarvest)
-            break
+            return Enums.Page.SupplyChainHarvest
         case Enums.SupplyChainAction.GrainProcessing:
-            pageManager.enter(Enums.Page.SupplyChainGrainProcessing)
-            break
+            return Enums.Page.SupplyChainGrainProcessing
         default:
             console.warn("navigateSupplyChainPages: Invalid action provided!")
+        }
+        return Enums.Page.InvalidPage
+    }
+
+    function navigateSupplyChainPages(action) {
+        var supplyChainPage = supplyChainPageForAction(action)
+        if (supplyChainPage !== Number(Enums.Page.InvalidPage)) {
+            pageManager.enter(supplyChainPage, { "action": action })
         }
     }
 
@@ -47,7 +53,7 @@ BasePage {
             ColumnLayout {
                 id: supplyChainButtonColumn
 
-                visible: userManager.loggedIn
+                visible: userManager.loggedIn && supplyChainSubmenu.availableActionsCount
                 spacing: 0
 
                 Components.MenuButton {

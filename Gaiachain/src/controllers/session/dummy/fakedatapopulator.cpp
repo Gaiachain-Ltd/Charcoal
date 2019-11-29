@@ -113,10 +113,11 @@ QVariantMap FakeDataPopulator::generateUserData(const QString &email)
     }
 
     auto userType = sc_usersLogin.value(email);
-    auto cooperative = randomCooperative();
+    auto cooperative = userType == Enums::UserType::SuperUser ? cooperativeById(sc_cooperatives.first().value("id").toString())
+                                                              : randomCooperative();
 
     auto obj = QVariantMap{};
-    obj.insert(Tags::email, email);
+    obj.insert(Tags::login, email);
     obj.insert(Tags::cooperativeId, cooperative.value("id"));
     obj.insert(Tags::cooperativeName, cooperative.value("name"));
     obj.insert(Tags::role, RequestsHelper::userTypeToString(userType));
@@ -577,6 +578,9 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
 
         action = Enums::SupplyChainAction::Harvest;
         std::tie(id, properties) = generateHarvestAction(harvestDate);
+        if (m_eventsHistory.contains(id)) {
+            break;  // other cooperative done harvest that day on that parcel
+        }
         addEvent(id, action, QDateTime(harvestDate, randomTime()), properties, cooperative);
 
         action = Enums::SupplyChainAction::GrainProcessing;

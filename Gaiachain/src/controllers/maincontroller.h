@@ -20,10 +20,6 @@ public:
     void setupQmlContext(QQmlApplicationEngine &engine) override;
     void startInitialWork();
 
-signals:
-
-public slots:
-
 private:
     void setupConnections();
     void setupDataConnections();

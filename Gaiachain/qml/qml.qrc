@@ -38,7 +38,7 @@
         <file>components/CalendarWeekItem.qml</file>
         <file>pages/CalendarPageBase.qml</file>
         <file>items/LayoutSeparator.qml</file>
-        <file>components/dummy/DummyLoginCombobox.qml</file>
+        <file>components/dummy/LoginCombobox.qml</file>
         <file>items/BasicCheckBox.qml</file>
         <file>items/RectCheckBox.qml</file>
         <file>components/CalendarYearItem.qml</file>
@@ -51,7 +51,6 @@
         <file>components/SupplyChainCategorySubmenu.qml</file>
         <file>components/SupplyChainSubmenuButton.qml</file>
         <file>components/SupplyChainSubmenuExpandButton.qml</file>
-        <file>pages/CalendarYearPage.qml</file>
         <file>pages/PackageDataPage.qml</file>
         <file>components/PackageDataDetails.qml</file>
         <file>components/PackageDataHarvestDetails.qml</file>
@@ -74,5 +73,9 @@
         <file>items/SpinnerItem.qml</file>
         <file>components/CalendarItemGridExtension.qml</file>
         <file>pages/SupplyChainGrainProcessingPage.qml</file>
+        <file>popups/YesNoQuestionPopup.qml</file>
+        <file>components/dummy/ServerStateChanger.qml</file>
+        <file>pages/WaitingTransactionsPage.qml</file>
+        <file>items/NumberImageButton.qml</file>
     </qresource>
 </RCC>

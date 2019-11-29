@@ -30,6 +30,7 @@ public:
     static QList<Enums::PlaceType> availablePlaceTypes();
     static QList<Enums::PackageType> availablePackageTypes();
     static QList<Enums::SupplyChainAction> availableActions();
+    static QList<Enums::SupplyChainAction> availableOfflineActions();
 
     // qmls
     Q_INVOKABLE static QVariantList userActionsQml(const Enums::UserType &user);
@@ -38,10 +39,12 @@ public:
     Q_INVOKABLE static QVariantList availablePlaceTypesQml();
     Q_INVOKABLE static QVariantList availablePackageTypesQml();
     Q_INVOKABLE static QVariantList availableActionsQml();
+    Q_INVOKABLE static QVariantList availableOfflineActionsQml();
 
 private:
     DataGlobals();
 
+    static const QList<Enums::SupplyChainAction> sc_supplyChainOfflineActions;
     static const QHash<Enums::SupplyChainAction, Enums::PackageType> sc_supplyChainActionPackageType;
     static const QHash<Enums::SupplyChainAction, Enums::PlaceType> sc_supplyChainActionPlaceType;
     static const QHash<Enums::UserType, QList<Enums::SupplyChainAction>> sc_supplyChainActionPerUser;

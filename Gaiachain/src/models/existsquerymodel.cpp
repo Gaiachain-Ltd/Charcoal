@@ -5,9 +5,18 @@
 #include "../common/types.h"
 #include "../database/dbhelpers.h"
 
+ExistsQueryModel::ExistsQueryModel(QObject *parent)
+    : QObject(parent)
+{}
+
 ExistsQueryModel::ExistsQueryModel(QSqlDatabase db, QObject *parent)
     : QObject(parent), m_db(db)
 {}
+
+void ExistsQueryModel::setDatabase(QSqlDatabase db)
+{
+    m_db = db;
+}
 
 bool ExistsQueryModel::prepareQuery(const QString &tableName, const QStringList &conditionFields)
 {
@@ -28,6 +37,7 @@ bool ExistsQueryModel::prepareQuery(const QString &tableName, const QStringList 
     });
     conditionString = conditionString.left(conditionString.count() - 4);  // " AND"
 
+    m_query = QSqlQuery(m_db);
     m_query.prepare(ExistsQueryBase.arg(tableName).arg(conditionString));
     return true;
 }

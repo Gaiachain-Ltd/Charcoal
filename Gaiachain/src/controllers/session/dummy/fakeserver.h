@@ -11,11 +11,13 @@ class FakeServer : public QObject
     Q_OBJECT
 
 public:
-    explicit FakeServer(QObject *parent = nullptr);
+    ~FakeServer();
+
+    static FakeServer &instance();
 
 public slots:
     void ping();
-    void login(const QString &email, const QString &password);
+    void login(const QString &login, const QString &password);
 
     void getAdditionalData();
 
@@ -42,41 +44,43 @@ public slots:
     void postUnusedLotId();
 
 signals:
-    void connectionState(const int &errorCode);
+    void connectionState(const QNetworkReply::NetworkError &errorCode);
 
-    void pingError(const int &code) const;
+    void pingError(const QNetworkReply::NetworkError &code) const;
     void pingSuccess() const;
 
-    void loginError(const int &code) const;
-    void loginFinished(const QJsonObject &userData) const;
+    void loginError(const QString &login, const QNetworkReply::NetworkError &code) const;
+    void loginFinished(const QString &login, const QJsonObject &userDataObj) const;
 
-    void additionalDataLoadError(const int &code) const;
+    void additionalDataLoadError(const QNetworkReply::NetworkError &code) const;
     void additionalDataLoaded(const QJsonObject &data) const;
 
-    void relationsLoadError(const int &code) const;
+    void relationsLoadError(const QNetworkReply::NetworkError &code) const;
     void relationsLoaded(const QJsonArray &relations) const;
-    void relationsSaveError(const int &code) const;
+    void relationsSaveError(const QString &packageId, const QNetworkReply::NetworkError &code) const;
     void relationsSaved(const QString &packageId) const;
 
-    void entitiesLoadError(const int &code) const;
+    void entitiesLoadError(const QNetworkReply::NetworkError &code) const;
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
     void entitiesLoaded(const QJsonArray &entities) const;
 
-    void entityIdLoadError(const int &code) const;
+    void entityIdLoadError(const QNetworkReply::NetworkError &code) const;
     void entityIdLoaded(const QString &packageId) const;
 
-    void entitySaveError(const int &code) const;
+    void entitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &code) const;
     void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;
 
-    void createdHarvestIdsLoadError(const int &code) const;
+    void createdHarvestIdsLoadError(const QNetworkReply::NetworkError &code) const;
     void createdHarvestIdsLoaded(const QJsonArray &ids) const;
 
-    void unusedLotIdsLoadError(const int &code) const;
+    void unusedLotIdsLoadError(const QNetworkReply::NetworkError &code) const;
     void unusedLotIdsLoaded(const QJsonArray &ids) const;
-    void unusedLotIdCreateError(const int &code) const;
+    void unusedLotIdCreateError(const QNetworkReply::NetworkError &code) const;
     void unusedLotIdCreated(const QString &id) const;
 
 private:
+    explicit FakeServer(QObject *parent = nullptr);
+
     QThread m_thread;
 
     static const int sc_firstHarvestShift = 90;    // more or less a quarter
@@ -85,24 +89,26 @@ private:
     Enums::UserType m_currentUserType;
     QString m_currentCooperativeId;
 
-    int randomWaitTime();
+    bool isError(const QNetworkReply::NetworkError &error) const;
+    QNetworkReply::NetworkError randomError() const;
+    int randomWaitTime() const;
 
-    void onPingError();
+    void onPingError(const QNetworkReply::NetworkError &error);
     void onPingSuccess();
 
-    void onLoginError();
-    void onLogin(const QString &email, const QString &password);
+    void onLoginError(const QString &login, const QNetworkReply::NetworkError &error);
+    void onLogin(const QString &login, const QString &password);
 
-    void onAdditionalDataError();
+    void onAdditionalDataError(const QNetworkReply::NetworkError &error);
     void onAdditionalData();
 
-    void onRelationsError();
+    void onRelationsError(const QNetworkReply::NetworkError &error);
     void onRelations(const QStringList &packagesIds);
 
-    void onRelationSaveError();
+    void onRelationSaveError(const QString &packageId, const QNetworkReply::NetworkError &error);
     void onRelationSaved(const QString &packageId, const QStringList &relatedIds);
 
-    void onEntityError();
+    void onEntityError(const QNetworkReply::NetworkError &error);
 
     void onEntityInfo(int count, const QDateTime &from, const QString &keyword);
     void onEntityInfo(const QDateTime &from, const QDateTime &to, const QString &keyword);
@@ -110,22 +116,22 @@ private:
     void onEntityAll();
     void onEntity(const QStringList &packagesId);
 
-    void onEntityIdError();
+    void onEntityIdError(const QNetworkReply::NetworkError &error);
     void onEntityId(const QByteArray &codeData);
 
-    void onEntitySaveError();
+    void onEntitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error);
     void onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                        const QVariantMap &properties, const QByteArray &codeData);
     void onEntitySaved(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                        const QVariantMap &properties);
 
-    void onCreatedHarvestIdsError();
+    void onCreatedHarvestIdsError(const QNetworkReply::NetworkError &error);
     void onCreatedHarvestIds();
 
-    void onUnusedLotIdsError();
+    void onUnusedLotIdsError(const QNetworkReply::NetworkError &error);
     void onUnusedLotIds();
 
-    void onUnusedLotIdCreationError();
+    void onUnusedLotIdCreationError(const QNetworkReply::NetworkError &error);
     void onUnusedLotIdCreated();
 };
 

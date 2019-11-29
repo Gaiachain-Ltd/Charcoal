@@ -38,6 +38,7 @@ namespace Enums {
         PackageData,
         SupplyChainHarvest,
         SupplyChainGrainProcessing,
+        WaitingTransactions,
 
         PageCount
     };
@@ -47,6 +48,7 @@ namespace Enums {
     enum class Popup {
         InvalidPopup = -1,
         Information,
+        YesNoQuestion,
         WaitOverlay,
         Notification,
         Confirm,
@@ -60,6 +62,8 @@ namespace Enums {
         InvalidPopupAction = -1,
         Accept,
         Cancel,
+        Yes,
+        No,
         Save,
         Logout,
         Exit,

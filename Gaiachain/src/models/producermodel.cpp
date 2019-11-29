@@ -1,9 +1,5 @@
 #include "producermodel.h"
 
-namespace {
-    const QLatin1String TableName = QLatin1String("Producers");
-}
-
 const QHash<int, QByteArray> ProducerModel::sc_roleNames = {
     { Columns::ProducerId,    QByteArrayLiteral("producerId") },
     { Columns::Name,          QByteArrayLiteral("name") },
@@ -11,22 +7,22 @@ const QHash<int, QByteArray> ProducerModel::sc_roleNames = {
     { Columns::ParcelCodes,   QByteArrayLiteral("parcelCodes") }
 };
 
-const QHash<int, QVariant::Type> ProducerModel::sc_roleDatabaseTypes = {
-    { Columns::ProducerId,    QVariant::String },
-    { Columns::Name,          QVariant::String },
-    { Columns::Village,       QVariant::String },
-    { Columns::ParcelCodes,   QVariant::String }
+const QHash<int, QMetaType::Type> ProducerModel::sc_roleDatabaseTypes = {
+    { Columns::ProducerId,    QMetaType::QString },
+    { Columns::Name,          QMetaType::QString },
+    { Columns::Village,       QMetaType::QString },
+    { Columns::ParcelCodes,   QMetaType::QString }
 };
 
-const QHash<int, QVariant::Type> ProducerModel::sc_roleAppTypes = {
-    { Columns::ProducerId,    QVariant::String },
-    { Columns::Name,          QVariant::String },
-    { Columns::Village,       QVariant::String },
-    { Columns::ParcelCodes,   QVariant::StringList }
+const QHash<int, QMetaType::Type> ProducerModel::sc_roleAppTypes = {
+    { Columns::ProducerId,    QMetaType::QString },
+    { Columns::Name,          QMetaType::QString },
+    { Columns::Village,       QMetaType::QString },
+    { Columns::ParcelCodes,   QMetaType::QStringList }
 };
 
-ProducerModel::ProducerModel(QSqlDatabase db, QObject *parent)
-    : AbstractModel(TableName, db, parent)
+ProducerModel::ProducerModel(QObject *parent)
+    : AbstractModel(parent)
 {}
 
 int ProducerModel::firstColumn() const
@@ -44,12 +40,12 @@ QHash<int, QByteArray> ProducerModel::roleNames() const
     return sc_roleNames;
 }
 
-QHash<int, QVariant::Type> ProducerModel::roleDatabaseTypes() const
+QHash<int, QMetaType::Type> ProducerModel::roleDatabaseTypes() const
 {
     return sc_roleDatabaseTypes;
 }
 
-QHash<int, QVariant::Type> ProducerModel::roleAppTypes() const
+QHash<int, QMetaType::Type> ProducerModel::roleAppTypes() const
 {
     return sc_roleAppTypes;
 }

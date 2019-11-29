@@ -18,7 +18,7 @@ SessionManager::SessionManager(QObject *parent)
 
 void SessionManager::ping()
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit pingError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &) {
@@ -27,24 +27,26 @@ void SessionManager::ping()
     sendRequest(QSharedPointer<AuthRequest>::create(), errorHandler, replyHandler);
 }
 
-void SessionManager::login(const QString &email, const QString &password)
+void SessionManager::login(const QString &login, const QString &password)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
-        emit loginError(code);
+    emit loginAttempt(login, password);
+
+    const auto errorHandler = [this, &login](const QString &, const QNetworkReply::NetworkError &code) {
+        emit loginError(login, code);
     };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
+    const auto replyHandler = [this, &login](const QJsonDocument &reply) {
         if (reply.isObject()) {
-            emit loginFinished(reply.object());
+            emit loginFinished(login, reply.object());
         } else {
-            emit loginError(QNetworkReply::NetworkError::UnknownContentError);
+            emit loginError(login, QNetworkReply::NetworkError::UnknownContentError);
         }
     };
-    sendRequest(QSharedPointer<AuthRequest>::create(email, password), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<AuthRequest>::create(login, password), errorHandler, replyHandler);
 }
 
 void SessionManager::getAdditionalData()
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit additionalDataLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -56,7 +58,7 @@ void SessionManager::getAdditionalData()
 
 void SessionManager::getRelations(const QString &packageId)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit relationsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -67,7 +69,7 @@ void SessionManager::getRelations(const QString &packageId)
 
 void SessionManager::getRelations(const QStringList &packageIds)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit relationsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -78,10 +80,10 @@ void SessionManager::getRelations(const QStringList &packageIds)
 
 void SessionManager::addRelation(const QString &packageId, const QStringList &relatedIds)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
-        emit relationsLoadError(code);
+    const auto errorHandler = [this, &packageId](const QString &, const QNetworkReply::NetworkError &code) {
+        emit relationsSaveError(packageId, code);
     };
-    const auto replyHandler = [this, packageId](const QJsonDocument &) {
+    const auto replyHandler = [this, &packageId](const QJsonDocument &) {
         emit relationsSaved(packageId);
     };
 
@@ -92,7 +94,7 @@ void SessionManager::addRelation(const QString &packageId, const QStringList &re
 
 void SessionManager::getEntitiesInfo(int count, const QDateTime &from, const QString &keyword)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -105,7 +107,7 @@ void SessionManager::getEntitiesInfo(int count, const QDateTime &from, const QSt
 
 void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -117,7 +119,7 @@ void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to,
 
 void SessionManager::getEntities(const QStringList &packageIds)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -128,7 +130,7 @@ void SessionManager::getEntities(const QStringList &packageIds)
 
 void SessionManager::getEntity(const QString &packageId)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -139,7 +141,7 @@ void SessionManager::getEntity(const QString &packageId)
 
 void SessionManager::getEntityId(const QByteArray &codeData)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entityIdLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -150,10 +152,10 @@ void SessionManager::getEntityId(const QByteArray &codeData)
 
 void SessionManager::putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
-        emit entitySaveError(code);
+    const auto errorHandler = [this, &packageId, &action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError(packageId, action, code);
     };
-    const auto replyHandler = [this, packageId, action](const QJsonDocument &) {
+    const auto replyHandler = [this, &packageId, &action](const QJsonDocument &) {
         emit entitySaved(packageId, action);
     };
 
@@ -165,10 +167,10 @@ void SessionManager::putEntityAction(const QString &packageId, const Enums::Supp
 
 void SessionManager::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
-        emit entitySaveError(code);
+    const auto errorHandler = [this, &action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError({}, action, code);
     };
-    const auto replyHandler = [this, action](const QJsonDocument &reply) {
+    const auto replyHandler = [this, &action](const QJsonDocument &reply) {
         emit entitySaved(reply.object().value(Tags::packageId).toString(), action);
     };
 
@@ -180,10 +182,10 @@ void SessionManager::putEntityAction(const QByteArray &codeData, const Enums::Su
 
 void SessionManager::postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
-        emit entitySaveError(code);
+    const auto errorHandler = [this, &action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError({}, action, code);
     };
-    const auto replyHandler = [this, action](const QJsonDocument &reply) {
+    const auto replyHandler = [this, &action](const QJsonDocument &reply) {
         emit entitySaved(reply.object().value(Tags::packageId).toString(), action);
     };
 
@@ -195,7 +197,7 @@ void SessionManager::postNewEntity(const Enums::SupplyChainAction &action, const
 
 void SessionManager::getCreatedHarvestIds()
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit createdHarvestIdsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -209,7 +211,7 @@ void SessionManager::getCreatedHarvestIds()
 
 void SessionManager::getUnusedLotIds()
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit unusedLotIdsLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -223,7 +225,7 @@ void SessionManager::getUnusedLotIds()
 
 void SessionManager::postUnusedLotId()
 {
-    const auto errorHandler = [this](const QString &, const int &code) {
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit unusedLotIdCreateError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
@@ -236,10 +238,11 @@ void SessionManager::postUnusedLotId()
 }
 
 void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,
-                                 const std::function<void (const QString &, const int &)> &errorHandler,
+                                 const std::function<void (const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
                                  const std::function<void (const QJsonDocument &)> &replyHandler)
 {
-    connect(request.data(), &BaseRequest::replyError, this, errorHandler);
+    connect(request.data(), &BaseRequest::replyError,
+            this, [&errorHandler](const QString &msgs, const int errorCode) { errorHandler(msgs, static_cast<QNetworkReply::NetworkError>(errorCode)); });
     connect(request.data(), &BaseRequest::requestFinished, this, replyHandler);
 
     sendRequest(request);

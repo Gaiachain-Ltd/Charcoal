@@ -15,18 +15,34 @@ Items.GenericPanel
         return false    // back button not working for this page
     }
 
+    property string login
+    property string password
+
     property bool skipLogin: false
 
     Connections
     {
         target: sessionManager
+        enabled: Number(pageManager.topPage) === page
         onLoginFinished: d.onLoginReady()
-        onLoginError: d.showLoginError(code)
+        onLoginError: d.handleLoginError(code)
     }
+
     Connections
     {
         target: pageManager
-        onPopupAction: pageManager.back()
+        enabled: Number(pageManager.topPage) === page
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.Yes:
+                d.tryOfflineLogin()
+                break
+            case Enums.PopupAction.No:  // rejecting offline mode
+            case Enums.PopupAction.Ok:  // accepting error
+            default:
+                pageManager.back()
+            }
+        }
     }
 
     states: [
@@ -62,6 +78,14 @@ Items.GenericPanel
             animationFinished = true
         }
 
+        function tryOfflineLogin() {
+            if (userManager.offlineLogin(login, password)) {
+                onLoginReady()
+            } else {
+                handleLoginError(RequestHelper.authenticationError())
+            }
+        }
+
         function checkEnterMainPage() {
             if (!animationFinished || !loginReady) {
                 return false
@@ -70,8 +94,15 @@ Items.GenericPanel
             pageManager.enterReplace(Enums.Page.MainMenu)
             return true
         }
-        function showLoginError(code) {
-            console.log("Login Error:", code)
+        function handleLoginError(code) {
+            if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
+                if (userManager.offlineAvailable(login)) {
+                    pageManager.openPopup(Enums.Popup.YesNoQuestion,
+                                          { "text": Strings.offlineModeQuestion })
+                    return
+                }
+            }
+
             pageManager.openPopup(Enums.Popup.Information,
                                   { "text": RequestHelper.isAuthenticationError(code) ? Strings.loginError : Strings.serverConnectionError })
         }

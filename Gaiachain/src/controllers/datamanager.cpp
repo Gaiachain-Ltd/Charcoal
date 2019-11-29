@@ -22,7 +22,14 @@
 Q_LOGGING_CATEGORY(dataManager, "data.manager")
 
 namespace {
-const QList<Enums::SupplyChainAction> OfflineActions = { Enums::SupplyChainAction::Harvest, Enums::SupplyChainAction::GrainProcessing };
+const QLatin1String EventsTableName = QLatin1String("Events");
+const QLatin1String RelationsTableName = QLatin1String("Relations");
+const QLatin1String UnusedIdsTableName = QLatin1String("UnusedIds");
+
+const QLatin1String ProducersTableName = QLatin1String("Producers");
+const QLatin1String BuyersTableName = QLatin1String("Buyers");
+const QLatin1String TransportersTableName = QLatin1String("Transporters");
+const QLatin1String DestinationsTableName = QLatin1String("Destinations");
 }
 
 DataManager::DataManager(QObject *parent)
@@ -40,6 +47,8 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("buyersModel"), &m_buyersModel);
     engine.rootContext()->setContextProperty(QStringLiteral("transportersModel"), &m_transportersModel);
     engine.rootContext()->setContextProperty(QStringLiteral("destinationsModel"), &m_destinationsModel);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("localOnlyEventsModel"), &m_localOnlyEventsModel);
 
     engine.rootContext()->setContextProperty(QStringLiteral("createdHarvestIdsModel"), &m_createdHarvestIdsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsModel);
@@ -66,9 +75,6 @@ void DataManager::updateUserData(const UserData &userData)
 
 void DataManager::onAdditionalDataLoaded(const QJsonObject &additionalData)
 {
-    Q_ASSERT(m_producersSourceModel && m_buyersSourceModel &&
-             m_transportersSourceModel && m_destinationsSourceModel);
-
     auto modelData = Gaia::ModelData{};
     auto array = QJsonArray{};
 
@@ -77,26 +83,27 @@ void DataManager::onAdditionalDataLoaded(const QJsonObject &additionalData)
     std::transform(array.constBegin(), array.constEnd(), std::back_inserter(modelData),
                    std::bind(&DataManager::processProducer, this, std::placeholders::_1));
     removeExistingProducers(modelData);
-    m_producersSourceModel->appendData(modelData);
+    m_producersModel.appendData(modelData);
 
     modelData.clear();
 
     // other
-    static const auto AdditionalDataModels = QList<QPair<QLatin1String, AbstractModel*>> {
-        { Tags::buyers, m_buyersSourceModel.data() },
-        { Tags::transporters, m_transportersSourceModel.data() },
-        { Tags::destinations, m_destinationsSourceModel.data() }
+    static const auto AdditionalDataModels = std::array<std::tuple<QLatin1String, AbstractModel*, QLatin1String>, 3> {
+        std::make_tuple(Tags::buyers, &m_buyersModel, BuyersTableName),
+        std::make_tuple(Tags::transporters, &m_transportersModel, TransportersTableName),
+        std::make_tuple(Tags::destinations, &m_destinationsModel, DestinationsTableName)
     };
 
-    std::for_each(AdditionalDataModels.constBegin(), AdditionalDataModels.constEnd(),
+    std::for_each(AdditionalDataModels.cbegin(), AdditionalDataModels.cend(),
                   [this, &additionalData, &array, &modelData](const auto &dataModel) {
-        Q_ASSERT(dataModel.second);
+        auto [ tag, model, tableName ] = dataModel;
+        Q_ASSERT(model);
 
-        array = additionalData.value(dataModel.first).toArray();
+        array = additionalData.value(tag).toArray();
         std::transform(array.constBegin(), array.constEnd(), std::back_inserter(modelData),
                        std::bind(&DataManager::processNameData, this, std::placeholders::_1));
-        this->removeExistingNameData(modelData, dataModel.second);
-        dataModel.second->appendData(modelData);
+        this->removeExistingNameData(modelData, model, tableName);
+        model->appendData(modelData);
 
         modelData.clear();
     });
@@ -114,22 +121,18 @@ void DataManager::onEntitiesInfoLoaded(const QJsonArray &entitiesInfo)
 
 void DataManager::onEntitiesLoaded(const QJsonArray &entities)
 {
-    Q_ASSERT(m_eventsSourceModel);
-
     auto modelData = Gaia::ModelData{};
     std::transform(entities.constBegin(), entities.constEnd(), std::back_inserter(modelData),
                    std::bind(&DataManager::processEvent, this, std::placeholders::_1));
 
     removeExistingEvents(modelData);
-    m_eventsSourceModel->appendData(modelData);
+    m_eventsSourceModel.appendData(modelData);
 
     dataRequestProcessed();
 }
 
 void DataManager::onRelationsLoaded(const QJsonArray &relations)
 {
-    Q_ASSERT(m_relationsSourceModel);
-
     auto modelData = Gaia::ModelData{};
     auto modelDataArrays = QVector<Gaia::ModelData>{};
     std::transform(relations.constBegin(), relations.constEnd(), std::back_inserter(modelDataArrays),
@@ -138,7 +141,7 @@ void DataManager::onRelationsLoaded(const QJsonArray &relations)
                   [&modelData](const auto &item) { std::move(item.begin(), item.end(), std::back_inserter(modelData)); });
 
     removeExistingRelations(modelData, true);
-    m_relationsSourceModel->appendData(modelData);
+    m_relationsSourceModel.appendData(modelData);
 
     dataRequestProcessed();
 }
@@ -154,14 +157,12 @@ void DataManager::onCreatedHarvestIdsLoaded(const QJsonArray &idsArray)
 
 void DataManager::onUnusedLotIdsLoaded(const QJsonArray &ids)
 {
-    Q_ASSERT(m_unusedIdsSourceModel);
-
     auto modelData = Gaia::ModelData{};
     std::transform(ids.constBegin(), ids.constEnd(), std::back_inserter(modelData),
                    std::bind(&DataManager::processUnusedLotId, this, std::placeholders::_1));
 
     removeExistingUnusedLotIds(modelData);
-    m_unusedIdsSourceModel->appendData(modelData);
+    m_unusedLotIdsModel.appendData(modelData);
 }
 
 void DataManager::updateCooperativeId()
@@ -199,6 +200,7 @@ void DataManager::fetchMissingEvents(const Gaia::ModelData &eventsInfo)
     auto missingRelationsIds = QStringList{};
     std::transform(missingRelationsInfo.constBegin(), missingRelationsInfo.constEnd(), std::back_inserter(missingRelationsIds),
                    [](const auto &entry) { return entry.isEmpty() ? QString{} : entry.first().toString(); });
+    missingRelationsIds.removeDuplicates();
 
     if (!missingEventsIds.isEmpty()) {
         dataRequestSent();
@@ -233,11 +235,18 @@ bool DataManager::collectingData() const
 void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
     handleActionAdd(packageId, action, timestamp, properties);
-    emit addActionRequest(packageId, action, timestamp, properties, codeData);
+
+    if (!m_addActionRequestSent.contains(packageId, action)) {
+        m_addActionRequestSent.insert(packageId, action);
+
+        dataRequestSent();
+        emit addActionRequest(packageId, action, timestamp, properties, codeData);
+    }
 }
 
 void DataManager::addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
+    dataRequestSent();
     emit addActionRequest(codeData, action, timestamp, properties);
 }
 
@@ -247,7 +256,29 @@ void DataManager::addAction(const Enums::SupplyChainAction &action, const QDateT
         auto id = generateHarvestId(timestamp.date(), properties.value(PackageDataProperties::ParcelCode).toString());
         addAction(id, action, timestamp, properties, codeData);
     } else {
+
+        dataRequestSent();
         emit addActionRequest(action, timestamp, properties, codeData);
+    }
+}
+
+void DataManager::sendOfflineActions()
+{
+    for (const auto &modelEntry : m_localOnlyEventsModel.getData()) {
+        Q_ASSERT(modelEntry.size() >= 4);
+
+        const auto packageId = modelEntry.at(0).toString();
+        const auto action = modelEntry.at(1).value<Enums::SupplyChainAction>();
+
+        if (!m_addActionRequestSent.contains(packageId, action)) {
+            m_addActionRequestSent.insert(packageId, action);
+
+            dataRequestSent();
+            emit addActionRequest(packageId,
+                                  action,
+                                  modelEntry.at(2).toDateTime(),
+                                  modelEntry.at(3).toMap());
+        }
     }
 }
 
@@ -281,9 +312,20 @@ void DataManager::fetchCreatedHarvestIdEvents()
 
 void DataManager::onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action)
 {
-    Q_ASSERT(m_eventsSourceModel);
+    m_addActionRequestSent.remove(packageId, action);
+    m_eventsSourceModel.updateData({ packageId, QVariant::fromValue(action) }, { { EventModel::Columns::IsLocal, false } });
 
-    m_eventsSourceModel->updateLocal(packageId, action, false);
+    dataRequestProcessed();
+}
+
+void DataManager::onActionAddError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error)
+{
+    if (error == QNetworkReply::NetworkError::ContentConflictError) {
+        m_eventsSourceModel.removeData({ packageId, QVariant::fromValue(action) });
+    }
+    m_addActionRequestSent.remove(packageId, action);
+
+    dataRequestProcessed();
 }
 
 void DataManager::onDataRequestError()
@@ -293,31 +335,37 @@ void DataManager::onDataRequestError()
 
 void DataManager::setupModels(QSqlDatabase db)
 {
-    m_existsQueryModel.reset(new ExistsQueryModel(db));
-
-    m_producersSourceModel.reset(new ProducerModel(db));
-    m_buyersSourceModel.reset(new NameModel(QLatin1String("Buyers"), db));
-    m_transportersSourceModel.reset(new NameModel(QLatin1String("Transporters"), db));
-    m_destinationsSourceModel.reset(new NameModel(QLatin1String("Destinations"), db));
-
-    m_producersModel.setSourceModel(m_producersSourceModel.data());
-    m_buyersModel.setSourceModel(m_buyersSourceModel.data());
-    m_transportersModel.setSourceModel(m_transportersSourceModel.data());
-    m_destinationsModel.setSourceModel(m_destinationsSourceModel.data());
+    m_existsQueryModel.setDatabase(db);
 
     // -------------------------------------------------------------
 
-    m_eventsSourceModel.reset(new EventModel(db));
-    m_relationsSourceModel.reset(new RelationModel(db));
-    m_unusedIdsSourceModel.reset(new UnusedIdsModel(db));
+    m_eventsDatabaseModel.reset(new SqlTableModel(EventsTableName, db));
+    m_relationsDatabaseModel.reset(new SqlTableModel(RelationsTableName, db));
+    m_unusedIdsDatabaseModel.reset(new SqlTableModel(UnusedIdsTableName, db));
+    m_producersDatabaseModel.reset(new SqlTableModel(ProducersTableName, db));
+    m_buyersDatabaseModel.reset(new SqlTableModel(BuyersTableName, db));
+    m_transportersDatabaseModel.reset(new SqlTableModel(TransportersTableName, db));
+    m_destinationsDatabaseModel.reset(new SqlTableModel(DestinationsTableName, db));
 
+    // -------------------------------------------------------------
+
+    m_eventsSourceModel.setSourceModel(m_eventsDatabaseModel.data());
+    m_relationsSourceModel.setSourceModel(m_relationsDatabaseModel.data());
+    m_unusedLotIdsModel.setSourceModel(m_unusedIdsDatabaseModel.data());
+    m_producersModel.setSourceModel(m_producersDatabaseModel.data());
+    m_buyersModel.setSourceModel(m_buyersDatabaseModel.data());
+    m_transportersModel.setSourceModel(m_transportersDatabaseModel.data());
+    m_destinationsModel.setSourceModel(m_destinationsDatabaseModel.data());
+
+    // -------------------------------------------------------------
+
+    m_cooperativeEventsModel.setSourceModel(&m_eventsSourceModel);    
     m_createdHarvestIdsModel.setSourceModel(&m_cooperativeEventsModel);
-    m_unusedLotIdsModel.setSourceModel(m_unusedIdsSourceModel.data());
-
-    m_cooperativeEventsModel.setSourceModel(m_eventsSourceModel.data());
     m_packageTypeCooperativeIdsModel.setSourceModel(&m_cooperativeEventsModel);
 
-    m_cooperativeFilteringEventsModel.setSourceModel(m_eventsSourceModel.data());
+    m_localOnlyEventsModel.setSourceModel(&m_cooperativeEventsModel);
+
+    m_cooperativeFilteringEventsModel.setSourceModel(&m_eventsSourceModel);
     m_calendarModel.setSourceModel(&m_cooperativeFilteringEventsModel);
     m_packagesCalendarModel.setSourceModel(&m_calendarModel);
 
@@ -328,8 +376,8 @@ void DataManager::setupModels(QSqlDatabase db)
     m_packagesTypeSearchEventsModel.setSourceModel(&m_searchEventsModel);
     m_latestRangePackagesTypeSearchEventsModel.setSourceModel(&m_packagesTypeSearchEventsModel);
 
-    m_packageDataModel.setSourceModel(m_eventsSourceModel.data());
-    m_relationsListModel.setSourceModel(m_relationsSourceModel.data());
+    m_packageDataModel.setSourceModel(&m_eventsSourceModel);
+    m_relationsListModel.setSourceModel(&m_relationsSourceModel);
 }
 
 QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)
@@ -343,21 +391,19 @@ QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1St
 
 void DataManager::handleActionAdd(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
-    Q_ASSERT(m_eventsSourceModel);
-
-    if (OfflineActions.contains(action) &&
+    if (DataGlobals::availableOfflineActions().contains(action) &&
             !m_userData.isAnonymous()) {
-        m_eventsSourceModel->appendData({ Gaia::ModelEntry {
-                                              packageId,
-                                              QVariant::fromValue(action),
-                                              timestamp,
-                                              QVariant::fromValue(m_userData.type),
-                                              m_userData.cooperativeId,
-                                              properties,
-                                              0.0,    // location not handled yet
-                                              0.0,    // location not handled yet
-                                              true
-                                          }, });
+        m_eventsSourceModel.appendData({ Gaia::ModelEntry {
+                                             packageId,
+                                             QVariant::fromValue(action),
+                                             timestamp,
+                                             QVariant::fromValue(m_userData.type),
+                                             m_userData.cooperativeId,
+                                             properties,
+                                             0.0,    // location not handled yet
+                                             0.0,    // location not handled yet
+                                             true
+                                         }, });
     }
 }
 
@@ -451,89 +497,82 @@ Gaia::ModelEntry DataManager::processUnusedLotId(const QJsonValue &value)
 
 void DataManager::removeExistingProducers(Gaia::ModelData &modelData)
 {
-    Q_ASSERT(m_existsQueryModel && m_producersSourceModel);
-
     static const auto ConditionsFields = QStringList{
-            m_producersSourceModel->roleNames().value(ProducerModel::Columns::ProducerId) };
+            m_producersModel.roleNames().value(ProducerModel::Columns::ProducerId) };
 
-    m_existsQueryModel->prepareQuery(m_producersSourceModel->tableName(), ConditionsFields);
+    m_existsQueryModel.prepareQuery(ProducersTableName, ConditionsFields);
 
     modelData.erase(std::remove_if(modelData.begin(), modelData.end(),
                                    [this](const auto &entry) {
         return entry.isEmpty() ? false
-                               : m_existsQueryModel->exists({ entry.first() });
+                               : m_existsQueryModel.exists({ entry.first() });
     }), modelData.end());
 }
 
-void DataManager::removeExistingNameData(Gaia::ModelData &modelData, AbstractModel *model)
+void DataManager::removeExistingNameData(Gaia::ModelData &modelData, AbstractModel *model, const QLatin1String &tableName)
 {
-    Q_ASSERT(m_existsQueryModel && model);
+    Q_ASSERT(model);
+    if (model) {
+        static const auto ConditionsFields = QStringList{ NameModel::columnName() };
 
-    static const auto ConditionsFields = QStringList{ NameModel::columnName() };
+        m_existsQueryModel.prepareQuery(tableName, ConditionsFields);
 
-    m_existsQueryModel->prepareQuery(model->tableName(), ConditionsFields);
-
-    modelData.erase(std::remove_if(modelData.begin(), modelData.end(),
-                                   [this](const auto &entry) {
-        return entry.isEmpty() ? false
-                               : m_existsQueryModel->exists({ entry.first() });
-    }), modelData.end());
+        modelData.erase(std::remove_if(modelData.begin(), modelData.end(),
+                                       [this](const auto &entry) {
+            return entry.isEmpty() ? false
+                                   : m_existsQueryModel.exists({ entry.first() });
+        }), modelData.end());
+    }
 }
 
 void DataManager::removeExistingEvents(Gaia::ModelData &modelData)
 {
-    Q_ASSERT(m_existsQueryModel && m_eventsSourceModel);
-
     static const auto ConditionsFields = QStringList{
-            m_eventsSourceModel->roleNames().value(EventModel::Columns::PackageId),
-            m_eventsSourceModel->roleNames().value(EventModel::Columns::Action) };
+            m_eventsSourceModel.roleNames().value(EventModel::Columns::PackageId),
+            m_eventsSourceModel.roleNames().value(EventModel::Columns::Action) };
 
-    m_existsQueryModel->prepareQuery(m_eventsSourceModel->tableName(), ConditionsFields);
+    m_existsQueryModel.prepareQuery(EventsTableName, ConditionsFields);
 
     modelData.erase(std::remove_if(modelData.begin(), modelData.end(),
                                    [this](const auto &entry) {
         return entry.size() < 2 ? false
-                                : m_existsQueryModel->exists({ entry.at(0), entry.at(1).toInt() });
+                                : m_existsQueryModel.exists({ entry.at(0), entry.at(1).toInt() });
     }), modelData.end());
 }
 
 void DataManager::removeExistingRelations(Gaia::ModelData &modelData, bool fullCheck)
 {
-    Q_ASSERT(m_existsQueryModel && m_relationsSourceModel);
-
     static const auto ConditionsFields = QStringList{
-            m_relationsSourceModel->roleNames().value(RelationModel::Columns::PackageId) };
+            m_relationsSourceModel.roleNames().value(RelationModel::Columns::PackageId) };
     static const auto FullConditionsFields = QStringList{
-            m_relationsSourceModel->roleNames().value(RelationModel::Columns::PackageId),
-            m_relationsSourceModel->roleNames().value(RelationModel::Columns::RelatedId) };
+            m_relationsSourceModel.roleNames().value(RelationModel::Columns::PackageId),
+            m_relationsSourceModel.roleNames().value(RelationModel::Columns::RelatedId) };
 
-    m_existsQueryModel->prepareQuery(m_relationsSourceModel->tableName(),
-                                     fullCheck ? FullConditionsFields : ConditionsFields);
+    m_existsQueryModel.prepareQuery(RelationsTableName,
+                                    fullCheck ? FullConditionsFields : ConditionsFields);
 
     modelData.erase(std::remove_if(modelData.begin(), modelData.end(),
                                    [this, fullCheck](const auto &entry) {
         if (fullCheck) {
             return entry.size() < 2 ? false
-                                    : m_existsQueryModel->exists({ entry.at(0), entry.at(1) });
+                                    : m_existsQueryModel.exists({ entry.at(0), entry.at(1) });
         } else {
             return entry.isEmpty() ? false
-                                   : m_existsQueryModel->exists({ entry.first() });
+                                   : m_existsQueryModel.exists({ entry.first() });
         }
     }), modelData.end());
 }
 
 void DataManager::removeExistingUnusedLotIds(Gaia::ModelData &modelData)
 {
-    Q_ASSERT(m_existsQueryModel && m_unusedIdsSourceModel);
-
     static const auto ConditionsFields = QStringList{
-            m_unusedIdsSourceModel->roleNames().value(UnusedIdsModel::Columns::PackageId) };
+            m_unusedLotIdsModel.roleNames().value(UnusedIdsModel::Columns::PackageId) };
 
-    m_existsQueryModel->prepareQuery(m_unusedIdsSourceModel->tableName(), ConditionsFields);
+    m_existsQueryModel.prepareQuery(UnusedIdsTableName, ConditionsFields);
 
     modelData.erase(std::remove_if(modelData.begin(), modelData.end(),
                                    [this](const auto &entry) {
         return entry.isEmpty() ? false
-                               : m_existsQueryModel->exists({ entry.first() });
+                               : m_existsQueryModel.exists({ entry.first() });
     }), modelData.end());
 }

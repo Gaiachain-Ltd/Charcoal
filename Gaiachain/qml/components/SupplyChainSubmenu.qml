@@ -12,6 +12,7 @@ import "../components" as Components
 Item {
     id: top
 
+    readonly property int availableActionsCount: nonCategoryActions.count + transportActions.count + receptionActions.count
     readonly property int contentHeight: mainLayout.implicitHeight
 
     readonly property var actionsModel: {
@@ -27,12 +28,16 @@ Item {
     implicitHeight: mainLayout.implicitHeight
 
     function filterData(actions) {
+        var offlineActions = DataGlobals.availableOfflineActionsQml()
         var availableActions = DataGlobals.userActionsQml(Number(userManager.userData.type))
         var filteredData = []
 
         for (var i = 0; i < actions.length; ++i) {
-            if (availableActions.includes(actions[i])){
-                filteredData.push(actions[i])
+            var action = actions[i]
+
+            if (availableActions.includes(action) &&
+                    (!userManager.offlineMode || offlineActions.includes(action)) ) {
+                filteredData.push(action)
             }
         }
 

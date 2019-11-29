@@ -11,16 +11,19 @@
 class PageManager : public AbstractManager
 {
     Q_OBJECT
+    Q_PROPERTY(Enums::Page topPage READ topPage NOTIFY topPageChanged)
+
 public:
     explicit PageManager(QObject *parent = nullptr);
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     Q_INVOKABLE QString getInitialPageUrl() const;
+    Q_INVOKABLE Enums::Page topPage() const;
     Q_INVOKABLE Enums::Page homePage() const;
+    Q_INVOKABLE bool isOnTop(Enums::Page page) const;
     Q_INVOKABLE bool isOnHomePage() const;
     Q_INVOKABLE bool isBackToHomePage() const;
-    Q_INVOKABLE bool isOnTop(Enums::Page page) const;
 
 signals:
     void popupAction(Enums::PopupAction action);
@@ -33,6 +36,8 @@ signals:
     void stackViewReplace(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
     void popupManagerOpen(const QString &url, const QVariantMap properties = QVariantMap{}) const;
     void popupManagerClose() const;
+
+    void topPageChanged(Enums::Page topPage);
 
 public slots:
     // Page managment

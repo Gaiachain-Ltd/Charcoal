@@ -34,7 +34,7 @@ DEFINES *= QT_USE_QSTRINGBUILDER
 QMAKE_CXXFLAGS += -Wno-deprecated-copy # because of QTBUG-75210
 
 TEMPLATE = app
-CONFIG += c++14
+CONFIG += c++17
 TARGET = Gaiachain
 
 HEADERS += \
@@ -42,24 +42,29 @@ HEADERS += \
     src/common/types.h \
     src/common/userdata.h \
     src/controllers/databasemanager.h \
+    src/controllers/offlineusershandler.h \
     src/controllers/session/abstractsessionmanager.h \
     src/controllers/session/dummy/fakeserver.h \
+    src/controllers/session/dummy/fakeserverstate.h \
     src/controllers/session/dummy/fakesessionmanager.h \
     src/database/dbhelpers.h \
     src/database/dbmigrationmanager.h \
     src/database/dbmigrations.h \
+    src/helpers/cryptohelper.h \
     src/helpers/modelhelper.h \
     src/helpers/packagedataproperties.h \
     src/helpers/requestshelper.h \
     src/helpers/typetraits.h \
     src/models/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
+    src/models/abstractreadmodel.h \
     src/models/cooperativeeventsproxymodel.h \
     src/models/createdharvestidsproxymodel.h \
     src/models/daterangeproxymodel.h \
     src/models/existsquerymodel.h \
     src/models/latesteventsproxymodel.h \
     src/models/latestrangeeventsproxymodel.h \
+    src/models/localonlyproxymodel.h \
     src/models/modelchangedextension.h \
     src/models/namemodel.h \
     src/models/packagedataproxymodel.h \
@@ -79,6 +84,7 @@ HEADERS += \
     src/models/searcheventsproxymodel.h \
     src/common/packagedata.h \
     src/models/selectedidsproxymodel.h \
+    src/models/sqltablemodel.h \
     src/models/unusedidsmodel.h \
     src/rest/additionaldatarequest.h \
     src/rest/authrequest.h \
@@ -102,23 +108,28 @@ SOURCES += src/main.cpp \
     src/common/types.cpp \
     src/common/userdata.cpp \
     src/controllers/databasemanager.cpp \
+    src/controllers/offlineusershandler.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/dummy/fakeserver.cpp \
+    src/controllers/session/dummy/fakeserverstate.cpp \
     src/controllers/session/dummy/fakesessionmanager.cpp \
     src/database/dbhelpers.cpp \
     src/database/dbmigrationmanager.cpp \
     src/database/dbmigrations.cpp \
+    src/helpers/cryptohelper.cpp \
     src/helpers/modelhelper.cpp \
     src/helpers/packagedataproperties.cpp \
     src/helpers/requestshelper.cpp \
     src/models/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
+    src/models/abstractreadmodel.cpp \
     src/models/cooperativeeventsproxymodel.cpp \
     src/models/createdharvestidsproxymodel.cpp \
     src/models/daterangeproxymodel.cpp \
     src/models/existsquerymodel.cpp \
     src/models/latesteventsproxymodel.cpp \
     src/models/latestrangeeventsproxymodel.cpp \
+    src/models/localonlyproxymodel.cpp \
     src/models/modelchangedextension.cpp \
     src/models/namemodel.cpp \
     src/models/packagedataproxymodel.cpp \
@@ -135,6 +146,7 @@ SOURCES += src/main.cpp \
     src/models/relationslistproxymodel.cpp \
     src/models/searcheventsproxymodel.cpp \
     src/models/selectedidsproxymodel.cpp \
+    src/models/sqltablemodel.cpp \
     src/models/unusedidsmodel.cpp \
     src/rest/additionaldatarequest.cpp \
     src/rest/authrequest.cpp \
@@ -160,13 +172,7 @@ OTHER_FILES += \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
 
-android {
-    QT += androidextras
-    INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
-
-    SSL_LIB = $$PWD/3rdparty/OpenSSL/OpenSSL/lib/android/arm
-    ANDROID_EXTRA_LIBS += $$SSL_LIB/libcrypto_1_1.so $$SSL_LIB/libssl_1_1.so
-}
+INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
 
 ## Put all build files into build directory
 ##  This also works with shadow building, so don't worry!
@@ -185,7 +191,7 @@ include(platforms/linux/linux.pri)
 include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)
 #include(../milo/mscripts/mscripts.pri) # TODO disabling it until potential usecase
-#include(../milo/mcrypto/mcrypto.pri)  # TODO disabling it until potential database encryption implementation
+include(../milo/mcrypto/mcrypto.pri)
 include(../milo/mrestapi/mrestapi.pri)
 
 DISTFILES += \

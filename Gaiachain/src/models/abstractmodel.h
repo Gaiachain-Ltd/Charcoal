@@ -1,41 +1,30 @@
 #ifndef ABSTRACTMODEL_H
 #define ABSTRACTMODEL_H
 
+#include "abstractreadmodel.h"
+
+#include <QPointer>
 #include <QSqlTableModel>
-#include <QHash>
 
-#include "modelchangedextension.h"
-#include "../common/globals.h"
-
-class AbstractModel : public QSqlTableModel, public ModelChangedExtension
+class AbstractModel : public AbstractReadModel
 {
     Q_OBJECT
-    Q_INTERFACES(ModelChangedExtension)
-
 public:
-    explicit AbstractModel(const QLatin1String &tableName, QSqlDatabase db, QObject *parent = nullptr);
+    explicit AbstractModel(QObject *parent = nullptr);
 
-    virtual int firstColumn() const;
-    virtual int lastColumn() const = 0;
+    virtual void setSourceModel(QSqlTableModel *sourceModel);
+    void setSourceModel(QSqlQueryModel *sourceModel) override;
 
     virtual QList<int> editableRoles() const;
 
-    virtual QHash<int, QVariant::Type> roleDatabaseTypes() const = 0;
-    virtual QHash<int, QVariant::Type> roleAppTypes() const = 0;
-
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    void appendData(const Gaia::ModelData &inData);
-
-signals:
-    void modelChanged() const override;
+    void appendData(const Gaia::ModelData &modelData);
+    void updateData(const Gaia::ModelEntry &searchEntryData, const Gaia::ModelEntryInfo &updateEntryData);
+    void removeData(const Gaia::ModelEntry &entryData);
 
 protected:
-    virtual void initialize();
-
-    int columnShift(const int &role) const;
-    int roleShift(const int &column) const;
+    QPointer<QSqlTableModel> m_writableModel;
 };
 
 #endif // ABSTRACTMODEL_H
