@@ -25,7 +25,8 @@ variables:
 
 .only-common: &only-common
   only:
-    - branches
+    - dev
+    - master
     - tags
     - merge_requests
 
