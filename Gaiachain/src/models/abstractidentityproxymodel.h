@@ -8,6 +8,7 @@ class AbstractIdentityProxyModel : public QIdentityProxyModel, public ModelChang
 {
     Q_OBJECT
     Q_INTERFACES(ModelChangedExtension)
+    Q_PROPERTY(int size READ rowCount NOTIFY modelChanged)
 
 public:
     AbstractIdentityProxyModel(QObject *parent = nullptr);

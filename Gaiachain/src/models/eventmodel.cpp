@@ -1,9 +1,5 @@
 #include "eventmodel.h"
 
-namespace {
-    const QLatin1String TableName = QLatin1String("Events");
-}
-
 const QHash<int, QByteArray> EventModel::sc_roleNames = {
     { Columns::PackageId,       QByteArrayLiteral("packageId") },
     { Columns::Action,          QByteArrayLiteral("action") },
@@ -17,34 +13,34 @@ const QHash<int, QByteArray> EventModel::sc_roleNames = {
     { Columns::LastUsed,        QByteArrayLiteral("lastUsed") }
 };
 
-const QHash<int, QVariant::Type> EventModel::sc_roleDatabaseTypes = {
-    { Columns::PackageId,       QVariant::String },
-    { Columns::Action,          QVariant::UInt },
-    { Columns::Timestamp,       QVariant::LongLong },
-    { Columns::UserRole,        QVariant::UInt },
-    { Columns::CooperativeId,   QVariant::String },
-    { Columns::Properties,      QVariant::ByteArray },
-    { Columns::LocationLat,     QVariant::Double },
-    { Columns::LocationLon,     QVariant::Double },
-    { Columns::IsLocal,         QVariant::Bool },
-    { Columns::LastUsed,        QVariant::LongLong }
+const QHash<int, QMetaType::Type> EventModel::sc_roleDatabaseTypes = {
+    { Columns::PackageId,       QMetaType::QString },
+    { Columns::Action,          QMetaType::UInt },
+    { Columns::Timestamp,       QMetaType::LongLong },
+    { Columns::UserRole,        QMetaType::UInt },
+    { Columns::CooperativeId,   QMetaType::QString },
+    { Columns::Properties,      QMetaType::QByteArray },
+    { Columns::LocationLat,     QMetaType::Double },
+    { Columns::LocationLon,     QMetaType::Double },
+    { Columns::IsLocal,         QMetaType::Bool },
+    { Columns::LastUsed,        QMetaType::LongLong }
 };
 
-const QHash<int, QVariant::Type> EventModel::sc_roleAppTypes = {
-    { Columns::PackageId,       QVariant::String },
-    { Columns::Action,          static_cast<QVariant::Type>(qMetaTypeId<Enums::SupplyChainAction>()) },
-    { Columns::Timestamp,       QVariant::DateTime },
-    { Columns::UserRole,        QVariant::UInt },
-    { Columns::CooperativeId,   QVariant::String },
-    { Columns::Properties,      QVariant::Map },
-    { Columns::LocationLat,     QVariant::Double },
-    { Columns::LocationLon,     QVariant::Double },
-    { Columns::IsLocal,         QVariant::Bool },
-    { Columns::LastUsed,        QVariant::DateTime }
+const QHash<int, QMetaType::Type> EventModel::sc_roleAppTypes = {
+    { Columns::PackageId,       QMetaType::QString },
+    { Columns::Action,          static_cast<QMetaType::Type>(qMetaTypeId<Enums::SupplyChainAction>()) },
+    { Columns::Timestamp,       QMetaType::QDateTime },
+    { Columns::UserRole,        QMetaType::UInt },
+    { Columns::CooperativeId,   QMetaType::QString },
+    { Columns::Properties,      QMetaType::QVariantMap },
+    { Columns::LocationLat,     QMetaType::Double },
+    { Columns::LocationLon,     QMetaType::Double },
+    { Columns::IsLocal,         QMetaType::Bool },
+    { Columns::LastUsed,        QMetaType::QDateTime }
 };
 
-EventModel::EventModel(QSqlDatabase db, QObject *parent)
-    : AbstractModel(TableName, db, parent)
+EventModel::EventModel(QObject *parent)
+    : AbstractModel(parent)
 {}
 
 int EventModel::firstColumn() const
@@ -67,27 +63,12 @@ QHash<int, QByteArray> EventModel::roleNames() const
     return sc_roleNames;
 }
 
-QHash<int, QVariant::Type> EventModel::roleDatabaseTypes() const
+QHash<int, QMetaType::Type> EventModel::roleDatabaseTypes() const
 {
     return sc_roleDatabaseTypes;
 }
 
-QHash<int, QVariant::Type> EventModel::roleAppTypes() const
+QHash<int, QMetaType::Type> EventModel::roleAppTypes() const
 {
     return sc_roleAppTypes;
-}
-
-void EventModel::updateLocal(const QString &packageId, const Enums::SupplyChainAction &action, bool isLocal)
-{
-    auto packageIndexes = match(index(0, 0), Columns::PackageId, packageId, -1, Qt::MatchExactly);
-    auto packageActionIndex = std::find_if(packageIndexes.constBegin(), packageIndexes.constEnd(),
-                                           [this, &action](const auto &index) {
-        return (this->data(index, Columns::Action).template value<Enums::SupplyChainAction>() == action);
-    });
-
-    if (packageActionIndex != packageIndexes.constEnd()) {
-        if (setData(*packageActionIndex, isLocal, Columns::IsLocal)) {
-            submitAll();
-        }
-    }
 }

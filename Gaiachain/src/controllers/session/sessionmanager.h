@@ -13,7 +13,7 @@ public:
     explicit SessionManager(QObject *parent = nullptr);
 
     Q_INVOKABLE void ping() override;
-    Q_INVOKABLE void login(const QString &email, const QString &password) override;
+    Q_INVOKABLE void login(const QString &login, const QString &password) override;
 
     Q_INVOKABLE void getAdditionalData() override;
 
@@ -43,7 +43,7 @@ private:
     RestAPIClient m_client;
 
     void sendRequest(const QSharedPointer<BaseRequest> &request,
-                     const std::function<void(const QString &, const int &)> &errorHandler,
+                     const std::function<void(const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
                      const std::function<void(const QJsonDocument &)> &replyHandler);
     void sendRequest(const QSharedPointer<BaseRequest> &request);
 };

@@ -15,15 +15,15 @@ AuthRequest::AuthRequest()
     : BaseRequest(PING_PATH, Type::Get)
 {}
 
-AuthRequest::AuthRequest(const QString &email, const QString &password)
+AuthRequest::AuthRequest(const QString &login, const QString &password)
     : BaseRequest(LOGIN_PATH, Type::Post)
 {
-    if (!email.isEmpty() && !password.isEmpty()) {
-        mRequestDocument.setObject({ { Tags::email, email },
+    if (!login.isEmpty() && !password.isEmpty()) {
+        mRequestDocument.setObject({ { Tags::login, login },
                                      { Tags::password, password } });
     } else {
         qCCritical(sessionRequest) << "Error: missing login info"
-                                   << email << password.length();
+                                   << login << password.length();
     }
 }
 

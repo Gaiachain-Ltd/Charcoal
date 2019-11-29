@@ -25,7 +25,7 @@ public:
 
     Q_INVOKABLE virtual void ping() = 0;
 
-    Q_INVOKABLE virtual void login(const QString &email, const QString &password) = 0;
+    Q_INVOKABLE virtual void login(const QString &login, const QString &password) = 0;
 
     Q_INVOKABLE virtual void getAdditionalData() = 0;
 
@@ -55,36 +55,37 @@ public:
 signals:
     void connectionStateChanged(Enums::ConnectionState connectionState);
 
-    void pingError(const int &code) const;
+    void pingError(const QNetworkReply::NetworkError &code) const;
     void pingSuccess() const;
 
-    void loginError(const int &code) const;
-    void loginFinished(const QJsonObject &userData) const;
+    void loginAttempt(const QString &login, const QString &password) const;
+    void loginError(const QString &login, const int &code) const;
+    void loginFinished(const QString &login, const QJsonObject &userDataObj) const;
 
-    void additionalDataLoadError(const int &code) const;
+    void additionalDataLoadError(const QNetworkReply::NetworkError &code) const;
     void additionalDataLoaded(const QJsonObject &data) const;
 
-    void relationsLoadError(const int &code) const;
+    void relationsLoadError(const QNetworkReply::NetworkError &code) const;
     void relationsLoaded(const QJsonArray &relations) const;
-    void relationsSaveError(const int &code) const;
+    void relationsSaveError(const QString &packageId, const QNetworkReply::NetworkError &code) const;
     void relationsSaved(const QString &packageId) const;
 
-    void entitiesLoadError(const int &code) const;
+    void entitiesLoadError(const QNetworkReply::NetworkError &code) const;
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
     void entitiesLoaded(const QJsonArray &entities) const;
 
-    void entityIdLoadError(const int &code) const;
+    void entityIdLoadError(const QNetworkReply::NetworkError &code) const;
     void entityIdLoaded(const QString &packageId) const;
 
-    void entitySaveError(const int &code) const;
+    void entitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &code) const;
     void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;
 
-    void createdHarvestIdsLoadError(const int &code) const;
+    void createdHarvestIdsLoadError(const QNetworkReply::NetworkError &code) const;
     void createdHarvestIdsLoaded(const QJsonArray &ids) const;
 
-    void unusedLotIdsLoadError(const int &code) const;
+    void unusedLotIdsLoadError(const QNetworkReply::NetworkError &code) const;
     void unusedLotIdsLoaded(const QJsonArray &ids) const;
-    void unusedLotIdCreateError(const int &code) const;
+    void unusedLotIdCreateError(const QNetworkReply::NetworkError &code) const;
     void unusedLotIdCreated(const QString &id) const;
 
 protected:

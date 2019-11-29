@@ -8,6 +8,7 @@ class AbstractSortFilterProxyModel : public QSortFilterProxyModel, public ModelC
 {
     Q_OBJECT
     Q_INTERFACES(ModelChangedExtension)
+    Q_PROPERTY(int size READ rowCount NOTIFY modelChanged)
 
 public:
     AbstractSortFilterProxyModel(QObject *parent = nullptr);

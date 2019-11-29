@@ -1,12 +1,14 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-class QVariant;
+#include <QVariant>
 
 namespace types {
 
-bool canCustomConvert(const QVariant &value, const int toType);
-bool customConvert(QVariant &value, const int toType);
+void convert(QVariant &value, const QMetaType::Type toType);
+
+bool canCustomConvert(const QVariant &value, const QMetaType::Type toType);
+bool customConvert(QVariant &value, const QMetaType::Type toType);
 
 }
 

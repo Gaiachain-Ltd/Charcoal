@@ -7,11 +7,16 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
 import "../items" as Items
+import "../components/dummy" as DummyComponents
 
 Item {
     id: top
 
     function colorForState(state) {
+        if (userManager.offlineMode) {
+            return Style.unknownColor
+        }
+
         switch (state) {
         case Enums.ConnectionState.ConnectionSuccessful:
             return Style.okColor
@@ -24,6 +29,10 @@ Item {
         return Style.unknownColor
     }
     function textForState(state) {
+        if (userManager.offlineMode) {
+            return Strings.offline
+        }
+
         switch (state) {
         case Enums.ConnectionState.ConnectionSuccessful:
             return Strings.online
@@ -43,11 +52,18 @@ Item {
         anchors.fill: parent
         spacing: s(Style.bigMargin)
 
-        Items.ImageItem {
+        Items.NumberImageButton {
             Layout.alignment: Qt.AlignVCenter
 
+            number: localOnlyEventsModel.size
+
             source: Utility.fakeData() ? Style.dummyTestIconUrl : Style.userImgUrl
-            backgroundColor: top.currentColor
+            palette.button: top.currentColor
+
+            disabledColorTint: Style.blank
+            enabled: localOnlyEventsModel.size > 0
+
+            onClicked: pageManager.enter(Enums.Page.WaitingTransactions)
         }
 
         Items.BasicText {
@@ -59,6 +75,8 @@ Item {
 
             font.bold: true
             horizontalAlignment: Qt.AlignLeft
+
+            DummyComponents.ServerStateChanger {}
         }
     }
 }

@@ -18,19 +18,19 @@ public:
         LastColumn
     }; //!!! Keep the lastcolumn, a last entry in the enum
 
-    ProducerModel(QSqlDatabase db, QObject *parent = nullptr);
+    ProducerModel(QObject *parent = nullptr);
 
     int firstColumn() const override;
     int lastColumn() const override;
 
     QHash<int, QByteArray> roleNames() const override;
-    QHash<int, QVariant::Type> roleDatabaseTypes() const override;
-    QHash<int, QVariant::Type> roleAppTypes() const override;
+    QHash<int, QMetaType::Type> roleDatabaseTypes() const override;
+    QHash<int, QMetaType::Type> roleAppTypes() const override;
 
 private:
     static const QHash<int, QByteArray> sc_roleNames;
-    static const QHash<int, QVariant::Type> sc_roleDatabaseTypes;
-    static const QHash<int, QVariant::Type> sc_roleAppTypes;
+    static const QHash<int, QMetaType::Type> sc_roleDatabaseTypes;
+    static const QHash<int, QMetaType::Type> sc_roleAppTypes;
 };
 
 #endif // PRODUCERMODEL_H

@@ -47,6 +47,7 @@ void PageManager::enter(const Enums::Page page, QVariantMap properties, const bo
     m_pageStack.append(page);
     properties.insert(QStringLiteral("page"), static_cast<int>(page));
     emit stackViewPush(toFilePath(page), properties, immediate);
+    emit topPageChanged(topPage());
 }
 
 void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, const bool immediate)
@@ -70,6 +71,7 @@ void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, c
     m_pageStack.append(page);
     properties.insert(QStringLiteral("page"), static_cast<int>(page));
     emit stackViewReplace(toFilePath(page), properties, immediate);
+    emit topPageChanged(topPage());
 }
 
 void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties)
@@ -126,6 +128,7 @@ void PageManager::back(const bool immediate)
     auto poppedPage = m_pageStack.takeLast();
     qCDebug(corePageManager) << "Popped page" << toFilePath(poppedPage);
     emit stackViewPop(immediate);
+    emit topPageChanged(topPage());
 }
 
 bool PageManager::backTo(const Enums::Page page, const QVariantMap properties, const bool immediate)
@@ -142,12 +145,13 @@ bool PageManager::backTo(const Enums::Page page, const QVariantMap properties, c
 
     Enums::Page currentTop = m_pageStack.last();
     while (currentTop != page) {
-        m_pageStack.pop_back();
+        m_pageStack.removeLast();
         currentTop = m_pageStack.last();
     }
 
     qCDebug(corePageManager) << "Going back to page" << toFilePath(page) << "properties:" << properties;
     emit stackViewPopTo(page, properties, immediate);
+    emit topPageChanged(topPage());
     return true;
 }
 
@@ -156,14 +160,24 @@ QString PageManager::getInitialPageUrl() const
     return toFilePath(m_initialPage);
 }
 
+Enums::Page PageManager::topPage() const
+{
+    return m_pageStack.last();
+}
+
 Enums::Page PageManager::homePage() const
 {
     return m_homePage;
 }
 
+bool PageManager::isOnTop(Enums::Page page) const
+{
+    return topPage() == page;
+}
+
 bool PageManager::isOnHomePage() const
 {
-    return isOnTop(m_homePage);
+    return topPage() == m_homePage;
 }
 
 bool PageManager::isBackToHomePage() const
@@ -173,9 +187,4 @@ bool PageManager::isBackToHomePage() const
     }
 
     return m_pageStack.at(m_pageStack.size() - 2) == m_homePage;
-}
-
-bool PageManager::isOnTop(Enums::Page page) const
-{
-    return m_pageStack.last() == page;
 }

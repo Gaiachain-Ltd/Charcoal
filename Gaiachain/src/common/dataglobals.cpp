@@ -2,6 +2,11 @@
 
 #include "../helpers/utility.h"
 
+const QList<Enums::SupplyChainAction> DataGlobals::sc_supplyChainOfflineActions = {
+    Enums::SupplyChainAction::Harvest,
+    Enums::SupplyChainAction::GrainProcessing
+};
+
 const QHash<Enums::SupplyChainAction, Enums::PackageType> DataGlobals::sc_supplyChainActionPackageType = {
     { Enums::SupplyChainAction::Harvest, Enums::PackageType::Harvest },
     { Enums::SupplyChainAction::GrainProcessing, Enums::PackageType::Harvest },
@@ -121,6 +126,11 @@ QList<Enums::SupplyChainAction> DataGlobals::availableActions()
     return availableList;
 }
 
+QList<Enums::SupplyChainAction> DataGlobals::availableOfflineActions()
+{
+    return sc_supplyChainOfflineActions;
+}
+
 QVariantList DataGlobals::userActionsQml(const Enums::UserType &user)
 {
     return Utility::toVariantList(userActions(user), QMetaType::Int);
@@ -147,6 +157,12 @@ QVariantList DataGlobals::availablePackageTypesQml()
 QVariantList DataGlobals::availableActionsQml()
 {
     static auto variantList = Utility::toVariantList(availableActions(), QMetaType::Int);
+    return variantList;
+}
+
+QVariantList DataGlobals::availableOfflineActionsQml()
+{
+    static auto variantList = Utility::toVariantList(availableOfflineActions(), QMetaType::Int);
     return variantList;
 }
 

@@ -13,8 +13,6 @@ void ModelChangedExtension::setupConnections(const QObject *iObject)
                      iObject, SIGNAL(modelChanged()) );
     QObject::connect(iObject, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
                      iObject, SIGNAL(modelChanged()) );
-    QObject::connect(iObject, SIGNAL(layoutChanged(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint)),
-                     iObject, SIGNAL(modelChanged()) );
     QObject::connect(iObject, SIGNAL(modelReset()),
                      iObject, SIGNAL(modelChanged()) );
 }

@@ -4,9 +4,11 @@
 #include "abstractmanager.h"
 
 #include <QSqlDatabase>
+#include <QNetworkReply>
 #include <QStringListModel>
 
 #include "../models/existsquerymodel.h"
+#include "../models/sqltablemodel.h"
 
 #include "../models/producermodel.h"
 #include "../models/namemodel.h"
@@ -25,6 +27,7 @@
 #include "../models/packagetypeproxymodel.h"
 #include "../models/packagetypeidsproxymodel.h"
 #include "../models/createdharvestidsproxymodel.h"
+#include "../models/localonlyproxymodel.h"
 
 #include "../common/userdata.h"
 #include "../common/packagedata.h"
@@ -56,6 +59,8 @@ public:
     Q_INVOKABLE void addAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                const QVariantMap &properties, const QByteArray &codeData = {});
 
+    Q_INVOKABLE void sendOfflineActions();
+
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     Q_INVOKABLE void fetchCountEvents(int count, const QDateTime &from, const QString &keyword = {});
@@ -80,6 +85,7 @@ signals:
 
 public slots:
     void onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
+    void onActionAddError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error);
 
     void onDataRequestError();
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
@@ -91,30 +97,40 @@ public slots:
 
 private:
     QSqlDatabase m_db;
-    int m_dataRequestsCount = 0;
-
     UserData m_userData;
 
-    QScopedPointer<ExistsQueryModel> m_existsQueryModel;
+    int m_dataRequestsCount = 0;
+    QMultiMap<QString, Enums::SupplyChainAction> m_addActionRequestSent;
 
-    // source models
-    QScopedPointer<ProducerModel> m_producersSourceModel;
-    QScopedPointer<NameModel> m_buyersSourceModel;
-    QScopedPointer<NameModel> m_transportersSourceModel;
-    QScopedPointer<NameModel> m_destinationsSourceModel;
+    // database models
+    QScopedPointer<SqlTableModel> m_eventsDatabaseModel;
+    QScopedPointer<SqlTableModel> m_relationsDatabaseModel;
+    QScopedPointer<SqlTableModel> m_unusedIdsDatabaseModel;
 
-    QScopedPointer<EventModel> m_eventsSourceModel;
-    QScopedPointer<RelationModel> m_relationsSourceModel;
-    QScopedPointer<UnusedIdsModel> m_unusedIdsSourceModel;
+    QScopedPointer<SqlTableModel> m_producersDatabaseModel;
+    QScopedPointer<SqlTableModel> m_buyersDatabaseModel;
+    QScopedPointer<SqlTableModel> m_transportersDatabaseModel;
+    QScopedPointer<SqlTableModel> m_destinationsDatabaseModel;
+
+    ExistsQueryModel m_existsQueryModel;
+
+    // source
+    EventModel m_eventsSourceModel;
+    RelationModel m_relationsSourceModel;
+
+    UnusedIdsModel m_unusedLotIdsModel;
+
+    ProducerModel m_producersModel;
+    NameModel m_buyersModel;
+    NameModel m_transportersModel;
+    NameModel m_destinationsModel;
 
     // proxy models
-    PackageDataProxyModel m_packageDataModel;
-
-    CreatedHarvestIdsProxyModel m_createdHarvestIdsModel;
-    QIdentityProxyModel m_unusedLotIdsModel;
-
     CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
+    CreatedHarvestIdsProxyModel m_createdHarvestIdsModel;
     PackageTypeIdsProxyModel m_packageTypeCooperativeIdsModel;
+
+    LocalOnlyProxyModel m_localOnlyEventsModel;
 
     // TODO: if still needed in final implementation compose as extensions instead of single models
     CooperativeEventsProxyModel m_cooperativeFilteringEventsModel;
@@ -129,12 +145,8 @@ private:
     PackageTypeProxyModel m_packagesTypeSearchEventsModel;
     LatestRangeEventsProxyModel m_latestRangePackagesTypeSearchEventsModel;
 
+    PackageDataProxyModel m_packageDataModel;
     RelationsListProxyModel m_relationsListModel;
-
-    QIdentityProxyModel m_producersModel;
-    QIdentityProxyModel m_buyersModel;
-    QIdentityProxyModel m_transportersModel;
-    QIdentityProxyModel m_destinationsModel;
 
     void updateCooperativeId();
 
@@ -157,7 +169,7 @@ private:
     Gaia::ModelEntry processUnusedLotId(const QJsonValue &value);
 
     void removeExistingProducers(Gaia::ModelData &modelData);
-    void removeExistingNameData(Gaia::ModelData &modelData, AbstractModel* model);
+    void removeExistingNameData(Gaia::ModelData &modelData, AbstractModel* model, const QLatin1String &tableName);
     void removeExistingEvents(Gaia::ModelData &modelData);
     void removeExistingRelations(Gaia::ModelData &modelData, bool fullCheck);
     void removeExistingUnusedLotIds(Gaia::ModelData &modelData);

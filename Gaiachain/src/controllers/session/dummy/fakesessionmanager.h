@@ -6,7 +6,6 @@
 class FakeSessionManager : public AbstractSessionManager
 {
     Q_OBJECT
-
 public:
     explicit FakeSessionManager(QObject *parent = nullptr);
 
@@ -36,9 +35,6 @@ public:
 
     Q_INVOKABLE void getUnusedLotIds() override;
     Q_INVOKABLE void postUnusedLotId() override;
-
-private:
-    FakeServer m_fakeServer;
 };
 
 #endif // FAKESESSIONMANAGER_H

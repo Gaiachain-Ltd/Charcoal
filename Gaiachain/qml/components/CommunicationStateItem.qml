@@ -44,8 +44,7 @@ Item {
             source: Style.refreshImgUrl
             palette.button: Style.unknownColor
 
-            enabled: !communicationInProgress
-            onClicked: refreshData()    // TODO retry server communication here
+            onClicked: retryConnection()
         }
     }
 }

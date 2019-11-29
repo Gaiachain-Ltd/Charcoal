@@ -6,19 +6,20 @@
 
 #include "../common/types.h"
 
-AbstractModel::AbstractModel(const QLatin1String &tableName, QSqlDatabase db, QObject *parent)
-    : QSqlTableModel(parent, db)
-{
-    ModelChangedExtension::setupConnections(this);
-    setTable(tableName);
-    setEditStrategy(QSqlTableModel::OnRowChange);
+AbstractModel::AbstractModel(QObject *parent)
+    : AbstractReadModel(parent)
+{}
 
-    initialize();
+void AbstractModel::setSourceModel(QSqlTableModel *sourceModel)
+{
+    m_writableModel = QPointer<QSqlTableModel>(sourceModel);
+    AbstractReadModel::setSourceModel(sourceModel);
 }
 
-int AbstractModel::firstColumn() const
+void AbstractModel::setSourceModel(QSqlQueryModel *sourceModel)
 {
-    return 0;
+    m_writableModel.clear();
+    AbstractReadModel::setSourceModel(sourceModel);
 }
 
 QList<int> AbstractModel::editableRoles() const
@@ -34,7 +35,7 @@ bool AbstractModel::setData(const QModelIndex &index, const QVariant &value, int
         }
     } else {
         if (index.column() < firstColumn() || index.column() >= lastColumn()) {
-            return QSqlTableModel::setData(index, value);
+            return QIdentityProxyModel::setData(index, value);
         }
     }
 
@@ -42,60 +43,18 @@ bool AbstractModel::setData(const QModelIndex &index, const QVariant &value, int
     auto updatedIndex = this->index(index.row(), column, index.parent());
 
     auto updatedValue = value;
-    auto targetType = static_cast<int>(roleDatabaseTypes().value(roleShift(column)) );
-    if (!types::canCustomConvert(value, targetType)) {
-        if (!value.canConvert(targetType)) {
-            qCWarning(dataModels) << "Error while setting data. Cannot convert column data:" << QString(roleNames().value(roleShift(column)) );
-        } else {
-            updatedValue.convert(targetType);
-        }
-    } else {
-        types::customConvert(updatedValue, targetType);
-    }
+    types::convert(updatedValue, roleDatabaseTypes().value(roleShift(column)) );
 
-    return QSqlTableModel::setData(updatedIndex, updatedValue);
+    return QIdentityProxyModel::setData(updatedIndex, updatedValue);
 }
 
-QVariant AbstractModel::data(const QModelIndex &index, int role) const
+void AbstractModel::appendData(const Gaia::ModelData &modelData)
 {
-    if (role >= Qt::UserRole) {
-        if (columnShift(role) < firstColumn() || columnShift(role) >= lastColumn()) {
-            return {};
-        }
-    } else {
-        if (index.column() < firstColumn() || index.column() >= lastColumn()) {
-            return QSqlTableModel::data(index);
-        }
+    if (m_writableModel.isNull()) {
+        qCWarning(dataModels) << "Trying to append data into an empty model!";
+        return;
     }
 
-
-    auto column = role >= Qt::UserRole ? columnShift(role) : index.column();
-    auto updatedIndex = this->index(index.row(), column, index.parent());
-
-    auto value = QSqlTableModel::data(updatedIndex);
-    if (!value.isNull()) {
-        auto targetType = static_cast<int>(roleAppTypes().value(roleShift(column)));
-        if (!types::canCustomConvert(value, targetType)) {
-            if (!value.canConvert(targetType)) {
-                qCWarning(dataModels) << "Error while getting data. Cannot convert column data:" << QString(roleNames().value(roleShift(column)));
-            } else {
-                value.convert(targetType);
-            }
-        } else {
-            types::customConvert(value, targetType);
-        }
-    }
-
-    return value;
-}
-
-void AbstractModel::initialize()
-{
-    select();
-}
-
-void AbstractModel::appendData(const Gaia::ModelData &inData)
-{
     const int FirstColumn = firstColumn();
     const int LastColumn = lastColumn();
     const int ColumnCount = LastColumn - FirstColumn;
@@ -103,33 +62,53 @@ void AbstractModel::appendData(const Gaia::ModelData &inData)
     auto record = QSqlRecord{};
     for (auto column = FirstColumn; column < LastColumn; ++column) {
         auto role = roleShift(column);
-        record.append(QSqlField{ roleNames().value(role), roleDatabaseTypes().value(role) });
+        record.append(QSqlField{ roleNames().value(role), static_cast<QVariant::Type>(roleDatabaseTypes().value(role)) });
     }
 
-    for (const auto &dataRow : inData) {
-        if (dataRow.count() > ColumnCount) {
-            qCWarning(dataModels) << "Wrong input fields count:" << dataRow.count() << " > " << ColumnCount;
+    for (const auto &entryData : modelData) {
+        if (entryData.count() > ColumnCount) {
+            qCWarning(dataModels) << "Wrong input fields count:" << entryData.count() << " > " << ColumnCount;
             break;
         }
 
-        for (auto column = FirstColumn; (column < LastColumn && (column - FirstColumn) < dataRow.count()); ++column) {
+        for (auto column = FirstColumn; (column < LastColumn && (column - FirstColumn) < entryData.count()); ++column) {
             auto name = roleNames().value(roleShift(column));
-            auto value = dataRow.value(column - FirstColumn);
+            auto value = entryData.value(column - FirstColumn);
+            types::convert(value, roleDatabaseTypes().value(roleShift(column)) );
+
             record.setValue(QString::fromLatin1(name), value);
         }
 
-        if (!insertRecord(rowCount(), record)) {
-            qCWarning(dataModels) << "Error while inserting data:" << lastError().text();
+        if (!m_writableModel->insertRecord(rowCount(), record)) {
+            qCWarning(dataModels) << "Error while inserting data:" << m_writableModel->lastError().text();
         }
     }
 }
 
-int AbstractModel::columnShift(const int &role) const
+void AbstractModel::updateData(const Gaia::ModelEntry &searchEntryData, const Gaia::ModelEntryInfo &updateEntryData)
 {
-    return role - Qt::UserRole;
+    if (m_writableModel.isNull()) {
+        qCWarning(dataModels) << "Trying to append data into an empty model!";
+        return;
+    }
+
+    for (const auto &dataIndex : find(searchEntryData)) {
+        for (const auto &role : updateEntryData.keys()) {
+            setData(dataIndex, updateEntryData.value(role), role);
+        }
+        submit();
+    }
 }
 
-int AbstractModel::roleShift(const int &column) const
+void AbstractModel::removeData(const Gaia::ModelEntry &entryData)
 {
-    return column + Qt::UserRole;
+    if (m_writableModel.isNull()) {
+        qCWarning(dataModels) << "Trying to append data into an empty model!";
+        return;
+    }
+
+    for (const auto &dataIndex : find(entryData)) {
+        removeRow(dataIndex.row());
+        submit();
+    }
 }

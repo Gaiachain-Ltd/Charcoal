@@ -10,7 +10,7 @@ namespace Tags {
     const QLatin1String role = QLatin1String("role");
     const QLatin1String cooperativeId = QLatin1String("cooperative_id");
     const QLatin1String cooperativeName = QLatin1String("cooperative_name");
-    const QLatin1String email = QLatin1String("email");
+    const QLatin1String login = QLatin1String("email");
     const QLatin1String password = QLatin1String("password");
     const QLatin1String id = QLatin1String("id");
     const QLatin1String packageId = QLatin1String("pid");

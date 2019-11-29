@@ -10,7 +10,7 @@ class AuthRequest : public BaseRequest
     Q_OBJECT
 public:
     AuthRequest();
-    AuthRequest(const QString &email, const QString &password);
+    AuthRequest(const QString &login, const QString &password);
 
     bool isTokenRequired() const override;
 };

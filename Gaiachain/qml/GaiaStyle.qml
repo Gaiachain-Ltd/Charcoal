@@ -154,6 +154,7 @@ QtObject {
     // control
     readonly property int controlDefaultBorderWidth: 1
     readonly property int controlBoldBorderWidth: 2
+    readonly property int controlBoldestBorderWidth: 3
 
     // input
     readonly property int inputHeight: 90
@@ -167,6 +168,7 @@ QtObject {
     readonly property int buttonImageHeight: 95
     readonly property int buttonImageBigHeight: 125
     readonly property int buttonImageMargin: 20
+    readonly property int buttonNumberRadius: middleMargin
 
     // Other
     readonly property int animationDuration: 300

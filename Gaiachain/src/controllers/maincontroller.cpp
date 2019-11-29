@@ -21,11 +21,16 @@
 #ifdef USE_COMBOBOX
 #include "session/dummy/fakedatapopulator.h"
 #endif
+#ifdef FAKE_DATA
+#include "session/dummy/fakeserverstate.h"
+#endif
 
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
     QLocale::setDefault(QLocale("en_GB"));
+
+    qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
 
 #ifdef Q_OS_ANDROID
     // check for permissions before opening scanner page to load camera faster
@@ -45,6 +50,7 @@ void MainController::setupConnections()
 
     connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getInitialData);
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
+    connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
 
     connect(&m_userManager, &UserManager::userDataChanged, &m_dataManager, &DataManager::updateUserData);
@@ -67,6 +73,22 @@ void MainController::setupDataConnections()
             &m_sessionManager, &AbstractSessionManager::postNewEntity);
     connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
             &m_dataManager, &DataManager::onActionAdded);
+    connect(&m_sessionManager, &AbstractSessionManager::entitySaveError,
+            &m_dataManager, &DataManager::onActionAddError);
+
+    connect(&m_sessionManager, &AbstractSessionManager::connectionStateChanged,
+            &m_dataManager, [dataManager = &m_dataManager, userManager = &m_userManager](Enums::ConnectionState connectionState) {
+        if (connectionState == Enums::ConnectionState::ConnectionSuccessful
+                && !userManager->isOfflineMode()) {
+            dataManager->sendOfflineActions();
+        }
+    });
+    connect(&m_userManager, &UserManager::loggedIn,
+            &m_dataManager, [dataManager = &m_dataManager, userManager = &m_userManager]() {
+        if (!userManager->isOfflineMode()) {
+            dataManager->sendOfflineActions();
+        }
+    });
 
     connect(&m_dataManager, qOverload<const QDateTime &, const QDateTime &, const QString &>(&DataManager::eventsInfoNeeded),
             &m_sessionManager, qOverload<const QDateTime &, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
@@ -141,6 +163,9 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // add context properties
 #ifdef USE_COMBOBOX
     engine.rootContext()->setContextProperty(QStringLiteral("fakeLogins"), FakeDataPopulator::availableLogins());
+#endif
+#ifdef FAKE_DATA
+    engine.rootContext()->setContextProperty(QStringLiteral("fakeServer"), &FakeServerState::instance());
 #endif
 
     // setup other components

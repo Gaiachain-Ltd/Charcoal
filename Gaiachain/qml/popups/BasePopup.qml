@@ -46,7 +46,13 @@ Popups.GenericPopup
             spacing: s(Style.bigMargin)
 
             Repeater {
+                id: buttonsRepeater
                 model: buttons
+
+                function isAccept(action) {
+                    return (action === Enums.PopupAction.Accept) ||
+                        (action === Enums.PopupAction.Yes)
+                }
 
                 Items.GenericButton {
                     Layout.fillWidth: true
@@ -54,12 +60,12 @@ Popups.GenericPopup
 
                     palette {
                         buttonText: Style.textSecondaryColor
-                        button: modelData.action === Enums.PopupAction.Accept ? Style.buttonPopupAcceptSecondaryColor : Style.buttonPopupRejectColor
+                        button: buttonsRepeater.isAccept(modelData.action) ? Style.buttonPopupAcceptSecondaryColor : Style.buttonPopupRejectColor
                     }
 
                     text: modelData.text
 
-                    onClicked: pageManager.sendAction(modelData.Action)
+                    onClicked: pageManager.sendAction(modelData.action)
 
                     Component.onCompleted: {
                         buttonsRow.buttonHeight = implicitHeight

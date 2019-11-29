@@ -115,7 +115,7 @@ BasePage {
     Connections
     {
         target: pageManager
-        enabled: pageManager.isOnTop(page)
+        enabled: Number(pageManager.topPage) === page
         onPopupAction: {
             switch(action) {
             case Enums.PopupAction.TryAgain:

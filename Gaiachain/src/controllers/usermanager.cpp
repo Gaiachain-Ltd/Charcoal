@@ -18,21 +18,6 @@ UserManager::UserManager(QObject *parent)
             this, [this](bool loggedId) { if (loggedId) { emit loggedIn(); } });
 }
 
-bool UserManager::isLoggedIn() const
-{
-    return !m_userData.isAnonymous();
-}
-
-QString UserManager::getLogin() const
-{
-    return m_userData.email;
-}
-
-UserData UserManager::getUserData() const
-{
-    return m_userData;
-}
-
 void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("userManager"), this);
@@ -41,24 +26,96 @@ void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
 void UserManager::logOut()
 {
     if (isLoggedIn()) {
-        m_userData = {};
+        setLogin({});
+        updateUserData({});
 
         emit tokenChanged({});
-        emit userDataChanged(m_userData);
         emit loggedInChanged(false);
     }
 }
 
-void UserManager::readLoginData(const QJsonObject &userDataObj)
+bool UserManager::offlineAvailable(const QString &login) const
 {
-    m_userData.email = userDataObj.value(Tags::email).toString();
-    m_userData.cooperativeId = userDataObj.value(Tags::cooperativeId).toString();
-    m_userData.cooperativeName = userDataObj.value(Tags::cooperativeName).toString();
+    return m_offlineHandler.hasUser(login);
+}
+
+bool UserManager::offlineLogin(const QString &login, const QString &password)
+{
+    if (m_offlineHandler.canLogin(login, password)) {
+        setLogin(login);
+        updateUserData(m_offlineHandler.getUser(login));
+        setOfflineMode(true);
+        emit loggedInChanged(true);
+        return true;
+    }
+    return false;
+}
+
+bool UserManager::isLoggedIn() const
+{
+    return !m_userData.isAnonymous();
+}
+
+QString UserManager::getLogin() const
+{
+    return m_login;
+}
+
+UserData UserManager::getUserData() const
+{
+    return m_userData;
+}
+
+bool UserManager::isOfflineMode() const
+{
+    return m_offlineMode;
+}
+
+void UserManager::handleLoginAttempt(const QString &login, const QString &password)
+{
+    m_offlineHandler.putTemporaryPassword(login, password);
+}
+
+void UserManager::readLoginData(const QString &login, const QJsonObject &userDataObj)
+{
+    setOfflineMode(false);
+    m_offlineHandler.acknowledgePassword(login);
+
+    setLogin(login);
+
+    auto userData = UserData{};
+    userData.email = userDataObj.value(Tags::login).toString();
+    userData.cooperativeId = userDataObj.value(Tags::cooperativeId).toString();
+    userData.cooperativeName = userDataObj.value(Tags::cooperativeName).toString();
 
     const auto role = userDataObj.value(Tags::role).toString();
-    m_userData.type = RequestsHelper::userTypeFromString(role);
+    userData.type = RequestsHelper::userTypeFromString(role);
 
-    emit loggedInChanged(true);
+    updateUserData(userData);
+    m_offlineHandler.putUser(m_login, userData);
+
     emit tokenChanged(userDataObj.value(Tags::token).toString());
-    emit userDataChanged(m_userData);
+    emit loggedInChanged(true);
+}
+
+void UserManager::setOfflineMode(bool offline)
+{
+    if (m_offlineMode != offline) {
+        m_offlineMode = offline;
+        emit offlineModeChanged(offline);
+    }
+}
+
+void UserManager::setLogin(const QString &login)
+{
+    if (m_login != login) {
+        m_login = login;
+        emit loginChanged(login);
+    }
+}
+
+void UserManager::updateUserData(const UserData &userData)
+{
+    m_userData = userData;
+    emit userDataChanged(userData);
 }

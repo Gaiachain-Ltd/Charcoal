@@ -30,6 +30,11 @@ RequestsHelper &RequestsHelper::instance()
     return rh;
 }
 
+QNetworkReply::NetworkError RequestsHelper::authenticationError()
+{
+    return QNetworkReply::NetworkError::AuthenticationRequiredError;
+}
+
 bool RequestsHelper::isNetworkError(const QNetworkReply::NetworkError &error)
 {
     switch (error) {

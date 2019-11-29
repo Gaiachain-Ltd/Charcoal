@@ -40,7 +40,7 @@ linux_build:
     QT_PATH: "/home/tools/Qt-OpenSource/5.12.6/gcc_64"
   script:
     - cd $CI_PROJECT_DIR
-    - $QT_PATH/bin/qmake
+    - $QT_PATH/bin/qmake QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 

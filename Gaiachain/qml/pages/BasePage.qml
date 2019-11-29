@@ -42,7 +42,16 @@ Items.GenericPanel
         pageManager.closePopup()
     }
 
+    function retryConnection() {
+        if (userManager.offlineMode) {  // for offline always only ping
+            sessionManager.ping()
+        } else {
+            refreshData()
+        }
+    }
+
     function refreshData() {
+        // possibly redefined in each page
         sessionManager.ping()
     }
 
@@ -58,11 +67,31 @@ Items.GenericPanel
         Layout.fillWidth: true
     }
 
-    // TODO wait for real server answer or error
-    Timer {
-        id: refreshDataTimer
-        interval: Style.requestOverlayInterval
-        onTriggered: hideOverlay()
+    Connections {
+        target: sessionManager
+        enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode
+
+        onPingError: {
+            pageManager.openPopup(Enums.Popup.Information,
+                                  { "text": Strings.serverConnectionError })
+        }
+        onPingSuccess: {
+            pageManager.openPopup(Enums.Popup.YesNoQuestion,
+                                  { "text": Strings.onlineLogoutQuestion })
+        }
+    }
+    Connections {
+        target: pageManager
+        enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode
+
+        onPopupAction: {
+            switch(action) {
+            case Enums.PopupAction.Yes:
+                header.logout()
+                break
+            default:
+            }
+        }
     }
 
     Connections {
