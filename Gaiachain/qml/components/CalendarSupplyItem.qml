@@ -14,7 +14,6 @@ Components.CalendarItem {
     property date selectedDate
 
     currentMonth: selectedDate.getMonth()
-    isCurrentMonth: (selectedDate.getMonth() === model.month)
     isToday: (selectedDate.getDate() === model.day &&
               selectedDate.getMonth() === model.month &&
               selectedDate.getFullYear() === model.year)

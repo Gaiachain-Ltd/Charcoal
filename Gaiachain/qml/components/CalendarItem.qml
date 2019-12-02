@@ -18,7 +18,7 @@ Item {
     property Item gridItem
     property int currentMonth: model.month
 
-    property bool isCurrentMonth: ((new Date).getMonth() === model.month)
+    property bool isCurrentMonth: (currentMonth === model.month)
     property bool isToday: model.today && isCurrentMonth
 
     implicitHeight: s(Style.calendarDayMinHeight)
