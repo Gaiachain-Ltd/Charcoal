@@ -90,7 +90,7 @@ private:
     QVariantMap generateReceptionProperties(const QDate &processingDate, const QDate &actionDate) const;
     QVariantMap generateBaggingProperties(const QStringList &harvestIds) const;
     QVariantMap generateLotCreationProperties() const;
-    QVariantMap generateWarehouseTransportProperties() const;
+    QVariantMap generateWarehouseTransportProperties(const QDate &transportDate) const;
     QVariantMap generateExportReceptionProperties() const;
 
     void addHarvestRelation(const QString &sacId, const QStringList &harvestIds);

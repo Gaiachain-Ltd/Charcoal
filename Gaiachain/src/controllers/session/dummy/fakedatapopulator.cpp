@@ -461,7 +461,8 @@ std::tuple<QString, QVariantMap> FakeDataPopulator::generateHarvestAction(const 
         { PackageDataProperties::ProducerId, producer.value(Tags::id) },
         { PackageDataProperties::ProducerName, producer.value(Tags::name) },
         { PackageDataProperties::Village, producer.value(Tags::village) },
-        { PackageDataProperties::ParcelCode, parcel }
+        { PackageDataProperties::ParcelCode, parcel },
+        { PackageDataProperties::HarvestDate, harvestDate }
     };
 
     return std::make_tuple(harvestId, properties);
@@ -509,11 +510,12 @@ QVariantMap FakeDataPopulator::generateLotCreationProperties() const
     return {};
 }
 
-QVariantMap FakeDataPopulator::generateWarehouseTransportProperties() const
+QVariantMap FakeDataPopulator::generateWarehouseTransportProperties(const QDate &transportDate) const
 {
     return {
         { PackageDataProperties::Transporter, randomTransporter() },
         { PackageDataProperties::Destination, randomDestination() },
+        { PackageDataProperties::TransportDate, transportDate }
     };
 }
 
@@ -682,7 +684,7 @@ void FakeDataPopulator::generateCooperativeData(const QVariantHash &cooperative,
         if (actionDate > endDate) {
             continue;
         }
-        addEvent(id, action, QDateTime(actionDate, randomTime()), generateWarehouseTransportProperties(), cooperative);
+        addEvent(id, action, QDateTime(actionDate, randomTime()), generateWarehouseTransportProperties(actionDate), cooperative);
 
         // export reception
         action = Enums::SupplyChainAction::ExportReception;

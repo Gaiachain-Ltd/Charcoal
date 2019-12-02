@@ -19,7 +19,7 @@ Components.PackageDataDetails {
         const data = [
            { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Transporter]) },
            { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Destination]) },
-           { "headerValue": Strings.dateOfTransport,            "inputValue": emptyIfNotIncludesAction(Enums.SupplyChainAction.WarehouseTransport) }
+           { "headerValue": Strings.dateOfTransport,            "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.TransportDate]) }
        ]
 
         for (var i = 0; i < data.length; ++i) {
