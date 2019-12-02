@@ -9,6 +9,7 @@ import "../items" as Items
 
 Item {
     id: top
+
     implicitHeight: topRow.implicitHeight
     implicitWidth: topRow.implicitWidth
 
@@ -53,13 +54,13 @@ Item {
         id: topRow
         anchors {
             fill: parent
-            margins: s(Style.hugeMargin)
+            leftMargin: s(Style.bigMargin)
+            rightMargin: s(Style.bigMargin)
         }
 
         Repeater {
             id: packagesFilteringRepeater
             model: packageTypeActionsModel
-
 
            Items.RectCheckBox {
                Layout.fillWidth: true

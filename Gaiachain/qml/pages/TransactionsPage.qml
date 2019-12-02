@@ -61,7 +61,9 @@ BasePage {
         spacing: s(Style.smallMargin)
         anchors {
             fill: parent
-            margins: s(Style.bigMargin)
+            leftMargin: s(Style.bigMargin)
+            rightMargin: s(Style.bigMargin)
+            topMargin: s(Style.bigMargin)
         }
 
         Items.GenericInput {
