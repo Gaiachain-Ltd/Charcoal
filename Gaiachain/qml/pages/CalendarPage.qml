@@ -39,7 +39,7 @@ CalendarPageBase {
     }
 
     ColumnLayout {
-        spacing: s(Style.hugeMargin) * 3
+        spacing: s(Style.bigMargin) * 1.5
 
         Components.CalendarPackageEventsBars {
             Layout.fillWidth: true
@@ -52,7 +52,7 @@ CalendarPageBase {
 
             Layout.fillWidth: true
             Layout.leftMargin: s(Style.hugeMargin) * 2
-            Layout.bottomMargin: s(Style.hugeMargin)
+            Layout.bottomMargin: s(Style.bigMargin) * 1.5
 
             enabled: userManager.loggedIn
             opacity: userManager.loggedIn ? 1 : 0
