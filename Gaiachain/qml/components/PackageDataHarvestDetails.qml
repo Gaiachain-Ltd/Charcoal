@@ -19,7 +19,7 @@ Components.PackageDataDetails {
            { "headerValue": Strings.producerIdNumber,     "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.ProducerId]) },
            { "headerValue": Strings.village,              "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Village]) },
            { "headerValue": Strings.parcelCode,           "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.ParcelCode]) },
-           { "headerValue": Strings.harvestDate,          "inputValue": emptyIfNotIncludesAction(Enums.SupplyChainAction.Harvest) },
+           { "headerValue": Strings.harvestDate,          "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
            { "headerValue": Strings.breakingDate,         "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) }
        ]
 

@@ -20,6 +20,7 @@ const QString PackageDataProperties::Weights = QStringLiteral("weights");
 const QString PackageDataProperties::Transporter = QStringLiteral("transporter");
 const QString PackageDataProperties::Destination = QStringLiteral("destination");
 const QString PackageDataProperties::Weight = QStringLiteral("weight");
+const QString PackageDataProperties::TransportDate = QStringLiteral("transportDate");
 
 PackageDataProperties &PackageDataProperties::instance() {
     static PackageDataProperties pdp;

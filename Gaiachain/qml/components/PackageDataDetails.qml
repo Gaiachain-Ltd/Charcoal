@@ -39,11 +39,6 @@ Item {
         return date ? (new Date(date)).toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy")) : Strings.empty
     }
 
-    function emptyIfNotIncludesAction(action) {
-        return packageData.actions().includes(action) ? Helper.convertTimestampToDate(Number(packageData.actionDate(Number(action))))
-                                                      : Strings.empty
-    }
-
     ColumnLayout {
         id: topLayout
 
