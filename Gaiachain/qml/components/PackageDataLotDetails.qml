@@ -21,8 +21,8 @@ Components.PackageDataDetails {
         }
 
         const data = [
-           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Transporter]) },
-           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Destination]) },
+           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.Transporter]) },
+           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.Destination]) },
            { "headerValue": Strings.transportDate,              "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.TransportDate]) }
        ]
 

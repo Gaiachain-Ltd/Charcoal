@@ -108,6 +108,7 @@ QtObject {
     readonly property string parcelCode: qsTr("Parcel code")
     readonly property string harvestDate: qsTr("Harvest date")
     readonly property string breakingDate: qsTr("Breaking date")
+    readonly property string estimatedBeensVolume: qsTr("Estimated volume on fresh beans kg")
 
     readonly property string organicCocoaTransporter: qsTr("Organic cocoa transporter")
     readonly property string destination: qsTr("Destination")
@@ -119,7 +120,6 @@ QtObject {
     readonly property string notRequired: qsTr("not required")
 
     readonly property string endFermentationDate: qsTr("End of fermentation date")
-    readonly property string estimatedVolume: qsTr("Estimated volume on fresh beans kg")
     readonly property string typeHere: qsTr("Type here")
 
     readonly property string receptionAtSection: qsTr("Reception at the section")
