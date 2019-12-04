@@ -14,6 +14,7 @@
 
 Q_DECLARE_LOGGING_CATEGORY(dataTypes)
 Q_DECLARE_LOGGING_CATEGORY(dataModels)
+Q_DECLARE_LOGGING_CATEGORY(dataRequests)
 
 namespace Gaia {
     using ModelEntryInfo = QMap<int, QVariant>;

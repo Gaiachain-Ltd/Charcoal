@@ -14,6 +14,10 @@ Components.PackageDataDetails {
     id: top
 
     onPackageDataChanged: {
+        if (typeof(top.packageData) === "undefined") {
+            return
+        }
+
         const data = [
            { "headerValue": Strings.nameOfProducer,       "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.ProducerName]) },
            { "headerValue": Strings.producerIdNumber,     "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.ProducerId]) },
@@ -23,6 +27,7 @@ Components.PackageDataDetails {
            { "headerValue": Strings.breakingDate,         "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) }
        ]
 
+        detailsModel.clear()
         for (var i = 0; i < data.length; ++i) {
             detailsModel.append(data[i])
         }

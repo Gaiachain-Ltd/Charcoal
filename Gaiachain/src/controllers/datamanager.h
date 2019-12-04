@@ -3,56 +3,31 @@
 
 #include "abstractmanager.h"
 
-#include <QSqlDatabase>
-#include <QNetworkReply>
-#include <QStringListModel>
+#include <QThread>
 
-#include "../models/existsquerymodel.h"
-#include "../models/sqltablemodel.h"
-
-#include "../models/producermodel.h"
-#include "../models/namemodel.h"
-
-#include "../models/eventmodel.h"
-#include "../models/relationmodel.h"
-#include "../models/unusedidsmodel.h"
-
-#include "../models/selectedidsproxymodel.h"
-#include "../models/daterangeproxymodel.h"
-#include "../models/latestrangeeventsproxymodel.h"
-#include "../models/latesteventsproxymodel.h"
-#include "../models/packagetypeeventsproxymodel.h"
-#include "../models/searcheventsproxymodel.h"
-#include "../models/cooperativeeventsproxymodel.h"
-#include "../models/packagetypeproxymodel.h"
-#include "../models/packagetypeidsproxymodel.h"
-#include "../models/packagelastactionproxymodel.h"
-#include "../models/localonlyproxymodel.h"
+#include "datamodelsmanager.h"
+#include "datarequestsmanager.h"
 
 #include "../common/userdata.h"
-#include "../common/packagedata.h"
-#include "../models/packagedataproxymodel.h"
-#include "../models/relationslistproxymodel.h"
 
 class DataManager : public AbstractManager
 {
     Q_OBJECT
-    Q_PROPERTY(bool collectingData READ collectingData NOTIFY collectingDataChanged)
 
 public:
     DataManager(QObject *parent = nullptr);
+    ~DataManager() override;
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void setupModels(QSqlDatabase db);
 
     void updateUserData(const UserData &userData);
 
-    bool collectingData() const;
-
-    void setupModels(QSqlDatabase db);
+    bool processing() const override;
 
     Q_INVOKABLE void getInitialData();
 
-    Q_INVOKABLE PackageData getPackageData(const QString &packageId) const;
+    Q_INVOKABLE void getPackageData(const QString &packageId) const;
 
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                const QVariantMap &properties, const QByteArray &codeData = {});
@@ -69,7 +44,7 @@ public:
     Q_INVOKABLE void fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction);
 
 signals:
-    void collectingDataChanged(bool collectingData) const;
+    void collectingDataChanged(bool processing) const;
 
     void addActionRequest(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                           const QVariantMap &properties, const QByteArray &codeData = {});
@@ -85,12 +60,12 @@ signals:
     void eventsNeeded(const QStringList &ids) const;
     void relationsNeeded(const QStringList &ids) const;
 
+    void packageData(const PackageData &packageData) const;
 
 public slots:
     void onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
     void onActionAddError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error);
 
-    void onDataRequestError();
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);
     void onEntitiesLoaded(const QJsonArray &entities);
@@ -98,83 +73,16 @@ public slots:
     void onUnusedLotIdsLoaded(const QJsonArray &idsArray);
 
 private:
-    QSqlDatabase m_db;
+    QThread m_processingThread;
+
+    DataModelsManager m_modelsHandler;
+    DataRequestsManager m_requestsHandler;
+
     UserData m_userData;
 
-    int m_dataRequestsCount = 0;
-    QMultiMap<QString, Enums::SupplyChainAction> m_addActionRequestSent;
+    void setupHandlersConnections();
 
-    // database models
-    QScopedPointer<SqlTableModel> m_eventsDatabaseModel;
-    QScopedPointer<SqlTableModel> m_relationsDatabaseModel;
-    QScopedPointer<SqlTableModel> m_unusedIdsDatabaseModel;
-
-    QScopedPointer<SqlTableModel> m_producersDatabaseModel;
-    QScopedPointer<SqlTableModel> m_buyersDatabaseModel;
-    QScopedPointer<SqlTableModel> m_transportersDatabaseModel;
-    QScopedPointer<SqlTableModel> m_destinationsDatabaseModel;
-
-    ExistsQueryModel m_existsQueryModel;
-
-    // source
-    EventModel m_eventsSourceModel;
-    RelationModel m_relationsSourceModel;
-
-    UnusedIdsModel m_unusedLotIdsModel;
-
-    ProducerModel m_producersModel;
-    NameModel m_buyersModel;
-    NameModel m_transportersModel;
-    NameModel m_destinationsModel;
-
-    // proxy models
-    CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
-    PackageLastActionProxyModel m_lastActionHarvestModel{ Enums::SupplyChainAction::Harvest };
-    PackageLastActionProxyModel m_lastActionGrainProcessingModel{ Enums::SupplyChainAction::GrainProcessing };
-    PackageTypeIdsProxyModel m_packageTypeCooperativeIdsModel;
-
-    LocalOnlyProxyModel m_localOnlyEventsModel;
-
-    // TODO: if still needed in final implementation compose as extensions instead of single models
-    CooperativeEventsProxyModel m_cooperativeFilteringEventsModel;
-
-    DateRangeProxyModel m_calendarModel;
-    PackageTypeEventsProxyModel m_packagesCalendarModel;
-
-    DateRangeProxyModel m_dateEventsModel;
-    LatestEventsProxyModel m_latestDateEventsModel;
-
-    SearchEventsProxyModel m_searchEventsModel;
-    PackageTypeProxyModel m_packagesTypeSearchEventsModel;
-    LatestRangeEventsProxyModel m_latestRangePackagesTypeSearchEventsModel;
-
-    PackageDataProxyModel m_packageDataModel;
-    RelationsListProxyModel m_relationsListModel;
-
-    void updateCooperativeId();
-
-    void dataRequestSent();
-    void dataRequestProcessed();
-
-    void fetchMissingEvents(const Gaia::ModelData &eventsInfo);
-
-    QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
-
-    void handleActionAdd(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties);
     QString generateHarvestId(const QDate &date, const QString &parcelCode);
-
-    Gaia::ModelEntry processProducer(const QJsonValue &value);
-    Gaia::ModelEntry processNameData(const QJsonValue &value);
-    Gaia::ModelEntry processEventInfo(const QJsonValue &value);
-    Gaia::ModelEntry processEvent(const QJsonValue &value);
-    Gaia::ModelData processRelations(const QJsonValue &value);
-    Gaia::ModelEntry processUnusedLotId(const QJsonValue &value);
-
-    void removeExistingProducers(Gaia::ModelData &modelData);
-    void removeExistingNameData(Gaia::ModelData &modelData, AbstractModel* model, const QLatin1String &tableName);
-    void removeExistingEvents(Gaia::ModelData &modelData);
-    void removeExistingRelations(Gaia::ModelData &modelData, bool fullCheck);
-    void removeExistingUnusedLotIds(Gaia::ModelData &modelData);
 };
 
 #endif // DATAMANAGER_H

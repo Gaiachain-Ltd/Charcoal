@@ -97,16 +97,17 @@ Items.GenericPanel
     Connections {
         target: dbManager
 
-        onDatabaseUpdateStarted: {
-            showOverlay(Strings.dbUpdateProgress)
-        }
-        onDatabaseUpdateFinished: {
-            hideOverlay()
-
-            if (!success) {
-                pageManager.openPopup(Enums.Popup.Information,
-                                      { "text": Strings.dbUpdateError })
+        onProcessingChanged: {
+            if (processing) {
+                showOverlay(Strings.dbUpdateProgress)
+            } else {
+                hideOverlay()
             }
+        }
+
+        onDatabaseUpdateError: {
+            pageManager.openPopup(Enums.Popup.Information,
+                                  { "text": Strings.dbUpdateError })
         }
     }
 }

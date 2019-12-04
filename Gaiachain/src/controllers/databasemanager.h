@@ -13,7 +13,7 @@ class DatabaseManager : public AbstractManager
 public:
     explicit DatabaseManager(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     void setupDatabase();
     QSqlDatabase database() const;
@@ -21,8 +21,7 @@ public:
 signals:
     void databaseReady(QSqlDatabase db);
 
-    void databaseUpdateStarted() const;
-    void databaseUpdateFinished(bool success) const;
+    void databaseUpdateError() const;
 
 private:
     bool m_setupDone = false;

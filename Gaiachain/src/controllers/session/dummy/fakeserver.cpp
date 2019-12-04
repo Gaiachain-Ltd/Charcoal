@@ -37,119 +37,170 @@ void FakeServer::ping()
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onPingError(error) : onPingSuccess(); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onPingError(error) : onPingSuccess();
+        emit requestFinished();
+    });
 }
 
 void FakeServer::login(const QString &login, const QString &password)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onLoginError(login, error) : onLogin(login, password); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onLoginError(login, error) : onLogin(login, password);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getAdditionalData()
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onAdditionalDataError(error) : onAdditionalData(); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onAdditionalDataError(error) : onAdditionalData();
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getRelations(const QString &packageId)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onRelationsError(error) : onRelations({packageId, }); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onRelationsError(error) : onRelations({packageId, });
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getRelations(const QStringList &packageIds)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onRelationsError(error) : onRelations(packageIds); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onRelationsError(error) : onRelations(packageIds);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::addRelation(const QString &packageId, const QStringList &relatedIds)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onRelationSaveError(packageId, error) : onRelationSaved(packageId, relatedIds); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onRelationSaveError(packageId, error) : onRelationSaved(packageId, relatedIds);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getEntitiesInfo(int count, const QDateTime &from, const QString &keyword)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onEntityInfo(count, from, keyword); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntityError(error) : onEntityInfo(count, from, keyword);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onEntityInfo(from, to, keyword); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntityError(error) : onEntityInfo(from, to, keyword);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onLastActionEntitiesInfo(lastAction); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntityError(error) : onLastActionEntitiesInfo(lastAction);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getEntities(const QStringList &packageIds)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onEntity(packageIds); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntityError(error) : onEntity(packageIds);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getEntity(const QString &packageId)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onEntity({ packageId, }); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntityError(error) : onEntity({ packageId, });
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getEntityId(const QByteArray &codeData)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onEntityId(codeData); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntityError(error) : onEntityId(codeData);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntitySaveError(packageId, action, error) : onEntitySaved(packageId, action, timestamp, properties, codeData); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntitySaveError(packageId, action, error) : onEntitySaved(packageId, action, timestamp, properties, codeData);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(QString{}, action, timestamp, properties, codeData); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(QString{}, action, timestamp, properties, codeData);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(codeData, action, timestamp, properties); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(codeData, action, timestamp, properties);
+        emit requestFinished();
+    });
 }
 
 void FakeServer::getUnusedLotIds()
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onUnusedLotIdsError(error) : onUnusedLotIds(); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onUnusedLotIdsError(error) : onUnusedLotIds();
+        emit requestFinished();
+    });
 }
 
 void FakeServer::postUnusedLotId()
 {
     const auto error = randomError();
 
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onUnusedLotIdCreationError(error) : onUnusedLotIdCreated(); });
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onUnusedLotIdCreationError(error) : onUnusedLotIdCreated();
+        emit requestFinished();
+    });
 }
 
 bool FakeServer::isError(const QNetworkReply::NetworkError &error) const
@@ -159,7 +210,7 @@ bool FakeServer::isError(const QNetworkReply::NetworkError &error) const
 
 QNetworkReply::NetworkError FakeServer::randomError() const
 {
-    auto error = !FakeServerState::instance().up() || (qrand() % 128 == 1);
+    auto error = !FakeServerState::instance().up() || (qrand() % 1024 == 1);
     return error ? QNetworkReply::HostNotFoundError : QNetworkReply::NoError;
 }
 

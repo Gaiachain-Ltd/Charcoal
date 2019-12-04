@@ -157,8 +157,7 @@ BasePage {
             viewModel: latestRangePackagesTypeSearchEventsModel
 
             onDelegateClicked:  {
-                var packageData = dataManager.getPackageData(packageId)
-                pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageData": packageData })
+                pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageId": packageId, "packageType": DataGlobals.packageType(action) })
             }
         }
     }

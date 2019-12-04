@@ -14,6 +14,8 @@ Item {
     default property alias additionalContent: topLayout.data
     property alias relatedPackagesModel: headerAndRelatedPackages.model
 
+    property string packageId
+    property int packageType
     property var packageData
 
     implicitWidth: topLayout.implicitWidth
@@ -51,9 +53,9 @@ Item {
 
             Layout.fillWidth: true
 
-            color: String(Helper.packageTypeColor(Number(packageData.type)))
-            headerText: top.packageTypeDetailsName(Number(packageData.type))
-            inputText: packageData.id
+            color: String(Helper.packageTypeColor(Number(packageType)))
+            headerText: top.packageTypeDetailsName(Number(packageType))
+            inputText: packageId
         }
     }
 }

@@ -8,7 +8,10 @@
 
 AbstractModel::AbstractModel(QObject *parent)
     : AbstractReadModel(parent)
-{}
+{
+    connect(this, &QAbstractItemModel::rowsInserted, this, &AbstractModel::handleRowsInserted);
+    connect(this, &QAbstractItemModel::rowsAboutToBeRemoved, this, &AbstractModel::handleRowsToBeRemoved);
+}
 
 void AbstractModel::setSourceModel(QSqlTableModel *sourceModel)
 {
@@ -110,5 +113,19 @@ void AbstractModel::removeData(const Gaia::ModelEntry &entryData)
     for (const auto &dataIndex : find(entryData)) {
         removeRow(dataIndex.row());
         submit();
+    }
+}
+
+void AbstractModel::handleRowsInserted(const QModelIndex &, int first, int last)
+{
+    for (auto row = first; row <= last; ++row) {
+        emit entryInserted(getEntry(row));
+    }
+}
+
+void AbstractModel::handleRowsToBeRemoved(const QModelIndex &, int first, int last)
+{
+    for (auto row = first; row <= last; ++row) {
+        emit entryRemoved(getEntry(row));
     }
 }

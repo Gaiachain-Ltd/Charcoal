@@ -18,7 +18,7 @@ class UserManager : public AbstractManager
 public:
     explicit UserManager(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     Q_INVOKABLE void logOut();
     Q_INVOKABLE bool offlineAvailable(const QString &login) const;

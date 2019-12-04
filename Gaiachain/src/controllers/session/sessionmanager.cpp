@@ -253,12 +253,16 @@ void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
     connect(request.data(), &BaseRequest::requestFinished,
             this, [this](const QJsonDocument &) {
         updateConnectionStateAfterRequest();
+        processFinished();
     });
     connect(request.data(), &BaseRequest::replyError,
             this, [this](const QString &, const int errorCode) {
         updateConnectionStateAfterRequest(QNetworkReply::NetworkError(errorCode));
+        processFinished();
     });
 
+    processStarted();
     updateConnectionStateBeforeRequest();
+
     m_client.send(request);
 }

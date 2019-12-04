@@ -42,6 +42,8 @@ HEADERS += \
     src/common/types.h \
     src/common/userdata.h \
     src/controllers/databasemanager.h \
+    src/controllers/datamodelsmanager.h \
+    src/controllers/datarequestsmanager.h \
     src/controllers/offlineusershandler.h \
     src/controllers/session/abstractsessionmanager.h \
     src/controllers/session/dummy/fakeserver.h \
@@ -108,6 +110,8 @@ SOURCES += src/main.cpp \
     src/common/types.cpp \
     src/common/userdata.cpp \
     src/controllers/databasemanager.cpp \
+    src/controllers/datamodelsmanager.cpp \
+    src/controllers/datarequestsmanager.cpp \
     src/controllers/offlineusershandler.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/controllers/session/dummy/fakeserver.cpp \

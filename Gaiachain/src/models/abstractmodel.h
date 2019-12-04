@@ -23,8 +23,15 @@ public:
     void updateData(const Gaia::ModelEntry &searchEntryData, const Gaia::ModelEntryInfo &updateEntryData);
     void removeData(const Gaia::ModelEntry &entryData);
 
+signals:
+    void entryInserted(const Gaia::ModelEntry &entryData) const;
+    void entryRemoved(const Gaia::ModelEntry &entryData) const;
+
 protected:
     QPointer<QSqlTableModel> m_writableModel;
+
+    void handleRowsInserted(const QModelIndex &parent, int first, int last);
+    void handleRowsToBeRemoved(const QModelIndex &parent, int first, int last);
 };
 
 #endif // ABSTRACTMODEL_H

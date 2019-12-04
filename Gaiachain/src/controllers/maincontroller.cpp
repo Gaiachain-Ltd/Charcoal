@@ -31,6 +31,7 @@ MainController::MainController(QObject *parent)
     QLocale::setDefault(QLocale("en_GB"));
 
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
+    qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
 #ifdef Q_OS_ANDROID
     // check for permissions before opening scanner page to load camera faster
@@ -95,19 +96,16 @@ void MainController::setupDataConnections()
             &m_sessionManager, qOverload<const QDateTime &, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
     connect(&m_dataManager, qOverload<int, const QDateTime &, const QString &>(&DataManager::eventsInfoNeeded),
             &m_sessionManager, qOverload<int, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
+    connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
     connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
     connect(&m_dataManager, &DataManager::relationsNeeded,
             &m_sessionManager, qOverload<const QStringList &>(&AbstractSessionManager::getRelations));
-    connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
 
     connect(&m_sessionManager, &AbstractSessionManager::entitiesInfoLoaded, &m_dataManager, &DataManager::onEntitiesInfoLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::relationsLoaded, &m_dataManager, &DataManager::onRelationsLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
-
-    connect(&m_sessionManager, &AbstractSessionManager::entitiesLoadError, &m_dataManager, &DataManager::onDataRequestError);
-    connect(&m_sessionManager, &AbstractSessionManager::relationsLoadError, &m_dataManager, &DataManager::onDataRequestError);
 }
 
 void MainController::initialWork()
