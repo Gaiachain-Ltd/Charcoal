@@ -26,7 +26,7 @@
 #include "../models/cooperativeeventsproxymodel.h"
 #include "../models/packagetypeproxymodel.h"
 #include "../models/packagetypeidsproxymodel.h"
-#include "../models/createdharvestidsproxymodel.h"
+#include "../models/packagelastactionproxymodel.h"
 #include "../models/localonlyproxymodel.h"
 
 #include "../common/userdata.h"
@@ -50,6 +50,8 @@ public:
 
     void setupModels(QSqlDatabase db);
 
+    Q_INVOKABLE void getInitialData();
+
     Q_INVOKABLE PackageData getPackageData(const QString &packageId) const;
 
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
@@ -64,7 +66,7 @@ public:
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     Q_INVOKABLE void fetchCountEvents(int count, const QDateTime &from, const QString &keyword = {});
-    Q_INVOKABLE void fetchCreatedHarvestIdEvents();
+    Q_INVOKABLE void fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction);
 
 signals:
     void collectingDataChanged(bool collectingData) const;
@@ -78,10 +80,11 @@ signals:
 
     void eventsInfoNeeded(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
     void eventsInfoNeeded(int count, const QDateTime &from, const QString &keyword) const;
+    void lastActionEventsInfoNeeded(const Enums::SupplyChainAction &lastAction) const;
+
     void eventsNeeded(const QStringList &ids) const;
     void relationsNeeded(const QStringList &ids) const;
 
-    void createdHarvestIdEventsNeeded() const;
 
 public slots:
     void onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
@@ -92,7 +95,6 @@ public slots:
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);
     void onEntitiesLoaded(const QJsonArray &entities);
     void onRelationsLoaded(const QJsonArray &relations);
-    void onCreatedHarvestIdsLoaded(const QJsonArray &idsArray);
     void onUnusedLotIdsLoaded(const QJsonArray &idsArray);
 
 private:
@@ -127,7 +129,8 @@ private:
 
     // proxy models
     CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
-    CreatedHarvestIdsProxyModel m_createdHarvestIdsModel;
+    PackageLastActionProxyModel m_lastActionHarvestModel{ Enums::SupplyChainAction::Harvest };
+    PackageLastActionProxyModel m_lastActionGrainProcessingModel{ Enums::SupplyChainAction::GrainProcessing };
     PackageTypeIdsProxyModel m_packageTypeCooperativeIdsModel;
 
     LocalOnlyProxyModel m_localOnlyEventsModel;
@@ -165,7 +168,6 @@ private:
     Gaia::ModelEntry processEventInfo(const QJsonValue &value);
     Gaia::ModelEntry processEvent(const QJsonValue &value);
     Gaia::ModelData processRelations(const QJsonValue &value);
-    Gaia::ModelEntry processCreatedHarvestId(const QJsonValue &value);
     Gaia::ModelEntry processUnusedLotId(const QJsonValue &value);
 
     void removeExistingProducers(Gaia::ModelData &modelData);

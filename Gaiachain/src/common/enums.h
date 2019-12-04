@@ -39,6 +39,7 @@ namespace Enums {
         SupplyChainHarvest,
         SupplyChainGrainProcessing,
         WaitingTransactions,
+        SupplyChainSectionReception,
 
         PageCount
     };

@@ -14,8 +14,8 @@ public:
         GetBatch,
         GetFilterCount,
         GetFilterTo,
+        GetFilterLastAction,
         GetId,
-        GetCreatedHarvests,
         GetUnusedLots,
         PutActionId,
         PutActionCode,
@@ -36,6 +36,7 @@ public:
     EntityRequest(const QStringList &packageIds = {});
     EntityRequest(int count, const QDateTime &from, const QString &keyword = {});
     EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
+    EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction);
     EntityRequest(const QByteArray &codeData);
 
     EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData, const QByteArray &codeData = {});
@@ -48,8 +49,6 @@ private:
     static const QString sc_basePath;
     static const QMap<RequestType, Type> sc_requestsType;
     static const QMap<RequestType, QString> sc_requestsPath;
-
-    static RequestType requestForPackageType(const Enums::PackageType &type, const Type &requestType);
 };
 
 

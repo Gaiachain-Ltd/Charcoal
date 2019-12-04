@@ -14,8 +14,8 @@ const QMap<EntityRequest::RequestType, MRestRequest::Type> EntityRequest::sc_req
     { EntityRequest::RequestType::GetBatch, Type::Get },
     { EntityRequest::RequestType::GetFilterCount, Type::Get },
     { EntityRequest::RequestType::GetFilterTo, Type::Get },
+    { EntityRequest::RequestType::GetFilterLastAction, Type::Get },
     { EntityRequest::RequestType::GetId, Type::Get },
-    { EntityRequest::RequestType::GetCreatedHarvests, Type::Get },
     { EntityRequest::RequestType::GetUnusedLots, Type::Get },
     { EntityRequest::RequestType::PutActionId, Type::Put },
     { EntityRequest::RequestType::PutActionCode, Type::Put },
@@ -27,8 +27,8 @@ const QMap<EntityRequest::RequestType, QString> EntityRequest::sc_requestsPath =
     { EntityRequest::RequestType::GetBatch, sc_basePath.arg(QStringLiteral("batch")) },
     { EntityRequest::RequestType::GetFilterCount, sc_basePath.arg(QStringLiteral("filter")) },
     { EntityRequest::RequestType::GetFilterTo, sc_basePath.arg(QStringLiteral("filter")) },
+    { EntityRequest::RequestType::GetFilterLastAction, sc_basePath.arg(QStringLiteral("lastAction")) },
     { EntityRequest::RequestType::GetId, sc_basePath.arg(QStringLiteral("id")) },
-    { EntityRequest::RequestType::GetCreatedHarvests, sc_basePath.arg(QStringLiteral("harvest")) },
     { EntityRequest::RequestType::GetUnusedLots, sc_basePath.arg(QStringLiteral("lots")) },
     { EntityRequest::RequestType::PutActionId, sc_basePath.arg(QStringLiteral("%1")) },
     { EntityRequest::RequestType::PutActionCode, sc_basePath.arg(QStringLiteral("code/%1")) },
@@ -85,6 +85,13 @@ EntityRequest::EntityRequest(const QDateTime &from, const QDateTime &to, const Q
     mRequestDocument.setObject(docObj);
 }
 
+EntityRequest::EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction)
+    : EntityRequest(RequestType::GetFilterLastAction, token)
+{
+    auto docObj = QJsonObject{ { Tags::lastAction, RequestsHelper::supplyChainActionToString(lastAction) } };
+    mRequestDocument.setObject(docObj);
+}
+
 EntityRequest::EntityRequest(const QByteArray &codeData)
     : EntityRequest(RequestType::GetId)
 {
@@ -121,36 +128,7 @@ EntityRequest::EntityRequest(const QString &token, const QByteArray &codeData, c
 }
 
 EntityRequest::EntityRequest(const QString &token, const Enums::PackageType &packageType, bool create)
-    : EntityRequest(requestForPackageType(packageType, create ? Type::Post : Type::Get), token)
+    : EntityRequest(packageType == Enums::PackageType::Lot ? (create ? RequestType::PostUnusedLot
+                                                                     : RequestType::GetUnusedLots)
+                                                           : RequestType::Invalid, token)
 {}
-
-EntityRequest::RequestType EntityRequest::requestForPackageType(const Enums::PackageType &type, const Type &requestType)
-{
-    switch (type) {
-    case Enums::PackageType::Harvest:
-    {
-        switch (requestType) {
-        case Type::Get:
-            return RequestType::GetCreatedHarvests;
-        default:
-            ;
-        }
-        break;
-    }
-    case Enums::PackageType::Lot:
-    {
-        switch (requestType) {
-        case Type::Get:
-            return RequestType::GetUnusedLots;
-        case Type::Post:
-            return RequestType::PostUnusedLot;
-        default:
-            ;
-        }
-        break;
-    }
-    default:
-        ;
-    }
-    return RequestType::Invalid;
-}

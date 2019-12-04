@@ -89,6 +89,13 @@ void FakeServer::getEntitiesInfo(const QDateTime &from, const QDateTime &to, con
     QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onEntityInfo(from, to, keyword); });
 }
 
+void FakeServer::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
+{
+    const auto error = randomError();
+
+    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntityError(error) : onLastActionEntitiesInfo(lastAction); });
+}
+
 void FakeServer::getEntities(const QStringList &packageIds)
 {
     const auto error = randomError();
@@ -129,13 +136,6 @@ void FakeServer::postNewEntity(const Enums::SupplyChainAction &action, const QDa
     const auto error = randomError();
 
     QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(codeData, action, timestamp, properties); });
-}
-
-void FakeServer::getCreatedHarvestIds()
-{
-    const auto error = randomError();
-
-    QTimer::singleShot(randomWaitTime(), this, [=]() { isError(error) ? onCreatedHarvestIdsError(error) : onCreatedHarvestIds(); });
 }
 
 void FakeServer::getUnusedLotIds()
@@ -284,6 +284,13 @@ void FakeServer::onEntityInfo(const QDateTime &from, const QDateTime &to, const 
     emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getEventsInfo(from, to, keyword)) );
 }
 
+void FakeServer::onLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
+{
+    emit connectionState(QNetworkReply::NoError);
+
+    emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getLastActionEventsInfo(m_currentCooperativeId, lastAction)) );
+}
+
 void FakeServer::onEntity(const QStringList &packagesId)
 {
     emit connectionState(QNetworkReply::NoError);
@@ -337,19 +344,6 @@ void FakeServer::onEntitySaved(const QByteArray &codeData, const Enums::SupplyCh
     } else {
         emit entitySaved(packageId, action);
     }
-}
-
-void FakeServer::onCreatedHarvestIdsError(const QNetworkReply::NetworkError &error)
-{
-    emit connectionState(error);
-    emit createdHarvestIdsLoadError(error);
-}
-
-void FakeServer::onCreatedHarvestIds()
-{
-    emit connectionState(QNetworkReply::NoError);
-
-    emit createdHarvestIdsLoaded(QJsonArray::fromVariantList(m_populator.createdHarvestIds(m_currentCooperativeId)) );
 }
 
 void FakeServer::onUnusedLotIdsError(const QNetworkReply::NetworkError &error)

@@ -50,7 +50,8 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 
     engine.rootContext()->setContextProperty(QStringLiteral("localOnlyEventsModel"), &m_localOnlyEventsModel);
 
-    engine.rootContext()->setContextProperty(QStringLiteral("createdHarvestIdsModel"), &m_createdHarvestIdsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("lastActionHarvestModel"), &m_lastActionHarvestModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("lastActionGrainProcessingModel"), &m_lastActionGrainProcessingModel);
     engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("packageTypeCooperativeIdsModel"), &m_packageTypeCooperativeIdsModel);
 
@@ -144,15 +145,6 @@ void DataManager::onRelationsLoaded(const QJsonArray &relations)
     m_relationsSourceModel.appendData(modelData);
 
     dataRequestProcessed();
-}
-
-void DataManager::onCreatedHarvestIdsLoaded(const QJsonArray &idsArray)
-{
-    auto eventsInfo = Gaia::ModelData{};
-    std::transform(idsArray.constBegin(), idsArray.constEnd(), std::back_inserter(eventsInfo),
-                   std::bind(&DataManager::processCreatedHarvestId, this, std::placeholders::_1));
-
-    fetchMissingEvents(eventsInfo);
 }
 
 void DataManager::onUnusedLotIdsLoaded(const QJsonArray &ids)
@@ -305,9 +297,10 @@ void DataManager::fetchCountEvents(int count, const QDateTime &from, const QStri
     emit eventsInfoNeeded(count, from, keyword);
 }
 
-void DataManager::fetchCreatedHarvestIdEvents()
+void DataManager::fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction)
 {
-    emit createdHarvestIdEventsNeeded();
+    dataRequestSent();
+    emit lastActionEventsInfoNeeded(lastAction);
 }
 
 void DataManager::onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action)
@@ -359,8 +352,9 @@ void DataManager::setupModels(QSqlDatabase db)
 
     // -------------------------------------------------------------
 
-    m_cooperativeEventsModel.setSourceModel(&m_eventsSourceModel);    
-    m_createdHarvestIdsModel.setSourceModel(&m_cooperativeEventsModel);
+    m_cooperativeEventsModel.setSourceModel(&m_eventsSourceModel);
+    m_lastActionHarvestModel.setSourceModel(&m_cooperativeEventsModel);
+    m_lastActionGrainProcessingModel.setSourceModel(&m_cooperativeEventsModel);
     m_packageTypeCooperativeIdsModel.setSourceModel(&m_cooperativeEventsModel);
 
     m_localOnlyEventsModel.setSourceModel(&m_cooperativeEventsModel);
@@ -378,6 +372,12 @@ void DataManager::setupModels(QSqlDatabase db)
 
     m_packageDataModel.setSourceModel(&m_eventsSourceModel);
     m_relationsListModel.setSourceModel(&m_relationsSourceModel);
+}
+
+void DataManager::getInitialData()
+{
+    fetchLastActionPackageEvents(Enums::SupplyChainAction::Harvest);
+    fetchLastActionPackageEvents(Enums::SupplyChainAction::GrainProcessing);
 }
 
 QJsonValue DataManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)
@@ -483,11 +483,6 @@ Gaia::ModelData DataManager::processRelations(const QJsonValue &value)
     std::transform(relatedIds.begin(), relatedIds.end(), std::back_inserter(modelData),
                    [&id](const auto &relatedId) { return Gaia::ModelEntry{{ id, relatedId }, }; });
     return modelData;
-}
-
-Gaia::ModelEntry DataManager::processCreatedHarvestId(const QJsonValue &value)
-{
-    return { value.toString(), QVariant::fromValue(Enums::SupplyChainAction::Harvest) };
 }
 
 Gaia::ModelEntry DataManager::processUnusedLotId(const QJsonValue &value)

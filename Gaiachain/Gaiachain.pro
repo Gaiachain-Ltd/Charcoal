@@ -59,7 +59,6 @@ HEADERS += \
     src/models/abstractmodel.h \
     src/models/abstractreadmodel.h \
     src/models/cooperativeeventsproxymodel.h \
-    src/models/createdharvestidsproxymodel.h \
     src/models/daterangeproxymodel.h \
     src/models/existsquerymodel.h \
     src/models/latesteventsproxymodel.h \
@@ -68,6 +67,7 @@ HEADERS += \
     src/models/modelchangedextension.h \
     src/models/namemodel.h \
     src/models/packagedataproxymodel.h \
+    src/models/packagelastactionproxymodel.h \
     src/models/packagetypeeventsproxymodel.h \
     src/models/eventmodel.h \
     src/helpers/utility.h \
@@ -124,7 +124,6 @@ SOURCES += src/main.cpp \
     src/models/abstractmodel.cpp \
     src/models/abstractreadmodel.cpp \
     src/models/cooperativeeventsproxymodel.cpp \
-    src/models/createdharvestidsproxymodel.cpp \
     src/models/daterangeproxymodel.cpp \
     src/models/existsquerymodel.cpp \
     src/models/latesteventsproxymodel.cpp \
@@ -133,6 +132,7 @@ SOURCES += src/main.cpp \
     src/models/modelchangedextension.cpp \
     src/models/namemodel.cpp \
     src/models/packagedataproxymodel.cpp \
+    src/models/packagelastactionproxymodel.cpp \
     src/models/packagetypeeventsproxymodel.cpp \
     src/models/eventmodel.cpp \
     src/helpers/utility.cpp \

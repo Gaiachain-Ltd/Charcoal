@@ -17,6 +17,7 @@ TextField
 
     property color borderColor: Style.inputBorderColor
     property color backgroundColor: Style.backgroundColor
+    property alias iconItem: icon
 
     property Item nextInput: null
     signal moveToNextInput()

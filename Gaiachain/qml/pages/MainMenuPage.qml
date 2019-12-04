@@ -19,6 +19,8 @@ BasePage {
             return Enums.Page.SupplyChainHarvest
         case Enums.SupplyChainAction.GrainProcessing:
             return Enums.Page.SupplyChainGrainProcessing
+        case Enums.SupplyChainAction.SectionReception:
+            return Enums.Page.SupplyChainSectionReception
         default:
             console.warn("navigateSupplyChainPages: Invalid action provided!")
         }

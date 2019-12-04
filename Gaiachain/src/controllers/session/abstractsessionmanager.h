@@ -35,6 +35,8 @@ public:
 
     Q_INVOKABLE virtual void getEntitiesInfo(int count, const QDateTime &from, const QString &keyword) = 0;
     Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) = 0;
+    Q_INVOKABLE virtual void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) = 0;
+
     Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;
     Q_INVOKABLE virtual void getEntity(const QString &id) = 0;
     Q_INVOKABLE virtual void getEntityId(const QByteArray &codeData) = 0;
@@ -44,8 +46,6 @@ public:
                                              const QDateTime &timestamp, const QVariantMap &properties) = 0;
     Q_INVOKABLE virtual void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                            const QVariantMap &properties, const QByteArray &codeData) = 0;
-
-    Q_INVOKABLE virtual void getCreatedHarvestIds() = 0;
 
     Q_INVOKABLE virtual void getUnusedLotIds() = 0;
     Q_INVOKABLE virtual void postUnusedLotId() = 0;
@@ -79,9 +79,6 @@ signals:
 
     void entitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &code) const;
     void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;
-
-    void createdHarvestIdsLoadError(const QNetworkReply::NetworkError &code) const;
-    void createdHarvestIdsLoaded(const QJsonArray &ids) const;
 
     void unusedLotIdsLoadError(const QNetworkReply::NetworkError &code) const;
     void unusedLotIdsLoaded(const QJsonArray &ids) const;

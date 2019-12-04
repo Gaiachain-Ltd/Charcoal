@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.modelhelper 1.0
 import com.gaiachain.packagedata 1.0
 
 import "../items" as Items
@@ -12,34 +13,34 @@ import "../components" as Components
 import "../pages" as Pages
 
 Pages.SupplyChainPage {
-    id: test
+    id: top
 
-    title: Strings.supplyChainMenuActionGrainProcessing
+    title: Strings.receptionAtSection
 
-    proceedButtonEnabled: harvestIdComboBox.currentText !== Strings.empty
+    proceedButtonEnabled: !(harvestIdComboBox.currentText === Strings.empty)
 
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        dataManager.fetchLastActionPackageEvents(Enums.SupplyChainAction.Harvest);
+        dataManager.fetchLastActionPackageEvents(Enums.SupplyChainAction.GrainProcessing);
     }
 
     function proceed() {
         pageManager.openPopup(Enums.Popup.WaitOverlay)
 
         var harvestId = harvestIdComboBox.currentText
-        var breakingDate = breakingDateInputDate.currentDate
-        var endFermentationDate = endFermentationDateInputDate.currentDate
-        var estimatedVolume= estimatedVolumeInputHeader.inputText
+        var receptionDate = receptionInputDateHeader.currentDate
+        var transportDate = transportInputDateHeader.currentDate
+        var buyer = buyerComboBox.currentText
 
         var properties = {
-            [PackageDataProperties.BreakingDate]: breakingDate,
-            [PackageDataProperties.DryingDate]: endFermentationDate,
-            [PackageDataProperties.EstimatedVolume]: estimatedVolume
+            [PackageDataProperties.ReceptionDate]: receptionDate,
+            [PackageDataProperties.TransportDate]: transportDate,
+            [PackageDataProperties.Buyer]: buyer
         }
 
         dataManager.addAction(harvestId,
-                              Enums.SupplyChainAction.GrainProcessing,
+                              Enums.SupplyChainAction.SectionReception,
                               new Date,
                               properties)
     }
@@ -54,39 +55,37 @@ Pages.SupplyChainPage {
 
             headerText: Strings.harvestId
 
+            model: lastActionGrainProcessingModel
             displayRole: "packageId"
-            model: lastActionHarvestModel
         }
 
         Items.InputDateHeader {
-            id: breakingDateInputDate
+            id: receptionInputDateHeader
 
             Layout.fillWidth: true
 
-            headerText: Strings.breakingDate
+            headerText: Strings.receptionDate
         }
 
         Items.InputDateHeader {
-            id: endFermentationDateInputDate
+            id: transportInputDateHeader
 
             Layout.fillWidth: true
 
-            headerText: Strings.endFermentationDate
+            headerText: Strings.transportDate + " (" + Strings.notRequired + ")"
+            headerTextColor: Style.notRequiredTextInputColor
         }
 
-        Items.InputHeader {
-            id: estimatedVolumeInputHeader
+        Items.ComboBoxHeader {
+            id: buyerComboBox
 
             Layout.fillWidth: true
 
-            validator: IntValidator {}
-
-            headerText: Strings.estimatedVolume + " (" + Strings.notRequired + ")"
+            headerText: Strings.buyer + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor
 
-            iconSource: Style.rightArrowImgUrl
-
-            placeholderText: Strings.typeHere + "..."
+            model: buyersModel
+            displayRole: "name"
         }
     }
 }

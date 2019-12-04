@@ -12,9 +12,9 @@ Item {
     readonly property bool headerIsEmpty: (headerText === Strings.empty)
 
     property alias widget: mainLayout.data
-    property alias headerTextColor: header.color
 
-    property string headerText
+    property alias headerText: header.text
+    property alias headerTextColor: header.color
 
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
@@ -35,8 +35,6 @@ Item {
 
             visible: !headerIsEmpty
             wrapMode: Text.WordWrap
-
-            text: headerText
         }
     }
 }
