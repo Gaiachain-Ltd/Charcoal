@@ -65,6 +65,8 @@ Item {
 
         initialItem: pageManager.getInitialPageUrl()
 
+        onCurrentItemChanged: currentItem.initialize()
+
         pushEnter: Transition {
             PropertyAnimation {
                 property: "x"

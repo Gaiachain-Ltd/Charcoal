@@ -39,6 +39,10 @@ CalendarPageBase {
                               "currentYear": currentYear })
     }
 
+    function initialize() {
+        onlyMyTransactionsCheckBox.updateCooperativeOnlyFiltering()
+    }
+
     onMonthHeaderClicked: enterMonthPage()
 
     calendarWidgets: Components.CalendarWeekItem {
@@ -85,6 +89,8 @@ CalendarPageBase {
         }
 
         Items.BasicCheckBox {
+            id: onlyMyTransactionsCheckBox
+
             function updateCooperativeOnlyFiltering() {
                 cooperativeFilteringEvents.active = checked
             }
@@ -95,7 +101,7 @@ CalendarPageBase {
             visible: userManager.loggedIn
 
             text: Strings.onlyMyTransactions
-            checked: true
+            checked: cooperativeFilteringEvents.active
 
             Component.onCompleted: updateCooperativeOnlyFiltering()
             onCheckedChanged: updateCooperativeOnlyFiltering()
