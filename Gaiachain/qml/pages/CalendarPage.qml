@@ -32,6 +32,10 @@ CalendarPageBase {
                               "currentYear": dayDate.getFullYear() })
     }
 
+    function initialize() {
+        onlyMyTransactionsCheckBox.updateCooperativeOnlyFiltering()
+    }
+
     onMonthHeaderClicked: {
         pageManager.enter(Enums.Page.CalendarYear, {
                               "currentMonth": currentMonth,
@@ -46,6 +50,8 @@ CalendarPageBase {
         }
 
         Items.BasicCheckBox {
+            id: onlyMyTransactionsCheckBox
+
             function updateCooperativeOnlyFiltering() {
                 cooperativeFilteringEvents.active = checked
             }
@@ -58,7 +64,7 @@ CalendarPageBase {
             opacity: userManager.loggedIn ? 1 : 0
 
             text: Strings.onlyMyTransactions
-            checked: true
+            checked: cooperativeFilteringEvents.active
 
             Component.onCompleted: updateCooperativeOnlyFiltering()
             onCheckedChanged: updateCooperativeOnlyFiltering()
