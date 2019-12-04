@@ -49,6 +49,7 @@ void MainController::setupConnections()
     connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupModels);
 
     connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getInitialData);
+    connect(&m_userManager, &UserManager::loggedIn, &m_dataManager, &DataManager::getInitialData);
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
     connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
@@ -97,13 +98,12 @@ void MainController::setupDataConnections()
     connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
     connect(&m_dataManager, &DataManager::relationsNeeded,
             &m_sessionManager, qOverload<const QStringList &>(&AbstractSessionManager::getRelations));
-    connect(&m_dataManager, &DataManager::createdHarvestIdEventsNeeded, &m_sessionManager, &AbstractSessionManager::getCreatedHarvestIds);
+    connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
 
     connect(&m_sessionManager, &AbstractSessionManager::entitiesInfoLoaded, &m_dataManager, &DataManager::onEntitiesInfoLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::relationsLoaded, &m_dataManager, &DataManager::onRelationsLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
-    connect(&m_sessionManager, &AbstractSessionManager::createdHarvestIdsLoaded, &m_dataManager, &DataManager::onCreatedHarvestIdsLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
 
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoadError, &m_dataManager, &DataManager::onDataRequestError);

@@ -27,8 +27,9 @@ Items.GenericHeader {
         Layout.fillWidth: true
 
         focus: false
+        rightPadding: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2
+                                                      : ((iconEdge === Enums.Edge.RightEdge) && iconItem.visible ? iconItem.width + 2 * iconItem.horizontalMargins : padding)
 
-        rightPadding: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2 : padding
 
         iconEdge: Enums.Edge.RightEdge
 

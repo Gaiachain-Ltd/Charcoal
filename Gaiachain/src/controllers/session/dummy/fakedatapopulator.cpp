@@ -224,6 +224,52 @@ QVariantList FakeDataPopulator::getEventsInfo(const QDateTime &from, const QDate
     return eventsInfo;
 }
 
+QVariantList FakeDataPopulator::getLastActionEventsInfo(const QString &cooperativeId, const Enums::SupplyChainAction &lastAction) const
+{
+    const auto &history = m_eventsHistory.values();
+
+    auto cooperativeHistory = QList<QVariantMap>{};
+    std::copy_if(history.constBegin(), history.constEnd(), std::back_inserter(cooperativeHistory),
+                 [&cooperativeId](const auto &event) {
+        auto eventCooperativeId = event.value(Tags::cooperativeId).toString();
+        return (eventCooperativeId == cooperativeId);
+    });
+
+    auto packageType = DataGlobals::packageType(lastAction);
+    auto packageTypeHistory = QList<QVariantMap>{};
+    std::copy_if(history.constBegin(), history.constEnd(), std::back_inserter(cooperativeHistory),
+                 [&packageType](const auto &event) {
+        auto eventPackageType = DataGlobals::packageType(event.value(Tags::action).template value<Enums::SupplyChainAction>());
+        return (eventPackageType == packageType);
+    });
+
+    auto idActionMap = QMap<QString, QList<Enums::SupplyChainAction>>{};
+    std::for_each(packageTypeHistory.constBegin(), packageTypeHistory.constEnd(),
+                  [&idActionMap](const auto &event) {
+        return idActionMap[event.value(Tags::packageId).toString()].append(event.value(Tags::action).template value<Enums::SupplyChainAction>());
+    });
+
+    auto validHistory = QList<QVariantMap>{};
+    std::copy_if(packageTypeHistory.constBegin(), packageTypeHistory.constEnd(),
+                 std::back_inserter(validHistory), [&idActionMap, &lastAction](const auto &event) {
+        auto packageId = event.value(Tags::packageId).toString();
+        auto actions = idActionMap.value(packageId);
+        return (std::find_if(actions.constBegin(), actions.constEnd(), [&lastAction](const auto &action) {
+            return (action > lastAction);
+        }) == actions.constEnd());
+    });
+
+    auto eventsInfo = QVariantList{};
+    std::transform(validHistory.constBegin(), validHistory.constEnd(),
+                   std::back_inserter(eventsInfo), [](const auto &event) {
+        return QVariantMap{
+            { Tags::packageId, event.value(Tags::packageId) },
+            { Tags::action, event.value(Tags::action) } };
+    });
+
+    return eventsInfo;
+}
+
 QString FakeDataPopulator::getEventId(const QByteArray &codeData) const
 {
     return m_packagesCodeData.value(codeData);
@@ -237,33 +283,6 @@ QVariantList FakeDataPopulator::getEventHistory(const QStringList &packagesId) c
     }
 
     return Utility::toVariantList(history);
-}
-
-QVariantList FakeDataPopulator::createdHarvestIds(const QString &cooperativeId) const
-{
-    auto ids = QStringList{};
-    std::copy_if(m_eventsHistory.keyBegin(), m_eventsHistory.keyEnd(),
-                 std::back_inserter(ids), [this, &cooperativeId](const auto &id) {
-        const auto entry = m_eventsHistory.value(id);
-        const auto entryCooperativeId = entry.value(Tags::agent).toMap().value(Tags::cooperativeId).toString();
-        const auto entryAction = RequestsHelper::supplyChainActionFromString(entry.value(Tags::action).toString());
-        auto isCooperativeHarvestAction = (entryCooperativeId == cooperativeId) && (entryAction == Enums::SupplyChainAction::Harvest);
-        if (isCooperativeHarvestAction) {
-            auto otherIdActions = std::find_if(m_eventsHistory.keyBegin(), m_eventsHistory.keyEnd(),
-                                               [this, id](const auto &searchId) {
-                if (searchId == id) {
-                    const auto entry = m_eventsHistory.value(id);
-                    const auto entryAction = RequestsHelper::supplyChainActionFromString(entry.value(Tags::action).toString());
-                    return (entryAction != Enums::SupplyChainAction::Harvest);
-                }
-                return false;
-            });
-            return otherIdActions == m_eventsHistory.keyEnd();  // no other actions
-        }
-        return false;
-    });
-
-    return Utility::toVariantList<QList<QString>>(ids);
 }
 
 QVariantList FakeDataPopulator::unusedLotIds(const QString &cooperativeId) const

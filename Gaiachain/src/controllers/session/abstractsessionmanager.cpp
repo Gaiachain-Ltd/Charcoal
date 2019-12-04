@@ -25,7 +25,6 @@ Enums::ConnectionState AbstractSessionManager::connectionState() const
 void AbstractSessionManager::getInitialData()
 {
     getAdditionalData();
-    getCreatedHarvestIds();
     getUnusedLotIds();
 }
 

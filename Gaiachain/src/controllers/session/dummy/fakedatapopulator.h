@@ -30,10 +30,10 @@ public:
 
     QVariantList getEventsInfo(int count, const QDateTime &from, const QString &keyword) const;
     QVariantList getEventsInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
+    QVariantList getLastActionEventsInfo(const QString &cooperativeId, const Enums::SupplyChainAction &lastAction) const;
     QString getEventId(const QByteArray &codeData) const;
     QVariantList getEventHistory(const QStringList &packagesId) const;
 
-    QVariantList createdHarvestIds(const QString &cooperativeId) const;
     QVariantList unusedLotIds(const QString &cooperativeId) const;
     QString createUnusedLotId(const QString &cooperativeId);
 

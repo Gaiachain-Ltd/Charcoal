@@ -23,6 +23,8 @@ public:
 
     Q_INVOKABLE void getEntitiesInfo(int count, const QDateTime &from, const QString &keyword) override;
     Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) override;
+    Q_INVOKABLE void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) override;
+
     Q_INVOKABLE void getEntities(const QStringList &packageIds) override;
     Q_INVOKABLE void getEntity(const QString &packageId) override;
     Q_INVOKABLE void getEntityId(const QByteArray &codeData) override;
@@ -33,8 +35,6 @@ public:
                                      const QDateTime &timestamp, const QVariantMap &properties) override;
     Q_INVOKABLE void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                                    const QVariantMap &properties, const QByteArray &codeData) override;
-
-    Q_INVOKABLE void getCreatedHarvestIds() override;
 
     Q_INVOKABLE void getUnusedLotIds() override;
     Q_INVOKABLE void postUnusedLotId() override;

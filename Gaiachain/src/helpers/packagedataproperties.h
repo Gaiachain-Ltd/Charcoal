@@ -22,6 +22,7 @@ private:
     Q_PROPERTY(QString Transporter MEMBER Transporter CONSTANT)
     Q_PROPERTY(QString Destination MEMBER Destination CONSTANT)
     Q_PROPERTY(QString Weight MEMBER Weight CONSTANT)
+    Q_PROPERTY(QString ReceptionDate MEMBER ReceptionDate CONSTANT)
     Q_PROPERTY(QString TransportDate MEMBER TransportDate CONSTANT)
 
 public:
@@ -43,6 +44,7 @@ public:
     static const QString Transporter;
     static const QString Destination;
     static const QString Weight;
+    static const QString ReceptionDate;
     static const QString TransportDate;
 
 private:

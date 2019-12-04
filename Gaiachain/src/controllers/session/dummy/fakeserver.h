@@ -27,6 +27,8 @@ public slots:
 
     void getEntitiesInfo(int count, const QDateTime &from, const QString &);
     void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &);
+    void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction);
+
     void getEntities(const QStringList &packageIds);
     void getEntity(const QString &packageId);
     void getEntityId(const QByteArray &codeData);
@@ -37,8 +39,6 @@ public slots:
                          const QDateTime &timestamp, const QVariantMap &properties);
     void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                        const QVariantMap &properties, const QByteArray &codeData);
-
-    void getCreatedHarvestIds();
 
     void getUnusedLotIds();
     void postUnusedLotId();
@@ -69,9 +69,6 @@ signals:
 
     void entitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &code) const;
     void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;
-
-    void createdHarvestIdsLoadError(const QNetworkReply::NetworkError &code) const;
-    void createdHarvestIdsLoaded(const QJsonArray &ids) const;
 
     void unusedLotIdsLoadError(const QNetworkReply::NetworkError &code) const;
     void unusedLotIdsLoaded(const QJsonArray &ids) const;
@@ -112,6 +109,7 @@ private:
 
     void onEntityInfo(int count, const QDateTime &from, const QString &keyword);
     void onEntityInfo(const QDateTime &from, const QDateTime &to, const QString &keyword);
+    void onLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction);
 
     void onEntityAll();
     void onEntity(const QStringList &packagesId);
@@ -124,9 +122,6 @@ private:
                        const QVariantMap &properties, const QByteArray &codeData);
     void onEntitySaved(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
                        const QVariantMap &properties);
-
-    void onCreatedHarvestIdsError(const QNetworkReply::NetworkError &error);
-    void onCreatedHarvestIds();
 
     void onUnusedLotIdsError(const QNetworkReply::NetworkError &error);
     void onUnusedLotIds();

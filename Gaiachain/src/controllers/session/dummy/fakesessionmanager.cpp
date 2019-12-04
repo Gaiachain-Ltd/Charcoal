@@ -30,9 +30,6 @@ FakeSessionManager::FakeSessionManager(QObject *parent)
     connect(&FakeServer::instance(), &FakeServer::entitySaveError, this, &FakeSessionManager::entitySaveError);
     connect(&FakeServer::instance(), &FakeServer::entitySaved, this, &FakeSessionManager::entitySaved);
 
-    connect(&FakeServer::instance(), &FakeServer::createdHarvestIdsLoadError, this, &FakeSessionManager::createdHarvestIdsLoadError);
-    connect(&FakeServer::instance(), &FakeServer::createdHarvestIdsLoaded, this, &FakeSessionManager::createdHarvestIdsLoaded);
-
     connect(&FakeServer::instance(), &FakeServer::unusedLotIdsLoadError, this, &FakeSessionManager::unusedLotIdsLoadError);
     connect(&FakeServer::instance(), &FakeServer::unusedLotIdsLoaded, this, &FakeSessionManager::unusedLotIdsLoaded);
     connect(&FakeServer::instance(), &FakeServer::unusedLotIdCreateError, this, &FakeSessionManager::unusedLotIdCreateError);
@@ -89,6 +86,12 @@ void FakeSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime 
     FakeServer::instance().getEntitiesInfo(from, to, keyword);
 }
 
+void FakeSessionManager::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
+{
+    updateConnectionStateBeforeRequest();
+    FakeServer::instance().getLastActionEntitiesInfo(lastAction);
+}
+
 void FakeSessionManager::getEntities(const QStringList &packageIds)
 {
     updateConnectionStateBeforeRequest();
@@ -123,12 +126,6 @@ void FakeSessionManager::postNewEntity(const Enums::SupplyChainAction &action, c
 {
     updateConnectionStateBeforeRequest();
     FakeServer::instance().postNewEntity(action, timestamp, properties, codeData);
-}
-
-void FakeSessionManager::getCreatedHarvestIds()
-{
-    updateConnectionStateBeforeRequest();
-    FakeServer::instance().getCreatedHarvestIds();
 }
 
 void FakeSessionManager::getUnusedLotIds()

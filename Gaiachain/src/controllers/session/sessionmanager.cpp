@@ -117,6 +117,20 @@ void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to,
     sendRequest(QSharedPointer<EntityRequest>::create(from, to, keyword), errorHandler, replyHandler);
 }
 
+void SessionManager::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.object().value(Tags::entities).toArray());
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, lastAction), errorHandler, replyHandler);
+    }
+}
+
 void SessionManager::getEntities(const QStringList &packageIds)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
@@ -192,20 +206,6 @@ void SessionManager::postNewEntity(const Enums::SupplyChainAction &action, const
     if (checkValidToken()) {
         sendRequest(QSharedPointer<EntityRequest>::create(m_token, codeData, EntityRequest::EntityData{ action, timestamp, properties }, true),
                     errorHandler, replyHandler);
-    }
-}
-
-void SessionManager::getCreatedHarvestIds()
-{
-    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
-        emit createdHarvestIdsLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit createdHarvestIdsLoaded(reply.object().value(Tags::packageIds).toArray());
-    };
-
-    if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Harvest), errorHandler, replyHandler);
     }
 }
 
