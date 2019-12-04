@@ -67,6 +67,7 @@ Item {
             delegate: Items.InputHeader {
                 width: parent.width
 
+                showIcon: false
                 readOnly: true
                 color: Style.headerBackgroundColor
                 headerText: headerValue

@@ -23,7 +23,7 @@ Components.PackageDataDetails {
         for (var i = 0; i < relatedPackages.length; ++i) {
             relatedPackagesModel.append({ "headerValue": Strings.empty,
                                           "inputValue": relatedPackages[i],
-                                          "inputSuffixValue": Strings.kg.arg(packageData.properties[PackageDataProperties.Weights][relatedPackages[i]]) })
+                                          "inputSuffixValue": Strings.kg.arg(minusIfNotDefined(packageData.properties[PackageDataProperties.Weights][relatedPackages[i]])) })
         }
 
     }

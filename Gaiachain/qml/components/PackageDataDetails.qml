@@ -33,8 +33,12 @@ Item {
         return Strings.empty
     }
 
-    function emptyIfNotDefnied(data) {
+    function emptyIfNotDefined(data) {
         return data ? data : Strings.empty
+    }
+
+    function minusIfNotDefined(value) {
+        return value ? value : "-"
     }
 
     function emptyIfNotDate(date) {

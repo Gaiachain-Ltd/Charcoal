@@ -81,7 +81,7 @@ Pages.SupplyChainPage {
 
             validator: IntValidator {}
 
-            headerText: Strings.estimatedVolume + " (" + Strings.notRequired + ")"
+            headerText: Strings.estimatedBeensVolume + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor
 
             iconSource: Style.rightArrowImgUrl
