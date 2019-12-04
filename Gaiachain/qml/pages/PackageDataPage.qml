@@ -9,11 +9,30 @@ import com.gaiachain.helpers 1.0
 BasePage {
     id: top
 
+    property string packageId
+    property int packageType
     property var packageData
+
+    Component.onCompleted: refreshData()
+
+    Connections {
+        target: dataManager
+        onPackageData: { top.packageData = packageData }
+    }
+    Connections {
+        target: eventsModel
+        onEntryInserted: {
+            // update view if new data arrived
+            if (entryData.at(0) === top.packageId) {
+                refreshData();
+            }
+        }
+    }
 
     function refreshData() {
         // called from BasePage
-        dataManager.fetchEventData(packageData.id, packageData.type)
+        dataManager.fetchEventData(packageId, packageType)
+        dataManager.getPackageData(packageId)
     }
 
     function urlToDetails(packageType) {
@@ -40,9 +59,11 @@ BasePage {
         Loader {
             anchors.fill: parent
 
-            source: urlToDetails(Number(top.packageData.type))
+            source: urlToDetails(Number(top.packageType))
             onLoaded: {
-                item.packageData = top.packageData
+                item.packageId = top.packageId
+                item.packageType = top.packageType
+                item.packageData = Qt.binding(function() { return top.packageData; })
                 detailsFlickable.contentHeight = Qt.binding( function() {
                     return item.implicitHeight
                 })

@@ -53,7 +53,7 @@ public:
     void updateToken(const QString &token);
 
 signals:
-    void connectionStateChanged(Enums::ConnectionState connectionState);
+    void connectionStateChanged(Enums::ConnectionState connectionState) const;
 
     void pingError(const QNetworkReply::NetworkError &code) const;
     void pingSuccess() const;

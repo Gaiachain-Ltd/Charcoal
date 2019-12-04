@@ -39,7 +39,7 @@ Item {
             Layout.preferredHeight: s(Style.buttonImageHeight)
             Layout.fillWidth: true
 
-            communicationInProgress: dataManager.collectingData
+            communicationInProgress: sessionManager.processing || dataManager.processing
         }
     }
 }

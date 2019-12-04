@@ -44,7 +44,8 @@ public slots:
     void postUnusedLotId();
 
 signals:
-    void connectionState(const QNetworkReply::NetworkError &errorCode);
+    void connectionState(const QNetworkReply::NetworkError &errorCode) const;
+    void requestFinished() const;
 
     void pingError(const QNetworkReply::NetworkError &code) const;
     void pingSuccess() const;

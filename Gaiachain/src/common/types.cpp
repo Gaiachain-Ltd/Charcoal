@@ -5,8 +5,7 @@
 #include <QHash>
 #include <QPair>
 #include <QDateTime>
-#include <QJsonDocument>
-#include <QJsonObject>
+#include <QDataStream>
 
 // All of this, because Qt doesn't allow to reqister converter for non custom types
 
@@ -42,12 +41,22 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
     { { QMetaType::QVariantMap, QMetaType::QByteArray },
       [](QVariant &value) {
           auto vm = value.toMap();
-          value.setValue(QJsonDocument(QJsonObject::fromVariantMap(vm)).toJson());
+          auto ba = QByteArray{};
+
+          QDataStream outStream(&ba, QIODevice::WriteOnly);
+          outStream << vm;
+
+          value.setValue(ba);
       } },
     { { QMetaType::QByteArray, QMetaType::QVariantMap },
       [](QVariant &value) {
-          auto s = value.toString();
-          value.setValue(QJsonDocument::fromJson(s.toLatin1()).object().toVariantMap());
+          auto ba = value.toByteArray();
+          auto vm = QVariantMap{};
+
+          QDataStream inStream(&ba, QIODevice::ReadOnly);
+          inStream >> vm;
+
+          value.setValue(vm);
       } },
 };
 }

@@ -16,17 +16,24 @@ Components.PackageDataDetails {
     relatedPackagesModel: relatedPackagesModel
 
     onPackageDataChanged: {
+        if (typeof(top.packageData) === "undefined") {
+            return
+        }
+
         const data = [
            { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Transporter]) },
            { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefnied(packageData.properties[PackageDataProperties.Destination]) },
            { "headerValue": Strings.transportDate,              "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.TransportDate]) }
        ]
 
+        detailsModel.clear()
         for (var i = 0; i < data.length; ++i) {
             detailsModel.append(data[i])
         }
 
         var relatedPackages = packageData.relatedPackages
+
+        relatedPackagesModel.clear()
         for (i = 0; i < relatedPackages.length; ++i) {
             relatedPackagesModel.append({ "headerValue": Strings.empty,
                                           "inputValue": relatedPackages[i],

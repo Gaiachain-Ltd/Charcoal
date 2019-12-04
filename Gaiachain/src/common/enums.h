@@ -87,6 +87,16 @@ namespace Enums {
     Q_ENUM_NS(ConnectionState)
     inline uint qHash(ConnectionState key, uint seed) { return qH<ConnectionState>(key, seed);}
 
+    enum class AdditionalDataType {
+        UnknownData = -1,
+        ProducersData,
+        BuyersData,
+        TransportersData,
+        DestinationsData
+    };
+    Q_ENUM_NS(AdditionalDataType)
+    inline uint qHash(AdditionalDataType key, uint seed) { return qH<AdditionalDataType>(key, seed);}
+
     enum class UserType {
         Annonymous = -1,
         SuperUser,

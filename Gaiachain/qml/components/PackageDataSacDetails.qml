@@ -13,8 +13,13 @@ Components.PackageDataDetails {
     relatedPackagesModel: relatedPackagesModel
 
     onPackageDataChanged: {
+        if (typeof(top.packageData) === "undefined") {
+            return
+        }
+
         var relatedPackages = packageData.relatedPackages
 
+        relatedPackagesModel.clear()
         for (var i = 0; i < relatedPackages.length; ++i) {
             relatedPackagesModel.append({ "headerValue": Strings.empty,
                                           "inputValue": relatedPackages[i],
