@@ -12,7 +12,7 @@ class BaseRequest : public MRestRequest
 {
     Q_OBJECT
 public:
-    explicit BaseRequest(const QString &path, const Type &type, const QString &token = QString());
+    BaseRequest(const QString &path, const Type &type, const QString &token = QString());
 
 signals:
     void requestFinished(const QJsonDocument &doc) const;
@@ -23,6 +23,7 @@ protected:
     QElapsedTimer mElapsedTimer;
 
     void setPath(const QString &path);
+    void setQuery(const QUrlQuery &query);
 
     virtual bool isTokenRequired() const;
     virtual void customizeRequest(QNetworkRequest &request) override;

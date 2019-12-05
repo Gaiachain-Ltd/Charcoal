@@ -77,6 +77,7 @@
         <file>components/dummy/ServerStateChanger.qml</file>
         <file>pages/WaitingTransactionsPage.qml</file>
         <file>items/NumberImageButton.qml</file>
-        <file>pages/SupplyChainSectionReceptionPage.qml</file>  
+        <file>pages/SupplyChainSectionReceptionPage.qml</file>
+        <file>pages/CalendarYearPage.qml</file>
     </qresource>
 </RCC>

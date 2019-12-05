@@ -25,40 +25,37 @@ public:
 
     bool processing() const override;
 
-    Q_INVOKABLE void getInitialData();
-
     Q_INVOKABLE void getPackageData(const QString &packageId) const;
 
-    Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                               const QVariantMap &properties, const QByteArray &codeData = {});
+    Q_INVOKABLE void addHarvestAction(const QString &parcelCode, const QDateTime &timestamp, const QVariantMap &properties);
+    Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action,
+                               const QDateTime &timestamp, const QVariantMap &properties);
+    Q_INVOKABLE void addAction(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                               const QDateTime &timestamp, const QVariantMap &properties);
     Q_INVOKABLE void addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
                                const QDateTime &timestamp, const QVariantMap &properties);
-    Q_INVOKABLE void addAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                               const QVariantMap &properties, const QByteArray &codeData = {});
 
     Q_INVOKABLE void sendOfflineActions();
 
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
-    Q_INVOKABLE void fetchCountEvents(int count, const QDateTime &from, const QString &keyword = {});
+    Q_INVOKABLE void fetchLimitEvents(int limit, const QDateTime &to, const QString &keyword = {});
     Q_INVOKABLE void fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction);
 
 signals:
     void collectingDataChanged(bool processing) const;
 
-    void addActionRequest(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                          const QVariantMap &properties, const QByteArray &codeData = {});
+    void addActionRequest(const QString &packageId, const Enums::SupplyChainAction &action,
+                          const QDateTime &timestamp, const QVariantMap &properties);
+    void addActionRequest(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                          const QDateTime &timestamp, const QVariantMap &properties);
     void addActionRequest(const QByteArray &codeData, const Enums::SupplyChainAction &action,
                           const QDateTime &timestamp, const QVariantMap &properties);
-    void addActionRequest(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                          const QVariantMap &properties, const QByteArray &codeData);
 
     void eventsInfoNeeded(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
-    void eventsInfoNeeded(int count, const QDateTime &from, const QString &keyword) const;
+    void eventsInfoNeeded(int limit, const QDateTime &to, const QString &keyword) const;
     void lastActionEventsInfoNeeded(const Enums::SupplyChainAction &lastAction) const;
-
     void eventsNeeded(const QStringList &ids) const;
-    void relationsNeeded(const QStringList &ids) const;
 
     void packageData(const PackageData &packageData) const;
 
@@ -69,7 +66,6 @@ public slots:
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);
     void onEntitiesLoaded(const QJsonArray &entities);
-    void onRelationsLoaded(const QJsonArray &relations);
     void onUnusedLotIdsLoaded(const QJsonArray &idsArray);
 
 private:

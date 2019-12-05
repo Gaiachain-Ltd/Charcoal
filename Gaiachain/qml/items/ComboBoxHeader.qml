@@ -15,6 +15,7 @@ Items.GenericHeader {
     property alias currentIndex: comboBox.currentIndex
     property alias currentText: comboBox.currentText
     property alias displayRole: comboBox.textRole
+    property alias count: comboBox.count
 
     property alias placeholderText: comboBox.placeholderText
 

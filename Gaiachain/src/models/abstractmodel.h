@@ -19,6 +19,7 @@ public:
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
+    bool clearData();
     void appendData(const Gaia::ModelData &modelData);
     void updateData(const Gaia::ModelEntry &searchEntryData, const Gaia::ModelEntryInfo &updateEntryData);
     void removeData(const Gaia::ModelEntry &entryData);

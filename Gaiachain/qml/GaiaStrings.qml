@@ -108,7 +108,7 @@ QtObject {
     readonly property string parcelCode: qsTr("Parcel code")
     readonly property string harvestDate: qsTr("Harvest date")
     readonly property string breakingDate: qsTr("Breaking date")
-    readonly property string estimatedBeensVolume: qsTr("Estimated volume on fresh beans kg")
+    readonly property string estimatedBeansVolume: qsTr("Estimated volume on fresh beans kg")
 
     readonly property string organicCocoaTransporter: qsTr("Organic cocoa transporter")
     readonly property string destination: qsTr("Destination")
@@ -131,4 +131,5 @@ QtObject {
 
     // special
     readonly property string checkMark: "\u2713"
+    readonly property string minus: "-"
 }

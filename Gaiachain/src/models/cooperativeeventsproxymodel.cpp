@@ -4,19 +4,28 @@
 
 CooperativeEventsProxyModel::CooperativeEventsProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
-{
-    setFilterRole(EventModel::CooperativeId);
-    connect(this, &CooperativeEventsProxyModel::activeChanged, this, [this]() { invalidateFilter(); });
-}
+{}
 
-void CooperativeEventsProxyModel::setCooperativeId(const QString &cooperativeId)
+quint32 CooperativeEventsProxyModel::cooperativeId() const
 {
-    setFilterFixedString(cooperativeId);
+    return m_cooperativeId;
 }
 
 bool CooperativeEventsProxyModel::active() const
 {
     return m_active;
+}
+
+void CooperativeEventsProxyModel::setCooperativeId(quint32 cooperativeId)
+{
+    if (m_cooperativeId == cooperativeId) {
+        return;
+    }
+
+    m_cooperativeId = cooperativeId;
+    emit cooperativeIdChanged(cooperativeId);
+
+    invalidateFilter();
 }
 
 void CooperativeEventsProxyModel::setActive(bool active)
@@ -26,7 +35,9 @@ void CooperativeEventsProxyModel::setActive(bool active)
     }
 
     m_active = active;
-    emit activeChanged(m_active);
+    emit activeChanged(active);
+
+    invalidateFilter();
 }
 
 bool CooperativeEventsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -35,5 +46,9 @@ bool CooperativeEventsProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
         return true;
     }
 
-    return AbstractSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
+    if (sourceModel()) {
+        auto cooperativeId = sourceModel()->data(sourceModel()->index(sourceRow, 0, sourceParent), EventModel::Columns::CooperativeId).toUInt();
+        return (m_cooperativeId == cooperativeId);
+    }
+    return false;
 }

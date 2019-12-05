@@ -4,7 +4,6 @@ const QHash<int, QByteArray> EventModel::sc_roleNames = {
     { Columns::PackageId,       QByteArrayLiteral("packageId") },
     { Columns::Action,          QByteArrayLiteral("action") },
     { Columns::Timestamp,       QByteArrayLiteral("timestamp") },
-    { Columns::UserRole,        QByteArrayLiteral("userRole") },
     { Columns::CooperativeId,   QByteArrayLiteral("cooperativeId") },
     { Columns::Properties,      QByteArrayLiteral("properties") },
     { Columns::LocationLat,     QByteArrayLiteral("locationLat") },
@@ -17,8 +16,7 @@ const QHash<int, QMetaType::Type> EventModel::sc_roleDatabaseTypes = {
     { Columns::PackageId,       QMetaType::QString },
     { Columns::Action,          QMetaType::UInt },
     { Columns::Timestamp,       QMetaType::LongLong },
-    { Columns::UserRole,        QMetaType::UInt },
-    { Columns::CooperativeId,   QMetaType::QString },
+    { Columns::CooperativeId,   QMetaType::UInt },
     { Columns::Properties,      QMetaType::QByteArray },
     { Columns::LocationLat,     QMetaType::Double },
     { Columns::LocationLon,     QMetaType::Double },
@@ -30,8 +28,7 @@ const QHash<int, QMetaType::Type> EventModel::sc_roleAppTypes = {
     { Columns::PackageId,       QMetaType::QString },
     { Columns::Action,          static_cast<QMetaType::Type>(qMetaTypeId<Enums::SupplyChainAction>()) },
     { Columns::Timestamp,       QMetaType::QDateTime },
-    { Columns::UserRole,        QMetaType::UInt },
-    { Columns::CooperativeId,   QMetaType::QString },
+    { Columns::CooperativeId,   QMetaType::UInt },
     { Columns::Properties,      QMetaType::QVariantMap },
     { Columns::LocationLat,     QMetaType::Double },
     { Columns::LocationLon,     QMetaType::Double },
@@ -42,6 +39,11 @@ const QHash<int, QMetaType::Type> EventModel::sc_roleAppTypes = {
 EventModel::EventModel(QObject *parent)
     : AbstractModel(parent)
 {}
+
+QString EventModel::columnName(const EventModel::Columns &column)
+{
+    return sc_roleNames.value(column);
+}
 
 int EventModel::firstColumn() const
 {

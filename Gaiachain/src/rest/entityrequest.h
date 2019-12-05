@@ -12,14 +12,11 @@ public:
     enum class RequestType {
         Invalid = -1,
         GetBatch,
-        GetFilterCount,
+        GetFilterLimit,
         GetFilterTo,
         GetFilterLastAction,
-        GetId,
         GetUnusedLots,
-        PutActionId,
-        PutActionCode,
-        PostNewPackage,
+        PostNewAction,
         PostUnusedLot
     };
     Q_ENUM(RequestType)
@@ -31,16 +28,15 @@ public:
     };
 
     EntityRequest(const RequestType &requestType, const QString &token = {});
-    EntityRequest(const QString &customPath, const RequestType &requestType, const QString &token = {});
 
     EntityRequest(const QStringList &packageIds = {});
-    EntityRequest(int count, const QDateTime &from, const QString &keyword = {});
+    EntityRequest(int limit, const QDateTime &to, const QString &keyword = {});
     EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction);
-    EntityRequest(const QByteArray &codeData);
 
-    EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData, const QByteArray &codeData = {});
-    EntityRequest(const QString &token, const QByteArray &codeData, const EntityData &entityData, bool newPackage);
+    EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData);
+    EntityRequest(const QString &token, const QString &packageId, const QByteArray &codeData, const EntityData &entityData);
+    EntityRequest(const QString &token, const QByteArray &codeData, const EntityData &entityData);
 
     EntityRequest(const QString &token, const Enums::PackageType &packageType, bool create = false);
 private:
@@ -49,6 +45,10 @@ private:
     static const QString sc_basePath;
     static const QMap<RequestType, Type> sc_requestsType;
     static const QMap<RequestType, QString> sc_requestsPath;
+
+    bool isTokenRequired() const override;
+
+    static QJsonObject entityDataObject(const EntityData &entityData);
 };
 
 

@@ -19,7 +19,7 @@
 #endif
 
 #ifdef USE_COMBOBOX
-#include "session/dummy/fakedatapopulator.h"
+#include "../common/dummy/commondummydata.h"
 #endif
 #ifdef FAKE_DATA
 #include "session/dummy/fakeserverstate.h"
@@ -49,9 +49,8 @@ void MainController::setupConnections()
 {
     connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupModels);
 
-    connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getInitialData);
-    connect(&m_userManager, &UserManager::loggedIn, &m_dataManager, &DataManager::getInitialData);
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
+    connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getAdditionalData);
     connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
 
@@ -63,16 +62,18 @@ void MainController::setupConnections()
 void MainController::setupDataConnections()
 {
     connect(&m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &, const QByteArray &>(&DataManager::addActionRequest),
+            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &, const QByteArray &>(&AbstractSessionManager::putEntityAction));
+            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+    connect(&m_dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
+            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            &m_sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
+            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
     connect(&m_dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
             const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::putEntityAction));
-    connect(&m_dataManager, qOverload<const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &, const QByteArray &>(&DataManager::addActionRequest),
-            &m_sessionManager, &AbstractSessionManager::postNewEntity);
+            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+
     connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
             &m_dataManager, &DataManager::onActionAdded);
     connect(&m_sessionManager, &AbstractSessionManager::entitySaveError,
@@ -98,12 +99,10 @@ void MainController::setupDataConnections()
             &m_sessionManager, qOverload<int, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
     connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
     connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
-    connect(&m_dataManager, &DataManager::relationsNeeded,
-            &m_sessionManager, qOverload<const QStringList &>(&AbstractSessionManager::getRelations));
+    connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
 
     connect(&m_sessionManager, &AbstractSessionManager::entitiesInfoLoaded, &m_dataManager, &DataManager::onEntitiesInfoLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
-    connect(&m_sessionManager, &AbstractSessionManager::relationsLoaded, &m_dataManager, &DataManager::onRelationsLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
 }
@@ -126,14 +125,15 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qmlRegisterUncreatableMetaObject(Enums::staticMetaObject, "com.gaiachain.enums", 1, 0,
                                      "Enums", "Cannot create namespace Enums in QML");
 
-    qRegisterMetaType<Enums::Page>("Page");
-    qRegisterMetaType<Enums::Popup>("Popup");
-    qRegisterMetaType<Enums::PopupAction>("PopupAction");
-    qRegisterMetaType<Enums::ConnectionState>("ConnectionState");
-    qRegisterMetaType<Enums::UserType>("UserType");
-    qRegisterMetaType<Enums::PlaceType>("PlaceType");
-    qRegisterMetaType<Enums::PackageType>("PackageType");
-    qRegisterMetaType<Enums::SupplyChainAction>("SupplyChainAction");
+    qRegisterMetaType<Enums::Page>("Enums::Page");
+    qRegisterMetaType<Enums::Popup>("Enums::Popup");
+    qRegisterMetaType<Enums::PopupAction>("Enums::PopupAction");
+    qRegisterMetaType<Enums::ConnectionState>("Enums::ConnectionState");
+    qRegisterMetaType<Enums::UserType>("Enums::UserType");
+    qRegisterMetaType<Enums::PackageType>("Enums::PackageType");
+    qRegisterMetaType<Enums::SupplyChainAction>("Enums::SupplyChainAction");
+    qRegisterMetaType<Gaia::ModelData>("Gaia::ModelData");
+    qRegisterMetaType<Gaia::ModelEntry>("Gaia::ModelEntry");
 
     // register other types
     qRegisterMetaType<PackageData>("PackageData");
@@ -160,7 +160,8 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 
     // add context properties
 #ifdef USE_COMBOBOX
-    engine.rootContext()->setContextProperty(QStringLiteral("fakeLogins"), FakeDataPopulator::availableLogins());
+    engine.rootContext()->setContextProperty(QStringLiteral("dummyLogins"), CommonDummyData::availableLogins());
+    engine.rootContext()->setContextProperty(QStringLiteral("dummyPassword"), CommonDummyData::commonPassword());
 #endif
 #ifdef FAKE_DATA
     engine.rootContext()->setContextProperty(QStringLiteral("fakeServer"), &FakeServerState::instance());

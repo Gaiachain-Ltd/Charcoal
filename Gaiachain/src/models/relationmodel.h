@@ -19,6 +19,8 @@ public:
 
     RelationModel(QObject *parent = nullptr);
 
+    static QString columnName(const Columns &column);
+
     int firstColumn() const override;
     int lastColumn() const override;
 

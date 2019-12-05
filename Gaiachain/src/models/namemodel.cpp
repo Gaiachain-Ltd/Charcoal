@@ -1,29 +1,27 @@
 #include "namemodel.h"
 
 const QHash<int, QByteArray> NameModel::sc_roleNames = {
-    { Columns::Name,          QByteArrayLiteral("name") }
+    { Columns::Id,      QByteArrayLiteral("id") },
+    { Columns::Name,    QByteArrayLiteral("name") }
 };
 
 const QHash<int, QMetaType::Type> NameModel::sc_roleDatabaseTypes = {
-    { Columns::Name,          QMetaType::QString }
+    { Columns::Id,      QMetaType::LongLong },
+    { Columns::Name,    QMetaType::QString }
 };
 
 const QHash<int, QMetaType::Type> NameModel::sc_roleAppTypes = {
-    { Columns::Name,          QMetaType::QString }
+    { Columns::Id,      QMetaType::LongLong },
+    { Columns::Name,    QMetaType::QString }
 };
 
 NameModel::NameModel(QObject *parent)
     : AbstractModel(parent)
 {}
 
-const QString NameModel::columnName()
-{
-    return sc_roleNames.value(Columns::Name);
-}
-
 int NameModel::firstColumn() const
 {
-    return columnShift(Name);
+    return columnShift(Id);
 }
 
 int NameModel::lastColumn() const

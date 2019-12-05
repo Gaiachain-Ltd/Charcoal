@@ -131,7 +131,7 @@ BasePage {
 
             onClicked: {
                 pageManager.enter(Enums.Page.LoginLoading, { "skipLogin": true })
-                sessionManager.ping()
+                sessionManager.getAdditionalData()
             }
         }
 

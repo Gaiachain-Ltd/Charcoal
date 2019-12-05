@@ -31,7 +31,9 @@ BasePage {
         var supplyChainPage = supplyChainPageForAction(action)
         if (supplyChainPage !== Number(Enums.Page.InvalidPage)) {
             pageManager.enter(supplyChainPage, { "action": action })
+            return true
         }
+        return false
     }
 
     Flickable {
@@ -87,7 +89,11 @@ BasePage {
                         }
                     }
 
-                    onActionClicked: navigateSupplyChainPages(action)
+                    onActionClicked: {
+                        if (navigateSupplyChainPages(action)) {
+                            supplyChainSubmenu.menuVisible = false
+                        }
+                    }
 
                     ParallelAnimation {
                         id: menuVisibleAnimation

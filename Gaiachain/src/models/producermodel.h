@@ -11,14 +11,16 @@ class ProducerModel : public AbstractModel
 
 public:
     enum Columns {
-        ProducerId = Qt::UserRole + 1, // 1 as 0 column is id column not used in UI
+        Id = Qt::UserRole,
+        Code,
         Name,
         Village,
-        ParcelCodes,
         LastColumn
     }; //!!! Keep the lastcolumn, a last entry in the enum
 
     ProducerModel(QObject *parent = nullptr);
+
+    static QString columnName(const Columns &column);
 
     int firstColumn() const override;
     int lastColumn() const override;

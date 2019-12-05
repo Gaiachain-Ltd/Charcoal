@@ -15,13 +15,13 @@ ComboBox
 
     function updateInputsProperties() {
         loginInput.text = useDummy ?  Qt.binding(function() { return currentText }) : ""
-        passwordInput.text = useDummy ?  "milo1024" : ""
+        passwordInput.text = useDummy ?  dummyPassword : ""
     }
 
     Component.onCompleted: updateInputsProperties()
     onUseDummyChanged: updateInputsProperties()
 
-    model: typeof (fakeLogins) !== "undefined" ? fakeLogins : {}
+    model: typeof (dummyLogins) !== "undefined" ? dummyLogins : {}
     visible: useDummy
 
     anchors.centerIn: parent

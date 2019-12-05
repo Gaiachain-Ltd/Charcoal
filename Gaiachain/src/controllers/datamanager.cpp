@@ -34,12 +34,6 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
     m_modelsHandler.setupQmlContext(engine);
 }
 
-void DataManager::getInitialData()
-{
-    fetchLastActionPackageEvents(Enums::SupplyChainAction::Harvest);
-    fetchLastActionPackageEvents(Enums::SupplyChainAction::GrainProcessing);
-}
-
 void DataManager::setupModels(QSqlDatabase db)
 {
     m_modelsHandler.setupModels(db);
@@ -63,32 +57,36 @@ void DataManager::getPackageData(const QString &packageId) const
                                                           packageId));
 }
 
-void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void DataManager::addHarvestAction(const QString &parcelCode, const QDateTime &timestamp, const QVariantMap &properties)
+{
+    auto id = generateHarvestId(properties.value(PackageDataProperties::HarvestDate).toDate(), parcelCode);
+    addAction(id, Enums::SupplyChainAction::Harvest, timestamp, properties);
+}
+
+void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action,
+                            const QDateTime &timestamp, const QVariantMap &properties)
 {
     auto isOfflineAction = DataGlobals::availableOfflineActions().contains(action) && !m_userData.isAnonymous();
     if (isOfflineAction) {
         QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::addLocalAction, &m_modelsHandler,
-                                                              packageId, action, timestamp, m_userData.type, m_userData.cooperativeId, properties));
+                                                              packageId, action, timestamp, m_userData.cooperativeId, properties));
         QMetaObject::invokeMethod(&m_requestsHandler, std::bind(&DataRequestsManager::processOfflineAction, &m_requestsHandler,
                                                                 packageId, action));
     }
 
-    emit addActionRequest(packageId, action, timestamp, properties, codeData);
+    emit addActionRequest(packageId, action, timestamp, properties);
 }
 
-void DataManager::addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
+void DataManager::addAction(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                            const QDateTime &timestamp, const QVariantMap &properties)
+{
+    emit addActionRequest(packageId, codeData, action, timestamp, properties);
+}
+
+void DataManager::addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                            const QDateTime &timestamp, const QVariantMap &properties)
 {
     emit addActionRequest(codeData, action, timestamp, properties);
-}
-
-void DataManager::addAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
-{
-    if (action == Enums::SupplyChainAction::Harvest) {
-        auto id = generateHarvestId(timestamp.date(), properties.value(PackageDataProperties::ParcelCode).toString());
-        addAction(id, action, timestamp, properties, codeData);
-    } else {
-        emit addActionRequest(action, timestamp, properties, codeData);
-    }
 }
 
 void DataManager::sendOfflineActions()
@@ -114,9 +112,9 @@ void DataManager::fetchRangeEvents(const QDateTime &from, const QDateTime &to, c
     emit eventsInfoNeeded(from, to, keyword);
 }
 
-void DataManager::fetchCountEvents(int count, const QDateTime &from, const QString &keyword)
+void DataManager::fetchLimitEvents(int limit, const QDateTime &from, const QString &keyword)
 {
-    emit eventsInfoNeeded(count, from, keyword);
+    emit eventsInfoNeeded(limit, from, keyword);
 }
 
 void DataManager::fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction)
@@ -154,12 +152,6 @@ void DataManager::onEntitiesLoaded(const QJsonArray &entities)
                                                             entities));
 }
 
-void DataManager::onRelationsLoaded(const QJsonArray &relations)
-{
-    QMetaObject::invokeMethod(&m_requestsHandler, std::bind(&DataRequestsManager::processRelations, &m_requestsHandler,
-                                                            relations));
-}
-
 void DataManager::onUnusedLotIdsLoaded(const QJsonArray &idsArray)
 {
     QMetaObject::invokeMethod(&m_requestsHandler, std::bind(&DataRequestsManager::processUnusedLotIdsLoaded, &m_requestsHandler,
@@ -179,9 +171,8 @@ void DataManager::setupHandlersConnections()
     connect(&m_requestsHandler, &AbstractManager::processingChanged, this, updateProcessing);
 
     // data related
-    connect(&m_modelsHandler, &DataModelsManager::countEventsNeeded, this, &DataManager::fetchCountEvents);
+    connect(&m_modelsHandler, &DataModelsManager::limitEventsNeeded, this, &DataManager::fetchLimitEvents);
     connect(&m_modelsHandler, &DataModelsManager::eventsNeeded, this, &DataManager::eventsNeeded);
-    connect(&m_modelsHandler, &DataModelsManager::relationsNeeded, this, &DataManager::relationsNeeded);
     connect(&m_modelsHandler, &DataModelsManager::packageData, this, &DataManager::packageData);
     connect(&m_modelsHandler, &DataModelsManager::offlineActions, &m_requestsHandler, &DataRequestsManager::processOfflineActions);
 

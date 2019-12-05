@@ -21,6 +21,11 @@ UnusedIdsModel::UnusedIdsModel(QObject *parent)
     : AbstractModel(parent)
 {}
 
+QString UnusedIdsModel::columnName(const UnusedIdsModel::Columns &column)
+{
+    return sc_roleNames.value(column);
+}
+
 int UnusedIdsModel::firstColumn() const
 {
     return columnShift(PackageId);

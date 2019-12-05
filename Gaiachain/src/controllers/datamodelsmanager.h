@@ -12,6 +12,8 @@
 #include "../models/sqltablemodel.h"
 
 #include "../models/producermodel.h"
+#include "../models/parcelmodel.h"
+#include "../models/companymodel.h"
 #include "../models/namemodel.h"
 
 #include "../models/eventmodel.h"
@@ -33,6 +35,8 @@
 #include "../models/packagedataproxymodel.h"
 #include "../models/relationslistproxymodel.h"
 
+#include "../models/views/parcelviewmodel.h"
+
 class QQmlApplicationEngine;
 
 class DataModelsManager : public AbstractManager
@@ -45,10 +49,10 @@ public:
 
     void setupModels(QSqlDatabase db);
 
-    void updateCooperativeId(const QString &cooperativeId);
+    void updateCooperativeId(quint32 cooperativeId);
 
     void addLocalAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                        const Enums::UserType &userType, const QString &cooperativeId, const QVariantMap &properties);
+                        int cooperativeId, const QVariantMap &properties);
     void updateLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
     void removeLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
 
@@ -62,9 +66,8 @@ public:
     void getOfflineActions() const;
 
 signals:
-    void countEventsNeeded(int count, const QDateTime &from, const QString &keyword);
+    void limitEventsNeeded(int count, const QDateTime &from, const QString &keyword);
     void eventsNeeded(const QStringList &packageIds);
-    void relationsNeeded(const QStringList &packageIds);
 
     void packageData(const PackageData &packageData) const;
     void offlineActions(const Gaia::ModelData &offlineData) const;
@@ -78,8 +81,8 @@ private:
     QScopedPointer<SqlTableModel> m_unusedIdsDatabaseModel;
 
     QScopedPointer<SqlTableModel> m_producersDatabaseModel;
-    QScopedPointer<SqlTableModel> m_buyersDatabaseModel;
-    QScopedPointer<SqlTableModel> m_transportersDatabaseModel;
+    QScopedPointer<SqlTableModel> m_parcelsDatabaseModel;
+    QScopedPointer<SqlTableModel> m_companiesDatabaseModel;
     QScopedPointer<SqlTableModel> m_destinationsDatabaseModel;
 
     ExistsQueryModel m_existsQueryModel;
@@ -90,12 +93,18 @@ private:
 
     UnusedIdsModel m_unusedLotIdsModel;
 
-    ProducerModel m_producersModel;
-    NameModel m_buyersModel;
-    NameModel m_transportersModel;
-    NameModel m_destinationsModel;
+    ProducerModel m_producersSourceModel;
+    ParcelModel m_parcelsSourceModel;
+    CompanyModel m_companiesSourceModel;
+    NameModel m_destinationsSourceModel;
 
     // proxy models
+    ProducerModel m_producersViewModel;
+    ParcelViewModel m_parcelsViewModel;
+    NameModel m_buyersViewModel;
+    NameModel m_transportersViewModel;
+    NameModel m_destinationsViewModel;
+
     CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
     PackageLastActionProxyModel m_lastActionHarvestModel{ Enums::SupplyChainAction::Harvest };
     PackageLastActionProxyModel m_lastActionGrainProcessingModel{ Enums::SupplyChainAction::GrainProcessing };
@@ -119,10 +128,19 @@ private:
     PackageDataProxyModel m_packageDataModel;
     RelationsListProxyModel m_relationsListModel;
 
-    void removeExistingProducers(Gaia::ModelData &modelData);
-    void removeExistingNameData(Gaia::ModelData &modelData, AbstractModel* model, const QLatin1String &tableName);
+    // models handling
+    QList<QPointer<SqlQueryModel>> m_modelsToUpdate;
+
+    void setupUpdateConnections();
+
+    void scheduleModelUpdate(SqlQueryModel *model);
+    void updateModels();
+
+    static bool isInvalidAction(const Gaia::ModelEntry &entityEntry);
+
+    void removeExistingById(Gaia::ModelData &modelData, const QLatin1String &tableName);
     void removeExistingEvents(Gaia::ModelData &modelData);
-    void removeExistingRelations(Gaia::ModelData &modelData, bool fullCheck);
+    void removeExistingRelations(Gaia::ModelData &modelData);
     void removeExistingUnusedLotIds(Gaia::ModelData &modelData);
 };
 

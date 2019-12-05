@@ -5,23 +5,20 @@ PackageDataProperties::PackageDataProperties(QObject *parent)
 
 }
 
-const QString PackageDataProperties::ProducerId = QStringLiteral("producerId");
-const QString PackageDataProperties::ProducerName = QStringLiteral("producerName");
-const QString PackageDataProperties::Village = QStringLiteral("village");
-const QString PackageDataProperties::ParcelCode = QStringLiteral("parcelCode");
-const QString PackageDataProperties::BreakingDate = QStringLiteral("breakingDate");
-const QString PackageDataProperties::DryingDate = QStringLiteral("dryingDate");
-const QString PackageDataProperties::EstimatedVolume = QStringLiteral("estimatedVolume");
-const QString PackageDataProperties::DepartureDate = QStringLiteral("departureDate");
-const QString PackageDataProperties::HarvestDate = QStringLiteral("harvestDate");
-const QString PackageDataProperties::DeparturePlace = QStringLiteral("departurePlace");
+const QString PackageDataProperties::ParcelId = QStringLiteral("parcel");
+const QString PackageDataProperties::BreakingDate = QStringLiteral("breaking_date");
+const QString PackageDataProperties::FermentationEndDate = QStringLiteral("end_fermentation_date");
+const QString PackageDataProperties::EstimatedBeansVolume = QStringLiteral("beans_volume");
+const QString PackageDataProperties::DepartureDate = QStringLiteral("departure_date");
+const QString PackageDataProperties::HarvestDate = QStringLiteral("harvest_date");
+const QString PackageDataProperties::DeparturePlace = QStringLiteral("departure_place");
 const QString PackageDataProperties::Buyer = QStringLiteral("buyer");
 const QString PackageDataProperties::Weights = QStringLiteral("weights");
 const QString PackageDataProperties::Transporter = QStringLiteral("transporter");
 const QString PackageDataProperties::Destination = QStringLiteral("destination");
 const QString PackageDataProperties::Weight = QStringLiteral("weight");
-const QString PackageDataProperties::ReceptionDate = QStringLiteral("receptionDate");
-const QString PackageDataProperties::TransportDate = QStringLiteral("transportDate");
+const QString PackageDataProperties::ReceptionDate = QStringLiteral("reception_date");
+const QString PackageDataProperties::TransportDate = QStringLiteral("transport_date");
 
 PackageDataProperties &PackageDataProperties::instance() {
     static PackageDataProperties pdp;

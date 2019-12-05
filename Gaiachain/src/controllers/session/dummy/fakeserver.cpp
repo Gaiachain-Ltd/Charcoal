@@ -63,12 +63,32 @@ void FakeServer::getAdditionalData()
     });
 }
 
-void FakeServer::getRelations(const QString &packageId)
+void FakeServer::getProducers()
 {
     const auto error = randomError();
 
     QTimer::singleShot(randomWaitTime(), this, [=]() {
-        isError(error) ? onRelationsError(error) : onRelations({packageId, });
+        isError(error) ? onAdditionalDataError(error) : onProducers();
+        emit requestFinished();
+    });
+}
+
+void FakeServer::getCompanies()
+{
+    const auto error = randomError();
+
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onAdditionalDataError(error) : onCompanies();
+        emit requestFinished();
+    });
+}
+
+void FakeServer::getDestinations()
+{
+    const auto error = randomError();
+
+    QTimer::singleShot(randomWaitTime(), this, [=]() {
+        isError(error) ? onAdditionalDataError(error) : onDestinations();
         emit requestFinished();
     });
 }
@@ -83,22 +103,12 @@ void FakeServer::getRelations(const QStringList &packageIds)
     });
 }
 
-void FakeServer::addRelation(const QString &packageId, const QStringList &relatedIds)
+void FakeServer::getEntitiesInfo(int limit, const QDateTime &to, const QString &keyword)
 {
     const auto error = randomError();
 
     QTimer::singleShot(randomWaitTime(), this, [=]() {
-        isError(error) ? onRelationSaveError(packageId, error) : onRelationSaved(packageId, relatedIds);
-        emit requestFinished();
-    });
-}
-
-void FakeServer::getEntitiesInfo(int count, const QDateTime &from, const QString &keyword)
-{
-    const auto error = randomError();
-
-    QTimer::singleShot(randomWaitTime(), this, [=]() {
-        isError(error) ? onEntityError(error) : onEntityInfo(count, from, keyword);
+        isError(error) ? onEntityError(error) : onEntityInfo(limit, to, keyword);
         emit requestFinished();
     });
 }
@@ -133,47 +143,30 @@ void FakeServer::getEntities(const QStringList &packageIds)
     });
 }
 
-void FakeServer::getEntity(const QString &packageId)
+void FakeServer::postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
+                               const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto error = randomError();
 
     QTimer::singleShot(randomWaitTime(), this, [=]() {
-        isError(error) ? onEntityError(error) : onEntity({ packageId, });
+        isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(packageId, action, timestamp, properties);
         emit requestFinished();
     });
 }
 
-void FakeServer::getEntityId(const QByteArray &codeData)
+void FakeServer::postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                               const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto error = randomError();
 
     QTimer::singleShot(randomWaitTime(), this, [=]() {
-        isError(error) ? onEntityError(error) : onEntityId(codeData);
+        isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(packageId, codeData, action, timestamp, properties);
         emit requestFinished();
     });
 }
 
-void FakeServer::putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
-{
-    const auto error = randomError();
-
-    QTimer::singleShot(randomWaitTime(), this, [=]() {
-        isError(error) ? onEntitySaveError(packageId, action, error) : onEntitySaved(packageId, action, timestamp, properties, codeData);
-        emit requestFinished();
-    });
-}
-
-void FakeServer::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
-{
-    const auto error = randomError();
-
-    QTimer::singleShot(randomWaitTime(), this, [=]() {
-        isError(error) ? onEntitySaveError({}, action, error) : onEntitySaved(QString{}, action, timestamp, properties, codeData);
-        emit requestFinished();
-    });
-}
-
-void FakeServer::postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void FakeServer::postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                               const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto error = randomError();
 
@@ -236,7 +229,7 @@ void FakeServer::onLoginError(const QString &login, const QNetworkReply::Network
     emit connectionState(error);
 
     m_currentUserType = Enums::UserType::Annonymous;
-    m_currentCooperativeId = QString{};
+    m_currentCooperativeId = -1;
 
     emit loginError(login, error);
 }
@@ -248,12 +241,12 @@ void FakeServer::onLogin(const QString &login, const QString &password)
     if (m_populator.checkLogin(login, password)) {
         auto userData = m_populator.generateUserData(login);
         m_currentUserType = m_populator.userType(login);
-        m_currentCooperativeId = userData.value(Tags::cooperativeId).toString();
+        m_currentCooperativeId = userData.value(Tags::company).toMap().value(Tags::id).toInt();
 
         emit loginFinished(login, QJsonObject::fromVariantMap(userData));
     } else {
         m_currentUserType = Enums::UserType::Annonymous;
-        m_currentCooperativeId = QString{};
+        m_currentCooperativeId = -1;
 
         emit loginError(login, QNetworkReply::AuthenticationRequiredError);
     }
@@ -271,8 +264,37 @@ void FakeServer::onAdditionalData()
 
     auto additionalData = QVariantMap{};
     additionalData.insert(Tags::producers, m_populator.getProducers());
-    additionalData.insert(Tags::buyers, m_populator.getBuyers());
-    additionalData.insert(Tags::transporters, m_populator.getTransporters());
+    additionalData.insert(Tags::companies, m_populator.getCompanies());
+    additionalData.insert(Tags::destinations, m_populator.getDestinations());
+
+    emit additionalDataLoaded(QJsonObject::fromVariantMap(additionalData));
+}
+
+void FakeServer::onProducers()
+{
+    emit connectionState(QNetworkReply::NoError);
+
+    auto additionalData = QVariantMap{};
+    additionalData.insert(Tags::producers, m_populator.getProducers());
+
+    emit additionalDataLoaded(QJsonObject::fromVariantMap(additionalData));
+}
+
+void FakeServer::onCompanies()
+{
+    emit connectionState(QNetworkReply::NoError);
+
+    auto additionalData = QVariantMap{};
+    additionalData.insert(Tags::companies, m_populator.getCompanies());
+
+    emit additionalDataLoaded(QJsonObject::fromVariantMap(additionalData));
+}
+
+void FakeServer::onDestinations()
+{
+    emit connectionState(QNetworkReply::NoError);
+
+    auto additionalData = QVariantMap{};
     additionalData.insert(Tags::destinations, m_populator.getDestinations());
 
     emit additionalDataLoaded(QJsonObject::fromVariantMap(additionalData));
@@ -294,25 +316,11 @@ void FakeServer::onRelations(const QStringList &packagesIds)
                    std::back_inserter(relationsArray),
                    [](const std::pair<QString, QVariant> &data) -> QJsonValue {
         return QJsonObject::fromVariantMap({
-                                               { Tags::packageId, data.first },
-                                               { Tags::packageIds, data.second }
+                                               { Tags::pid, data.first },
+                                               { Tags::pids, data.second }
                                            });
     });
     emit relationsLoaded(relationsArray);
-}
-
-void FakeServer::onRelationSaveError(const QString &packageId, const QNetworkReply::NetworkError &error)
-{
-    emit connectionState(error);
-    emit relationsSaveError(packageId, error);
-}
-
-void FakeServer::onRelationSaved(const QString &packageId, const QStringList &relatedIds)
-{
-    emit connectionState(QNetworkReply::NoError);
-
-    m_populator.addPackageRelation(packageId, relatedIds);
-    emit relationsSaved(packageId);
 }
 
 void FakeServer::onEntityError(const QNetworkReply::NetworkError &error)
@@ -321,11 +329,11 @@ void FakeServer::onEntityError(const QNetworkReply::NetworkError &error)
     emit entitiesLoadError(error);
 }
 
-void FakeServer::onEntityInfo(int count, const QDateTime &from, const QString &keyword)
+void FakeServer::onEntityInfo(int limit, const QDateTime &to, const QString &keyword)
 {
     emit connectionState(QNetworkReply::NoError);
 
-    emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getEventsInfo(count, from, keyword)) );
+    emit entitiesInfoLoaded(QJsonArray::fromVariantList(m_populator.getEventsInfo(limit, to, keyword)) );
 }
 
 void FakeServer::onEntityInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
@@ -346,25 +354,7 @@ void FakeServer::onEntity(const QStringList &packagesId)
 {
     emit connectionState(QNetworkReply::NoError);
 
-    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventHistory(packagesId)) );
-}
-
-void FakeServer::onEntityIdError(const QNetworkReply::NetworkError &error)
-{
-    emit connectionState(error);
-    emit entityIdLoadError(error);
-}
-
-void FakeServer::onEntityId(const QByteArray &codeData)
-{
-    emit connectionState(QNetworkReply::NoError);
-
-    auto id = m_populator.getEventId(codeData);
-    if (id.isEmpty()) {
-        emit entityIdLoadError(QNetworkReply::HostNotFoundError);
-    } else {
-        emit entityIdLoaded(id);
-    }
+    emit entitiesLoaded(QJsonArray::fromVariantList(m_populator.getEventsHistory(packagesId)) );
 }
 
 void FakeServer::onEntitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error)
@@ -373,13 +363,25 @@ void FakeServer::onEntitySaveError(const QString &packageId, const Enums::Supply
     emit entitySaveError(packageId, action, error);
 }
 
-void FakeServer::onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void FakeServer::onEntitySaved(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
 {
     emit connectionState(QNetworkReply::NoError);
 
-    auto result = m_populator.addAction(packageId, action, timestamp, properties, codeData, m_currentUserType, m_currentCooperativeId);
+    auto result = m_populator.addAction(packageId, action, timestamp, properties, m_currentUserType, m_currentCooperativeId);
     if (!result) {
         emit entitySaveError(packageId, action, QNetworkReply::NetworkError::ContentOperationNotPermittedError);
+    } else {
+        emit entitySaved(packageId, action);
+    }
+}
+
+void FakeServer::onEntitySaved(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
+{
+    emit connectionState(QNetworkReply::NoError);
+
+    auto result = m_populator.addAction(packageId, codeData, action, timestamp, properties, m_currentUserType, m_currentCooperativeId);
+    if (!result) {
+        emit entitySaveError({}, action, QNetworkReply::NetworkError::ContentOperationNotPermittedError);
     } else {
         emit entitySaved(packageId, action);
     }
@@ -389,7 +391,7 @@ void FakeServer::onEntitySaved(const QByteArray &codeData, const Enums::SupplyCh
 {
     emit connectionState(QNetworkReply::NoError);
 
-    auto packageId = m_populator.addNewAction(action, timestamp, properties, codeData, m_currentUserType, m_currentCooperativeId);
+    auto packageId = m_populator.addAction(codeData, action, timestamp, properties, m_currentUserType, m_currentCooperativeId);
     if (packageId.isEmpty()) {
         emit entitySaveError({}, action, QNetworkReply::NetworkError::ContentOperationNotPermittedError);
     } else {

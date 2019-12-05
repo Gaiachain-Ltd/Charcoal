@@ -12,8 +12,7 @@ public:
     enum class DataType {
         All = 0,
         Producers,
-        Buyers,
-        Transporters,
+        Companies,
         Destinations
     };
     Q_ENUM(DataType)

@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.modelhelper 1.0
 import com.gaiachain.packagedata 1.0
 
 import "../items" as Items
@@ -18,14 +19,20 @@ Components.PackageDataDetails {
             return
         }
 
+        var parcelId = packageData.properties[PackageDataProperties.ParcelId]
+        var parcelData = ModelHelper.findItem("id", parcelId, ["code", "producerId"], allParcelsModel)
+
+        var producerId = parcelData[1]
+        var producerData = ModelHelper.findItem("id", producerId, ["name", "code", "village"], producersModel)
+
         const data = [
-           { "headerValue": Strings.nameOfProducer,                 "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.ProducerName]) },
-           { "headerValue": Strings.producerIdNumber,               "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.ProducerId]) },
-           { "headerValue": Strings.village,                        "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.Village]) },
-           { "headerValue": Strings.parcelCode,                     "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.ParcelCode]) },
-           { "headerValue": Strings.harvestDate,                    "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
-           { "headerValue": Strings.breakingDate,                   "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) },
-           { "headerValue": Strings.estimatedBeensVolume,           "inputValue": Strings.kg.arg(minusIfNotDefined(packageData.properties[PackageDataProperties.EstimatedVolume])) }
+           { "headerValue": Strings.nameOfProducer,       "inputValue": emptyIfNotDefined(producerData[0]) },
+           { "headerValue": Strings.producerIdNumber,     "inputValue": emptyIfNotDefined(producerData[1]) },
+           { "headerValue": Strings.village,              "inputValue": emptyIfNotDefined(producerData[2]) },
+           { "headerValue": Strings.parcelCode,           "inputValue": emptyIfNotDefined(parcelData[0]) },
+           { "headerValue": Strings.harvestDate,          "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
+           { "headerValue": Strings.breakingDate,         "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) },
+           { "headerValue": Strings.estimatedBeansVolume, "inputValue": Strings.kg.arg(minusIfNotDefined(packageData.properties[PackageDataProperties.EstimatedBeansVolume])) }
        ]
 
         detailsModel.clear()

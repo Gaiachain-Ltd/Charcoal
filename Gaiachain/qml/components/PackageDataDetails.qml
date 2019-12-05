@@ -38,7 +38,7 @@ Item {
     }
 
     function minusIfNotDefined(value) {
-        return value ? value : "-"
+        return value ? value : Strings.minus
     }
 
     function emptyIfNotDate(date) {

@@ -3,8 +3,10 @@
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QSqlField>
+#include <QSqlQuery>
 
 #include "../common/types.h"
+#include "../database/dbhelpers.h"
 
 AbstractModel::AbstractModel(QObject *parent)
     : AbstractReadModel(parent)
@@ -49,6 +51,24 @@ bool AbstractModel::setData(const QModelIndex &index, const QVariant &value, int
     types::convert(updatedValue, roleDatabaseTypes().value(roleShift(column)) );
 
     return QIdentityProxyModel::setData(updatedIndex, updatedValue);
+}
+
+bool AbstractModel::clearData()
+{
+    if (m_writableModel.isNull()) {
+        qCWarning(dataModels) << "Trying to clear data with an empty model!";
+        return false;
+    }
+
+    static const auto DeleteAllQuery = QString{"DELETE FROM `%1`"};
+
+    auto query = QSqlQuery{m_writableModel->database()};
+    query.prepare(DeleteAllQuery.arg(m_writableModel->tableName()));
+
+    db::Helpers::execQuery(query);
+
+    m_writableModel->select();
+    return !db::Helpers::hasError(query);
 }
 
 void AbstractModel::appendData(const Gaia::ModelData &modelData)

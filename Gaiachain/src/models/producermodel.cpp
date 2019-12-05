@@ -1,33 +1,38 @@
 #include "producermodel.h"
 
 const QHash<int, QByteArray> ProducerModel::sc_roleNames = {
-    { Columns::ProducerId,    QByteArrayLiteral("producerId") },
-    { Columns::Name,          QByteArrayLiteral("name") },
-    { Columns::Village,       QByteArrayLiteral("village") },
-    { Columns::ParcelCodes,   QByteArrayLiteral("parcelCodes") }
+    { Columns::Id,      QByteArrayLiteral("id") },
+    { Columns::Code,    QByteArrayLiteral("code") },
+    { Columns::Name,    QByteArrayLiteral("name") },
+    { Columns::Village, QByteArrayLiteral("village") }
 };
 
 const QHash<int, QMetaType::Type> ProducerModel::sc_roleDatabaseTypes = {
-    { Columns::ProducerId,    QMetaType::QString },
-    { Columns::Name,          QMetaType::QString },
-    { Columns::Village,       QMetaType::QString },
-    { Columns::ParcelCodes,   QMetaType::QString }
+    { Columns::Id,      QMetaType::LongLong },
+    { Columns::Code,    QMetaType::QString },
+    { Columns::Name,    QMetaType::QString },
+    { Columns::Village, QMetaType::QString }
 };
 
 const QHash<int, QMetaType::Type> ProducerModel::sc_roleAppTypes = {
-    { Columns::ProducerId,    QMetaType::QString },
-    { Columns::Name,          QMetaType::QString },
-    { Columns::Village,       QMetaType::QString },
-    { Columns::ParcelCodes,   QMetaType::QStringList }
+    { Columns::Id,      QMetaType::LongLong },
+    { Columns::Code,    QMetaType::QString },
+    { Columns::Name,    QMetaType::QString },
+    { Columns::Village, QMetaType::QString }
 };
 
 ProducerModel::ProducerModel(QObject *parent)
     : AbstractModel(parent)
 {}
 
+QString ProducerModel::columnName(const ProducerModel::Columns &column)
+{
+    return sc_roleNames.value(column);
+}
+
 int ProducerModel::firstColumn() const
 {
-    return columnShift(ProducerId);
+    return columnShift(Id);
 }
 
 int ProducerModel::lastColumn() const

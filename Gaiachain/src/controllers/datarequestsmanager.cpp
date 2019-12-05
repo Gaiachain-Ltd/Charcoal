@@ -7,6 +7,18 @@
 #include "../helpers/requestshelper.h"
 #include "../common/tags.h"
 #include "../common/dataglobals.h"
+#include "../helpers/packagedataproperties.h"
+
+const QMap<Enums::SupplyChainAction, DataRequestsManager::EventPropertyHandler> DataRequestsManager::sc_eventPropertyHandlers = {
+    { Enums::SupplyChainAction::Unknown, &DataRequestsManager::processSimpleProperties },
+    { Enums::SupplyChainAction::Harvest, &DataRequestsManager::processHarvestProperties },
+    { Enums::SupplyChainAction::GrainProcessing, &DataRequestsManager::processSimpleProperties },
+    { Enums::SupplyChainAction::SectionReception, &DataRequestsManager::processSimpleProperties },
+    { Enums::SupplyChainAction::Bagging, &DataRequestsManager::processBaggingProperties },
+    { Enums::SupplyChainAction::LotCreation, &DataRequestsManager::processLotCreationProperties },
+    { Enums::SupplyChainAction::WarehouseTransport, &DataRequestsManager::processSimpleProperties },
+    { Enums::SupplyChainAction::ExportReception, &DataRequestsManager::processSimpleProperties },
+};
 
 DataRequestsManager::DataRequestsManager(QObject *parent)
     : AbstractManager(parent)
@@ -21,41 +33,56 @@ void DataRequestsManager::processAdditionalData(const QJsonObject &additionalDat
 
     auto additionalDataModels = QMap<Enums::AdditionalDataType, Gaia::ModelData>{};
 
-    // producers
     auto modelData = Gaia::ModelData{};
-    auto array = additionalData.value(Tags::producers).toArray();
-    std::transform(array.constBegin(), array.constEnd(), std::back_inserter(modelData),
-                   std::bind(&DataRequestsManager::processProducer, this, std::placeholders::_1));
-    additionalDataModels.insert(Enums::AdditionalDataType::ProducersData, modelData);
+    auto array = QJsonArray{};
 
-    // other
-    static const auto AdditionalDataTags = std::array<std::tuple<Enums::AdditionalDataType, QLatin1String>, 3> {
-        std::make_tuple(Enums::AdditionalDataType::BuyersData, Tags::buyers),
-        std::make_tuple(Enums::AdditionalDataType::TransportersData, Tags::transporters),
-        std::make_tuple(Enums::AdditionalDataType::DestinationsData, Tags::destinations)
-    };
+    // producers & parcels
+    if (additionalData.contains(Tags::producers)) {
+        modelData = Gaia::ModelData{};
+        array = additionalData.value(Tags::producers).toArray();
+        std::transform(array.constBegin(), array.constEnd(),
+                       std::back_inserter(modelData), &DataRequestsManager::processProducer);
+        additionalDataModels.insert(Enums::AdditionalDataType::ProducersData, modelData);
 
-    std::for_each(AdditionalDataTags.cbegin(), AdditionalDataTags.cend(),
-                  [this, &additionalData, &additionalDataModels](const auto &additioanlDataTag) {
-        auto [ type, tag ] = additioanlDataTag;
+        modelData = Gaia::ModelData{};
+        array = additionalData.value(Tags::producers).toArray();
 
-        auto modelData = Gaia::ModelData{};
-        auto array = additionalData.value(tag).toArray();
-        std::transform(array.constBegin(), array.constEnd(), std::back_inserter(modelData),
-                       std::bind(&DataRequestsManager::processNameData, this, std::placeholders::_1));
-        additionalDataModels.insert(type, modelData);
-    });
+        auto parcelsData = QList<Gaia::ModelData>{};
+        std::transform(array.constBegin(), array.constEnd(),
+                       std::back_inserter(parcelsData), &DataRequestsManager::processParcels);
+        std::for_each(parcelsData.constBegin(), parcelsData.constEnd(),
+                      [&modelData](const auto &entry) { modelData.append(entry); });
 
-    emit additionalDataProcessed(additionalDataModels);
-}
+        additionalDataModels.insert(Enums::AdditionalDataType::ParcelsData, modelData);
+    }
+
+    // companies
+    if (additionalData.contains(Tags::companies)) {
+        modelData = Gaia::ModelData{};
+        array = additionalData.value(Tags::companies).toArray();
+        std::transform(array.constBegin(), array.constEnd(),
+                       std::back_inserter(modelData), &DataRequestsManager::processCompany);
+        additionalDataModels.insert(Enums::AdditionalDataType::CompaniesData, modelData);
+    }
+
+    // destinations
+    if (additionalData.contains(Tags::destinations)) {
+        modelData = Gaia::ModelData{};
+        array = additionalData.value(Tags::destinations).toArray();
+        std::transform(array.constBegin(), array.constEnd(),
+                       std::back_inserter(modelData), &DataRequestsManager::processNameData);
+        additionalDataModels.insert(Enums::AdditionalDataType::DestinationsData, modelData);
+    }
+
+    emit additionalDataProcessed(additionalDataModels);}
 
 void DataRequestsManager::processEntitiesInfo(const QJsonArray &entitiesInfo)
 {
     ProcessCounter p(this);
 
     auto eventsInfo = Gaia::ModelData{};
-    std::transform(entitiesInfo.constBegin(), entitiesInfo.constEnd(), std::back_inserter(eventsInfo),
-                   std::bind(&DataRequestsManager::processEventInfo, this, std::placeholders::_1));
+    std::transform(entitiesInfo.constBegin(), entitiesInfo.constEnd(),
+                   std::back_inserter(eventsInfo), &DataRequestsManager::processEventInfo);
 
     emit entitiesInfoProcessed(eventsInfo);
 }
@@ -64,24 +91,19 @@ void DataRequestsManager::processEntities(const QJsonArray &entities)
 {
     ProcessCounter p(this);
 
+    // events
     auto modelData = Gaia::ModelData{};
-    std::transform(entities.constBegin(), entities.constEnd(), std::back_inserter(modelData),
-                   std::bind(&DataRequestsManager::processEvent, this, std::placeholders::_1));
-
+    std::transform(entities.constBegin(), entities.constEnd(),
+                   std::back_inserter(modelData), &DataRequestsManager::processEvent);
     emit entitiesProcessed(modelData);
-}
 
-void DataRequestsManager::processRelations(const QJsonArray &relations)
-{
-    ProcessCounter p(this);
-
-    auto modelData = Gaia::ModelData{};
+    // relations
+    modelData = Gaia::ModelData{};
     auto modelDataArrays = QVector<Gaia::ModelData>{};
-    std::transform(relations.constBegin(), relations.constEnd(), std::back_inserter(modelDataArrays),
-                   std::bind(&DataRequestsManager::processRelationsValue, this, std::placeholders::_1));
+    std::transform(entities.constBegin(), entities.constEnd(),
+                   std::back_inserter(modelDataArrays), &DataRequestsManager::processRelationsValue);
     std::for_each(modelDataArrays.begin(), modelDataArrays.end(),
                   [&modelData](const auto &item) { std::move(item.begin(), item.end(), std::back_inserter(modelData)); });
-
     emit relationsProcessed(modelData);
 }
 
@@ -90,8 +112,8 @@ void DataRequestsManager::processUnusedLotIdsLoaded(const QJsonArray &idsArray)
     ProcessCounter p(this);
 
     auto modelData = Gaia::ModelData{};
-    std::transform(idsArray.constBegin(), idsArray.constEnd(), std::back_inserter(modelData),
-                   std::bind(&DataRequestsManager::processUnusedLotId, this, std::placeholders::_1));
+    std::transform(idsArray.constBegin(), idsArray.constEnd(),
+                   std::back_inserter(modelData), &DataRequestsManager::processUnusedLotId);
 
     emit unusedLotIdsProcessed(modelData);
 }
@@ -141,48 +163,80 @@ void DataRequestsManager::offlineActionError(const QString &packageId, const Enu
     m_offlineActionRequestsSent.remove(packageId, action);
 }
 
-QJsonValue DataRequestsManager::checkAndValue(const QJsonObject &object, const QLatin1String tag)
+Gaia::ModelEntry DataRequestsManager::processNameData(const QJsonValue &value)
 {
-    if (!object.contains(tag)) {
-        qCWarning(dataRequests) << "Tag" << tag << "is missing in an object data!";
-        return {};
-    }
-    return object.value(tag);
+    auto object = value.toObject();
+
+    const auto id = RequestsHelper::checkAndValue(object, Tags::id).toInt();
+    const auto name = RequestsHelper::checkAndValue(object, Tags::name).toString();
+
+    return Gaia::ModelEntry { id, name };
 }
 
 Gaia::ModelEntry DataRequestsManager::processProducer(const QJsonValue &value)
 {
     auto object = value.toObject();
 
-    const auto producerId = checkAndValue(object, Tags::id).toString();
-    const auto name = checkAndValue(object, Tags::name).toString();
-    const auto village = checkAndValue(object, Tags::village).toString();
-    const auto parcels = checkAndValue(object, Tags::parcels).toVariant().toStringList();
+    const auto id = RequestsHelper::checkAndValue(object, Tags::id).toInt();
+    const auto code = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+    const auto name = RequestsHelper::checkAndValue(object, Tags::name).toString();
+
+    const auto villageObj = RequestsHelper::checkAndValue(object, Tags::village).toObject();
+    const auto village = RequestsHelper::checkAndValue(villageObj, Tags::name).toString();
 
     return Gaia::ModelEntry {
-        producerId,
-                name,
-                village,
-                parcels
+        id,
+        code,
+        name,
+        village
     };
 }
 
-Gaia::ModelEntry DataRequestsManager::processNameData(const QJsonValue &value)
+Gaia::ModelData DataRequestsManager::processParcels(const QJsonValue &value)
 {
-    return Gaia::ModelEntry { value.toString() };
+    auto object = value.toObject();
+
+    const auto id = RequestsHelper::checkAndValue(object, Tags::id).toInt();
+
+    auto parcelsData = Gaia::ModelData{};
+    const auto parcelsArray = RequestsHelper::checkAndValue(object, Tags::parcels).toArray();
+    std::transform(parcelsArray.constBegin(), parcelsArray.constEnd(), std::back_inserter(parcelsData),
+                   [producerId = id](const auto &value) {
+        auto object = value.toObject();
+
+        const auto id = RequestsHelper::checkAndValue(object, Tags::id).toInt();
+        const auto code = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+
+        return Gaia::ModelEntry { id, code, producerId };
+    });
+
+    return parcelsData;
+}
+
+Gaia::ModelEntry DataRequestsManager::processCompany(const QJsonValue &value)
+{
+    auto object = value.toObject();
+
+    const auto id = RequestsHelper::checkAndValue(object, Tags::id).toInt();
+    const auto name = RequestsHelper::checkAndValue(object, Tags::name).toString();
+    const auto code = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+    const auto type = RequestsHelper::companyTypeFromString(
+                RequestsHelper::checkAndValue(object, Tags::type).toString());
+
+    return Gaia::ModelEntry { id, name, code, QVariant::fromValue(type) };
 }
 
 Gaia::ModelEntry DataRequestsManager::processEventInfo(const QJsonValue &value)
 {
     auto object = value.toObject();
 
-    const auto packageId = checkAndValue(object, Tags::packageId).toString();
+    const auto packageId = RequestsHelper::checkAndValue(object, Tags::pid).toString();
     const auto action = RequestsHelper::supplyChainActionFromString(
-                checkAndValue(object, Tags::action).toString());
+                RequestsHelper::checkAndValue(object, Tags::action).toString());
 
     return Gaia::ModelEntry {
         packageId,
-                QVariant::fromValue(action),
+        QVariant::fromValue(action),
     };
 }
 
@@ -190,45 +244,79 @@ Gaia::ModelEntry DataRequestsManager::processEvent(const QJsonValue &value)
 {
     auto object = value.toObject();
 
-    const auto packageId = checkAndValue(object, Tags::packageId).toString();
+    const auto packageId = RequestsHelper::checkAndValue(object, Tags::pid).toString();
     const auto action = RequestsHelper::supplyChainActionFromString(
-                checkAndValue(object, Tags::action).toString());
+                RequestsHelper::checkAndValue(object, Tags::action).toString());
 
     const auto date = QDateTime::fromSecsSinceEpoch(
-                checkAndValue(object, Tags::timestamp).toVariant().value<qint64>());
-    const auto properties = checkAndValue(object, Tags::properties).toObject().toVariantMap();
+                RequestsHelper::checkAndValue(object, Tags::timestamp).toVariant().value<qint64>());
+    const auto properties = processEventProperties(RequestsHelper::checkAndValue(object, Tags::properties).toObject(), action);
 
-    const auto agentObj = checkAndValue(object, Tags::agent).toObject();
-    const auto cooperativeId = checkAndValue(agentObj, Tags::cooperativeId).toString();
-    const auto agentRole = RequestsHelper::userTypeFromString(
-                checkAndValue(agentObj, Tags::role).toString());
+    const auto userObj = RequestsHelper::checkAndValue(object, Tags::user).toObject();
+    const auto companyObj = RequestsHelper::checkAndValue(userObj, Tags::company).toObject();
+    const auto cooperativeId = RequestsHelper::checkAndValue(companyObj, Tags::id).toInt();
 
     return Gaia::ModelEntry {
         packageId,
-                QVariant::fromValue(action),
-                date,
-                QVariant::fromValue(agentRole),
-                cooperativeId,
-                properties,
-                0.0,    // location not handled yet
-                0.0     // location not handled yet
+        QVariant::fromValue(action),
+        date,
+        cooperativeId,
+        properties,
+        0.0,    // location not handled yet
+        0.0     // location not handled yet
     };
 }
 
 Gaia::ModelData DataRequestsManager::processRelationsValue(const QJsonValue &value)
 {
-    auto object = value.toObject();
-
-    const auto id = checkAndValue(object, Tags::packageId).toString();
-    const auto relatedIds = checkAndValue(object, Tags::packageIds).toVariant().toStringList();
-
     auto modelData = Gaia::ModelData{};
-    std::transform(relatedIds.begin(), relatedIds.end(), std::back_inserter(modelData),
-                   [&id](const auto &relatedId) { return Gaia::ModelEntry{{ id, relatedId }, }; });
+
+    auto object = value.toObject();
+    const auto id = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+
+    if (object.contains(Tags::relations)) {
+        const auto relatedIds = RequestsHelper::checkAndValue(object, Tags::relations).toVariant().toStringList();
+
+        std::transform(relatedIds.begin(), relatedIds.end(), std::back_inserter(modelData),
+                       [&id](const auto &relatedId) { return Gaia::ModelEntry{{ id, relatedId }, }; });
+    }
     return modelData;
 }
 
 Gaia::ModelEntry DataRequestsManager::processUnusedLotId(const QJsonValue &value)
 {
-    return { value.toString(), QVariant::fromValue(Enums::PackageType::Lot) };
+    auto object = value.toObject();
+    const auto id = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+
+    return { id, QVariant::fromValue(Enums::PackageType::Lot) };
+}
+
+QVariantMap DataRequestsManager::processEventProperties(const QJsonObject &object, const Enums::SupplyChainAction &action)
+{
+    return sc_eventPropertyHandlers[action](object);
+}
+
+QVariantMap DataRequestsManager::processSimpleProperties(const QJsonObject &object)
+{
+    return object.toVariantMap();
+}
+
+QVariantMap DataRequestsManager::processHarvestProperties(const QJsonObject &object)
+{
+    return {
+        { PackageDataProperties::ParcelId, object.value(Tags::parcel).toObject().value(Tags::id).toVariant() },
+        { PackageDataProperties::HarvestDate, object.value(PackageDataProperties::HarvestDate).toVariant() }
+    };
+}
+
+QVariantMap DataRequestsManager::processBaggingProperties(const QJsonObject &object)
+{
+    // TODO
+    return object.toVariantMap();
+}
+
+QVariantMap DataRequestsManager::processLotCreationProperties(const QJsonObject &object)
+{
+    // TODO
+    return object.toVariantMap();
 }
