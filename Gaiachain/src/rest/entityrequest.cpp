@@ -2,47 +2,36 @@
 
 #include <QDebug>
 #include <QJsonObject>
+#include <QUrlQuery>
 
-#include "../common/logs.h"
 #include "../common/tags.h"
 #include "../common/dataglobals.h"
 #include "../helpers/requestshelper.h"
 
-const QString EntityRequest::sc_basePath = QStringLiteral("/entities/%1/");
+const QString EntityRequest::sc_basePath = QStringLiteral("/entities/%1");
 
 const QMap<EntityRequest::RequestType, MRestRequest::Type> EntityRequest::sc_requestsType = {
-    { EntityRequest::RequestType::GetBatch, Type::Get },
-    { EntityRequest::RequestType::GetFilterCount, Type::Get },
+    { EntityRequest::RequestType::GetBatch, Type::Post },   // it's post because of pids data
+    { EntityRequest::RequestType::GetFilterLimit, Type::Get },
     { EntityRequest::RequestType::GetFilterTo, Type::Get },
     { EntityRequest::RequestType::GetFilterLastAction, Type::Get },
-    { EntityRequest::RequestType::GetId, Type::Get },
     { EntityRequest::RequestType::GetUnusedLots, Type::Get },
-    { EntityRequest::RequestType::PutActionId, Type::Put },
-    { EntityRequest::RequestType::PutActionCode, Type::Put },
-    { EntityRequest::RequestType::PostNewPackage, Type::Post },
+    { EntityRequest::RequestType::PostNewAction, Type::Post },
     { EntityRequest::RequestType::PostUnusedLot, Type::Post }
 };
 
 const QMap<EntityRequest::RequestType, QString> EntityRequest::sc_requestsPath = {
-    { EntityRequest::RequestType::GetBatch, sc_basePath.arg(QStringLiteral("batch")) },
-    { EntityRequest::RequestType::GetFilterCount, sc_basePath.arg(QStringLiteral("filter")) },
-    { EntityRequest::RequestType::GetFilterTo, sc_basePath.arg(QStringLiteral("filter")) },
-    { EntityRequest::RequestType::GetFilterLastAction, sc_basePath.arg(QStringLiteral("lastAction")) },
-    { EntityRequest::RequestType::GetId, sc_basePath.arg(QStringLiteral("id")) },
-    { EntityRequest::RequestType::GetUnusedLots, sc_basePath.arg(QStringLiteral("lots")) },
-    { EntityRequest::RequestType::PutActionId, sc_basePath.arg(QStringLiteral("%1")) },
-    { EntityRequest::RequestType::PutActionCode, sc_basePath.arg(QStringLiteral("code/%1")) },
-    { EntityRequest::RequestType::PostNewPackage, sc_basePath.arg(QStringLiteral("new/%1")) },
-    { EntityRequest::RequestType::PostUnusedLot, sc_basePath.arg(QStringLiteral("lots")) }
+    { EntityRequest::RequestType::GetBatch, sc_basePath.arg(QStringLiteral("batch/")) },
+    { EntityRequest::RequestType::GetFilterLimit, sc_basePath.arg(QStringLiteral()) },
+    { EntityRequest::RequestType::GetFilterTo, sc_basePath.arg(QStringLiteral()) },
+    { EntityRequest::RequestType::GetFilterLastAction, sc_basePath.arg(QStringLiteral("harvests/")) },
+    { EntityRequest::RequestType::GetUnusedLots, sc_basePath.arg(QStringLiteral("lots/")) },
+    { EntityRequest::RequestType::PostNewAction, sc_basePath.arg(QStringLiteral("new/")) },
+    { EntityRequest::RequestType::PostUnusedLot, sc_basePath.arg(QStringLiteral("lots/")) }
 };
 
 EntityRequest::EntityRequest(const EntityRequest::RequestType &requestType, const QString &token)
-    : EntityRequest(sc_requestsPath.value(requestType), requestType, token)
-{}
-
-EntityRequest::EntityRequest(const QString &customPath, const EntityRequest::RequestType &requestType, const QString &token)
-    : BaseRequest(customPath, sc_requestsType.value(requestType), token),
-      m_requestType(requestType)
+    : BaseRequest(sc_requestsPath.value(requestType), sc_requestsType.value(requestType), token), m_requestType(requestType)
 {
     if (m_requestType == RequestType::Invalid) {
         qCWarning(sessionRequest) << "Invalid request provided";
@@ -52,78 +41,72 @@ EntityRequest::EntityRequest(const QString &customPath, const EntityRequest::Req
 EntityRequest::EntityRequest(const QStringList &packageIds)
     : EntityRequest(RequestType::GetBatch)
 {
-    auto docObj = QJsonObject{ { Tags::packageIds, packageIds.isEmpty() ? QJsonValue(StaticValues::all)
-                                                                        : QJsonValue::fromVariant(packageIds) } };
+    auto docObj = QJsonObject{ { Tags::pids, (packageIds.isEmpty() ? QJsonValue(QString{})
+                                                                   : QJsonValue::fromVariant(packageIds)) } };
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(int count, const QDateTime &from, const QString &keyword)
-    : EntityRequest(RequestType::GetFilterCount)
+EntityRequest::EntityRequest(int limit, const QDateTime &to, const QString &keyword)
+    : EntityRequest(RequestType::GetFilterLimit)
 {
-    auto docObj = QJsonObject{ { Tags::count, count } };
-    if (from.isValid()) {
-        docObj.insert(Tags::timestampFrom, static_cast<qint64>(from.toTime_t()) );
+    auto query = QUrlQuery{};
+    query.addQueryItem(Tags::limit, QString::number(limit));
+    if (to.isValid()) {
+        query.addQueryItem(Tags::timestampTo, QString::number(static_cast<qint64>(to.toSecsSinceEpoch())) );
     }
     if (!keyword.isEmpty()) {
-        docObj.insert(Tags::keyword, keyword);
+        query.addQueryItem(Tags::keyword, keyword);
     }
-
-    mRequestDocument.setObject(docObj);
+    setQuery(query);
 }
 
 EntityRequest::EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword)
     : EntityRequest(RequestType::GetFilterTo)
 {
-    auto docObj = QJsonObject{ { Tags::timestampTo, static_cast<qint64>(to.toTime_t()) } };
+    auto query = QUrlQuery{};
+    query.addQueryItem(Tags::timestampTo, QString::number(static_cast<qint64>(to.toSecsSinceEpoch())) );
     if (from.isValid()) {
-        docObj.insert(Tags::timestampFrom, static_cast<qint64>(from.toTime_t()) );
+        query.addQueryItem(Tags::timestampFrom, QString::number(static_cast<qint64>(from.toSecsSinceEpoch())) );
     }
     if (!keyword.isEmpty()) {
-        docObj.insert(Tags::keyword, keyword);
+        query.addQueryItem(Tags::keyword, keyword);
     }
-
-    mRequestDocument.setObject(docObj);
+    setQuery(query);
 }
 
 EntityRequest::EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction)
     : EntityRequest(RequestType::GetFilterLastAction, token)
 {
-    auto docObj = QJsonObject{ { Tags::lastAction, RequestsHelper::supplyChainActionToString(lastAction) } };
+    auto query = QUrlQuery{};
+    query.addQueryItem(Tags::lastAction, RequestsHelper::supplyChainActionToString(lastAction) );
+    setQuery(query);
+}
+
+EntityRequest::EntityRequest(const QString &token, const QString &packageId, const EntityRequest::EntityData &entityData)
+    : EntityRequest(RequestType::PostNewAction, token)
+{
+    auto docObj = entityDataObject(entityData);
+    docObj.insert(Tags::pid, packageId);
+
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QByteArray &codeData)
-    : EntityRequest(RequestType::GetId)
+EntityRequest::EntityRequest(const QString &token, const QString &packageId, const QByteArray &codeData, const EntityRequest::EntityData &entityData)
+    : EntityRequest(RequestType::PostNewAction, token)
 {
-    auto docObj = QJsonObject{ { Tags::code, codeData.data() } };
+    auto docObj = entityDataObject(entityData);
+    docObj.insert(Tags::pid, packageId);
+    docObj.insert(Tags::code, codeData.data());
+
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QString &token, const QString &packageId, const EntityRequest::EntityData &entityData, const QByteArray &codeData)
-    : EntityRequest(sc_requestsPath.value(RequestType::PutActionId).arg(packageId), RequestType::PutActionId, token)
+EntityRequest::EntityRequest(const QString &token, const QByteArray &codeData, const EntityRequest::EntityData &entityData)
+    : EntityRequest(RequestType::PostNewAction, token)
 {
-    auto docObj = QJsonObject{
-    { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
-    { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
-    { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
-    { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
-};
-    if (!codeData.isEmpty()) {
-        docObj.insert(Tags::code, codeData.data());
-    }
-    mRequestDocument.setObject(docObj);
-}
+    auto docObj = entityDataObject(entityData);
+    docObj.insert(Tags::code, codeData.data());
 
-EntityRequest::EntityRequest(const QString &token, const QByteArray &codeData, const EntityRequest::EntityData &entityData, bool newPackage)
-    : EntityRequest(sc_requestsPath.value(newPackage ? RequestType::PostNewPackage : RequestType::PutActionCode).arg(codeData.data()),
-                    newPackage ? RequestType::PostNewPackage : RequestType::PutActionCode, token)
-{
-    auto docObj = QJsonObject{
-    { Tags::packageType,    RequestsHelper::packageTypeToString(DataGlobals::packageType(entityData.action)) },
-    { Tags::action,         RequestsHelper::supplyChainActionToString(entityData.action) },
-    { Tags::timestamp,      static_cast<qint64>(entityData.timestamp.toTime_t()) },
-    { Tags::properties,     QJsonObject::fromVariantMap(entityData.properties) }
-};
     mRequestDocument.setObject(docObj);
 }
 
@@ -132,3 +115,21 @@ EntityRequest::EntityRequest(const QString &token, const Enums::PackageType &pac
                                                                      : RequestType::GetUnusedLots)
                                                            : RequestType::Invalid, token)
 {}
+
+bool EntityRequest::isTokenRequired() const
+{
+    return (BaseRequest::isTokenRequired() &&
+            !(m_requestType == RequestType::GetBatch)) ||
+            (m_requestType == RequestType::GetFilterLastAction) ||
+            (m_requestType == RequestType::GetUnusedLots);
+}
+
+QJsonObject EntityRequest::entityDataObject(const EntityRequest::EntityData &entityData)
+{
+    return {
+        { Tags::action,     RequestsHelper::supplyChainActionToString(entityData.action) },
+        { Tags::timestamp,  static_cast<qint64>(entityData.timestamp.toSecsSinceEpoch()) },
+        { Tags::properties, QJsonObject::fromVariantMap(
+                        RequestsHelper::convertProperties(entityData.properties)) }
+    };
+}

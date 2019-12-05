@@ -21,14 +21,10 @@ FakeSessionManager::FakeSessionManager(QObject *parent)
 
     connect(&FakeServer::instance(), &FakeServer::relationsLoadError, this, &FakeSessionManager::relationsLoadError);
     connect(&FakeServer::instance(), &FakeServer::relationsLoaded, this, &FakeSessionManager::relationsLoaded);
-    connect(&FakeServer::instance(), &FakeServer::relationsSaveError, this, &FakeSessionManager::relationsSaveError);
-    connect(&FakeServer::instance(), &FakeServer::relationsSaved, this, &FakeSessionManager::relationsSaved);
 
     connect(&FakeServer::instance(), &FakeServer::entitiesLoadError, this, &FakeSessionManager::entitiesLoadError);
     connect(&FakeServer::instance(), &FakeServer::entitiesLoaded, this, &FakeSessionManager::entitiesLoaded);
     connect(&FakeServer::instance(), &FakeServer::entitiesInfoLoaded, this, &FakeSessionManager::entitiesInfoLoaded);
-    connect(&FakeServer::instance(), &FakeServer::entityIdLoadError, this, &FakeSessionManager::entityIdLoadError);
-    connect(&FakeServer::instance(), &FakeServer::entityIdLoaded, this, &FakeSessionManager::entityIdLoaded);
     connect(&FakeServer::instance(), &FakeServer::entitySaveError, this, &FakeSessionManager::entitySaveError);
     connect(&FakeServer::instance(), &FakeServer::entitySaved, this, &FakeSessionManager::entitySaved);
 
@@ -61,11 +57,25 @@ void FakeSessionManager::getAdditionalData()
     FakeServer::instance().getAdditionalData();
 }
 
-void FakeSessionManager::getRelations(const QString &packageId)
+void FakeSessionManager::getProducers()
 {
     processStarted();
     updateConnectionStateBeforeRequest();
-    FakeServer::instance().getRelations(packageId);
+    FakeServer::instance().getProducers();
+}
+
+void FakeSessionManager::getCompanies()
+{
+    processStarted();
+    updateConnectionStateBeforeRequest();
+    FakeServer::instance().getCompanies();
+}
+
+void FakeSessionManager::getDestinations()
+{
+    processStarted();
+    updateConnectionStateBeforeRequest();
+    FakeServer::instance().getDestinations();
 }
 
 void FakeSessionManager::getRelations(const QStringList &packageIds)
@@ -75,18 +85,11 @@ void FakeSessionManager::getRelations(const QStringList &packageIds)
     FakeServer::instance().getRelations(packageIds);
 }
 
-void FakeSessionManager::addRelation(const QString &packageId, const QStringList &relatedIds)
+void FakeSessionManager::getEntitiesInfo(int limit, const QDateTime &to, const QString &keyword)
 {
     processStarted();
     updateConnectionStateBeforeRequest();
-    FakeServer::instance().addRelation(packageId, relatedIds);
-}
-
-void FakeSessionManager::getEntitiesInfo(int count, const QDateTime &from, const QString &keyword)
-{
-    processStarted();
-    updateConnectionStateBeforeRequest();
-    FakeServer::instance().getEntitiesInfo(count, from.isNull() ? QDateTime::currentDateTime() : from, keyword);
+    FakeServer::instance().getEntitiesInfo(limit, to.isNull() ? QDateTime::currentDateTime() : to, keyword);
 }
 
 void FakeSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
@@ -110,39 +113,28 @@ void FakeSessionManager::getEntities(const QStringList &packageIds)
     FakeServer::instance().getEntities(packageIds);
 }
 
-void FakeSessionManager::getEntity(const QString &packageId)
+void FakeSessionManager::postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
+                                       const QDateTime &timestamp, const QVariantMap &properties)
 {
     processStarted();
     updateConnectionStateBeforeRequest();
-    FakeServer::instance().getEntity(packageId);
+    FakeServer::instance().postNewEntity(packageId, action, timestamp, properties);
 }
 
-void FakeSessionManager::getEntityId(const QByteArray &codeData)
+void FakeSessionManager::postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                                       const QDateTime &timestamp, const QVariantMap &properties)
 {
     processStarted();
     updateConnectionStateBeforeRequest();
-    FakeServer::instance().getEntityId(codeData);
+    FakeServer::instance().postNewEntity(packageId, codeData, action, timestamp, properties);
 }
 
-void FakeSessionManager::putEntityAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
+void FakeSessionManager::postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                                       const QDateTime &timestamp, const QVariantMap &properties)
 {
     processStarted();
     updateConnectionStateBeforeRequest();
-    FakeServer::instance().putEntityAction(packageId, action, timestamp, properties, codeData);
-}
-
-void FakeSessionManager::putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties)
-{
-    processStarted();
-    updateConnectionStateBeforeRequest();
-    FakeServer::instance().putEntityAction(codeData, action, timestamp, properties);
-}
-
-void FakeSessionManager::postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData)
-{
-    processStarted();
-    updateConnectionStateBeforeRequest();
-    FakeServer::instance().postNewEntity(action, timestamp, properties, codeData);
+    FakeServer::instance().postNewEntity(codeData, action, timestamp, properties);
 }
 
 void FakeSessionManager::getUnusedLotIds()

@@ -23,7 +23,12 @@ BaseRequest::BaseRequest(const QString &path, const Type &type, const QString &t
 void BaseRequest::setPath(const QString &path)
 {
     Q_ASSERT_X(!path.isEmpty(), __PRETTY_FUNCTION__, "Path address not provided!");
-    setAddress(QUrl(SERVER_ADDRESS + path));
+    mUrl.setUrl(SERVER_ADDRESS + path);
+}
+
+void BaseRequest::setQuery(const QUrlQuery &query)
+{
+    mUrl.setQuery(query);
 }
 
 void BaseRequest::customizeRequest(QNetworkRequest &request)

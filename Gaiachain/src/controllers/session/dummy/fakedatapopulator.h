@@ -26,45 +26,42 @@ public:
     void populateFakeData(const QDate &startDate);
 
     QVariantMap getRelations(const QStringList &packagesIds) const;
-    void addPackageRelation(const QString &packageId, const QStringList &relatedIds);
 
-    QVariantList getEventsInfo(int count, const QDateTime &from, const QString &keyword) const;
+    QVariantList getEventsInfo(int limit, const QDateTime &from, const QString &keyword) const;
     QVariantList getEventsInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
-    QVariantList getLastActionEventsInfo(const QString &cooperativeId, const Enums::SupplyChainAction &lastAction) const;
-    QString getEventId(const QByteArray &codeData) const;
-    QVariantList getEventHistory(const QStringList &packagesId) const;
+    QVariantList getLastActionEventsInfo(int cooperativeId, const Enums::SupplyChainAction &lastAction) const;
+    QVariantList getEventsHistory(const QStringList &packagesId) const;
 
-    QVariantList unusedLotIds(const QString &cooperativeId) const;
-    QString createUnusedLotId(const QString &cooperativeId);
+    QVariantList unusedLotIds(int cooperativeId) const;
+    QString createUnusedLotId(int cooperativeId);
 
-    bool canAddAction(const QString &packageId, const Enums::SupplyChainAction &action, const Enums::UserType &user, const QString &cooperativeId) const;
-    bool addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData,
-                   const Enums::UserType &user, const QString &cooperativeId);
+    bool addAction(const QString &packageId, const Enums::SupplyChainAction &action,
+                   const QDateTime &timestamp, const QVariantMap &properties,
+                   const Enums::UserType &user, int cooperativeId);
+    bool addAction(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                   const QDateTime &timestamp, const QVariantMap &properties,
+                   const Enums::UserType &user, int cooperativeId);
+    QString addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                      const QDateTime &timestamp, const QVariantMap &properties,
+                      const Enums::UserType &user, int cooperativeId);
 
-    bool canAddNewAction(const Enums::SupplyChainAction &action, const QByteArray &codeData, const Enums::UserType &user) const;
-    QString addNewAction(const Enums::SupplyChainAction &action, const QDateTime &timestamp, const QVariantMap &properties, const QByteArray &codeData,
-                         const Enums::UserType &user, const QString &cooperativeId);
+    bool canAddAction(const QString &packageId, const Enums::SupplyChainAction &action, int cooperativeId);
+    bool canAddAction(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action);
+    bool canAddAction(const QByteArray &codeData, const Enums::SupplyChainAction &action, int cooperativeId);
 
     QVariantList getProducers() const;
-    QVariantList getBuyers() const;
-    QVariantList getTransporters() const;
+    QVariantList getCompanies() const;
     QVariantList getDestinations() const;
 
 private:
-    static const QString sc_loginPassword;
-    static const QHash<QString, Enums::UserType> sc_usersLogin;
-    static const QHash<Enums::PlaceType, Enums::UserType> sc_placesUser;
-
     static const QList<QVariantHash> sc_producers;
-    static const QList<QVariantHash> sc_cooperatives;
-    static const QStringList sc_buyers;
-    static const QStringList sc_transporters;
-    static const QStringList sc_destinations;
+    static const QList<QVariantHash> sc_companies;
+    static const QList<QVariantHash> sc_destinations;
 
     QMultiMap<QString, QVariantMap> m_eventsHistory;
     QMultiMap<QString, QString> m_packagesRelations;
     QMap<QByteArray, QString> m_packagesCodeData;
-    QHash<QString, QStringList> m_cooperativeUnusedLotIds;
+    QHash<int, QStringList> m_cooperativeUnusedLotIds;
 
     static const auto sc_minDayShift = static_cast<int>(Qt::DayOfWeek::Tuesday);
 
@@ -74,16 +71,19 @@ private:
 
     QVariantHash randomCooperative() const;
     QVariantHash randomProducer() const;
-    QString randomParcel(const QVariantHash &producer) const;
-    QString randomBuyer() const;
-    QString randomTransporter() const;
-    QString randomDestination() const;
+    QVariantHash randomParcel(const QVariantHash &producer) const;
+    QVariantHash randomBuyer() const;
+    QVariantHash randomTransporter() const;
+    QVariantHash randomDestination() const;
 
-    QVariantHash cooperativeById(const QString &cooperativeId) const;
+    QVariantHash companyById(int companyId) const;
+
+    QString getEventId(const QByteArray &codeData) const;
+    bool isNextPackageAction(const QString &packageId, const Enums::SupplyChainAction &action, int cooperativeId) const;
 
     QString generateHarvestId(const QString &parceleCode, const QDate &date) const;
-    QString generateSackId(const QString &cooperativeId, const QDate &date) const;
-    QString generateLotId(const QString &cooperativeId, const QDate &date) const;
+    QString generateSackId(const QString &cooperativeCode, const QDate &date) const;
+    QString generateLotId(const QString &cooperativeCode, const QDate &date) const;
 
     std::tuple<QString, QVariantMap> generateHarvestAction(const QDate &harvestDate) const;
     QVariantMap generateGrainProcessingProperties(const QDate &harvestDate, const QDate &actionDate) const;

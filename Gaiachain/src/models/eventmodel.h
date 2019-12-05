@@ -16,7 +16,6 @@ public:
         PackageId = Qt::UserRole + 1, // 1 as 0 column is id column not used in UI
         Action,
         Timestamp,
-        UserRole,
         CooperativeId,
         Properties,
         LocationLat,
@@ -27,6 +26,8 @@ public:
     }; //!!! Keep the lastcolumn, a last entry in the enum
 
     EventModel(QObject *parent = nullptr);
+
+    static QString columnName(const Columns &column);
 
     int firstColumn() const override;
     int lastColumn() const override;

@@ -22,12 +22,6 @@ Enums::ConnectionState AbstractSessionManager::connectionState() const
     return m_connectionState;
 }
 
-void AbstractSessionManager::getInitialData()
-{
-    getAdditionalData();
-    getUnusedLotIds();
-}
-
 void AbstractSessionManager::updateToken(const QString &token)
 {
     m_token = token;

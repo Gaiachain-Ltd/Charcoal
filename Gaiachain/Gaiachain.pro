@@ -39,6 +39,7 @@ TARGET = Gaiachain
 
 HEADERS += \
     src/common/dataglobals.h \
+    src/common/dummy/commondummydata.h \
     src/common/types.h \
     src/common/userdata.h \
     src/controllers/databasemanager.h \
@@ -46,9 +47,6 @@ HEADERS += \
     src/controllers/datarequestsmanager.h \
     src/controllers/offlineusershandler.h \
     src/controllers/session/abstractsessionmanager.h \
-    src/controllers/session/dummy/fakeserver.h \
-    src/controllers/session/dummy/fakeserverstate.h \
-    src/controllers/session/dummy/fakesessionmanager.h \
     src/database/dbhelpers.h \
     src/database/dbmigrationmanager.h \
     src/database/dbmigrations.h \
@@ -60,7 +58,17 @@ HEADERS += \
     src/models/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
     src/models/abstractreadmodel.h \
+    src/models/companymodel.h \
     src/models/cooperativeeventsproxymodel.h \
+    src/models/parcelmodel.h \
+    src/models/proxy/abstractsortfilterqueryextension.h \
+    src/models/proxy/companytypequery.h \
+    src/models/proxy/isortfilterquery.h \
+    src/models/proxy/produceridquery.h \
+    src/models/proxy/sortfilterquery.h \
+    src/models/proxy/sortnamequery.h \
+    src/models/proxy/sqlquerymodel.h \
+    src/models/sqltablemodel.h \
     src/models/daterangeproxymodel.h \
     src/models/existsquerymodel.h \
     src/models/latesteventsproxymodel.h \
@@ -86,12 +94,12 @@ HEADERS += \
     src/models/searcheventsproxymodel.h \
     src/common/packagedata.h \
     src/models/selectedidsproxymodel.h \
-    src/models/sqltablemodel.h \
     src/models/unusedidsmodel.h \
+    src/models/views/abstractmodelview.h \
+    src/models/views/parcelviewmodel.h \
     src/rest/additionaldatarequest.h \
     src/rest/authrequest.h \
     src/rest/baserequest.h \
-    src/rest/relationrequest.h \
     src/rest/restapiclient.h \
     src/controllers/session/sessionmanager.h \
     src/controllers/usermanager.h \
@@ -99,10 +107,10 @@ HEADERS += \
     src/models/abstractsortfilterproxymodel.h \
     src/common/tags.h \
     src/rest/entityrequest.h \
-    src/common/logs.h \
-    src/controllers/session/dummy/fakedatapopulator.h
+    src/common/logs.h
 
 SOURCES += src/main.cpp \
+    src/common/dummy/commondummydata.cpp \
     src/common/logs.cpp \
     src/common/packagedata.cpp \
     src/common/dataglobals.cpp \
@@ -114,9 +122,6 @@ SOURCES += src/main.cpp \
     src/controllers/datarequestsmanager.cpp \
     src/controllers/offlineusershandler.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
-    src/controllers/session/dummy/fakeserver.cpp \
-    src/controllers/session/dummy/fakeserverstate.cpp \
-    src/controllers/session/dummy/fakesessionmanager.cpp \
     src/database/dbhelpers.cpp \
     src/database/dbmigrationmanager.cpp \
     src/database/dbmigrations.cpp \
@@ -127,7 +132,12 @@ SOURCES += src/main.cpp \
     src/models/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
     src/models/abstractreadmodel.cpp \
+    src/models/companymodel.cpp \
     src/models/cooperativeeventsproxymodel.cpp \
+    src/models/parcelmodel.cpp \
+    src/models/proxy/sortfilterquery.cpp \
+    src/models/proxy/sqlquerymodel.cpp \
+    src/models/sqltablemodel.cpp \
     src/models/daterangeproxymodel.cpp \
     src/models/existsquerymodel.cpp \
     src/models/latesteventsproxymodel.cpp \
@@ -150,19 +160,18 @@ SOURCES += src/main.cpp \
     src/models/relationslistproxymodel.cpp \
     src/models/searcheventsproxymodel.cpp \
     src/models/selectedidsproxymodel.cpp \
-    src/models/sqltablemodel.cpp \
     src/models/unusedidsmodel.cpp \
+    src/models/views/abstractmodelview.cpp \
+    src/models/views/parcelviewmodel.cpp \
     src/rest/additionaldatarequest.cpp \
     src/rest/authrequest.cpp \
     src/rest/baserequest.cpp \
-    src/rest/relationrequest.cpp \
     src/rest/restapiclient.cpp \
     src/controllers/session/sessionmanager.cpp \
     src/controllers/usermanager.cpp \
     src/rest/entityrequest.cpp \
     src/controllers/abstractmanager.cpp \
-    src/models/abstractsortfilterproxymodel.cpp \
-    src/controllers/session/dummy/fakedatapopulator.cpp
+    src/models/abstractsortfilterproxymodel.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \
@@ -175,6 +184,20 @@ OTHER_FILES += \
     ../.gitignore \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
+
+fake_data {
+    HEADERS += \
+        src/controllers/session/dummy/fakeserver.h \
+        src/controllers/session/dummy/fakeserverstate.h \
+        src/controllers/session/dummy/fakesessionmanager.h \
+        src/controllers/session/dummy/fakedatapopulator.h
+
+    SOURCES += \
+        src/controllers/session/dummy/fakeserver.cpp \
+        src/controllers/session/dummy/fakeserverstate.cpp \
+        src/controllers/session/dummy/fakesessionmanager.cpp \
+        src/controllers/session/dummy/fakedatapopulator.cpp
+}
 
 INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
 

@@ -22,6 +22,11 @@ RelationModel::RelationModel(QObject *parent)
     : AbstractModel(parent)
 {}
 
+QString RelationModel::columnName(const RelationModel::Columns &column)
+{
+    return sc_roleNames.value(column);
+}
+
 int RelationModel::firstColumn() const
 {
     return columnShift(PackageId);

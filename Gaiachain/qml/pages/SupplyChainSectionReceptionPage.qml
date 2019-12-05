@@ -22,7 +22,8 @@ Pages.SupplyChainPage {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        dataManager.fetchLastActionPackageEvents(Enums.SupplyChainAction.GrainProcessing);
+        dataManager.fetchLastActionPackageEvents(Enums.SupplyChainAction.GrainProcessing)
+        sessionManager.getCompanies()
     }
 
     function proceed() {
@@ -31,12 +32,12 @@ Pages.SupplyChainPage {
         var harvestId = harvestIdComboBox.currentText
         var receptionDate = receptionInputDateHeader.currentDate
         var transportDate = transportInputDateHeader.currentDate
-        var buyer = buyerComboBox.currentText
+        var buyerId = ModelHelper.getData(buyerComboBox.currentIndex, "id", buyerComboBox.model)
 
         var properties = {
             [PackageDataProperties.ReceptionDate]: receptionDate,
             [PackageDataProperties.TransportDate]: transportDate,
-            [PackageDataProperties.Buyer]: buyer
+            [PackageDataProperties.Buyer]: buyerId
         }
 
         dataManager.addAction(harvestId,

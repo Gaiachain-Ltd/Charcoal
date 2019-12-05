@@ -22,39 +22,28 @@ Pages.SupplyChainPage {
                             producerNameComboBox.currentText === Strings.empty ||
                             villageInputHeader.inputText === Strings.empty)
 
+    Component.onCompleted: {
+        parcelsModel.producerId = -1
+        refreshData()
+    }
+
+    function refreshData() {
+        sessionManager.getProducers()
+    }
+
     function proceed() {
         pageManager.openPopup(Enums.Popup.WaitOverlay)
 
+        var parcelId = ModelHelper.getData(parcelCodesComboBox.currentIndex, "id", parcelCodesComboBox.model)
         var harvestDate = inputHarvestDate.currentDate
-        var parcelCode = parcelCodesComboBox.currentText
 
         var properties = {
-            [PackageDataProperties.ProducerId]: producerIdComboBox.currentText,
-            [PackageDataProperties.ProducerName]: producerNameComboBox.currentText,
-            [PackageDataProperties.Village]: villageInputHeader.inputText,
-            [PackageDataProperties.ParcelCode]: parcelCode,
+            [PackageDataProperties.ParcelId]: parcelId,
             [PackageDataProperties.HarvestDate]: harvestDate
         }
 
-        dataManager.addAction(Enums.SupplyChainAction.Harvest,
-                              harvestDate,
-                              properties)
-    }
-
-    ListModel {
-        id: parcelCodesModel
-
-        function setItems(items) {
-            clear()
-
-            for (var item of items) {
-                append({item})
-            }
-
-            if (items.length === 1) {
-                parcelCodesComboBox.currentIndex = 0
-            }
-        }
+        var parcelCode = parcelCodesComboBox.currentText
+        dataManager.addHarvestAction(parcelCode, new Date, properties)
     }
 
     pageContent: ColumnLayout {
@@ -68,20 +57,14 @@ Pages.SupplyChainPage {
             headerText: Strings.nameOfProducer
 
             onActivated: {
-                var producerId = ModelHelper.findItem(ModelHelper.roleNameToColumn("name", producersModel),
-                                                      activatedText,
-                                                      ModelHelper.roleNameToColumn("producerId", producersModel), producersModel)
-                producerIdComboBox.selectItem(producerId)
+                producerIdComboBox.currentIndex = currentIndex
 
-                var village = ModelHelper.findItem(ModelHelper.roleNameToColumn("name", producersModel),
-                                                   activatedText,
-                                                   ModelHelper.roleNameToColumn("village", producersModel), producersModel)
+                var village = ModelHelper.getData(currentIndex, "village", model)
                 villageInputHeader.inputText = village
 
-                var headers = ModelHelper.findItem(ModelHelper.roleNameToColumn("name", producersModel),
-                                                   activatedText,
-                                                   ModelHelper.roleNameToColumn("parcelCodes", producersModel), producersModel)
-                parcelCodesModel.setItems(headers)
+                var producerId = ModelHelper.getData(currentIndex, "id", model)
+                parcelsModel.producerId = producerId
+                parcelCodesComboBox.updateCurrentIndex()
             }
 
             displayRole: "name"
@@ -96,23 +79,17 @@ Pages.SupplyChainPage {
             headerText: Strings.producerIdNumber
 
             onActivated: {
-                var producerName = ModelHelper.findItem(ModelHelper.roleNameToColumn("producerId", producersModel),
-                                                        activatedText,
-                                                        ModelHelper.roleNameToColumn("name", producersModel), producersModel)
-                producerNameComboBox.selectItem(producerName)
+                producerNameComboBox.currentIndex = currentIndex
 
-                var village = ModelHelper.findItem(ModelHelper.roleNameToColumn("producerId", producersModel),
-                                                   activatedText,
-                                                   ModelHelper.roleNameToColumn("village", producersModel), producersModel)
+                var village = ModelHelper.getData(currentIndex, "village", model)
                 villageInputHeader.inputText = village
 
-                var headers = ModelHelper.findItem(ModelHelper.roleNameToColumn("producerId", producersModel),
-                                                   activatedText,
-                                                   ModelHelper.roleNameToColumn("parcelCodes", producersModel), producersModel)
-                parcelCodesModel.setItems(headers)
+                var producerId = ModelHelper.getData(currentIndex, "id", model)
+                parcelsModel.producerId = producerId
+                parcelCodesComboBox.updateCurrentIndex()
            }
 
-           displayRole: "producerId"
+           displayRole: "code"
            model: producersModel
        }
 
@@ -134,9 +111,14 @@ Pages.SupplyChainPage {
 
             headerText: Strings.parcelCode
             placeholderText: enabled ? Strings.toSelect : Strings.selectProducer
-            enabled: parcelCodesModel.count !== 0
+            enabled: count !== 0
 
-            model: parcelCodesModel
+            displayRole: "code"
+            model: parcelsModel
+
+            function updateCurrentIndex() {
+                currentIndex = (count === 1) ? 0 : -1
+            }
         }
 
         Items.InputDateHeader {

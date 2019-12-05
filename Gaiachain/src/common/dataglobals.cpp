@@ -17,16 +17,6 @@ const QHash<Enums::SupplyChainAction, Enums::PackageType> DataGlobals::sc_supply
     { Enums::SupplyChainAction::ExportReception, Enums::PackageType::Lot }
 };
 
-const QHash<Enums::SupplyChainAction, Enums::PlaceType> DataGlobals::sc_supplyChainActionPlaceType = {
-    { Enums::SupplyChainAction::Harvest, Enums::PlaceType::Parcele },
-    { Enums::SupplyChainAction::GrainProcessing, Enums::PlaceType::Parcele },
-    { Enums::SupplyChainAction::SectionReception, Enums::PlaceType::Section },
-    { Enums::SupplyChainAction::Bagging, Enums::PlaceType::Section },
-    { Enums::SupplyChainAction::LotCreation, Enums::PlaceType::Section },
-    { Enums::SupplyChainAction::WarehouseTransport, Enums::PlaceType::Section },
-    { Enums::SupplyChainAction::ExportReception, Enums::PlaceType::CooperativeHQ }
-};
-
 const QHash<Enums::PackageType, Enums::SupplyChainAction> DataGlobals::sc_packageTypeCreationAction = {
     { Enums::PackageType::Harvest, Enums::SupplyChainAction::Harvest},
     { Enums::PackageType::Sac, Enums::SupplyChainAction::Bagging },
@@ -53,14 +43,6 @@ const QHash<Enums::UserType, QList<Enums::SupplyChainAction>> DataGlobals::sc_su
     { Enums::UserType::CooperativeRepresentative, QList<Enums::SupplyChainAction>{ Enums::SupplyChainAction::ExportReception } }
 };
 
-const QHash<Enums::UserType, Enums::PlaceType> DataGlobals::sc_userPlaceType = {
-    { Enums::UserType::SuperUser, Enums::PlaceType::Invalid },
-    { Enums::UserType::Inspector, Enums::PlaceType::Parcele },
-    { Enums::UserType::PCA, Enums::PlaceType::Section },
-    { Enums::UserType::Warehouseman, Enums::PlaceType::Section },
-    { Enums::UserType::CooperativeRepresentative, Enums::PlaceType::CooperativeHQ }
-};
-
 DataGlobals &DataGlobals::instance()
 {
     static DataGlobals dg;
@@ -70,11 +52,6 @@ DataGlobals &DataGlobals::instance()
 Enums::PackageType DataGlobals::packageType(const Enums::SupplyChainAction &action)
 {
     return sc_supplyChainActionPackageType.value(action, Enums::PackageType::Unknown);
-}
-
-Enums::PlaceType DataGlobals::placeType(const Enums::SupplyChainAction &action)
-{
-    return sc_supplyChainActionPlaceType.value(action, Enums::PlaceType::Invalid);
 }
 
 QList<Enums::SupplyChainAction> DataGlobals::userActions(const Enums::UserType &user)
@@ -97,20 +74,9 @@ Enums::SupplyChainAction DataGlobals::packageTypeCreationAction(const Enums::Pac
     return sc_packageTypeCreationAction.value(type);
 }
 
-Enums::PlaceType DataGlobals::userPlaceType(const Enums::UserType &user)
-{
-    return sc_userPlaceType.value(user);
-}
-
 QList<Enums::UserType> DataGlobals::availableUserTypes()
 {
     static const auto availableList = Utility::generateEnumValues(Enums::UserType::Annonymous, Enums::UserType::UserTypeCount);
-    return availableList;
-}
-
-QList<Enums::PlaceType> DataGlobals::availablePlaceTypes()
-{
-    static const auto availableList = Utility::generateEnumValues(Enums::PlaceType::Invalid, Enums::PlaceType::PlaceTypeCount);
     return availableList;
 }
 
@@ -139,12 +105,6 @@ QVariantList DataGlobals::userActionsQml(const Enums::UserType &user)
 QVariantList DataGlobals::availableUserTypesQml()
 {
     static auto variantList = Utility::toVariantList(availableUserTypes(), QMetaType::Int);
-    return variantList;
-}
-
-QVariantList DataGlobals::availablePlaceTypesQml()
-{
-    static auto variantList = Utility::toVariantList(availablePlaceTypes(), QMetaType::Int);
     return variantList;
 }
 

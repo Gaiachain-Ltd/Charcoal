@@ -21,8 +21,13 @@ public:
     static Q_INVOKABLE bool isServerError(const QNetworkReply::NetworkError &error);
     static Q_INVOKABLE bool isAuthenticationError(const QNetworkReply::NetworkError &error);
 
+    static QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
+
     static Enums::UserType userTypeFromString(const QString &text);
     static QString userTypeToString(const Enums::UserType &userType);
+
+    static Enums::CompanyType companyTypeFromString(const QString &text);
+    static QString companyTypeToString(const Enums::CompanyType &companyType);
 
     static Enums::PackageType packageTypeFromString(const QString &text);
     static QString packageTypeToString(const Enums::PackageType &packageType);
@@ -30,12 +35,10 @@ public:
     static Enums::SupplyChainAction supplyChainActionFromString(const QString &text);
     static QString supplyChainActionToString(const Enums::SupplyChainAction &action);
 
+    static QVariantMap convertProperties(const QVariantMap &properties);
+
 private:
     RequestsHelper();
-
-    static const QHash<Enums::UserType, QString> sc_userTypeStrings;
-    static const QHash<Enums::PackageType, QString> sc_packageTypeStrings;
-    static const QHash<Enums::SupplyChainAction, QString> sc_supplyChainActionStrings;
 };
 
 #endif // REQUESTSHELPER_H

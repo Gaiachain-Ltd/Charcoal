@@ -23,7 +23,7 @@ public:
     Q_INVOKABLE QDateTime oldestEventDate() const;
 
 signals:
-    void fetchEvents(int count, const QDateTime &from) const;
+    void fetchEvents(int number, const QDateTime &from) const;
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;

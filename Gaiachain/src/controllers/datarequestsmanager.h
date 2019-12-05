@@ -21,7 +21,6 @@ public:
     void processAdditionalData(const QJsonObject &additionalData);
     void processEntitiesInfo(const QJsonArray &entitiesInfo);
     void processEntities(const QJsonArray &entities);
-    void processRelations(const QJsonArray &relations);
     void processUnusedLotIdsLoaded(const QJsonArray &idsArray);
 
     void processOfflineActions(const Gaia::ModelData &offlineData);
@@ -47,16 +46,24 @@ signals:
                            const QDateTime &timestamp, const QVariantMap &properties);
 
 private:
+    using EventPropertyHandler = std::function<QVariantMap(const QJsonObject &)>;
+    static const QMap<Enums::SupplyChainAction, EventPropertyHandler> sc_eventPropertyHandlers;
     QMultiMap<QString, Enums::SupplyChainAction> m_offlineActionRequestsSent;
 
-    QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
+    static Gaia::ModelEntry processNameData(const QJsonValue &value);
+    static Gaia::ModelEntry processProducer(const QJsonValue &value);
+    static Gaia::ModelData processParcels(const QJsonValue &value);
+    static Gaia::ModelEntry processCompany(const QJsonValue &value);
+    static Gaia::ModelEntry processEventInfo(const QJsonValue &value);
+    static Gaia::ModelEntry processEvent(const QJsonValue &value);
+    static Gaia::ModelData processRelationsValue(const QJsonValue &value);
+    static Gaia::ModelEntry processUnusedLotId(const QJsonValue &value);
 
-    Gaia::ModelEntry processProducer(const QJsonValue &value);
-    Gaia::ModelEntry processNameData(const QJsonValue &value);
-    Gaia::ModelEntry processEventInfo(const QJsonValue &value);
-    Gaia::ModelEntry processEvent(const QJsonValue &value);
-    Gaia::ModelData processRelationsValue(const QJsonValue &value);
-    Gaia::ModelEntry processUnusedLotId(const QJsonValue &value);
+    static QVariantMap processEventProperties(const QJsonObject &object, const Enums::SupplyChainAction &action);
+    static QVariantMap processSimpleProperties(const QJsonObject &object);
+    static QVariantMap processHarvestProperties(const QJsonObject &object);
+    static QVariantMap processBaggingProperties(const QJsonObject &object);
+    static QVariantMap processLotCreationProperties(const QJsonObject &object);
 };
 
 #endif // DATAREQUESTSMANAGER_H

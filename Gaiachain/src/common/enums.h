@@ -90,8 +90,8 @@ namespace Enums {
     enum class AdditionalDataType {
         UnknownData = -1,
         ProducersData,
-        BuyersData,
-        TransportersData,
+        ParcelsData,
+        CompaniesData,
         DestinationsData
     };
     Q_ENUM_NS(AdditionalDataType)
@@ -110,16 +110,16 @@ namespace Enums {
     Q_ENUM_NS(UserType)
     inline uint qHash(UserType key, uint seed) { return qH<UserType>(key, seed);}
 
-    enum class PlaceType {
-        Invalid = -1,
-        Parcele,
-        Section,
-        CooperativeHQ,
+    enum class CompanyType {
+        Unknown = -1,
+        Cooperative,
+        Buyer,
+        Transporter,
 
-        PlaceTypeCount
+        CompanyTypeCount
     };
-    Q_ENUM_NS(PlaceType)
-    inline uint qHash(PlaceType key, uint seed) { return qH<PlaceType>(key, seed);}
+    Q_ENUM_NS(CompanyType)
+    inline uint qHash(CompanyType key, uint seed) { return qH<CompanyType>(key, seed);}
 
     enum class PackageType {
         Unknown = -1,

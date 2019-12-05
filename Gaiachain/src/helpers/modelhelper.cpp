@@ -1,62 +1,58 @@
 #include "modelhelper.h"
 
-#include <QDebug>
-
 ModelHelper::ModelHelper(QObject *parent)
     : QObject(parent)
+{}
+
+ModelHelper &ModelHelper::instance()
 {
-
-}
-
-ModelHelper &ModelHelper::instance() {
     static ModelHelper pmh;
     return pmh;
 }
 
-QVariant ModelHelper::findItem(int column, QVariant targetItem, int searchColumn, QAbstractItemModel *model) {
-    for (int i = 0; i < model->rowCount(); ++i) {
-        QVariant tempItem = model->data(model->index(i, column), Qt::UserRole + column + 1);
+QVariant ModelHelper::getData(int row, const QString &roleName, AbstractReadModel *model)
+{
+    if (model) {
+        return model->data(model->index(row, 0), roleNameToNumber(roleName, model));
+    }
+    return {};
+}
 
-        if (tempItem == targetItem) {
-            return model->data(model->index(i, searchColumn), Qt::UserRole + searchColumn + 1);
+QVariant ModelHelper::findItem(const QString &roleName, const QVariant &targetItem, const QString &searchRoleName, AbstractReadModel *model)
+{
+    if (model) {
+        auto matchingIndex = model->match(model->index(0, 0), roleNameToNumber(roleName, model), targetItem, 1, Qt::MatchExactly);
+        if (!matchingIndex.isEmpty()) {
+            return model->data(model->index(matchingIndex.first().row(), 0), roleNameToNumber(searchRoleName, model));
         }
     }
 
-    return QVariant();
+    return {};
 }
 
-QVariantList ModelHelper::findItems(int column, QAbstractItemModel *model) {
-    QVariantList dataList;
+QVariantList ModelHelper::findItem(const QString &roleName, const QVariant &targetItem, const QStringList &searchRoleNames, AbstractReadModel *model)
+{
+    auto dataList = QVariantList{};
+    if (model) {
+        auto matchingIndex = model->match(model->index(0, 0), roleNameToNumber(roleName, model), targetItem, 1, Qt::MatchExactly);
+        if (!matchingIndex.isEmpty()) {
+            const auto row = matchingIndex.first().row();
 
-    for (int i = 0; i < model->rowCount(); ++i) {
-        dataList.append(model->data(model->index(i, column), Qt::UserRole + column + 1));
+            for (const auto &roleName : searchRoleNames) {
+                auto data = model->data(model->index(row, 0), roleNameToNumber(roleName, model));
+                dataList.append(data);
+            }
+        }
     }
 
     return dataList;
 }
 
-QVariantList ModelHelper::findItems(int column, QVariant targetItem, int searchColumn, QAbstractItemModel *model) {
-    QVariantList dataList;
-
-    for (int i = 0; i < model->rowCount(); ++i) {
-        QVariant tempItem = model->data(model->index(i, column), Qt::UserRole + column + 1);
-
-        if (tempItem == targetItem) {
-            dataList.append(model->data(model->index(i, searchColumn), Qt::UserRole + searchColumn + 1));
-        }
+int ModelHelper::roleNameToNumber(const QString &roleName, AbstractReadModel *model)
+{
+    if (model) {
+        const auto roles = model->roleNames();
+        return roles.key(roleName.toLatin1(), -1);
     }
-
-    return dataList;
-}
-
-int ModelHelper::roleNameToColumn(const QString &roleName, QAbstractItemModel *model) {
-    const auto roles = model->roleNames();
-
-    for (const int key : roles.keys()) {
-        if (roles.value(key) == roleName) {
-            return key - Qt::UserRole - 1;
-        }
-    }
-
     return -1;
 }

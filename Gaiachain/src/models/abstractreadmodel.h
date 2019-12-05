@@ -34,14 +34,14 @@ public:
     Gaia::ModelEntry getEntry(int row) const;
     Gaia::ModelData getData() const;
 
+    int columnShift(const int &role) const;
+    int roleShift(const int &column) const;
+
 signals:
     void modelChanged() const override;
 
 protected:
     using QIdentityProxyModel::setSourceModel;
-
-    int columnShift(const int &role) const;
-    int roleShift(const int &column) const;
 };
 
 #endif // ABSTRACTREADMODEL_H

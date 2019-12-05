@@ -21,31 +21,27 @@ public:
 
     Enums::ConnectionState connectionState() const;
 
-    Q_INVOKABLE void getInitialData();
-
     Q_INVOKABLE virtual void ping() = 0;
 
     Q_INVOKABLE virtual void login(const QString &login, const QString &password) = 0;
 
     Q_INVOKABLE virtual void getAdditionalData() = 0;
+    Q_INVOKABLE virtual void getProducers() = 0;
+    Q_INVOKABLE virtual void getCompanies() = 0;
+    Q_INVOKABLE virtual void getDestinations() = 0;
 
-    Q_INVOKABLE virtual void getRelations(const QString &id) = 0;
-    Q_INVOKABLE virtual void getRelations(const QStringList &ids) = 0;
-    Q_INVOKABLE virtual void addRelation(const QString &id, const QStringList &ids) = 0;
-
-    Q_INVOKABLE virtual void getEntitiesInfo(int count, const QDateTime &from, const QString &keyword) = 0;
+    Q_INVOKABLE virtual void getEntitiesInfo(int limit, const QDateTime &from, const QString &keyword) = 0;
     Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) = 0;
     Q_INVOKABLE virtual void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) = 0;
 
     Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;
-    Q_INVOKABLE virtual void getEntity(const QString &id) = 0;
-    Q_INVOKABLE virtual void getEntityId(const QByteArray &codeData) = 0;
-    Q_INVOKABLE virtual void putEntityAction(const QString &id, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                                             const QVariantMap &properties, const QByteArray &codeData = {}) = 0;
-    Q_INVOKABLE virtual void putEntityAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                             const QDateTime &timestamp, const QVariantMap &properties) = 0;
-    Q_INVOKABLE virtual void postNewEntity(const Enums::SupplyChainAction &action, const QDateTime &timestamp,
-                                           const QVariantMap &properties, const QByteArray &codeData) = 0;
+
+    Q_INVOKABLE virtual void postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
+                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+    Q_INVOKABLE virtual void postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+    Q_INVOKABLE virtual void postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
 
     Q_INVOKABLE virtual void getUnusedLotIds() = 0;
     Q_INVOKABLE virtual void postUnusedLotId() = 0;
@@ -65,17 +61,9 @@ signals:
     void additionalDataLoadError(const QNetworkReply::NetworkError &code) const;
     void additionalDataLoaded(const QJsonObject &data) const;
 
-    void relationsLoadError(const QNetworkReply::NetworkError &code) const;
-    void relationsLoaded(const QJsonArray &relations) const;
-    void relationsSaveError(const QString &packageId, const QNetworkReply::NetworkError &code) const;
-    void relationsSaved(const QString &packageId) const;
-
     void entitiesLoadError(const QNetworkReply::NetworkError &code) const;
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
     void entitiesLoaded(const QJsonArray &entities) const;
-
-    void entityIdLoadError(const QNetworkReply::NetworkError &code) const;
-    void entityIdLoaded(const QString &packageId) const;
 
     void entitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &code) const;
     void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;

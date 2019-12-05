@@ -11,13 +11,12 @@ class NameModel : public AbstractModel
 
 public:
     enum Columns {
-        Name = Qt::UserRole + 1, // 1 as 0 column is id column not used in UI
+        Id = Qt::UserRole,
+        Name,
         LastColumn
     }; //!!! Keep the lastcolumn, a last entry in the enum
 
     NameModel(QObject *parent = nullptr);
-
-    static const QString columnName();
 
     int firstColumn() const override;
     int lastColumn() const override;

@@ -84,17 +84,21 @@ void UserManager::readLoginData(const QString &login, const QJsonObject &userDat
     setLogin(login);
 
     auto userData = UserData{};
-    userData.email = userDataObj.value(Tags::login).toString();
-    userData.cooperativeId = userDataObj.value(Tags::cooperativeId).toString();
-    userData.cooperativeName = userDataObj.value(Tags::cooperativeName).toString();
+    userData.email = RequestsHelper::checkAndValue(userDataObj, Tags::login).toString();
 
-    const auto role = userDataObj.value(Tags::role).toString();
+    auto cooperativeObj = RequestsHelper::checkAndValue(userDataObj, Tags::company).toObject();
+    userData.cooperativeId = static_cast<quint32>(RequestsHelper::checkAndValue(cooperativeObj, Tags::id).toInt());
+    userData.cooperativeCode = RequestsHelper::checkAndValue(cooperativeObj, Tags::pid).toString();
+    userData.cooperativeName = RequestsHelper::checkAndValue(cooperativeObj, Tags::name).toString();
+
+    const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
+    const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
     userData.type = RequestsHelper::userTypeFromString(role);
 
     updateUserData(userData);
-    m_offlineHandler.putUser(m_login, userData);
+    m_offlineHandler.putUser(login, userData);
 
-    emit tokenChanged(userDataObj.value(Tags::token).toString());
+    emit tokenChanged(RequestsHelper::checkAndValue(userDataObj, Tags::accessToken).toString());
     emit loggedInChanged(true);
 }
 

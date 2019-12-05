@@ -30,12 +30,14 @@ Pages.SupplyChainPage {
         var harvestId = harvestIdComboBox.currentText
         var breakingDate = breakingDateInputDate.currentDate
         var endFermentationDate = endFermentationDateInputDate.currentDate
-        var estimatedVolume= estimatedVolumeInputHeader.inputText
+        var estimatedBeansVolume= estimatedBeansVolumeInputHeader.inputText
 
         var properties = {
             [PackageDataProperties.BreakingDate]: breakingDate,
-            [PackageDataProperties.DryingDate]: endFermentationDate,
-            [PackageDataProperties.EstimatedVolume]: estimatedVolume
+            [PackageDataProperties.FermentationEndDate]: endFermentationDate
+        }
+        if (estimatedBeansVolume) {
+            properties[PackageDataProperties.EstimatedBeansVolume] = estimatedBeansVolume
         }
 
         dataManager.addAction(harvestId,
@@ -75,13 +77,13 @@ Pages.SupplyChainPage {
         }
 
         Items.InputHeader {
-            id: estimatedVolumeInputHeader
+            id: estimatedBeansVolumeInputHeader
 
             Layout.fillWidth: true
 
             validator: IntValidator {}
 
-            headerText: Strings.estimatedBeensVolume + " (" + Strings.notRequired + ")"
+            headerText: Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor
 
             iconSource: Style.rightArrowImgUrl

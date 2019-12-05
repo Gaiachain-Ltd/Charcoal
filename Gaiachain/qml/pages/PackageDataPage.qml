@@ -23,8 +23,8 @@ BasePage {
         target: eventsModel
         onEntryInserted: {
             // update view if new data arrived
-            if (entryData.at(0) === top.packageId) {
-                refreshData();
+            if (entryData[0] === top.packageId) {
+                dataManager.getPackageData(top.packageId)
             }
         }
     }

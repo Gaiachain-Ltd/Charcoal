@@ -23,12 +23,29 @@ const QVector<Migration> db::DB_MIGRATIONS = {
     {
         { 0, 9, 1 },
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("CREATE TABLE Producers   (`id` 		INTEGER primary key UNIQUE,"
+                                                    "`code`     TEXT NOT NULL,"
+                                                    "`name`		TEXT NOT NULL,"
+                                                    "`village`  TEXT NOT NULL"
+                                                    ")"),
+            QLatin1String("CREATE TABLE Parcels (`id`           INTEGER primary key UNIQUE,"
+                                                "`code`         TEXT NOT NULL,"
+                                                "`producerId`	INTEGER NOT NULL,"
+                                                "FOREIGN KEY(`producerId`) REFERENCES `Producers`(`id`)"
+                                                ")"),
+            QLatin1String("CREATE TABLE Companies   (`id` 	INTEGER primary key UNIQUE,"
+                                                    "`name`	TEXT NOT NULL,"
+                                                    "`code` TEXT NOT NULL,"
+                                                    "`type`	INTEGER NOT NULL"
+                                                    ")"),
+            QLatin1String("CREATE TABLE Destinations    (`id` 	INTEGER primary key UNIQUE,"
+                                                        "`name`	TEXT NOT NULL"
+                                                        ")"),
             QLatin1String("CREATE TABLE Events  (`id` 				INTEGER primary key AUTOINCREMENT,"
                                                 "`packageId`		TEXT NOT NULL,"
                                                 "`action`			INTEGER NOT NULL,"
                                                 "`timestamp`		INTEGER NOT NULL,"
-                                                "`userRole`			INTEGER NOT NULL,"
-                                                "`cooperativeId`	TEXT NOT NULL,"
+                                                "`cooperativeId`	INTEGER NOT NULL,"
                                                 "`properties`		TEXT NOT NULL,"
                                                 "`locationLat`		REAL NOT NULL,"
                                                 "`locationLon`		REAL NOT NULL,"
@@ -46,30 +63,15 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                                                     "`packageId`	TEXT NOT NULL UNIQUE,"
                                                     "`packageType`	INTEGER NOT NULL"
                                                     ")"),
-            QLatin1String("CREATE TABLE Producers   (`id` 			INTEGER primary key AUTOINCREMENT,"
-                                                    "`producerId`	TEXT NOT NULL UNIQUE,"
-                                                    "`name`			TEXT NOT NULL,"
-                                                    "`village`		TEXT NOT NULL,"
-                                                    "`parcelCodes`	TEXT NOT NULL"
-                                                    ")"),
-            QLatin1String("CREATE TABLE Buyers  (`id` 	INTEGER primary key AUTOINCREMENT,"
-                                                "`name`	TEXT NOT NULL UNIQUE"
-                                                ")"),
-            QLatin1String("CREATE TABLE Transporters    (`id` 	INTEGER primary key AUTOINCREMENT,"
-                                                        "`name`	TEXT NOT NULL UNIQUE"
-                                                        ")"),
-            QLatin1String("CREATE TABLE Destinations    (`id` 	INTEGER primary key AUTOINCREMENT,"
-                                                        "`name`	TEXT NOT NULL UNIQUE"
-                                                        ")"),
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("DROP TABLE Producers"),
+            QLatin1String("DROP TABLE Parcels"),
+            QLatin1String("DROP TABLE Companies"),
+            QLatin1String("DROP TABLE Destinations"),
             QLatin1String("DROP TABLE Events"),
             QLatin1String("DROP TABLE Relations"),
             QLatin1String("DROP TABLE UnusedIds"),
-            QLatin1String("DROP TABLE Producers"),
-            QLatin1String("DROP TABLE Buyers"),
-            QLatin1String("DROP TABLE Transporters"),
-            QLatin1String("DROP TABLE Destinations"),
         }, true)
     },
 };

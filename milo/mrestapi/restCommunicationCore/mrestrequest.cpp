@@ -194,14 +194,14 @@ void MRestRequest::send()
         return;
     case Type::Put:
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->put(request, mRequestDocument.toJson());
+        mActiveReply = mNetworkManager->put(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
         break;
     case Type::Get:
         mActiveReply = mNetworkManager->get(request);
         break;
     case Type::Post:
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->post(request, mRequestDocument.toJson());
+        mActiveReply = mNetworkManager->post(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
         break;
     case Type::Delete:
         mActiveReply = mNetworkManager->deleteResource(request);
@@ -238,6 +238,8 @@ void MRestRequest::retry()
 
     if (mRequestRetryCounter >= mMaxRequestRetryCount) {
         qCCritical(crequest, "Request retry limit reached - operation aborted!");
+
+        emit replyError(mLastError, QNetworkReply::NetworkError::TimeoutError);
         emit finished();
     } else {
         if (mActiveReply->bytesAvailable()) {
@@ -267,11 +269,10 @@ void MRestRequest::onReplyError(QNetworkReply::NetworkError code)
                              .toString());
         qCWarning(crequest) << requestName << status << "Error:" << mLastError;
 
-        emit replyError(mLastError, code);
-
         if (code == QNetworkReply::TimeoutError) {
             retry();
         } else {
+            emit replyError(mLastError, code);
             emit finished();
         }
     }

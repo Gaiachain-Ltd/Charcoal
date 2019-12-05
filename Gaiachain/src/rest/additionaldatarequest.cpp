@@ -8,13 +8,12 @@
 #include "../common/dataglobals.h"
 #include "../helpers/requestshelper.h"
 
-const QString AdditionalDataRequest::sc_basePath = QStringLiteral("/additionalData/%1/");
+const QString AdditionalDataRequest::sc_basePath = QStringLiteral("/additional_data/%1/");
 
 const QMap<AdditionalDataRequest::DataType, QString> AdditionalDataRequest::sc_requestsPath = {
-    { AdditionalDataRequest::DataType::All, sc_basePath.arg(QStringLiteral("all")) },
+    { AdditionalDataRequest::DataType::All, sc_basePath.arg(QStringLiteral("all_data")) },
     { AdditionalDataRequest::DataType::Producers, sc_basePath.arg(QStringLiteral("producers")) },
-    { AdditionalDataRequest::DataType::Buyers, sc_basePath.arg(QStringLiteral("buyers")) },
-    { AdditionalDataRequest::DataType::Transporters, sc_basePath.arg(QStringLiteral("transporters")) },
+    { AdditionalDataRequest::DataType::Companies, sc_basePath.arg(QStringLiteral("companies")) },
     { AdditionalDataRequest::DataType::Destinations, sc_basePath.arg(QStringLiteral("destinations")) }
 };
 
