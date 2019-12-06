@@ -13,6 +13,7 @@ struct PackageData
     Q_GADGET
     Q_PROPERTY(QString id MEMBER id)
     Q_PROPERTY(Enums::PackageType type MEMBER type)
+    Q_PROPERTY(quint32 cooperativeId MEMBER cooperativeId)
     Q_PROPERTY(QStringList relatedPackages MEMBER relatedPackages)
     Q_PROPERTY(QVariantMap properties MEMBER properties)
 public:
@@ -21,6 +22,9 @@ public:
 
     QString id;
     Enums::PackageType type;
+
+    quint32 cooperativeId;
+
     QStringList relatedPackages;
 
     QHash<Enums::SupplyChainAction, QDateTime> actionDates;

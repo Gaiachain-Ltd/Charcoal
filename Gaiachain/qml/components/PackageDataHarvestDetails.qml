@@ -32,7 +32,7 @@ Components.PackageDataDetails {
            { "headerValue": Strings.parcelCode,           "inputValue": emptyIfNotDefined(parcelData[0]) },
            { "headerValue": Strings.harvestDate,          "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
            { "headerValue": Strings.breakingDate,         "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) },
-           { "headerValue": Strings.estimatedBeansVolume, "inputValue": Strings.kg.arg(minusIfNotDefined(packageData.properties[PackageDataProperties.EstimatedBeansVolume])) }
+           { "headerValue": Strings.estimatedBeansVolume, "inputValue": Strings.kg.arg(minusIfNotDefinedOrZero(packageData.properties[PackageDataProperties.EstimatedBeansVolume])) }
        ]
 
         detailsModel.clear()

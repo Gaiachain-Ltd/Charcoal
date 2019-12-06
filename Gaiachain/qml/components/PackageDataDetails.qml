@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.helpers 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.modelhelper 1.0
 
 import "../items" as Items
 
@@ -37,8 +38,8 @@ Item {
         return data ? data : Strings.empty
     }
 
-    function minusIfNotDefined(value) {
-        return value ? value : Strings.minus
+    function minusIfNotDefinedOrZero(value) {
+        return value && value > 0 ? value : Strings.minus
     }
 
     function emptyIfNotDate(date) {
@@ -52,7 +53,7 @@ Item {
 
         spacing: s(Style.smallMargin)
 
-        Items.InputHeaderWithExpandList {
+        Items.ButtonInputHeaderWithExpandList {
             id: headerAndRelatedPackages
 
             Layout.fillWidth: true
@@ -60,6 +61,17 @@ Item {
             color: String(Helper.packageTypeColor(Number(packageType)))
             headerText: top.packageTypeDetailsName(Number(packageType))
             inputText: packageId
+        }
+        Items.InputHeader {
+            id: cooperativeName
+
+            Layout.fillWidth: true
+
+            visible: Number(packageType) !== Enums.PackageType.Harvest
+
+            color: String(Helper.packageTypeColor(Number(packageType)))
+            inputText: packageData ? emptyIfNotDefined(ModelHelper.findItem("id", packageData.cooperativeId, "name", cooperativesModel))
+                                   : ""
         }
     }
 }

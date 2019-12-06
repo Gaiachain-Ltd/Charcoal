@@ -17,15 +17,22 @@ Components.PackageDataDetails {
             return
         }
 
+        var weightsMap = {}
+        var weightsData = packageData.properties[PackageDataProperties.HarvestWeights]
+        for (var i = 0; i < weightsData.length; ++i) {
+            weightsMap[weightsData[i][PackageDataProperties.Pid]] = weightsData[i][PackageDataProperties.Weight]
+        }
+
         var relatedPackages = packageData.relatedPackages
 
         relatedPackagesModel.clear()
-        for (var i = 0; i < relatedPackages.length; ++i) {
+        for (i = 0; i < relatedPackages.length; ++i) {
+            var packageId = relatedPackages[i]
+            var weight = weightsMap[packageId]
             relatedPackagesModel.append({ "headerValue": Strings.empty,
-                                          "inputValue": relatedPackages[i],
-                                          "inputSuffixValue": Strings.kg.arg(minusIfNotDefined(packageData.properties[PackageDataProperties.Weights][relatedPackages[i]])) })
+                                          "inputValue": packageId,
+                                          "inputSuffixValue": Strings.kg.arg(minusIfNotDefinedOrZero(weight)) })
         }
-
     }
 
     ListModel {

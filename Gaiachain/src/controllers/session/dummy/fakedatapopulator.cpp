@@ -672,8 +672,8 @@ QVariantMap FakeDataPopulator::generateLotCreationProperties() const
 QVariantMap FakeDataPopulator::generateWarehouseTransportProperties(const QDate &transportDate) const
 {
     return {
-        { PackageDataProperties::Transporter, randomTransporter() },
-        { PackageDataProperties::Destination, randomDestination() },
+        { PackageDataProperties::TransporterId, randomTransporter() },
+        { PackageDataProperties::DestinationId, randomDestination() },
         { PackageDataProperties::TransportDate, transportDate }
     };
 }

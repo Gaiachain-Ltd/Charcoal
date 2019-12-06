@@ -17,8 +17,12 @@ BasePage {
 
     function refreshData() {
         // called from BasePage
-        dataManager.fetchRangeEvents(latestRangePackagesTypeSearchEventsModel.oldestEventDate(),
-                                     new Date, searchEventsModel.keyword)
+        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+    }
+
+    function updateCooperativeOnlyFiltering(active) {
+        cooperativeFilteringEvents.active = active
+        latestRangePackagesTypeSearchEventsModel.clearRowCount()
     }
 
     function updateSearch() {
@@ -81,17 +85,13 @@ BasePage {
 
 
         Items.BasicCheckBox {
-            function updateCooperativeOnlyFiltering() {
-                cooperativeFilteringEvents.active = checked
-            }
-
             checked: true
             visible: userManager.loggedIn
 
             text: Strings.onlyMyTransactions
 
-            Component.onCompleted: updateCooperativeOnlyFiltering()
-            onCheckedChanged: updateCooperativeOnlyFiltering()
+            Component.onCompleted: top.updateCooperativeOnlyFiltering(checked)
+            onCheckedChanged: top.updateCooperativeOnlyFiltering(checked)
         }
 
         RowLayout {

@@ -77,13 +77,13 @@ void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAc
     emit addActionRequest(packageId, action, timestamp, properties);
 }
 
-void DataManager::addAction(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QByteArray &codeData,
                             const QDateTime &timestamp, const QVariantMap &properties)
 {
     emit addActionRequest(packageId, codeData, action, timestamp, properties);
 }
 
-void DataManager::addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+void DataManager::addAction(const Enums::SupplyChainAction &action, const QByteArray &codeData,
                             const QDateTime &timestamp, const QVariantMap &properties)
 {
     emit addActionRequest(codeData, action, timestamp, properties);
@@ -112,9 +112,9 @@ void DataManager::fetchRangeEvents(const QDateTime &from, const QDateTime &to, c
     emit eventsInfoNeeded(from, to, keyword);
 }
 
-void DataManager::fetchLimitEvents(int limit, const QDateTime &from, const QString &keyword)
+void DataManager::fetchLimitEvents(int limit, int offset, const QString &keyword)
 {
-    emit eventsInfoNeeded(limit, from, keyword);
+    emit eventsInfoNeeded(limit, offset, keyword);
 }
 
 void DataManager::fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction)

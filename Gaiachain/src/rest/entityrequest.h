@@ -30,7 +30,7 @@ public:
     EntityRequest(const RequestType &requestType, const QString &token = {});
 
     EntityRequest(const QStringList &packageIds = {});
-    EntityRequest(int limit, const QDateTime &to, const QString &keyword = {});
+    EntityRequest(int limit, int offset, const QString &keyword = {});
     EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction);
 

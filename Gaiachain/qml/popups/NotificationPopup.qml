@@ -6,22 +6,20 @@ import com.gaiachain.style 1.0
 import "../items" as Items
 import "../popups" as Popups
 
-Popups.GenericPopup {
+Popups.TimedPopup {
     id: top
 
     property color backgroundColor: Style.primaryColor
 
     property string text
-    property int openedInterval: Style.notificationPopupOpenedDefaultInterval
 
     readonly property int topMarginStart: (parent.height - height - s(Style.hugeMargin) * 6 - s(Style.transitionMoveYRange))
     readonly property int topMarginFinish: (parent.height - height - s(Style.hugeMargin) * 6)
 
+    openedInterval: Style.notificationPopupOpenedDefaultInterval
+
     topMargin: topMarginStart
     padding: s(Style.hugeMargin)
-
-    onOpened: timer.start()
-    onClosed: pageManager.closePopup()
 
     contentItem: Items.BasicText {
         color: Style.textSecondaryColor
@@ -60,12 +58,5 @@ Popups.GenericPopup {
     background: Rectangle {
         color: top.backgroundColor
         radius: top.height/2
-    }
-
-    Timer {
-        id: timer
-
-        interval: top.openedInterval
-        onTriggered: top.close()
     }
 }

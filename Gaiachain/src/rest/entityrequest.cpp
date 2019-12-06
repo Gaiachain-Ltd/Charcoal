@@ -46,14 +46,12 @@ EntityRequest::EntityRequest(const QStringList &packageIds)
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(int limit, const QDateTime &to, const QString &keyword)
+EntityRequest::EntityRequest(int limit, int offset, const QString &keyword)
     : EntityRequest(RequestType::GetFilterLimit)
 {
     auto query = QUrlQuery{};
     query.addQueryItem(Tags::limit, QString::number(limit));
-    if (to.isValid()) {
-        query.addQueryItem(Tags::timestampTo, QString::number(static_cast<qint64>(to.toSecsSinceEpoch())) );
-    }
+    query.addQueryItem(Tags::offset, QString::number(offset));
     if (!keyword.isEmpty()) {
         query.addQueryItem(Tags::keyword, keyword);
     }
@@ -96,7 +94,7 @@ EntityRequest::EntityRequest(const QString &token, const QString &packageId, con
 {
     auto docObj = entityDataObject(entityData);
     docObj.insert(Tags::pid, packageId);
-    docObj.insert(Tags::code, codeData.data());
+    docObj.insert(Tags::qrCode, codeData.data());
 
     mRequestDocument.setObject(docObj);
 }
@@ -105,7 +103,7 @@ EntityRequest::EntityRequest(const QString &token, const QByteArray &codeData, c
     : EntityRequest(RequestType::PostNewAction, token)
 {
     auto docObj = entityDataObject(entityData);
-    docObj.insert(Tags::code, codeData.data());
+    docObj.insert(Tags::qrCode, codeData.data());
 
     mRequestDocument.setObject(docObj);
 }

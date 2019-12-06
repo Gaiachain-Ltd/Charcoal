@@ -10,14 +10,14 @@ LatestRangeEventsProxyModel::LatestRangeEventsProxyModel(QObject *parent)
 
 void LatestRangeEventsProxyModel::clearRowCount()
 {
-    m_availableEvents = 0;
+    m_offset = 0;
     invalidateFilter();
     fetchMore({});
 }
 
 void LatestRangeEventsProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
-    m_availableEvents = 0;
+    m_offset = 0;
     m_latestEventsModel.setSourceModel(sourceModel);
 }
 
@@ -29,36 +29,24 @@ bool LatestRangeEventsProxyModel::canFetchMore(const QModelIndex &parent) const
     }
 
     const auto rowsAvailable = AbstractSortFilterProxyModel::rowCount(parent);
-    return (m_availableEvents < rowsAvailable + sc_fetchSize);
+    return (m_offset < rowsAvailable + sc_fetchSize);
 }
 
 void LatestRangeEventsProxyModel::fetchMore(const QModelIndex &parent)
 {
-    qDebug() << "Fetching events:" << m_availableEvents << m_availableEvents + sc_fetchSize;
-    emit fetchEvents(sc_fetchSize, oldestEventDate());
+    qDebug() << "Fetching events:" << m_offset << m_offset + sc_fetchSize;
+    emit fetchEvents(sc_fetchSize, m_offset);
 
     const auto rowsAvailable = AbstractSortFilterProxyModel::rowCount(parent);
-    auto hasMoreData = (rowsAvailable > m_availableEvents);
+    auto hasMoreData = (rowsAvailable > m_offset);
 
-    m_availableEvents += sc_fetchSize;
+    m_offset += sc_fetchSize;
     if (hasMoreData) {
         invalidateFilter();
     }
 }
 
-QDateTime LatestRangeEventsProxyModel::newestEventDate() const
-{
-    return rowCount() ? data(index(0, 0), EventModel::Timestamp).toDateTime()
-                      : QDateTime{};
-}
-
-QDateTime LatestRangeEventsProxyModel::oldestEventDate() const
-{
-    return rowCount() ? data(index(rowCount() - 1, 0), EventModel::Timestamp).toDateTime()
-                      : QDateTime{};
-}
-
 bool LatestRangeEventsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &) const
 {
-    return (sourceRow <= m_availableEvents);
+    return (sourceRow <= m_offset);
 }

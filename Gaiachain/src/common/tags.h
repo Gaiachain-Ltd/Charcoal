@@ -18,6 +18,7 @@ namespace Tags {
     const QLatin1String timestampFrom = QLatin1String("from_timestamp");
     const QLatin1String timestampTo = QLatin1String("to_timestamp");
     const QLatin1String limit = QLatin1String("limit");
+    const QLatin1String offset = QLatin1String("offset");
     const QLatin1String keyword = QLatin1String("keyword");
     const QLatin1String lastAction = QLatin1String("last_action");
     const QLatin1String results = QLatin1String("results");
@@ -26,7 +27,7 @@ namespace Tags {
     const QLatin1String timestamp = QLatin1String("timestamp");
     const QLatin1String properties = QLatin1String("properties");
     const QLatin1String relations = QLatin1String("relations");
-    const QLatin1String code = QLatin1String("code");
+    const QLatin1String qrCode = QLatin1String("qr_code");
     const QLatin1String user = QLatin1String("user");
     const QLatin1String producers = QLatin1String("producers");
     const QLatin1String companies = QLatin1String("companies");
@@ -60,7 +61,7 @@ namespace StaticValues {
     const QLatin1String actionWarehouseTransport = QLatin1String("TR");
     const QLatin1String actionExportReception = QLatin1String("LR");
 
-    const QLatin1String packageHarvest = QLatin1String("HARVEST");
+    const QLatin1String packageHarvest = QLatin1String("HAR");
     const QLatin1String packageSac = QLatin1String("SAC");
     const QLatin1String packageLot = QLatin1String("LOT");
 }

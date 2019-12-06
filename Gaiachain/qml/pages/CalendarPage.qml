@@ -12,14 +12,13 @@ CalendarPageBase {
 
     function refreshData() {
         // called from BasePage
-        dataManager.fetchRangeEvents(new Date(currentYear, currentMonth, 1),
-                                     new Date(currentYear, currentMonth + 1, 0))
+        dataManager.fetchRangeEvents(getMonthStartDate(), getMonthEndDate())
     }
 
     function updateModelRange() {
         // called from CalendarPageBase
-        var from = new Date(currentYear, currentMonth, 1)
-        var to = new Date(currentYear, currentMonth + 1, 0)
+        var from = getMonthStartDate()
+        var to = getMonthEndDate()
 
         calendarModel.setDateRange(from, to)
         dataManager.fetchRangeEvents(from, to)

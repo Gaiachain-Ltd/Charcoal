@@ -23,7 +23,7 @@ DataModelsManager::DataModelsManager(QObject *parent)
     : AbstractManager(parent)
 {
     connect(&m_latestRangePackagesTypeSearchEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
-            this, [this](int number, const QDateTime &from) { emit limitEventsNeeded(number, from, m_searchEventsModel.keyword()); });
+            this, [this](int number, int offset) { emit limitEventsNeeded(number, offset, m_searchEventsModel.keyword()); });
 }
 
 void DataModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -31,6 +31,7 @@ void DataModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("producersModel"), &m_producersViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("allParcelsModel"), &m_parcelsSourceModel);
     engine.rootContext()->setContextProperty(QStringLiteral("parcelsModel"), &m_parcelsViewModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("cooperativesModel"), &m_cooperativesViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("buyersModel"), &m_buyersViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("transportersModel"), &m_transportersViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("destinationsModel"), &m_destinationsViewModel);
@@ -40,6 +41,7 @@ void DataModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
 
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionHarvestModel"), &m_lastActionHarvestModel);
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionGrainProcessingModel"), &m_lastActionGrainProcessingModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("lastActionSectionReceptionModel"), &m_lastActionSectionReceptionModel);
     engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("packageTypeCooperativeIdsModel"), &m_packageTypeCooperativeIdsModel);
 
@@ -88,6 +90,9 @@ void DataModelsManager::setupModels(QSqlDatabase db)
                                                           &m_producersViewModel));
     m_parcelsViewModel.setSourceModel(new SqlQueryModel(ParcelsTableName, db,
                                                         &m_producersViewModel));
+    m_cooperativesViewModel.setSourceModel(new SqlQueryModel(CompaniesTableName, db,
+                                                             SortNameQuery(CompanyTypeQuery(Enums::CompanyType::Cooperative, SortFilterQuery{})),
+                                                             &m_cooperativesViewModel));
     m_buyersViewModel.setSourceModel(new SqlQueryModel(CompaniesTableName, db,
                                                        SortNameQuery(CompanyTypeQuery(Enums::CompanyType::Buyer, SortFilterQuery{})),
                                                        &m_buyersViewModel));
@@ -103,6 +108,7 @@ void DataModelsManager::setupModels(QSqlDatabase db)
     m_cooperativeEventsModel.setSourceModel(&m_eventsSourceModel);
     m_lastActionHarvestModel.setSourceModel(&m_cooperativeEventsModel);
     m_lastActionGrainProcessingModel.setSourceModel(&m_cooperativeEventsModel);
+    m_lastActionSectionReceptionModel.setSourceModel(&m_cooperativeEventsModel);
     m_packageTypeCooperativeIdsModel.setSourceModel(&m_cooperativeEventsModel);
 
     m_localOnlyEventsModel.setSourceModel(&m_cooperativeEventsModel);
@@ -265,7 +271,9 @@ void DataModelsManager::processUnusedLotIds(const Gaia::ModelData &modelData)
     ProcessCounter p(this);
 
     auto missingUnusedLotIds = modelData;
-    removeExistingUnusedLotIds(missingUnusedLotIds);
+    if (!m_unusedLotIdsModel.clearData()) {
+        removeExistingUnusedLotIds(missingUnusedLotIds);
+    }
     m_unusedLotIdsModel.appendData(missingUnusedLotIds);
 }
 
@@ -284,6 +292,9 @@ void DataModelsManager::setupUpdateConnections()
     connect(&m_parcelsSourceModel, &AbstractModel::modelChanged,
             this, std::bind(&DataModelsManager::scheduleModelUpdate,
                             this, qobject_cast<SqlQueryModel *>(m_parcelsViewModel.sourceModel())) );
+    connect(&m_companiesSourceModel, &AbstractModel::modelChanged,
+            this, std::bind(&DataModelsManager::scheduleModelUpdate,
+                            this, qobject_cast<SqlQueryModel *>(m_cooperativesViewModel.sourceModel())) );
     connect(&m_companiesSourceModel, &AbstractModel::modelChanged,
             this, std::bind(&DataModelsManager::scheduleModelUpdate,
                             this, qobject_cast<SqlQueryModel *>(m_buyersViewModel.sourceModel())) );

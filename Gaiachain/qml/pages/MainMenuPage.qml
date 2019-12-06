@@ -19,8 +19,16 @@ BasePage {
             return Enums.Page.SupplyChainHarvest
         case Enums.SupplyChainAction.GrainProcessing:
             return Enums.Page.SupplyChainGrainProcessing
+        case Enums.SupplyChainAction.Bagging:
+            return Enums.Page.SupplyChainBagging
+        case Enums.SupplyChainAction.LotCreation:
+            return Enums.Page.SupplyChainLotCreation
+        case Enums.SupplyChainAction.WarehouseTransport:
+            return Enums.Page.SupplyChainWarehouseTransport
         case Enums.SupplyChainAction.SectionReception:
             return Enums.Page.SupplyChainSectionReception
+        case Enums.SupplyChainAction.ExportReception:
+            return Enums.Page.SupplyChainExportReception  
         default:
             console.warn("navigateSupplyChainPages: Invalid action provided!")
         }

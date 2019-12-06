@@ -8,6 +8,7 @@ GenericButton {
 
     property alias source: image.source
     property alias fillMode: image.fillMode
+    property alias status: image.status
 
     borderRadius: s(Style.buttonSmallRadius)
     padding: s(Style.buttonImageMargin)
