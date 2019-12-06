@@ -27,6 +27,7 @@ TextField
         if (nextInput !== null) {
             nextInput.focus = true
         } else {
+            focus = false
             Qt.inputMethod.hide();
         }
     }

@@ -16,6 +16,7 @@ BasePage {
     property var action: Enums.SupplyChainAction.Unknown
     property alias pageContent: contentLayout.data
     property alias proceedButtonEnabled: proceedButton.enabled
+    property alias proceedButtonText: proceedButton.text
 
     property string buttonText: Strings.proceed
 

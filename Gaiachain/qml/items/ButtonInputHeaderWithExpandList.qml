@@ -1,4 +1,4 @@
-import QtQuick 2.11
+﻿import QtQuick 2.11
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.11
 
@@ -15,6 +15,7 @@ Item {
     property alias headerText: inputHeader.headerText
     property alias inputText: inputHeader.inputText
     property alias color: inputHeader.color
+    property alias expanded: inputHeader.expanded
 
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
@@ -25,36 +26,29 @@ Item {
         anchors.fill: parent
         spacing: Style.none
 
-        Items.InputHeader {
+        Items.ButtonInputHeader {
             id: inputHeader
-
-            property bool showRelatedPackages: false
-
             Layout.fillWidth: true
 
-            onShowRelatedPackagesChanged: relatedPackagesListVisibleAnimation.start()
+            property bool expanded: false
 
-            readOnly: true
             headerText: top.headerText
             inputText: top.inputText
 
-            showIcon: !expandList.empty()
-            iconSource: showRelatedPackages ? Style.expandUpImgUrl : Style.expandDownImgUrl
+            showIcon: expandList.count
+            iconSource: expanded ? Style.expandUpImgUrl : Style.expandDownImgUrl
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: inputHeader.showRelatedPackages = !inputHeader.showRelatedPackages
-                enabled: !expandList.empty()
+            onExpandedChanged: expandingAnimation.start()
+
+            onClicked: {
+                if (expandList.count) {
+                    inputHeader.expanded = !inputHeader.expanded
+                }
             }
         }
 
         ListView {
             id: expandList
-
-            function empty() {
-                return (count === 0)
-            }
-
             Layout.fillWidth: true
 
             implicitHeight: Style.none
@@ -75,27 +69,54 @@ Item {
                 suffixText: inputSuffixValue
             }
 
+            Rectangle {
+                id: packagesLine
+
+                property real additionalSpace: Style.none
+
+                anchors {
+                    top: parent.top
+                    topMargin: -additionalSpace
+
+                    bottom: parent.bottom
+                    bottomMargin: s(Style.tinyMargin)
+
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+                width: sr(Style.separatorHeight)
+                color: Style.separatorColor
+
+                z: parent.z - 1
+            }
+
             ParallelAnimation {
-                id: relatedPackagesListVisibleAnimation
+                id: expandingAnimation
 
                 NumberAnimation {
                     target: expandList
                     property: "opacity"
-                    to: inputHeader.showRelatedPackages ? Style.hidden : Style.visible
+                    to: inputHeader.expanded ? Style.hidden : Style.visible
                     duration: Style.animationDuration
                 }
 
                 NumberAnimation {
                     target: expandList
                     property: "implicitHeight"
-                    to: inputHeader.showRelatedPackages ? Style.none : expandList.contentHeight
+                    to: inputHeader.expanded ? Style.none : expandList.contentHeight
                     duration: Style.animationDuration
                 }
 
                 NumberAnimation {
                     target: mainLayout
                     property: "spacing"
-                    to: inputHeader.showRelatedPackages ? Style.none : s(Style.hugeMargin)
+                    to: inputHeader.expanded ? Style.none : s(Style.hugeMargin)
+                    duration: Style.animationDuration
+                }
+                NumberAnimation {
+                    target: packagesLine
+                    property: "additionalSpace"
+                    to: inputHeader.expanded ? Style.none : s(Style.hugeMargin)
                     duration: Style.animationDuration
                 }
             }

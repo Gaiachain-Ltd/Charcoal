@@ -9,17 +9,6 @@
 #include "../common/dataglobals.h"
 #include "../helpers/packagedataproperties.h"
 
-const QMap<Enums::SupplyChainAction, DataRequestsManager::EventPropertyHandler> DataRequestsManager::sc_eventPropertyHandlers = {
-    { Enums::SupplyChainAction::Unknown, &DataRequestsManager::processSimpleProperties },
-    { Enums::SupplyChainAction::Harvest, &DataRequestsManager::processHarvestProperties },
-    { Enums::SupplyChainAction::GrainProcessing, &DataRequestsManager::processSimpleProperties },
-    { Enums::SupplyChainAction::SectionReception, &DataRequestsManager::processSimpleProperties },
-    { Enums::SupplyChainAction::Bagging, &DataRequestsManager::processBaggingProperties },
-    { Enums::SupplyChainAction::LotCreation, &DataRequestsManager::processLotCreationProperties },
-    { Enums::SupplyChainAction::WarehouseTransport, &DataRequestsManager::processSimpleProperties },
-    { Enums::SupplyChainAction::ExportReception, &DataRequestsManager::processSimpleProperties },
-};
-
 DataRequestsManager::DataRequestsManager(QObject *parent)
     : AbstractManager(parent)
 {}
@@ -250,7 +239,7 @@ Gaia::ModelEntry DataRequestsManager::processEvent(const QJsonValue &value)
 
     const auto date = QDateTime::fromSecsSinceEpoch(
                 RequestsHelper::checkAndValue(object, Tags::timestamp).toVariant().value<qint64>());
-    const auto properties = processEventProperties(RequestsHelper::checkAndValue(object, Tags::properties).toObject(), action);
+    const auto properties = RequestsHelper::checkAndValue(object, Tags::properties).toObject().toVariantMap();
 
     const auto userObj = RequestsHelper::checkAndValue(object, Tags::user).toObject();
     const auto companyObj = RequestsHelper::checkAndValue(userObj, Tags::company).toObject();
@@ -273,12 +262,23 @@ Gaia::ModelData DataRequestsManager::processRelationsValue(const QJsonValue &val
 
     auto object = value.toObject();
     const auto id = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+    const auto action = RequestsHelper::supplyChainActionFromString(
+                RequestsHelper::checkAndValue(object, Tags::action).toString());
+    const auto packageType = DataGlobals::packageType(action);
 
     if (object.contains(Tags::relations)) {
-        const auto relatedIds = RequestsHelper::checkAndValue(object, Tags::relations).toVariant().toStringList();
+        const auto relatedIdsArray = RequestsHelper::checkAndValue(object, Tags::relations).toArray();
 
-        std::transform(relatedIds.begin(), relatedIds.end(), std::back_inserter(modelData),
-                       [&id](const auto &relatedId) { return Gaia::ModelEntry{{ id, relatedId }, }; });
+        std::transform(relatedIdsArray.begin(), relatedIdsArray.end(), std::back_inserter(modelData),
+                       [&id, &packageType](const auto &value) {
+            auto object = value.toObject();
+            const auto relatedId = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+            const auto relatedPackageType = RequestsHelper::packageTypeFromString(
+                        RequestsHelper::checkAndValue(object, Tags::type).toString());
+
+            return (packageType > relatedPackageType) ? Gaia::ModelEntry{{ id, relatedId }, }
+                                                      : Gaia::ModelEntry{{ relatedId, id }, };
+        });
     }
     return modelData;
 }
@@ -289,34 +289,4 @@ Gaia::ModelEntry DataRequestsManager::processUnusedLotId(const QJsonValue &value
     const auto id = RequestsHelper::checkAndValue(object, Tags::pid).toString();
 
     return { id, QVariant::fromValue(Enums::PackageType::Lot) };
-}
-
-QVariantMap DataRequestsManager::processEventProperties(const QJsonObject &object, const Enums::SupplyChainAction &action)
-{
-    return sc_eventPropertyHandlers[action](object);
-}
-
-QVariantMap DataRequestsManager::processSimpleProperties(const QJsonObject &object)
-{
-    return object.toVariantMap();
-}
-
-QVariantMap DataRequestsManager::processHarvestProperties(const QJsonObject &object)
-{
-    return {
-        { PackageDataProperties::ParcelId, object.value(Tags::parcel).toObject().value(Tags::id).toVariant() },
-        { PackageDataProperties::HarvestDate, object.value(PackageDataProperties::HarvestDate).toVariant() }
-    };
-}
-
-QVariantMap DataRequestsManager::processBaggingProperties(const QJsonObject &object)
-{
-    // TODO
-    return object.toVariantMap();
-}
-
-QVariantMap DataRequestsManager::processLotCreationProperties(const QJsonObject &object)
-{
-    // TODO
-    return object.toVariantMap();
 }

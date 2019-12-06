@@ -19,6 +19,11 @@ Items.GenericHeader {
 
     property alias placeholderText: comboBox.placeholderText
 
+    property alias footerVisible: comboBox.footerVisible
+    property alias footerText: comboBox.footerText
+
+    signal footerClicked()
+
     signal activated(string activatedText)
 
     function selectItem(itemName) {
@@ -32,9 +37,10 @@ Items.GenericHeader {
     widget: Items.GenericComboBox {
         id: comboBox
 
-        width: top.width
-        enabled: top.enabled
+        Layout.fillWidth: true
 
         onActivated: top.activated(currentText)
+
+        onFooterClicked: top.footerClicked()
     }
 }

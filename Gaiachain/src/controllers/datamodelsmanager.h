@@ -66,7 +66,7 @@ public:
     void getOfflineActions() const;
 
 signals:
-    void limitEventsNeeded(int count, const QDateTime &from, const QString &keyword);
+    void limitEventsNeeded(int count, int offset, const QString &keyword);
     void eventsNeeded(const QStringList &packageIds);
 
     void packageData(const PackageData &packageData) const;
@@ -101,6 +101,7 @@ private:
     // proxy models
     ProducerModel m_producersViewModel;
     ParcelViewModel m_parcelsViewModel;
+    NameModel m_cooperativesViewModel;
     NameModel m_buyersViewModel;
     NameModel m_transportersViewModel;
     NameModel m_destinationsViewModel;
@@ -108,6 +109,7 @@ private:
     CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
     PackageLastActionProxyModel m_lastActionHarvestModel{ Enums::SupplyChainAction::Harvest };
     PackageLastActionProxyModel m_lastActionGrainProcessingModel{ Enums::SupplyChainAction::GrainProcessing };
+    PackageLastActionProxyModel m_lastActionSectionReceptionModel{ Enums::SupplyChainAction::SectionReception };
     PackageTypeIdsProxyModel m_packageTypeCooperativeIdsModel;
 
     LocalOnlyProxyModel m_localOnlyEventsModel;

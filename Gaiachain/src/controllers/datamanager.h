@@ -30,16 +30,16 @@ public:
     Q_INVOKABLE void addHarvestAction(const QString &parcelCode, const QDateTime &timestamp, const QVariantMap &properties);
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action,
                                const QDateTime &timestamp, const QVariantMap &properties);
-    Q_INVOKABLE void addAction(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+    Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QByteArray &codeData,
                                const QDateTime &timestamp, const QVariantMap &properties);
-    Q_INVOKABLE void addAction(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+    Q_INVOKABLE void addAction(const Enums::SupplyChainAction &action, const QByteArray &codeData,
                                const QDateTime &timestamp, const QVariantMap &properties);
 
     Q_INVOKABLE void sendOfflineActions();
 
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
-    Q_INVOKABLE void fetchLimitEvents(int limit, const QDateTime &to, const QString &keyword = {});
+    Q_INVOKABLE void fetchLimitEvents(int limit, int offset, const QString &keyword = {});
     Q_INVOKABLE void fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction);
 
 signals:
@@ -52,8 +52,8 @@ signals:
     void addActionRequest(const QByteArray &codeData, const Enums::SupplyChainAction &action,
                           const QDateTime &timestamp, const QVariantMap &properties);
 
+    void eventsInfoNeeded(int limit, int offset, const QString &keyword) const;
     void eventsInfoNeeded(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
-    void eventsInfoNeeded(int limit, const QDateTime &to, const QString &keyword) const;
     void lastActionEventsInfoNeeded(const Enums::SupplyChainAction &lastAction) const;
     void eventsNeeded(const QStringList &ids) const;
 

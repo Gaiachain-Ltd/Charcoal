@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.modelhelper 1.0
 import com.gaiachain.packagedata 1.0
 
 import "../items" as Items
@@ -20,9 +21,15 @@ Components.PackageDataDetails {
             return
         }
 
+        var transporterId = packageData.properties[PackageDataProperties.TransporterId]
+        var transporterName = ModelHelper.findItem("id", transporterId, "name", transportersModel)
+
+        var destinationId = packageData.properties[PackageDataProperties.DestinationId]
+        var destinationName = ModelHelper.findItem("id", destinationId, "name", destinationsModel)
+
         const data = [
-           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.Transporter]) },
-           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefined(packageData.properties[PackageDataProperties.Destination]) },
+           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": emptyIfNotDefined(transporterName) },
+           { "headerValue": Strings.destination,                "inputValue": emptyIfNotDefined(destinationName) },
            { "headerValue": Strings.transportDate,              "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.TransportDate]) }
        ]
 

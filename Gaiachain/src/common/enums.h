@@ -24,6 +24,15 @@ namespace Enums {
     Q_ENUM_NS(Edge)
     inline uint qHash(Edge key, uint seed) { return qH<Edge>(key, seed);}
 
+    enum class QRScanStatus {
+        Unknown = -1,
+        Scanning,
+        Success,
+        Failed
+    };
+    Q_ENUM_NS(QRScanStatus)
+    inline uint qHash(QRScanStatus key, uint seed) { return qH<QRScanStatus>(key, seed);}
+
     enum class Page {
         InvalidPage = -1,
         CalendarEvents,
@@ -34,12 +43,17 @@ namespace Enums {
         MainMenu,
         QRScanner,              // TODO check if still needed
         Transactions,
+        WaitingTransactions,
         Tracking,
         PackageData,
         SupplyChainHarvest,
         SupplyChainGrainProcessing,
-        WaitingTransactions,
         SupplyChainSectionReception,
+        SupplyChainBagging, 
+        SupplyChainAddHarvestId,
+        SupplyChainLotCreation,
+        SupplyChainWarehouseTransport,
+        SupplyChainExportReception,
 
         PageCount
     };
@@ -53,6 +67,8 @@ namespace Enums {
         WaitOverlay,
         Notification,
         Confirm,
+        Comment,
+        Text,
 
         PopupCount
     };

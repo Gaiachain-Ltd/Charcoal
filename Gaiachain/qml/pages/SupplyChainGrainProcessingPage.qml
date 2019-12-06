@@ -82,6 +82,7 @@ Pages.SupplyChainPage {
             Layout.fillWidth: true
 
             validator: IntValidator {}
+            inputMethodHints: Qt.ImhDigitsOnly
 
             headerText: Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor

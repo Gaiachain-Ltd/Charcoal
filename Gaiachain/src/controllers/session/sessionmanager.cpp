@@ -61,7 +61,7 @@ void SessionManager::getProducers()
         emit additionalDataLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit additionalDataLoaded(QJsonObject{ { Tags::producers, reply.object().value(Tags::results) } });
+        emit additionalDataLoaded(QJsonObject{ { Tags::producers, reply.object().value(Tags::results).toArray() } });
     };
     sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::Producers),
                 errorHandler, replyHandler);
@@ -73,7 +73,7 @@ void SessionManager::getCompanies()
         emit additionalDataLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit additionalDataLoaded(QJsonObject{ { Tags::companies, reply.object().value(Tags::results) } });
+        emit additionalDataLoaded(QJsonObject{ { Tags::companies, reply.object().value(Tags::results).toArray() } });
     };
     sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::Companies),
                 errorHandler, replyHandler);
@@ -85,13 +85,13 @@ void SessionManager::getDestinations()
         emit additionalDataLoadError(code);
     };
     const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit additionalDataLoaded(QJsonObject{ { Tags::destinations, reply.object().value(Tags::results) } });
+        emit additionalDataLoaded(QJsonObject{ { Tags::destinations, reply.object().value(Tags::results).toArray() } });
     };
     sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::Destinations),
                 errorHandler, replyHandler);
 }
 
-void SessionManager::getEntitiesInfo(int limit, const QDateTime &to, const QString &keyword)
+void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keyword)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
@@ -100,8 +100,7 @@ void SessionManager::getEntitiesInfo(int limit, const QDateTime &to, const QStri
         emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
     };
 
-    auto toDate = to.isNull() ? QDateTime::currentDateTime() : to;
-    sendRequest(QSharedPointer<EntityRequest>::create(limit, toDate, keyword), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, keyword), errorHandler, replyHandler);
 }
 
 void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)

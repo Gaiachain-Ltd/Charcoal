@@ -27,6 +27,7 @@ public:
 
 signals:
     void popupAction(Enums::PopupAction action);
+    void popupClosed(int popup);
 
 signals:
     // Signals below should only be used by StackView!!!

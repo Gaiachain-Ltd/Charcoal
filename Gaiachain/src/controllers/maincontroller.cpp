@@ -95,8 +95,8 @@ void MainController::setupDataConnections()
 
     connect(&m_dataManager, qOverload<const QDateTime &, const QDateTime &, const QString &>(&DataManager::eventsInfoNeeded),
             &m_sessionManager, qOverload<const QDateTime &, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
-    connect(&m_dataManager, qOverload<int, const QDateTime &, const QString &>(&DataManager::eventsInfoNeeded),
-            &m_sessionManager, qOverload<int, const QDateTime &, const QString &>(&AbstractSessionManager::getEntitiesInfo));
+    connect(&m_dataManager, qOverload<int, int, const QString &>(&DataManager::eventsInfoNeeded),
+            &m_sessionManager, qOverload<int, int, const QString &>(&AbstractSessionManager::getEntitiesInfo));
     connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
     connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
     connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);

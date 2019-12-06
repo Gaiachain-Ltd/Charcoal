@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -18,14 +19,13 @@ CalendarPageBase {
 
     function refreshData() {
         // called from BasePage
-        dataManager.fetchRangeEvents(new Date(currentYear, currentMonth, 1),
-                                     new Date(currentYear, currentMonth + 1, 0))
+        dataManager.fetchRangeEvents(getMonthStartDate(), getMonthEndDate())
     }
 
     function updateModelRange() {
         // called from CalendarPageBase
-        var from = new Date(currentYear, currentMonth, 1)
-        var to = new Date(currentYear, currentMonth + 1, 0)
+        var from = getMonthStartDate()
+        var to = getMonthEndDate()
 
         calendarModel.setDateRange(from, to)
         dateEventsModel.setSingleDateRange(new Date(currentYear, currentMonth, currentDay))
@@ -84,7 +84,7 @@ CalendarPageBase {
 
             onDelegateClicked:  {
                 var packageData = dataManager.getPackageData(packageId)
-                pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageData": packageData })
+                pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageId": packageId, "packageType": DataGlobals.packageType(action) })
             }
         }
 

@@ -58,12 +58,6 @@ private:
     static Gaia::ModelEntry processEvent(const QJsonValue &value);
     static Gaia::ModelData processRelationsValue(const QJsonValue &value);
     static Gaia::ModelEntry processUnusedLotId(const QJsonValue &value);
-
-    static QVariantMap processEventProperties(const QJsonObject &object, const Enums::SupplyChainAction &action);
-    static QVariantMap processSimpleProperties(const QJsonObject &object);
-    static QVariantMap processHarvestProperties(const QJsonObject &object);
-    static QVariantMap processBaggingProperties(const QJsonObject &object);
-    static QVariantMap processLotCreationProperties(const QJsonObject &object);
 };
 
 #endif // DATAREQUESTSMANAGER_H

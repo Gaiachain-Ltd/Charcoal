@@ -20,7 +20,7 @@ public:
     Q_INVOKABLE void getCompanies() override;
     Q_INVOKABLE void getDestinations() override;
 
-    Q_INVOKABLE void getEntitiesInfo(int limit, const QDateTime &from, const QString &keyword) override;
+    Q_INVOKABLE void getEntitiesInfo(int limit, int offset, const QString &keyword) override;
     Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) override;
     Q_INVOKABLE void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) override;
 

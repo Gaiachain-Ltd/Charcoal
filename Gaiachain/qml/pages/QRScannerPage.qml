@@ -8,355 +8,230 @@ import com.gaiachain.style 1.0
 import com.gaiachain.helpers 1.0
 
 import "../items" as Items
+import "../components" as Components
 
 BasePage {
     id: top
 
-    function enterEventDetailsPage() {
-        var attributes = {}
+    property string scannedId
+    property string popupText
 
-        attributes["action"] = scannedIdAction
-        attributes["timestamp"] = Number(new Date())
-        attributes["packageId"] = scannedId
+    property bool displayId: false
 
-        pageManager.enter(Enums.Page.EditableEventDetails, { "attributes": attributes })
-    }
-
-    function previewCapturedImage(result) {
-        photoPreview.source = result.url
-        photoPreview.visible = true
-    }
+    property int scanStatus: Enums.QRScanStatus.Unknown
+    property int backSupplyChainPage: Enums.Page.InvalidPage
 
     function parseScannedId(id) {
-        if (scannedId.length == 0 && !error && !wrongCodeError) {
-            if (Utility.validateId(id)) {
-                scannedId = Utility.formatRawId(id)
-            } else {
-                wrongCodeError = true
-                scannedId = id
-                showErrorPopup(false)
-                console.warn("Wrong code content!", id)
-            }
-            grabImageOfCamera()
-        }
-    }
-
-    function grabImageOfCamera() {
-        if (!photoPreview.visible)
-            videoOutput.grabToImage(previewCapturedImage)
-    }
-
-    function parseInputId() {
-        if (scanInput.text.length > 0) {
-            parseScannedId(scanInput.text)
+        if (Utility.validateId(id)) {
+            scannedId = Utility.formatRawId(id)
+            scanStatus = Enums.QRScanStatus.Success
         } else {
-            retry()
-        }
-        scanInput.visible = false
-        scanInput.focus = false
-        Qt.inputMethod.hide()
-    }
-
-    function retry() {
-        if (camera.cameraState !== Camera.ActiveState)
-            camera.start()
-        scanInput.visible = false
-        error = false
-        wrongCodeError = false
-        photoPreview.source = ""
-        photoPreview.visible = false
-        scannedId = ""
-    }
-
-    function showErrorPopup(exists) {
-        pageManager.openPopup(Enums.Popup.Information, {
-                                                        "text" : exists ? Strings.idAlreadyUsed : Strings.incorrectId,
-                                                        "rejectButtonText": Strings.tryAgain,
-                                                        "rejectButtonType": Enums.PopupAction.TryAgain,
-                               })
-    }
-
-    property string scannedId: ""
-
-    property int scannedIdAction: Number(Enums.PlaceAction.Arrived)
-
-    onScannedIdChanged: {
-        if (scannedId.length > 0 && !wrongCodeError) {
-            sessionManager.getEntityAction(scannedId, userManager.userData.type)
+            scannedId = id
+            scanStatus = Enums.QRScanStatus.Failed
+            console.warn("Wrong code content", id)
         }
     }
 
-    property bool error: false
-    property bool wrongCodeError: false
-
-    Connections
-    {
-        target: sessionManager
-        onEntityActionDownloaded: {
-            if (id == scannedId) {
-                // If it arrived then user is scanning departing part.
-                // If invalid then it just arrived to new location.
-                if (action == Enums.PlaceAction.Arrived) {
-                    scannedIdAction = Enums.PlaceAction.Departed
-                } else {
-                    scannedIdAction = Enums.PlaceAction.Arrived
-                }
-
-            }
-        }
-
-        onEntityActionDownloadedError: {
-            if (id == scannedId) {
-                showErrorPopup(exists)
-            }
-        }
+    function backToHomeHandler() {
+        pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit })
     }
 
-    Connections
-    {
+    Component.onCompleted: pageManager.openPopup(Enums.Popup.Text, { "text": top.popupText })
+
+    Connections {
         target: pageManager
-        enabled: Number(pageManager.topPage) === page
+        enabled: pageManager.isOnTop(page)
+
         onPopupAction: {
-            switch(action) {
-            case Enums.PopupAction.TryAgain:
-                retry()
+            switch (action) {
+            case Enums.PopupAction.Accept:
+                pageManager.backTo(pageManager.homePage())
                 break
             default:
+                break
+            }
+        }
+
+        onPopupClosed: {
+            switch (popup) {
+            case Enums.Popup.Text:
+                scanStatus = Enums.QRScanStatus.Scanning
+                break
+            default:
+                break
             }
         }
     }
 
-    ColumnLayout
-    {
+    ColumnLayout {
         anchors.fill: parent
-        spacing: 0
 
-        Item {
-            id: cameraContainer
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+        spacing: Style.none
 
-            Rectangle
-            {
-                anchors.fill: parent
-                color: Style.textGreyColor
+        Camera {
+            id: camera
+
+            captureMode: Camera.CaptureVideo
+            focus {
+                focusMode: CameraFocus.FocusContinuous
+                focusPointMode: CameraFocus.FocusPointAuto
+            }
+        }
+
+        QZXingFilter {
+            id: zxingFilter
+
+            property real normalizedScanSize: Style.normalizedScanSize
+            property real normalizedScanPos: (1.0 - normalizedScanSize) * 0.5
+
+            captureRect: {
+                videoOutput.contentRect
+                videoOutput.sourceRect
+
+                return videoOutput.mapRectToSource(videoOutput.mapNormalizedRectToItem(
+                                                       Qt.rect(normalizedScanPos, normalizedScanPos, normalizedScanSize, normalizedScanSize)))
             }
 
-            Camera {
-                id: camera
-                captureMode: Camera.CaptureVideo
-                focus {
-                    focusMode: CameraFocus.FocusContinuous
-                    focusPointMode: CameraFocus.FocusPointAuto
-                }
-            }
-
-            QZXingFilter {
-                id: zxingFilter
-                property real normalizedScanSize: Style.normalizedScanSize
-                property real normalizedScanPos: (1.0 - normalizedScanSize) * 0.5 //Position of scanning area is centered
-                captureRect: {
-                    // setup bindings
-                    videoOutput.contentRect
-                    videoOutput.sourceRect
-
-                    // only scan the central quarter of the area for a barcode
-                    return videoOutput.mapRectToSource(
-                                videoOutput.mapNormalizedRectToItem(
-                                    Qt.rect(normalizedScanPos, normalizedScanPos, normalizedScanSize, normalizedScanSize)))
-                }
-
-                decoder {
-                    enabledDecoders: QZXing.DecoderFormat_QR_CODE
-                    onTagFound: parseScannedId(tag)
-                }
-            }
-
-            VideoOutput {
-                id: videoOutput
-                anchors.fill: parent
-                source: camera
-                filters: [zxingFilter]
-                fillMode: VideoOutput.PreserveAspectCrop
-                autoOrientation: true
-            }
-
-            Image {
-                id: photoPreview
-                visible: false
-                anchors.fill: parent
-            }
-
-            Items.ItemBorder
-            {
-                id: scanBorder
-                anchors.centerIn: parent
-                width: Math.min(videoOutput.width, videoOutput.height) * zxingFilter.normalizedScanSize
-                height: width
-
-                error: top.error || top.wrongCodeError
-                finished: scannedId.length > 0
-            }
-
-            Row {
-                id: buttonRow
-                anchors {
-                    top: parent.top
-                    topMargin: s(Style.bigMargin)
-                    right: parent.right
-                    rightMargin: s(Style.bigMargin)
-                }
-
-                spacing: s(Style.bigMargin)
-                layoutDirection: Qt.RightToLeft
-
-                Items.ImageButton
-                {
-                    onClicked: pageManager.back()
-
-                    backgroundColor: Style.backgroundShadowColor
-                    source: Style.cancelImgUrl
-
-                    padding: s(Style.smallMargin) * 2
-                }
-
-                Items.ImageButton
-                {
-                    onClicked: retry()
-
-                    backgroundColor: Style.backgroundShadowColor
-                    source: Style.relaodImgUrl
-
-                    visible: error || wrongCodeError || scannedId.length > 0
-                }
-            }
-
-            Items.ImageButton
-            {
-                text: Helper.getCurrentIdText()
-                backgroundColor: Style.backgroundShadowColor
-                textColor: Style.textSecondaryColor
-                showIcon: false
-                textFont.bold: true
-
-                width: textWidth + s(Style.bigMargin) * 1.75
-                height: s(Style.buttonHeight) * 0.75
-
-                anchors {
-                    verticalCenter: buttonRow.verticalCenter
-                    left: parent.left
-                    leftMargin: s(Style.bigMargin)
+            decoder {
+                enabledDecoders: QZXing.DecoderFormat_QR_CODE
+                onTagFound: {
+                    if (scanStatus === Enums.QRScanStatus.Scanning) {
+                        parseScannedId(tag)
+                    }
                 }
             }
         }
 
-        Item {
+        VideoOutput {
+            id: videoOutput
+
             Layout.fillWidth: true
-            Layout.preferredHeight: s(Style.footerHeight)
+            Layout.fillHeight: true
 
-            RowLayout
-            {
-                anchors {
-                    fill: parent
-                    leftMargin: s(Style.middleMargin)
-                    rightMargin: s(Style.middleMargin)
-                    topMargin: s(Style.smallMargin)
-                    bottomMargin: s(Style.smallMargin)
+            source: camera
+            filters: [zxingFilter]
+            fillMode: VideoOutput.PreserveAspectCrop
+            autoOrientation: true
+        }
+
+        Items.QRStatus {
+            id: qrStatus
+
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignBottom
+
+            implicitHeight: Style.none
+
+            function text() {
+                switch (scanStatus) {
+                    case Enums.QRScanStatus.Unknown: return Strings.empty
+                    case Enums.QRScanStatus.Success: return Strings.success
+                    case Enums.QRScanStatus.Failed: return Strings.error
+                    case Enums.QRScanStatus.Scanning: return Strings.scanning + "..."
                 }
-                spacing: s(Style.bigMargin)
+            }
 
-                Item
-                {
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
+            text: text()
 
-                    Items.GenericInput
-                    {
-                        id: scanInput
-                        onVisibleChanged: {
-                            scanInput.text = ""
-                        }
-
-                        background.border.width: 0
-                        anchors.fill: parent
-                        visible: false
-                        focus: true
-                        placeholderText: Strings.typeId + "..."
-
-                        additionalInputMethodHints: Qt.ImhLowercaseOnly
-                        input.maximumLength: Utility.getScannedIdLength()
-                        input.validator : RegExpValidator { regExp : /[a-zA-Z0-9]+/ }
-
-                        onMoveToNextInput: {
-                            parseInputId()
-                        }
-                    }
-
-                    Items.BasicText
-                    {
-                        id: scanLabel
-                        visible: !scanInput.visible
-
-                        anchors.fill: parent
-                        text: {
-                            if (error) {
-                                return Strings.scanFailed
-                            } else if (scannedId.length == 0) {
-                                return Strings.scanning + "..."
-                            } else {
-                                return String("%1: <b>%2</b>").arg(Strings.id).arg(scannedId)
-                            }
-                        }
-
-                        color: error ? Style.textErrorColor : Style.textPrimaryColor
-                        horizontalAlignment: Text.AlignLeft
-                        font.pixelSize: s(Style.pixelSize)
-                        textFormat: Text.RichText
-                    }
+            Behavior on text {
+                Components.ChangeAnimation {
+                    target: qrStatus.textItem
+                    property: "opacity"
+                    inValue: Style.visible
+                    outValue: Style.hidden
+                    duration: Style.animationDuration/2
                 }
+            }
 
-                Items.ImageButton
-                {
-                    onClicked: {
-                        if (scanInput.visible) {
-                            parseInputId()
-                        } else {
-                            scanInput.visible = true
-                            scanInput.focus = true
-                            grabImageOfCamera()
-                        }
-                    }
+            states: [
+                State {
+                    name: "unknown"; when: (scanStatus ===  Enums.QRScanStatus.Unknown)
+                    PropertyChanges { target: qrStatus; implicitHeight: Style.none }
+                },
 
-                    padding: s(Style.smallMargin) * 1.25
+                State {
+                    name: "scanning"; when: (scanStatus === Enums.QRScanStatus.Scanning)
+                    PropertyChanges { target: qrStatus; color: Style.backgroundColor; textColor: Style.textPrimaryColor; implicitHeight: s(Style.footerHeight) }
+                },
 
-                    enabled: !error && !wrongCodeError && scannedId.length == 0
+                State {
+                    name: "success"; when: (scanStatus === Enums.QRScanStatus.Success)
+                    PropertyChanges { target: qrStatus; color: Style.primaryColor; textColor: Style.textSecondaryColor; implicitHeight: s(Style.footerHeight) }
+                },
 
-                    backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
-                    source: scanInput.visible ? Style.qrCodeImgUrl : Style.keyboardImgUrl
-
-                    Layout.preferredWidth: s(Style.buttonHeight)
-                    Layout.preferredHeight: s(Style.buttonHeight)
+                State {
+                    name: "failed"; when: (scanStatus === Enums.QRScanStatus.Failed)
+                    PropertyChanges { target: qrStatus; color: Style.errorColor; textColor: Style.textSecondaryColor; implicitHeight: s(Style.footerHeight) }
                 }
+            ]
 
-                Items.ImageButton
-                {
-                    onClicked: top.enterEventDetailsPage()
-
-                    fillMode: Image.PreserveAspectFit
-
-                    padding: s(Style.smallMargin) * 1.75
-
-                    enabled: scannedId.length > 0
-
-                    backgroundColor: enabled ? Style.buttonGreyColor : Style.disabledButtonGreyColor
-                    source: Style.loginImgUrl
-
-                    Layout.preferredWidth: s(Style.buttonHeight)
-                    Layout.preferredHeight: s(Style.buttonHeight)
+            transitions: Transition {
+                ParallelAnimation {
+                    ColorAnimation { target: qrStatus; duration: Style.animationDuration; easing.type: Style.animationEasing }
+                    PropertyAnimation { target: qrStatus; property: "implicitHeight"; duration: Style.animationDuration; easing.type: Style.animationEasing }
                 }
-
             }
         }
     }
 
+    Items.SvgImage {
+        id: frameSvgImage
+
+        parent: videoOutput
+
+        width: s(Style.frameSvgImgHeight); height: s(Style.frameSvgImgHeight)
+
+        source: Style.frameImgUrl
+        anchors.centerIn: parent
+
+        Items.PureImageButton {
+            id: statusPureImageButton
+
+            function allow() {
+                return (scanStatus === Enums.QRScanStatus.Success || scanStatus === Enums.QRScanStatus.Failed)
+            }
+
+            function source() {
+                switch (scanStatus) {
+                    case Enums.QRScanStatus.Success: return Style.checkImgUrl
+                    case Enums.QRScanStatus.Failed: return Style.refreshImgUrl
+                    case Enums.QRScanStatus.Scanning: case Enums.QRScanStatus.Unknown: return Strings.empty
+                }
+            }
+
+            width: s(Style.checkSvgImageHeight); height: s(Style.checkSvgImageHeight)
+
+            opacity: allow()
+            enabled: allow()
+            source: source()
+
+            anchors.centerIn: parent
+
+            onClicked: {
+                switch (scanStatus) {
+                    case Enums.QRScanStatus.Success: pageManager.backTo(backSupplyChainPage, {"scannedId": top.scannedId}); break
+                    case Enums.QRScanStatus.Failed: scanStatus = Enums.QRScanStatus.Scanning; break
+                }
+            }
+
+            Behavior on opacity {
+                NumberAnimation { duration: Style.animationDuration; easing.type: Style.animationEasing }
+            }
+        }
+
+        Items.BasicText {
+            id: displayIdText
+
+            text: top.scannedId
+            color: Style.textSecondaryColor
+            visible: (top.displayId && scanStatus === Enums.QRScanStatus.Success)
+            font.bold: true
+
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                top: parent.bottom
+                topMargin: s(Style.middleBigMargin)
+            }
+        }
+    }
 }

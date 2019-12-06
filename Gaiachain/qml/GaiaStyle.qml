@@ -151,6 +151,13 @@ QtObject {
     readonly property url expandUpImgUrl: "qrc:/ui/expandUp"
     readonly property url expandDownImgUrl: "qrc:/ui/expandDown"
 
+    readonly property url plusImgUrl: "qrc:/ui/plus"
+    readonly property url qrImgUrl: "qrc:/ui/qr"
+    readonly property url threeDotsImgUrl: "qrc:/ui/threeDots"
+
+    readonly property url checkImgUrl: "qrc:/ui/check"
+    readonly property url frameImgUrl: "qrc:/ui/frame"
+
     // control
     readonly property int controlDefaultBorderWidth: 1
     readonly property int controlBoldBorderWidth: 2
@@ -174,8 +181,10 @@ QtObject {
     readonly property int animationDuration: 300
     readonly property int animationEasing: Easing.Linear
     readonly property int requestOverlayInterval: 2000
+    readonly property int commentPopupOpenedDefaultInterval: 2000
     readonly property int notificationPopupOpenedDefaultInterval: 2600
     readonly property int transitionMoveYRange: 100
+    readonly property int genericTextAreaHeight: 280
 
     // logical
     readonly property int visible: 1
@@ -207,4 +216,9 @@ QtObject {
     readonly property int calendarMonthMinWidth: 150
     readonly property int calendarMonthMinHeight: 120
     readonly property int calendarYearStartYear: 2018
+
+    // qr scanner page
+    readonly property int frameSvgImgHeight: 550
+    readonly property int checkSvgImageHeight: 250
+    readonly property real normalizedScanSize: 0.6 // Should be between 0 and 1
 }

@@ -16,11 +16,13 @@ void PackageDataProxyModel::fillPackageData(PackageData &packageData) const
 
         auto id = data(rowIndex, EventModel::PackageId).toString();
         if (id == packageData.id) {
-            auto action = data(rowIndex, EventModel::Action).value<Enums::SupplyChainAction>();
-            auto timestamp = data(rowIndex, EventModel::Timestamp).toDateTime();
+            packageData.cooperativeId = data(rowIndex, EventModel::CooperativeId).toUInt();
+
+            const auto action = data(rowIndex, EventModel::Action).value<Enums::SupplyChainAction>();
+            const auto timestamp = data(rowIndex, EventModel::Timestamp).toDateTime();
             packageData.actionDates.insert(action, timestamp);
 
-            auto properties = data(rowIndex, EventModel::Properties).toMap();
+            const auto properties = data(rowIndex, EventModel::Properties).toMap();
             packageData.properties.unite(properties);
         }
     }

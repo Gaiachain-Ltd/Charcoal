@@ -14,38 +14,16 @@ ComboBox {
 
     property alias placeholderText: indicatorInput.placeholderText
 
-    delegate: ItemDelegate {
-        id: itemDelegate
+    property bool footerVisible: false
+    property string footerText
 
-        implicitWidth: indicatorInput.width
-        implicitHeight: indicatorInput.implicitHeight
+    signal footerClicked
 
-        background: Rectangle {
-            anchors.fill: parent
-
-            color: itemDelegate.highlighted ? Style.delegateHighlightColor : Style.backgroundColor
-
-            Rectangle {
-                anchors.top: parent.top
-
-                width: parent.width
-                height: sr(Style.separatorHeight)
-
-                visible: (index !== 0)
-                color: Style.separatorColor
-            }
-        }
-
-        contentItem: Items.BasicText {
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-
-            font.bold: itemDelegate.highlighted
-
-            text: textRole ? (Array.isArray(model) ? modelData[textRole] : model[textRole]) : modelData
-        }
-
+    delegate: Items.GenericItemDelegate {
         highlighted: (highlightedIndex === index)
+        separatorVisible: (index !== 0)
+
+        text: textRole ? (Array.isArray(model) ? modelData[textRole] : model[textRole]) : modelData
     }
 
     indicator: Items.GenericInput {
@@ -74,6 +52,8 @@ ComboBox {
     background: Item {}
 
     popup: Popup {
+        id: comboBoxPopup
+
         y: top.height
         width: top.width
 
@@ -95,8 +75,15 @@ ComboBox {
 
             model: top.delegateModel
 
-            ScrollBar.vertical: ScrollBar {
-                active: true
+            footer: Items.GenericItemDelegate {
+                text: footerText
+                visible: footerVisible
+                height: footerVisible ? implicitHeight : Style.none
+
+                onClicked: {
+                    comboBoxPopup.parent.footerClicked()
+                    comboBoxPopup.parent.popup.visible = false
+                }
             }
         }
 

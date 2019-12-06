@@ -13,6 +13,7 @@ Items.GenericHeader {
     property alias iconSource: input.iconSource
     property alias placeholderText: input.placeholderText
     property alias validator: input.validator
+    property alias inputMethodHints: input.inputMethodHints
 
     property alias readOnly: input.readOnly
 
@@ -20,6 +21,7 @@ Items.GenericHeader {
     property string suffixText
 
     property alias showIcon: input.showIcon
+    signal iconClicked
 
     widget: Items.GenericInput {
         id: input
@@ -28,10 +30,12 @@ Items.GenericHeader {
 
         focus: false
         rightPadding: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2
-                                                      : ((iconEdge === Enums.Edge.RightEdge) && iconItem.visible ? iconItem.width + 2 * iconItem.horizontalMargins : padding)
-
+                                     : ((iconEdge === Enums.Edge.RightEdge) && iconItem.visible ? iconItem.width + 2 * iconItem.horizontalMargins
+                                                                                                : padding)
 
         iconEdge: Enums.Edge.RightEdge
+
+        onIconClicked: top.iconClicked()
 
         Items.BasicText {
             id: suffix

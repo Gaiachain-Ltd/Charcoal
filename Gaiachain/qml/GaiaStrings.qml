@@ -58,7 +58,7 @@ QtObject {
     readonly property string onlineLogoutQuestion: qsTr("The internet connection is now available. Do you want to log in online mode?")
 
     readonly property string dbUpdateProgress: qsTr("Database updating. Please wait...")
-    readonly property string dbUpdateError: qsTr("Database update failed. If the error repeats, try to reainstall the application.")
+    readonly property string dbUpdateError: qsTr("Database update failed. If the error repeats, try to clean the application data in the system.")
 
     // main menu
     readonly property string supplyChain: qsTr("Supply chain")
@@ -125,6 +125,33 @@ QtObject {
     readonly property string receptionAtSection: qsTr("Reception at the section")
     readonly property string receptionDate: qsTr("Reception date")
     readonly property string buyer: qsTr("Buyer")
+
+    readonly property string lotIdTheSackBelongsTo: qsTr("LOT ID the sack belongs to")
+    readonly property string nameCooperative: qsTr("Cooperative name")
+    readonly property string addHarvestId: qsTr("Add Harvest ID")
+    readonly property string addLot: qsTr("Add lot")
+    readonly property string alreadyAdded: qsTr("%1 already added!")
+    readonly property string bagWeight: qsTr("Bag weight")
+    readonly property string cocoaFromSeveralPlotsComment: qsTr("If there is cocoa from several plots in the bag, please add the other Harvest IDs")
+
+    readonly property string lotIdForThePackage: qsTr("LOT ID for the package")
+    readonly property string registerQrCodeToLotId: qsTr("Register QR code to LOT ID")
+    readonly property string description: qsTr("Description")
+
+    readonly property string transportToCentralWarehouse: qsTr("Transport to Central Warehouse")
+
+    readonly property string receptionInCooperativeHQ: qsTr("Reception in Cooperative HQ")
+    readonly property string lotWeight: qsTr("Weight of LOT")
+
+    readonly property string qrCode: qsTr("QR Code")
+    readonly property string scanQrCodeFromSAC: qsTr("Scan QR code from SAC")
+    readonly property string scanQrCodeFromLot: qsTr("Scan QR code from LOT")
+
+
+    // qr code page
+    readonly property string scanning: qsTr("Scanning")
+    readonly property string error: qsTr("Error")
+    readonly property string attachQrSAC: qsTr("Attach the QR code to the SAC and scan the QR code")
 
     // calendar
     readonly property string activities: qsTr("activities")
