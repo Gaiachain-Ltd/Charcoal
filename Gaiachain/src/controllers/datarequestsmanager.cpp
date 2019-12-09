@@ -261,23 +261,23 @@ Gaia::ModelData DataRequestsManager::processRelationsValue(const QJsonValue &val
     auto modelData = Gaia::ModelData{};
 
     auto object = value.toObject();
-    const auto id = RequestsHelper::checkAndValue(object, Tags::pid).toString();
+    const auto packageId = RequestsHelper::checkAndValue(object, Tags::pid).toString();
     const auto action = RequestsHelper::supplyChainActionFromString(
                 RequestsHelper::checkAndValue(object, Tags::action).toString());
     const auto packageType = DataGlobals::packageType(action);
 
-    if (object.contains(Tags::relations)) {
+    if (object.contains(Tags::relations) && (packageType != Enums::PackageType::Unknown)) {
         const auto relatedIdsArray = RequestsHelper::checkAndValue(object, Tags::relations).toArray();
 
         std::transform(relatedIdsArray.begin(), relatedIdsArray.end(), std::back_inserter(modelData),
-                       [&id, &packageType](const auto &value) {
+                       [&packageId, &packageType](const auto &value) {
             auto object = value.toObject();
             const auto relatedId = RequestsHelper::checkAndValue(object, Tags::pid).toString();
             const auto relatedPackageType = RequestsHelper::packageTypeFromString(
                         RequestsHelper::checkAndValue(object, Tags::type).toString());
 
-            return (packageType > relatedPackageType) ? Gaia::ModelEntry{{ id, relatedId }, }
-                                                      : Gaia::ModelEntry{{ relatedId, id }, };
+            return (packageType > relatedPackageType) ? Gaia::ModelEntry{{ packageId, relatedId }, }
+                                                      : Gaia::ModelEntry{{ relatedId, packageId }, };
         });
     }
     return modelData;
