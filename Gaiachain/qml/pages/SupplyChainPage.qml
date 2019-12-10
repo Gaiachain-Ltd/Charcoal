@@ -156,6 +156,16 @@ BasePage {
 
             boundsBehavior: Flickable.StopAtBounds
 
+            onHeightChanged: {
+                // To avoid overlapping inputs by keyboard
+                var desiredVisibleY = Qt.inputMethod.cursorRectangle.y + Qt.inputMethod.cursorRectangle.height + s(Style.hugeMargin)
+                var realVisibleY = mapToGlobal(0, y + height).y
+
+                if (desiredVisibleY > realVisibleY) {
+                    contentY += desiredVisibleY - realVisibleY
+                }
+            }
+
             ColumnLayout {
                 id: contentLayout
 
