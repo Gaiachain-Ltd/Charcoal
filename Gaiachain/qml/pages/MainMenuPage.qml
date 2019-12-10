@@ -80,14 +80,14 @@ BasePage {
                 Components.SupplyChainSubmenu {
                     id: supplyChainSubmenu
 
-                    property int initialHeight: Style.none
+                    property real initialHeight: Style.none
                     property bool menuVisible: false
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: initialHeight
 
                     opacity: Style.none
-                    implicitHeight: initialHeight
+                    clip: true
 
                     onMenuVisibleChanged: menuVisibleAnimation.start()
 

@@ -13,7 +13,7 @@ Item {
     id: top
 
     readonly property int availableActionsCount: nonCategoryActions.count + transportActions.count + receptionActions.count
-    readonly property int contentHeight: mainLayout.implicitHeight
+    readonly property real contentHeight: mainLayout.implicitHeight
 
     readonly property var actionsModel: {
         "": [Enums.SupplyChainAction.Harvest, Enums.SupplyChainAction.GrainProcessing,
@@ -86,8 +86,6 @@ Item {
 
         anchors.fill: parent
         spacing: s(Style.middleBigMargin)
-
-        clip: true
 
         Repeater {
             model: nonCategoryActions

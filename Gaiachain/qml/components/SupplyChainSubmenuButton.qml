@@ -22,6 +22,8 @@ MenuButton {
 
     font.pixelSize: s(Style.submenuButtonPixelSize)
 
+    clip: true
+
     Rectangle {
         id: categoryLabel
 
