@@ -30,14 +30,18 @@ Pages.SupplyChainPage {
         showOverlay()
 
         var harvestId = harvestIdComboBox.currentText
-        var receptionDate = receptionInputDateHeader.currentDate
-        var transportDate = transportInputDateHeader.currentDate
+        var receptionDate = receptionInputDateHeader.selectedDate
+        var transportDate = transportInputDateHeader.selectedDate
         var buyerId = ModelHelper.getData(buyerComboBox.currentIndex, "id", buyerComboBox.model)
 
         var properties = {
             [PackageDataProperties.ReceptionDate]: receptionDate,
-            [PackageDataProperties.TransportDate]: transportDate,
-            [PackageDataProperties.Buyer]: buyerId
+        }
+        if (!transportInputDateHeader.isEmpty) {
+            properties[PackageDataProperties.TransportDate] = transportDate
+        }
+        if (!buyerComboBox.isEmpty) {
+            properties[PackageDataProperties.Buyer] = buyerId
         }
 
         top.packageId = harvestId
@@ -74,6 +78,9 @@ Pages.SupplyChainPage {
 
             Layout.fillWidth: true
 
+            optional: true
+
+            placeholderText: Strings.toSelect
             headerText: Strings.transportDate + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor
         }
@@ -83,6 +90,9 @@ Pages.SupplyChainPage {
 
             Layout.fillWidth: true
 
+            optional: true
+
+            placeholderText: Strings.toSelect
             headerText: Strings.buyer + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor
 

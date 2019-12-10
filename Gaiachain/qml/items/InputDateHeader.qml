@@ -14,9 +14,16 @@ import "../components" as Components
 Items.GenericHeader {
     id: top
 
+    property var selectedDate: optional ? undefined : currentDate
+
     property date currentDate: new Date
     property int currentYear: currentDate.getFullYear()
     property int currentMonth: currentDate.getMonth()
+
+    property alias placeholderText: input.placeholderText
+
+    property bool optional: false
+    readonly property bool isEmpty: selectedDate === undefined
 
     function previousMonth() {
         if (currentMonth === Calendar.January) {
@@ -36,19 +43,39 @@ Items.GenericHeader {
         }
     }
 
+    function togglePopup() {
+        popup.visible = !popup.visible
+    }
+
+    function clear() {
+        selectedDate = undefined
+    }
+
     widget: Items.GenericInput {
+        id: input
         Layout.fillWidth: true
 
-        text: top.currentDate.toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy"))
+        text: isEmpty ? Strings.empty : top.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)
 
         readOnly: true
 
         iconEdge: Enums.Edge.RightEdge
-        iconSource: Style.calendarButtonImgUrl
+        iconSource: optional && !isEmpty ? Style.clearImgUrl : Style.calendarButtonImgUrl
+
+        iconItem.z: ma.z + 1 // this is to handle icon click firstly
+
+        onIconClicked: {
+            if (optional && !isEmpty) {
+                top.clear()
+            } else {
+                top.togglePopup()
+            }
+        }
 
         MouseArea {
+            id: ma
             anchors.fill: parent
-            onClicked: popup.visible = !popup.visible
+            onClicked: top.togglePopup()
         }
     }
 
@@ -101,6 +128,7 @@ Items.GenericHeader {
 
                 onDayClicked: {
                     top.currentDate = dayDate
+                    top.selectedDate = dayDate
                     popup.visible = false
                 }
 

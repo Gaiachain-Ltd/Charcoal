@@ -28,9 +28,9 @@ Pages.SupplyChainPage {
         showOverlay()
 
         var harvestId = harvestIdComboBox.currentText
-        var breakingDate = breakingDateInputDate.currentDate
-        var endFermentationDate = endFermentationDateInputDate.currentDate
-        var estimatedBeansVolume= estimatedBeansVolumeInputHeader.inputText
+        var breakingDate = breakingDateInputDate.selectedDate
+        var endFermentationDate = endFermentationDateInputDate.selectedDate
+        var estimatedBeansVolume = estimatedBeansVolumeInputHeader.inputText
 
         var properties = {
             [PackageDataProperties.BreakingDate]: breakingDate,
@@ -85,6 +85,7 @@ Pages.SupplyChainPage {
             validator: IntValidator {}
             inputMethodHints: Qt.ImhDigitsOnly
 
+            optional: true
             headerText: Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor
 

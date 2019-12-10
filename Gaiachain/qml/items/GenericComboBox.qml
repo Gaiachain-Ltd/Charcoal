@@ -14,10 +14,21 @@ ComboBox {
 
     property alias placeholderText: indicatorInput.placeholderText
 
+    property bool optional: false
+    readonly property bool isEmpty: currentIndex == -1
+
     property bool footerVisible: false
     property string footerText
 
     signal footerClicked
+
+    function togglePopup() {
+        popup.visible = !popup.visible
+    }
+
+    function clear() {
+        currentIndex = -1
+    }
 
     delegate: Items.GenericItemDelegate {
         highlighted: (highlightedIndex === index)
@@ -34,18 +45,28 @@ ComboBox {
         placeholderText: enabled ? Strings.toSelect : Strings.empty
 
         iconEdge: Enums.Edge.RightEdge
-        iconSource: Style.downArrowImgUrl
+        iconSource: optional && !isEmpty ? Style.clearImgUrl : Style.downArrowImgUrl
         enabled: top.enabled
 
         text: currentText
+        readOnly: true
+
+        iconItem.z: ma.z + 1 // this is to handle icon click firstly
+
+        onIconClicked: {
+            if (optional && !isEmpty) {
+                top.clear()
+            } else {
+                top.togglePopup()
+            }
+        }
 
         MouseArea {
+            id: ma
             anchors.fill: parent
-            onClicked: {
-                if (top.model !== undefined && top.model.rowCount() > 0) {
-                    top.popup.visible = !top.popup.visible
-                }
-            }
+            enabled: top.model !== undefined && top.model.rowCount() > 0
+
+            onClicked: top.togglePopup()
         }
     }
 

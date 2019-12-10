@@ -150,6 +150,7 @@ QtObject {
 
     readonly property url expandUpImgUrl: "qrc:/ui/expandUp"
     readonly property url expandDownImgUrl: "qrc:/ui/expandDown"
+    readonly property url clearImgUrl: "qrc:/ui/clear"
 
     readonly property url plusImgUrl: "qrc:/ui/plus"
     readonly property url qrImgUrl: "qrc:/ui/qr"

@@ -79,6 +79,7 @@ Pages.SupplyChainPage {
             validator: IntValidator {}
             inputMethodHints: Qt.ImhDigitsOnly
 
+            optional: true
             headerText: Strings.kg.arg(Strings.bagWeight) + " (" + Strings.notRequired + ")"
             headerTextColor: Style.notRequiredTextInputColor
 
