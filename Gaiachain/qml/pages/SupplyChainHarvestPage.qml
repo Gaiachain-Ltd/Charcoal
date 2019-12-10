@@ -36,7 +36,7 @@ Pages.SupplyChainPage {
 
         var parcelCode = parcelCodesComboBox.currentText
         var parcelId = ModelHelper.getData(parcelCode, "id", parcelCodesComboBox.model)
-        var harvestDate = inputHarvestDate.currentDate
+        var harvestDate = inputHarvestDate.selectedDate
 
         var harvestId = dataManager.generateHarvestId(harvestDate, parcelCode)
 

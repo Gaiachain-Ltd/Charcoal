@@ -9,7 +9,7 @@ import com.gaiachain.enums 1.0
 
 QtObject {
     function convertTimestampToDate(timestamp) {
-        return (new Date(timestamp)).toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy"))
+        return (new Date(timestamp)).toLocaleDateString(Qt.locale(), Strings.dateFormat)
     }
 
     function daysInMonth(year, month) {

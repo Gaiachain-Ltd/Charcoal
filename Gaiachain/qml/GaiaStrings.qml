@@ -160,6 +160,7 @@ QtObject {
     readonly property string activities: qsTr("activities")
 
     // special
+    readonly property string dateFormat: qsTr("MM/dd/yyyy")
     readonly property string checkMark: "\u2713"
     readonly property string minus: "-"
 }

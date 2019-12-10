@@ -10,7 +10,7 @@ Items.GenericHeader {
     id: top
 
     property alias color: input.color
-    property alias iconSource: input.iconSource
+    property url iconSource
     property alias placeholderText: input.placeholderText
     property alias validator: input.validator
     property alias inputMethodHints: input.inputMethodHints
@@ -20,8 +20,15 @@ Items.GenericHeader {
     property alias inputText: input.text
     property string suffixText
 
+    property bool optional: false
+    readonly property bool isEmpty: inputText === Strings.empty
+
     property alias showIcon: input.showIcon
     signal iconClicked
+
+    function clear() {
+        inputText = Strings.empty
+    }
 
     widget: Items.GenericInput {
         id: input
@@ -35,7 +42,14 @@ Items.GenericHeader {
 
         iconEdge: Enums.Edge.RightEdge
 
-        onIconClicked: top.iconClicked()
+        iconSource: optional && !isEmpty ? Style.clearImgUrl : top.iconSource
+        onIconClicked: {
+            if (optional && !isEmpty) {
+                top.clear()
+            } else {
+                top.iconClicked()
+            }
+        }
 
         Items.BasicText {
             id: suffix

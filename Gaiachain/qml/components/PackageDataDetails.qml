@@ -43,7 +43,7 @@ Item {
     }
 
     function emptyIfNotDate(date) {
-        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), qsTr("MM/dd/yyyy")) : Strings.empty
+        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), Strings.dateFormat) : Strings.empty
     }
 
     ColumnLayout {

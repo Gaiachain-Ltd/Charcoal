@@ -41,6 +41,7 @@
         <file alias="threeDots">ui/three-dots.svg</file>
         <file alias="check">ui/check.svg</file>
         <file alias="frame">ui/frame.svg</file>
+        <file alias="clear">ui/clear-icon.svg</file> 
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

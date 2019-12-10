@@ -36,7 +36,7 @@ Pages.SupplyChainPage {
         var codeData = qrCodeInputHeader.inputText
         var transporterId = ModelHelper.getData(transporterComboBox.currentIndex, "id", transporterComboBox.model)
         var destinationId = ModelHelper.getData(destinationComboBox.currentIndex, "id", destinationComboBox.model)
-        var transportDate = inputDateHeader.currentDate
+        var transportDate = inputDateHeader.selectedDate
 
         var properties = {
             [PackageDataProperties.TransporterId]: transporterId,
