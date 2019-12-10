@@ -13,6 +13,10 @@ BasePage {
     title: Strings.gaiachain
     logoVisible: true
 
+    function closeEventHandler() {
+        return true // android back button will close app
+    }
+
     function supplyChainPageForAction(action) {
         switch (Number(action)) {
         case Enums.SupplyChainAction.Harvest:

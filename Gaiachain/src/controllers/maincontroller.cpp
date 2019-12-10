@@ -25,6 +25,13 @@
 #include "session/dummy/fakeserverstate.h"
 #endif
 
+template <typename Singleton>
+QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
+{
+    QQmlEngine::setObjectOwnership(&Singleton::instance(), QQmlEngine::CppOwnership);
+    return &Singleton::instance();
+}
+
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
@@ -144,19 +151,11 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");
 
-    qmlRegisterSingletonType<RequestsHelper>("com.gaiachain.helpers", 1, 0, "RequestHelper",
-                                             [](QQmlEngine *, QJSEngine *) -> QObject * { return &RequestsHelper::instance(); });
-    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0, "ModelHelper",
-                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &ModelHelper::instance(); });
-
-    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0, "PackageDataProperties",
-                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &PackageDataProperties::instance(); });
-
-    qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0, "Utility",
-                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &Utility::instance(); });
-
-    qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0, "DataGlobals",
-                                                    [](QQmlEngine *, QJSEngine *) -> QObject* { return &DataGlobals::instance(); });
+    qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0, "Utility", &registerCppOwnershipSingletonType<Utility>);
+    qmlRegisterSingletonType<RequestsHelper>("com.gaiachain.helpers", 1, 0, "RequestHelper", &registerCppOwnershipSingletonType<RequestsHelper>);
+    qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0, "DataGlobals", &registerCppOwnershipSingletonType<DataGlobals>);
+    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0, "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);
+    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0, "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
 
     // add context properties
 #ifdef USE_COMBOBOX
