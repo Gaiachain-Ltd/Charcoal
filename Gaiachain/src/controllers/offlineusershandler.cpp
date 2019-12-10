@@ -16,6 +16,7 @@ const QLatin1String TmpSalt = QLatin1String("tmpSalt");
 const QLatin1String TmpPassword = QLatin1String("tmpPassword");
 const QLatin1String Salt = QLatin1String("salt");
 const QLatin1String Password = QLatin1String("password");
+const QLatin1String Token = QLatin1String("token");
 const QLatin1String Email = QLatin1String("email");
 const QLatin1String Type = QLatin1String("type");
 const QLatin1String CooperativeId = QLatin1String("cooperativeId");
@@ -71,7 +72,7 @@ void OfflineUsersHandler::acknowledgePassword(const QString &login)
     m_usersData.endGroup();
 }
 
-void OfflineUsersHandler::putUser(const QString &login, const UserData &userData)
+void OfflineUsersHandler::putUser(const QString &login, const UserData &userData, const QString &token)
 {
     if (userData.isAnonymous()) {
         return;
@@ -83,20 +84,24 @@ void OfflineUsersHandler::putUser(const QString &login, const UserData &userData
 
     m_usersData.beginGroup(login);
 
+    m_usersData.setValue(SettingKey::Token, token);
     m_usersData.setValue(SettingKey::Email, userData.email);
     m_usersData.setValue(SettingKey::Type, QVariant::fromValue(userData.type));
-    m_usersData.setValue(SettingKey::CooperativeId, userData.cooperativeCode);
+    m_usersData.setValue(SettingKey::CooperativeId, userData.cooperativeId);
+    m_usersData.setValue(SettingKey::CooperativeCode, userData.cooperativeCode);
     m_usersData.setValue(SettingKey::CooperativeName, userData.cooperativeName);
 
     m_usersData.endGroup();
 }
 
-UserData OfflineUsersHandler::getUser(const QString &login) const
+QPair<UserData, QString> OfflineUsersHandler::getUser(const QString &login) const
 {
+    auto token = QString{};
     auto userData = UserData{};
     if (hasUser(login)) {
         const_cast<QSettings &>(m_usersData).beginGroup(login); // beginGroup is not a const function :(
 
+        token = m_usersData.value(SettingKey::Token).toString();
         userData.email = m_usersData.value(SettingKey::Email).toString();
         userData.type = m_usersData.value(SettingKey::Type).value<Enums::UserType>();
         userData.cooperativeId = m_usersData.value(SettingKey::CooperativeId).toUInt();
@@ -105,7 +110,7 @@ UserData OfflineUsersHandler::getUser(const QString &login) const
 
         const_cast<QSettings &>(m_usersData).endGroup();        // endGroup is not a const function :(
     }
-    return userData;
+    return { userData, token };
 }
 
 void OfflineUsersHandler::addUser(const QString &login)

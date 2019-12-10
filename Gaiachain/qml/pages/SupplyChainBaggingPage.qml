@@ -40,7 +40,7 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
-        pageManager.openPopup(Enums.Popup.WaitOverlay)
+        showOverlay()
 
         var codeData = qrCodeInputHeader.inputText
         var lotId = lotIdComboBox.currentText
@@ -51,6 +51,7 @@ Pages.SupplyChainPage {
             [PackageDataProperties.HarvestWeights]: harvestWeights
         }
 
+        top.packageCodeData = codeData
         dataManager.addAction(Enums.SupplyChainAction.Bagging,
                               codeData,
                               new Date,

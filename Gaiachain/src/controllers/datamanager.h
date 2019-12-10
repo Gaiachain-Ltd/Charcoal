@@ -27,7 +27,8 @@ public:
 
     Q_INVOKABLE void getPackageData(const QString &packageId) const;
 
-    Q_INVOKABLE void addHarvestAction(const QString &parcelCode, const QDateTime &timestamp, const QVariantMap &properties);
+    Q_INVOKABLE QString generateHarvestId(const QDate &date, const QString &parcelCode);
+
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action,
                                const QDateTime &timestamp, const QVariantMap &properties);
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QByteArray &codeData,
@@ -59,9 +60,13 @@ signals:
 
     void packageData(const PackageData &packageData) const;
 
+    void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
+    void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action);
+
 public slots:
-    void onActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
-    void onActionAddError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error);
+    void onActionAdded(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action);
+    void onActionAddError(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action,
+                          const QNetworkReply::NetworkError &error);
 
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);
@@ -77,8 +82,6 @@ private:
     UserData m_userData;
 
     void setupHandlersConnections();
-
-    QString generateHarvestId(const QDate &date, const QString &parcelCode);
 };
 
 #endif // DATAMANAGER_H

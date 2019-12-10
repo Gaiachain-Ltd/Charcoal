@@ -48,6 +48,13 @@ BasePage {
         return false
     }
 
+    Component.onCompleted: {
+        if (!userManager.offlineMode &&
+                localOnlyEventsModel.size) {
+            dataManager.sendOfflineActions()
+        }
+    }
+
     Flickable {
         anchors.fill: parent
 

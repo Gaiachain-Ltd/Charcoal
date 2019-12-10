@@ -28,7 +28,7 @@ Pages.SupplyChainPage {
                             qrCodeInputHeader.inputText === Strings.empty)
 
     function proceed() {
-        pageManager.openPopup(Enums.Popup.WaitOverlay)
+        showOverlay()
 
         var lotId = lotIdComboBox.currentText
         var codeData = qrCodeInputHeader.inputText
@@ -38,6 +38,7 @@ Pages.SupplyChainPage {
             [PackageDataProperties.Notes]: notes
         }
 
+        top.packageId = lotId
         dataManager.addAction(lotId,
                               Enums.SupplyChainAction.LotCreation,
                               codeData,

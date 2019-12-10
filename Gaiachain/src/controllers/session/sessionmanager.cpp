@@ -23,7 +23,7 @@ void SessionManager::ping()
     const auto replyHandler = [this](const QJsonDocument &) {
         emit pingSuccess();
     };
-    sendRequest(QSharedPointer<AuthRequest>::create(), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<AuthRequest>::create(), errorHandler, replyHandler, true);
 }
 
 void SessionManager::login(const QString &login, const QString &password)
@@ -143,11 +143,11 @@ void SessionManager::getEntities(const QStringList &packageIds)
 void SessionManager::postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
                                    const QDateTime &timestamp, const QVariantMap &properties)
 {
-    const auto errorHandler = [this, action](const QString &, const QNetworkReply::NetworkError &code) {
-        emit entitySaveError({}, action, code);
+    const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError(packageId, {}, action, code);
     };
     const auto replyHandler = [this, action](const QJsonDocument &reply) {
-        emit entitySaved(reply.object().value(Tags::pid).toString(), action);
+        emit entitySaved(reply.object().value(Tags::pid).toString(), {}, action);
     };
 
     if (checkValidToken()) {
@@ -159,11 +159,11 @@ void SessionManager::postNewEntity(const QString &packageId, const Enums::Supply
 void SessionManager::postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
                                    const QDateTime &timestamp, const QVariantMap &properties)
 {
-    const auto errorHandler = [this, action](const QString &, const QNetworkReply::NetworkError &code) {
-        emit entitySaveError({}, action, code);
+    const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError(packageId, {}, action, code);
     };
     const auto replyHandler = [this, action](const QJsonDocument &reply) {
-        emit entitySaved(reply.object().value(Tags::pid).toString(), action);
+        emit entitySaved(reply.object().value(Tags::pid).toString(), {}, action);
     };
 
     if (checkValidToken()) {
@@ -175,11 +175,11 @@ void SessionManager::postNewEntity(const QString &packageId, const QByteArray &c
 void SessionManager::postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
                                    const QDateTime &timestamp, const QVariantMap &properties)
 {
-    const auto errorHandler = [this, action](const QString &, const QNetworkReply::NetworkError &code) {
-        emit entitySaveError({}, action, code);
+    const auto errorHandler = [this, codeData, action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError({}, codeData, action, code);
     };
-    const auto replyHandler = [this, action](const QJsonDocument &reply) {
-        emit entitySaved(reply.object().value(Tags::pid).toString(), action);
+    const auto replyHandler = [this, codeData, action](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::pid).toString(), codeData, action);
     };
 
     if (checkValidToken()) {
@@ -218,8 +218,13 @@ void SessionManager::postUnusedLotId()
 
 void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,
                                  const std::function<void (const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
-                                 const std::function<void (const QJsonDocument &)> &replyHandler)
+                                 const std::function<void (const QJsonDocument &)> &replyHandler,
+                                 bool force)
 {
+    if (!enabled() && !force) {
+        return;
+    }
+
     connect(request.data(), &BaseRequest::replyError,
             this, [errorHandler](const QString &msgs, const int errorCode) { errorHandler(msgs, static_cast<QNetworkReply::NetworkError>(errorCode)); });
     connect(request.data(), &BaseRequest::requestFinished, this, replyHandler);

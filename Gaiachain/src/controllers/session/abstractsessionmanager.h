@@ -12,6 +12,7 @@ Q_DECLARE_LOGGING_CATEGORY(sessionManager)
 class AbstractSessionManager : public AbstractManager
 {
     Q_OBJECT
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(Enums::ConnectionState connectionState READ connectionState NOTIFY connectionStateChanged)
 
 public:
@@ -19,6 +20,7 @@ public:
 
     virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
 
+    bool enabled() const;
     Enums::ConnectionState connectionState() const;
 
     Q_INVOKABLE virtual void ping() = 0;
@@ -46,9 +48,12 @@ public:
     Q_INVOKABLE virtual void getUnusedLotIds() = 0;
     Q_INVOKABLE virtual void postUnusedLotId() = 0;
 
+public slots:
+    void setEnabled(bool enabled);
     void updateToken(const QString &token);
 
 signals:
+    void enabledChanged(bool enabled) const;
     void connectionStateChanged(Enums::ConnectionState connectionState) const;
 
     void pingError(const QNetworkReply::NetworkError &code) const;
@@ -65,8 +70,9 @@ signals:
     void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
     void entitiesLoaded(const QJsonArray &entities) const;
 
-    void entitySaveError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &code) const;
-    void entitySaved(const QString &packageId, const Enums::SupplyChainAction &action) const;
+    void entitySaveError(const QString &packageId, const QByteArray &codeData,
+                         const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &code) const;
+    void entitySaved(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action) const;
 
     void unusedLotIdsLoadError(const QNetworkReply::NetworkError &code) const;
     void unusedLotIdsLoaded(const QJsonArray &ids) const;
@@ -74,6 +80,7 @@ signals:
     void unusedLotIdCreated(const QString &id) const;
 
 protected:
+    bool m_enabled = true;
     Enums::ConnectionState m_connectionState = Enums::ConnectionState::Unknown;
     QString m_token;
 

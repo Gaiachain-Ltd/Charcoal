@@ -31,7 +31,7 @@ Pages.SupplyChainPage {
                             destinationComboBox.currentText === Strings.empty)
 
     function proceed() {
-        pageManager.openPopup(Enums.Popup.WaitOverlay)
+        showOverlay()
 
         var codeData = qrCodeInputHeader.inputText
         var transporterId = ModelHelper.getData(transporterComboBox.currentIndex, "id", transporterComboBox.model)
@@ -44,6 +44,7 @@ Pages.SupplyChainPage {
             [PackageDataProperties.TransportDate]: transportDate
         }
 
+        top.packageCodeData = codeData
         dataManager.addAction(Enums.SupplyChainAction.WarehouseTransport,
                               codeData,
                               new Date,

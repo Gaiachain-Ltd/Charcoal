@@ -14,6 +14,8 @@ Popups.GenericPopup
 
     property string text
     property var buttons: []
+
+    property color buttonPrimaryColor: Style.buttonPopupAcceptSecondaryColor
     property int additionalTextHorizontalMargins: 0
 
     padding: s(Style.bigMargin)
@@ -60,7 +62,7 @@ Popups.GenericPopup
 
                     palette {
                         buttonText: Style.textSecondaryColor
-                        button: buttonsRepeater.isAccept(modelData.action) ? Style.buttonPopupAcceptSecondaryColor : Style.buttonPopupRejectColor
+                        button: buttonsRepeater.isAccept(modelData.action) ? buttonPrimaryColor : Style.buttonPopupRejectColor
                     }
 
                     text: modelData.text
