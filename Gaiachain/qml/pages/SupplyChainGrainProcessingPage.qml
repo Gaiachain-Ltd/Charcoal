@@ -12,7 +12,7 @@ import "../components" as Components
 import "../pages" as Pages
 
 Pages.SupplyChainPage {
-    id: test
+    id: top
 
     title: Strings.supplyChainMenuActionGrainProcessing
 
@@ -25,7 +25,7 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
-        pageManager.openPopup(Enums.Popup.WaitOverlay)
+        showOverlay()
 
         var harvestId = harvestIdComboBox.currentText
         var breakingDate = breakingDateInputDate.currentDate
@@ -40,6 +40,7 @@ Pages.SupplyChainPage {
             properties[PackageDataProperties.EstimatedBeansVolume] = estimatedBeansVolume
         }
 
+        top.packageId = harvestId
         dataManager.addAction(harvestId,
                               Enums.SupplyChainAction.GrainProcessing,
                               new Date,

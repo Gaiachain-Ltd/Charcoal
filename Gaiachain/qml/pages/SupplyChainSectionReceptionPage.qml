@@ -27,7 +27,7 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
-        pageManager.openPopup(Enums.Popup.WaitOverlay)
+        showOverlay()
 
         var harvestId = harvestIdComboBox.currentText
         var receptionDate = receptionInputDateHeader.currentDate
@@ -40,6 +40,7 @@ Pages.SupplyChainPage {
             [PackageDataProperties.Buyer]: buyerId
         }
 
+        top.packageId = harvestId
         dataManager.addAction(harvestId,
                               Enums.SupplyChainAction.SectionReception,
                               new Date,

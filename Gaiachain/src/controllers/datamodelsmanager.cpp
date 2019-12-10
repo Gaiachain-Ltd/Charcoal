@@ -143,16 +143,26 @@ void DataModelsManager::addLocalAction(const QString &packageId, const Enums::Su
 {
     ProcessCounter p(this);
 
-    m_eventsSourceModel.appendData({ Gaia::ModelEntry {
-                                         packageId,
-                                         QVariant::fromValue(action),
-                                         timestamp,
-                                         cooperativeId,
-                                         properties,
-                                         0.0,    // location not handled yet
-                                         0.0,    // location not handled yet
-                                         true
-                                     }, });
+    auto eventInfo = Gaia::ModelEntry{ packageId, QVariant::fromValue(action) };
+    auto modelData = Gaia::ModelData { eventInfo, };
+    removeExistingEvents(modelData);
+
+    if (modelData.isEmpty()) {
+        emit localActionDuplicated(packageId, action, timestamp, properties);
+    } else {
+        m_eventsSourceModel.appendData({ Gaia::ModelEntry {
+                                             packageId,
+                                             QVariant::fromValue(action),
+                                             timestamp,
+                                             cooperativeId,
+                                             properties,
+                                             0.0,    // location not handled yet
+                                             0.0,    // location not handled yet
+                                             true
+                                         }, });
+
+        emit localActionAdded(packageId, action, timestamp, properties);
+    }
 }
 
 void DataModelsManager::updateLocalAction(const QString &packageId, const Enums::SupplyChainAction &action)

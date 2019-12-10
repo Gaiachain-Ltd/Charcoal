@@ -11,10 +11,6 @@ Page {
 
     property var attachedStackView: StackView.view
 
-    function initialize() { // page beginning handler
-
-    }
-
     function closeEventHandler()
     {
         return false

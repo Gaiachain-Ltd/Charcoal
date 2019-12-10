@@ -14,11 +14,6 @@ BasePage {
 
     title: Strings.waitingTransactions
 
-    function refreshData() {
-        // called from BasePage
-        dataManager.sendOfflineActions()
-    }
-
     Components.EventsListView {
         anchors {
             fill: parent

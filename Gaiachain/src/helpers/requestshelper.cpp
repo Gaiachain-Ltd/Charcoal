@@ -47,6 +47,11 @@ QNetworkReply::NetworkError RequestsHelper::authenticationError()
     return QNetworkReply::NetworkError::AuthenticationRequiredError;
 }
 
+QNetworkReply::NetworkError RequestsHelper::actionDuplicatedError()
+{
+    return QNetworkReply::NetworkError::ContentConflictError;
+}
+
 bool RequestsHelper::isNetworkError(const QNetworkReply::NetworkError &error)
 {
     switch (error) {
@@ -80,6 +85,16 @@ bool RequestsHelper::isServerError(const QNetworkReply::NetworkError &error)
 bool RequestsHelper::isAuthenticationError(const QNetworkReply::NetworkError &error)
 {
     return (error == QNetworkReply::NetworkError::AuthenticationRequiredError);
+}
+
+bool RequestsHelper::isActionMissingError(const QNetworkReply::NetworkError &error)
+{
+    return (error == QNetworkReply::NetworkError::ContentNotFoundError);
+}
+
+bool RequestsHelper::isActionDuplicatedError(const QNetworkReply::NetworkError &error)
+{
+    return (error == QNetworkReply::NetworkError::ContentConflictError);
 }
 
 QJsonValue RequestsHelper::checkAndValue(const QJsonObject &object, const QLatin1String tag)

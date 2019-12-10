@@ -95,7 +95,7 @@ void PageManager::closePopup()
 
     auto poppedPopup = m_popupStack.takeLast();
     qCDebug(corePageManager) << "Closing popup" << toFilePath(poppedPopup);
-    emit popupClosed(static_cast<int>(poppedPopup));
+    emit popupClosed(poppedPopup);
     emit popupManagerClose();
 }
 

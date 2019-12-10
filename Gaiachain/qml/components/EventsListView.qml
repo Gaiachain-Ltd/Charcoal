@@ -16,22 +16,6 @@ Item {
     property bool displayDate: true
     property bool displayLastItemSeparator: false
 
-    function actionDescriptionStatusText(action) {
-        switch(action) {
-            case Enums.SupplyChainAction.Harvest: return Strings.actionHarvestDescriptionStatus
-            case Enums.SupplyChainAction.GrainProcessing: return Strings.actionGrainProcessingDescriptionStatus
-            case Enums.SupplyChainAction.SectionReception: return Strings.actionSectionReceptionDescriptionStatus
-            case Enums.SupplyChainAction.Bagging:  return Strings.actionBaggingDescriptionStatus
-            case Enums.SupplyChainAction.LotCreation:  return Strings.actionLotCreationDescriptionStatus
-            case Enums.SupplyChainAction.WarehouseTransport:  return Strings.actionWarehouseTransportDescriptionStatus
-            case Enums.SupplyChainAction.ExportReception:  return Strings.actionExportReceptionDescriptionStatus
-            default:
-                console.warn("actionDescriptionStatus: Invalid action provided!", action)
-
-            return ""
-        }
-    }
-
     signal delegateClicked(string packageId, int action)
 
     ListView {
@@ -93,7 +77,7 @@ Item {
 
                     horizontalAlignment: Text.AlignLeft
 
-                    text: actionDescriptionStatusText(Number(action))
+                    text: Helper.actionDescriptionStatusText(Number(action))
                 }
 
                 Items.LayoutSeparator {

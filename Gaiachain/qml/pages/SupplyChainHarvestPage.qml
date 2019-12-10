@@ -32,18 +32,24 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
-        pageManager.openPopup(Enums.Popup.WaitOverlay)
+        showOverlay()
 
-        var parcelId = ModelHelper.getData(parcelCodesComboBox.currentIndex, "id", parcelCodesComboBox.model)
+        var parcelCode = parcelCodesComboBox.currentText
+        var parcelId = ModelHelper.getData(parcelCode, "id", parcelCodesComboBox.model)
         var harvestDate = inputHarvestDate.currentDate
+
+        var harvestId = dataManager.generateHarvestId(harvestDate, parcelCode)
 
         var properties = {
             [PackageDataProperties.ParcelId]: parcelId,
             [PackageDataProperties.HarvestDate]: harvestDate
         }
 
-        var parcelCode = parcelCodesComboBox.currentText
-        dataManager.addHarvestAction(parcelCode, new Date, properties)
+        top.packageId = harvestId
+        dataManager.addAction(harvestId,
+                              Enums.SupplyChainAction.Harvest,
+                              new Date,
+                              properties)
     }
 
     pageContent: ColumnLayout {

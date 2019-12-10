@@ -70,7 +70,12 @@ signals:
     void eventsNeeded(const QStringList &packageIds);
 
     void packageData(const PackageData &packageData) const;
+
     void offlineActions(const Gaia::ModelData &offlineData) const;
+    void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action,
+                          const QDateTime &timestamp, const QVariantMap &properties);
+    void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action,
+                               const QDateTime &timestamp, const QVariantMap &properties);
 
 private:
     QSqlDatabase m_db;

@@ -6,10 +6,13 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 import com.gaiachain.helpers 1.0
 
-Items.GenericPanel
+BasePage
 {
     id: top
     page: Enums.Page.LoginLoading
+
+    headerVisible: false
+    footerVisible: false
 
     function closeEventHandler() {
         return false    // back button not working for this page

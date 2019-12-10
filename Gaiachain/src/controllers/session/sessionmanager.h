@@ -41,7 +41,8 @@ private:
 
     void sendRequest(const QSharedPointer<BaseRequest> &request,
                      const std::function<void(const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
-                     const std::function<void(const QJsonDocument &)> &replyHandler);
+                     const std::function<void(const QJsonDocument &)> &replyHandler,
+                     bool force = false);
     void sendRequest(const QSharedPointer<BaseRequest> &request);
 };
 

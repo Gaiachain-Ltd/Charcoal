@@ -17,9 +17,24 @@ void AbstractSessionManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("sessionManager"), this);
 }
 
+bool AbstractSessionManager::enabled() const
+{
+    return m_enabled;
+}
+
 Enums::ConnectionState AbstractSessionManager::connectionState() const
 {
     return m_connectionState;
+}
+
+void AbstractSessionManager::setEnabled(bool enabled)
+{
+    if (m_enabled == enabled) {
+        return;
+    }
+
+    m_enabled = enabled;
+    emit enabledChanged(m_enabled);
 }
 
 void AbstractSessionManager::updateToken(const QString &token)

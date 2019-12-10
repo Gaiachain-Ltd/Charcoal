@@ -3,6 +3,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQmlEngine>
+#include <QTimer>
+
+#include <QZXing.h>
 
 #include "../common/enums.h"
 #include "../common/packagedata.h"
@@ -11,8 +14,6 @@
 #include "../helpers/requestshelper.h"
 #include "../helpers/modelhelper.h"
 #include "../helpers/packagedataproperties.h"
-
-#include <QZXing.h>
 
 #ifdef Q_OS_ANDROID
     #include <QtAndroidExtras/QtAndroid>
@@ -56,6 +57,8 @@ void MainController::setupConnections()
 {
     connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupModels);
 
+    connect(&m_userManager, &UserManager::offlineModeChanged,
+            &m_sessionManager, [sessionManager = &m_sessionManager](bool offlineMode) { sessionManager->setEnabled(!offlineMode); });
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
     connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getAdditionalData);
     connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
@@ -87,15 +90,11 @@ void MainController::setupDataConnections()
             &m_dataManager, &DataManager::onActionAddError);
 
     connect(&m_sessionManager, &AbstractSessionManager::connectionStateChanged,
-            &m_dataManager, [dataManager = &m_dataManager, userManager = &m_userManager](Enums::ConnectionState connectionState) {
-        if (connectionState == Enums::ConnectionState::ConnectionSuccessful
-                && !userManager->isOfflineMode()) {
-            dataManager->sendOfflineActions();
-        }
-    });
-    connect(&m_userManager, &UserManager::loggedIn,
-            &m_dataManager, [dataManager = &m_dataManager, userManager = &m_userManager]() {
-        if (!userManager->isOfflineMode()) {
+            &m_dataManager, [dataManager = &m_dataManager, userManager = &m_userManager, pageManager = &m_pageManager](Enums::ConnectionState connectionState) {
+        if (connectionState == Enums::ConnectionState::ConnectionSuccessful &&
+                !userManager->isOfflineMode() &&
+                pageManager->topPage() != Enums::Page::Login &&
+                pageManager->topPage() != Enums::Page::LoginLoading) {
             dataManager->sendOfflineActions();
         }
     });

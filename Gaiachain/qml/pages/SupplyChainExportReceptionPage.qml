@@ -28,7 +28,7 @@ Pages.SupplyChainPage {
                             lotWeightInputHeader.inputText === Strings.empty)
 
     function proceed() {
-        pageManager.openPopup(Enums.Popup.WaitOverlay)
+        showOverlay()
 
         var codeData = qrCodeInputHeader.inputText
         var lotWeight = lotWeightInputHeader.inputText
@@ -37,6 +37,7 @@ Pages.SupplyChainPage {
             [PackageDataProperties.Weight]: lotWeight,
         }
 
+        top.packageCodeData = codeData
         dataManager.addAction(Enums.SupplyChainAction.ExportReception,
                               codeData,
                               new Date,

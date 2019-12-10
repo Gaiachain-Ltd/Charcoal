@@ -95,7 +95,10 @@ QtObject {
     // supply chain pages
     readonly property string proceed: qsTr("Proceed")
 
-    readonly property string addActionError: qsTr("Cannot add the action to the server. Please try again.")
+    readonly property string addActionErrorOffline: qsTr("Cannot reach the server. Please try again later.")
+    readonly property string addActionErrorUnknown: qsTr("Cannot add the action to the server.")
+    readonly property string addActionErrorMissing: qsTr("Data is missing. Please check your input and try again.")
+    readonly property string addActionErrorDuplicated: qsTr("The action already exists. Please check your input and try again.")
     readonly property string offlineActionAdded: qsTr("Cannot add the action to the server. It has been added to queue.")
 
     readonly property string toSelect: qsTr("To select")

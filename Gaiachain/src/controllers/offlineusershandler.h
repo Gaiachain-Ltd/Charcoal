@@ -16,8 +16,8 @@ public:
     void putTemporaryPassword(const QString &login, const QString &password);
     void acknowledgePassword(const QString &login);
 
-    void putUser(const QString &login, const UserData &userData);
-    UserData getUser(const QString &login) const;
+    void putUser(const QString &login, const UserData &userData, const QString &token);
+    QPair<UserData, QString> getUser(const QString &login) const;
 
 private:
     const QString c_dataFilePath;

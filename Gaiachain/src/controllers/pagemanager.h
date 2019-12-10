@@ -26,8 +26,8 @@ public:
     Q_INVOKABLE bool isBackToHomePage() const;
 
 signals:
-    void popupAction(Enums::PopupAction action);
-    void popupClosed(int popup);
+    void popupAction(const Enums::PopupAction &action);
+    void popupClosed(const Enums::Popup &popup);
 
 signals:
     // Signals below should only be used by StackView!!!

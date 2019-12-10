@@ -26,6 +26,7 @@ void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
 void UserManager::logOut()
 {
     if (isLoggedIn()) {
+        setOfflineMode(false);
         setLogin({});
         updateUserData({});
 
@@ -42,9 +43,13 @@ bool UserManager::offlineAvailable(const QString &login) const
 bool UserManager::offlineLogin(const QString &login, const QString &password)
 {
     if (m_offlineHandler.canLogin(login, password)) {
-        setLogin(login);
-        updateUserData(m_offlineHandler.getUser(login));
         setOfflineMode(true);
+        setLogin(login);
+
+        auto [ userData, token ] = m_offlineHandler.getUser(login);
+        updateUserData(userData);
+
+        emit tokenChanged(token);
         emit loggedInChanged(true);
         return true;
     }
@@ -95,10 +100,12 @@ void UserManager::readLoginData(const QString &login, const QJsonObject &userDat
     const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
     userData.type = RequestsHelper::userTypeFromString(role);
 
-    updateUserData(userData);
-    m_offlineHandler.putUser(login, userData);
+    const auto token = RequestsHelper::checkAndValue(userDataObj, Tags::accessToken).toString();
 
-    emit tokenChanged(RequestsHelper::checkAndValue(userDataObj, Tags::accessToken).toString());
+    updateUserData(userData);
+    m_offlineHandler.putUser(login, userData, token);
+
+    emit tokenChanged(token);
     emit loggedInChanged(true);
 }
 

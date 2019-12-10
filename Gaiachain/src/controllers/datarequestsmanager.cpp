@@ -145,7 +145,7 @@ void DataRequestsManager::offlineActionAdded(const QString &packageId, const Enu
 
 void DataRequestsManager::offlineActionError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error)
 {
-    if (error == QNetworkReply::NetworkError::ContentConflictError) {
+    if (!RequestsHelper::isNetworkError(error) && !RequestsHelper::isServerError(error)) {
         emit removeLocalAction(packageId, action);
     }
 

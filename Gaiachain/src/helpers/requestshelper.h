@@ -16,10 +16,13 @@ public:
     static RequestsHelper &instance();
 
     static Q_INVOKABLE QNetworkReply::NetworkError authenticationError();
+    static Q_INVOKABLE QNetworkReply::NetworkError actionDuplicatedError();
 
     static Q_INVOKABLE bool isNetworkError(const QNetworkReply::NetworkError &error);
     static Q_INVOKABLE bool isServerError(const QNetworkReply::NetworkError &error);
     static Q_INVOKABLE bool isAuthenticationError(const QNetworkReply::NetworkError &error);
+    static Q_INVOKABLE bool isActionMissingError(const QNetworkReply::NetworkError &error);
+    static Q_INVOKABLE bool isActionDuplicatedError(const QNetworkReply::NetworkError &error);
 
     static QJsonValue checkAndValue(const QJsonObject &object, const QLatin1String tag);
 
