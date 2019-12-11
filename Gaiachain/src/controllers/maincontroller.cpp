@@ -40,13 +40,7 @@ MainController::MainController(QObject *parent)
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
 #ifdef Q_OS_ANDROID
-    // check for permissions before opening scanner page to load camera faster
-    // TODO user it only after login
-    const QString cameraPermission = QStringLiteral("android.permission.CAMERA");
-    if (QtAndroid::checkPermission(cameraPermission) == QtAndroid::PermissionResult::Denied) {
-        auto permissionCallback = [](const QtAndroid::PermissionResultMap &) {};
-        QtAndroid::requestPermissions(QStringList() << cameraPermission, permissionCallback);
-    }
+    setupAppPermissions();
 #endif
     setupConnections();
 }
@@ -117,6 +111,30 @@ void MainController::initialWork()
 {
     m_dbManager.setupDatabase();
 }
+
+#ifdef Q_OS_ANDROID
+void MainController::setupAppPermissions()
+{
+    const auto appPermissions = QStringList{
+            "android.permission.ACCESS_COARSE_LOCATION",
+            "android.permission.ACCESS_FINE_LOCATION",
+            "android.permission.CAMERA",
+            "android.permission.INTERNET",
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+    };
+
+    // TODO: shift some permissions only after login
+    // check for permissions before opening scanner page to load camera faster
+    auto permissionsToRequest = QStringList{};
+    std::copy_if(appPermissions.constBegin(), appPermissions.constEnd(),
+                 std::back_inserter(permissionsToRequest), [](const auto &permission) {
+        return QtAndroid::checkPermission(permission) == QtAndroid::PermissionResult::Denied;
+    });
+
+    QtAndroid::requestPermissions(permissionsToRequest, [](const QtAndroid::PermissionResultMap &) {});
+}
+#endif
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 {
