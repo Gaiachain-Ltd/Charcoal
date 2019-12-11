@@ -37,6 +37,9 @@ private:
     FakeSessionManager m_sessionManager;
 #endif
 
+#ifdef Q_OS_ANDROID
+    void setupAppPermissions();
+#endif
     void setupQZXing(QQmlApplicationEngine &engine);
 };
 
