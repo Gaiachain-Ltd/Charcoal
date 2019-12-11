@@ -77,7 +77,7 @@ android_combobox_build:
   stage: build
   variables:
     BUILD_TYPE: "release"
-    PACKAGE_NAME: "Gaiachain_$CI_COMMIT_REF_SLUG.apk"
+    PACKAGE_NAME: "Gaiachain_combobox_$CI_COMMIT_REF_SLUG.apk"
   script:
     - cd $CI_PROJECT_DIR
     - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
@@ -100,7 +100,7 @@ android_combobox_build:
 #  stage: build
 #  variables:
 #    BUILD_TYPE: "release"
-#    PACKAGE_NAME: "Gaiachain_combobox_$CI_COMMIT_REF_SLUG.apk"
+#    PACKAGE_NAME: "Gaiachain_combobox_fake-data_$CI_COMMIT_REF_SLUG.apk"
 #  script:
 #    - cd $CI_PROJECT_DIR
 #    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
