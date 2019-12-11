@@ -55,7 +55,7 @@ MainController::MainController(QObject *parent)
 
 void MainController::setupConnections()
 {
-    connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupModels);
+    connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupDatabase);
 
     connect(&m_userManager, &UserManager::offlineModeChanged,
             &m_sessionManager, [sessionManager = &m_sessionManager](bool offlineMode) { sessionManager->setEnabled(!offlineMode); });

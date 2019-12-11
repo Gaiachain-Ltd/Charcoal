@@ -1,14 +1,15 @@
 ﻿#ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 
-#include "abstractmanager.h"
+#include "../abstractmanager.h"
 
 #include <QThread>
 
 #include "datamodelsmanager.h"
+#include "dataviewmodelsmanager.h"
 #include "datarequestsmanager.h"
 
-#include "../common/userdata.h"
+#include "../../common/userdata.h"
 
 class DataManager : public AbstractManager
 {
@@ -19,7 +20,7 @@ public:
     ~DataManager() override;
 
     void setupQmlContext(QQmlApplicationEngine &engine) override;
-    void setupModels(QSqlDatabase db);
+    void setupDatabase(const QString &dbPath);
 
     void updateUserData(const UserData &userData);
 
@@ -61,6 +62,8 @@ signals:
     void eventsNeeded(const QStringList &ids) const;
 
     void packageData(const PackageData &packageData) const;
+    void eventInserted(const Gaia::ModelEntry &entryData) const;
+    void relationInserted(const Gaia::ModelEntry &entryData) const;
 
     void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
     void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action);
@@ -79,6 +82,7 @@ private:
     QThread m_processingThread;
 
     DataModelsManager m_modelsHandler;
+    DataViewModelsManager m_viewModelsHandler;
     DataRequestsManager m_requestsHandler;
 
     UserData m_userData;

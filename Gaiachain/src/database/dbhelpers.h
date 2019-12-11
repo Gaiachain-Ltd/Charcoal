@@ -12,6 +12,8 @@ namespace db {
 class Helpers
 {
 public:
+    static void setupDatabaseConnection(QSqlDatabase &db, const QString &dbPath, const QString &connectionName);
+
     static bool hasError(const QSqlQuery &query);
 
     static void execQuery(QSqlQuery &query, bool critical = false);

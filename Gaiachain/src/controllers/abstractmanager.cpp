@@ -2,9 +2,10 @@
 
 AbstractManager::AbstractManager(QObject *parent)
     : QObject(parent)
-{
+{}
 
-}
+void AbstractManager::setupQmlContext(QQmlApplicationEngine &)
+{}
 
 bool AbstractManager::processing() const
 {

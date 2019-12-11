@@ -13,28 +13,6 @@ BasePage {
     property int packageType
     property var packageData
 
-    Component.onCompleted: refreshData()
-
-    Connections {
-        target: dataManager
-        onPackageData: { top.packageData = packageData }
-    }
-    Connections {
-        target: allEventsModel
-        onEntryInserted: {
-            // update view if new data arrived
-            if (entryData[0] === top.packageId) {
-                dataManager.getPackageData(top.packageId)
-            }
-        }
-    }
-
-    function refreshData() {
-        // called from BasePage
-        dataManager.fetchEventData(packageId, packageType)
-        dataManager.getPackageData(packageId)
-    }
-
     function urlToDetails(packageType) {
         switch(packageType) {
         case Enums.PackageType.Harvest: return "qrc:/components/PackageDataHarvestDetails.qml"
@@ -45,6 +23,28 @@ BasePage {
         }
 
         return Strings.empty
+    }
+
+    function refreshData() {
+        // called from BasePage
+        dataManager.fetchEventData(packageId, packageType)
+        dataManager.getPackageData(packageId)
+    }
+
+    function updatePackage(entryData) {
+        if (entryData[0] === top.packageId) {
+            dataManager.getPackageData(top.packageId)
+        }
+    }
+
+    Component.onCompleted: refreshData()
+
+    Connections {
+
+        target: dataManager
+        onPackageData: { top.packageData = packageData }
+        onEventInserted: top.updatePackage(entryData)
+        onRelationInserted: top.updatePackage(entryData)
     }
 
     Flickable {

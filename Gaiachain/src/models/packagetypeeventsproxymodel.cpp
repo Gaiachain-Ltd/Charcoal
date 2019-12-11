@@ -118,15 +118,48 @@ void PackageTypeEventsProxyModel::onRowsToBeRemoved(const QModelIndex &parent, i
 
 void PackageTypeEventsProxyModel::onModelReset()
 {
-    const auto dates = m_datesPackageTypeEvents.keys();
+    auto prevPackageTypeEvents = m_packageTypeEvents;
+    auto prevDatesPackageTypeEvents = m_datesPackageTypeEvents;
 
     m_packageTypeEvents.clear();
     m_datesPackageTypeEvents.clear();
 
-    for (const auto &packageType : DataGlobals::availablePackageTypes()) {
+    for (auto row = 0; row < rowCount(); ++row) {
+        auto rowIndex = index(row, 0);
+
+        auto eventDate = data(rowIndex, EventModel::Timestamp).toDateTime().date();
+        auto action = data(rowIndex, EventModel::Action).value<Enums::SupplyChainAction>();
+        auto packageType = DataGlobals::packageType(action);
+        if (packageType == Enums::PackageType::Unknown) {
+            qCWarning(dataModels) << "Unknown package type for action:" << action;
+            continue;
+        }
+
+        // add package type event
+        m_packageTypeEvents.insert(packageType, m_packageTypeEvents.value(packageType, 0) + 1);
+
+        // add date package type event
+        auto &datePackageTypeEvents = m_datesPackageTypeEvents[eventDate];
+        datePackageTypeEvents.insert(packageType, datePackageTypeEvents.value(packageType, 0) + 1);
+    }
+
+    for (const auto &packageType : m_packageTypeEvents.keys()) {
+        if (prevPackageTypeEvents.take(packageType) !=
+                m_packageTypeEvents.value(packageType)) {
+            emit packageTypeEventsChanged(packageType);
+        }
+    }
+    for (const auto &packageType : prevPackageTypeEvents.keys()) {
         emit packageTypeEventsChanged(packageType);
     }
-    for (const auto &date : dates) {
+
+    for (const auto &date : m_datesPackageTypeEvents.keys()) {
+        if (prevDatesPackageTypeEvents.take(date) !=
+                m_datesPackageTypeEvents.value(date)) {
+            emit datePackageTypesChanged(date);
+        }
+    }
+    for (const auto &date : prevDatesPackageTypeEvents.keys()) {
         emit datePackageTypesChanged(date);
     }
 }

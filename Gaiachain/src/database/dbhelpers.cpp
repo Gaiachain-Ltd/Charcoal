@@ -7,6 +7,16 @@
 
 Q_LOGGING_CATEGORY(databaseQuery, "database.query")
 
+void db::Helpers::setupDatabaseConnection(QSqlDatabase &db, const QString &dbPath, const QString &connectionName)
+{
+    db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+    db.setDatabaseName(dbPath);
+    if (!db.open()) {
+        Q_ASSERT(db.isOpen());
+        qCritical(databaseQuery) << "Cannot open database connection. Cannot proceed.";
+    }
+}
+
 bool db::Helpers::hasError(const QSqlQuery &query)
 {
     return query.lastError().isValid();

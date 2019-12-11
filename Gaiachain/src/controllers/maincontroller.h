@@ -2,9 +2,9 @@
 #define MAINCONTROLLER_H
 
 #include "databasemanager.h"
-#include "datamanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
+#include "data/datamanager.h"
 #ifndef FAKE_DATA
 #include "session/sessionmanager.h"
 #else
