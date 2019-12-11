@@ -12,8 +12,9 @@ const QString EntityRequest::sc_basePath = QStringLiteral("/entities/%1");
 
 const QMap<EntityRequest::RequestType, MRestRequest::Type> EntityRequest::sc_requestsType = {
     { EntityRequest::RequestType::GetBatch, Type::Post },   // it's post because of pids data
+    { EntityRequest::RequestType::GetFilterRange, Type::Get },
+    { EntityRequest::RequestType::GetFilterLimitRange, Type::Get },
     { EntityRequest::RequestType::GetFilterLimit, Type::Get },
-    { EntityRequest::RequestType::GetFilterTo, Type::Get },
     { EntityRequest::RequestType::GetFilterLastAction, Type::Get },
     { EntityRequest::RequestType::GetUnusedLots, Type::Get },
     { EntityRequest::RequestType::PostNewAction, Type::Post },
@@ -22,8 +23,9 @@ const QMap<EntityRequest::RequestType, MRestRequest::Type> EntityRequest::sc_req
 
 const QMap<EntityRequest::RequestType, QString> EntityRequest::sc_requestsPath = {
     { EntityRequest::RequestType::GetBatch, sc_basePath.arg(QStringLiteral("batch/")) },
+    { EntityRequest::RequestType::GetFilterRange, sc_basePath.arg(QStringLiteral()) },
+    { EntityRequest::RequestType::GetFilterLimitRange, sc_basePath.arg(QStringLiteral()) },
     { EntityRequest::RequestType::GetFilterLimit, sc_basePath.arg(QStringLiteral()) },
-    { EntityRequest::RequestType::GetFilterTo, sc_basePath.arg(QStringLiteral()) },
     { EntityRequest::RequestType::GetFilterLastAction, sc_basePath.arg(QStringLiteral("harvests/")) },
     { EntityRequest::RequestType::GetUnusedLots, sc_basePath.arg(QStringLiteral("lots/")) },
     { EntityRequest::RequestType::PostNewAction, sc_basePath.arg(QStringLiteral("new/")) },
@@ -46,26 +48,35 @@ EntityRequest::EntityRequest(const QStringList &packageIds)
     mRequestDocument.setObject(docObj);
 }
 
+EntityRequest::EntityRequest(const QDateTime &from, const QDateTime &to)
+    : EntityRequest(RequestType::GetFilterRange)
+{
+    auto query = QUrlQuery{};
+    query.addQueryItem(Tags::timestampTo, QString::number(static_cast<qint64>(to.toSecsSinceEpoch())) );
+    query.addQueryItem(Tags::timestampFrom, QString::number(static_cast<qint64>(from.toSecsSinceEpoch())) );
+
+    setQuery(query);
+}
+
+EntityRequest::EntityRequest(int limit, int offset, const QDateTime &from, const QDateTime &to)
+    : EntityRequest(RequestType::GetFilterLimitRange)
+{
+    auto query = QUrlQuery{};
+    query.addQueryItem(Tags::limit, QString::number(limit));
+    query.addQueryItem(Tags::offset, QString::number(offset));
+
+    query.addQueryItem(Tags::timestampTo, QString::number(static_cast<qint64>(to.toSecsSinceEpoch())) );
+    query.addQueryItem(Tags::timestampFrom, QString::number(static_cast<qint64>(from.toSecsSinceEpoch())) );
+
+    setQuery(query);
+}
+
 EntityRequest::EntityRequest(int limit, int offset, const QString &keyword)
     : EntityRequest(RequestType::GetFilterLimit)
 {
     auto query = QUrlQuery{};
     query.addQueryItem(Tags::limit, QString::number(limit));
     query.addQueryItem(Tags::offset, QString::number(offset));
-    if (!keyword.isEmpty()) {
-        query.addQueryItem(Tags::keyword, keyword);
-    }
-    setQuery(query);
-}
-
-EntityRequest::EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword)
-    : EntityRequest(RequestType::GetFilterTo)
-{
-    auto query = QUrlQuery{};
-    query.addQueryItem(Tags::timestampTo, QString::number(static_cast<qint64>(to.toSecsSinceEpoch())) );
-    if (from.isValid()) {
-        query.addQueryItem(Tags::timestampFrom, QString::number(static_cast<qint64>(from.toSecsSinceEpoch())) );
-    }
     if (!keyword.isEmpty()) {
         query.addQueryItem(Tags::keyword, keyword);
     }

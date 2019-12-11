@@ -26,7 +26,7 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    const static int sc_fetchSize = 50;
+    const static int sc_fetchSize = 20;
     int m_offset = 0;
 
     LatestEventsProxyModel m_latestEventsModel;

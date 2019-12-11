@@ -23,7 +23,13 @@ DataModelsManager::DataModelsManager(QObject *parent)
     : AbstractManager(parent)
 {
     connect(&m_latestRangePackagesTypeSearchEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
-            this, [this](int number, int offset) { emit limitEventsNeeded(number, offset, m_searchEventsModel.keyword()); });
+            this, [this](int number, int offset) { emit limitKeywordEventsNeeded(number, offset, m_searchEventsModel.keyword()); });
+    connect(&m_latestRangeDateEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
+            this, [this](int number, int offset) {
+        emit limitRangeEventsNeeded(number, offset,
+                                  m_dateEventsModel.startDateTime(), m_dateEventsModel.endDateTime(),
+                                  m_searchEventsModel.keyword());
+    });
 }
 
 void DataModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -54,7 +60,7 @@ void DataModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("packagesCalendarModel"), &m_packagesCalendarModel);
 
     engine.rootContext()->setContextProperty(QStringLiteral("dateEventsModel"), &m_dateEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("latestDateEventsModel"), &m_latestDateEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("latestRangeDateEventsModel"), &m_latestRangeDateEventsModel);
 
     engine.rootContext()->setContextProperty(QStringLiteral("searchEventsModel"), &m_searchEventsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeSearchEventsModel"), &m_packagesTypeSearchEventsModel);
@@ -125,7 +131,7 @@ void DataModelsManager::setupModels(QSqlDatabase db)
     m_packagesCalendarModel.setSourceModel(&m_calendarModel);
 
     m_dateEventsModel.setSourceModel(&m_calendarModel);
-    m_latestDateEventsModel.setSourceModel(&m_dateEventsModel);
+    m_latestRangeDateEventsModel.setSourceModel(&m_dateEventsModel);
 
     m_searchEventsModel.setSourceModel(&m_cooperativeFilteringEventsModel);
     m_packagesTypeSearchEventsModel.setSourceModel(&m_searchEventsModel);

@@ -104,12 +104,17 @@ void DataManager::fetchEventData(const QString &packageId, const Enums::PackageT
                                                           eventsInfo));
 }
 
-void DataManager::fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword)
+void DataManager::fetchRangeEvents(const QDateTime &from, const QDateTime &to)
 {
-    emit eventsInfoNeeded(from, to, keyword);
+    emit eventsInfoNeeded(from, to);
 }
 
-void DataManager::fetchLimitEvents(int limit, int offset, const QString &keyword)
+void DataManager::fetchLimitRangeEvents(int limit, int offset, const QDateTime &from, const QDateTime &to)
+{
+    emit eventsInfoNeeded(limit, offset, from, to);
+}
+
+void DataManager::fetchLimitKeywordEvents(int limit, int offset, const QString &keyword)
 {
     emit eventsInfoNeeded(limit, offset, keyword);
 }
@@ -175,7 +180,8 @@ void DataManager::setupHandlersConnections()
     connect(&m_requestsHandler, &AbstractManager::processingChanged, this, updateProcessing);
 
     // data related
-    connect(&m_modelsHandler, &DataModelsManager::limitEventsNeeded, this, &DataManager::fetchLimitEvents);
+    connect(&m_modelsHandler, &DataModelsManager::limitKeywordEventsNeeded, this, &DataManager::fetchLimitKeywordEvents);
+    connect(&m_modelsHandler, &DataModelsManager::limitRangeEventsNeeded, this, &DataManager::fetchLimitRangeEvents);
     connect(&m_modelsHandler, &DataModelsManager::eventsNeeded, this, &DataManager::eventsNeeded);
     connect(&m_modelsHandler, &DataModelsManager::packageData, this, &DataManager::packageData);
     connect(&m_modelsHandler, &DataModelsManager::offlineActions, &m_requestsHandler, &DataRequestsManager::processOfflineActions);

@@ -32,8 +32,9 @@ public:
     Q_INVOKABLE virtual void getCompanies() = 0;
     Q_INVOKABLE virtual void getDestinations() = 0;
 
+    Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to) = 0;
+    Q_INVOKABLE virtual void getEntitiesInfo(int limit, int offset, const QDateTime &from, const QDateTime &to) = 0;
     Q_INVOKABLE virtual void getEntitiesInfo(int limit, int offset, const QString &keyword) = 0;
-    Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword) = 0;
     Q_INVOKABLE virtual void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) = 0;
 
     Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;

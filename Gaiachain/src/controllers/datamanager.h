@@ -39,8 +39,9 @@ public:
     Q_INVOKABLE void sendOfflineActions();
 
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
-    Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
-    Q_INVOKABLE void fetchLimitEvents(int limit, int offset, const QString &keyword = {});
+    Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to);
+    Q_INVOKABLE void fetchLimitRangeEvents(int limit, int offset, const QDateTime &from, const QDateTime &to);
+    Q_INVOKABLE void fetchLimitKeywordEvents(int limit, int offset, const QString &keyword = {});
     Q_INVOKABLE void fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction);
 
 signals:
@@ -53,8 +54,9 @@ signals:
     void addActionRequest(const QByteArray &codeData, const Enums::SupplyChainAction &action,
                           const QDateTime &timestamp, const QVariantMap &properties);
 
+    void eventsInfoNeeded(const QDateTime &from, const QDateTime &to) const;
+    void eventsInfoNeeded(int limit, int offset, const QDateTime &from, const QDateTime &to) const;
     void eventsInfoNeeded(int limit, int offset, const QString &keyword) const;
-    void eventsInfoNeeded(const QDateTime &from, const QDateTime &to, const QString &keyword) const;
     void lastActionEventsInfoNeeded(const Enums::SupplyChainAction &lastAction) const;
     void eventsNeeded(const QStringList &ids) const;
 

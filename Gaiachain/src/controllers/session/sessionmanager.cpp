@@ -91,6 +91,30 @@ void SessionManager::getDestinations()
                 errorHandler, replyHandler);
 }
 
+void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
+    };
+
+    sendRequest(QSharedPointer<EntityRequest>::create(from, to), errorHandler, replyHandler);
+}
+
+void SessionManager::getEntitiesInfo(int limit, int offset, const QDateTime &from, const QDateTime &to)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
+    };
+
+    sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, from, to), errorHandler, replyHandler);
+}
+
 void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keyword)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
@@ -101,18 +125,6 @@ void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keywo
     };
 
     sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, keyword), errorHandler, replyHandler);
-}
-
-void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to, const QString &keyword)
-{
-    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
-        emit entitiesLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
-    };
-
-    sendRequest(QSharedPointer<EntityRequest>::create(from, to, keyword), errorHandler, replyHandler);
 }
 
 void SessionManager::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)

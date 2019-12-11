@@ -17,6 +17,9 @@ public:
     Q_INVOKABLE void setDateRange(const QDate &startDate, const QDate &endDate);
     Q_INVOKABLE void setDateTimeRange(const QDateTime &startDateTime, const QDateTime &endDateTime);
 
+    Q_INVOKABLE QDateTime startDateTime() const;
+    Q_INVOKABLE QDateTime endDateTime() const;
+
 signals:
     void dateRangeChanged(const QDateTime &startDateTime, const QDateTime &endDateTime) const;
 

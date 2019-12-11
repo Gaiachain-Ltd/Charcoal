@@ -39,6 +39,16 @@ void DateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTime, const
     emit dateRangeChanged(startDateTime, endDateTime);
 }
 
+QDateTime DateRangeProxyModel::startDateTime() const
+{
+    return m_startDateTime;
+}
+
+QDateTime DateRangeProxyModel::endDateTime() const
+{
+    return m_endDateTime;
+}
+
 bool DateRangeProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     auto index = sourceModel()->index(sourceRow, 0, sourceParent);
