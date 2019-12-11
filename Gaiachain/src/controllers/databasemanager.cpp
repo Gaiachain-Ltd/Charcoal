@@ -8,9 +8,14 @@
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(databaseManager, "database.manager")
 
+const QLatin1String DatabaseManager::sc_dbName = QLatin1String("local.db");
+
 DatabaseManager::DatabaseManager(QObject *parent)
-    : AbstractManager(parent), m_migrationManager(m_db)
+    : AbstractManager(parent), c_dbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + sc_dbName),
+      m_migrationManager(c_dbPath)
 {
+    qCDebug(databaseManager) << "DB path:" << c_dbPath;
+
     connect(&m_migrationProgress, &QFutureWatcher<bool>::finished,
             this, [this]() {
         processFinished();
@@ -18,7 +23,7 @@ DatabaseManager::DatabaseManager(QObject *parent)
             emit databaseUpdateError();
         }
 
-        emit databaseReady(database());
+        emit databaseReady(dbPath());
     });
 }
 
@@ -42,13 +47,13 @@ void DatabaseManager::setupDatabase()
         m_migrationRunner = QtConcurrent::run(std::bind(&db::MigrationManager::update, &m_migrationManager));
         m_migrationProgress.setFuture(m_migrationRunner);
     } else {
-        emit databaseReady(database());
+        emit databaseReady(dbPath());
     }
 
     m_setupDone = true;
 }
 
-QSqlDatabase DatabaseManager::database() const
+QString DatabaseManager::dbPath() const
 {
-    return m_db;
+    return c_dbPath;
 }

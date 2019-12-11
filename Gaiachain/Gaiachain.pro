@@ -42,9 +42,12 @@ HEADERS += \
     src/common/dummy/commondummydata.h \
     src/common/types.h \
     src/common/userdata.h \
+    src/controllers/data/abstractdatamodelsmanager.h \
+    src/controllers/data/datamanager.h \
+    src/controllers/data/datamodelsmanager.h \
+    src/controllers/data/datarequestsmanager.h \
+    src/controllers/data/dataviewmodelsmanager.h \
     src/controllers/databasemanager.h \
-    src/controllers/datamodelsmanager.h \
-    src/controllers/datarequestsmanager.h \
     src/controllers/offlineusershandler.h \
     src/controllers/session/abstractsessionmanager.h \
     src/database/dbhelpers.h \
@@ -82,7 +85,6 @@ HEADERS += \
     src/models/eventmodel.h \
     src/helpers/utility.h \
     src/controllers/maincontroller.h \
-    src/controllers/datamanager.h \
     src/common/enums.h \
     src/common/globals.h \
     src/controllers/pagemanager.h \
@@ -117,9 +119,12 @@ SOURCES += src/main.cpp \
     src/common/globals.cpp \
     src/common/types.cpp \
     src/common/userdata.cpp \
+    src/controllers/data/abstractdatamodelsmanager.cpp \
+    src/controllers/data/datamanager.cpp \
+    src/controllers/data/datamodelsmanager.cpp \
+    src/controllers/data/datarequestsmanager.cpp \
+    src/controllers/data/dataviewmodelsmanager.cpp \
     src/controllers/databasemanager.cpp \
-    src/controllers/datamodelsmanager.cpp \
-    src/controllers/datarequestsmanager.cpp \
     src/controllers/offlineusershandler.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
     src/database/dbhelpers.cpp \
@@ -151,7 +156,6 @@ SOURCES += src/main.cpp \
     src/models/eventmodel.cpp \
     src/helpers/utility.cpp \
     src/controllers/maincontroller.cpp \
-    src/controllers/datamanager.cpp \
     src/controllers/pagemanager.cpp \
     src/models/packagetypeidsproxymodel.cpp \
     src/models/packagetypeproxymodel.cpp \

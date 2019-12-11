@@ -1,20 +1,18 @@
 ﻿#ifndef DATAREQUESTSMANAGER_H
 #define DATAREQUESTSMANAGER_H
 
-#include "abstractmanager.h"
+#include "../abstractmanager.h"
 
 #include <QNetworkReply>
 
-#include "../common/globals.h"
-#include "../common/enums.h"
+#include "../../common/globals.h"
+#include "../../common/enums.h"
 
 class DataRequestsManager : public AbstractManager
 {
     Q_OBJECT
 public:
     DataRequestsManager(QObject *parent = nullptr);
-
-    void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     int processingRequestsNumber() const;
 

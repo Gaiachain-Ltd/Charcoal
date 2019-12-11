@@ -16,17 +16,17 @@ public:
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     void setupDatabase();
-    QSqlDatabase database() const;
+    QString dbPath() const;
 
 signals:
-    void databaseReady(QSqlDatabase db);
-
+    void databaseReady(const QString &dbPath);
     void databaseUpdateError() const;
 
 private:
-    bool m_setupDone = false;
+    static const QLatin1String sc_dbName;
+    const QString c_dbPath;
 
-    QSqlDatabase m_db;
+    bool m_setupDone = false;
 
     db::MigrationManager m_migrationManager;
     QFuture<bool> m_migrationRunner;

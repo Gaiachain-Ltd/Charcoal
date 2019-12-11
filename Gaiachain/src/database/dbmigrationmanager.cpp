@@ -12,14 +12,9 @@
 
 using namespace db;
 
-const QLatin1String MigrationManager::sc_dbName = QLatin1String("local.db");
-
-MigrationManager::MigrationManager(QSqlDatabase &db, QObject *parent)
-    : QObject(parent), c_dbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + sc_dbName)
-    , m_db(db)
-{
-    qCDebug(databaseMigration) << "DB path:" << c_dbPath;
-}
+MigrationManager::MigrationManager(const QString &dbPath, QObject *parent)
+    : QObject(parent), c_dbPath(dbPath)
+{}
 
 bool MigrationManager::checkAndCreate()
 {
@@ -63,8 +58,7 @@ bool MigrationManager::dbExist() const
 
 bool MigrationManager::openDb()
 {
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(c_dbPath);
+    db::Helpers::setupDatabaseConnection(m_db, c_dbPath, metaObject()->className());
     return m_db.open();
 }
 

@@ -14,7 +14,7 @@ class MigrationManager final : public QObject
 {
     Q_OBJECT
 public:
-    MigrationManager(QSqlDatabase &db, QObject *parent = nullptr);
+    MigrationManager(const QString &dbPath, QObject *parent = nullptr);
 
     bool checkAndCreate();
 
@@ -22,10 +22,9 @@ public:
     bool update();
 
 private:
-    static const QLatin1String sc_dbName;
     const QString c_dbPath;
 
-    QSqlDatabase &m_db;
+    QSqlDatabase m_db;
     QVersionNumber m_dbVersion;
 
     bool dbExist() const;

@@ -5,8 +5,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include "../common/dataglobals.h"
-#include "../helpers/packagedataproperties.h"
+#include "../../common/dataglobals.h"
+#include "../../helpers/packagedataproperties.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(dataManager, "data.manager")
@@ -31,18 +31,19 @@ void DataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("dataManager"), this);
 
-    m_modelsHandler.setupQmlContext(engine);
+    m_viewModelsHandler.setupQmlContext(engine);
 }
 
-void DataManager::setupModels(QSqlDatabase db)
+void DataManager::setupDatabase(const QString &dbPath)
 {
-    m_modelsHandler.setupModels(db);
+    QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::setupDatabaseModels, &m_modelsHandler, dbPath));
+    m_viewModelsHandler.setupDatabaseModels(dbPath);
 }
 
 void DataManager::updateUserData(const UserData &userData)
 {
     m_userData = userData;
-    QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::updateCooperativeId, &m_modelsHandler, userData.cooperativeId));
+    m_viewModelsHandler.updateCooperativeId(userData.cooperativeId);
 }
 
 bool DataManager::processing() const
@@ -52,9 +53,8 @@ bool DataManager::processing() const
 
 void DataManager::getPackageData(const QString &packageId) const
 {
-    QMetaObject::invokeMethod(const_cast<DataModelsManager *>(&m_modelsHandler),    // const cast required to use invokeMethod. Method called is const.
-                              std::bind(&DataModelsManager::getPackageData, &m_modelsHandler,
-                                                          packageId));
+    const auto data = m_viewModelsHandler.getPackageData(packageId);
+    emit packageData(data);
 }
 
 QString DataManager::generateHarvestId(const QDate &date, const QString &parcelCode)
@@ -88,8 +88,9 @@ void DataManager::addAction(const Enums::SupplyChainAction &action, const QByteA
 
 void DataManager::sendOfflineActions()
 {
-    QMetaObject::invokeMethod(const_cast<DataModelsManager *>(&m_modelsHandler),    // const cast required to use invokeMethod. Method called is const.
-                              std::bind(&DataModelsManager::getOfflineActions, &m_modelsHandler));
+    const auto offlineActions = m_viewModelsHandler.getOfflineActions();
+    QMetaObject::invokeMethod(const_cast<DataRequestsManager *>(&m_requestsHandler),    // const cast required to use invokeMethod. Method called is const.
+                              std::bind(&DataRequestsManager::processOfflineActions, &m_requestsHandler, offlineActions));
 }
 
 void DataManager::fetchEventData(const QString &packageId, const Enums::PackageType &type)
@@ -180,11 +181,14 @@ void DataManager::setupHandlersConnections()
     connect(&m_requestsHandler, &AbstractManager::processingChanged, this, updateProcessing);
 
     // data related
-    connect(&m_modelsHandler, &DataModelsManager::limitKeywordEventsNeeded, this, &DataManager::fetchLimitKeywordEvents);
-    connect(&m_modelsHandler, &DataModelsManager::limitRangeEventsNeeded, this, &DataManager::fetchLimitRangeEvents);
+    connect(&m_modelsHandler, &DataModelsManager::modelUpdated, &m_viewModelsHandler, &DataViewModelsManager::onModelUpdated);
+
+    connect(&m_viewModelsHandler, &DataViewModelsManager::limitKeywordEventsNeeded, this, &DataManager::fetchLimitKeywordEvents);
+    connect(&m_viewModelsHandler, &DataViewModelsManager::limitRangeEventsNeeded, this, &DataManager::fetchLimitRangeEvents);
+
     connect(&m_modelsHandler, &DataModelsManager::eventsNeeded, this, &DataManager::eventsNeeded);
-    connect(&m_modelsHandler, &DataModelsManager::packageData, this, &DataManager::packageData);
-    connect(&m_modelsHandler, &DataModelsManager::offlineActions, &m_requestsHandler, &DataRequestsManager::processOfflineActions);
+    connect(&m_modelsHandler, &DataModelsManager::eventInserted, this, &DataManager::eventInserted);
+    connect(&m_modelsHandler, &DataModelsManager::relationInserted, this, &DataManager::relationInserted);
 
     connect(&m_requestsHandler, &DataRequestsManager::additionalDataProcessed, &m_modelsHandler, &DataModelsManager::processAdditionalData);
     connect(&m_requestsHandler, &DataRequestsManager::entitiesInfoProcessed, &m_modelsHandler, &DataModelsManager::processEntitiesInfo);

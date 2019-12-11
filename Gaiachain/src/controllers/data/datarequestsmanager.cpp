@@ -4,16 +4,13 @@
 #include <QJsonObject>
 #include <QJsonValue>
 
-#include "../helpers/requestshelper.h"
-#include "../common/tags.h"
-#include "../common/dataglobals.h"
-#include "../helpers/packagedataproperties.h"
+#include "../../helpers/requestshelper.h"
+#include "../../common/tags.h"
+#include "../../common/dataglobals.h"
+#include "../../helpers/packagedataproperties.h"
 
 DataRequestsManager::DataRequestsManager(QObject *parent)
     : AbstractManager(parent)
-{}
-
-void DataRequestsManager::setupQmlContext(QQmlApplicationEngine &)
 {}
 
 void DataRequestsManager::processAdditionalData(const QJsonObject &additionalData)

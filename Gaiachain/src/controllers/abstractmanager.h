@@ -15,7 +15,7 @@ class AbstractManager : public QObject
 public:
     explicit AbstractManager(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) = 0;
+    virtual void setupQmlContext(QQmlApplicationEngine &engine);
 
     virtual bool processing() const;
 
