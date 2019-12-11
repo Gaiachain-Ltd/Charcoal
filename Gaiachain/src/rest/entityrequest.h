@@ -12,8 +12,9 @@ public:
     enum class RequestType {
         Invalid = -1,
         GetBatch,
+        GetFilterRange,
+        GetFilterLimitRange,
         GetFilterLimit,
-        GetFilterTo,
         GetFilterLastAction,
         GetUnusedLots,
         PostNewAction,
@@ -30,8 +31,9 @@ public:
     EntityRequest(const RequestType &requestType, const QString &token = {});
 
     EntityRequest(const QStringList &packageIds = {});
+    EntityRequest(const QDateTime &from, const QDateTime &to);
+    EntityRequest(int limit, int offset, const QDateTime &from, const QDateTime &to);
     EntityRequest(int limit, int offset, const QString &keyword = {});
-    EntityRequest(const QDateTime &from, const QDateTime &to, const QString &keyword = {});
     EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction);
 
     EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData);

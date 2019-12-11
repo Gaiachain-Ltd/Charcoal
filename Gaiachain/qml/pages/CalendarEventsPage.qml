@@ -19,7 +19,7 @@ CalendarPageBase {
 
     function refreshData() {
         // called from BasePage
-        dataManager.fetchRangeEvents(getMonthStartDate(), getMonthEndDate())
+        latestRangeDateEventsModel.clearRowCount()
     }
 
     function updateModelRange() {
@@ -29,7 +29,7 @@ CalendarPageBase {
 
         calendarModel.setDateRange(from, to)
         dateEventsModel.setSingleDateRange(new Date(currentYear, currentMonth, currentDay))
-        dataManager.fetchRangeEvents(from, to)
+        latestRangePackagesTypeSearchEventsModel.clearRowCount()
     }
 
     function enterMonthPage() {
@@ -78,7 +78,7 @@ CalendarPageBase {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: latestDateEventsModel
+            viewModel: latestRangeDateEventsModel
             displayDate: false
             displayLastItemSeparator: true
 

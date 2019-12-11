@@ -66,7 +66,8 @@ public:
     void getOfflineActions() const;
 
 signals:
-    void limitEventsNeeded(int count, int offset, const QString &keyword);
+    void limitKeywordEventsNeeded(int count, int offset, const QString &keyword);
+    void limitRangeEventsNeeded(int count, int offset, const QDateTime &from, const QDateTime &to, const QString &keyword);
     void eventsNeeded(const QStringList &packageIds);
 
     void packageData(const PackageData &packageData) const;
@@ -122,14 +123,15 @@ private:
 
     LocalOnlyProxyModel m_localOnlyEventsModel;
 
-    // TODO: if still needed in final implementation compose as extensions instead of single models
+    //! TODO: multiple proxy models should be removed with view solution
+    //! part of work is already done, the rest will be done in #82196
     CooperativeEventsProxyModel m_cooperativeFilteringEventsModel;
 
     DateRangeProxyModel m_calendarModel;
     PackageTypeEventsProxyModel m_packagesCalendarModel;
 
     DateRangeProxyModel m_dateEventsModel;
-    LatestEventsProxyModel m_latestDateEventsModel;
+    LatestRangeEventsProxyModel m_latestRangeDateEventsModel;
 
     SearchEventsProxyModel m_searchEventsModel;
     PackageTypeProxyModel m_packagesTypeSearchEventsModel;
