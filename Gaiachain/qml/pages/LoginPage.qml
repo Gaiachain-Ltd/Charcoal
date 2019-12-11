@@ -7,6 +7,8 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 import com.gaiachain.helpers 1.0
 
+import Qt.labs.settings 1.1
+
 import "../items" as Items
 import "../components/dummy" as DummyComponents
 
@@ -19,6 +21,28 @@ BasePage {
 
     function closeEventHandler() {
         return true // android back button will close app
+    }
+
+    Settings {
+        id: loginSettings
+
+        category: "Login"
+
+        property string login
+
+        Component.onCompleted: {
+            if (!Utility.useCombobox()) {
+                loginInput.text = login
+            }
+        }
+    }
+
+    Connections {
+        target: sessionManager
+
+        onLoginFinished: {
+            loginSettings.login = login
+        }
     }
 
     ColumnLayout
@@ -65,6 +89,7 @@ BasePage {
             nextInput: passwordInput
 
             additionalInputMethodHints: Qt.ImhNoAutoUppercase
+            inputMethodHints: Qt.ImhEmailCharactersOnly
             placeholderText: Strings.emailAddress
             iconSource: Style.emailImgUrl
 
