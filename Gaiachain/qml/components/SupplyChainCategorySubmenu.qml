@@ -29,6 +29,8 @@ Rectangle {
         spacing: Style.none
 
         delegate: Components.SupplyChainCategorySubmenuButton {
+            width: listView.width
+
             topPadding: (index === 0) ? s(Style.hugeMargin) : Style.none
             onClicked: listView.parent.clicked(actionType)
 

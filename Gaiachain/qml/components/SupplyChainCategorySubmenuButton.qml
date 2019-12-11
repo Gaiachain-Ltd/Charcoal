@@ -29,4 +29,7 @@ Items.GenericButton {
     }
 
     disabledColorTint: Style.blank
+
+    // this is to avoid reimplementing of contentItem
+    Component.onCompleted: contentItem.alignment = Qt.AlignLeft
 }
