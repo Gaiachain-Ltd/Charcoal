@@ -15,7 +15,7 @@ void PackageTypeProxyModel::setPackageTypeFiltering(const Enums::PackageType &ty
     }
 
     m_packageTypesActivity.insert(type, active);
-    invalidateFilter();
+    resetFilter();
 }
 
 void PackageTypeProxyModel::clearFiltering()
@@ -24,7 +24,7 @@ void PackageTypeProxyModel::clearFiltering()
     if (filteringValues.size() > 1 ||
             (!filteringValues.isEmpty() && filteringValues.contains(true))) {
         m_packageTypesActivity = {};
-        invalidateFilter();
+        resetFilter();
     }
 }
 

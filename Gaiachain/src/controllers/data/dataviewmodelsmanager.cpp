@@ -143,6 +143,15 @@ void DataViewModelsManager::setupModels()
 
 void DataViewModelsManager::setupUpdateConnections()
 {
+    connect(&m_lastActionHarvestModel, &PackageLastActionProxyModel::filteringFinished,
+            this, [this]() { packagesEventsNeeded(m_lastActionHarvestModel.getData()); });
+    connect(&m_lastActionGrainProcessingModel, &PackageLastActionProxyModel::filteringFinished,
+            this, [this]() { packagesEventsNeeded(m_lastActionGrainProcessingModel.getData()); });
+    connect(&m_lastActionSectionReceptionModel, &PackageLastActionProxyModel::filteringFinished,
+            this, [this]() { packagesEventsNeeded(m_lastActionSectionReceptionModel.getData()); });
+
+    // -------------------------------------------------------------
+
     m_modelUpdateHandler.insert(ModelType::Producers,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
                                           dynamic_cast<SqlQueryModel *>(m_producersViewModel.sourceModel()) ));

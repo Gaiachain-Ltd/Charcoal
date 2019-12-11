@@ -32,8 +32,11 @@ public:
     void updateLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
     void removeLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
 
+    void processPackageData(const QString &packageId, const Enums::PackageType &packageType);
+    void processPackagesInfo(const Gaia::ModelData &modelData);
+
     void processAdditionalData(const QMap<Enums::AdditionalDataType, Gaia::ModelData> &modelsData);
-    void processEntitiesInfo(const Gaia::ModelData &eventsInfo);
+    void processEntitiesInfo(const Gaia::ModelData &modelData);
     void processEntities(const Gaia::ModelData &modelData);
     void processRelations(const Gaia::ModelData &modelData);
     void processUnusedLotIds(const Gaia::ModelData &modelData);
@@ -67,6 +70,9 @@ private:
     void setupUpdateConnections() override;
 
     static bool isInvalidAction(const Gaia::ModelEntry &entityEntry);
+    static Gaia::ModelData allPackageEvents(const QString &packageId, const Enums::PackageType &packageType);
+
+    void processLastActionInfo(const Gaia::ModelData &modelData);
 
     void removeExistingById(Gaia::ModelData &modelData, const QLatin1String &tableName);
     void removeExistingEvents(Gaia::ModelData &modelData);

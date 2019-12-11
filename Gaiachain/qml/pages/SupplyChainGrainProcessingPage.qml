@@ -22,6 +22,7 @@ Pages.SupplyChainPage {
 
     function refreshData() {
         dataManager.fetchLastActionPackageEvents(Enums.SupplyChainAction.Harvest);
+        lastActionHarvestModel.resetFilter()
     }
 
     function proceed() {

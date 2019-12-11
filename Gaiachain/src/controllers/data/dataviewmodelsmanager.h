@@ -54,6 +54,8 @@ public slots:
     void onModelUpdated(const AbstractDataModelsManager::ModelType &type);
 
 signals:
+    void packagesEventsNeeded(const Gaia::ModelData &modelData) const;
+
     void limitKeywordEventsNeeded(int count, int offset, const QString &keyword) const;
     void limitRangeEventsNeeded(int count, int offset, const QDateTime &from, const QDateTime &to) const;
 

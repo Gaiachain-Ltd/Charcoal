@@ -7,3 +7,9 @@ AbstractSortFilterProxyModel::AbstractSortFilterProxyModel(QObject *parent)
 
     setDynamicSortFilter(true);
 }
+
+void AbstractSortFilterProxyModel::resetFilter()
+{
+    invalidateFilter();
+    emit filteringFinished();
+}

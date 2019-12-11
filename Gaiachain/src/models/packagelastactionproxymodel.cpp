@@ -11,14 +11,29 @@ PackageLastActionProxyModel::PackageLastActionProxyModel(const Enums::SupplyChai
 void PackageLastActionProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
     if (this->sourceModel()) {
-        disconnect(this->sourceModel(), &QAbstractItemModel::rowsInserted, this, &QSortFilterProxyModel::invalidate);
+        disconnect(this->sourceModel(), &QAbstractItemModel::rowsInserted, this, &AbstractSortFilterProxyModel::resetFilter);
     }
 
     AbstractSortFilterProxyModel::setSourceModel(sourceModel);
 
     if (this->sourceModel()) {
-        connect(this->sourceModel(), &QAbstractItemModel::rowsInserted, this, &QSortFilterProxyModel::invalidate);
+        connect(this->sourceModel(), &QAbstractItemModel::rowsInserted, this, &AbstractSortFilterProxyModel::resetFilter);
     }
+}
+
+Gaia::ModelData PackageLastActionProxyModel::getData() const
+{
+    auto modelData = Gaia::ModelData{};
+
+    for (auto row = 0; row < rowCount(); ++row) {
+        modelData.append({ data(index(row, 0), EventModel::Columns::PackageId),
+                           data(index(row, 0), EventModel::Columns::Action),
+                           data(index(row, 0), EventModel::Columns::Timestamp),
+                           data(index(row, 0), EventModel::Columns::Properties)
+                         });
+    }
+
+    return modelData;
 }
 
 bool PackageLastActionProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

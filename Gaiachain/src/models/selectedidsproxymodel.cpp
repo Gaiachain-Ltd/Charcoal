@@ -12,7 +12,7 @@ void SelectedIdsProxyModel::setPackageIds(const QStringList &packageIds)
 {
     if (m_packageIds != packageIds) {
         m_packageIds = packageIds;
-        invalidateFilter();
+        resetFilter();
     }
 }
 
