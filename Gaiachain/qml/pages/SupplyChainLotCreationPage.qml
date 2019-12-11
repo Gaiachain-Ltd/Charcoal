@@ -18,14 +18,14 @@ Pages.SupplyChainPage {
 
     property string scannedId
 
+    proceedButtonEnabled: !(lotIdComboBox.currentText === Strings.empty ||
+                            qrCodeInputHeader.inputText === Strings.empty)
+
     Component.onCompleted: refreshData()
 
     function refreshData() {
         sessionManager.getUnusedLotIds()
     }
-
-    proceedButtonEnabled: !(lotIdComboBox.currentText === Strings.empty ||
-                            qrCodeInputHeader.inputText === Strings.empty)
 
     function proceed() {
         showOverlay()
