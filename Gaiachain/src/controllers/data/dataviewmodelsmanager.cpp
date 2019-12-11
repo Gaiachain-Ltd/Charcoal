@@ -154,32 +154,32 @@ void DataViewModelsManager::setupUpdateConnections()
 
     m_modelUpdateHandler.insert(ModelType::Producers,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_producersViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_producersViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Parcels,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_parcelsViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_parcelsViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Companies,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_cooperativesViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_cooperativesViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Companies,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_buyersViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_buyersViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Companies,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_transportersViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_transportersViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Destinations,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_destinationsViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_destinationsViewModel.sourceModel()) ));
 
     m_modelUpdateHandler.insert(ModelType::Events,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_eventsViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_eventsViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Relations,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_relationsViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_relationsViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::UnusedIds,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          dynamic_cast<SqlQueryModel *>(m_unusedLotIdsViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_unusedLotIdsViewModel.sourceModel()) ));
 }
 
 void DataViewModelsManager::scheduleModelUpdate(SqlQueryModel *model)
