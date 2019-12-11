@@ -17,6 +17,10 @@ fake_data {
     DEFINES+=FAKE_DATA
 }
 
+english {
+    DEFINES+=ENGLISH_LANGUAGE
+}
+
 include(../version.pri)
 
 # qzxing
@@ -40,6 +44,7 @@ TARGET = Gaiachain
 HEADERS += \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
+    src/common/locale.h \
     src/common/types.h \
     src/common/userdata.h \
     src/controllers/data/abstractdatamodelsmanager.h \
@@ -179,7 +184,8 @@ SOURCES += src/main.cpp \
 
 RESOURCES +=  \
     qml/qml.qrc \
-    resources/resources.qrc
+    resources/resources.qrc \
+    translations/translations.qrc
 
 OTHER_FILES += \
     ../Gaiachain.doxyfile \

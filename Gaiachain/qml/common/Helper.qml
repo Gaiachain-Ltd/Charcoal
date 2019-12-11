@@ -20,6 +20,10 @@ QtObject {
         return location.lat.toFixed(6) + ", " + location.lon.toFixed(6)
     }
 
+    function formatShortMonthName(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1).replace(".", Strings.empty)
+    }
+
     function getMonthName(month) {
         switch(month) {
         case Calendar.January:return Strings.january
