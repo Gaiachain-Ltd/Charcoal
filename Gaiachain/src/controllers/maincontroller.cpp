@@ -36,8 +36,6 @@ QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
 MainController::MainController(QObject *parent)
     : AbstractManager(parent)
 {
-    QLocale::setDefault(QLocale("en_GB"));
-
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
