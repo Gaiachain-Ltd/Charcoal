@@ -47,7 +47,7 @@ Pages.SupplyChainPage {
     pageContent: ColumnLayout {
         spacing: s(Style.smallMargin)
 
-        Items.InputHeader {
+        Items.ButtonInputHeader {
             id: qrCodeInputHeader
 
             Layout.fillWidth: true
@@ -59,7 +59,7 @@ Pages.SupplyChainPage {
             placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
             headerText: Strings.qrCode
 
-            onIconClicked: pageManager.enter(Enums.Page.QRScanner, {
+            onClicked: pageManager.enter(Enums.Page.QRScanner, {
                                                  "title": title,
                                                  "backSupplyChainPage": page,
                                                  "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })

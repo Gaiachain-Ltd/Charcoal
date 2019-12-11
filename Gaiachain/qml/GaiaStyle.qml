@@ -159,6 +159,9 @@ QtObject {
     readonly property url checkImgUrl: "qrc:/ui/check"
     readonly property url frameImgUrl: "qrc:/ui/frame"
 
+    readonly property url typeManuallyImgUrl: "qrc:/ui/typeManually"
+    readonly property url enterImgUrl: "qrc:/ui/enter"
+
     // control
     readonly property int controlDefaultBorderWidth: 1
     readonly property int controlBoldBorderWidth: 2
@@ -174,6 +177,7 @@ QtObject {
     readonly property int buttonImageTinyHeight: 30
     readonly property int buttonImageSmallHeight: 55
     readonly property int buttonImageHeight: 95
+    readonly property int buttonImageMiddleBigHeight: 115
     readonly property int buttonImageBigHeight: 125
     readonly property int buttonImageMargin: 20
     readonly property int buttonNumberRadius: middleMargin
@@ -222,4 +226,5 @@ QtObject {
     readonly property int frameSvgImgHeight: 550
     readonly property int checkSvgImageHeight: 250
     readonly property real normalizedScanSize: 0.6 // Should be between 0 and 1
+    readonly property var codeDataRegExpPattern: /[A-Za-z0-9\-]+/
 }
