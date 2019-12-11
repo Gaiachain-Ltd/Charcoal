@@ -20,7 +20,7 @@ BasePage {
         onPackageData: { top.packageData = packageData }
     }
     Connections {
-        target: eventsModel
+        target: allEventsModel
         onEntryInserted: {
             // update view if new data arrived
             if (entryData[0] === top.packageId) {

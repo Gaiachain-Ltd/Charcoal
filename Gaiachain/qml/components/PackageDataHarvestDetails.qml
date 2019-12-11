@@ -14,13 +14,16 @@ import "../components" as Components
 Components.PackageDataDetails {
     id: top
 
+    Component.onCompleted: parcelsModel.allProducers = true
+    Component.onDestruction: parcelsModel.allProducers = false
+
     onPackageDataChanged: {
         if (typeof(top.packageData) === "undefined") {
             return
         }
 
         var parcelId = packageData.properties[PackageDataProperties.ParcelId]
-        var parcelData = ModelHelper.findItem("id", parcelId, ["code", "producerId"], allParcelsModel)
+        var parcelData = ModelHelper.findItem("id", parcelId, ["code", "producerId"], parcelsModel)
 
         var producerId = parcelData[1]
         var producerData = ModelHelper.findItem("id", producerId, ["name", "code", "village"], producersModel)

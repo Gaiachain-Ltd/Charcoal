@@ -22,10 +22,8 @@ Pages.SupplyChainPage {
                             producerNameComboBox.currentText === Strings.empty ||
                             villageInputHeader.inputText === Strings.empty)
 
-    Component.onCompleted: {
-        parcelsModel.producerId = -1
-        refreshData()
-    }
+    Component.onCompleted: refreshData()
+    Component.onDestruction: parcelsModel.producerId = 0
 
     function refreshData() {
         sessionManager.getProducers()

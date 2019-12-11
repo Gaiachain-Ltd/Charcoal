@@ -96,14 +96,16 @@ private:
     EventModel m_eventsSourceModel;
     RelationModel m_relationsSourceModel;
 
-    UnusedIdsModel m_unusedLotIdsModel;
+    UnusedIdsModel m_unusedLotIdsSourceModel;
 
     ProducerModel m_producersSourceModel;
     ParcelModel m_parcelsSourceModel;
     CompanyModel m_companiesSourceModel;
     NameModel m_destinationsSourceModel;
 
-    // proxy models
+    // view models
+    UnusedIdsModel m_unusedLotIdsViewModel;
+
     ProducerModel m_producersViewModel;
     ParcelViewModel m_parcelsViewModel;
     NameModel m_cooperativesViewModel;
@@ -111,6 +113,7 @@ private:
     NameModel m_transportersViewModel;
     NameModel m_destinationsViewModel;
 
+    // proxy models
     CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
     PackageLastActionProxyModel m_lastActionHarvestModel{ Enums::SupplyChainAction::Harvest };
     PackageLastActionProxyModel m_lastActionGrainProcessingModel{ Enums::SupplyChainAction::GrainProcessing };

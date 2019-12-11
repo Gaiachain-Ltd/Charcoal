@@ -11,6 +11,11 @@ quint32 ParcelViewModel::producerId() const
     return m_producerId;
 }
 
+bool ParcelViewModel::allProducers() const
+{
+    return m_allProducers;
+}
+
 void ParcelViewModel::setSourceModel(SqlQueryModel *sourceModel)
 {
     m_queryModel = QPointer<SqlQueryModel>(sourceModel);
@@ -21,8 +26,9 @@ void ParcelViewModel::setSourceModel(SqlQueryModel *sourceModel)
 
 void ParcelViewModel::setProducerId(quint32 producerId)
 {
-    if (m_producerId == producerId)
+    if (m_producerId == producerId) {
         return;
+    }
 
     m_producerId = producerId;
 
@@ -30,9 +36,25 @@ void ParcelViewModel::setProducerId(quint32 producerId)
     emit producerIdChanged(m_producerId);
 }
 
+void ParcelViewModel::setAllProducers(bool allProducers)
+{
+    if (m_allProducers == allProducers) {
+        return;
+    }
+
+    m_allProducers = allProducers;
+
+    updateFilterQuery();
+    emit allProducersChanged(m_allProducers);
+}
+
 void ParcelViewModel::updateFilterQuery()
 {
     if (!m_queryModel.isNull()) {
-        m_queryModel->setSortFilterQuery(ProducerIdQuery(m_producerId, SortFilterQuery()));
+        if (m_allProducers) {
+            m_queryModel->setSortFilterQuery(SortFilterQuery());
+        } else {
+            m_queryModel->setSortFilterQuery(ProducerIdQuery(m_producerId, SortFilterQuery()));
+        }
     }
 }
