@@ -28,21 +28,24 @@ DataModelsManager::DataModelsManager(QObject *parent)
 
 void DataModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
+    engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsViewModel);
+
     engine.rootContext()->setContextProperty(QStringLiteral("producersModel"), &m_producersViewModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("allParcelsModel"), &m_parcelsSourceModel);
     engine.rootContext()->setContextProperty(QStringLiteral("parcelsModel"), &m_parcelsViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("cooperativesModel"), &m_cooperativesViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("buyersModel"), &m_buyersViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("transportersModel"), &m_transportersViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("destinationsModel"), &m_destinationsViewModel);
 
-    engine.rootContext()->setContextProperty(QStringLiteral("eventsModel"), &m_eventsSourceModel);
+    //! allEventsModel is a source model, don't use it to display data directly
+    //! it may cause issues, like duplicated entries (threads related)
+    engine.rootContext()->setContextProperty(QStringLiteral("allEventsModel"), &m_eventsSourceModel);
+
     engine.rootContext()->setContextProperty(QStringLiteral("localOnlyEventsModel"), &m_localOnlyEventsModel);
 
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionHarvestModel"), &m_lastActionHarvestModel);
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionGrainProcessingModel"), &m_lastActionGrainProcessingModel);
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionSectionReceptionModel"), &m_lastActionSectionReceptionModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsModel);
     engine.rootContext()->setContextProperty(QStringLiteral("packageTypeCooperativeIdsModel"), &m_packageTypeCooperativeIdsModel);
 
     engine.rootContext()->setContextProperty(QStringLiteral("cooperativeFilteringEvents"), &m_cooperativeFilteringEventsModel);
@@ -76,7 +79,7 @@ void DataModelsManager::setupModels(QSqlDatabase db)
 
     m_eventsSourceModel.setSourceModel(m_eventsDatabaseModel.data());
     m_relationsSourceModel.setSourceModel(m_relationsDatabaseModel.data());
-    m_unusedLotIdsModel.setSourceModel(m_unusedIdsDatabaseModel.data());
+    m_unusedLotIdsSourceModel.setSourceModel(m_unusedIdsDatabaseModel.data());
 
     m_producersSourceModel.setSourceModel(m_producersDatabaseModel.data());
     m_parcelsSourceModel.setSourceModel(m_parcelsDatabaseModel.data());
@@ -102,6 +105,10 @@ void DataModelsManager::setupModels(QSqlDatabase db)
     m_destinationsViewModel.setSourceModel(new SqlQueryModel(DestinationsTableName, db,
                                                              SortNameQuery(SortFilterQuery{}),
                                                              &m_destinationsViewModel));
+
+    m_unusedLotIdsViewModel.setSourceModel(new SqlQueryModel(UnusedIdsTableName, db,
+                                                             SortFilterQuery{},
+                                                             &m_unusedLotIdsViewModel));
 
     // -------------------------------------------------------------
 
@@ -281,10 +288,10 @@ void DataModelsManager::processUnusedLotIds(const Gaia::ModelData &modelData)
     ProcessCounter p(this);
 
     auto missingUnusedLotIds = modelData;
-    if (!m_unusedLotIdsModel.clearData()) {
+    if (!m_unusedLotIdsSourceModel.clearData()) {
         removeExistingUnusedLotIds(missingUnusedLotIds);
     }
-    m_unusedLotIdsModel.appendData(missingUnusedLotIds);
+    m_unusedLotIdsSourceModel.appendData(missingUnusedLotIds);
 }
 
 void DataModelsManager::getOfflineActions() const
@@ -315,6 +322,9 @@ void DataModelsManager::setupUpdateConnections()
             this, std::bind(&DataModelsManager::scheduleModelUpdate,
                             this, qobject_cast<SqlQueryModel *>(m_destinationsViewModel.sourceModel())) );
 
+    connect(&m_unusedLotIdsSourceModel, &AbstractModel::modelChanged,
+            this, std::bind(&DataModelsManager::scheduleModelUpdate,
+                            this, qobject_cast<SqlQueryModel *>(m_unusedLotIdsViewModel.sourceModel())) );
 }
 
 void DataModelsManager::scheduleModelUpdate(SqlQueryModel *model)
@@ -388,7 +398,7 @@ void DataModelsManager::removeExistingRelations(Gaia::ModelData &modelData)
 void DataModelsManager::removeExistingUnusedLotIds(Gaia::ModelData &modelData)
 {
     static const auto ConditionsFields = QStringList{
-            m_unusedLotIdsModel.roleNames().value(UnusedIdsModel::Columns::PackageId) };
+            m_unusedLotIdsSourceModel.roleNames().value(UnusedIdsModel::Columns::PackageId) };
 
     m_existsQueryModel.prepareQuery(UnusedIdsTableName, ConditionsFields);
 
