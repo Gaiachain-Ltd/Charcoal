@@ -20,6 +20,9 @@ QtObject {
     readonly property string sacId: qsTr("Sac ID")
     readonly property string lotId: qsTr("Lot ID")
 
+    readonly property string sac: qsTr("sac")
+    readonly property string lot: qsTr("lot")
+
     readonly property string details: qsTr("%1 details")
 
     readonly property string kg: qsTr("%1 kg")
@@ -147,14 +150,13 @@ QtObject {
     readonly property string lotWeight: qsTr("Weight of LOT")
 
     readonly property string qrCode: qsTr("QR Code")
-    readonly property string scanQrCodeFromSAC: qsTr("Scan QR code from SAC")
-    readonly property string scanQrCodeFromLot: qsTr("Scan QR code from LOT")
-
+    readonly property string scanQrCodeFrom: qsTr("Scan QR code from %1")
 
     // qr code page
     readonly property string scanning: qsTr("Scanning")
     readonly property string error: qsTr("Error")
-    readonly property string attachQrSAC: qsTr("Attach the QR code to the SAC and scan the QR code")
+    readonly property string attachQr: qsTr("Attach the QR code to the %1 and scan the QR code")
+
 
     // calendar
     readonly property string activities: qsTr("activities")

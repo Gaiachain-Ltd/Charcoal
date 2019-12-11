@@ -69,12 +69,12 @@ Pages.SupplyChainPage {
 
             inputText: top.scannedId
             headerText: Strings.registerQrCodeToLotId
-            placeholderText: Strings.scanQrCodeFromLot
+            placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
 
             onIconClicked: pageManager.enter(Enums.Page.QRScanner, {
                                                  "title": title,
                                                  "backSupplyChainPage": page,
-                                                 "popupText": Strings.attachQrSAC })
+                                                 "popupText": Strings.attachQr.arg(Strings.lot.toUpperCase()) })
         }
 
         Items.TextAreaHeader {
