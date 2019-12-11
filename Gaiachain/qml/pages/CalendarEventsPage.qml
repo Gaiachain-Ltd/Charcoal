@@ -45,7 +45,11 @@ CalendarPageBase {
 
     onMonthHeaderClicked: enterMonthPage()
 
+    // manual update required because binding is broken when user select a date in UI
+    onCurrentDayChanged: calendarWeekItem.currentDay = currentDay
+
     calendarWidgets: Components.CalendarWeekItem {
+        id: calendarWeekItem
         Layout.fillWidth: true
 
         currentDay: top.currentDay

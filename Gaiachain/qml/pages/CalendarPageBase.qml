@@ -50,9 +50,11 @@ BasePage {
     function returnToCurrentMonth() {
         var date = new Date
 
+        var day = date.getDate()
         var month = date.getMonth()
         var year = date.getFullYear()
 
+        currentDay = day
         currentYear = year
         currentMonth = monthModel[month]
     }
