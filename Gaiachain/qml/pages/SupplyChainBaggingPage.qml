@@ -133,7 +133,7 @@ Pages.SupplyChainPage {
             inputText: userManager.userData.cooperativeName
         }
 
-        Items.InputHeader {
+        Items.ButtonInputHeader {
             id: qrCodeInputHeader
 
             Layout.fillWidth: true
@@ -144,7 +144,7 @@ Pages.SupplyChainPage {
 
             iconSource: Style.qrImgUrl
 
-            onIconClicked: pageManager.enter(Enums.Page.QRScanner, {
+            onClicked: pageManager.enter(Enums.Page.QRScanner, {
                                                  "title": title,
                                                  "backSupplyChainPage": page,
                                                  "popupText": Strings.attachQr.arg(Strings.sac.toUpperCase()) })

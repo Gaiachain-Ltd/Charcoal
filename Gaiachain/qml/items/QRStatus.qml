@@ -14,24 +14,101 @@ Rectangle {
     property alias text: statusText.text
     property alias textColor: statusText.color
 
+    property bool scanning: true
+    property bool manual: false
+
+    signal typedManually(string manualId)
+
     implicitHeight: s(Style.footerHeight)
 
     color: Style.backgroundColor
 
-    Items.BasicText {
-        id: statusText
-
-        font {
-            pixelSize: s(Style.buttonPixelSize)
-            family: Style.primaryFontFamily
-            capitalization: Font.AllUppercase
-            letterSpacing: s(Style.buttonLetterSpacing)
-            weight: Font.DemiBold
+    RowLayout {
+        anchors {
+            fill: parent
+            leftMargin: s(Style.hugeMargin)
+            rightMargin: s(Style.hugeMargin)
         }
 
-        color: Style.textPrimaryColor
+        spacing: s(Style.tinyMargin)
 
-        anchors.centerIn: parent
+        Items.BasicText {
+            id: statusText
+
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+
+            font {
+                pixelSize: s(Style.buttonPixelSize)
+                family: Style.primaryFontFamily
+                capitalization: Font.AllUppercase
+                letterSpacing: s(Style.buttonLetterSpacing)
+                weight: Font.DemiBold
+            }
+
+            color: Style.textPrimaryColor
+
+            visible: !top.manual
+        }
+
+        Items.GenericInput {
+            id: manualInput
+
+            Layout.fillWidth: true
+
+            placeholderText: Strings.qrIdMask
+            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+            focus: false
+            visible: top.manual
+
+            validator: RegExpValidator { regExp: Style.codeDataRegExpPattern }
+        }
+
+        Items.PureImageButton {
+            id: imageButton
+
+            Layout.alignment: Qt.AlignRight
+            Layout.preferredHeight: s(Style.buttonImageMiddleBigHeight)
+            Layout.preferredWidth: s(Style.buttonImageMiddleBigHeight)
+
+            source: top.manual ? Style.enterImgUrl : Style.typeManuallyImgUrl
+
+            function handleClick() {
+                if (!top.manual) {
+                    top.manual = true
+                    manualInput.focus = true
+                } else {
+                    var manualText = manualInput.text
+                    if (manualText) {
+                        top.manual = false
+                        top.typedManually(manualText)
+                        imageButton.text = Strings.empty
+                        manualInput.focus = false
+                    }
+                }
+            }
+
+            onClicked: handleClick()
+        }
+    }
+
+    Behavior on scanning {
+        ParallelAnimation {
+            PropertyAnimation {
+                target: imageButton
+                property: "opacity"
+                to: !top.scanning ? Style.visible : Style.hidden
+                duration: Style.animationDuration;
+                easing.type: Style.animationEasing
+            }
+            PropertyAnimation {
+                target: imageButton
+                property: "Layout.preferredWidth"
+                to: !top.scanning ? s(Style.buttonImageMiddleBigHeight) : Style.none
+                duration: Style.animationDuration;
+                easing.type: Style.animationEasing
+            }
+        }
     }
 }
 

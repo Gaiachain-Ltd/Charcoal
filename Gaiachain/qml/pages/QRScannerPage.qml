@@ -36,6 +36,16 @@ BasePage {
         pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit })
     }
 
+    function backHandler() {
+        if (scanStatus === Enums.QRScanStatus.Success) {
+            pageManager.backTo(backSupplyChainPage, { "scannedId": top.scannedId })
+        } else {
+            pageManager.back()
+        }
+
+        return false    // do not close application
+    }
+
     Component.onCompleted: pageManager.openPopup(Enums.Popup.Text, { "text": top.popupText })
 
     Connections {
@@ -95,7 +105,7 @@ BasePage {
             decoder {
                 enabledDecoders: QZXing.DecoderFormat_QR_CODE
                 onTagFound: {
-                    if (scanStatus === Enums.QRScanStatus.Scanning) {
+                    if (scanStatus === Enums.QRScanStatus.Scanning && !qrStatus.manual) {
                         parseScannedId(tag)
                     }
                 }
@@ -121,6 +131,10 @@ BasePage {
             Layout.alignment: Qt.AlignBottom
 
             implicitHeight: Style.none
+
+            scanning: (scanStatus === Enums.QRScanStatus.Scanning)
+
+            onTypedManually: parseScannedId(manualId)
 
             function text() {
                 switch (scanStatus) {
@@ -174,15 +188,19 @@ BasePage {
         }
     }
 
-    Items.SvgImage {
-        id: frameSvgImage
-
+    Items.PureImageButton {
         parent: videoOutput
 
         width: s(Style.frameSvgImgHeight); height: s(Style.frameSvgImgHeight)
 
-        source: Style.frameImgUrl
+        source: !qrStatus.manual ? Style.frameImgUrl : Style.qrImgUrl
         anchors.centerIn: parent
+
+        onClicked: {
+            if (qrStatus.manual) {
+                qrStatus.manual = false
+            }
+        }
 
         Items.PureImageButton {
             id: statusPureImageButton
@@ -209,7 +227,7 @@ BasePage {
 
             onClicked: {
                 switch (scanStatus) {
-                    case Enums.QRScanStatus.Success: pageManager.backTo(backSupplyChainPage, {"scannedId": top.scannedId}); break
+                    case Enums.QRScanStatus.Success: pageManager.backTo(backSupplyChainPage, { "scannedId": top.scannedId }); break
                     case Enums.QRScanStatus.Failed: scanStatus = Enums.QRScanStatus.Scanning; break
                 }
             }

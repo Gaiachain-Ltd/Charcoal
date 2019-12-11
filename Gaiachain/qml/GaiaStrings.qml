@@ -149,14 +149,12 @@ QtObject {
     readonly property string receptionInCooperativeHQ: qsTr("Reception in Cooperative HQ")
     readonly property string lotWeight: qsTr("Weight of LOT")
 
-    readonly property string qrCode: qsTr("QR Code")
-    readonly property string scanQrCodeFrom: qsTr("Scan QR code from %1")
-
     // qr code page
+    readonly property string qrCode: qsTr("QR Code")
     readonly property string scanning: qsTr("Scanning")
     readonly property string error: qsTr("Error")
+    readonly property string scanQrCodeFrom: qsTr("Scan QR code from %1")
     readonly property string attachQr: qsTr("Attach the QR code to the %1 and scan the QR code")
-
 
     // calendar
     readonly property string activities: qsTr("activities")
@@ -165,4 +163,5 @@ QtObject {
     readonly property string dateFormat: qsTr("MM/dd/yyyy")
     readonly property string checkMark: "\u2713"
     readonly property string minus: "-"
+    readonly property string qrIdMask: "   -   -   "
 }
