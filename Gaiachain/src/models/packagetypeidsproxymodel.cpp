@@ -16,7 +16,7 @@ void PackageTypeIdsProxyModel::setPackageType(const Enums::PackageType &type)
 
     m_packageType = type;
     m_creationAction = DataGlobals::packageTypeCreationAction(type);
-    invalidateFilter();
+    resetFilter();
 }
 
 bool PackageTypeIdsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

@@ -11,7 +11,7 @@ LatestRangeEventsProxyModel::LatestRangeEventsProxyModel(QObject *parent)
 void LatestRangeEventsProxyModel::clearRowCount()
 {
     m_offset = 0;
-    invalidateFilter();
+    resetFilter();
     fetchMore({});
 }
 
@@ -42,7 +42,7 @@ void LatestRangeEventsProxyModel::fetchMore(const QModelIndex &parent)
 
     m_offset += sc_fetchSize;
     if (hasMoreData) {
-        invalidateFilter();
+        resetFilter();
     }
 }
 

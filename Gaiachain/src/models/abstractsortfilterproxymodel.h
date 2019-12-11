@@ -13,8 +13,11 @@ class AbstractSortFilterProxyModel : public QSortFilterProxyModel, public ModelC
 public:
     AbstractSortFilterProxyModel(QObject *parent = nullptr);
 
+    Q_INVOKABLE void resetFilter();
+
 signals:
     void modelChanged() const override;
+    void filteringFinished() const;
 };
 
 #endif // ABSTRACTSORTFILTERPROXYMODEL_H

@@ -24,6 +24,7 @@ Pages.SupplyChainPage {
 
     function refreshData() {
         dataManager.fetchLastActionPackageEvents(Enums.SupplyChainAction.SectionReception)
+        lastActionSectionReceptionModel.resetFilter()
     }
 
     function proceed() {

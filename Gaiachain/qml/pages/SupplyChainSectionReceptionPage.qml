@@ -23,6 +23,8 @@ Pages.SupplyChainPage {
 
     function refreshData() {
         dataManager.fetchLastActionPackageEvents(Enums.SupplyChainAction.GrainProcessing)
+        lastActionGrainProcessingModel.resetFilter()
+
         sessionManager.getCompanies()
     }
 

@@ -35,7 +35,7 @@ void DateRangeProxyModel::setDateTimeRange(const QDateTime &startDateTime, const
     m_startDateTime = startDateTime;
     m_endDateTime = endDateTime;
 
-    invalidateFilter();
+    resetFilter();
     emit dateRangeChanged(startDateTime, endDateTime);
 }
 

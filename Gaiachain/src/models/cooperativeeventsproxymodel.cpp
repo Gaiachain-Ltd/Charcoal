@@ -25,7 +25,7 @@ void CooperativeEventsProxyModel::setCooperativeId(quint32 cooperativeId)
     m_cooperativeId = cooperativeId;
     emit cooperativeIdChanged(cooperativeId);
 
-    invalidateFilter();
+    resetFilter();
 }
 
 void CooperativeEventsProxyModel::setActive(bool active)
@@ -37,7 +37,7 @@ void CooperativeEventsProxyModel::setActive(bool active)
     m_active = active;
     emit activeChanged(active);
 
-    invalidateFilter();
+    resetFilter();
 }
 
 bool CooperativeEventsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

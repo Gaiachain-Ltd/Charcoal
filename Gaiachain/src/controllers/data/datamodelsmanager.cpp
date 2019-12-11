@@ -1,6 +1,7 @@
 #include "datamodelsmanager.h"
 
 #include "../../database/dbhelpers.h"
+#include "../../common/dataglobals.h"
 
 DataModelsManager::DataModelsManager(QObject *parent)
     : AbstractDataModelsManager(parent)
@@ -61,6 +62,28 @@ void DataModelsManager::removeLocalAction(const QString &packageId, const Enums:
     m_eventsSourceModel.removeData({ packageId, QVariant::fromValue(action) });
 }
 
+void DataModelsManager::processPackageData(const QString &packageId, const Enums::PackageType &packageType)
+{
+    auto eventsInfo = allPackageEvents(packageId, packageType);
+
+    processEntitiesInfo(eventsInfo);
+}
+
+void DataModelsManager::processPackagesInfo(const Gaia::ModelData &modelData)
+{
+    auto eventsInfo = Gaia::ModelData{};
+
+    std::for_each(modelData.constBegin(), modelData.constEnd(),
+                  [&eventsInfo](const auto &eventInfo) {
+        Q_ASSERT(eventInfo.size() >= 2);
+
+        const auto packageType = DataGlobals::packageType(eventInfo.at(1).template value<Enums::SupplyChainAction>());
+        eventsInfo.append(allPackageEvents(eventInfo.at(0).toString(), packageType));
+    });
+
+    processEntitiesInfo(eventsInfo);
+}
+
 void DataModelsManager::processAdditionalData(const QMap<Enums::AdditionalDataType, Gaia::ModelData> &modelsData)
 {
     ProcessCounter p(this);
@@ -108,12 +131,12 @@ void DataModelsManager::processAdditionalData(const QMap<Enums::AdditionalDataTy
     }
 }
 
-void DataModelsManager::processEntitiesInfo(const Gaia::ModelData &eventsInfo)
+void DataModelsManager::processEntitiesInfo(const Gaia::ModelData &modelData)
 {
     ProcessCounter p(this);
 
     // events
-    auto missingEventsInfo = eventsInfo;
+    auto missingEventsInfo = modelData;
     auto missingEventsIds = QStringList{};
     removeExistingEvents(missingEventsInfo);
     std::transform(missingEventsInfo.constBegin(), missingEventsInfo.constEnd(), std::back_inserter(missingEventsIds),
@@ -206,6 +229,17 @@ bool DataModelsManager::isInvalidAction(const Gaia::ModelEntry &entityEntry)
 {
     Q_ASSERT(entityEntry.size() >= 2);
     return (entityEntry.at(1).value<Enums::SupplyChainAction>() == Enums::SupplyChainAction::Unknown);
+}
+
+Gaia::ModelData DataModelsManager::allPackageEvents(const QString &packageId, const Enums::PackageType &packageType)
+{
+    auto eventsInfo = Gaia::ModelData{};
+    const auto packageActions = DataGlobals::packageActions(packageType);
+
+    std::transform(packageActions.constBegin(), packageActions.constEnd(), std::back_inserter(eventsInfo),
+                   [&packageId](const auto &action) { return Gaia::ModelEntry{ packageId, QVariant::fromValue(action) }; });
+
+    return eventsInfo;
 }
 
 void DataModelsManager::removeExistingById(Gaia::ModelData &modelData, const QLatin1String &tableName)

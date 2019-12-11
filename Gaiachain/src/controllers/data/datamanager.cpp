@@ -95,14 +95,8 @@ void DataManager::sendOfflineActions()
 
 void DataManager::fetchEventData(const QString &packageId, const Enums::PackageType &type)
 {
-    auto eventsInfo = Gaia::ModelData{};
-
-    const auto packageActions = DataGlobals::packageActions(type);
-    std::transform(packageActions.constBegin(), packageActions.constEnd(), std::back_inserter(eventsInfo),
-                   [&packageId](const auto &action) { return Gaia::ModelEntry{ packageId, QVariant::fromValue(action) }; });
-
-    QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::processEntitiesInfo, &m_modelsHandler,
-                                                          eventsInfo));
+    QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::processPackageData, &m_modelsHandler,
+                                                          packageId, type));
 }
 
 void DataManager::fetchRangeEvents(const QDateTime &from, const QDateTime &to)
@@ -183,6 +177,7 @@ void DataManager::setupHandlersConnections()
     // data related
     connect(&m_modelsHandler, &DataModelsManager::modelUpdated, &m_viewModelsHandler, &DataViewModelsManager::onModelUpdated);
 
+    connect(&m_viewModelsHandler, &DataViewModelsManager::packagesEventsNeeded, &m_modelsHandler, &DataModelsManager::processPackagesInfo);
     connect(&m_viewModelsHandler, &DataViewModelsManager::limitKeywordEventsNeeded, this, &DataManager::fetchLimitKeywordEvents);
     connect(&m_viewModelsHandler, &DataViewModelsManager::limitRangeEventsNeeded, this, &DataManager::fetchLimitRangeEvents);
 
