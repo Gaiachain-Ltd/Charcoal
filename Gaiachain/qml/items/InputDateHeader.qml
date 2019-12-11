@@ -75,7 +75,10 @@ Items.GenericHeader {
         MouseArea {
             id: ma
             anchors.fill: parent
-            onClicked: top.togglePopup()
+            onClicked: {
+                forceActiveFocus()
+                top.togglePopup()
+            }
         }
     }
 

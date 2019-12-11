@@ -66,7 +66,10 @@ ComboBox {
             anchors.fill: parent
             enabled: top.model !== undefined && top.model.rowCount() > 0
 
-            onClicked: top.togglePopup()
+            onClicked: {
+                forceActiveFocus()
+                top.togglePopup()
+            }
         }
     }
 

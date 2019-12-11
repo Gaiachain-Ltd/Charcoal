@@ -75,6 +75,11 @@ Items.GenericPanel
         Layout.fillWidth: true
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: forceActiveFocus()
+    }
+
     Connections {
         target: sessionManager
         enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode

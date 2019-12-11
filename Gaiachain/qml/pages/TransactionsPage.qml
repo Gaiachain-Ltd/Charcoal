@@ -75,11 +75,18 @@ BasePage {
             Layout.fillWidth: true
 
             focus: false
+
+            inputMethodHints: Qt.ImhUppercaseOnly
             placeholderText: Strings.searchForTransaction
             iconSource: Style.searchImgUrl
             iconEdge: Enums.Edge.RightEdge
 
-            onIconClicked: top.updateSearch()
+            onIconClicked: {
+                focus = false
+                accepted()
+            }
+
+            onFocusChanged: if (!focus) top.updateSearch()
             onAccepted: top.updateSearch()
         }
 
