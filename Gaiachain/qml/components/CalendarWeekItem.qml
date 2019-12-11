@@ -98,6 +98,7 @@ Item {
     }
 
     Component.onCompleted: { d.updateCurrentDay(); d.initDayNamesModel(); d.initDaysModel() }
+    onCurrentDayChanged: { d.updateCurrentDay(); }
     onCurrentMonthChanged: { d.updateCurrentDay(); d.updateDaysModel() }
     onCurrentYearChanged: { d.updateCurrentDay(); d.updateDaysModel() }
 
