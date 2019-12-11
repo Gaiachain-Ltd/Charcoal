@@ -19,13 +19,13 @@ Pages.SupplyChainPage {
 
     property string scannedId
 
+    proceedButtonEnabled: !(qrCodeInputHeader.inputText === Strings.empty ||
+                            lotWeightInputHeader.inputText === Strings.empty)
+
     Component.onCompleted: refreshData()
 
     function refreshData() {
     }
-
-    proceedButtonEnabled: !(qrCodeInputHeader.inputText === Strings.empty ||
-                            lotWeightInputHeader.inputText === Strings.empty)
 
     function proceed() {
         showOverlay()

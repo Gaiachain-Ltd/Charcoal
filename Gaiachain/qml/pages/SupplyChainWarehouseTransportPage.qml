@@ -19,16 +19,16 @@ Pages.SupplyChainPage {
 
     property string scannedId
 
+    proceedButtonEnabled: !(qrCodeInputHeader.inputText === Strings.empty ||
+                            transporterComboBox.currentText === Strings.empty ||
+                            destinationComboBox.currentText === Strings.empty)
+
     Component.onCompleted: refreshData()
 
     function refreshData() {
         sessionManager.getCompanies()
         sessionManager.getDestinations()
     }
-
-    proceedButtonEnabled: !(qrCodeInputHeader.inputText === Strings.empty ||
-                            transporterComboBox.currentText === Strings.empty ||
-                            destinationComboBox.currentText === Strings.empty)
 
     function proceed() {
         showOverlay()

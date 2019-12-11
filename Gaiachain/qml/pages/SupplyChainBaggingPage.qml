@@ -19,12 +19,6 @@ Pages.SupplyChainPage {
     property var lastHarvestData
     property string scannedId
 
-    Component.onCompleted: refreshData()
-
-    function refreshData() {
-        sessionManager.getUnusedLotIds()
-    }
-
     proceedButtonEnabled: !(lotIdComboBox.currentText === Strings.empty ||
                             nameCooperativeInputHeader.inputText === Strings.empty ||
                             qrCodeInputHeader.inputText === Strings.empty ||
@@ -37,6 +31,12 @@ Pages.SupplyChainPage {
         } else {
             harvestPidsModel.addNewHarvestId(harvestId, lastHarvestData["weight"])
         }
+    }
+
+    Component.onCompleted: refreshData()
+
+    function refreshData() {
+        sessionManager.getUnusedLotIds()
     }
 
     function proceed() {
