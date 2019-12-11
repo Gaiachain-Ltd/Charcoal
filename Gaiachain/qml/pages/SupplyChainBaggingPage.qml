@@ -140,14 +140,14 @@ Pages.SupplyChainPage {
 
             inputText: top.scannedId
             headerText: Strings.qrCode
-            placeholderText: Strings.scanQrCodeFromSAC
+            placeholderText: Strings.scanQrCodeFrom.arg(Strings.sac.toUpperCase())
 
             iconSource: Style.qrImgUrl
 
             onIconClicked: pageManager.enter(Enums.Page.QRScanner, {
                                                  "title": title,
                                                  "backSupplyChainPage": page,
-                                                 "popupText": Strings.attachQrSAC })
+                                                 "popupText": Strings.attachQr.arg(Strings.sac.toUpperCase()) })
         }
 
         Items.ButtonHeader {
