@@ -15,6 +15,9 @@ Items.InputHeader {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: top.clicked()
+        onClicked: {
+            forceActiveFocus()
+            top.clicked()
+        }
     }
 }
