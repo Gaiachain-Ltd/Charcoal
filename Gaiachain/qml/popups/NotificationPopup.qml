@@ -30,6 +30,7 @@ Popups.TimedPopup {
             weight: Font.DemiBold
         }
 
+        wrapMode: Text.WordWrap
         text: top.text
     }
 
