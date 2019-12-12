@@ -146,7 +146,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
 
                 font.pixelSize: s(Style.calendarNamePixelSize)
-                text: daysNamesModel.get(model.date.getDay()).shortName
+                text: Helper.formatShortName(daysNamesModel.get(model.date.getDay()).shortName)
             }
 
             CalendarPageItem {

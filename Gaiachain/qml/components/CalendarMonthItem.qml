@@ -42,7 +42,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
 
                 font.pixelSize: s(Style.calendarNamePixelSize)
-                text: Helper.formatShortMonthName(model.shortName)
+                text: Helper.formatShortName(model.shortName)
             }
         }
 
