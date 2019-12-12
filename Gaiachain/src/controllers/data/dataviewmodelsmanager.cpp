@@ -25,7 +25,7 @@ DataViewModelsManager::DataViewModelsManager(QObject *parent)
     connect(&m_latestRangeDateEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
             this, [this](int number, int offset) {
         emit limitRangeEventsNeeded(number, offset,
-                                  m_dateEventsModel.startDateTime(), m_dateEventsModel.endDateTime());
+                                    m_dateEventsModel.startDateTime(), m_dateEventsModel.endDateTime());
     });
 }
 
@@ -158,15 +158,11 @@ void DataViewModelsManager::setupUpdateConnections()
     m_modelUpdateHandler.insert(ModelType::Parcels,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_parcelsViewModel.sourceModel()) ));
-    m_modelUpdateHandler.insert(ModelType::Companies,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          qobject_cast<SqlQueryModel *>(m_cooperativesViewModel.sourceModel()) ));
-    m_modelUpdateHandler.insert(ModelType::Companies,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          qobject_cast<SqlQueryModel *>(m_buyersViewModel.sourceModel()) ));
-    m_modelUpdateHandler.insert(ModelType::Companies,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
-                                          qobject_cast<SqlQueryModel *>(m_transportersViewModel.sourceModel()) ));
+    m_modelUpdateHandler.insert(ModelType::Companies, [this]() {
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_cooperativesViewModel.sourceModel()));
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_buyersViewModel.sourceModel()));
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_transportersViewModel.sourceModel()));
+    });
     m_modelUpdateHandler.insert(ModelType::Destinations,
                                 std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_destinationsViewModel.sourceModel()) ));
