@@ -67,6 +67,7 @@ Item {
 
             Layout.fillWidth: true
 
+            readOnly: true
             visible: Number(packageType) !== Enums.PackageType.Harvest
 
             color: String(Helper.packageTypeColor(Number(packageType)))
