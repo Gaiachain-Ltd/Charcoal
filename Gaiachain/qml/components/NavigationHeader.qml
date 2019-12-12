@@ -13,8 +13,6 @@ Item {
     readonly property bool isOnHomePage: pageManager.isOnHomePage()
     readonly property bool isBackToHomePage: pageManager.isBackToHomePage()
 
-    signal headerClicked()
-
     function logout() {
         pageManager.backTo(Enums.Page.Login)
         userManager.logOut()
@@ -63,7 +61,14 @@ Item {
             source: Style.logoWhiteImgUrl
             visible: logoVisible
 
-            onClicked: headerClicked()
+            onClicked: {
+                var message = Strings.aboutApp.arg(AppName).arg(AppVersion).arg(GitCommit).arg(AppDomain);
+                if (userManager.loggedIn) {
+                    message += "<br/><br/>" + Strings.userInfo.arg(userManager.login)
+                }
+
+                pageManager.openPopup(Enums.Popup.Information, { "text": message, "textFormat": Text.StyledText })
+            }
         }
 
         Items.BasicText {

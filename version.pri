@@ -1,7 +1,7 @@
 # Provide version number to application
 COMMIT = $$system(git rev-parse --short HEAD)
 
-VERSION=0.0.1
+VERSION=0.1.0
 
 HOST_MACHINE = $$[QMAKE_SPEC]
 contains (HOST_MACHINE, .*win32.*) {
@@ -12,14 +12,16 @@ contains (HOST_MACHINE, .*win32.*) {
 
 APP_VERSION = "$$VERSION"
 APP_NAME = "Gaiachain"
+APP_DOMAIN = "gaiachain.io"
 COMPANY_NAME = "Milo Solutions"
 COMPANY_DOMAIN = "milosolutions.com"
 
 # add defines
 DEFINES += AppVersion='"\\\"$$APP_VERSION\\\""'
 DEFINES += AppName='"\\\"$$APP_NAME\\\""'
-DEFINES += CompanyName='"\\\"COMPANY_NAME\\\""'
-DEFINES += CompanyDomain='"\\\"COMPANY_DOMAIN\\\""'
+DEFINES += AppDomain='"\\\"$$APP_DOMAIN\\\""'
+DEFINES += CompanyName='"\\\"$$COMPANY_NAME\\\""'
+DEFINES += CompanyDomain='"\\\"$$COMPANY_DOMAIN\\\""'
 DEFINES += BuildDate=\\\"$$BUILD_DATE\\\"
 DEFINES += GitCommit=\\\"$$COMMIT\\\"
 

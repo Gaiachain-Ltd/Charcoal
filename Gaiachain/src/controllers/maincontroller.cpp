@@ -175,6 +175,11 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0, "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
 
     // add context properties
+    engine.rootContext()->setContextProperty(QStringLiteral("AppName"), AppName);
+    engine.rootContext()->setContextProperty(QStringLiteral("AppDomain"), AppDomain);
+    engine.rootContext()->setContextProperty(QStringLiteral("AppVersion"), AppVersion);
+    engine.rootContext()->setContextProperty(QStringLiteral("GitCommit"), GitCommit);
+
 #ifdef USE_COMBOBOX
     engine.rootContext()->setContextProperty(QStringLiteral("dummyLogins"), CommonDummyData::availableLogins());
     engine.rootContext()->setContextProperty(QStringLiteral("dummyPassword"), CommonDummyData::commonPassword());

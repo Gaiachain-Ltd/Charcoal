@@ -50,14 +50,14 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
   class, if present.
   */
 int main(int argc, char *argv[]) {
-    MLog::instance()->enableLogToFile("Gaiachain");
+    MLog::instance()->enableLogToFile(AppName);
 
     // Set up basic application data. Modify this to your needs
     QGuiApplication app(argc, argv);
     app.setApplicationVersion(AppVersion);
-    app.setOrganizationName("Milo Solutions");
-    app.setOrganizationDomain("milosolutions.com");
-    app.setApplicationName("Gaiachain");
+    app.setOrganizationName(CompanyName);
+    app.setOrganizationDomain(CompanyDomain);
+    app.setApplicationName(AppName);
 
     qCInfo(coreMain) << "\nName:" << app.applicationName()
                      << "\nOrganisation:" << app.organizationName()
