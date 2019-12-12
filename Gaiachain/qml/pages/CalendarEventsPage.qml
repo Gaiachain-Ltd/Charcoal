@@ -1,171 +1,114 @@
 import QtQuick 2.11
 import QtQuick.Layouts 1.11
 
-import Qt.labs.calendar 1.0
-
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
 import "../items" as Items
+import "../components" as Components
 
-BasePage {
+CalendarPageBase {
     id: top
 
-    property string currentDateStr
-    property date currentDate: utility.convertDateString(currentDateStr, utility.defaultDateFormat())
-    property int currentDay: currentDate.getDate()
-    property int currentMonth: currentDate.getMonth()
-    property int currentYear: currentDate.getFullYear()
-
-    function enterShipmentDetailsPage(data) {
-        pageManager.enter(Enums.Page.ShipmentDetails, data)
+    function backHandler() {
+        // called from BasePage
+        enterMonthPage()
+        return false    // do not close application
     }
 
-    // Month should be 0-indexed
-    function daysInMonth (year, month) {
-        return new Date(year, month + 1, 0).getDate();
+    function refreshData() {
+        // called from BasePage
+        latestRangeDateEventsModel.clearRowCount()
     }
 
-    onCurrentDayChanged: {
-        var today = new Date(currentYear, currentMonth, currentDay)
-        var tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
+    function updateModelRange() {
+        // called from CalendarPageBase
+        var from = getMonthStartDate()
+        var to = getMonthEndDate()
 
-        dateEventsRangeProxyModel.setDateTimeRange(today, tomorrow)
+        calendarModel.setDateRange(from, to)
+        dateEventsModel.setSingleDateRange(new Date(currentYear, currentMonth, currentDay))
+        latestRangePackagesTypeSearchEventsModel.clearRowCount()
     }
 
-    onCurrentDateChanged: {
-        var daysCount = daysInMonth(currentDate.getFullYear(), currentDate.getMonth())
-        daysModel.clear()
-
-        for (var i=1; i <= daysCount; ++i)
-            daysModel.append({"day": i, "isWeekend": utility.isWeekend(new Date(currentDate.getFullYear(), currentDate.getMonth(), i))})
+    function enterMonthPage() {
+        pageManager.enter(Enums.Page.Calendar, {
+                              "currentDay": currentDay,
+                              "currentMonth": currentMonth,
+                              "currentYear": currentYear })
     }
 
-    ListModel {
-        id: daysModel
+    function initialize() {
+        onlyMyTransactionsCheckBox.updateCooperativeOnlyFiltering()
+    }
+
+    onMonthHeaderClicked: enterMonthPage()
+
+    // manual update required because binding is broken when user select a date in UI
+    onCurrentDayChanged: calendarWeekItem.currentDay = currentDay
+
+    calendarWidgets: Components.CalendarWeekItem {
+        id: calendarWeekItem
+        Layout.fillWidth: true
+
+        currentDay: top.currentDay
+        currentMonth: top.currentMonth
+        currentYear: top.currentYear
+
+        onCurrentDayChanged: top.currentDay = currentDay
+        onCurrentMonthChanged: top.currentMonth = currentMonth
+        onCurrentYearChanged: top.currentYear = currentYear
     }
 
     ColumnLayout {
-        anchors {
-            fill: parent
-            topMargin: s(Style.bigMargin)
-        }
-        spacing: s(Style.bigMargin)
+        Layout.topMargin: 0
+        Layout.bottomMargin: 0
+        Layout.margins: 1.5 * s(Style.hugeMargin)
+        spacing: 1.5 * s(Style.smallMargin)
 
-        Items.ImageItem {
+        Items.BasicText {
             Layout.fillWidth: true
-            Layout.leftMargin: s(Style.normalMargin)
 
-            buttonHeight: s(30)
-            buttonWidth: s(30)
-            imageUrl: Style.backBlackImgUrl
+            horizontalAlignment: Text.AlignLeft
+            font.weight: Font.DemiBold
+            font.pixelSize: s(Style.subtitlePixelSize)
 
-            text: Helpers.getMonthName(top.currentMonth) + " " + top.currentYear
-            textFont.bold: true
-            textFont.pixelSize: s(50)
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: pageManager.back()
-            }
+            text: new Date(top.currentYear, top.currentMonth, top.currentDay).toLocaleDateString(Qt.locale(), 'MMMM dd (dddd)')
         }
 
-        ListView {
-            id: daysView
-
-            property int visibleCount: 7
-            property int selectedDay: top.currentDay
-            property int cellWidth: width / visibleCount
-
-            Layout.fillWidth: true
-            Layout.preferredHeight: s(Style.bigMargin) * 3
-
-            model: daysModel
-
-            cacheBuffer: count * cellWidth
-
-            orientation: ListView.Horizontal
-            clip: true
-
-            delegate: Item {
-                id: delegate
-                height: ListView.view.height
-                width: ListView.view.cellWidth
-
-                property bool isSelected: ListView.view.selectedDay === day
-                property date myDate: new Date(currentYear, currentMonth, day)
-                property bool hasEvents: false
-
-                function updateData() {
-                    hasEvents = calendarRangeProxyModel.hasEvents(myDate);
-                }
-
-                Connections {
-                    target: calendarRangeProxyModel
-                    onEventsCommoditiesChanged: {
-                        if (date.getFullYear() === myDate.getFullYear()) {
-                            if (date.getMonth() === myDate.getMonth()) {
-                                if (date.getDate() === myDate.getDate())
-                                    updateData()
-                            }
-                        }
-                    }
-                }
-                Component.onCompleted: {
-                    updateData();
-
-                    // TO_DO find a better solution (center!)
-                    if (delegate.isSelected)
-                        ListView.view.positionViewAtIndex(ListView.view.selectedDay-1, ListView.Center)
-                }
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 0
-                    Rectangle {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredHeight: parent.width * 0.7
-                        Layout.preferredWidth: parent.width * 0.7
-                        radius: width * 0.5
-                        color: delegate.isSelected ? Style.buttonBlackGreyColor : "transparent"
-
-                        Items.BasicText {
-                            anchors.centerIn: parent
-                            text: day
-                            color: delegate.isSelected ? "white" : "black" // TO_DO should be in Style!
-                            opacity: isWeekend ? 0.3 : 1 // TO_DO should be in Style!
-                        }
-                    }
-                    Rectangle {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredHeight: s(20)
-                        Layout.preferredWidth: s(20)
-                        radius: width * 0.5
-                        color: hasEvents ? Style.currentCommodityColor : "transparent"
-                    }
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: currentDay = day
-                }
-            }
-        }
-
-        Items.EventsListView {
+        Components.EventsListView {
+            Layout.topMargin: -parent.spacing + s(Style.middleMargin)
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            delegateHeight: s(100)
-            backgroundColor: "#FFF5F5F5"    // TO_DO should be in Style!
-
-            onDelegateClicked: top.enterShipmentDetailsPage(data)
-
-            viewModel: dateEventsRangeProxyModel
-
+            viewModel: latestRangeDateEventsModel
             displayDate: false
+            displayLastItemSeparator: true
+
+            onDelegateClicked:  {
+                var packageData = dataManager.getPackageData(packageId)
+                pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageId": packageId, "packageType": DataGlobals.packageType(action) })
+            }
+        }
+
+        Items.BasicCheckBox {
+            id: onlyMyTransactionsCheckBox
+
+            function updateCooperativeOnlyFiltering() {
+                cooperativeFilteringEvents.active = checked
+            }
+
+            Layout.fillWidth: true
+            Layout.bottomMargin: s(Style.hugeMargin)
+
+            visible: userManager.loggedIn
+
+            text: Strings.onlyMyTransactions
+            checked: cooperativeFilteringEvents.active
+
+            Component.onCompleted: updateCooperativeOnlyFiltering()
+            onCheckedChanged: updateCooperativeOnlyFiltering()
         }
     }
 }

@@ -6,13 +6,14 @@
 #include <QMetaEnum>
 #include <QDate>
 
+#include "typetraits.h"
 #include "../common/enums.h"
 
 class Utility : public QObject
 {
     Q_OBJECT
 public:
-    static Utility *instance();
+    static Utility &instance();
 
     template<typename QEnum>
     static QString enumToQString(QEnum value, const char *enumName)
@@ -22,8 +23,6 @@ public:
         const QMetaEnum enumerator = smo.enumerator(indexOfType);
         return QString(enumerator.valueToKey(static_cast<int>(value)));
     }
-
-    Q_INVOKABLE QString commodityToString(Enums::CommodityType ct);
 
     Q_INVOKABLE qreal scaleByDpi(qreal num) const;
     Q_INVOKABLE qreal scaleRoundByDpi(qreal num) const;
@@ -43,21 +42,75 @@ public:
 
     Q_INVOKABLE QString formatRawId(QString id) const;
 
-    Enums::UserType userTypeFromString(const QString &text) const;
-    Q_INVOKABLE QString userTypeToString(const Enums::UserType type) const;
+    Q_INVOKABLE bool useCombobox() const;
+    Q_INVOKABLE bool fakeData() const;
 
-    Q_INVOKABLE bool isLoginComboboxVisible() const;
+    template <typename C, std::enable_if_t<is_qt_array_type<C>::value, int> = 0>
+    static QVariantList toVariantList(const C &arrayType, QMetaType::Type converToType = QMetaType::Void)
+    {
+        auto variantList = QVariantList{};
+        for (const auto &type : arrayType) {
+            auto variantValue = QVariant::fromValue(type);
+            if (converToType != QMetaType::Void) {
+                variantValue.convert(converToType);
+            }
+            variantList.append(variantValue);
+        }
+        return variantList;
+    }
+
+    template <typename C, std::enable_if_t<is_qt_dictionary_type<C>::value, int> = 0>
+    static QVariantMap toVariantsMap(const C &dictionaryType,
+                                     QMetaType::Type convertToTypeKey = QMetaType::Void, QMetaType::Type convertToTypeValue = QMetaType::Void)
+    {
+        auto variantsMap = QVariantMap{};
+        for (const auto &key : dictionaryType.keys()) {
+            auto variantKey = QVariant::fromValue(key);
+            if (convertToTypeKey != QMetaType::Void) {
+                variantKey.convert(convertToTypeKey);
+            }
+            auto variantValue = QVariant::fromValue(dictionaryType.value(key));
+            if (convertToTypeValue != QMetaType::Void) {
+                variantValue.convert(convertToTypeValue);
+            }
+
+            variantsMap.insert(variantKey.toString(), variantValue);
+        }
+        return variantsMap;
+    }
+
+    template <typename C, std::enable_if_t<is_qt_multi_dictionary_type<C>::value, int> = 0>
+    static QVariantMap toVariantsMap(const C &dictionaryType,
+                                     QMetaType::Type convertToTypeKey = QMetaType::Void, QMetaType::Type convertToTypeValue = QMetaType::Void)
+    {
+        auto variantsMap = QVariantMap{};
+        for (const auto &key : dictionaryType.uniqueKeys()) {
+            auto variantKey = QVariant::fromValue(key);
+            if (convertToTypeKey != QMetaType::Void) {
+                variantKey.convert(convertToTypeKey);
+            }
+
+            auto variantListValue = toVariantList(dictionaryType.values(key), convertToTypeValue);
+            variantsMap.insert(variantKey.toString(), variantListValue);
+        }
+        return variantsMap;
+    }
+
+    template<typename Enum,
+             typename = std::enable_if_t<std::is_enum<Enum>::value>>
+    static QList<Enum> generateEnumValues(const Enum &before, const Enum &after)
+    {
+        auto list = std::list<Enum>(static_cast<int>(after) - static_cast<int>(before) - 1);
+        std::generate(list.begin(), list.end(),
+                      [before = before]() mutable {
+            before = static_cast<Enum>(static_cast<int>(before) + 1);
+            return before;
+        });
+        return QList<Enum>::fromStdList(list);
+    }
 
 private:
     Utility();
-
-    const QHash<Enums::UserType, QString> m_userTypes = {
-        {Enums::UserType::Producer, QStringLiteral("PRODUCER") },
-        {Enums::UserType::LogParkWorker, QStringLiteral("LOG_PARK") },
-        {Enums::UserType::SawmillWorker, QStringLiteral("SAWMILL") },
-        {Enums::UserType::Exporter, QStringLiteral("EXPORTER") },
-        {Enums::UserType::NotLoggedUser, QString()}
-    };
 
     qreal setupDpiScale();
 

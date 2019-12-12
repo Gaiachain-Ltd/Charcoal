@@ -1,11 +1,15 @@
 #ifndef MAINCONTROLLER_H
 #define MAINCONTROLLER_H
 
-#include "datamanager.h"
+#include "databasemanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
-#include "overlaymanager.h"
-#include "sessionmanager.h"
+#include "data/datamanager.h"
+#ifndef FAKE_DATA
+#include "session/sessionmanager.h"
+#else
+#include "session/dummy/fakesessionmanager.h"
+#endif
 
 class MainController : public AbstractManager
 {
@@ -13,21 +17,29 @@ class MainController : public AbstractManager
 public:
     explicit MainController(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) Q_DECL_OVERRIDE;
-
-signals:
-
-public slots:
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void startInitialWork();
 
 private:
     void setupConnections();
+    void setupDataConnections();
+    void initialWork();
 
-    DataManager m_dataManager;
     PageManager m_pageManager;
     UserManager m_userManager;
-    OverlayManager m_overlayManager;
-    SessionManager m_sessionManager;
 
+    DatabaseManager m_dbManager;
+    DataManager m_dataManager;
+
+#ifndef FAKE_DATA
+    SessionManager m_sessionManager;
+#else
+    FakeSessionManager m_sessionManager;
+#endif
+
+#ifdef Q_OS_ANDROID
+    void setupAppPermissions();
+#endif
     void setupQZXing(QQmlApplicationEngine &engine);
 };
 

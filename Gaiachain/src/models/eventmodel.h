@@ -1,51 +1,47 @@
 #ifndef EVENTMODEL_H
 #define EVENTMODEL_H
 
-#include <QAbstractListModel>
+#include "abstractmodel.h"
+
 #include <QHash>
 
-#include "../common/globals.h"
+#include "../common/enums.h"
 
-class EventModel : public QAbstractListModel
+class EventModel : public AbstractModel
 {
     Q_OBJECT
 
 public:
-    enum ModelRole {
-        ShipmentId = Qt::UserRole, //Foreign key
+    enum Columns {
+        PackageId = Qt::UserRole + 1, // 1 as 0 column is id column not used in UI
+        Action,
         Timestamp,
-        Location,
-        Company,
-        Place,
-        PlaceAction,
-        LastRole
-    }; //!!! Add new roles at the end
+        CooperativeId,
+        Properties,
+        LocationLat,
+        LocationLon,
+        IsLocal,
+        LastUsed,
+        LastColumn
+    }; //!!! Keep the lastcolumn, a last entry in the enum
 
-    explicit EventModel(QObject *parent = nullptr);
+    EventModel(QObject *parent = nullptr);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    static QString columnName(const Columns &column);
+
+    int firstColumn() const override;
+    int lastColumn() const override;
+
+    QList<int> editableRoles() const override;
 
     QHash<int, QByteArray> roleNames() const override;
-
-    void clearModel();
-
-    void appendData(const Gaia::ModelData &inData);
+    QHash<int, QMetaType::Type> roleDatabaseTypes() const override;
+    QHash<int, QMetaType::Type> roleAppTypes() const override;
 
 private:
-    const QHash<int, QByteArray> m_roleNames = {
-        { ModelRole::ShipmentId, "shipmentId" },
-        { ModelRole::Timestamp, "timestamp" },
-        { ModelRole::Location, "location" },
-        { ModelRole::Company, "company" },
-        { ModelRole::Place, "place" },
-        { ModelRole::PlaceAction, "action" }
-    };
-
-    QHash<int, QVariantList> m_data;
-
-    int shiftedIndex(const int idx) const;
+    static const QHash<int, QByteArray> sc_roleNames;
+    static const QHash<int, QMetaType::Type> sc_roleDatabaseTypes;
+    static const QHash<int, QMetaType::Type> sc_roleAppTypes;
 };
 
 #endif // EVENTMODEL_H

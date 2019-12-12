@@ -3,6 +3,11 @@
 
 #include <QObject>
 
+//! All enums should:
+//! 1. Start with Unknown / Invalid entry of value -1
+//! 2. End with EnumCount entry
+//! 3. Include consecutive number between
+
 namespace Enums {
     Q_NAMESPACE
 
@@ -11,32 +16,44 @@ namespace Enums {
         return ::qHash(static_cast<int>(key), seed);
     }
 
-    enum class CommodityType {
-        InvalidCommodity = -1,
-        Timber = 0,
-        Charcoal,
-        Cocoa,
-
-        CommodityCount
+    enum class Edge {
+        Unknown = -1,
+        LeftEdge,
+        RightEdge
     };
-    Q_ENUM_NS(CommodityType)
-    inline uint qHash(CommodityType key, uint seed) {return qH<CommodityType>(key, seed);}
+    Q_ENUM_NS(Edge)
+    inline uint qHash(Edge key, uint seed) { return qH<Edge>(key, seed);}
+
+    enum class QRScanStatus {
+        Unknown = -1,
+        Scanning,
+        Success,
+        Failed
+    };
+    Q_ENUM_NS(QRScanStatus)
+    inline uint qHash(QRScanStatus key, uint seed) { return qH<QRScanStatus>(key, seed);}
 
     enum class Page {
         InvalidPage = -1,
-        CalendarEvents = 0,
-        CalendarMonth,
+        CalendarEvents,
+        CalendarYear,
         Calendar,
-        EditableEventDetails,
-        EventDetails,
-        EventsList,
-        LanguageChosing,
         Login,
-        ResourceChosing,
-        ShipmentDetails,
-        ViewType,
-        QRScanner,
-        Map,
+        LoginLoading,
+        MainMenu,
+        QRScanner,              // TODO check if still needed
+        Transactions,
+        WaitingTransactions,
+        Tracking,
+        PackageData,
+        SupplyChainHarvest,
+        SupplyChainGrainProcessing,
+        SupplyChainSectionReception,
+        SupplyChainBagging, 
+        SupplyChainAddHarvestId,
+        SupplyChainLotCreation,
+        SupplyChainWarehouseTransport,
+        SupplyChainExportReception,
 
         PageCount
     };
@@ -46,74 +63,24 @@ namespace Enums {
     enum class Popup {
         InvalidPopup = -1,
         Information,
+        YesNoQuestion,
+        WaitOverlay,
+        Notification,
+        Confirm,
+        Comment,
+        Text,
 
         PopupCount
     };
     Q_ENUM_NS(Popup)
     inline uint qHash(Popup key, uint seed) {return qH<Popup>(key, seed);}
 
-    enum class PageSections {
-        DefaultSection = -1,
-        ViewTypeSection = 0,
-        CalendarSection,
-        EditableEventDetailsSection,
-        EventsListSection,
-        EventDetailsSection,
-        ShipmentDetailsSection,
-        QRSection,
-        HomeSection,
-
-        PageSectionsCount
-    };
-    Q_ENUM_NS(PageSections)
-    inline uint qHash(PageSections key, uint seed) { return qH<PageSections>(key, seed);}
-
-    enum class UserType {
-        NotLoggedUser = -1,
-        Producer,
-        LogParkWorker,
-        SawmillWorker,
-        Exporter,
-        NurseryWorker,
-        VillageWorker,
-        BaggingWorker,
-        TruckDriver,
-
-        UserTypeCount
-    };
-    Q_ENUM_NS(UserType)
-    inline uint qHash(UserType key, uint seed) { return qH<UserType>(key, seed);}
-
-    enum class PlaceType {
-        InvalidPlace = -1,
-        Forestery,
-        LogPark,
-        Sawmill,
-        Export,
-        Nursery,
-        Village,
-        Bagging,
-        Truck,
-
-        PlaceTypeCount
-    };
-    Q_ENUM_NS(PlaceType)
-    inline uint qHash(PlaceType key, uint seed) { return qH<PlaceType>(key, seed);}
-
-    enum class PlaceAction {
-        InvalidPlaceAction = -1,
-        Arrived,
-        Departed,
-
-        PlaceActionCount
-    };
-    Q_ENUM_NS(PlaceAction)
-    inline uint qHash(PlaceAction key, uint seed) { return qH<PlaceAction>(key, seed);}
-
     enum class PopupAction {
         InvalidPopupAction = -1,
         Accept,
         Cancel,
+        Yes,
+        No,
         Save,
         Logout,
         Exit,
@@ -124,6 +91,77 @@ namespace Enums {
     };
     Q_ENUM_NS(PopupAction)
     inline uint qHash(PopupAction key, uint seed) { return qH<PopupAction>(key, seed);}
+
+    enum class ConnectionState {
+        Unknown = -1,
+        ConnectionSuccessful,
+        Connecting,
+        ConnectionError,
+
+        ConnectionStateCount
+    };
+    Q_ENUM_NS(ConnectionState)
+    inline uint qHash(ConnectionState key, uint seed) { return qH<ConnectionState>(key, seed);}
+
+    enum class AdditionalDataType {
+        UnknownData = -1,
+        ProducersData,
+        ParcelsData,
+        CompaniesData,
+        DestinationsData
+    };
+    Q_ENUM_NS(AdditionalDataType)
+    inline uint qHash(AdditionalDataType key, uint seed) { return qH<AdditionalDataType>(key, seed);}
+
+    enum class UserType {
+        Annonymous = -1,
+        SuperUser,
+        Inspector,
+        PCA,
+        Warehouseman,
+        CooperativeRepresentative,
+
+        UserTypeCount
+    };
+    Q_ENUM_NS(UserType)
+    inline uint qHash(UserType key, uint seed) { return qH<UserType>(key, seed);}
+
+    enum class CompanyType {
+        Unknown = -1,
+        Cooperative,
+        Buyer,
+        Transporter,
+
+        CompanyTypeCount
+    };
+    Q_ENUM_NS(CompanyType)
+    inline uint qHash(CompanyType key, uint seed) { return qH<CompanyType>(key, seed);}
+
+    enum class PackageType {
+        Unknown = -1,
+        Harvest,
+        Sac,
+        Lot,
+
+        PackageTypeCount
+    };
+    Q_ENUM_NS(PackageType)
+    inline uint qHash(PackageType key, uint seed) { return qH<PackageType>(key, seed);}
+
+    enum class SupplyChainAction {
+        Unknown = -1,
+        Harvest,
+        GrainProcessing,
+        SectionReception,
+        Bagging,
+        LotCreation,
+        WarehouseTransport,
+        ExportReception,
+
+        SupplyChainActionCount
+    };
+    Q_ENUM_NS(SupplyChainAction)
+    inline uint qHash(SupplyChainAction key, uint seed) { return qH<SupplyChainAction>(key, seed);}
 
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }

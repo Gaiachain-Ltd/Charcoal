@@ -1,72 +1,68 @@
 <RCC>
     <qresource prefix="/ui">
-        <file alias="add_black">ui/add-icon-black.svg</file>
-        <file alias="add_green">ui/add-icon.svg</file>
-        <file alias="right_arrow">ui/arrow.svg</file>
-        <file alias="back">ui/back-icon.svg</file>
-        <file alias="back_black">ui/back-icon-black.svg</file>
-        <file alias="calendar">ui/calendar-icon.svg</file>
-        <file alias="cancel">ui/cancel-icon.svg</file>
-        <file alias="details">ui/details-icon.svg</file>
-        <file alias="details_green">ui/details-icon-green.svg</file>
-        <file alias="edit">ui/edit-icon.svg</file>
-        <file alias="email">ui/email-icon.svg</file>
-        <file alias="exit_to_login">ui/login-screen-icon.svg</file>
-        <file alias="export_green">ui/export-icon.svg</file>
-        <file alias="gaia_logo">ui/gaiachain-logo-black.svg</file>
-        <file alias="gaia_black">ui/gaia-icon.svg</file>
-        <file alias="gaia_color">ui/gaia-color-icon.svg</file>
-        <file alias="home">ui/home-icon.svg</file>
-        <file alias="home_brown">ui/home-icon-brown.svg</file>
-        <file alias="keyboard">ui/keyboard-icon.svg</file>
-        <file alias="key">ui/key-icon.svg</file>
-        <file alias="list">ui/list-icon.svg</file>
-        <file alias="login">ui/login-icon.svg</file>
-        <file alias="logout">ui/logout-screen-icon.svg</file>
-        <file alias="log_park">ui/log-park-icon.svg</file>
-        <file alias="mini_calendar">ui/mini-calendar-icon.svg</file>
-        <file alias="mini_calendar_green">ui/mini-calendar-icon-green.svg</file>
-        <file alias="mini_edit">ui/mini-edit-icon.svg</file>
-        <file alias="mini_list">ui/mini-list-icon.svg</file>
-        <file alias="mini_list_green">ui/mini-list-icon-green.svg</file>
+        <file alias="back">ui/icon-back.svg</file>
+        <file alias="email">ui/icon-email.svg</file>
+        <file alias="logout">ui/icon-exit.svg</file>
+        <file alias="logo-white">ui/gaiachain-logo-white.svg</file>
+        <file alias="password">ui/icon-password.svg</file>
         <file alias="ok">ui/ok-icon.svg</file>
-        <file alias="qr_code">ui/QR-code-icon.svg</file>
-        <file alias="qr_code_green">ui/QR-code-icon-green.svg</file>
-        <file alias="sawmill">ui/sawmill-icon.svg</file>
-        <file alias="skip_arrow">ui/skip-arrow.svg</file>
         <file alias="spinner">ui/loader.svg</file>
-        <file alias="timber">ui/timber-icon.svg</file>
-        <file alias="mini_timber">ui/timber-mini-icon.svg</file>
-        <file alias="mini_timber_green">ui/timber-mini-icon-green.svg</file>
-        <file alias="timeline">ui/timeline-icon.svg</file>
-        <file alias="timeline_green">ui/timeline-icon-green.svg</file>
-        <file alias="refresh">ui/refresh-icon.svg</file>
-        <file alias="reload">ui/reload-icon.svg</file>
-        <file alias="edit_green">ui/edit-icon-green.svg</file>
-        <file alias="right_arrow_light">ui/arrow-light.svg</file>
-        <file alias="choose_cocoa">ui/cocoa-main-icon.svg</file>
-        <file alias="choose_timber">ui/timber-main-icon.svg</file>
-        <file alias="details_brown">ui/details-icon-brown.svg</file>
-        <file alias="edit_brown">ui/edit-icon-brown.svg</file>
-        <file alias="mini_calendar_brown">ui/mini-calendar-icon-brown.svg</file>
-        <file alias="mini_list_brown">ui/mini-list-icon-brown.svg</file>
-        <file alias="qr_code_brown">ui/QR-code-icon-brown.svg</file>
-        <file alias="timeline_brown">ui/timeline-icon-brown.svg</file>
-        <file alias="mini_cocoa_brown">ui/cocoa-mini-icon-brown.svg</file>
-        <file alias="mini_cocoa">ui/cocoa-mini-icon.svg</file>
-        <file alias="cocoa">ui/cocoa-icon.svg</file>
-        <file alias="drying">ui/drying-icon.svg</file>
-        <file alias="motorcycle">ui/motorcycle-icon.svg</file>
-        <file alias="export_brown">ui/ship-icon.svg</file>
-        <file alias="truck">ui/truck-icon.svg</file>
-        <file alias="right_arrow_white">ui/arrow-light-white.svg</file>
-        <file alias="abidjan_scale_1">ui/abidjan_scale_1.png</file>
-        <file alias="abidjan_scale_2">ui/abidjan_scale_2.png</file>
-        <file alias="abidjan_scale_3">ui/abidjan_scale_3.png</file>
+        <file alias="refresh">ui/icon-refresh.svg</file>
+        <file alias="logo-icon">ui/gaiachain-logo-icon.svg</file>
+        <file alias="user">ui/gaia-icon.svg</file>
+        <file alias="loadingLogoOne">ui/loading-1.svg</file>
+        <file alias="loadingLogoTwo">ui/loading-2.svg</file>
+        <file alias="loadingLogoThree">ui/loading-3.svg</file>
+        <file alias="menuSupplyChain">ui/icon-chain.svg</file>
+        <file alias="menuCalendar">ui/icon-calendar.svg</file>
+        <file alias="menuTransactions">ui/icon-transactions.svg</file>
+        <file alias="close">ui/close-icon.svg</file>
+        <file alias="logo-black">ui/gaiachain-logo-black.svg</file>
+        <file alias="submenuLotCreation">ui/icon-submenu-create-lot.svg</file>
+        <file alias="submenuBagging">ui/icon-submenu-drying.svg</file>
+        <file alias="submenuGrainProcessing">ui/icon-submenu-fermentation.svg</file>
+        <file alias="submenuTransport">ui/icon-submenu-icon-submenu-transport.svg</file>
+        <file alias="submenuReception">ui/icon-submenu-reception.svg</file>
+        <file alias="submenuHarvest">ui/icon-submenu-recolte.svg</file>
+        <file alias="dummy/testIcon">ui/dummy/gaia-test-icon.svg</file>
+        <file alias="calendarBlack">ui/calendar-icon-black.svg</file>
+        <file alias="search">ui/icon-search.svg</file>
+        <file alias="arrowDown">ui/arrow-down.svg</file>
+        <file alias="arrowUp">ui/arrow-up.svg</file>
+        <file alias="returnCurrentMonth">ui/button-return-current-month.svg</file>
+        <file alias="expandDown">ui/icon-expand-down.svg</file>
+        <file alias="expandUp">ui/icon-expand-up.svg</file>
+        <file alias="downArrow">ui/arrow-down.svg</file>
+        <file alias="leftBlackArrow">ui/left-black-arrow-icon.svg</file>
+        <file alias="rightBlackArrow">ui/right-black-arrow-icon.svg</file>
+        <file alias="arrowRight">ui/arrow-right.svg</file>
+        <file alias="plus">ui/plus.svg</file>
+        <file alias="qr">ui/qr-icon.svg</file>
+        <file alias="threeDots">ui/three-dots.svg</file>
+        <file alias="check">ui/check.svg</file>
+        <file alias="frame">ui/frame.svg</file>
+        <file alias="clear">ui/clear-icon.svg</file>
+        <file alias="typeManually">ui/button-type-in-manually.svg</file>
+        <file alias="enter">ui/button-enter.svg</file> 
     </qresource>
     <qresource prefix="/font">
-        <file>fonts/Montserrat-Medium.ttf</file>
-        <file>fonts/Lato-Regular.ttf</file>
-        <file>fonts/Lato-Bold.ttf</file>
+        <file>fonts/PublicSans/PublicSans-Black.otf</file>
+        <file>fonts/PublicSans/PublicSans-BlackItalic.otf</file>
+        <file>fonts/PublicSans/PublicSans-Bold.otf</file>
+        <file>fonts/PublicSans/PublicSans-BoldItalic.otf</file>
+        <file>fonts/PublicSans/PublicSans-ExtraBold.otf</file>
+        <file>fonts/PublicSans/PublicSans-ExtraBoldItalic.otf</file>
+        <file>fonts/PublicSans/PublicSans-ExtraLight.otf</file>
+        <file>fonts/PublicSans/PublicSans-ExtraLightItalic.otf</file>
+        <file>fonts/PublicSans/PublicSans-Italic.otf</file>
+        <file>fonts/PublicSans/PublicSans-Light.otf</file>
+        <file>fonts/PublicSans/PublicSans-LightItalic.otf</file>
+        <file>fonts/PublicSans/PublicSans-Medium.otf</file>
+        <file>fonts/PublicSans/PublicSans-MediumItalic.otf</file>
+        <file>fonts/PublicSans/PublicSans-Regular.otf</file>
+        <file>fonts/PublicSans/PublicSans-SemiBold.otf</file>
+        <file>fonts/PublicSans/PublicSans-SemiBoldItalic.otf</file>
+        <file>fonts/PublicSans/PublicSans-Thin.otf</file>
+        <file>fonts/PublicSans/PublicSans-ThinItalic.otf</file>
     </qresource>
 </RCC>

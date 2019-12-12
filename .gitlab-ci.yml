@@ -5,9 +5,9 @@ stages:
 
 #Global variables
 variables:
-    QT_PATH_ANDROID: "/home/projects/Gaiachain/Qt/5.12.0"
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12.6/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
-    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r15c"
+    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r20"
     ANDROID_SIGN_COMMANDS: "--sign $CI_PROJECT_DIR/Gaiachain/platforms/android/cert/gaiachain_cert.keystore gaiachain --storepass $ANDROID_KEYSTORE_PASS"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
     ANDROID_TARGET_PLATFORM: "android-23"
@@ -15,7 +15,7 @@ variables:
     PROJECT_NAME: "Gaiachain"
 
 .common: &common
-  allow_failure: true
+  allow_failure: false
   before_script:
     - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
     - mkdir -p $OUT_PACKAGES_DIR
@@ -23,70 +23,133 @@ variables:
     - git submodule update --init --recursive
     - git submodule status --recursive
 
-# Android
-android_build:
-  <<: *common
-  tags:
-    - LinuxAndroid
-  stage: build
-  variables:
-    BUILD_TYPE: "release"
-    PACKAGE_NAME: "Gaiachain_$CI_COMMIT_REF_SLUG.apk"
-  script:
-    - cd $CI_PROJECT_DIR
-    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake "CONFIG+=fake_data"
-    - cat Makefile
-    - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
-    - cd $CI_PROJECT_DIR
-    - ls -la
-    - cd Gaiachain
-    - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
-
-# Android (combobox)
-android_combobox_build:
-  <<: *common
-  tags:
-    - LinuxAndroid
-  stage: build
-  variables:
-    BUILD_TYPE: "release"
-    PACKAGE_NAME: "Gaiachain_combobox_$CI_COMMIT_REF_SLUG.apk"
-  script:
-    - cd $CI_PROJECT_DIR
-    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake "CONFIG+=use_combobox CONFIG+=fake_data"
-    - cat Makefile
-    - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
-    - cd $CI_PROJECT_DIR
-    - ls -la
-    - cd Gaiachain
-    - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+.only-common: &only-common
+  only:
+    - dev
+    - master
+    - tags
+    - merge_requests
 
 # Linux
 linux_build:
   <<: *common
+  <<: *only-common
   tags:
     - LinuxDesktop
   stage: build
   variables:
-    QT_PATH: "/home/tools/Qt-OpenSource/5.12.0/gcc_64"
+    QT_PATH: "/home/tools/Qt-OpenSource/5.12.6/gcc_64"
   script:
     - cd $CI_PROJECT_DIR
-    - $QT_PATH/bin/qmake
+    - $QT_PATH/bin/qmake QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
+
+# Android
+android_release-server_build:
+  <<: *common
+  <<: *only-common
+  tags:
+    - LinuxAndroid
+  stage: build
+  when: manual
+  allow_failure: true
+  variables:
+    BUILD_TYPE: "release"
+    PACKAGE_NAME: "Gaiachain_release-server_$CI_COMMIT_REF_SLUG.apk"
+  script:
+    - cd $CI_PROJECT_DIR
+    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=release_server
+    - cat Makefile
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
+    - cd $CI_PROJECT_DIR
+    - ls -la
+    - cd Gaiachain
+    - ls -la
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
+    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+
+android_dev-server_build:
+  <<: *common
+  <<: *only-common
+  tags:
+    - LinuxAndroid
+  stage: build
+  variables:
+    BUILD_TYPE: "release"
+    PACKAGE_NAME: "Gaiachain_dev-server_$CI_COMMIT_REF_SLUG.apk"
+  script:
+    - cd $CI_PROJECT_DIR
+    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=use_combobox
+    - cat Makefile
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
+    - cd $CI_PROJECT_DIR
+    - ls -la
+    - cd Gaiachain
+    - ls -la
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
+    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+
+android_dev-server_no-combobox_build:
+  <<: *common
+  <<: *only-common
+  tags:
+    - LinuxAndroid
+  stage: build
+  when: manual
+  allow_failure: true
+  variables:
+    BUILD_TYPE: "release"
+    PACKAGE_NAME: "Gaiachain_dev-server_$CI_COMMIT_REF_SLUG.apk"
+  script:
+    - cd $CI_PROJECT_DIR
+    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
+    - $QT_PATH_ANDROID/bin/qmake
+    - cat Makefile
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
+    - cd $CI_PROJECT_DIR
+    - ls -la
+    - cd Gaiachain
+    - ls -la
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
+    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+
+android_dev-server_fake-data_build:
+ <<: *common
+ <<: *only-common
+ tags:
+   - LinuxAndroid
+ stage: build
+ when: manual
+ allow_failure: true
+ variables:
+   BUILD_TYPE: "release"
+   PACKAGE_NAME: "Gaiachain_combobox_fake-data_$CI_COMMIT_REF_SLUG.apk"
+ script:
+   - cd $CI_PROJECT_DIR
+   - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
+   - $QT_PATH_ANDROID/bin/qmake CONFIG+=use_combobox CONFIG+=fake_data
+   - cat Makefile
+   - make -j3
+   - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
+   - cd $CI_PROJECT_DIR
+   - ls -la
+   - cd Gaiachain
+   - ls -la
+   - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
+   - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 upload_job:
   <<: *common
   only:
     - master
+    - merge_requests
+    - schedules
   tags:
     - LinuxAndroid
   stage: upload
@@ -103,6 +166,7 @@ upload_job:
 
 cleanup:
   <<: *common
+  <<: *only-common
   tags:
     - LinuxDesktop
     - LinuxAndroid

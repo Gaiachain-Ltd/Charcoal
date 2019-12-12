@@ -3,139 +3,167 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.11
 
 import "../items" as Items
+import "../components" as Components
 
-import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
 Items.GenericPanel
 {
     id: top
-    property bool footerVisible: true
-    property bool headerVisible: true
+    property alias headerVisible: header.visible
+    property alias footerVisible: footer.visible
 
-    property color backgroundColor: Style.pageBaseBackgroundColor
-
-    property alias header: navigationHeader
-    property alias mainOverlayVisible: mainOverlay.visible
-
-    property alias refreshTimer: refreshDataTimer
+    property alias logoVisible: header.logoVisible
+    property alias backgroundColor: top.palette.window
 
     property bool errorDisplayed: false
 
-    property alias addButtonVisible: footer.addButtonVisible
-    property alias refreshButtonVisible: footer.refreshButtonVisible
-
-    default property alias content: pageContent.data
-
     function closeEventHandler() {
-        navigationHeader.backHandler() // calling back button
+        return backHandler() // calling back button
+    }
+
+    function backHandler() {
+        pageManager.back()
+        return false    // do not close application
+    }
+
+    function backToHomeHandler() {
+        pageManager.backTo(pageManager.homePage())
+    }
+
+    function initialize() { // page beginning handler
+
+    }
+
+    function showOverlay(message = "") {
+          pageManager.openPopup(Enums.Popup.WaitOverlay,
+                                { "message" : message, })
+      }
+
+    function hideOverlay() {
+        pageManager.closePopup()
+    }
+
+    function retryConnection() {
+        if (userManager.offlineMode) {  // for offline always only ping
+            sessionManager.ping()
+        } else {
+            if (localOnlyEventsModel.size) {
+                dataManager.sendOfflineActions()
+            }
+
+            refreshData()
+        }
     }
 
     function refreshData() {
-        mainOverlayVisible = true
-        dataManager.clearModels()
-        sessionManager.getEntity()
-        refreshDataTimer.start()
+        // possibly redefined in each page
+        sessionManager.ping()
     }
 
-    Connections
-    {
-        target: sessionManager
+    header: Components.NavigationHeader {
+        id: header
+        Layout.fillWidth: true
 
-        onEntityLoadError: {
-            if (errorDisplayed || !pageManager.isOnTop(page))
+        title: top.title
+    }
+
+    footer: Components.Footer {
+        id: footer
+        Layout.fillWidth: true
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: forceActiveFocus()
+    }
+
+    Connections {
+        target: sessionManager
+        enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode
+
+        onPingError: {
+            pageManager.openPopup(Enums.Popup.Information,
+                                  { "text": Strings.serverConnectionError })
+        }
+        onPingSuccess: {
+            pageManager.openPopup(Enums.Popup.YesNoQuestion,
+                                  { "text": Strings.onlineLogoutQuestion })
+        }
+    }
+
+    Connections {
+        target: sessionManager
+        enabled: (Number(pageManager.topPage) === page)
+
+        function isSupplyChainPage() {
+            return page === Enums.SupplyChainHarvest ||
+                    page === Enums.SupplyChainGrainProcessing ||
+                    page === Enums.SupplyChainSectionReception ||
+                    page === Enums.SupplyChainBagging ||
+                    page === Enums.SupplyChainAddHarvestId ||
+                    page === Enums.SupplyChainLotCreation ||
+                    page === Enums.SupplyChainWarehouseTransport ||
+                    page === Enums.SupplyChainExportReception;
+        }
+
+        // handle notification for package sent error (here for offline added actions)
+        onEntitySaveError: {
+            if (isSupplyChainPage()
+                    && isCurrentAction(packageId, codeData, action)) {
                 return
-            errorDisplayed = true
-            pageManager.enterPopup(Enums.Popup.Information, {
-                                                            "text" : Strings.dataDownloadError + (Helpers.isNetworkError(code) ? "\n" + Strings.noInternet : ""),
-                                                            "acceptButtonText": Strings.tryAgain,
-                                                            "acceptButtonType": Enums.PopupAction.ReloadData,
-                                                            "rejectButtonText": Strings.close,
-                                                            "rejectButtonType": Enums.PopupAction.Cancel
-                                   }, true)
+            }
+
+            // is offline added action
+            if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
+                return
+            }
+
+            var errorText = Strings.addActionErrorUnknown
+            if (RequestHelper.isActionMissingError(code)) {
+                errorText = Strings.addActionErrorMissing
+            } else if (RequestHelper.isActionDuplicatedError(code)) {
+                errorText = Strings.addActionErrorDuplicated
+            }
+
+            errorText += "\n\n" + packageId
+            errorText += "\n" + Helper.actionDescriptionStatusText(action)
+
+            pageManager.openPopup(Enums.Popup.Information, {"text": errorText, "buttonPrimaryColor": Style.errorColor})
         }
     }
 
     Connections {
         target: pageManager
-        // When using popup always add checking if I'm on top
-        enabled: pageManager.isOnTop(page)
+        enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode
+            && (page !== Enums.Login) && (page !== Enums.LoginLoading)
+
         onPopupAction: {
-            errorDisplayed = false
             switch(action) {
-            case Enums.PopupAction.ReloadData:
-                mainOverlayVisible = true
-                refreshDateDelayTimer.start()
+            case Enums.PopupAction.Yes:
+                header.logout()
                 break
             default:
             }
         }
     }
 
-    Timer {
-        id: refreshDateDelayTimer
-        interval: 1000
-        onTriggered: refreshData()
-    }
+    Connections {
+        target: dbManager
 
-    Timer {
-        id: refreshDataTimer
-        interval: Style.requestOverlayInterval
-        onTriggered: mainOverlayVisible = false
-    }
-
-    ColumnLayout {
-        id:  columnLayout
-        anchors.fill: parent
-
-        spacing: 0
-
-        Items.NavigationHeader {
-            id: navigationHeader
-            Layout.fillWidth: true
-            Layout.preferredHeight: s(Style.headerHeight)
-            visible: top.headerVisible
-            z: 5
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            layer.enabled: true
-            clip: true
-
-            Rectangle {
-                id: background
-                anchors.fill: parent
-                color: top.backgroundColor
-            }
-
-            Item {
-                id: pageContent
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
-                }
-                height: parent.height
+        onProcessingChanged: {
+            if (processing) {
+                showOverlay(Strings.dbUpdateProgress)
+            } else {
+                hideOverlay()
             }
         }
 
-        Items.Footer {
-            id: footer
-            Layout.fillWidth: true
-            // Math.round added because line below footer would appear
-            Layout.preferredHeight: Math.round(s(Style.footerHeight))
-            visible: top.footerVisible
+        onDatabaseUpdateError: {
+            pageManager.openPopup(Enums.Popup.Information,
+                                  { "text": Strings.dbUpdateError })
         }
-    }
-
-    Items.WaitOverlay {
-        id: mainOverlay
-        anchors.fill: parent
-
-        color: Style.backgroundShadowColor
     }
 }

@@ -7,257 +7,162 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 import com.gaiachain.helpers 1.0
 
+import Qt.labs.settings 1.1
+
 import "../items" as Items
+import "../components/dummy" as DummyComponents
 
 BasePage {
     id: top
     page: Enums.Page.Login
 
     headerVisible: false
-    addButtonVisible: false
-    refreshButtonVisible: false
-
-    function enterNextPage() {
-        pageManager.enter(Enums.Page.ResourceChosing)
-    }
+    footerVisible: false
 
     function closeEventHandler() {
         return true // android back button will close app
     }
 
-    Connections
-    {
-        target: sessionManager
-        onLoginFinished: enterNextPage()
-        onDisplayLoginError: {
-            // If someone send displayLoginError when not in login screen, ignore it and print warning
-            if (!pageManager.isOnTop(page)) {
-                console.warn("displayLoginError send when LoginPage is not on the top! Returning.")
-                return
-            }
+    Settings {
+        id: loginSettings
 
-            console.log("ON_LOGIN_ERROR",code)
-            pageManager.enterPopup(Enums.Popup.Information, {
-                                       "text" : Helpers.isNetworkError(code) ? Strings.noInternet : Strings.loginErrorInfo,
-                                   })
+        category: "Login"
+
+        property string login
+
+        Component.onCompleted: {
+            if (!Utility.useCombobox()) {
+                loginInput.text = login
+            }
         }
     }
 
     Connections {
-        target: pageManager
-        // When using popup always add checking if I'm on top
-        enabled: pageManager.isOnTop(page)
-        onPopupAction: {
-            switch(action) {
-            case Enums.PopupAction.Accept:
-                console.log("Accept action to implement!")
-                break
-            default:
-                break
-            }
+        target: sessionManager
+
+        onLoginFinished: {
+            loginSettings.login = login
         }
     }
 
     ColumnLayout
     {
         id: layout
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            margins: s(Style.bigMargin)
+        }
 
-        Item
+        spacing: s(Style.middleSmallMargin)
+
+        Items.LayoutSpacer  // It is to keep keyboard working properly
         {
-            Layout.fillWidth: true
-            Layout.preferredHeight: parent.height * (Qt.inputMethod.keyboardRectangle.y > 0 ?  0.35 : 0.5)
+            Layout.minimumHeight: logoImage.paintedHeight
+            preferredHeight: parent.height * 0.42 - 2 * layout.spacing   // remove spacing for LayoutSpacer
+            Layout.maximumHeight: preferredHeight
 
             Items.SvgImage
             {
-                anchors.centerIn: parent
+                id: logoImage
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+                height: s(Style.logoHeight)
 
                 source: Style.logoImgUrl
 
-                readonly property int calcWidth: parent.width * Style.logoSize
-                width: calcWidth
-                height: 0.35 * calcWidth
+                DummyComponents.ServerStateChanger {}
             }
         }
 
-        Item
+        Items.LayoutSpacer {}
+
+        Items.GenericInput
         {
-            Layout.fillHeight: true
+            id: loginInput
             Layout.fillWidth: true
 
-            ColumnLayout
-            {
-                id: itemColumn
-                spacing: s(Style.smallMargin) * 1.5
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
+            property bool validInput: true
 
-                Items.GenericInput
-                {
-                    id: loginInput
-                    Layout.preferredWidth: parent.width * 0.9
-                    Layout.preferredHeight: s(Style.inputHeight)
-                    Layout.alignment: Qt.AlignHCenter
-                    additionalInputMethodHints: Qt.ImhNoAutoUppercase
+            nextInput: passwordInput
 
-                    input.enabled: !Style.loginByCombobox
+            additionalInputMethodHints: Qt.ImhNoAutoUppercase
+            inputMethodHints: Qt.ImhEmailCharactersOnly
+            placeholderText: Strings.emailAddress
+            iconSource: Style.emailImgUrl
 
-                    source: Style.emailImgUrl
-                    focus: true
-                    showImage: true
+            borderColor: validInput ? Style.inputBorderColor : Style.errorColor
 
-                    placeholderText: Style.loginByCombobox ? "" : Strings.emailAddress
+            onTextChanged: {
+                validInput = !length || Utility.validateEmail(text)
+            }
 
-                    nextInput: passwordInput
+            DummyComponents.LoginCombobox {
+                loginInput: loginInput
+                passwordInput: passwordInput
+            }
+        }
 
-                    property string currentLoginStr: "producer@gaiachain.io"
+        Items.GenericInput
+        {
+            id: passwordInput
+            Layout.fillWidth: true
 
-                    ComboBox
-                    {
-                        id: controlCombo
-                        model: ["producer@gaiachain.io", "logpark@gaiachain.io", "sawmill@gaiachain.io", "exporter@gaiachain.io"]
-                        visible: Style.loginByCombobox
+            placeholderText: Strings.password
+            iconSource: Style.passwordImgUrl
+            isPassword: true
 
-                        anchors.centerIn: parent
-                        height: parent.height
-                        width: parent.width
-
-                        background: Rectangle { color: "transparent" }
-
-                        contentItem: Text {
-                            leftPadding: loginInput.height
-
-                            text: controlCombo.displayText
-                            color: Style.textPrimaryColor
-                            font {
-                                pixelSize: s(Style.pixelSize)
-                                family: Style.primaryFontFamily
-                            }
-                            elide: Text.ElideRight
-                            verticalAlignment: Text.AlignVCenter
-                        }
-
-                        delegate: ItemDelegate {
-                            leftPadding: loginInput.height
-                            width: parent.width
-                            contentItem: Text {
-                                text: modelData
-                                color: Style.textPrimaryColor
-                                font {
-                                    pixelSize: s(Style.pixelSize)
-                                    family: Style.primaryFontFamily
-                                }
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            background: Rectangle {
-                                color: "transparent"
-                            }
-                        }
-
-                        onActivated: {
-                            passwordInput.text = "test1234"
-                            switch(index) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                                loginInput.currentLoginStr = model[index]
-                                break
-                            default:
-                                loginInput.currentLoginStr = ""
-                                passwordInput.text = ""
-                                break
-                            }
-                        }
-                    }
-                }
-
-                Items.GenericInput
-                {
-                    id: passwordInput
-                    Layout.preferredWidth: parent.width * 0.9
-                    Layout.preferredHeight: s(Style.inputHeight)
-                    Layout.alignment: Qt.AlignHCenter
-
-                    enabled: !Style.loginByCombobox
-
-                    source: Style.keyImgUrl
-                    showImage: true
-                    isPassword: true
-                    focus: true
-
-                    placeholderText: Strings.password
-                    text: Style.loginByCombobox ?  "test1234" : ""
-
-                    onMoveToNextInput: {
-                        if (loginButton.enabled)
-                            loginButton.clicked()
-                    }
-                }
-
-                Row {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.topMargin: itemColumn.spacing
-
-                    spacing: s(Style.normalMargin)
-
-                    Items.ImageButton
-                    {
-                        id: loginButton
-                        backgroundColor: Style.buttonGreenColor
-                        textColor: Style.textSecondaryColor
-                        text: Strings.login
-                        source: Style.loginImgUrl
-
-                        imageSize: s(Style.imageSize)
-
-                        enabled: Style.loginByCombobox || (loginInput.text.length > 0 && passwordInput.text.length > 0 && utility.validateEmail(loginInput.text))
-                        opacity: enabled ? 1 : 0.5
-
-                        width: s(Style.buttonHeight) * 2.5
-
-                        onClicked: {
-                            if (Style.loginByCombobox) {
-                                sessionManager.login(loginInput.currentLoginStr, passwordInput.text)
-                            } else {
-                                sessionManager.login(loginInput.text, passwordInput.text)
-                            }
-                        }
-                    }
-
-                    Items.ImageButton
-                    {
-                        id: skipLoginButton
-                        backgroundColor: Style.buttonBlackGreyColor
-                        textColor: Style.textSecondaryColor
-                        text: Strings.skipLogin
-                        source: Style.skipArrowImgUrl
-
-                        imageSize: s(Style.imageSize)
-
-                        width: s(Style.buttonHeight) * 3.25
-
-                        onClicked: {
-                            userManager.userType = Enums.UserType.NotLoggedUser
-                            sessionManager.getEntity()
-                            top.enterNextPage()
-                        }
-                    }
+            onAccepted: {
+                if (loginButton.enabled) {
+                    loginButton.clicked()
                 }
             }
         }
-    }
 
-    Items.WaitOverlay
-    {
-        anchors.fill: parent
-        logoVisible: true
+        Items.LayoutSpacer {
+            preferredHeight: 5 * s(Style.middleMargin)
+            Layout.maximumHeight: preferredHeight
+        }
 
-        visible: overlays.loginRequest
+        Items.GenericButton
+        {
+            id: loginButton
+            Layout.fillWidth: true
+
+            text: Strings.login
+
+            enabled: loginInput.text.length && passwordInput.text.length && loginInput.validInput
+
+            onClicked: {
+                pageManager.enter(Enums.Page.LoginLoading, { "login": loginInput.text, "password": passwordInput.text })
+                sessionManager.login(loginInput.text, passwordInput.text)
+            }
+        }
+
+        Items.GenericButton
+        {
+            id: skipLoginButton
+            Layout.fillWidth: true
+
+            palette {
+                button: Style.buttonSecondaryColor
+                buttonText: Style.textPrimaryColor
+            }
+            borderColor: Style.inputBorderColor
+
+            text: Strings.skipLogin
+
+            onClicked: {
+                pageManager.enter(Enums.Page.LoginLoading, { "skipLogin": true })
+                sessionManager.getAdditionalData()
+            }
+        }
+
+        Items.LayoutSpacer {
+            preferredHeight: s(Style.bigMargin)
+            Layout.maximumHeight: preferredHeight
+        }
     }
 }

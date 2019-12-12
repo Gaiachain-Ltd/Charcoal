@@ -1,42 +1,98 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>pages/LanguageChosingPage.qml</file>
         <file>pages/LoginPage.qml</file>
-        <file>pages/ResourceChosingPage.qml</file>
-        <file>pages/ViewTypePage.qml</file>
+        <file>pages/MainMenuPage.qml</file>
         <file>pages/CalendarPage.qml</file>
-        <file>pages/CalendarMonthPage.qml</file>
         <file>pages/CalendarEventsPage.qml</file>
-        <file>pages/ShipmentDetailsPage.qml</file>
-        <file>pages/EventDetailsPage.qml</file>
-        <file>pages/EventsListPage.qml</file>
-        <file>pages/EditableEventDetailsPage.qml</file>
         <file>pages/BasePage.qml</file>
         <file>pages/QRScannerPage.qml</file>
-        <file>pages/InformationPopup.qml</file>
         <file>items/GenericPanel.qml</file>
-        <file>items/Footer.qml</file>
-        <file>items/NavigationHeader.qml</file>
         <file>items/ImageButton.qml</file>
-        <file>items/ImageCheckbox.qml</file>
-        <file>items/TextImageButton.qml</file>
-        <file>items/CalendarMonthItem.qml</file>
         <file>items/ImageItem.qml</file>
         <file>items/SvgImage.qml</file>
-        <file>items/ShadowedImageButton.qml</file>
         <file>items/LayoutSpacer.qml</file>
         <file>items/BasicText.qml</file>
         <file>items/TextWithTitle.qml</file>
-        <file>items/EventsListView.qml</file>
         <file>items/ItemBorder.qml</file>
         <file>items/GenericInput.qml</file>
-        <file>items/ShipmentDetailsDelegate.qml</file>
-        <file>items/WaitOverlay.qml</file>
         <file>MainStackView.qml</file>
         <file>GaiaStrings.qml</file>
         <file>GaiaStyle.qml</file>
-        <file>common/Helpers.qml</file>
+        <file>common/Helper.qml</file>
         <file>pages/MapPage.qml</file>
+        <file>items/GenericButton.qml</file>
+        <file>pages/LoginLoadingPage.qml</file>
+        <file>items/PureImageButton.qml</file>
+        <file>components/ConnectionStateItem.qml</file>
+        <file>pages/TransactionsPage.qml</file>
+        <file>components/EventsListView.qml</file>
+        <file>components/Footer.qml</file>
+        <file>components/MenuButton.qml</file>
+        <file>components/NavigationHeader.qml</file>
+        <file>components/SupplyChainSubmenu.qml</file>
+        <file>items/BlockMouseArea.qml</file>
+        <file>components/CalendarPackageEventsBars.qml</file>
+        <file>components/CalendarPageItem.qml</file>
+        <file>components/CalendarMonthItem.qml</file>
+        <file>components/CalendarWeekItem.qml</file>
+        <file>pages/CalendarPageBase.qml</file>
+        <file>items/LayoutSeparator.qml</file>
+        <file>components/dummy/LoginCombobox.qml</file>
+        <file>items/BasicCheckBox.qml</file>
+        <file>items/RectCheckBox.qml</file>
+        <file>components/CalendarYearItem.qml</file>
+        <file>pages/CalendarYearPage.qml</file>
+        <file>popups/BasePopup.qml</file>
+        <file>popups/GenericPopup.qml</file>
+        <file>popups/InformationPopup.qml</file>
+        <file>popups/NotificationPopup.qml</file>
+        <file>popups/WaitOverlayPopup.qml</file>
+        <file>components/SupplyChainCategorySubmenuButton.qml</file>
+        <file>components/SupplyChainCategorySubmenu.qml</file>
+        <file>components/SupplyChainSubmenuButton.qml</file>
+        <file>components/SupplyChainSubmenuExpandButton.qml</file>
+        <file>pages/PackageDataPage.qml</file>
+        <file>components/PackageDataDetails.qml</file>
+        <file>components/PackageDataHarvestDetails.qml</file>
+        <file>components/PackageDataLotDetails.qml</file>
+        <file>components/PackageDataSacDetails.qml</file>
+        <file>pages/SupplyChainPage.qml</file>
+        <file>pages/SupplyChainHarvestPage.qml</file>
+        <file>items/GenericHeader.qml</file>
+        <file>items/ComboBoxHeader.qml</file>
+        <file>items/InputDateHeader.qml</file>
+        <file>components/CalendarNavigator.qml</file>
+        <file>popups/ConfirmPopup.qml</file>
+        <file>items/GenericComboBox.qml</file>
+        <file>components/CalendarSupplyItem.qml</file>
+        <file>items/InputHeader.qml</file>
+        <file>items/ButtonInputHeaderWithExpandList.qml</file>
+        <file>components/CalendarItem.qml</file>
+        <file>components/TodayIndicator.qml</file>
+        <file>pages/SupplyChainBaggingPage.qml</file>
+        <file>items/ButtonHeader.qml</file>
+        <file>pages/SupplyChainAddHarvestIdPage.qml</file>
+        <file>popups/CommentPopup.qml</file>
+        <file>popups/TimedPopup.qml</file>
+        <file>components/CommunicationStateItem.qml</file>
+        <file>items/SpinnerItem.qml</file>
+        <file>components/CalendarItemGridExtension.qml</file>
+        <file>pages/SupplyChainGrainProcessingPage.qml</file>
+        <file>popups/YesNoQuestionPopup.qml</file>
+        <file>components/dummy/ServerStateChanger.qml</file>
+        <file>pages/WaitingTransactionsPage.qml</file>
+        <file>items/NumberImageButton.qml</file>
+        <file>items/QRStatus.qml</file>
+        <file>items/ButtonInputHeader.qml</file>
+        <file>popups/TextPopup.qml</file>
+        <file>pages/SupplyChainSectionReceptionPage.qml</file>
+        <file>components/ChangeAnimation.qml</file>
+        <file>items/GenericItemDelegate.qml</file>
+        <file>pages/SupplyChainLotCreationPage.qml</file>  
+        <file>items/GenericTextArea.qml</file>
+        <file>items/TextAreaHeader.qml</file> 
+        <file>pages/SupplyChainWarehouseTransportPage.qml</file>
+        <file>pages/SupplyChainExportReceptionPage.qml</file>  
     </qresource>
 </RCC>
