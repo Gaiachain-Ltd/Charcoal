@@ -39,9 +39,6 @@ MainController::MainController(QObject *parent)
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
-#ifdef Q_OS_ANDROID
-    setupAppPermissions();
-#endif
     setupConnections();
 }
 
