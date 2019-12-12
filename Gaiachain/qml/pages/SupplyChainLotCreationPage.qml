@@ -60,7 +60,7 @@ Pages.SupplyChainPage {
             model: unusedLotIdsModel
         }
 
-        Items.InputHeader {
+        Items.ButtonInputHeader {
             id: qrCodeInputHeader
 
             Layout.fillWidth: true
@@ -71,10 +71,10 @@ Pages.SupplyChainPage {
             headerText: Strings.registerQrCodeToLotId
             placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
 
-            onIconClicked: pageManager.enter(Enums.Page.QRScanner, {
-                                                 "title": title,
-                                                 "backSupplyChainPage": page,
-                                                 "popupText": Strings.attachQr.arg(Strings.lot.toUpperCase()) })
+            onClicked: pageManager.enter(Enums.Page.QRScanner, {
+                                             "title": title,
+                                             "backSupplyChainPage": page,
+                                             "popupText": Strings.attachQr.arg(Strings.lot.toUpperCase()) })
         }
 
         Items.TextAreaHeader {

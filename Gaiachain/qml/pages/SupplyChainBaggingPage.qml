@@ -138,11 +138,12 @@ Pages.SupplyChainPage {
 
             Layout.fillWidth: true
 
+            iconSource: Style.qrImgUrl
+
             inputText: top.scannedId
             headerText: Strings.qrCode
             placeholderText: Strings.scanQrCodeFrom.arg(Strings.sac.toUpperCase())
 
-            iconSource: Style.qrImgUrl
 
             onClicked: pageManager.enter(Enums.Page.QRScanner, {
                                                  "title": title,
