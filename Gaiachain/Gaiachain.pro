@@ -45,6 +45,8 @@ TEMPLATE = app
 CONFIG += c++17
 TARGET = Gaiachain
 
+TRANSLATIONS = translations/translate_fr.ts
+
 HEADERS += \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \

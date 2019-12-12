@@ -20,7 +20,7 @@ QtObject {
         return location.lat.toFixed(6) + ", " + location.lon.toFixed(6)
     }
 
-    function formatShortMonthName(str) {
+    function formatShortName(str) {
         return str.charAt(0).toUpperCase() + str.slice(1).replace(".", Strings.empty)
     }
 

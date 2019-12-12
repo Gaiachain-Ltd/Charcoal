@@ -26,7 +26,7 @@ Item {
 
         function initData() {
             for (var month = Calendar.January; month <= Calendar.December; ++month) {
-                append({"shortName": Helper.formatShortMonthName(Qt.locale().monthName(month, Locale.ShortFormat)), "month": month})
+                append({"shortName": Helper.formatShortName(Qt.locale().monthName(month, Locale.ShortFormat)), "month": month})
             }
         }
 
