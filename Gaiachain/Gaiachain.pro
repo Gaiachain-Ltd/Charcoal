@@ -17,6 +17,10 @@ fake_data {
     DEFINES+=FAKE_DATA
 }
 
+release_server {
+    DEFINES+=RELEASE_SERVER
+}
+
 english {
     DEFINES+=ENGLISH_LANGUAGE
 }
