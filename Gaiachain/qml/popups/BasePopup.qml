@@ -12,7 +12,8 @@ Popups.GenericPopup
 {
     id: top
 
-    property string text
+    property alias text: popupText.text
+    property alias textFormat: popupText.textFormat
     property var buttons: []
 
     property color buttonPrimaryColor: Style.buttonPopupAcceptSecondaryColor
@@ -25,6 +26,7 @@ Popups.GenericPopup
         spacing: 2 * s(Style.bigMargin)
 
         Items.BasicText {
+            id: popupText
             Layout.fillWidth: true
             Layout.leftMargin: additionalTextHorizontalMargins
             Layout.rightMargin: additionalTextHorizontalMargins
@@ -35,8 +37,6 @@ Popups.GenericPopup
             }
             horizontalAlignment: Qt.AlignHCenter
             wrapMode: Text.Wrap
-
-            text: top.text
         }
         RowLayout {
             id: buttonsRow
