@@ -16,6 +16,7 @@ DataManager::DataManager(QObject *parent)
 {
     m_processingThread.start();
     m_modelsHandler.moveToThread(&m_processingThread);
+    m_modelsHandler.updateThread();
     m_requestsHandler.moveToThread(&m_processingThread);
 
     setupHandlersConnections();
