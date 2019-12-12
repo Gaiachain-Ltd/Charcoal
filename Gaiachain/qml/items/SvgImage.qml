@@ -3,7 +3,7 @@ import QtQuick 2.11
 Image {
     fillMode: Image.PreserveAspectFit
 
-    function getPreserveAspectSize(sourceWidth, sourceHeight, fillMode) {
+    function getPreserveAspectSize(sourceWidth, sourceHeight, width, height, fillMode) {
         if (fillMode !== Image.PreserveAspectCrop && fillMode !== Image.PreserveAspectFit) {
             console.warn("SvgImage:getPreserveAspectSize: unsupported fillMode!");
             return
@@ -27,20 +27,21 @@ Image {
         return size
     }
 
-    Component.onCompleted: {
-        var sourceWidth = sourceSize.width
-        var sourceHeight = sourceSize.height
-
+    function updateSourceSize() {
         if (fillMode === Image.PreserveAspectFit || fillMode === Image.PreserveAspectCrop) {
-            sourceSize.width = Qt.binding(function() {return getPreserveAspectSize(sourceWidth, sourceHeight, fillMode).width})
-            sourceSize.height = Qt.binding(function() {return getPreserveAspectSize(sourceWidth, sourceHeight, fillMode).height})
+            sourceSize = getPreserveAspectSize(sourceSize.width, sourceSize.height, width, height, fillMode)
         } else {
             if (fillMode !== Image.Stretch){
                 console.warn("SvgImage: unsupported fillMode!")
             }
 
-            sourceSize.width = Qt.binding(function() { return width })
-            sourceSize.height = Qt.binding(function() { return height })
+            sourceSize.width = width
+            sourceSize.height = width
         }
     }
+
+    Component.onCompleted: updateSourceSize()
+    onWidthChanged: updateSourceSize()
+    onHeightChanged: updateSourceSize()
+    onSourceChanged: updateSourceSize()
 }

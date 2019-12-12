@@ -1,123 +1,88 @@
 import QtQuick 2.11
-import QtQuick.Layouts 1.11
+import QtQuick.Controls 2.5
 
 import com.gaiachain.style 1.0
+import com.gaiachain.enums 1.0
 
-FocusScope
+TextField
 {
     id: top
 
-    property alias text: inputItem.text
-    property alias source: image.source
-    property alias input: inputItem
-
-    property alias showImage: image.visible
-    property alias background: rect
-
-    property alias placeholderText: placeholder.text
-    property alias placeholder: placeholder
-
     property bool isPassword: false
-
     property int additionalInputMethodHints: 0
 
-    property Item nextInput: null
+    property alias iconSource: icon.source
+    property var iconEdge: Enums.Edge.LeftEdge
+    property bool showIcon: true
 
+    property color borderColor: Style.inputBorderColor
+    property color backgroundColor: Style.backgroundColor
+    property alias iconItem: icon
+
+    property Item nextInput: null
     signal moveToNextInput()
+    signal iconClicked
 
     onMoveToNextInput: {
-        if (nextInput !== null)
+        if (nextInput !== null) {
             nextInput.focus = true
+        } else {
+            focus = false
+            Qt.inputMethod.hide();
+        }
     }
 
-    Rectangle
-    {
-        id: rect
-        anchors.fill: parent
-        radius: s(Style.smallMargin)
+    focus: true
+    autoScroll: true
+    maximumLength: 50
+    padding: s(Style.bigMargin)
+    leftPadding: (iconEdge === Enums.Edge.LeftEdge) && icon.visible ? icon.width + 2 * icon.horizontalMargins : padding
+    rightPadding: (iconEdge === Enums.Edge.RightEdge) && icon.visible ? icon.width + 2 * icon.horizontalMargins : padding
+
+    font {
+        pixelSize: s(Style.inputPixelSize)
+        family: Style.primaryFontFamily
+    }
+    placeholderTextColor: Style.textPrimaryColor
+
+    echoMode: isPassword ? TextInput.Password : TextInput.Normal
+    inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
+
+    Keys.onReturnPressed: { accepted(); moveToNextInput() }
+    Keys.onEnterPressed: { accepted(); moveToNextInput() }
+    Keys.onTabPressed: moveToNextInput()
+
+    background: Rectangle {
+        color: enabled ? top.backgroundColor : Style.backgroundDisabledColor
+        radius: s(Style.tinyMargin)
         border {
             width: sr(1)
-            color: Style.buttonGreyColor
+            color: top.borderColor
         }
-        RowLayout
-        {
-            id: row
-            anchors {
-                verticalCenter: parent.verticalCenter
-                left: parent.left
-                right: parent.right
-                margins: s(Style.normalMargin)
-            }
+    }
 
-            spacing: s(Style.smallMargin)
+    SvgImage {
+        id: icon
+        property real horizontalMargins: s(Style.middleMargin)
 
-            SvgImage {
-                id: image
-                Layout.fillHeight: true
-                Layout.preferredWidth: row.height
-                Layout.alignment: Qt.AlignVCenter
-                visible: false
-            }
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: (iconEdge == Enums.Edge.LeftEdge) ? parent.left : undefined
+            right: (iconEdge == Enums.Edge.RightEdge) ? parent.right : undefined
 
-            Item {
-                Layout.fillWidth: true
-                Layout.preferredHeight: inputItem.height
+            leftMargin: horizontalMargins
+            rightMargin: horizontalMargins
+            topMargin: top.padding
+            bottomMargin: top.padding
+        }
+        width: height
 
-                layer.enabled: true
+        visible: status != Image.Null && showIcon
 
-                // Placed inside item to enable clipping.
-                TextInput
-                {
-                    id: inputItem
-
-                    focus: true
-
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    autoScroll: true
-
-                    maximumLength: 50
-
-                    font {
-                        pixelSize: s(Style.pixelSize-5)
-                        family: Style.primaryFontFamily
-                    }
-                    echoMode: isPassword ? TextInput.Password : TextInput.Normal
-
-                    inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
-
-                    Keys.onReturnPressed: moveToNextInput()
-                    Keys.onEnterPressed: moveToNextInput()
-                    Keys.onTabPressed: moveToNextInput()
-
-                    BasicText
-                    {
-                        id: placeholder
-
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                        }
-
-                        color: Style.textGreyColor
-
-                        elide: Text.ElideRight
-                        horizontalAlignment: Text.AlignLeft
-
-                        font: inputItem.font
-                        opacity: inputItem.text.length == 0 ? 1 : 0
-
-                        Behavior on opacity { PropertyAnimation { duration: 50 } }
-                    }
-                }
-            }
-
+        MouseArea {
+            anchors.fill: parent
+            onClicked: top.iconClicked()
         }
     }
 }
-

@@ -3,39 +3,54 @@
 
 #include "baserequest.h"
 
-#include <QElapsedTimer>
-
 #include "../common/enums.h"
 
 class EntityRequest : public BaseRequest
 {
     Q_OBJECT
 public:
-    enum RequestType {
-        RequestGet = 0,
-        RequestGetFiltered,
-        RequestBatch,
-        RequestCalendar,
-        RequestUninitializedGet,
-        RequestUninitializedPost, // not used (web part)
-        RequestEntityGet,
-        RequestEntityPut
+    enum class RequestType {
+        Invalid = -1,
+        GetBatch,
+        GetFilterRange,
+        GetFilterLimitRange,
+        GetFilterLimit,
+        GetFilterLastAction,
+        GetUnusedLots,
+        PostNewAction,
+        PostUnusedLot
     };
     Q_ENUM(RequestType)
 
-    EntityRequest(const QString &token, const RequestType requestType = RequestType::RequestGet);
-    EntityRequest(const QString &token, const int count, const QString &type);
-    EntityRequest(const QString &token, const QString &id);
-    EntityRequest(const QString &token, const QJsonArray &ids);
-    EntityRequest(const QString &token, const QString &id, const Enums::PlaceAction action);
-    EntityRequest(const QString &token, const QString &dateFrom, const QString &dateTo);
+    struct EntityData {
+        Enums::SupplyChainAction action;
+        QDateTime timestamp;
+        QVariantMap properties;
+    };
 
+    EntityRequest(const RequestType &requestType, const QString &token = {});
+
+    EntityRequest(const QStringList &packageIds = {});
+    EntityRequest(const QDateTime &from, const QDateTime &to);
+    EntityRequest(int limit, int offset, const QDateTime &from, const QDateTime &to);
+    EntityRequest(int limit, int offset, const QString &keyword = {});
+    EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction);
+
+    EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData);
+    EntityRequest(const QString &token, const QString &packageId, const QByteArray &codeData, const EntityData &entityData);
+    EntityRequest(const QString &token, const QByteArray &codeData, const EntityData &entityData);
+
+    EntityRequest(const QString &token, const Enums::PackageType &packageType, bool create = false);
 private:
-    const RequestType m_requestType = RequestType::RequestGet;
-    QElapsedTimer m_timer;
+    const RequestType m_requestType = RequestType::Invalid;
 
-protected:
-    virtual void parse() Q_DECL_OVERRIDE final;
+    static const QString sc_basePath;
+    static const QMap<RequestType, Type> sc_requestsType;
+    static const QMap<RequestType, QString> sc_requestsPath;
+
+    bool isTokenRequired() const override;
+
+    static QJsonObject entityDataObject(const EntityData &entityData);
 };
 
 

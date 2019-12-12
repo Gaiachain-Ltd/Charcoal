@@ -1,24 +1,21 @@
-#!/bin/bash
-
-# include common part
-. `dirname $0`/prepare_openssl_common.sh
-
-GIT_TAG="OpenSSL_1_0_2n"
-
-check_openssl_sources
-
-cd $OPENSSL_SRC_DIR
-git checkout $GIT_TAG
+SCRIPT_DIR=$PWD/`dirname $0`
 
 source $SCRIPT_DIR/setenv-android.sh
-OUTPUT_DIR=$SCRIPT_DIR/OpenSSL/android/armeabi-v7a
 
-./Configure --prefix=$OUTPUT_DIR shared android-armv7
-make clean
-# The "weird" lines below are necessary to produce .so files that are not
-# versioned. Android requires that.
-make CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" MAKE="make -e" all
-mkdir -p $OUTPUT_DIR/lib
-echo "place-holder make target for avoiding symlinks" >> $OUTPUT_DIR/lib/link-shared
-make SHLIB_EXT=.so install_sw
-rm $OUTPUT_DIR/lib/link-shared
+mkdir build
+cd build
+source $SCRIPT_DIR/build-openssl-android.sh
+
+cd ../
+
+INCLUDE_DIR=OpenSSL/include/
+LIBS_DIR=OpenSSL/lib/android/
+
+mkdir -p ${INCLUDE_DIR}
+mkdir -p ${LIBS_DIR}
+
+cp -r build/openssl-${OPENSSL_VERSION}/include/openssl ${INCLUDE_DIR}
+
+for arch in ${ANDROID_ARCHS}; do
+    cp -r build/${arch} ${LIBS_DIR}
+done

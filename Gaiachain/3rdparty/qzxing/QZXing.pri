@@ -20,8 +20,8 @@ DEFINES += QZXING_LIBRARY \
         ZXING_ICONV_CONST \
         DISABLE_LIBRARY_FEATURES
 		 
-INCLUDEPATH  += $$PWD \
-                $$PWD/zxing
+INCLUDEPATH += $$PWD \
+               $$PWD/zxing
 
 HEADERS += $$PWD/QZXing_global.h \
     $$PWD/CameraImageWrapper.h \
@@ -335,9 +335,9 @@ win32-msvc*{
     DEFINES += __STDC_LIMIT_MACROS
 
     INCLUDEPATH += $$PWD/zxing/win32/zxing \
-	            $$PWD/zxing/win32/zxing/msvc
+                   $$PWD/zxing/win32/zxing/msvc
     HEADERS += $$PWD/zxing/win32/zxing/msvc/stdint.h \
-                $$PWD/zxing/win32/zxing/iconv.h
+               $$PWD/zxing/win32/zxing/iconv.h
 
     SOURCES += $$PWD/zxing/win32/zxing/win_iconv.c
 }

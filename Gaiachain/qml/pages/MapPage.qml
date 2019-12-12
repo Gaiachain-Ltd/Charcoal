@@ -87,9 +87,9 @@ BasePage {
             left: parent.left
             right: parent.right
 
-            bottomMargin: s(Style.normalMargin)
-            rightMargin: s(Style.normalMargin)
-            leftMargin: s(Style.normalMargin)
+            bottomMargin: s(Style.middleMargin)
+            rightMargin: s(Style.middleMargin)
+            leftMargin: s(Style.middleMargin)
         }
 
         spacing: s(Style.tinyMargin)

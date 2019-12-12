@@ -8,19 +8,14 @@
 #include <QJsonArray>
 
 #include "../common/tags.h"
-#include "../common/location.h"
-#include "../helpers/utility.h"
 #include "../common/logs.h"
+#include "../helpers/requestshelper.h"
 
 UserManager::UserManager(QObject *parent)
     : AbstractManager(parent)
 {
-
-}
-
-bool UserManager::loggedIn() const
-{
-    return m_userType != Enums::UserType::NotLoggedUser;
+    connect(this, &UserManager::loggedInChanged,
+            this, [this](bool loggedId) { if (loggedId) { emit loggedIn(); } });
 }
 
 void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -30,68 +25,108 @@ void UserManager::setupQmlContext(QQmlApplicationEngine &engine)
 
 void UserManager::logOut()
 {
-    setUserType(Enums::UserType::NotLoggedUser);
+    if (isLoggedIn()) {
+        setOfflineMode(false);
+        setLogin({});
+        updateUserData({});
+
+        emit tokenChanged({});
+        emit loggedInChanged(false);
+    }
 }
 
-Enums::UserType UserManager::getUserType() const
+bool UserManager::offlineAvailable(const QString &login) const
 {
-    return m_userType;
+    return m_offlineHandler.hasUser(login);
 }
 
-void UserManager::parseLoginData(const QJsonDocument &doc)
+bool UserManager::offlineLogin(const QString &login, const QString &password)
 {
-    const QJsonObject obj = doc.object();
+    if (m_offlineHandler.canLogin(login, password)) {
+        setOfflineMode(true);
+        setLogin(login);
 
-    m_userData.insert(Tags::company, obj.value(Tags::companyName).toString());
-    const QJsonArray locationArray = obj.value(Tags::location).toArray();
-    Location location;
-    location.lat = locationArray.at(0).toDouble();
-    location.lon = locationArray.at(1).toDouble();
-    m_userData.insert(Tags::location, QVariant::fromValue(location));
-    const QString &role = obj.value(Tags::role).toString();
-    const Enums::UserType userType = Utility::instance()->userTypeFromString(role);
-    m_userData.insert(Tags::place, static_cast<int>(userType));
+        auto [ userData, token ] = m_offlineHandler.getUser(login);
+        updateUserData(userData);
 
-    emit tokenChanged(obj.value(Tags::token).toString());
-
-    setUserType(userType);
+        emit tokenChanged(token);
+        emit loggedInChanged(true);
+        return true;
+    }
+    return false;
 }
 
-QVariantMap UserManager::userData() const
+bool UserManager::isLoggedIn() const
+{
+    return !m_userData.isAnonymous();
+}
+
+QString UserManager::getLogin() const
+{
+    return m_login;
+}
+
+UserData UserManager::getUserData() const
 {
     return m_userData;
 }
 
-void UserManager::setLoggedIn()
+bool UserManager::isOfflineMode() const
 {
-    bool loggedIn = m_userType != Enums::UserType::NotLoggedUser;
-    if (loggedIn == m_loggedIn)
-        return;
-
-    m_loggedIn = loggedIn;
-    emit loggedInChanged(m_loggedIn);
+    return m_offlineMode;
 }
 
-void UserManager::setUserType(const Enums::UserType userType)
+void UserManager::handleLoginAttempt(const QString &login, const QString &password)
 {
-    if (m_userType == userType)
-        return;
-
-    m_userType = userType;
-    setLoggedIn();
-    emit userTypeChanged(userType);
+    m_offlineHandler.putTemporaryPassword(login, password);
 }
 
-int UserManager::commodityType() const
+void UserManager::readLoginData(const QString &login, const QJsonObject &userDataObj)
 {
-    return m_commodityType;
+    setOfflineMode(false);
+    m_offlineHandler.acknowledgePassword(login);
+
+    setLogin(login);
+
+    auto userData = UserData{};
+    userData.email = RequestsHelper::checkAndValue(userDataObj, Tags::login).toString();
+
+    auto cooperativeObj = RequestsHelper::checkAndValue(userDataObj, Tags::company).toObject();
+    userData.cooperativeId = static_cast<quint32>(RequestsHelper::checkAndValue(cooperativeObj, Tags::id).toInt());
+    userData.cooperativeCode = RequestsHelper::checkAndValue(cooperativeObj, Tags::pid).toString();
+    userData.cooperativeName = RequestsHelper::checkAndValue(cooperativeObj, Tags::name).toString();
+
+    const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
+    const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
+    userData.type = RequestsHelper::userTypeFromString(role);
+
+    const auto token = RequestsHelper::checkAndValue(userDataObj, Tags::accessToken).toString();
+
+    updateUserData(userData);
+    m_offlineHandler.putUser(login, userData, token);
+
+    emit tokenChanged(token);
+    emit loggedInChanged(true);
 }
 
-void UserManager::setCommodityType(const int commodityType)
+void UserManager::setOfflineMode(bool offline)
 {
-    if (m_commodityType == commodityType)
-        return;
+    if (m_offlineMode != offline) {
+        m_offlineMode = offline;
+        emit offlineModeChanged(offline);
+    }
+}
 
-    m_commodityType = commodityType;
-    emit commodityTypeChanged(commodityType);
+void UserManager::setLogin(const QString &login)
+{
+    if (m_login != login) {
+        m_login = login;
+        emit loginChanged(login);
+    }
+}
+
+void UserManager::updateUserData(const UserData &userData)
+{
+    m_userData = userData;
+    emit userDataChanged(userData);
 }

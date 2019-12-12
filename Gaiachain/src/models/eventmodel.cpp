@@ -1,96 +1,76 @@
 #include "eventmodel.h"
 
-#include <QDateTime>
+const QHash<int, QByteArray> EventModel::sc_roleNames = {
+    { Columns::PackageId,       QByteArrayLiteral("packageId") },
+    { Columns::Action,          QByteArrayLiteral("action") },
+    { Columns::Timestamp,       QByteArrayLiteral("timestamp") },
+    { Columns::CooperativeId,   QByteArrayLiteral("cooperativeId") },
+    { Columns::Properties,      QByteArrayLiteral("properties") },
+    { Columns::LocationLat,     QByteArrayLiteral("locationLat") },
+    { Columns::LocationLon,     QByteArrayLiteral("locationLon") },
+    { Columns::IsLocal,         QByteArrayLiteral("isLocal") },
+    { Columns::LastUsed,        QByteArrayLiteral("lastUsed") }
+};
 
-#include "../common/logs.h"
-#include "../common/enums.h"
+const QHash<int, QMetaType::Type> EventModel::sc_roleDatabaseTypes = {
+    { Columns::PackageId,       QMetaType::QString },
+    { Columns::Action,          QMetaType::UInt },
+    { Columns::Timestamp,       QMetaType::LongLong },
+    { Columns::CooperativeId,   QMetaType::UInt },
+    { Columns::Properties,      QMetaType::QByteArray },
+    { Columns::LocationLat,     QMetaType::Double },
+    { Columns::LocationLon,     QMetaType::Double },
+    { Columns::IsLocal,         QMetaType::Bool },
+    { Columns::LastUsed,        QMetaType::LongLong }
+};
+
+const QHash<int, QMetaType::Type> EventModel::sc_roleAppTypes = {
+    { Columns::PackageId,       QMetaType::QString },
+    { Columns::Action,          static_cast<QMetaType::Type>(qMetaTypeId<Enums::SupplyChainAction>()) },
+    { Columns::Timestamp,       QMetaType::QDateTime },
+    { Columns::CooperativeId,   QMetaType::UInt },
+    { Columns::Properties,      QMetaType::QVariantMap },
+    { Columns::LocationLat,     QMetaType::Double },
+    { Columns::LocationLon,     QMetaType::Double },
+    { Columns::IsLocal,         QMetaType::Bool },
+    { Columns::LastUsed,        QMetaType::QDateTime }
+};
 
 EventModel::EventModel(QObject *parent)
-    : QAbstractListModel(parent)
+    : AbstractModel(parent)
+{}
+
+QString EventModel::columnName(const EventModel::Columns &column)
 {
+    return sc_roleNames.value(column);
 }
 
-int EventModel::rowCount(const QModelIndex &parent) const
+int EventModel::firstColumn() const
 {
-    Q_UNUSED(parent)
-
-    return m_data.count();
+    return columnShift(PackageId);
 }
 
-bool EventModel::setData(const QModelIndex &index, const QVariant &value, int role)
+int EventModel::lastColumn() const
 {
-    if (role < Qt::UserRole || role >= ModelRole::LastRole)
-        return false;
-
-    int shiftedIdx = shiftedIndex(role);
-    m_data[index.row()][shiftedIdx] = value;
-
-    emit dataChanged(index, index, {role});
-
-    return true;
+    return columnShift(LastColumn);
 }
 
-QVariant EventModel::data(const QModelIndex &index, int role) const
+QList<int> EventModel::editableRoles() const
 {
-    if (role < Qt::UserRole || role >= ModelRole::LastRole)
-        return {};
-
-    if (index.row() < 0 || index.row() > m_data.count())
-        return {};
-
-    int shiftedIdx = shiftedIndex(role);
-    auto values = m_data[index.row()];
-
-    if (0 <= shiftedIdx && shiftedIdx < values.count())
-        return values[shiftedIdx];
-
-    Q_ASSERT(false);
-    return {};
+    return { Columns::IsLocal, Columns::LastUsed };
 }
 
 QHash<int, QByteArray> EventModel::roleNames() const
 {
-    return m_roleNames;
+    return sc_roleNames;
 }
 
-void EventModel::clearModel()
+QHash<int, QMetaType::Type> EventModel::roleDatabaseTypes() const
 {
-    beginResetModel();
-    m_data.clear();
-    endResetModel();
+    return sc_roleDatabaseTypes;
 }
 
-void EventModel::appendData(const Gaia::ModelData &inData)
+QHash<int, QMetaType::Type> EventModel::roleAppTypes() const
 {
-    int modelCount = rowCount();
-    int newDataCount = inData.count();
-
-    beginInsertRows(QModelIndex(), modelCount, modelCount + newDataCount);
-
-    int newIndex = modelCount;
-    for (const auto &dataRow : inData) {
-        QVariantList rowToInsert;
-        int currentRole = Qt::UserRole;
-        for (const auto &data : dataRow) {
-            if (currentRole == LastRole)
-                break;
-
-            rowToInsert.append(data);
-            ++currentRole;
-        }
-
-        while (currentRole != LastRole) {
-            rowToInsert.append(QVariant());
-            ++currentRole;
-        }
-
-        m_data.insert(newIndex++, rowToInsert);
-    }
-
-    endInsertRows();
-}
-
-int EventModel::shiftedIndex(const int idx) const
-{
-    return idx - static_cast<int>(Qt::UserRole);
+    return sc_roleAppTypes;
 }

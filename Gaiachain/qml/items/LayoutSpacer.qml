@@ -5,12 +5,12 @@ Item {
     property bool horizontal: true
     property bool vertical: true
 
-    property var spacerWidth: undefined
-    property var spacerHeight: undefined
+    property var preferredWidth: undefined
+    property var preferredHeight: undefined
 
-    Layout.fillHeight: spacerHeight !== undefined ? false : vertical
-    Layout.fillWidth: spacerWidth !== undefined ? false : horizontal
+    Layout.fillWidth: horizontal
+    Layout.fillHeight: vertical
 
-    Layout.preferredHeight: spacerHeight !== undefined ? spacerHeight : implicitHeight
-    Layout.preferredWidth: spacerWidth !== undefined ? spacerWidth : implicitWidth
+    Layout.preferredWidth: preferredWidth !== undefined ? preferredWidth : implicitWidth
+    Layout.preferredHeight: preferredHeight !== undefined ? preferredHeight : implicitHeight
 }

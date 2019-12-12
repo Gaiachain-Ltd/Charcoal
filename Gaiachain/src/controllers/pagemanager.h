@@ -5,69 +5,77 @@
 #include <QJsonObject>
 
 #include "abstractmanager.h"
-#include "../models/pagesectionsmodel.h"
 #include "../common/enums.h"
 #include "../helpers/utility.h"
 
 class PageManager : public AbstractManager
 {
     Q_OBJECT
+    Q_PROPERTY(Enums::Page topPage READ topPage NOTIFY topPageChanged)
+
 public:
     explicit PageManager(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     Q_INVOKABLE QString getInitialPageUrl() const;
+    Q_INVOKABLE Enums::Page topPage() const;
     Q_INVOKABLE Enums::Page homePage() const;
-    Q_INVOKABLE bool isOnHomePage() const;
     Q_INVOKABLE bool isOnTop(Enums::Page page) const;
+    Q_INVOKABLE bool isOnHomePage() const;
+    Q_INVOKABLE bool isBackToHomePage() const;
 
 signals:
-    void popupAction(Enums::PopupAction action);
+    void popupAction(const Enums::PopupAction &action);
+    void popupClosed(const Enums::Popup &popup);
 
 signals:
     // Signals below should only be used by StackView!!!
-    void stackViewPush(const QString &url, const QJsonObject properites = QJsonObject(), const bool immediate = false) const;
+    void stackViewPush(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
     void stackViewPop(const bool immediate = false) const;
-    void stackViewBackToPage(const Enums::Page backPage, const bool immediate = false) const;
+    void stackViewPopTo(const Enums::Page page, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
+    void stackViewReplace(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
+    void popupManagerOpen(const QString &url, const QVariantMap properties = QVariantMap{}) const;
+    void popupManagerClose() const;
+
+    void topPageChanged(Enums::Page topPage);
 
 public slots:
     // Page managment
-    void enter(const Enums::Page page, QJsonObject properites = QJsonObject(), const bool immediate = false);
+    void enter(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
+    void enterReplace(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
     void back(const bool immediate = false);
-    bool backTo(const Enums::Page backPage, const bool immediate = false);
-    void backToAndEnter(const Enums::Page backPage, const Enums::Page page, QJsonObject properites = QJsonObject(),
-                            const bool backImmediate = false, const bool enterImmediate = false);
-    bool backToSection(const Enums::PageSections section);
+    bool backTo(const Enums::Page page, const QVariantMap properties = QVariantMap{}, const bool immediate = false);
 
     // Popup managment
-    // Use enterPopup only on QML side to handle strings and don't mess sendAction signal receivers!
-    void enterPopup(const Enums::Popup popup, QJsonObject properites = QJsonObject(), const bool immediate = true);
+    // Use openPopup only on QML side to handle strings and don't mess sendAction signal receivers!
+    void openPopup(const Enums::Popup popup, QVariantMap properties = QVariantMap{});
+    void closePopup();
     void sendAction(Enums::PopupAction action);
 
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
+    const QString m_popupsPrefix = QStringLiteral("qrc:/popups/");
     const Enums::Page m_initialPage = Enums::Page::Login;
-    const Enums::Page m_homePage = Enums::Page::ResourceChosing;
+    const Enums::Page m_homePage = Enums::Page::MainMenu;
 
     QVector<Enums::Page> m_pageStack;
     QVector<Enums::Popup> m_popupStack;
-    PageSectionsModel m_pageSectionsModel;
 
     void prepareConnections();
 
     template<typename T>
-    QString pageToQString(const T p, const char* enumName) const {
+    QString toFilePath(const T p, const char* enumName) const {
         const QString pageStr = Utility::enumToQString<T>(p, enumName);
-        return  m_pagePrefix + pageStr + enumName + QStringLiteral(".qml");
+        return pageStr + enumName + QStringLiteral(".qml");
     }
 
-    QString pageToQString(Enums::Page p) const {
-        return pageToQString<Enums::Page>(p, "Page");
+    QString toFilePath(Enums::Page p) const {
+        return m_pagePrefix + toFilePath<Enums::Page>(p, "Page");
     }
 
-    QString pageToQString(Enums::Popup p) const {
-        return pageToQString<Enums::Popup>(p, "Popup");
+    QString toFilePath(Enums::Popup p) const {
+        return m_popupsPrefix + toFilePath<Enums::Popup>(p, "Popup");
     }
 };
 

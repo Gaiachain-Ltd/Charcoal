@@ -194,14 +194,14 @@ void MRestRequest::send()
         return;
     case Type::Put:
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->put(request, mRequestDocument.toJson());
+        mActiveReply = mNetworkManager->put(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
         break;
     case Type::Get:
         mActiveReply = mNetworkManager->get(request);
         break;
     case Type::Post:
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->post(request, mRequestDocument.toJson());
+        mActiveReply = mNetworkManager->post(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
         break;
     case Type::Delete:
         mActiveReply = mNetworkManager->deleteResource(request);
@@ -238,6 +238,8 @@ void MRestRequest::retry()
 
     if (mRequestRetryCounter >= mMaxRequestRetryCount) {
         qCCritical(crequest, "Request retry limit reached - operation aborted!");
+
+        emit replyError(mLastError, QNetworkReply::NetworkError::TimeoutError);
         emit finished();
     } else {
         if (mActiveReply->bytesAvailable()) {
@@ -261,12 +263,16 @@ void MRestRequest::onReplyError(QNetworkReply::NetworkError code)
         reply->deleteLater();
         mRequestTimer->stop();
         mLastError = reply->errorString();
-        qCCritical(crequest) << mLastError;
-        emit replyError(mLastError, code);
+
+        const QString requestName(metaObject()->className());
+        const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
+                             .toString());
+        qCWarning(crequest) << requestName << status << "Error:" << mLastError;
 
         if (code == QNetworkReply::TimeoutError) {
             retry();
         } else {
+            emit replyError(mLastError, code);
             emit finished();
         }
     }
@@ -304,30 +310,18 @@ void MRestRequest::onReplyFinished()
     const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
                          .toString());
 
-    if (mReplyData.isEmpty()) {
+    if (!mReplyData.isEmpty()) {
+        // rawData can still be parsed in another formats
+        mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
+        if (parseError.error != QJsonParseError::NoError) {
+            qCDebug(crequest) << requestName << status
+                                << "Error while parsing json document:"
+                                << parseError.errorString();
+        } else {
+            qCDebug(crequest) << requestName << status << "Request reply is a valid JSON";
+        }
+    } else {
         qCDebug(crequest) << requestName << status << "Request reply is empty";
-        emit finished();
-        return;
-    }
-
-    // rawData can still be parsed in another formats
-    mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
-    if (parseError.error != QJsonParseError::NoError) {
-        qCWarning(crequest) << requestName << status
-                            << "Error while parsing json document:"
-                            << parseError.errorString();
-
-       emit finished();
-       return;
-    }
-
-    qCDebug(crequest) << requestName << "request response received";
-
-    if (mReplyDocument.isNull()) {
-        mLastError = "JSON document is invalid";
-        qCDebug(crequest) << requestName << mLastError;
-        emit finished(); // rawData can still be parsed in another formats
-        return;
     }
 
     //parse json document according to specific request reply format

@@ -3,6 +3,10 @@
 
 #include "mrestrequestmanager.h"
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(sessionClient)
+
 class RestAPIClient : public MRestRequestManager
 {
     Q_OBJECT

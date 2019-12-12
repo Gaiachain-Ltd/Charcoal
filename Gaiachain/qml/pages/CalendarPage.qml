@@ -1,211 +1,111 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.11
-import QtQml.Models 2.12
-
-import Qt.labs.calendar 1.0
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
-import com.gaiachain.helpers 1.0
 
 import "../items" as Items
+import "../components" as Components
 
-BasePage {
+CalendarPageBase {
     id: top
 
-    property date currentDate: new Date()
-    property int currentYear: currentDate.getFullYear()
-    property int currentMonth: monthModel[currentDate.getMonth()]
-    property int lowestYear: currentYear
-    // Initialize displayedYear with lowest year when only one/two months of new year are present, due to fact that topLeft item is from lowestYear.
-    property int displayedYear: (currentMonth === Calendar.January || currentMonth === Calendar.February) ? lowestYear : currentYear
-
-    readonly property var monthModel: [
-        Calendar.January, Calendar.February, Calendar.March,
-        Calendar.April, Calendar.May, Calendar.June,
-        Calendar.July, Calendar.August, Calendar.September,
-        Calendar.October, Calendar.November, Calendar.December
-    ]
-
-    onLowestYearChanged: {
-        var startDate = new Date(lowestYear, 0, 1)
-        var endDate = currentDate
-        calendarRangeProxyModel.setDateTimeRange(startDate, endDate)
+    function refreshData() {
+        // called from BasePage
+        dataManager.fetchRangeEvents(getMonthStartDate(), getMonthEndDate())
     }
 
-    function addYear(lastMonth) {
-        var endMonth = lastMonth
+    function updateModelRange() {
+        // called from CalendarPageBase
+        var from = getMonthStartDate()
+        var to = getMonthEndDate()
 
-        /* For first year we want months up to currentDate
-         * and we don't want to update lowestYear
-         */
-        if (endMonth === undefined) {
-            endMonth = Calendar.December
-            --lowestYear
-        }
-
-        var blockInsert = true // Block insert until lastMonth is found
-        for (var i = monthModel.length-1; i >= 0; --i) {
-            if (blockInsert) {
-                if (monthModel[i] === endMonth) {
-                    blockInsert = false
-                } else {
-                    continue
-                }
-            }
-
-            datesModel.append({ "month": monthModel[i], "year": lowestYear })
-        }
+        calendarModel.setDateRange(from, to)
+        dataManager.fetchRangeEvents(from, to)
     }
 
-    ListModel {
-        id: datesModel
-        Component.onCompleted: {
-            addYear(currentMonth % 2 == 0 ? currentMonth + 1 : currentMonth)
-            addYear()
-        }
+    function enterDayPage(dayDate) {
+        pageManager.enter(Enums.Page.CalendarEvents, {
+                              "currentDay": dayDate.getDate(),
+                              "currentMonth": dayDate.getMonth(),
+                              "currentYear": dayDate.getFullYear() })
     }
 
-    function enterCalendarMonthPage(month, year) {
-        console.log("Month/Year", month, year)
-        pageManager.enter(Enums.Page.CalendarMonth, {"currentMonth": month, "currentYear": year})
+    function initialize() {
+        onlyMyTransactionsCheckBox.updateCooperativeOnlyFiltering()
+    }
+
+    onMonthHeaderClicked: {
+        pageManager.enter(Enums.Page.CalendarYear, {
+                              "currentMonth": currentMonth,
+                              "currentYear": currentYear })
     }
 
     ColumnLayout {
-        anchors {
-            fill: parent
-            margins: s(20)
+        spacing: s(Style.bigMargin) * 1.5
+
+        Components.CalendarPackageEventsBars {
+            Layout.fillWidth: true
         }
 
-        spacing: s(20)
+        Items.BasicCheckBox {
+            id: onlyMyTransactionsCheckBox
 
-        Items.BasicText {
-            id: yearText
+            function updateCooperativeOnlyFiltering() {
+                cooperativeFilteringEvents.active = checked
+            }
 
             Layout.fillWidth: true
-            Layout.leftMargin: s(20)
+            Layout.leftMargin: s(Style.hugeMargin) * 2
+            Layout.bottomMargin: s(Style.bigMargin) * 1.5
 
-            text: displayedYear
-            horizontalAlignment: Text.AlignLeft
+            enabled: userManager.loggedIn
+            opacity: userManager.loggedIn ? 1 : 0
 
-            font {
-                pixelSize: s(60)
-                bold: true
-            }
+            text: Strings.onlyMyTransactions
+            checked: cooperativeFilteringEvents.active
+
+            Component.onCompleted: updateCooperativeOnlyFiltering()
+            onCheckedChanged: updateCooperativeOnlyFiltering()
         }
+    }
 
-        GridView {
-            id: grid
+    calendarWidgets: Flickable {
+        id: flickable
+        Layout.fillHeight: true
+        Layout.fillWidth: true
 
-            readonly property int synchronousItems: 6 // 1.5 page loaded synchronously
-            property int loadedItems: synchronousItems + 1
+        contentWidth: calendarMonthItem.width
+        contentHeight: calendarMonthItem.height
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
+        interactive: contentWidth > width || contentHeight > height
 
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+        Components.CalendarMonthItem {
+            id: calendarMonthItem
+            width: flickable.width < implicitWidth ? implicitWidth : flickable.width
+            height: flickable.height < implicitHeight ? implicitHeight : flickable.height
 
-            clip: true
+            currentMonth: top.currentMonth
+            currentYear: top.currentYear
 
-            cacheBuffer: top.height * 3
+            delegate: Components.CalendarPageItem {
+                Components.CalendarItemGridExtension {
+                    id: gridExtension
 
-            cellHeight: height / 2
-            cellWidth: width / 2
+                    modelDate: model.date
+                    modelDay: model.day
+                    modelMonth: model.month
+                    modelWeekNumber: model.weekNumber
 
-            model: datesModel
-
-            verticalLayoutDirection: GridView.BottomToTop
-            layoutDirection: Qt.RightToLeft
-
-            onContentYChanged: {
-                // Update curent year based on item at bottomLeft position.
-                // 0.8 is here tu assure that year will be changed when month header is shown.
-                var topLeft = itemAt(contentX + cellWidth * 0.5, contentY + cellHeight * 0.8)
-
-                if (topLeft !== null) {
-                    top.displayedYear = topLeft.cYear
-
-                    // Add next year when topLeft is in March.
-                    if (topLeft.cMonth === Calendar.March && topLeft.cYear === lowestYear)
-                         addYear()
+                    gridItem: calendarMonthItem.gridItem
                 }
+
+                visible: !gridExtension.additionalRow
+                currentMonth: calendarMonthItem.currentMonth
             }
 
-            delegate: Item {
-                width: GridView.view.cellWidth
-                height: GridView.view.cellHeight
-
-                property int cYear: year
-                property int cMonth: month
-
-                enabled: year < currentYear || month <= currentMonth
-                visible: enabled
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: s(20)
-
-                    spacing: s(20)
-
-                    Items.BasicText {
-                        Layout.fillWidth: true
-
-                        text: Helpers.getMonthName(month)
-                        horizontalAlignment: Text.AlignLeft
-                    }
-
-                    Item {
-                        id: asyncMonthItem
-                        property bool synchronous: index <= grid.synchronousItems
-                        property bool active: index <= grid.loadedItems
-                        property bool ready: loader.status === Loader.Ready
-
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-
-                        onReadyChanged: {
-                            if (index == grid.loadedItems)
-                                grid.loadedItems++;
-                        }
-
-                        Component {
-                            id: monthItemComponent
-
-                            Items.CalendarMonthItem {
-                                anchors.fill: parent
-                                currentMonth: month
-                                currentYear: year
-                                circleColor: Style.buttonBlackGreyColor
-                                circleSize: s(Style.calendarSmallDotSize)
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: enterCalendarMonthPage(month, year)
-                                }
-                            }
-                        }
-
-                        Loader {
-                            id: loader
-                            anchors.fill: parent
-
-                            asynchronous: false //!asyncMonthItem.synchronous
-                            sourceComponent: monthItemComponent
-
-                            visible: asyncMonthItem.ready
-                            active: enabled && asyncMonthItem.active
-                        }
-                        Items.WaitOverlay {
-                            anchors.fill: parent
-                            visible: !asyncMonthItem.ready
-                        }
-                    }
-                }
-            }
-
-            Component.onCompleted: {
-                // Slow down flick as page component is quite heavy which leads to poor UX.
-                flickDeceleration = flickDeceleration * 0.5
-                maximumFlickVelocity = maximumFlickVelocity * 0.3
-            }
+            onDayClicked: top.enterDayPage(dayDate)
         }
     }
 }

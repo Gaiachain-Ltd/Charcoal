@@ -3,50 +3,58 @@
 
 #include "abstractmanager.h"
 
-#include <QVariantMap>
-
+#include "offlineusershandler.h"
 #include "../common/enums.h"
+#include "../common/userdata.h"
 
 class UserManager : public AbstractManager
 {
     Q_OBJECT
-    Q_PROPERTY(Enums::UserType userType READ getUserType WRITE setUserType NOTIFY userTypeChanged)
-    Q_PROPERTY(QVariantMap userData READ userData CONSTANT)
-    Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
-    Q_PROPERTY(int commodityType READ commodityType WRITE setCommodityType NOTIFY commodityTypeChanged)
+    Q_PROPERTY(UserData userData READ getUserData NOTIFY userDataChanged)
+    Q_PROPERTY(QString login READ getLogin NOTIFY loginChanged)
+    Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
+    Q_PROPERTY(bool offlineMode READ isOfflineMode NOTIFY offlineModeChanged)
+
 public:
     explicit UserManager(QObject *parent = nullptr);
 
-    virtual void setupQmlContext(QQmlApplicationEngine &engine) override;
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     Q_INVOKABLE void logOut();
+    Q_INVOKABLE bool offlineAvailable(const QString &login) const;
+    Q_INVOKABLE bool offlineLogin(const QString &login, const QString &password);
 
-    bool loggedIn() const;
+    bool isLoggedIn() const;
 
-    Enums::UserType getUserType() const;
-    void setUserType(const Enums::UserType userType);
+    QString getLogin() const;
+    UserData getUserData() const;
 
-    int commodityType() const;
-    void setCommodityType(const int commodityType);
-
-    QVariantMap userData() const;
+    bool isOfflineMode() const;
 
 public slots:
-    void parseLoginData(const QJsonDocument &doc);
+    void handleLoginAttempt(const QString &login, const QString &password);
+    void readLoginData(const QString &login, const QJsonObject &userDataObj);
 
 signals:
-    void userTypeChanged(Enums::UserType userType) const;
-    void commodityTypeChanged(int commodityType) const;
-    void loggedInChanged(bool loggedIn) const;
     void tokenChanged(const QString &token) const;
+    void loggedInChanged(bool isLoggedIn) const;
+    void loggedIn() const;
+
+    void loginChanged(const QString &login) const;
+    void userDataChanged(const UserData &userData) const;
+
+    void offlineModeChanged(bool offlineMode);
 
 private:
-    int m_commodityType = static_cast<int>(Enums::CommodityType::InvalidCommodity);
-    Enums::UserType m_userType = Enums::UserType::NotLoggedUser;
-    bool m_loggedIn = false;
-    QVariantMap m_userData;
+    OfflineUsersHandler m_offlineHandler;
+    bool m_offlineMode = false;
 
-    void setLoggedIn();
+    QString m_login;
+    UserData m_userData;
+
+    void setOfflineMode(bool offline);
+    void setLogin(const QString &login);
+    void updateUserData(const UserData &userData);
 };
 
 #endif // USERMANAGER_H

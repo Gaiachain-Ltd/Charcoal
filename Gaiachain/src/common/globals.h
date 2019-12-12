@@ -3,18 +3,28 @@
 
 #include <QVector>
 #include <QObject>
+#include <QLoggingCategory>
 
-#define SERVER_ADDRESS QStringLiteral("https://poc.gaiachain.io/api/v1")
+#ifdef RELEASE_SERVER
+    #define SERVER_ADDRESS QStringLiteral("https://api.gaiachain.io")
+#else
+    #define SERVER_ADDRESS QStringLiteral("https://api-beta.gaiachain.io")
+#endif
+
 #define QR_CODE_LENGTH 12
-
-#define MAX_BATCH_SIZE 20
 
 #if defined(Q_OS_LINUX) and !defined(Q_OS_ANDROID)
     #define Q_OS_LINUX_DESKTOP 1
 #endif
 
+Q_DECLARE_LOGGING_CATEGORY(dataTypes)
+Q_DECLARE_LOGGING_CATEGORY(dataModels)
+Q_DECLARE_LOGGING_CATEGORY(dataRequests)
+
 namespace Gaia {
-    using ModelData = QVector<QVariantList>;
+    using ModelEntryInfo = QMap<int, QVariant>;
+    using ModelEntry = QVariantList;
+    using ModelData = QVector<ModelEntry>;
 }
 
 #endif // GLOBALS_H

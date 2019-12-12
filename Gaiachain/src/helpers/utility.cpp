@@ -6,15 +6,10 @@
 #include "../common/logs.h"
 #include "../common/globals.h"
 
-Utility *Utility::instance()
+Utility &Utility::instance()
 {
     static Utility u;
-    return &u;
-}
-
-QString Utility::commodityToString(Enums::CommodityType ct)
-{
-    return enumToQString<Enums::CommodityType>(ct, "CommodityType").toLower();
+    return u;
 }
 
 qreal Utility::scaleByDpi(qreal num) const
@@ -55,7 +50,7 @@ qreal Utility::setupDpiScale()
     qreal dpiScale = QGuiApplication::primaryScreen()->physicalDotsPerInch() / 332.5;
 
 #ifdef Q_OS_LINUX_DESKTOP
-    dpiScale = QGuiApplication::primaryScreen()->physicalDotsPerInch() / (332.5 * 0.6);
+    dpiScale = QGuiApplication::primaryScreen()->physicalDotsPerInch() / (332.5 * 0.55);
 #endif
 
 #ifdef Q_OS_IOS
@@ -99,14 +94,14 @@ bool Utility::validateId(const QString &id) const
     return rawId.length() == QR_CODE_LENGTH;
 }
 
-int Utility::getScannedIdLength() const
-{
-    return QR_CODE_LENGTH;
-}
-
 bool Utility::validateEmail(const QString &email) const
 {
     return m_emailRegex.exactMatch(email);
+}
+
+int Utility::getScannedIdLength() const
+{
+    return QR_CODE_LENGTH;
 }
 
 QDate Utility::convertDateString(const QString &dateStr, const QString &dateFormat) const
@@ -126,19 +121,18 @@ QString Utility::defaultDateFormat() const
     return m_dateFormat;
 }
 
-Enums::UserType Utility::userTypeFromString(const QString &text) const
-{
-    return m_userTypes.key(text);
-}
-
-QString Utility::userTypeToString(const Enums::UserType type) const
-{
-    return m_userTypes.value(type);
-}
-
-bool Utility::isLoginComboboxVisible() const
+bool Utility::useCombobox() const
 {
 #ifdef USE_COMBOBOX
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool Utility::fakeData() const
+{
+#ifdef FAKE_DATA
     return true;
 #else
     return false;
