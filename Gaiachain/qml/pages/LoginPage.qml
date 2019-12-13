@@ -89,7 +89,7 @@ BasePage {
             nextInput: passwordInput
 
             additionalInputMethodHints: Qt.ImhNoAutoUppercase
-            inputMethodHints: Qt.ImhEmailCharactersOnly
+            inputMethodHints: Qt.ImhEmailCharactersOnly | Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
             placeholderText: Strings.emailAddress
             iconSource: Style.emailImgUrl
 
