@@ -1,5 +1,5 @@
-﻿#ifndef DATAVIEWMODELSMANAGER_H
-#define DATAVIEWMODELSMANAGER_H
+﻿#ifndef DATAVIEWMANAGER_H
+#define DATAVIEWMANAGER_H
 
 #include "abstractdatamodelsmanager.h"
 
@@ -37,11 +37,11 @@
 
 class QQmlApplicationEngine;
 
-class DataViewModelsManager : public AbstractDataModelsManager
+class DataViewManager : public AbstractDataModelsManager
 {
     Q_OBJECT
 public:
-    DataViewModelsManager(QObject *parent = nullptr);
+    DataViewManager(QObject *parent = nullptr);
 
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
@@ -109,4 +109,4 @@ private:
     void updateModels();
 };
 
-#endif // DATAVIEWMODELSMANAGER_H
+#endif // DATAVIEWMANAGER_H

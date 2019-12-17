@@ -1,4 +1,4 @@
-#include "dataviewmodelsmanager.h"
+#include "dataviewmanager.h"
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -14,11 +14,11 @@ namespace {
 const std::chrono::milliseconds updateDelay = std::chrono::milliseconds(500);
 }
 
-DataViewModelsManager::DataViewModelsManager(QObject *parent)
+DataViewManager::DataViewManager(QObject *parent)
     : AbstractDataModelsManager(parent)
 {
     m_updateTimer.setSingleShot(true);
-    connect(&m_updateTimer, &QTimer::timeout, this, &DataViewModelsManager::updateModels);
+    connect(&m_updateTimer, &QTimer::timeout, this, &DataViewManager::updateModels);
 
     connect(&m_latestRangePackagesTypeSearchEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
             this, [this](int number, int offset) { emit limitKeywordEventsNeeded(number, offset, m_searchEventsModel.keyword()); });
@@ -29,7 +29,7 @@ DataViewModelsManager::DataViewModelsManager(QObject *parent)
     });
 }
 
-void DataViewModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
+void DataViewManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     engine.rootContext()->setContextProperty(QStringLiteral("producersModel"), &m_producersViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("parcelsModel"), &m_parcelsViewModel);
@@ -60,13 +60,13 @@ void DataViewModelsManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("latestRangePackagesTypeSearchEventsModel"), &m_latestRangePackagesTypeSearchEventsModel);
 }
 
-void DataViewModelsManager::updateCooperativeId(quint32 cooperativeId)
+void DataViewManager::updateCooperativeId(quint32 cooperativeId)
 {
     m_cooperativeEventsModel.setCooperativeId(cooperativeId);
     m_cooperativeFilteringEventsModel.setCooperativeId(cooperativeId);
 }
 
-PackageData DataViewModelsManager::getPackageData(const QString &packageId) const
+PackageData DataViewManager::getPackageData(const QString &packageId) const
 {
     auto package = PackageData{};
     package.id = packageId;
@@ -76,17 +76,17 @@ PackageData DataViewModelsManager::getPackageData(const QString &packageId) cons
     return package;
 }
 
-Gaia::ModelData DataViewModelsManager::getOfflineActions() const
+Gaia::ModelData DataViewManager::getOfflineActions() const
 {
     return m_localOnlyEventsModel.getData();
 }
 
-void DataViewModelsManager::onModelUpdated(const ModelType &type)
+void DataViewManager::onModelUpdated(const ModelType &type)
 {
     m_modelUpdateHandler.value(type, []{})();
 }
 
-void DataViewModelsManager::setupModels()
+void DataViewManager::setupModels()
 {
     m_producersViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Producers), m_db,
                                                           SortNameQuery(SortFilterQuery{}),
@@ -141,7 +141,7 @@ void DataViewModelsManager::setupModels()
     m_relationsListModel.setSourceModel(&m_relationsViewModel);
 }
 
-void DataViewModelsManager::setupUpdateConnections()
+void DataViewManager::setupUpdateConnections()
 {
     connect(&m_lastActionHarvestModel, &PackageLastActionProxyModel::filteringFinished,
             this, [this]() { packagesEventsNeeded(m_lastActionHarvestModel.getData()); });
@@ -153,10 +153,10 @@ void DataViewModelsManager::setupUpdateConnections()
     // -------------------------------------------------------------
 
     m_modelUpdateHandler.insert(ModelType::Producers,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
+                                std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_producersViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Parcels,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
+                                std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_parcelsViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Companies, [this]() {
         scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_cooperativesViewModel.sourceModel()));
@@ -164,21 +164,21 @@ void DataViewModelsManager::setupUpdateConnections()
         scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_transportersViewModel.sourceModel()));
     });
     m_modelUpdateHandler.insert(ModelType::Destinations,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
+                                std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_destinationsViewModel.sourceModel()) ));
 
     m_modelUpdateHandler.insert(ModelType::Events,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
+                                std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_eventsViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::Relations,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
+                                std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_relationsViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::UnusedIds,
-                                std::bind(&DataViewModelsManager::scheduleModelUpdate, this,
+                                std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_unusedLotIdsViewModel.sourceModel()) ));
 }
 
-void DataViewModelsManager::scheduleModelUpdate(SqlQueryModel *model)
+void DataViewManager::scheduleModelUpdate(SqlQueryModel *model)
 {
     Q_ASSERT(model);
     if (model) {
@@ -190,7 +190,7 @@ void DataViewModelsManager::scheduleModelUpdate(SqlQueryModel *model)
     }
 }
 
-void DataViewModelsManager::updateModels()
+void DataViewManager::updateModels()
 {
     while (!m_modelsToUpdate.isEmpty()) {
         if (auto modelPtr = m_modelsToUpdate.takeFirst(); modelPtr) {

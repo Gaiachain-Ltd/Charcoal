@@ -192,7 +192,8 @@ BasePage {
     Items.PureImageButton {
         parent: videoOutput
 
-        width: s(Static.frameSvgImgHeight); height: s(Static.frameSvgImgHeight)
+        width: s(Static.frameSvgImgHeight);
+        height: s(Static.frameSvgImgHeight)
 
         source: !qrStatus.manual ? Style.frameImgUrl : Style.qrImgUrl
         anchors.centerIn: parent

@@ -138,17 +138,13 @@ void DataRequestsManager::processOfflineAction(const QString &packageId, const E
 
 void DataRequestsManager::offlineActionAdded(const QString &packageId, const Enums::SupplyChainAction &action)
 {
-    emit updateLocalAction(packageId, action);
+    emit updateOfflineAction(packageId, action);
 
     m_offlineActionRequestsSent.remove(packageId, action);
 }
 
-void DataRequestsManager::offlineActionError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error)
+void DataRequestsManager::offlineActionError(const QString &packageId, const Enums::SupplyChainAction &action)
 {
-    if (!RequestsHelper::isNetworkError(error) && !RequestsHelper::isServerError(error)) {
-        emit removeLocalAction(packageId, action);
-    }
-
     m_offlineActionRequestsSent.remove(packageId, action);
 }
 

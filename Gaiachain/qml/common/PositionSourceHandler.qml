@@ -15,6 +15,11 @@ Item {
         }
     }
 
+    /* Bare PositionSource seems not to work properly in some cases when switching GPS on / off.
+     * It updates part of properties but not all and do not provide a valid coordinates.
+     * Calling start / stop doesn't help, only reloading of the whole component.
+     * Thus the Loader.
+     */
     Loader {
         id: positionSourceLoader
 
@@ -24,7 +29,7 @@ Item {
         function refreshDelayed(delay = Static.gpsRefreshInterval) {
             active = false
 
-            refreshTimer.interval = Static.gpsRefreshInterval
+            refreshTimer.interval = delay
             refreshTimer.start()
         }
         function refreshNow() {

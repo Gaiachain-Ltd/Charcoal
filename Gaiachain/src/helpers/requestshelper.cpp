@@ -100,7 +100,7 @@ bool RequestsHelper::isActionDuplicatedError(const QNetworkReply::NetworkError &
 QJsonValue RequestsHelper::checkAndValue(const QJsonObject &object, const QLatin1String tag)
 {
     if (!object.contains(tag)) {
-        qCWarning(dataModels) << "Tag" << tag << "is missing in an object data!";
+        qCWarning(dataRequests) << "Tag" << tag << "is missing in an object data!";
         return {};
     }
     return object.value(tag);

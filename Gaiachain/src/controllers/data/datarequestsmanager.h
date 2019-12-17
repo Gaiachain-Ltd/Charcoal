@@ -28,22 +28,20 @@ public:
     void processOfflineAction(const QString &packageId, const Enums::SupplyChainAction &action);
 
     void offlineActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
-    void offlineActionError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error);
+    void offlineActionError(const QString &packageId, const Enums::SupplyChainAction &action);
 
 signals:
     void processingRequestsNumberChanged(int processingRequestsNumber) const;
 
-    void additionalDataProcessed(const QMap<Enums::AdditionalDataType, Gaia::ModelData> &additionalDataModels);
-    void entitiesInfoProcessed(const Gaia::ModelData &modelData);
-    void entitiesProcessed(const Gaia::ModelData &modelData);
-    void relationsProcessed(const Gaia::ModelData &modelData);
-    void unusedLotIdsProcessed(const Gaia::ModelData &modelData);
+    void additionalDataProcessed(const QMap<Enums::AdditionalDataType, Gaia::ModelData> &additionalDataModels) const;
+    void entitiesInfoProcessed(const Gaia::ModelData &modelData) const;
+    void entitiesProcessed(const Gaia::ModelData &modelData) const;
+    void relationsProcessed(const Gaia::ModelData &modelData) const;
+    void unusedLotIdsProcessed(const Gaia::ModelData &modelData) const;
 
-    void updateLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
-    void removeLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
-
+    void updateOfflineAction(const QString &packageId, const Enums::SupplyChainAction &action) const;
     void sendOfflineAction(const QString &packageId, const Enums::SupplyChainAction &action,
-                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
+                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) const;
 
 private:
     using EventPropertyHandler = std::function<QVariantMap(const QJsonObject &)>;
