@@ -19,10 +19,10 @@ Pages.SupplyChainPage {
     property var lastHarvestData
     property string scannedId
 
-    proceedButtonEnabled: !(lotIdComboBox.currentText === Strings.empty ||
-                            nameCooperativeInputHeader.inputText === Strings.empty ||
-                            qrCodeInputHeader.inputText === Strings.empty ||
-                            harvestPidsRepeater.empty())
+    validPageData: !(lotIdComboBox.currentText === Strings.empty ||
+                     nameCooperativeInputHeader.inputText === Strings.empty ||
+                     qrCodeInputHeader.inputText === Strings.empty ||
+                     harvestPidsRepeater.empty())
 
     onLastHarvestDataChanged: {
         var harvestId = lastHarvestData["harvestId"]
@@ -54,14 +54,15 @@ Pages.SupplyChainPage {
         top.packageCodeData = codeData
         dataManager.addAction(Enums.SupplyChainAction.Bagging,
                               codeData,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
     Connections {
-       target: sessionManager
+        target: sessionManager
 
-       onUnusedLotIdCreated: sessionManager.getUnusedLotIds()
+        onUnusedLotIdCreated: sessionManager.getUnusedLotIds()
     }
 
     ListModel {
@@ -80,7 +81,7 @@ Pages.SupplyChainPage {
 
         function addNewHarvestId(harvestId, weight) {
             append({ "harvestIdValue": harvestId,
-                     "weightValue": weight })
+                       "weightValue": weight })
         }
 
         function idExists(id) {
@@ -103,83 +104,79 @@ Pages.SupplyChainPage {
                                                "backgroundColor": Style.warningColor })
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ComboBoxHeader {
+        id: lotIdComboBox
 
-        Items.ComboBoxHeader {
-            id: lotIdComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.lotIdTheSackBelongsTo
 
-            headerText: Strings.lotIdTheSackBelongsTo
+        displayRole: "packageId"
+        model: unusedLotIdsModel
 
-            displayRole: "packageId"
-            model: unusedLotIdsModel
+        footerVisible: true
+        footerText: Strings.addLot.toUpperCase()
+        onFooterClicked: sessionManager.postUnusedLotId()
+    }
 
-            footerVisible: true
-            footerText: Strings.addLot.toUpperCase()
-            onFooterClicked: sessionManager.postUnusedLotId()
+    Items.InputHeader {
+        id: nameCooperativeInputHeader
+
+        Layout.fillWidth: true
+
+        readOnly: true
+        color: Style.headerBackgroundColor
+
+        headerText: Strings.nameCooperative
+        inputText: userManager.userData.cooperativeName
+    }
+
+    Items.ButtonInputHeader {
+        id: qrCodeInputHeader
+
+        Layout.fillWidth: true
+
+        iconSource: Style.qrImgUrl
+
+        inputText: top.scannedId
+        headerText: Strings.qrCode
+        placeholderText: Strings.scanQrCodeFrom.arg(Strings.sac.toUpperCase())
+
+
+        onClicked: pageManager.enter(Enums.Page.QRScanner, {
+                                         "title": title,
+                                         "backSupplyChainPage": page,
+                                         "popupText": Strings.attachQr.arg(Strings.sac.toUpperCase()) })
+    }
+
+    Items.ButtonHeader {
+        Layout.fillWidth: true
+
+        headerText: Strings.harvestId
+        buttonText: Strings.addHarvestId
+
+        iconSource: Style.plusImgUrl
+
+        onClicked: pageManager.enter(Enums.Page.SupplyChainAddHarvestId, { "firstEntry": typeof(lastHarvestData) === "undefined" })
+    }
+
+    Repeater {
+        id: harvestPidsRepeater
+
+        model: harvestPidsModel
+
+        function empty() {
+            return (count === 0)
         }
 
         Items.InputHeader {
-            id: nameCooperativeInputHeader
-
             Layout.fillWidth: true
 
+            showIcon: (suffixText === Strings.empty)
             readOnly: true
-            color: Style.headerBackgroundColor
 
-            headerText: Strings.nameCooperative
-            inputText: userManager.userData.cooperativeName
-        }
-
-        Items.ButtonInputHeader {
-            id: qrCodeInputHeader
-
-            Layout.fillWidth: true
-
-            iconSource: Style.qrImgUrl
-
-            inputText: top.scannedId
-            headerText: Strings.qrCode
-            placeholderText: Strings.scanQrCodeFrom.arg(Strings.sac.toUpperCase())
-
-
-            onClicked: pageManager.enter(Enums.Page.QRScanner, {
-                                                 "title": title,
-                                                 "backSupplyChainPage": page,
-                                                 "popupText": Strings.attachQr.arg(Strings.sac.toUpperCase()) })
-        }
-
-        Items.ButtonHeader {
-            Layout.fillWidth: true
-
-            headerText: Strings.harvestId
-            buttonText: Strings.addHarvestId
-
-            iconSource: Style.plusImgUrl
-
-            onClicked: pageManager.enter(Enums.Page.SupplyChainAddHarvestId, { "firstEntry": typeof(lastHarvestData) === "undefined" })
-        }
-
-        Repeater {
-            id: harvestPidsRepeater
-
-            model: harvestPidsModel
-
-            function empty() {
-                return (count === 0)
-            }
-
-            Items.InputHeader {
-                Layout.fillWidth: true
-
-                showIcon: (suffixText === Strings.empty)
-                readOnly: true
-
-                inputText: harvestIdValue
-                suffixText: Strings.kg.arg((weightValue === Strings.empty) ? "-" : weightValue)
-            }
+            inputText: harvestIdValue
+            suffixText: Strings.kg.arg((weightValue === Strings.empty) ? "-" : weightValue)
         }
     }
 }

@@ -61,17 +61,17 @@ void MainController::setupConnections()
 void MainController::setupDataConnections()
 {
     connect(&m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
     connect(&m_dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
     connect(&m_dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
 
     connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
             &m_dataManager, &DataManager::onActionAdded);
@@ -163,6 +163,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // register singleton types
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
+    qmlRegisterSingletonType(QUrl("qrc:///GaiaStatic.qml"), "com.gaiachain.static", 1, 0, "Static");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");
 
     qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0, "Utility", &registerCppOwnershipSingletonType<Utility>);

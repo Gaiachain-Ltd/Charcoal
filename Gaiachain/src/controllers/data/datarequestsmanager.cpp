@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QGeoCoordinate>
 
 #include "../../helpers/requestshelper.h"
 #include "../../common/tags.h"
@@ -107,7 +108,7 @@ void DataRequestsManager::processUnusedLotIdsLoaded(const QJsonArray &idsArray)
 void DataRequestsManager::processOfflineActions(const Gaia::ModelData &offlineData)
 {
     for (const auto &modelEntry : offlineData) {
-        Q_ASSERT(modelEntry.size() >= 4);
+        Q_ASSERT(modelEntry.size() >= 6);
 
         const auto packageId = modelEntry.at(0).toString();
         const auto action = modelEntry.at(1).value<Enums::SupplyChainAction>();
@@ -117,6 +118,8 @@ void DataRequestsManager::processOfflineActions(const Gaia::ModelData &offlineDa
 
             emit sendOfflineAction(packageId,
                                    action,
+                                   QGeoCoordinate(modelEntry.at(4).toDouble(),
+                                                  modelEntry.at(5).toDouble()),
                                    modelEntry.at(2).toDateTime(),
                                    modelEntry.at(3).toMap());
         }
@@ -242,14 +245,18 @@ Gaia::ModelEntry DataRequestsManager::processEvent(const QJsonValue &value)
     const auto companyObj = RequestsHelper::checkAndValue(userObj, Tags::company).toObject();
     const auto cooperativeId = RequestsHelper::checkAndValue(companyObj, Tags::id).toInt();
 
+    const auto locationObj = RequestsHelper::checkAndValue(object, Tags::location).toObject();
+    const auto locationLat = RequestsHelper::checkAndValue(locationObj, Tags::latitude).toDouble();
+    const auto locationLon = RequestsHelper::checkAndValue(locationObj, Tags::longitude).toDouble();
+
     return Gaia::ModelEntry {
         packageId,
         QVariant::fromValue(action),
         date,
         cooperativeId,
         properties,
-        0.0,    // location not handled yet
-        0.0     // location not handled yet
+        locationLat,
+        locationLon
     };
 }
 

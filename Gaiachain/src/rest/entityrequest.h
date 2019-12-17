@@ -3,6 +3,8 @@
 
 #include "baserequest.h"
 
+#include <QGeoCoordinate>
+
 #include "../common/enums.h"
 
 class EntityRequest : public BaseRequest
@@ -24,6 +26,7 @@ public:
 
     struct EntityData {
         Enums::SupplyChainAction action;
+        QGeoCoordinate coordinate;
         QDateTime timestamp;
         QVariantMap properties;
     };

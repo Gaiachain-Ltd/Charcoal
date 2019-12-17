@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QGeoCoordinate>
 
 #include "../../common/dataglobals.h"
 #include "../../helpers/packagedataproperties.h"
@@ -64,27 +65,27 @@ QString DataManager::generateHarvestId(const QDate &date, const QString &parcelC
 }
 
 void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action,
-                            const QDateTime &timestamp, const QVariantMap &properties)
+                            const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto isOfflineAction = DataGlobals::availableOfflineActions().contains(action) && !m_userData.isAnonymous();
     if (isOfflineAction) {
         QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::addLocalAction, &m_modelsHandler,
-                                                              packageId, action, timestamp, m_userData.cooperativeId, properties));
+                                                              packageId, action, coordinate, timestamp, m_userData.cooperativeId, properties));
     } else {
-        emit addActionRequest(packageId, action, timestamp, properties);
+        emit addActionRequest(packageId, action, coordinate, timestamp, properties);
     }
 }
 
 void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QByteArray &codeData,
-                            const QDateTime &timestamp, const QVariantMap &properties)
+                            const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
-    emit addActionRequest(packageId, codeData, action, timestamp, properties);
+    emit addActionRequest(packageId, codeData, action, coordinate, timestamp, properties);
 }
 
 void DataManager::addAction(const Enums::SupplyChainAction &action, const QByteArray &codeData,
-                            const QDateTime &timestamp, const QVariantMap &properties)
+                            const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
-    emit addActionRequest(codeData, action, timestamp, properties);
+    emit addActionRequest(codeData, action, coordinate, timestamp, properties);
 }
 
 void DataManager::sendOfflineActions()
@@ -200,14 +201,12 @@ void DataManager::setupHandlersConnections()
 
     connect(&m_modelsHandler, &DataModelsManager::localActionAdded,
             this, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest));
     connect(&m_modelsHandler, &DataModelsManager::localActionDuplicated,
             this, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest));
 
     connect(&m_requestsHandler, &DataRequestsManager::sendOfflineAction,
-            this, [this](const QString &packageId, const Enums::SupplyChainAction &action,
-            const QDateTime &timestamp, const QVariantMap &properties){
-        emit addActionRequest(packageId, action, timestamp, properties);
-    });
+            this, qOverload<const QString &, const Enums::SupplyChainAction &,
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest));
 }

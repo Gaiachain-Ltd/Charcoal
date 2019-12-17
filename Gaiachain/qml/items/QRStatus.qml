@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.static 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -61,7 +62,7 @@ Rectangle {
             focus: false
             visible: top.manual
 
-            validator: RegExpValidator { regExp: Style.codeDataRegExpPattern }
+            validator: RegExpValidator { regExp: Static.codeDataRegExpPattern }
         }
 
         Items.PureImageButton {

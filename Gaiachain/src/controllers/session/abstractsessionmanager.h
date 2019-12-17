@@ -7,6 +7,8 @@
 #include <QNetworkReply>
 #include <QLoggingCategory>
 
+class QGeoCoordinate;
+
 Q_DECLARE_LOGGING_CATEGORY(sessionManager)
 
 class AbstractSessionManager : public AbstractManager
@@ -40,11 +42,11 @@ public:
     Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;
 
     Q_INVOKABLE virtual void postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
-                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+                                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) = 0;
     Q_INVOKABLE virtual void postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+                                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) = 0;
     Q_INVOKABLE virtual void postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+                                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) = 0;
 
     Q_INVOKABLE virtual void getUnusedLotIds() = 0;
     Q_INVOKABLE virtual void postUnusedLotId() = 0;

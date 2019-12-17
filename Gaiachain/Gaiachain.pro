@@ -3,7 +3,7 @@
 #
 ## (c) Milo Solutions, 2016
 
-QT += core gui qml quick svg sql
+QT += core gui qml quick svg sql location
 
 exists(../local.pri) {
     include(../local.pri)
@@ -21,7 +21,7 @@ release_server {
     DEFINES+=RELEASE_SERVER
 }
 
-english {
+english_language {
     DEFINES+=ENGLISH_LANGUAGE
 }
 

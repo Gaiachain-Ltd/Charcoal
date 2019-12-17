@@ -17,10 +17,10 @@ Pages.SupplyChainPage {
 
     title: Strings.supplyChainMenuActionHarvest
 
-    proceedButtonEnabled: !(parcelCodesComboBox.currentText === Strings.empty ||
-                            producerIdComboBox.currentText === Strings.empty ||
-                            producerNameComboBox.currentText === Strings.empty ||
-                            villageInputHeader.inputText === Strings.empty)
+    validPageData: !(parcelCodesComboBox.currentText === Strings.empty ||
+                     producerIdComboBox.currentText === Strings.empty ||
+                     producerNameComboBox.currentText === Strings.empty ||
+                     villageInputHeader.inputText === Strings.empty)
 
     Component.onCompleted: refreshData()
     Component.onDestruction: parcelsModel.producerId = 0
@@ -46,91 +46,88 @@ Pages.SupplyChainPage {
         top.packageId = harvestId
         dataManager.addAction(harvestId,
                               Enums.SupplyChainAction.Harvest,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ComboBoxHeader {
+        id: producerNameComboBox
 
-        Items.ComboBoxHeader {
-            id: producerNameComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.nameOfProducer
 
-            headerText: Strings.nameOfProducer
+        onActivated: {
+            producerIdComboBox.currentIndex = currentIndex
 
-            onActivated: {
-                producerIdComboBox.currentIndex = currentIndex
+            var village = ModelHelper.getData(currentIndex, "village", model)
+            villageInputHeader.inputText = village
 
-                var village = ModelHelper.getData(currentIndex, "village", model)
-                villageInputHeader.inputText = village
-
-                var producerId = ModelHelper.getData(currentIndex, "id", model)
-                parcelsModel.producerId = producerId
-                parcelCodesComboBox.updateCurrentIndex()
-            }
-
-            displayRole: "name"
-            model: producersModel
+            var producerId = ModelHelper.getData(currentIndex, "id", model)
+            parcelsModel.producerId = producerId
+            parcelCodesComboBox.updateCurrentIndex()
         }
 
-        Items.ComboBoxHeader {
-            id: producerIdComboBox
+        displayRole: "name"
+        model: producersModel
+    }
 
-            Layout.fillWidth: true
+    Items.ComboBoxHeader {
+        id: producerIdComboBox
 
-            headerText: Strings.producerIdNumber
+        Layout.fillWidth: true
 
-            onActivated: {
-                producerNameComboBox.currentIndex = currentIndex
+        headerText: Strings.producerIdNumber
 
-                var village = ModelHelper.getData(currentIndex, "village", model)
-                villageInputHeader.inputText = village
+        onActivated: {
+            producerNameComboBox.currentIndex = currentIndex
 
-                var producerId = ModelHelper.getData(currentIndex, "id", model)
-                parcelsModel.producerId = producerId
-                parcelCodesComboBox.updateCurrentIndex()
-           }
+            var village = ModelHelper.getData(currentIndex, "village", model)
+            villageInputHeader.inputText = village
 
-           displayRole: "code"
-           model: producersModel
-       }
-
-        Items.InputHeader {
-            id: villageInputHeader
-
-            Layout.fillWidth: true
-
-            readOnly: true
-            headerText: Strings.village
-            placeholderText: enabled ? Strings.empty : Strings.selectedAutomatically
-            enabled: inputText !== Strings.empty
+            var producerId = ModelHelper.getData(currentIndex, "id", model)
+            parcelsModel.producerId = producerId
+            parcelCodesComboBox.updateCurrentIndex()
         }
 
-        Items.ComboBoxHeader {
-            id: parcelCodesComboBox
+        displayRole: "code"
+        model: producersModel
+    }
 
-            Layout.fillWidth: true
+    Items.InputHeader {
+        id: villageInputHeader
 
-            headerText: Strings.parcelCode
-            placeholderText: enabled ? Strings.toSelect : Strings.selectProducer
-            enabled: count !== 0
+        Layout.fillWidth: true
 
-            displayRole: "code"
-            model: parcelsModel
+        readOnly: true
+        headerText: Strings.village
+        placeholderText: enabled ? Strings.empty : Strings.selectedAutomatically
+        enabled: inputText !== Strings.empty
+    }
 
-            function updateCurrentIndex() {
-                currentIndex = (count === 1) ? 0 : -1
-            }
+    Items.ComboBoxHeader {
+        id: parcelCodesComboBox
+
+        Layout.fillWidth: true
+
+        headerText: Strings.parcelCode
+        placeholderText: enabled ? Strings.toSelect : Strings.selectProducer
+        enabled: count !== 0
+
+        displayRole: "code"
+        model: parcelsModel
+
+        function updateCurrentIndex() {
+            currentIndex = (count === 1) ? 0 : -1
         }
+    }
 
-        Items.InputDateHeader {
-            id: inputHarvestDate
+    Items.InputDateHeader {
+        id: inputHarvestDate
 
-            Layout.fillWidth: true
+        Layout.fillWidth: true
 
-            headerText: Strings.harvestDate
-        }
+        headerText: Strings.harvestDate
     }
 }

@@ -29,7 +29,9 @@ Gaia::ModelData PackageLastActionProxyModel::getData() const
         modelData.append({ data(index(row, 0), EventModel::Columns::PackageId),
                            data(index(row, 0), EventModel::Columns::Action),
                            data(index(row, 0), EventModel::Columns::Timestamp),
-                           data(index(row, 0), EventModel::Columns::Properties)
+                           data(index(row, 0), EventModel::Columns::Properties),
+                           data(index(row, 0), EventModel::Columns::LocationLat),
+                           data(index(row, 0), EventModel::Columns::LocationLon)
                          });
     }
 
