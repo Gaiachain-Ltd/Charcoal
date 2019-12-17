@@ -24,6 +24,9 @@ namespace Tags {
     const QLatin1String results = QLatin1String("results");
     const QLatin1String packageType = QLatin1String("package_type");
     const QLatin1String action = QLatin1String("action");
+    const QLatin1String location = QLatin1String("location");
+    const QLatin1String latitude = QLatin1String("latitude");
+    const QLatin1String longitude = QLatin1String("longitude");
     const QLatin1String timestamp = QLatin1String("timestamp");
     const QLatin1String properties = QLatin1String("properties");
     const QLatin1String relations = QLatin1String("relations");

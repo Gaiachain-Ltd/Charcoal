@@ -11,6 +11,8 @@
 
 #include "../../common/userdata.h"
 
+class QGeoCoordinate;
+
 class DataManager : public AbstractManager
 {
     Q_OBJECT
@@ -31,11 +33,11 @@ public:
     Q_INVOKABLE QString generateHarvestId(const QDate &date, const QString &parcelCode);
 
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action,
-                               const QDateTime &timestamp, const QVariantMap &properties);
+                               const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QByteArray &codeData,
-                               const QDateTime &timestamp, const QVariantMap &properties);
+                               const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     Q_INVOKABLE void addAction(const Enums::SupplyChainAction &action, const QByteArray &codeData,
-                               const QDateTime &timestamp, const QVariantMap &properties);
+                               const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
 
     Q_INVOKABLE void sendOfflineActions();
 
@@ -49,11 +51,11 @@ signals:
     void collectingDataChanged(bool processing) const;
 
     void addActionRequest(const QString &packageId, const Enums::SupplyChainAction &action,
-                          const QDateTime &timestamp, const QVariantMap &properties);
+                          const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     void addActionRequest(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                          const QDateTime &timestamp, const QVariantMap &properties);
+                          const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     void addActionRequest(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                          const QDateTime &timestamp, const QVariantMap &properties);
+                          const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
 
     void eventsInfoNeeded(const QDateTime &from, const QDateTime &to) const;
     void eventsInfoNeeded(int limit, int offset, const QDateTime &from, const QDateTime &to) const;

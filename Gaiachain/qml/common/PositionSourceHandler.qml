@@ -1,0 +1,68 @@
+import QtQuick 2.12
+import QtPositioning 5.12
+
+import com.gaiachain.static 1.0
+
+Item {
+    readonly property bool validCoordinate: coordinate !== undefined
+    property var coordinate: positionSourceLoader.positionReady &&
+                             positionSourceLoader.item.validCoordinate ? positionSourceLoader.item.position.coordinate
+                                                                       : undefined
+
+    function update() {
+        if (positionSourceLoader.positionReady) {
+            positionSourceLoader.item.update()
+        }
+    }
+
+    Loader {
+        id: positionSourceLoader
+
+        readonly property bool positionReady: status === Loader.Ready && item
+        active: true
+
+        function refreshDelayed(delay = Static.gpsRefreshInterval) {
+            active = false
+
+            refreshTimer.interval = Static.gpsRefreshInterval
+            refreshTimer.start()
+        }
+        function refreshNow() {
+            refreshDelayed(0)
+        }
+
+        Timer {
+            id: refreshTimer
+
+            repeat: false
+            onTriggered: positionSourceLoader.active = true
+        }
+
+        sourceComponent: Component {
+            PositionSource {
+                readonly property bool dataAvailable: valid &&
+                                                      (supportedPositioningMethods !== PositionSource.NoPositioningMethods)
+                readonly property bool validCoordinate: dataAvailable &&
+                                                        position.latitudeValid &&
+                                                        position.longitudeValid
+
+                function checkStatus() {
+                    if (dataAvailable &&
+                            sourceError != PositionSource.NoError) {
+                        positionSourceLoader.refreshNow()
+                    } else if (valid &&
+                               (supportedPositioningMethods === PositionSource.NoPositioningMethods)) {
+                        positionSourceLoader.refreshDelayed()
+                    }
+                }
+
+                active: true
+                updateInterval: Static.gpsRefreshInterval
+
+                onSupportedPositioningMethodsChanged: checkStatus()
+                Component.onCompleted: checkStatus()
+            }
+        }
+    }
+
+}

@@ -19,9 +19,9 @@ Pages.SupplyChainPage {
 
     property string scannedId
 
-    proceedButtonEnabled: !(qrCodeInputHeader.inputText === Strings.empty ||
-                            transporterComboBox.currentText === Strings.empty ||
-                            destinationComboBox.currentText === Strings.empty)
+    validPageData: !(qrCodeInputHeader.inputText === Strings.empty ||
+                     transporterComboBox.currentText === Strings.empty ||
+                     destinationComboBox.currentText === Strings.empty)
 
     Component.onCompleted: refreshData()
 
@@ -47,58 +47,55 @@ Pages.SupplyChainPage {
         top.packageCodeData = codeData
         dataManager.addAction(Enums.SupplyChainAction.WarehouseTransport,
                               codeData,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ButtonInputHeader {
+        id: qrCodeInputHeader
 
-        Items.ButtonInputHeader {
-            id: qrCodeInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        iconSource: Style.qrImgUrl
 
-            iconSource: Style.qrImgUrl
+        inputText: top.scannedId
+        headerText: Strings.qrCode
+        placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
 
-            inputText: top.scannedId
-            headerText: Strings.qrCode
-            placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
+        onClicked: pageManager.enter(Enums.Page.QRScanner, {
+                                         "title": title,
+                                         "backSupplyChainPage": page,
+                                         "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })
+    }
 
-            onClicked: pageManager.enter(Enums.Page.QRScanner, {
-                                                 "title": title,
-                                                 "backSupplyChainPage": page,
-                                                 "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })
-        }
+    Items.ComboBoxHeader {
+        id: transporterComboBox
 
-        Items.ComboBoxHeader {
-            id: transporterComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.organicCocoaTransporter
 
-            headerText: Strings.organicCocoaTransporter
+        model: transportersModel
+        displayRole: "name"
+    }
 
-            model: transportersModel
-            displayRole: "name"
-        }
+    Items.ComboBoxHeader {
+        id: destinationComboBox
 
-        Items.ComboBoxHeader {
-            id: destinationComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.destination
 
-            headerText: Strings.destination
+        model: destinationsModel
+        displayRole: "name"
+    }
 
-            model: destinationsModel
-            displayRole: "name"
-        }
+    Items.InputDateHeader {
+        id: inputDateHeader
 
-        Items.InputDateHeader {
-            id: inputDateHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
-
-            headerText: Strings.transportDate
-        }
+        headerText: Strings.transportDate
     }
 }

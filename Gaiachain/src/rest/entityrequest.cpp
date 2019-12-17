@@ -137,6 +137,8 @@ QJsonObject EntityRequest::entityDataObject(const EntityRequest::EntityData &ent
 {
     return {
         { Tags::action,     RequestsHelper::supplyChainActionToString(entityData.action) },
+        { Tags::location,   QJsonObject{ { Tags::latitude, entityData.coordinate.latitude() },
+                                         { Tags::longitude, entityData.coordinate.longitude() } } },
         { Tags::timestamp,  static_cast<qint64>(entityData.timestamp.toSecsSinceEpoch()) },
         { Tags::properties, QJsonObject::fromVariantMap(
                         RequestsHelper::convertProperties(entityData.properties)) }

@@ -16,7 +16,7 @@ Pages.SupplyChainPage {
 
     title: Strings.supplyChainMenuActionGrainProcessing
 
-    proceedButtonEnabled: harvestIdComboBox.currentText !== Strings.empty
+    validPageData: harvestIdComboBox.currentText !== Strings.empty
 
     Component.onCompleted: refreshData()
 
@@ -44,55 +44,52 @@ Pages.SupplyChainPage {
         top.packageId = harvestId
         dataManager.addAction(harvestId,
                               Enums.SupplyChainAction.GrainProcessing,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ComboBoxHeader {
+        id: harvestIdComboBox
 
-        Items.ComboBoxHeader {
-            id: harvestIdComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.harvestId
 
-            headerText: Strings.harvestId
+        displayRole: "packageId"
+        model: lastActionHarvestModel
+    }
 
-            displayRole: "packageId"
-            model: lastActionHarvestModel
-        }
+    Items.InputDateHeader {
+        id: breakingDateInputDate
 
-        Items.InputDateHeader {
-            id: breakingDateInputDate
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.breakingDate
+    }
 
-            headerText: Strings.breakingDate
-        }
+    Items.InputDateHeader {
+        id: endFermentationDateInputDate
 
-        Items.InputDateHeader {
-            id: endFermentationDateInputDate
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.endFermentationDate
+    }
 
-            headerText: Strings.endFermentationDate
-        }
+    Items.InputHeader {
+        id: estimatedBeansVolumeInputHeader
 
-        Items.InputHeader {
-            id: estimatedBeansVolumeInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        validator: IntValidator {}
+        inputMethodHints: Qt.ImhDigitsOnly
 
-            validator: IntValidator {}
-            inputMethodHints: Qt.ImhDigitsOnly
+        optional: true
+        headerText: Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")"
+        headerTextColor: Style.notRequiredTextInputColor
 
-            optional: true
-            headerText: Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")"
-            headerTextColor: Style.notRequiredTextInputColor
+        iconSource: Style.rightArrowImgUrl
 
-            iconSource: Style.rightArrowImgUrl
-
-            placeholderText: Strings.typeHere + "..."
-        }
+        placeholderText: Strings.typeHere + "..."
     }
 }

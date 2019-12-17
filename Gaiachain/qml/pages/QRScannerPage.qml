@@ -5,6 +5,7 @@ import QZXing 2.3
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.static 1.0
 import com.gaiachain.helpers 1.0
 
 import "../items" as Items
@@ -91,7 +92,7 @@ BasePage {
         QZXingFilter {
             id: zxingFilter
 
-            property real normalizedScanSize: Style.normalizedScanSize
+            property real normalizedScanSize: Static.normalizedScanSize
             property real normalizedScanPos: (1.0 - normalizedScanSize) * 0.5
 
             captureRect: {
@@ -191,7 +192,7 @@ BasePage {
     Items.PureImageButton {
         parent: videoOutput
 
-        width: s(Style.frameSvgImgHeight); height: s(Style.frameSvgImgHeight)
+        width: s(Static.frameSvgImgHeight); height: s(Static.frameSvgImgHeight)
 
         source: !qrStatus.manual ? Style.frameImgUrl : Style.qrImgUrl
         anchors.centerIn: parent
@@ -217,7 +218,8 @@ BasePage {
                 }
             }
 
-            width: s(Style.checkSvgImageHeight); height: s(Style.checkSvgImageHeight)
+            width: s(Static.checkSvgImageHeight)
+            height: s(Static.checkSvgImageHeight)
 
             opacity: allow()
             enabled: allow()

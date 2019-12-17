@@ -1,5 +1,7 @@
 #include "datamodelsmanager.h"
 
+#include <QGeoCoordinate>
+
 #include "../../database/dbhelpers.h"
 #include "../../common/dataglobals.h"
 
@@ -21,7 +23,8 @@ void DataModelsManager::updateThread()
     m_unusedLotIdsSourceModel.moveToThread(thread());
 }
 
-void DataModelsManager::addLocalAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+void DataModelsManager::addLocalAction(const QString &packageId, const Enums::SupplyChainAction &action,
+                                       const QGeoCoordinate &coordinate, const QDateTime &timestamp,
                                        int cooperativeId, const QVariantMap &properties)
 {
     ProcessCounter p(this);
@@ -31,7 +34,7 @@ void DataModelsManager::addLocalAction(const QString &packageId, const Enums::Su
     removeExistingEvents(modelData);
 
     if (modelData.isEmpty()) {
-        emit localActionDuplicated(packageId, action, timestamp, properties);
+        emit localActionDuplicated(packageId, action, coordinate, timestamp, properties);
     } else {
         m_eventsSourceModel.appendData({ Gaia::ModelEntry {
                                              packageId,
@@ -39,12 +42,12 @@ void DataModelsManager::addLocalAction(const QString &packageId, const Enums::Su
                                              timestamp,
                                              cooperativeId,
                                              properties,
-                                             0.0,    // location not handled yet
-                                             0.0,    // location not handled yet
+                                             coordinate.latitude(),
+                                             coordinate.longitude(),
                                              true
                                          }, });
 
-        emit localActionAdded(packageId, action, timestamp, properties);
+        emit localActionAdded(packageId, action, coordinate, timestamp, properties);
     }
 }
 

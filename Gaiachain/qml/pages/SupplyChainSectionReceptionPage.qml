@@ -17,7 +17,7 @@ Pages.SupplyChainPage {
 
     title: Strings.receptionAtSection
 
-    proceedButtonEnabled: !(harvestIdComboBox.currentText === Strings.empty)
+    validPageData: !(harvestIdComboBox.currentText === Strings.empty)
 
     Component.onCompleted: refreshData()
 
@@ -49,57 +49,54 @@ Pages.SupplyChainPage {
         top.packageId = harvestId
         dataManager.addAction(harvestId,
                               Enums.SupplyChainAction.SectionReception,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ComboBoxHeader {
+        id: harvestIdComboBox
 
-        Items.ComboBoxHeader {
-            id: harvestIdComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.harvestId
 
-            headerText: Strings.harvestId
+        model: lastActionGrainProcessingModel
+        displayRole: "packageId"
+    }
 
-            model: lastActionGrainProcessingModel
-            displayRole: "packageId"
-        }
+    Items.InputDateHeader {
+        id: receptionInputDateHeader
 
-        Items.InputDateHeader {
-            id: receptionInputDateHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.receptionDate
+    }
 
-            headerText: Strings.receptionDate
-        }
+    Items.InputDateHeader {
+        id: transportInputDateHeader
 
-        Items.InputDateHeader {
-            id: transportInputDateHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        optional: true
 
-            optional: true
+        placeholderText: Strings.toSelect
+        headerText: Strings.transportDate + " (" + Strings.notRequired + ")"
+        headerTextColor: Style.notRequiredTextInputColor
+    }
 
-            placeholderText: Strings.toSelect
-            headerText: Strings.transportDate + " (" + Strings.notRequired + ")"
-            headerTextColor: Style.notRequiredTextInputColor
-        }
+    Items.ComboBoxHeader {
+        id: buyerComboBox
 
-        Items.ComboBoxHeader {
-            id: buyerComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        optional: true
 
-            optional: true
+        placeholderText: Strings.toSelect
+        headerText: Strings.buyer + " (" + Strings.notRequired + ")"
+        headerTextColor: Style.notRequiredTextInputColor
 
-            placeholderText: Strings.toSelect
-            headerText: Strings.buyer + " (" + Strings.notRequired + ")"
-            headerTextColor: Style.notRequiredTextInputColor
-
-            model: buyersModel
-            displayRole: "name"
-        }
+        model: buyersModel
+        displayRole: "name"
     }
 }

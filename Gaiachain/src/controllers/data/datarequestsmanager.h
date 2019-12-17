@@ -8,6 +8,8 @@
 #include "../../common/globals.h"
 #include "../../common/enums.h"
 
+class QGeoCoordinate;
+
 class DataRequestsManager : public AbstractManager
 {
     Q_OBJECT
@@ -41,7 +43,7 @@ signals:
     void removeLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
 
     void sendOfflineAction(const QString &packageId, const Enums::SupplyChainAction &action,
-                           const QDateTime &timestamp, const QVariantMap &properties);
+                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
 
 private:
     using EventPropertyHandler = std::function<QVariantMap(const QJsonObject &)>;

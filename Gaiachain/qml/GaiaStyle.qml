@@ -1,8 +1,6 @@
 pragma Singleton
 
-import QtQuick 2.11
-
-import com.gaiachain.enums 1.0
+import QtQuick 2.12
 
 QtObject {
     readonly property real logoHeight: 170
@@ -221,10 +219,4 @@ QtObject {
     readonly property int calendarMonthMinWidth: 150
     readonly property int calendarMonthMinHeight: 120
     readonly property int calendarYearStartYear: 2018
-
-    // qr scanner page
-    readonly property int frameSvgImgHeight: 550
-    readonly property int checkSvgImageHeight: 250
-    readonly property real normalizedScanSize: 0.6 // Should be between 0 and 1
-    readonly property var codeDataRegExpPattern: /[A-Za-z0-9\-]+/
 }

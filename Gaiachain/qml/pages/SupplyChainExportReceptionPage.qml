@@ -19,8 +19,8 @@ Pages.SupplyChainPage {
 
     property string scannedId
 
-    proceedButtonEnabled: !(qrCodeInputHeader.inputText === Strings.empty ||
-                            lotWeightInputHeader.inputText === Strings.empty)
+    validPageData: !(qrCodeInputHeader.inputText === Strings.empty ||
+                     lotWeightInputHeader.inputText === Strings.empty)
 
     Component.onCompleted: refreshData()
 
@@ -40,43 +40,40 @@ Pages.SupplyChainPage {
         top.packageCodeData = codeData
         dataManager.addAction(Enums.SupplyChainAction.ExportReception,
                               codeData,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ButtonInputHeader {
+        id: qrCodeInputHeader
 
-        Items.ButtonInputHeader {
-            id: qrCodeInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        iconSource: Style.qrImgUrl
 
-            iconSource: Style.qrImgUrl
+        inputText: top.scannedId
+        headerText: Strings.qrCode
+        placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
 
-            inputText: top.scannedId
-            headerText: Strings.qrCode
-            placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
+        onClicked: pageManager.enter(Enums.Page.QRScanner, {
+                                         "title": title,
+                                         "backSupplyChainPage": page,
+                                         "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })
+    }
 
-            onClicked: pageManager.enter(Enums.Page.QRScanner, {
-                                                 "title": title,
-                                                 "backSupplyChainPage": page,
-                                                 "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })
-        }
+    Items.InputHeader {
+        id: lotWeightInputHeader
 
-        Items.InputHeader {
-            id: lotWeightInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        validator: IntValidator {}
+        inputMethodHints: Qt.ImhDigitsOnly
 
-            validator: IntValidator {}
-            inputMethodHints: Qt.ImhDigitsOnly
+        headerText: Strings.kg.arg(Strings.lotWeight)
 
-            headerText: Strings.kg.arg(Strings.lotWeight)
+        iconSource: Style.rightArrowImgUrl
 
-            iconSource: Style.rightArrowImgUrl
-
-            placeholderText: Strings.typeHere + "..."
-        }
+        placeholderText: Strings.typeHere + "..."
     }
 }
