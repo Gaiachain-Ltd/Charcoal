@@ -80,6 +80,8 @@ Items.GenericPanel
         onClicked: forceActiveFocus()
     }
 
+    Components.OfflineModeHandler {}
+
     Connections {
         target: sessionManager
         enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode
@@ -91,47 +93,6 @@ Items.GenericPanel
         onPingSuccess: {
             pageManager.openPopup(Enums.Popup.YesNoQuestion,
                                   { "text": Strings.onlineLogoutQuestion })
-        }
-    }
-
-    Connections {
-        target: sessionManager
-        enabled: (Number(pageManager.topPage) === page)
-
-        function isSupplyChainPage() {
-            return page === Enums.SupplyChainHarvest ||
-                    page === Enums.SupplyChainGrainProcessing ||
-                    page === Enums.SupplyChainSectionReception ||
-                    page === Enums.SupplyChainBagging ||
-                    page === Enums.SupplyChainAddHarvestId ||
-                    page === Enums.SupplyChainLotCreation ||
-                    page === Enums.SupplyChainWarehouseTransport ||
-                    page === Enums.SupplyChainExportReception;
-        }
-
-        // handle notification for package sent error (here for offline added actions)
-        onEntitySaveError: {
-            if (isSupplyChainPage()
-                    && isCurrentAction(packageId, codeData, action)) {
-                return
-            }
-
-            // is offline added action
-            if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
-                return
-            }
-
-            var errorText = Strings.addActionErrorUnknown
-            if (RequestHelper.isActionMissingError(code)) {
-                errorText = Strings.addActionErrorMissing
-            } else if (RequestHelper.isActionDuplicatedError(code)) {
-                errorText = Strings.addActionErrorDuplicated
-            }
-
-            errorText += "\n\n" + packageId
-            errorText += "\n" + Helper.actionDescriptionStatusText(action)
-
-            pageManager.openPopup(Enums.Popup.Information, {"text": errorText, "buttonPrimaryColor": Style.errorColor})
         }
     }
 

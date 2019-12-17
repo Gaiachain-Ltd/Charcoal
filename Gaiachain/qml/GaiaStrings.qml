@@ -105,6 +105,7 @@ QtObject {
     readonly property string addActionErrorUnknown: qsTr("Cannot add the action to the server.")
     readonly property string addActionErrorMissing: qsTr("Data is missing. Please check your input and try again.")
     readonly property string addActionErrorDuplicated: qsTr("The action already exists. Please check your input and try again.")
+    readonly property string addActionErrorLocalData: qsTr("Cannot add the action to the server. Local action data was corrupted! Possible attempt to change the action data!")
     readonly property string offlineActionAdded: qsTr("Cannot add the action to the server. It has been added to queue.")
 
     readonly property string toSelect: qsTr("To select")

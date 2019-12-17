@@ -5,9 +5,10 @@
 
 #include <QThread>
 
-#include "datamodelsmanager.h"
-#include "dataviewmodelsmanager.h"
 #include "datarequestsmanager.h"
+#include "datamodelsmanager.h"
+#include "datalocalmanager.h"
+#include "dataviewmanager.h"
 
 #include "../../common/userdata.h"
 
@@ -67,13 +68,13 @@ signals:
     void eventInserted(const Gaia::ModelEntry &entryData) const;
     void relationInserted(const Gaia::ModelEntry &entryData) const;
 
-    void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
-    void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action);
+    void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action) const;
+    void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action) const;
+    void localActionDataError(const QString &packageId, const Enums::SupplyChainAction &action) const;
 
 public slots:
     void onActionAdded(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action);
-    void onActionAddError(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action,
-                          const QNetworkReply::NetworkError &error);
+    void onActionAddError(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action);
 
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);
@@ -83,9 +84,10 @@ public slots:
 private:
     QThread m_processingThread;
 
-    DataModelsManager m_modelsHandler;
-    DataViewModelsManager m_viewModelsHandler;
     DataRequestsManager m_requestsHandler;
+    DataModelsManager m_modelsHandler;
+    DataLocalManager m_localHandler;
+    DataViewManager m_viewHandler;
 
     UserData m_userData;
 
