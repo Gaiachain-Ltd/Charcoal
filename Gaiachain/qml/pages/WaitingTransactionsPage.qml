@@ -20,6 +20,6 @@ BasePage {
             margins: s(Style.bigMargin)
         }
 
-        viewModel: localOnlyEventsModel
+        viewModel: localEventsModel
     }
 }

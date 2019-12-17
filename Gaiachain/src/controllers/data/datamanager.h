@@ -29,7 +29,7 @@ public:
 
     bool processing() const override;
 
-    Q_INVOKABLE void getPackageData(const QString &packageId) const;
+    Q_INVOKABLE void preparePackageData(const QString &packageId);
 
     Q_INVOKABLE QString generateHarvestId(const QDate &date, const QString &parcelCode);
 

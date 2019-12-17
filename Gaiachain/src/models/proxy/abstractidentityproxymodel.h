@@ -2,7 +2,7 @@
 #define ABSTRACTIDENTITYPROXYMODEL_H
 
 #include <QIdentityProxyModel>
-#include "modelchangedextension.h"
+#include "../modelchangedextension.h"
 
 class AbstractIdentityProxyModel : public QIdentityProxyModel, public ModelChangedExtension
 {

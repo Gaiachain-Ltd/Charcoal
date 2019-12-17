@@ -18,22 +18,17 @@
 #include "../../models/relationmodel.h"
 #include "../../models/unusedidsmodel.h"
 
-#include "../../models/selectedidsproxymodel.h"
-#include "../../models/daterangeproxymodel.h"
-#include "../../models/latestrangeeventsproxymodel.h"
-#include "../../models/latesteventsproxymodel.h"
-#include "../../models/packagetypeeventsproxymodel.h"
-#include "../../models/searcheventsproxymodel.h"
-#include "../../models/cooperativeeventsproxymodel.h"
-#include "../../models/packagetypeproxymodel.h"
-#include "../../models/packagetypeidsproxymodel.h"
-#include "../../models/packagelastactionproxymodel.h"
-#include "../../models/localonlyproxymodel.h"
-
-#include "../../models/packagedataproxymodel.h"
-#include "../../models/relationslistproxymodel.h"
-
 #include "../../models/views/parcelviewmodel.h"
+#include "../../models/views/transactionsviewmodel.h"
+#include "../../models/views/calendarviewmodel.h"
+#include "../../models/views/cooperativeviewmodel.h"
+#include "../../models/views/localviewmodel.h"
+#include "../../models/views/packageviewmodel.h"
+#include "../../models/views/packagerelationsviewmodel.h"
+
+#include "../../models/proxy/latestrangeeventsproxymodel.h"
+#include "../../models/proxy/packagetypeeventsproxymodel.h"
+#include "../../models/proxy/packagelastactionproxymodel.h"
 
 class QQmlApplicationEngine;
 
@@ -47,7 +42,7 @@ public:
 
     void updateCooperativeId(quint32 cooperativeId);
 
-    PackageData getPackageData(const QString &packageId) const;
+    PackageData preparePackageData(const QString &packageId);
     Gaia::ModelData getOfflineActions() const;
 
 public slots:
@@ -73,34 +68,28 @@ private:
     NameModel m_transportersViewModel;
     NameModel m_destinationsViewModel;
 
-    EventModel m_eventsViewModel;
-    RelationModel m_relationsViewModel;
+    TransactionsViewModel m_transactionsViewModel;
+    LatestRangeEventsProxyModel m_latestRangeTransactionsModel;
+
+    CalendarViewModel m_calendarMonthViewModel;
+    CalendarViewModel m_calendarDateViewModel;
+    LatestRangeEventsProxyModel m_latestRangeDateModel;
+
+    LocalViewModel m_localEventsViewModel;
+    CooperativeViewModel m_cooperativeEventsViewModel;
+
+    PackageViewModel m_packageViewModel;
+    PackageRelationsViewModel m_packageRelationsViewModel;
+
     UnusedIdsModel m_unusedLotIdsViewModel;
 
     // proxy models
-    // TODO change to always use view models (#82779)
-    CooperativeEventsProxyModel m_cooperativeEventsModel;   // always active
+    // TODO: change this to clever sql query too
+    PackageTypeEventsProxyModel m_packagesCalendarMonthModel;
+
     PackageLastActionProxyModel m_lastActionHarvestModel{ Enums::SupplyChainAction::Harvest };
     PackageLastActionProxyModel m_lastActionGrainProcessingModel{ Enums::SupplyChainAction::GrainProcessing };
     PackageLastActionProxyModel m_lastActionSectionReceptionModel{ Enums::SupplyChainAction::SectionReception };
-    PackageTypeIdsProxyModel m_packageTypeCooperativeIdsModel;
-
-    LocalOnlyProxyModel m_localOnlyEventsModel;
-
-    CooperativeEventsProxyModel m_cooperativeFilteringEventsModel;
-
-    DateRangeProxyModel m_calendarModel;
-    PackageTypeEventsProxyModel m_packagesCalendarModel;
-
-    DateRangeProxyModel m_dateEventsModel;
-    LatestRangeEventsProxyModel m_latestRangeDateEventsModel;
-
-    SearchEventsProxyModel m_searchEventsModel;
-    PackageTypeProxyModel m_packagesTypeSearchEventsModel;
-    LatestRangeEventsProxyModel m_latestRangePackagesTypeSearchEventsModel;
-
-    PackageDataProxyModel m_packageDataModel;
-    RelationsListProxyModel m_relationsListModel;
 
     void setupModels() override;
     void setupUpdateConnections() override;

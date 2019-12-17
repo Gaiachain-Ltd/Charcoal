@@ -50,7 +50,7 @@ Items.GenericPanel
         if (userManager.offlineMode) {  // for offline always only ping
             sessionManager.ping()
         } else {
-            if (localOnlyEventsModel.size) {
+            if (localEventsModel.size) {
                 dataManager.sendOfflineActions()
             }
 

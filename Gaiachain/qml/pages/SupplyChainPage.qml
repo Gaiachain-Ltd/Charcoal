@@ -24,8 +24,8 @@ SupplyChainPageBase {
 
     function isCurrentAction(packageId, codeData, action) {
         var currentPackage = (top.packageId !== "" &&
-                              (top.packageId === packageId)) ||
-                top.packageId === "" && codeData &&
+                (top.packageId === packageId)) ||
+                top.packageId === "" && codeData.toString().length &&
                 (top.packageCodeData === codeData.toString());
 
         return currentPackage && (top.action === action);

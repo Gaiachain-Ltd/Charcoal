@@ -49,7 +49,6 @@ void MainController::setupConnections()
     connect(&m_userManager, &UserManager::offlineModeChanged,
             &m_sessionManager, [sessionManager = &m_sessionManager](bool offlineMode) { sessionManager->setEnabled(!offlineMode); });
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
-    connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getAdditionalData);
     connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
 

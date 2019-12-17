@@ -1,8 +1,8 @@
 #include "packagelastactionproxymodel.h"
 
-#include "eventmodel.h"
-#include "../common/enums.h"
-#include "../common/dataglobals.h"
+#include "../eventmodel.h"
+#include "../../common/enums.h"
+#include "../../common/dataglobals.h"
 
 PackageLastActionProxyModel::PackageLastActionProxyModel(const Enums::SupplyChainAction &lastAction, QObject *parent)
     : AbstractSortFilterProxyModel(parent), m_lastAction(lastAction)

@@ -66,7 +66,8 @@ BasePage {
     }
 
     function getMonthStartDate() { return new Date(currentYear, currentMonth, 1) }
-    function getMonthEndDate() { return new Date(currentYear, currentMonth + 1, 1, 0, 0, -1) }
+    function getMonthEndDate() { return new Date(currentYear, currentMonth + 1, 0) }
+    function getTodayDate() { return new Date(currentYear, currentMonth, currentDay) }
 
     Component.onCompleted: onDateChanged()
     onCurrentDayChanged: onDateChanged()

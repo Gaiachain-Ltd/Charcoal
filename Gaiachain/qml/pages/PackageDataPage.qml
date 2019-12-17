@@ -28,12 +28,12 @@ BasePage {
     function refreshData() {
         // called from BasePage
         dataManager.fetchEventData(packageId, packageType)
-        dataManager.getPackageData(packageId)
+        dataManager.preparePackageData(packageId)
     }
 
     function updatePackage(entryData) {
         if (entryData[0] === top.packageId) {
-            dataManager.getPackageData(top.packageId)
+            dataManager.preparePackageData(top.packageId)
         }
     }
 
