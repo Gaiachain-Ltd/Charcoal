@@ -3,8 +3,8 @@
 
 #include "abstractsortfilterproxymodel.h"
 
-#include "../common/enums.h"
-#include "../common/globals.h"
+#include "../../common/enums.h"
+#include "../../common/globals.h"
 
 class PackageLastActionProxyModel : public AbstractSortFilterProxyModel
 {

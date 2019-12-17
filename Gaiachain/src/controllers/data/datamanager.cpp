@@ -54,9 +54,9 @@ bool DataManager::processing() const
     return (m_modelsHandler.processing() || m_requestsHandler.processing());
 }
 
-void DataManager::getPackageData(const QString &packageId) const
+void DataManager::preparePackageData(const QString &packageId)
 {
-    const auto data = m_viewHandler.getPackageData(packageId);
+    const auto data = m_viewHandler.preparePackageData(packageId);
     emit packageData(data);
 }
 

@@ -2,7 +2,7 @@
 #define ABSTRACTSORTFILTERPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
-#include "modelchangedextension.h"
+#include "../modelchangedextension.h"
 
 class AbstractSortFilterProxyModel : public QSortFilterProxyModel, public ModelChangedExtension
 {

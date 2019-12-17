@@ -14,7 +14,8 @@ public:
         Less,
         LessEqual,
         Greater,
-        GreaterEqual
+        GreaterEqual,
+        In
     };
 
     struct FilterQuery {

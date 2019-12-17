@@ -19,7 +19,13 @@ CalendarPageBase {
 
     function refreshData() {
         // called from BasePage
-        latestRangeDateEventsModel.clearRowCount()
+        dataManager.fetchRangeEvents(getMonthStartDate(), getMonthEndDate())
+        latestRangeDateModel.clearRowCount()
+    }
+
+    function updateCooperativeOnlyFiltering(active) {
+        calendarMonthModel.setCooperativeOnly(active)
+        calendarDateModel.setCooperativeOnly(active)
     }
 
     function updateModelRange() {
@@ -27,9 +33,11 @@ CalendarPageBase {
         var from = getMonthStartDate()
         var to = getMonthEndDate()
 
-        calendarModel.setDateRange(from, to)
-        dateEventsModel.setSingleDateRange(new Date(currentYear, currentMonth, currentDay))
-        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+        calendarMonthModel.setDateRange(from, to)
+        dataManager.fetchRangeEvents(from, to)
+
+        calendarDateModel.setDate(getTodayDate())
+        latestRangeDateModel.clearRowCount()
     }
 
     function enterMonthPage() {
@@ -37,10 +45,6 @@ CalendarPageBase {
                               "currentDay": currentDay,
                               "currentMonth": currentMonth,
                               "currentYear": currentYear })
-    }
-
-    function initialize() {
-        onlyMyTransactionsCheckBox.updateCooperativeOnlyFiltering()
     }
 
     onMonthHeaderClicked: enterMonthPage()
@@ -74,7 +78,7 @@ CalendarPageBase {
             font.weight: Font.DemiBold
             font.pixelSize: s(Style.subtitlePixelSize)
 
-            text: new Date(top.currentYear, top.currentMonth, top.currentDay).toLocaleDateString(Qt.locale(), 'MMMM dd (dddd)')
+            text: top.getTodayDate().toLocaleDateString(Qt.locale(), 'MMMM dd (dddd)')
         }
 
         Components.EventsListView {
@@ -82,12 +86,11 @@ CalendarPageBase {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: latestRangeDateEventsModel
+            viewModel: latestRangeDateModel
             displayDate: false
             displayLastItemSeparator: true
 
             onDelegateClicked:  {
-                var packageData = dataManager.getPackageData(packageId)
                 pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageId": packageId, "packageType": DataGlobals.packageType(action) })
             }
         }
@@ -95,20 +98,16 @@ CalendarPageBase {
         Items.BasicCheckBox {
             id: onlyMyTransactionsCheckBox
 
-            function updateCooperativeOnlyFiltering() {
-                cooperativeFilteringEvents.active = checked
-            }
-
             Layout.fillWidth: true
             Layout.bottomMargin: s(Style.hugeMargin)
 
             visible: userManager.loggedIn
 
             text: Strings.onlyMyTransactions
-            checked: cooperativeFilteringEvents.active
+            checked: calendarMonthModel.cooperativeOnly
 
-            Component.onCompleted: updateCooperativeOnlyFiltering()
-            onCheckedChanged: updateCooperativeOnlyFiltering()
+            Component.onCompleted: top.updateCooperativeOnlyFiltering(checked)
+            onCheckedChanged: top.updateCooperativeOnlyFiltering(checked)
         }
     }
 }

@@ -4,9 +4,9 @@
 #include <QQmlContext>
 #include <QDateTime>
 
-#include "../../models/proxy/sqlquerymodel.h"
-#include "../../models/proxy/companytypequery.h"
-#include "../../models/proxy/sortnamequery.h"
+#include "../../models/query/sqlquerymodel.h"
+#include "../../models/query/companytypequery.h"
+#include "../../models/query/sortnamequery.h"
 
 #include "../../database/dbhelpers.h"
 
@@ -20,12 +20,12 @@ DataViewManager::DataViewManager(QObject *parent)
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, &QTimer::timeout, this, &DataViewManager::updateModels);
 
-    connect(&m_latestRangePackagesTypeSearchEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
-            this, [this](int number, int offset) { emit limitKeywordEventsNeeded(number, offset, m_searchEventsModel.keyword()); });
-    connect(&m_latestRangeDateEventsModel, &LatestRangeEventsProxyModel::fetchEvents,
+    connect(&m_latestRangeTransactionsModel, &LatestRangeEventsProxyModel::fetchEvents,
+            this, [this](int number, int offset) { emit limitKeywordEventsNeeded(number, offset, m_transactionsViewModel.keyword()); });
+    connect(&m_latestRangeDateModel, &LatestRangeEventsProxyModel::fetchEvents,
             this, [this](int number, int offset) {
         emit limitRangeEventsNeeded(number, offset,
-                                    m_dateEventsModel.startDateTime(), m_dateEventsModel.endDateTime());
+                                    m_calendarDateViewModel.fromDateTime(), m_calendarDateViewModel.toDateTime());
     });
 }
 
@@ -38,47 +38,50 @@ void DataViewManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("transportersModel"), &m_transportersViewModel);
     engine.rootContext()->setContextProperty(QStringLiteral("destinationsModel"), &m_destinationsViewModel);
 
-    engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsViewModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("transactionsModel"), &m_transactionsViewModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("latestRangeTransactionsModel"), &m_latestRangeTransactionsModel);
 
-    engine.rootContext()->setContextProperty(QStringLiteral("localOnlyEventsModel"), &m_localOnlyEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("calendarMonthModel"), &m_calendarMonthViewModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("packagesCalendarMonthModel"), &m_packagesCalendarMonthModel);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("calendarDateModel"), &m_calendarDateViewModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("latestRangeDateModel"), &m_latestRangeDateModel);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("localEventsModel"), &m_localEventsViewModel);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("unusedLotIdsModel"), &m_unusedLotIdsViewModel);
 
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionHarvestModel"), &m_lastActionHarvestModel);
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionGrainProcessingModel"), &m_lastActionGrainProcessingModel);
     engine.rootContext()->setContextProperty(QStringLiteral("lastActionSectionReceptionModel"), &m_lastActionSectionReceptionModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("packageTypeCooperativeIdsModel"), &m_packageTypeCooperativeIdsModel);
-
-    engine.rootContext()->setContextProperty(QStringLiteral("cooperativeFilteringEvents"), &m_cooperativeFilteringEventsModel);
-
-    engine.rootContext()->setContextProperty(QStringLiteral("calendarModel"), &m_calendarModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("packagesCalendarModel"), &m_packagesCalendarModel);
-
-    engine.rootContext()->setContextProperty(QStringLiteral("dateEventsModel"), &m_dateEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("latestRangeDateEventsModel"), &m_latestRangeDateEventsModel);
-
-    engine.rootContext()->setContextProperty(QStringLiteral("searchEventsModel"), &m_searchEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("packagesTypeSearchEventsModel"), &m_packagesTypeSearchEventsModel);
-    engine.rootContext()->setContextProperty(QStringLiteral("latestRangePackagesTypeSearchEventsModel"), &m_latestRangePackagesTypeSearchEventsModel);
 }
 
 void DataViewManager::updateCooperativeId(quint32 cooperativeId)
 {
-    m_cooperativeEventsModel.setCooperativeId(cooperativeId);
-    m_cooperativeFilteringEventsModel.setCooperativeId(cooperativeId);
+    m_transactionsViewModel.setCooperativeId(cooperativeId);
+    m_calendarMonthViewModel.setCooperativeId(cooperativeId);
+    m_calendarDateViewModel.setCooperativeId(cooperativeId);
+    m_cooperativeEventsViewModel.setCooperativeId(cooperativeId);
+    m_localEventsViewModel.setCooperativeId(cooperativeId);
 }
 
-PackageData DataViewManager::getPackageData(const QString &packageId) const
+PackageData DataViewManager::preparePackageData(const QString &packageId)
 {
     auto package = PackageData{};
     package.id = packageId;
-    package.relatedPackages = m_relationsListModel.relatedPackages(packageId);
-    m_packageDataModel.fillPackageData(package);
+
+    m_packageRelationsViewModel.setPackageId(packageId);
+    package.relatedPackages = m_packageRelationsViewModel.relatedPackages();
+
+    m_packageViewModel.setPackageId(packageId);
+    m_packageViewModel.fillPackageData(package);
 
     return package;
 }
 
 Gaia::ModelData DataViewManager::getOfflineActions() const
 {
-    return m_localOnlyEventsModel.getData();
+    return m_localEventsViewModel.getData();
 }
 
 void DataViewManager::onModelUpdated(const ModelType &type)
@@ -106,39 +109,37 @@ void DataViewManager::setupModels()
                                                              SortNameQuery(SortFilterQuery{}),
                                                              &m_destinationsViewModel));
 
-    m_eventsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
-                                                       SortFilterQuery{},
-                                                       &m_eventsViewModel));
-    m_relationsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Relations), m_db,
-                                                          SortFilterQuery{},
-                                                          &m_relationsViewModel));
+    m_transactionsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+                                                             &m_transactionsViewModel));
+    m_calendarMonthViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+                                                              &m_calendarMonthViewModel));
+    m_calendarDateViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+                                                             &m_calendarDateViewModel));
+
+    m_cooperativeEventsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+                                                                  &m_cooperativeEventsViewModel));
+    m_localEventsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+                                                            &m_localEventsViewModel));
+
+    m_packageViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+                                                        SortFilterQuery{},
+                                                        &m_packageViewModel));
+    m_packageRelationsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Relations), m_db,
+                                                                 SortFilterQuery{},
+                                                                 &m_packageRelationsViewModel));
+
     m_unusedLotIdsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::UnusedIds), m_db,
                                                              SortFilterQuery{},
                                                              &m_unusedLotIdsViewModel));
-
     // -------------------------------------------------------------
 
-    m_cooperativeEventsModel.setSourceModel(&m_eventsViewModel);
-    m_lastActionHarvestModel.setSourceModel(&m_cooperativeEventsModel);
-    m_lastActionGrainProcessingModel.setSourceModel(&m_cooperativeEventsModel);
-    m_lastActionSectionReceptionModel.setSourceModel(&m_cooperativeEventsModel);
-    m_packageTypeCooperativeIdsModel.setSourceModel(&m_cooperativeEventsModel);
+    m_latestRangeTransactionsModel.setSourceModel(&m_transactionsViewModel);
+    m_packagesCalendarMonthModel.setSourceModel(&m_calendarMonthViewModel);
+    m_latestRangeDateModel.setSourceModel(&m_calendarDateViewModel);
 
-    m_localOnlyEventsModel.setSourceModel(&m_cooperativeEventsModel);
-
-    m_cooperativeFilteringEventsModel.setSourceModel(&m_eventsViewModel);
-    m_calendarModel.setSourceModel(&m_cooperativeFilteringEventsModel);
-    m_packagesCalendarModel.setSourceModel(&m_calendarModel);
-
-    m_dateEventsModel.setSourceModel(&m_calendarModel);
-    m_latestRangeDateEventsModel.setSourceModel(&m_dateEventsModel);
-
-    m_searchEventsModel.setSourceModel(&m_cooperativeFilteringEventsModel);
-    m_packagesTypeSearchEventsModel.setSourceModel(&m_searchEventsModel);
-    m_latestRangePackagesTypeSearchEventsModel.setSourceModel(&m_packagesTypeSearchEventsModel);
-
-    m_packageDataModel.setSourceModel(&m_eventsViewModel);
-    m_relationsListModel.setSourceModel(&m_relationsViewModel);
+    m_lastActionHarvestModel.setSourceModel(&m_cooperativeEventsViewModel);
+    m_lastActionGrainProcessingModel.setSourceModel(&m_cooperativeEventsViewModel);
+    m_lastActionSectionReceptionModel.setSourceModel(&m_cooperativeEventsViewModel);
 }
 
 void DataViewManager::setupUpdateConnections()
@@ -167,12 +168,18 @@ void DataViewManager::setupUpdateConnections()
                                 std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_destinationsViewModel.sourceModel()) ));
 
-    m_modelUpdateHandler.insert(ModelType::Events,
-                                std::bind(&DataViewManager::scheduleModelUpdate, this,
-                                          qobject_cast<SqlQueryModel *>(m_eventsViewModel.sourceModel()) ));
+
+    m_modelUpdateHandler.insert(ModelType::Events, [this]() {
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_transactionsViewModel.sourceModel()));
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_calendarMonthViewModel.sourceModel()));
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_calendarDateViewModel.sourceModel()));
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_cooperativeEventsViewModel.sourceModel()));
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_localEventsViewModel.sourceModel()));
+        scheduleModelUpdate(qobject_cast<SqlQueryModel *>(m_packageViewModel.sourceModel()));
+    });
     m_modelUpdateHandler.insert(ModelType::Relations,
                                 std::bind(&DataViewManager::scheduleModelUpdate, this,
-                                          qobject_cast<SqlQueryModel *>(m_relationsViewModel.sourceModel()) ));
+                                          qobject_cast<SqlQueryModel *>(m_packageRelationsViewModel.sourceModel()) ));
     m_modelUpdateHandler.insert(ModelType::UnusedIds,
                                 std::bind(&DataViewManager::scheduleModelUpdate, this,
                                           qobject_cast<SqlQueryModel *>(m_unusedLotIdsViewModel.sourceModel()) ));

@@ -70,47 +70,49 @@ HEADERS += \
     src/helpers/packagedataproperties.h \
     src/helpers/requestshelper.h \
     src/helpers/typetraits.h \
-    src/models/abstractidentityproxymodel.h \
+    src/models/proxy/abstractidentityproxymodel.h \
     src/models/abstractmodel.h \
     src/models/abstractreadmodel.h \
     src/models/companymodel.h \
-    src/models/cooperativeeventsproxymodel.h \
     src/models/parcelmodel.h \
-    src/models/proxy/abstractsortfilterqueryextension.h \
-    src/models/proxy/companytypequery.h \
-    src/models/proxy/isortfilterquery.h \
-    src/models/proxy/produceridquery.h \
-    src/models/proxy/sortfilterquery.h \
-    src/models/proxy/sortnamequery.h \
-    src/models/proxy/sqlquerymodel.h \
+    src/models/query/abstractsortfilterqueryextension.h \
+    src/models/query/companytypequery.h \
+    src/models/query/cooperativeidquery.h \
+    src/models/query/daterangequery.h \
+    src/models/query/idkeywordquery.h \
+    src/models/query/isortfilterquery.h \
+    src/models/query/localeventsquery.h \
+    src/models/query/packagetypequery.h \
+    src/models/query/produceridquery.h \
+    src/models/query/sortfilterquery.h \
+    src/models/query/sortnamequery.h \
+    src/models/query/sorttimestampquery.h \
+    src/models/query/sqlquerymodel.h \
     src/models/sqltablemodel.h \
-    src/models/daterangeproxymodel.h \
     src/models/existsquerymodel.h \
-    src/models/latesteventsproxymodel.h \
-    src/models/latestrangeeventsproxymodel.h \
-    src/models/localonlyproxymodel.h \
+    src/models/proxy/latestrangeeventsproxymodel.h \
     src/models/modelchangedextension.h \
     src/models/namemodel.h \
-    src/models/packagedataproxymodel.h \
-    src/models/packagelastactionproxymodel.h \
-    src/models/packagetypeeventsproxymodel.h \
+    src/models/proxy/packagelastactionproxymodel.h \
+    src/models/proxy/packagetypeeventsproxymodel.h \
     src/models/eventmodel.h \
     src/helpers/utility.h \
     src/controllers/maincontroller.h \
     src/common/enums.h \
     src/common/globals.h \
     src/controllers/pagemanager.h \
-    src/models/packagetypeidsproxymodel.h \
-    src/models/packagetypeproxymodel.h \
     src/models/producermodel.h \
     src/models/relationmodel.h \
-    src/models/relationslistproxymodel.h \
-    src/models/searcheventsproxymodel.h \
     src/common/packagedata.h \
-    src/models/selectedidsproxymodel.h \
     src/models/unusedidsmodel.h \
     src/models/views/abstractmodelview.h \
+    src/models/views/calendarviewmodel.h \
+    src/models/views/cooperativeviewmodel.h \
+    src/models/views/localviewmodel.h \
+    src/models/views/packagerelationsviewmodel.h \
+    src/models/views/packageviewmodel.h \
     src/models/views/parcelviewmodel.h \
+    src/models/views/transactionsviewmodel.h \
     src/rest/additionaldatarequest.h \
     src/rest/authrequest.h \
     src/rest/baserequest.h \
@@ -118,7 +120,7 @@ HEADERS += \
     src/controllers/session/sessionmanager.h \
     src/controllers/usermanager.h \
     src/controllers/abstractmanager.h \
-    src/models/abstractsortfilterproxymodel.h \
+    src/models/proxy/abstractsortfilterproxymodel.h \
     src/common/tags.h \
     src/rest/entityrequest.h \
     src/common/logs.h
@@ -147,39 +149,35 @@ SOURCES += src/main.cpp \
     src/helpers/modelhelper.cpp \
     src/helpers/packagedataproperties.cpp \
     src/helpers/requestshelper.cpp \
-    src/models/abstractidentityproxymodel.cpp \
+    src/models/proxy/abstractidentityproxymodel.cpp \
     src/models/abstractmodel.cpp \
     src/models/abstractreadmodel.cpp \
     src/models/companymodel.cpp \
-    src/models/cooperativeeventsproxymodel.cpp \
     src/models/parcelmodel.cpp \
-    src/models/proxy/sortfilterquery.cpp \
-    src/models/proxy/sqlquerymodel.cpp \
+    src/models/query/sortfilterquery.cpp \
+    src/models/query/sqlquerymodel.cpp \
     src/models/sqltablemodel.cpp \
-    src/models/daterangeproxymodel.cpp \
     src/models/existsquerymodel.cpp \
-    src/models/latesteventsproxymodel.cpp \
-    src/models/latestrangeeventsproxymodel.cpp \
-    src/models/localonlyproxymodel.cpp \
+    src/models/proxy/latestrangeeventsproxymodel.cpp \
     src/models/modelchangedextension.cpp \
     src/models/namemodel.cpp \
-    src/models/packagedataproxymodel.cpp \
-    src/models/packagelastactionproxymodel.cpp \
-    src/models/packagetypeeventsproxymodel.cpp \
+    src/models/proxy/packagelastactionproxymodel.cpp \
+    src/models/proxy/packagetypeeventsproxymodel.cpp \
     src/models/eventmodel.cpp \
     src/helpers/utility.cpp \
     src/controllers/maincontroller.cpp \
     src/controllers/pagemanager.cpp \
-    src/models/packagetypeidsproxymodel.cpp \
-    src/models/packagetypeproxymodel.cpp \
     src/models/producermodel.cpp \
     src/models/relationmodel.cpp \
-    src/models/relationslistproxymodel.cpp \
-    src/models/searcheventsproxymodel.cpp \
-    src/models/selectedidsproxymodel.cpp \
     src/models/unusedidsmodel.cpp \
     src/models/views/abstractmodelview.cpp \
+    src/models/views/calendarviewmodel.cpp \
+    src/models/views/cooperativeviewmodel.cpp \
+    src/models/views/localviewmodel.cpp \
+    src/models/views/packagerelationsviewmodel.cpp \
+    src/models/views/packageviewmodel.cpp \
     src/models/views/parcelviewmodel.cpp \
+    src/models/views/transactionsviewmodel.cpp \
     src/rest/additionaldatarequest.cpp \
     src/rest/authrequest.cpp \
     src/rest/baserequest.cpp \
@@ -188,7 +186,7 @@ SOURCES += src/main.cpp \
     src/controllers/usermanager.cpp \
     src/rest/entityrequest.cpp \
     src/controllers/abstractmanager.cpp \
-    src/models/abstractsortfilterproxymodel.cpp
+    src/models/proxy/abstractsortfilterproxymodel.cpp
 
 RESOURCES +=  \
     qml/qml.qrc \

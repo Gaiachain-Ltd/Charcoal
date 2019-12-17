@@ -50,7 +50,7 @@ BasePage {
 
     Component.onCompleted: {
         if (!userManager.offlineMode &&
-                localOnlyEventsModel.size) {
+                localEventsModel.size) {
             dataManager.sendOfflineActions()
         }
     }

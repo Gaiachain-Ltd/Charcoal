@@ -1,12 +1,10 @@
 #include "latestrangeeventsproxymodel.h"
 
-#include "eventmodel.h"
+#include <QDebug>
 
 LatestRangeEventsProxyModel::LatestRangeEventsProxyModel(QObject *parent)
     : AbstractSortFilterProxyModel(parent)
-{
-    AbstractSortFilterProxyModel::setSourceModel(&m_latestEventsModel);
-}
+{}
 
 void LatestRangeEventsProxyModel::clearRowCount()
 {
@@ -18,7 +16,7 @@ void LatestRangeEventsProxyModel::clearRowCount()
 void LatestRangeEventsProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
     m_offset = 0;
-    m_latestEventsModel.setSourceModel(sourceModel);
+    AbstractSortFilterProxyModel::setSourceModel(sourceModel);
 }
 
 bool LatestRangeEventsProxyModel::canFetchMore(const QModelIndex &parent) const

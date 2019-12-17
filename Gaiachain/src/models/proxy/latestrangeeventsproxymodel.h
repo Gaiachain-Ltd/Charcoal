@@ -2,9 +2,6 @@
 #define LATESTRANGEEVENTSPROXYMODEL_H
 
 #include "abstractsortfilterproxymodel.h"
-#include "latesteventsproxymodel.h"
-
-#include <QDateTime>
 
 class LatestRangeEventsProxyModel : public AbstractSortFilterProxyModel
 {
@@ -28,8 +25,6 @@ protected:
 private:
     const static int sc_fetchSize = 20;
     int m_offset = 0;
-
-    LatestEventsProxyModel m_latestEventsModel;
 };
 
 #endif // LATESTRANGEEVENTSPROXYMODEL_H
