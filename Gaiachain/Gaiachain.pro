@@ -237,19 +237,3 @@ include(../milo/mlog/mlog.pri)
 #include(../milo/mscripts/mscripts.pri) # TODO disabling it until potential usecase
 include(../milo/mcrypto/mcrypto.pri)
 include(../milo/mrestapi/mrestapi.pri)
-
-DISTFILES += \
-    platforms/android/android/AndroidManifest.xml \
-    platforms/android/android/gradle/wrapper/gradle-wrapper.jar \
-    platforms/android/android/gradlew \
-    platforms/android/android/res/values/libs.xml \
-    platforms/android/android/build.gradle \
-    platforms/android/android/gradle/wrapper/gradle-wrapper.properties \
-    platforms/android/android/gradlew.bat \
-    platforms/android/android/AndroidManifest.xml \
-    platforms/android/android/gradle/wrapper/gradle-wrapper.jar \
-    platforms/android/android/gradlew \
-    platforms/android/android/res/values/libs.xml \
-    platforms/android/android/build.gradle \
-    platforms/android/android/gradle/wrapper/gradle-wrapper.properties \
-    platforms/android/android/gradlew.bat \

@@ -7,6 +7,10 @@
 
 #include <QZXing.h>
 
+#ifdef Q_OS_ANDROID
+#include "androidpermissionshandler.h"
+#endif
+
 #include "../common/enums.h"
 #include "../common/packagedata.h"
 #include "../common/dataglobals.h"
@@ -14,10 +18,6 @@
 #include "../helpers/requestshelper.h"
 #include "../helpers/modelhelper.h"
 #include "../helpers/packagedataproperties.h"
-
-#ifdef Q_OS_ANDROID
-    #include <QtAndroidExtras/QtAndroid>
-#endif
 
 #ifdef USE_COMBOBOX
 #include "../common/dummy/commondummydata.h"
@@ -105,32 +105,14 @@ void MainController::setupDataConnections()
 
 void MainController::initialWork()
 {
+#ifdef Q_OS_ANDROID
+    QMetaObject::invokeMethod(&Android::PermissionsHandler::instance(),
+                              std::bind(&Android::PermissionsHandler::requestPermissions, &Android::PermissionsHandler::instance(),
+                                        QList<Android::PermissionsHandler::Permissions>{ Android::PermissionsHandler::Permissions::Internet,
+                                                                                         Android::PermissionsHandler::Permissions::Storage }));
+#endif
     m_dbManager.setupDatabase();
 }
-
-#ifdef Q_OS_ANDROID
-void MainController::setupAppPermissions()
-{
-    const auto appPermissions = QStringList{
-            "android.permission.ACCESS_COARSE_LOCATION",
-            "android.permission.ACCESS_FINE_LOCATION",
-            "android.permission.CAMERA",
-            "android.permission.INTERNET",
-            "android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE"
-    };
-
-    // TODO: shift some permissions only after login
-    // check for permissions before opening scanner page to load camera faster
-    auto permissionsToRequest = QStringList{};
-    std::copy_if(appPermissions.constBegin(), appPermissions.constEnd(),
-                 std::back_inserter(permissionsToRequest), [](const auto &permission) {
-        return QtAndroid::checkPermission(permission) == QtAndroid::PermissionResult::Denied;
-    });
-
-    QtAndroid::requestPermissions(permissionsToRequest, [](const QtAndroid::PermissionResultMap &) {});
-}
-#endif
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 {
@@ -165,11 +147,21 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStatic.qml"), "com.gaiachain.static", 1, 0, "Static");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");
 
-    qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0, "Utility", &registerCppOwnershipSingletonType<Utility>);
-    qmlRegisterSingletonType<RequestsHelper>("com.gaiachain.helpers", 1, 0, "RequestHelper", &registerCppOwnershipSingletonType<RequestsHelper>);
-    qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0, "DataGlobals", &registerCppOwnershipSingletonType<DataGlobals>);
-    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0, "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);
-    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0, "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
+    qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0,
+                                      "Utility", &registerCppOwnershipSingletonType<Utility>);
+    qmlRegisterSingletonType<RequestsHelper>("com.gaiachain.helpers", 1, 0,
+                                             "RequestHelper", &registerCppOwnershipSingletonType<RequestsHelper>);
+    qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0,
+                                          "DataGlobals", &registerCppOwnershipSingletonType<DataGlobals>);
+    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0,
+                                          "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);   // TODO: move to com.gaiachain.helpers
+    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0,
+                                                    "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>); // TODO: move to com.gaiachain.types
+
+#ifdef Q_OS_ANDROID
+    qmlRegisterSingletonType<Android::PermissionsHandler>("com.gaiachain.platforms", 1, 0,
+                                                          "AndroidPermissionsHandler", &registerCppOwnershipSingletonType<Android::PermissionsHandler>);
+#endif
 
     // add context properties
     engine.rootContext()->setContextProperty(QStringLiteral("AppName"), AppName);

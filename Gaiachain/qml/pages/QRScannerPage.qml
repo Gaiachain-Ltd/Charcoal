@@ -7,6 +7,7 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 import com.gaiachain.static 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.platforms 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -21,6 +22,11 @@ BasePage {
 
     property int scanStatus: Enums.QRScanStatus.Unknown
     property int backSupplyChainPage: Enums.Page.InvalidPage
+
+    Component.onCompleted: {
+        AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
+        pageManager.openPopup(Enums.Popup.Text, { "text": top.popupText })
+    }
 
     function parseScannedId(id) {
         if (Utility.validateId(id)) {
@@ -46,8 +52,6 @@ BasePage {
 
         return false    // do not close application
     }
-
-    Component.onCompleted: pageManager.openPopup(Enums.Popup.Text, { "text": top.popupText })
 
     Connections {
         target: pageManager
