@@ -71,7 +71,6 @@
         <file>components/CalendarItem.qml</file>
         <file>components/TodayIndicator.qml</file>
         <file>pages/SupplyChainBaggingPage.qml</file>
-        <file>items/ButtonHeader.qml</file>
         <file>pages/SupplyChainAddHarvestIdPage.qml</file>
         <file>popups/CommentPopup.qml</file>
         <file>popups/TimedPopup.qml</file>
