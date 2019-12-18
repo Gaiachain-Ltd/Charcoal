@@ -10,20 +10,25 @@ import "../items" as Items
 Item {
     id: top
 
-    property alias viewModel: mainView.model
-    property alias delegateHeight: mainView.delegateHeight
+    property alias viewModel: listView.model
+    property alias delegateHeight: listView.delegateHeight
+    property alias delegateIcon: listView.delegateIcon
 
     property bool displayDate: true
     property bool displayLastItemSeparator: false
 
     signal delegateClicked(string packageId, int action)
+    signal delegateIconClicked(string packageId, int action)
 
     ListView {
-        id: mainView
+        id: listView
 
         anchors.fill: parent
 
         property real delegateHeight: Style.listViewDelegateDefaultHeight
+
+        readonly property bool hasIcon: delegateIcon.toString().length != 0
+        property url delegateIcon
 
         spacing: s(Style.smallMargin)
         clip: true
@@ -36,39 +41,34 @@ Item {
             id: delegate
 
             width: parent.width
-            height: s(mainView.delegateHeight)
+            height: s(listView.delegateHeight)
 
             readonly property bool isLast: ((ListView.view.count - 1) === index)
+            readonly property bool hasIcon: ListView.view.hasIcon
+            readonly property url delegateIcon: ListView.view.delegateIcon
 
-            ColumnLayout {
+            MouseArea {
                 anchors.fill: parent
-                spacing: s(Style.tinyMargin)
+                onClicked: delegateClicked(packageId, action)
+            }
 
-                RowLayout {
-                    spacing: s(Style.bigMargin)
+            GridLayout {
+                anchors.fill: parent
 
-                    Items.BasicText {
-                        Layout.fillHeight: true
+                columns: 3
+                columnSpacing: s(Style.bigMargin)
+                rowSpacing: s(Style.tinyMargin)
 
-                        horizontalAlignment: Text.AlignLeft
+                // row 1
+                Items.BasicText {
+                    Layout.fillHeight: true
 
-                        font.bold: true
-                        visible: displayDate
+                    horizontalAlignment: Text.AlignLeft
 
-                        text: Helper.convertTimestampToDate(Number(timestamp))
-                    }
+                    font.bold: true
+                    visible: displayDate
 
-                    Items.BasicText {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        horizontalAlignment: Text.AlignLeft
-
-                        font.bold: true
-                        color: Helper.packageTypeColor(DataGlobals.packageType(action))
-
-                        text: packageId
-                    }
+                    text: Helper.convertTimestampToDate(Number(timestamp))
                 }
 
                 Items.BasicText {
@@ -77,20 +77,43 @@ Item {
 
                     horizontalAlignment: Text.AlignLeft
 
+                    font.bold: true
+                    color: Helper.packageTypeColor(DataGlobals.packageType(action))
+
+                    text: packageId
+                }
+
+                Items.PureImageButton {
+                    Layout.preferredHeight: s(Style.buttonImageSmallHeight)
+                    Layout.preferredWidth: s(Style.buttonImageSmallHeight)
+                    Layout.rightMargin: s(Style.bigMargin)
+                    Layout.rowSpan: 2
+
+                    visible: hasIcon
+                    source: delegateIcon
+
+                    onClicked: delegateIconClicked(packageId, action)
+                }
+
+                // row 2
+                Items.BasicText {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.columnSpan: 2
+
+                    horizontalAlignment: Text.AlignLeft
+
                     text: Helper.actionDescriptionStatusText(Number(action))
                 }
 
                 Items.LayoutSeparator {
                     Layout.fillWidth: true
+                    Layout.columnSpan: 3
 
                     visible: !delegate.isLast || displayLastItemSeparator
                 }
             }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: delegateClicked(packageId, action)
-            }
         }
     }
 }

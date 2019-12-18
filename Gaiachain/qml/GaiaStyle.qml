@@ -153,6 +153,7 @@ QtObject {
     readonly property url plusImgUrl: "qrc:/ui/plus"
     readonly property url qrImgUrl: "qrc:/ui/qr"
     readonly property url threeDotsImgUrl: "qrc:/ui/threeDots"
+    readonly property url deleteImgUrl: "qrc:/ui/delete"
 
     readonly property url checkImgUrl: "qrc:/ui/check"
     readonly property url frameImgUrl: "qrc:/ui/frame"

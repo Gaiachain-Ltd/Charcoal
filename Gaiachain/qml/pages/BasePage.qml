@@ -92,7 +92,8 @@ Items.GenericPanel
         }
         onPingSuccess: {
             pageManager.openPopup(Enums.Popup.YesNoQuestion,
-                                  { "text": Strings.onlineLogoutQuestion })
+                                  { "text": Strings.onlineLogoutQuestion },
+                                  "OFFLINE_LOGOUT")
         }
     }
 
@@ -102,6 +103,10 @@ Items.GenericPanel
             && (page !== Enums.Login) && (page !== Enums.LoginLoading)
 
         onPopupAction: {
+            if (popupId != "OFFLINE_LOGOUT") {
+                return
+            }
+
             switch(action) {
             case Enums.PopupAction.Yes:
                 header.logout()
