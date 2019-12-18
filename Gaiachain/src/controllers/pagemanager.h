@@ -26,8 +26,8 @@ public:
     Q_INVOKABLE bool isBackToHomePage() const;
 
 signals:
-    void popupAction(const Enums::PopupAction &action);
-    void popupClosed(const Enums::Popup &popup);
+    void popupAction(const Enums::PopupAction &action, const QString &popupId) const;
+    void popupClosed(const Enums::Popup &popup, const QString &popupId) const;
 
 signals:
     // Signals below should only be used by StackView!!!
@@ -45,11 +45,10 @@ public slots:
     void enter(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
     void enterReplace(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
     void back(const bool immediate = false);
-    bool backTo(const Enums::Page page, const QVariantMap properties = QVariantMap{}, const bool immediate = false);
+    bool backTo(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
 
     // Popup managment
-    // Use openPopup only on QML side to handle strings and don't mess sendAction signal receivers!
-    void openPopup(const Enums::Popup popup, QVariantMap properties = QVariantMap{});
+    void openPopup(const Enums::Popup popup, QVariantMap properties = QVariantMap{}, const QString &id = {});
     void closePopup();
     void sendAction(Enums::PopupAction action);
 
@@ -60,7 +59,7 @@ private:
     const Enums::Page m_homePage = Enums::Page::MainMenu;
 
     QVector<Enums::Page> m_pageStack;
-    QVector<Enums::Popup> m_popupStack;
+    QVector<QPair<Enums::Popup, QString>> m_popupStack;
 
     void prepareConnections();
 

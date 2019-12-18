@@ -98,6 +98,14 @@ void DataManager::sendOfflineActions()
                               std::bind(&DataRequestsManager::processOfflineActions, &m_requestsHandler, offlineActions));
 }
 
+void DataManager::removeOfflineAction(const QString &packageId, const Enums::SupplyChainAction &action)
+{
+    QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::removeLocalAction, &m_modelsHandler,
+                                                          packageId, action));
+    QMetaObject::invokeMethod(&m_localHandler, std::bind(&DataLocalManager::removeLocalAction, &m_localHandler,
+                                                         packageId, action));
+}
+
 void DataManager::fetchEventData(const QString &packageId, const Enums::PackageType &type)
 {
     QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::processPackageData, &m_modelsHandler,

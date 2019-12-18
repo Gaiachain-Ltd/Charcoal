@@ -19,13 +19,17 @@ BasePage {
     }
 
     function backToHomeHandler() {
-        pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit })
+        pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit }, "EXIT_CONFIRM")
     }
 
     Connections {
         target: pageManager
         enabled: pageManager.isOnTop(page)
         onPopupAction: {
+            if (popupId != "EXIT_CONFIRM") {
+                return
+            }
+
             switch (action) {
             case Enums.PopupAction.Accept:
                 pageManager.backTo(pageManager.homePage())

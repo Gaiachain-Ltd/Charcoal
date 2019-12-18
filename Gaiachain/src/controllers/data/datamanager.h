@@ -41,6 +41,7 @@ public:
                                const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
 
     Q_INVOKABLE void sendOfflineActions();
+    Q_INVOKABLE void removeOfflineAction(const QString &packageId, const Enums::SupplyChainAction &action);
 
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to);

@@ -14,12 +14,42 @@ BasePage {
 
     title: Strings.waitingTransactions
 
+    Connections {
+        id: deleteConfirmConnections
+
+        property string packageId
+        property int action
+
+        target: pageManager
+        enabled: pageManager.isOnTop(page)
+        onPopupAction: {
+            if (popupId != "DELETE_CONFIRM") {
+                return
+            }
+
+            switch (action) {
+            case Enums.PopupAction.Accept:
+                dataManager.removeOfflineAction(packageId, action)
+                break
+            default:
+                break
+            }
+        }
+    }
+
     Components.EventsListView {
         anchors {
             fill: parent
             margins: s(Style.bigMargin)
         }
 
+        delegateIcon: Style.deleteImgUrl
         viewModel: localEventsModel
+
+        onDelegateIconClicked: {
+            deleteConfirmConnections.packageId = packageId
+            deleteConfirmConnections.action = action
+            pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit }, "DELETE_CONFIRM")
+        }
     }
 }

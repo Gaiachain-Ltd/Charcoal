@@ -43,7 +43,8 @@
         <file alias="frame">ui/frame.svg</file>
         <file alias="clear">ui/clear-icon.svg</file>
         <file alias="typeManually">ui/button-type-in-manually.svg</file>
-        <file alias="enter">ui/button-enter.svg</file> 
+        <file alias="enter">ui/button-enter.svg</file>
+        <file alias="delete">ui/delete-icon.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

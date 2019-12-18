@@ -36,14 +36,21 @@ BasePage
         target: pageManager
         enabled: Number(pageManager.topPage) === page
         onPopupAction: {
-            switch(action) {
-            case Enums.PopupAction.Yes:
-                d.tryOfflineLogin()
-                break
-            case Enums.PopupAction.No:  // rejecting offline mode
-            case Enums.PopupAction.Ok:  // accepting error
-            default:
-                pageManager.back()
+            if (popupId == "OFFLINE_LOGIN") {
+                switch(action) {
+                case Enums.PopupAction.Yes:
+                    d.tryOfflineLogin()
+                    break
+                case Enums.PopupAction.No:  // rejecting offline mode
+                default:
+                    pageManager.back()
+                }
+            } else if (popupId == "LOGIN_ERROR") {
+                switch(action) {
+                case Enums.PopupAction.Ok:  // accepting error
+                default:
+                    pageManager.back()
+                }
             }
         }
     }
@@ -101,13 +108,15 @@ BasePage
             if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
                 if (userManager.offlineAvailable(login)) {
                     pageManager.openPopup(Enums.Popup.YesNoQuestion,
-                                          { "text": Strings.offlineModeQuestion })
+                                          { "text": Strings.offlineModeQuestion },
+                                          "OFFLINE_LOGIN")
                     return
                 }
             }
 
             pageManager.openPopup(Enums.Popup.Information,
-                                  { "text": RequestHelper.isAuthenticationError(code) ? Strings.loginError : Strings.serverConnectionError })
+                                  { "text": RequestHelper.isAuthenticationError(code) ? Strings.loginError : Strings.serverConnectionError },
+                                  "LOGIN_ERROR")
         }
 
         // animation

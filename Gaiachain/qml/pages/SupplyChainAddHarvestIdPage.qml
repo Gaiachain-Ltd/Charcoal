@@ -29,7 +29,7 @@ Pages.SupplyChainPageBase {
 
     function proceed() {
         if (firstEntry) {
-            pageManager.openPopup(Enums.Popup.Comment, { "text": Strings.cocoaFromSeveralPlotsComment })
+            pageManager.openPopup(Enums.Popup.Comment, { "text": Strings.cocoaFromSeveralPlotsComment }, "COCOA_COMMENT")
         } else {
             processHarvestData()
         }
@@ -50,13 +50,11 @@ Pages.SupplyChainPageBase {
         target: pageManager
         enabled: pageManager.isOnTop(page)
         onPopupClosed: {
-            switch (popup) {
-            case Enums.Popup.Comment:
-                processHarvestData()
-                break
-            default:
-                break
+            if (popupId != "COCOA_COMMENT") {
+                return
             }
+
+            processHarvestData()
         }
     }
 

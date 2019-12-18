@@ -132,7 +132,6 @@ void AbstractModel::removeData(const Gaia::ModelEntry &entryData)
 
     for (const auto &dataIndex : find(entryData)) {
         removeRow(dataIndex.row());
-        submit();
     }
 }
 
