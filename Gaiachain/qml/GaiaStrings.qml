@@ -111,6 +111,12 @@ QtObject {
     readonly property string toSelect: qsTr("To select")
     readonly property string askForExit: qsTr("Are you sure you want to exit?")
 
+    readonly property string gpsCoordinates: qsTr("GPS coordinates")
+    readonly property string gpsInvalid: qsTr("Please check your GPS signal")
+    readonly property string gpsTurnedOff: qsTr("GPS turned off")
+    readonly property string gpsNotAvailable: qsTr("GPS not available")
+    readonly property string enableGpsLocation: qsTr("Enable GPS location")
+
     // package data details pages
     readonly property string nameOfProducer: qsTr("Name of the producer")
     readonly property string producerIdNumber: qsTr("Producer ID number")

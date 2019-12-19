@@ -24,6 +24,11 @@ QtObject {
         return str.charAt(0).toUpperCase() + str.slice(1).replace(".", Strings.empty)
     }
 
+    function formatCoordinate(coord) {
+        var items = coord.split(",")
+        return (items.length === 3 ? items.slice(0, -1) : items).join(", ")
+    }
+
     function getMonthName(month) {
         switch(month) {
         case Calendar.January:return Strings.january

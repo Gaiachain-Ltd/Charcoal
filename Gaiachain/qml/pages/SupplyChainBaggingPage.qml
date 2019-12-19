@@ -149,11 +149,11 @@ Pages.SupplyChainPage {
                                          "popupText": Strings.attachQr.arg(Strings.sac.toUpperCase()) })
     }
 
-    Items.ButtonHeader {
+    Items.ButtonInputHeader {
         Layout.fillWidth: true
 
         headerText: Strings.harvestId
-        buttonText: Strings.addHarvestId
+        inputText: Strings.addHarvestId
 
         iconSource: Style.plusImgUrl
 

@@ -161,7 +161,9 @@ QtObject {
     readonly property url typeManuallyImgUrl: "qrc:/ui/typeManually"
     readonly property url enterImgUrl: "qrc:/ui/enter"
 
-    readonly property url deleteImgUrl: "qrc:/ui/delete"
+    readonly property url gpsOkImgUrl: "qrc:/ui/gpsOk"
+    readonly property url gpsFailedImgUrl: "qrc:/ui/gpsFailed"
+    readonly property url gpsImgUrl: "qrc:/ui/gps"
 
     // control
     readonly property int controlDefaultBorderWidth: 1
