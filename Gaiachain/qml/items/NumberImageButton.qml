@@ -40,7 +40,10 @@ ImageButton {
                 margins: s(Style.tinyMargin) / 3
             }
 
-            font.bold: true
+            font {
+                bold: true
+                letterSpacing: 0   // required to display properly
+            }
 
             fontSizeMode: Text.Fit
             minimumPixelSize: s(Style.tinyPixelSize)
