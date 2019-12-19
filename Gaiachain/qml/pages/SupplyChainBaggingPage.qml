@@ -172,11 +172,13 @@ Pages.SupplyChainPage {
         Items.InputHeader {
             Layout.fillWidth: true
 
-            showIcon: (suffixText === Strings.empty)
+            iconSource: Style.deleteImgUrl
             readOnly: true
 
             inputText: harvestIdValue
             suffixText: Strings.kg.arg((weightValue === Strings.empty) ? "-" : weightValue)
+
+            onIconClicked: harvestPidsModel.remove(index)
         }
     }
 }
