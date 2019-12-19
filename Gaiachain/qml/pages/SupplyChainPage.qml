@@ -20,7 +20,7 @@ SupplyChainPageBase {
     proceedButtonEnabled: validPageData && gpsSource.validCoordinate
 
     Component.onCompleted: AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
-
+ 
     function coordinate() {
         return gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()
     }
@@ -84,6 +84,7 @@ SupplyChainPageBase {
             }
         }
     }
+
     Connections {
         id: addActionResponseHandler
         target: sessionManager
@@ -120,13 +121,27 @@ SupplyChainPageBase {
 
     PositionSourceHandler {
         id: gpsSource
+
+        function errorMessage() {
+            if (noAccess) {
+                return Strings.enableGpsLocation
+            } else if (!valid) {
+                return Strings.gpsNotAvailable
+            } else if (!positioningSupported) {
+                return Strings.gpsTurnedOff
+            } else {
+                return Strings.gpsInvalid
+            }
+        }
     }
 
     Items.ButtonInputHeader {
         Layout.fillWidth: true
 
-        inputText: "GPS: " + (gpsSource.validCoordinate ? gpsSource.coordinate.latitude + " " + gpsSource.coordinate.longitude
-                                                        : "invalid")
+        headerText: Strings.gpsCoordinates
+        inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinate.toString()) : gpsSource.errorMessage())
+        iconSource: (gpsSource.validCoordinate ? Style.gpsOkImgUrl : Style.gpsFailedImgUrl)
+
         onClicked: gpsSource.update()
     }
 }
