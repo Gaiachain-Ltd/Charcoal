@@ -21,7 +21,7 @@ Items.GenericHeader {
     property string suffixText
 
     property bool optional: false
-    readonly property bool isEmpty: inputText === Strings.empty
+    readonly property bool isEmpty: (inputText === Strings.empty)
 
     property alias showIcon: input.showIcon
     signal iconClicked
@@ -35,10 +35,12 @@ Items.GenericHeader {
 
         Layout.fillWidth: true
 
+        readonly property real iconItemSpacing: iconItem.visible ? iconItem.width + 2 * iconItem.horizontalMargins : Style.none
+        readonly property real suffixItemSpacing: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2 : Style.none
+        readonly property real itemsSpacing: (iconItemSpacing + suffixItemSpacing)
+
         focus: false
-        rightPadding: suffix.visible ? suffix.contentWidth + s(Style.hugeMargin) * 2
-                                     : ((iconEdge === Enums.Edge.RightEdge) && iconItem.visible ? iconItem.width + 2 * iconItem.horizontalMargins
-                                                                                                : padding)
+        rightPadding: (itemsSpacing === Style.none ? padding : itemsSpacing)
 
         iconEdge: Enums.Edge.RightEdge
 
@@ -56,14 +58,14 @@ Items.GenericHeader {
 
             anchors {
                 right: parent.right
-                rightMargin: s(Style.hugeMargin)
+                rightMargin: s(Style.hugeMargin) + input.iconItemSpacing
                 top: parent.top
                 bottom: parent.bottom
             }
 
             font: parent.font
             color: parent.color
-            visible: (suffixText !== Strings.empty && !showIcon)
+            visible: (suffixText !== Strings.empty)
 
             text: suffixText
         }

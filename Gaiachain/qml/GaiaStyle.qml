@@ -161,6 +161,8 @@ QtObject {
     readonly property url typeManuallyImgUrl: "qrc:/ui/typeManually"
     readonly property url enterImgUrl: "qrc:/ui/enter"
 
+    readonly property url deleteImgUrl: "qrc:/ui/delete"
+
     // control
     readonly property int controlDefaultBorderWidth: 1
     readonly property int controlBoldBorderWidth: 2
