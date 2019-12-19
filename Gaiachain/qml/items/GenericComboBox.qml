@@ -13,6 +13,7 @@ ComboBox {
     currentIndex: -1
 
     property alias placeholderText: indicatorInput.placeholderText
+    property string emptyListText: Strings.noEntries
 
     property bool optional: false
     readonly property bool isEmpty: currentIndex == -1
@@ -90,6 +91,7 @@ ComboBox {
         focus: true
 
         contentItem: ListView {
+            id: entriesList
             implicitHeight: contentHeight
 
             clip: true
@@ -99,10 +101,17 @@ ComboBox {
 
             model: top.delegateModel
 
+            header: Items.GenericItemDelegate {
+                text: emptyListText
+                visible: !entriesList.count
+                height: visible ? implicitHeight : Style.none
+            }
             footer: Items.GenericItemDelegate {
                 text: footerText
                 visible: footerVisible
-                height: footerVisible ? implicitHeight : Style.none
+                height: visible ? implicitHeight : Style.none
+
+                separatorVisible: true
 
                 onClicked: {
                     comboBoxPopup.parent.footerClicked()
