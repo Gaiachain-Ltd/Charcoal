@@ -133,6 +133,7 @@ QtObject {
     readonly property string selectedAutomatically: qsTr("[selected automatically]")
     readonly property string selectProducer: qsTr("[select producer]")
 
+    readonly property string noEntries: qsTr("No valid entries")
     readonly property string notRequired: qsTr("not required")
 
     readonly property string endFermentationDate: qsTr("End of fermentation date")
