@@ -28,6 +28,19 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary() })
+    }
+
+    function summary() {
+       return [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.lotIdForThePackage, lotIdComboBox.currentText),
+            createSummaryItem(Strings.registerQrCodeToLotId, qrCodeInputHeader.inputText),
+            createSummaryItem(Strings.description, descriptionHeader.inputText)
+       ]
+    }
+
+    function addAction() {
         showOverlay()
 
         var lotId = lotIdComboBox.currentText

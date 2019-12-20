@@ -17,12 +17,23 @@ SupplyChainPageBase {
     property string packageCodeData
     property var action: Enums.SupplyChainAction.Unknown
 
+    readonly property alias gpsCoordinates: gpsCoordinatesButtonInputHeader.inputText
+
     proceedButtonEnabled: validPageData && gpsSource.validCoordinate
 
     Component.onCompleted: AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
- 
+
     function coordinate() {
         return gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()
+    }
+
+    function createSummaryItem(header, value, inputIconSource = "", suffix = "") {
+        return {
+          "headerValue": header,
+          "value": value,
+          "inputIconSource": inputIconSource.toString(),
+          "suffixValue": suffix
+        }
     }
 
     function isCurrentAction(packageId, codeData, action) {
@@ -36,13 +47,14 @@ SupplyChainPageBase {
 
     function handleActionAdded(local = false) {
         hideOverlay()
-        pageManager.backTo(pageManager.homePage())
 
         if (local) {
-            pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.offlineActionAdded, "backgroundColor": Style.warningColor,
-                                      "iconSource": Style.warningImgUrl, "openedInterval": Style.notificationPopupOpenedLongInterval})
+            pageManager.backToAndOpenPopup(pageManager.homePage(), Enums.Popup.Notification, {},
+                                           {"text": Strings.offlineActionAdded, "backgroundColor": Style.warningColor,
+                                               "iconSource": Style.warningImgUrl, "openedInterval": Style.notificationPopupOpenedLongInterval})
         } else {
-            pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.success})
+            pageManager.backToAndOpenPopup(pageManager.homePage(), Enums.Popup.Notification, {},
+                                           {"text": Strings.success})
         }
     }
     function handleActionError(code) {
@@ -137,6 +149,8 @@ SupplyChainPageBase {
     }
 
     Items.ButtonInputHeader {
+        id: gpsCoordinatesButtonInputHeader
+
         Layout.fillWidth: true
 
         headerText: Strings.gpsCoordinates

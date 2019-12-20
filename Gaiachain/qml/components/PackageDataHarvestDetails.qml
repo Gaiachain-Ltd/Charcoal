@@ -28,13 +28,13 @@ Components.PackageDataDetails {
         var producerData = ModelHelper.findItem("id", producerId, ["name", "code", "village"], producersModel)
 
         const data = [
-           { "headerValue": Strings.nameOfProducer,       "inputValue": emptyIfNotDefined(producerData[0]) },
-           { "headerValue": Strings.producerIdNumber,     "inputValue": emptyIfNotDefined(producerData[1]) },
-           { "headerValue": Strings.village,              "inputValue": emptyIfNotDefined(producerData[2]) },
-           { "headerValue": Strings.parcelCode,           "inputValue": emptyIfNotDefined(parcelData[0]) },
-           { "headerValue": Strings.harvestDate,          "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
-           { "headerValue": Strings.breakingDate,         "inputValue": emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) },
-           { "headerValue": Strings.estimatedBeansVolume, "inputValue": Strings.kg.arg(minusIfNotDefinedOrZero(packageData.properties[PackageDataProperties.EstimatedBeansVolume])) }
+           { "headerValue": Strings.nameOfProducer,       "inputValue": Helper.emptyIfNotDefined(producerData[0]) },
+           { "headerValue": Strings.producerIdNumber,     "inputValue": Helper.emptyIfNotDefined(producerData[1]) },
+           { "headerValue": Strings.village,              "inputValue": Helper.emptyIfNotDefined(producerData[2]) },
+           { "headerValue": Strings.parcelCode,           "inputValue": Helper.emptyIfNotDefined(parcelData[0]) },
+           { "headerValue": Strings.harvestDate,          "inputValue": Helper.emptyIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
+           { "headerValue": Strings.breakingDate,         "inputValue": Helper.emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) },
+           { "headerValue": Strings.estimatedBeansVolume, "inputValue": Strings.kg.arg(Helper.minusIfNotDefinedOrZero(packageData.properties[PackageDataProperties.EstimatedBeansVolume])) }
        ]
 
         detailsModel.clear()

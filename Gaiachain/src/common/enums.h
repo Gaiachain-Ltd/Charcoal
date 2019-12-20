@@ -37,6 +37,7 @@ namespace Enums {
         SupplyChainLotCreation,
         SupplyChainWarehouseTransport,
         SupplyChainExportReception,
+        SupplyChainSummary,
 
         PageCount
     };

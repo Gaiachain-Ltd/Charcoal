@@ -29,6 +29,26 @@ QtObject {
         return (items.length === 3 ? items.slice(0, -1) : items).join(", ")
     }
 
+    function emptyIfNotDefined(data) {
+        return data ? data : Strings.empty
+    }
+
+    function minusIfNotDefined(str) {
+         return str ? str : Strings.minus
+     }
+
+    function minusIfNotDefinedOrZero(value) {
+        return value && value > 0 ? value : Strings.minus
+    }
+
+    function emptyIfNotDate(date) {
+        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), Strings.dateFormat) : Strings.empty
+    }
+
+    function minusIfNotDate(date) {
+        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), Strings.dateFormat) : Strings.minus
+    }
+
     function getMonthName(month) {
         switch(month) {
         case Calendar.January:return Strings.january

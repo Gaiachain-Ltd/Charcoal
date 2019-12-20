@@ -98,5 +98,6 @@
         <file>common/PositionSourceHandler.qml</file>
         <file>components/OfflineModeHandler.qml</file>
         <file>items/FilterComboBox.qml</file>
+        <file>pages/SupplyChainSummaryPage.qml</file>  
     </qresource>
 </RCC>
