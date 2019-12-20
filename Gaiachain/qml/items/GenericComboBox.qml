@@ -67,7 +67,7 @@ ComboBox {
         MouseArea {
             id: ma
             anchors.fill: parent
-            enabled: top.model !== undefined && top.model.rowCount() > 0
+            enabled: top.model !== undefined
 
             onClicked: {
                 forceActiveFocus()
