@@ -53,6 +53,8 @@ BasePage {
                 localEventsModel.size) {
             dataManager.sendOfflineActions()
         }
+
+        sessionManager.getAdditionalData()
     }
 
     Flickable {

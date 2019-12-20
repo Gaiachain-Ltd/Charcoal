@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 import com.gaiachain.types 1.0
+import com.gaiachain.helpers 1.0
 
 import "../components" as Components
 
@@ -12,7 +13,7 @@ Components.PackageDataDetails {
 
     relatedPackagesModel: relatedPackagesModel
 
-    onPackageDataChanged: {
+    function updatePackageData() {
         if (typeof(top.packageData) === "undefined") {
             return
         }
@@ -34,6 +35,8 @@ Components.PackageDataDetails {
                                           "inputSuffixValue": Strings.kg.arg(Helper.minusIfNotDefinedOrZero(weight)) })
         }
     }
+
+    onPackageDataChanged: updatePackageData()
 
     ListModel {
         id: relatedPackagesModel

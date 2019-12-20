@@ -16,7 +16,7 @@ Components.PackageDataDetails {
     Component.onCompleted: parcelsModel.allProducers = true
     Component.onDestruction: parcelsModel.allProducers = false
 
-    onPackageDataChanged: {
+    function updatePackageData() {
         if (typeof(top.packageData) === "undefined") {
             return
         }
@@ -28,12 +28,12 @@ Components.PackageDataDetails {
         var producerData = ModelHelper.findItem("id", producerId, ["name", "code", "village"], producersModel)
 
         const data = [
-           { "headerValue": Strings.nameOfProducer,       "inputValue": Helper.emptyIfNotDefined(producerData[0]) },
-           { "headerValue": Strings.producerIdNumber,     "inputValue": Helper.emptyIfNotDefined(producerData[1]) },
-           { "headerValue": Strings.village,              "inputValue": Helper.emptyIfNotDefined(producerData[2]) },
-           { "headerValue": Strings.parcelCode,           "inputValue": Helper.emptyIfNotDefined(parcelData[0]) },
-           { "headerValue": Strings.harvestDate,          "inputValue": Helper.emptyIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
-           { "headerValue": Strings.breakingDate,         "inputValue": Helper.emptyIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) },
+           { "headerValue": Strings.nameOfProducer,       "inputValue": Helper.minusIfNotDefined(producerData[0]) },
+           { "headerValue": Strings.producerIdNumber,     "inputValue": Helper.minusIfNotDefined(producerData[1]) },
+           { "headerValue": Strings.village,              "inputValue": Helper.minusIfNotDefined(producerData[2]) },
+           { "headerValue": Strings.parcelCode,           "inputValue": Helper.minusIfNotDefined(parcelData[0]) },
+           { "headerValue": Strings.harvestDate,          "inputValue": Helper.minusIfNotTimestamp(packageData.properties[PackageDataProperties.HarvestDate]) },
+           { "headerValue": Strings.breakingDate,         "inputValue": Helper.minusIfNotTimestamp(packageData.properties[PackageDataProperties.BreakingDate]) },
            { "headerValue": Strings.estimatedBeansVolume, "inputValue": Strings.kg.arg(Helper.minusIfNotDefinedOrZero(packageData.properties[PackageDataProperties.EstimatedBeansVolume])) }
        ]
 
@@ -42,6 +42,8 @@ Components.PackageDataDetails {
             detailsModel.append(data[i])
         }
     }
+
+    onPackageDataChanged: updatePackageData()
 
     ListModel {
         id: detailsModel
