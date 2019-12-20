@@ -1,7 +1,7 @@
 # Provide version number to application
 COMMIT = $$system(git rev-parse --short HEAD)
 
-VERSION=0.1.3
+VERSION=0.1.4
 
 HOST_MACHINE = $$[QMAKE_SPEC]
 contains (HOST_MACHINE, .*win32.*) {
