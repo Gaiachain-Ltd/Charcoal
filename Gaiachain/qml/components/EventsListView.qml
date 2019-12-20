@@ -68,7 +68,7 @@ Item {
                     font.bold: true
                     visible: displayDate
 
-                    text: Helper.convertTimestampToDate(Number(timestamp))
+                    text: Helper.formatDate(Number(timestamp))
                 }
 
                 Items.BasicText {
