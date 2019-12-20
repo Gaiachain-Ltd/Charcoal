@@ -10,7 +10,7 @@ ModelHelper &ModelHelper::instance()
     return pmh;
 }
 
-QVariant ModelHelper::getData(int row, const QString &roleName, AbstractReadModel *model)
+QVariant ModelHelper::getData(int row, const QString &roleName, QAbstractItemModel *model)
 {
     if (model) {
         return model->data(model->index(row, 0), roleNameToNumber(roleName, model));
@@ -18,19 +18,22 @@ QVariant ModelHelper::getData(int row, const QString &roleName, AbstractReadMode
     return {};
 }
 
-QVariant ModelHelper::findItem(const QString &roleName, const QVariant &targetItem, const QString &searchRoleName, AbstractReadModel *model)
+int ModelHelper::findRow(const QString &roleName, const QVariant &targetItem, QAbstractItemModel *model)
 {
     if (model) {
         auto matchingIndex = model->match(model->index(0, 0), roleNameToNumber(roleName, model), targetItem, 1, Qt::MatchExactly);
-        if (!matchingIndex.isEmpty()) {
-            return model->data(model->index(matchingIndex.first().row(), 0), roleNameToNumber(searchRoleName, model));
-        }
+        return !matchingIndex.isEmpty() ? matchingIndex.first().row() : -1;
     }
-
-    return {};
+    return -1;
 }
 
-QVariantList ModelHelper::findItem(const QString &roleName, const QVariant &targetItem, const QStringList &searchRoleNames, AbstractReadModel *model)
+QVariant ModelHelper::findItem(const QString &roleName, const QVariant &targetItem, const QString &searchRoleName, QAbstractItemModel *model)
+{
+    auto items = findItems(roleName, targetItem, searchRoleName, model);
+    return items.size() ? items.first() : QVariant{};
+}
+
+QVariantList ModelHelper::findItem(const QString &roleName, const QVariant &targetItem, const QStringList &searchRoleNames, QAbstractItemModel *model)
 {
     auto dataList = QVariantList{};
     if (model) {
@@ -48,7 +51,22 @@ QVariantList ModelHelper::findItem(const QString &roleName, const QVariant &targ
     return dataList;
 }
 
-int ModelHelper::roleNameToNumber(const QString &roleName, AbstractReadModel *model)
+QVariantList ModelHelper::findItems(const QString &roleName, const QVariant &targetItem, const QString &searchRoleName, QAbstractItemModel *model)
+{
+    auto dataList = QVariantList{};
+
+    if (model) {
+        const auto matchingIndexes = model->match(model->index(0, 0), roleNameToNumber(roleName, model), targetItem, 1, Qt::MatchExactly);
+        for (const auto &matchingIndex : matchingIndexes) {
+            const auto data = model->data(model->index(matchingIndex.row(), 0), roleNameToNumber(searchRoleName, model));
+            dataList.append(data);
+        }
+    }
+
+    return dataList;
+}
+
+int ModelHelper::roleNameToNumber(const QString &roleName, QAbstractItemModel *model)
 {
     if (model) {
         const auto roles = model->roleNames();

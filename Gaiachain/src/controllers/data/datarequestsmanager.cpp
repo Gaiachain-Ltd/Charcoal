@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QGeoCoordinate>
 
 #include "../../helpers/requestshelper.h"
 #include "../../common/tags.h"
@@ -107,7 +108,7 @@ void DataRequestsManager::processUnusedLotIdsLoaded(const QJsonArray &idsArray)
 void DataRequestsManager::processOfflineActions(const Gaia::ModelData &offlineData)
 {
     for (const auto &modelEntry : offlineData) {
-        Q_ASSERT(modelEntry.size() >= 4);
+        Q_ASSERT(modelEntry.size() >= 7);
 
         const auto packageId = modelEntry.at(0).toString();
         const auto action = modelEntry.at(1).value<Enums::SupplyChainAction>();
@@ -117,8 +118,10 @@ void DataRequestsManager::processOfflineActions(const Gaia::ModelData &offlineDa
 
             emit sendOfflineAction(packageId,
                                    action,
+                                   QGeoCoordinate(modelEntry.at(5).toDouble(),
+                                                  modelEntry.at(6).toDouble()),
                                    modelEntry.at(2).toDateTime(),
-                                   modelEntry.at(3).toMap());
+                                   modelEntry.at(4).toMap());
         }
     }
 }
@@ -135,17 +138,13 @@ void DataRequestsManager::processOfflineAction(const QString &packageId, const E
 
 void DataRequestsManager::offlineActionAdded(const QString &packageId, const Enums::SupplyChainAction &action)
 {
-    emit updateLocalAction(packageId, action);
+    emit updateOfflineAction(packageId, action);
 
     m_offlineActionRequestsSent.remove(packageId, action);
 }
 
-void DataRequestsManager::offlineActionError(const QString &packageId, const Enums::SupplyChainAction &action, const QNetworkReply::NetworkError &error)
+void DataRequestsManager::offlineActionError(const QString &packageId, const Enums::SupplyChainAction &action)
 {
-    if (!RequestsHelper::isNetworkError(error) && !RequestsHelper::isServerError(error)) {
-        emit removeLocalAction(packageId, action);
-    }
-
     m_offlineActionRequestsSent.remove(packageId, action);
 }
 
@@ -242,14 +241,18 @@ Gaia::ModelEntry DataRequestsManager::processEvent(const QJsonValue &value)
     const auto companyObj = RequestsHelper::checkAndValue(userObj, Tags::company).toObject();
     const auto cooperativeId = RequestsHelper::checkAndValue(companyObj, Tags::id).toInt();
 
+    const auto locationObj = RequestsHelper::checkAndValue(object, Tags::location).toObject();
+    const auto locationLat = RequestsHelper::checkAndValue(locationObj, Tags::latitude).toDouble();
+    const auto locationLon = RequestsHelper::checkAndValue(locationObj, Tags::longitude).toDouble();
+
     return Gaia::ModelEntry {
         packageId,
         QVariant::fromValue(action),
         date,
         cooperativeId,
         properties,
-        0.0,    // location not handled yet
-        0.0     // location not handled yet
+        locationLat,
+        locationLon
     };
 }
 

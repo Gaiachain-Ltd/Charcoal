@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.static 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -56,12 +57,10 @@ Rectangle {
 
             Layout.fillWidth: true
 
-            placeholderText: Strings.qrIdMask
-            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+            inputMask: Static.qrInputMask
+
             focus: false
             visible: top.manual
-
-            validator: RegExpValidator { regExp: Style.codeDataRegExpPattern }
         }
 
         Items.PureImageButton {

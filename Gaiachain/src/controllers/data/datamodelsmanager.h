@@ -19,6 +19,8 @@
 #include "../../models/relationmodel.h"
 #include "../../models/unusedidsmodel.h"
 
+class QGeoCoordinate;
+
 class DataModelsManager : public AbstractDataModelsManager
 {
     Q_OBJECT
@@ -27,7 +29,8 @@ public:
 
     void updateThread();
 
-    void addLocalAction(const QString &packageId, const Enums::SupplyChainAction &action, const QDateTime &timestamp,
+    void addLocalAction(const QString &packageId, const Enums::SupplyChainAction &action,
+                        const QGeoCoordinate &coordinate, const QDateTime &timestamp,
                         int cooperativeId, const QVariantMap &properties);
     void updateLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
     void removeLocalAction(const QString &packageId, const Enums::SupplyChainAction &action);
@@ -49,9 +52,9 @@ signals:
     void relationInserted(const Gaia::ModelEntry &entryData) const;
 
     void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action,
-                          const QDateTime &timestamp, const QVariantMap &properties) const;
+                          const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) const;
     void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action,
-                               const QDateTime &timestamp, const QVariantMap &properties) const;
+                               const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) const;
 
 private:
     ExistsQueryModel m_existsQueryModel;

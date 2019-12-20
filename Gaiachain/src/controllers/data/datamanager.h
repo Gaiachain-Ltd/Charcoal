@@ -5,11 +5,14 @@
 
 #include <QThread>
 
-#include "datamodelsmanager.h"
-#include "dataviewmodelsmanager.h"
 #include "datarequestsmanager.h"
+#include "datamodelsmanager.h"
+#include "datalocalmanager.h"
+#include "dataviewmanager.h"
 
 #include "../../common/userdata.h"
+
+class QGeoCoordinate;
 
 class DataManager : public AbstractManager
 {
@@ -26,38 +29,41 @@ public:
 
     bool processing() const override;
 
-    Q_INVOKABLE void getPackageData(const QString &packageId) const;
+    Q_INVOKABLE void preparePackageData(const QString &packageId);
 
     Q_INVOKABLE QString generateHarvestId(const QDate &date, const QString &parcelCode);
 
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action,
-                               const QDateTime &timestamp, const QVariantMap &properties);
+                               const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     Q_INVOKABLE void addAction(const QString &packageId, const Enums::SupplyChainAction &action, const QByteArray &codeData,
-                               const QDateTime &timestamp, const QVariantMap &properties);
+                               const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     Q_INVOKABLE void addAction(const Enums::SupplyChainAction &action, const QByteArray &codeData,
-                               const QDateTime &timestamp, const QVariantMap &properties);
+                               const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
 
     Q_INVOKABLE void sendOfflineActions();
+    Q_INVOKABLE void removeOfflineAction(const QString &packageId, const Enums::SupplyChainAction &action);
 
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to);
     Q_INVOKABLE void fetchLimitRangeEvents(int limit, int offset, const QDateTime &from, const QDateTime &to);
-    Q_INVOKABLE void fetchLimitKeywordEvents(int limit, int offset, const QString &keyword = {});
+    Q_INVOKABLE void fetchLimitKeywordEvents(int limit, int offset, const QString &keyword,
+                                             const QSet<Enums::PackageType> &filteredPackages, int cooperativeId);
     Q_INVOKABLE void fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction);
 
 signals:
     void collectingDataChanged(bool processing) const;
 
     void addActionRequest(const QString &packageId, const Enums::SupplyChainAction &action,
-                          const QDateTime &timestamp, const QVariantMap &properties);
+                          const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     void addActionRequest(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                          const QDateTime &timestamp, const QVariantMap &properties);
+                          const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
     void addActionRequest(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                          const QDateTime &timestamp, const QVariantMap &properties);
+                          const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties);
 
     void eventsInfoNeeded(const QDateTime &from, const QDateTime &to) const;
     void eventsInfoNeeded(int limit, int offset, const QDateTime &from, const QDateTime &to) const;
-    void eventsInfoNeeded(int limit, int offset, const QString &keyword) const;
+    void eventsInfoNeeded(int limit, int offset, const QString &keyword,
+                          const QSet<Enums::PackageType> &filteredPackages, int cooperativeId) const;
     void lastActionEventsInfoNeeded(const Enums::SupplyChainAction &lastAction) const;
     void eventsNeeded(const QStringList &ids) const;
 
@@ -65,8 +71,9 @@ signals:
     void eventInserted(const Gaia::ModelEntry &entryData) const;
     void relationInserted(const Gaia::ModelEntry &entryData) const;
 
-    void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action);
-    void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action);
+    void localActionAdded(const QString &packageId, const Enums::SupplyChainAction &action) const;
+    void localActionDuplicated(const QString &packageId, const Enums::SupplyChainAction &action) const;
+    void localActionDataError(const QString &packageId, const Enums::SupplyChainAction &action) const;
 
 public slots:
     void onActionAdded(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action);
@@ -81,9 +88,10 @@ public slots:
 private:
     QThread m_processingThread;
 
-    DataModelsManager m_modelsHandler;
-    DataViewModelsManager m_viewModelsHandler;
     DataRequestsManager m_requestsHandler;
+    DataModelsManager m_modelsHandler;
+    DataLocalManager m_localHandler;
+    DataViewManager m_viewHandler;
 
     UserData m_userData;
 

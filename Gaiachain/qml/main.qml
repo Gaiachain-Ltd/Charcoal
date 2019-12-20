@@ -47,7 +47,7 @@ ApplicationWindow
                 ? Qt.inputMethod.keyboardRectangle.y + Math.round(s(Style.footerHeight))
                 : parent.height
 
-        Behavior on height { NumberAnimation { duration: 200 } }
+        Behavior on height { NumberAnimation { duration: Style.keyboardAnimationDuration } }
     }
 
     onClosing: close.accepted = mainStackView.onClosingEvent()

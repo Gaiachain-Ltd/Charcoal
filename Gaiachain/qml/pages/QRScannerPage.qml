@@ -5,7 +5,9 @@ import QZXing 2.3
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.static 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.platforms 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -21,6 +23,13 @@ BasePage {
     property int scanStatus: Enums.QRScanStatus.Unknown
     property int backSupplyChainPage: Enums.Page.InvalidPage
 
+    Component.onCompleted: {
+        if (AndroidPermissionsHandler) {
+            AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Camera)
+        }
+        pageManager.openPopup(Enums.Popup.Text, { "text": top.popupText })
+    }
+
     function parseScannedId(id) {
         if (Utility.validateId(id)) {
             scannedId = Utility.formatRawId(id)
@@ -33,7 +42,7 @@ BasePage {
     }
 
     function backToHomeHandler() {
-        pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit })
+        pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit }, "EXIT_CONFIRM")
     }
 
     function backHandler() {
@@ -46,13 +55,15 @@ BasePage {
         return false    // do not close application
     }
 
-    Component.onCompleted: pageManager.openPopup(Enums.Popup.Text, { "text": top.popupText })
-
     Connections {
         target: pageManager
         enabled: pageManager.isOnTop(page)
 
         onPopupAction: {
+            if (popupId != "EXIT_CONFIRM") {
+                return
+            }
+
             switch (action) {
             case Enums.PopupAction.Accept:
                 pageManager.backTo(pageManager.homePage())
@@ -91,7 +102,7 @@ BasePage {
         QZXingFilter {
             id: zxingFilter
 
-            property real normalizedScanSize: Style.normalizedScanSize
+            property real normalizedScanSize: Static.normalizedScanSize
             property real normalizedScanPos: (1.0 - normalizedScanSize) * 0.5
 
             captureRect: {
@@ -191,7 +202,8 @@ BasePage {
     Items.PureImageButton {
         parent: videoOutput
 
-        width: s(Style.frameSvgImgHeight); height: s(Style.frameSvgImgHeight)
+        width: s(Static.frameSvgImgHeight);
+        height: s(Static.frameSvgImgHeight)
 
         source: !qrStatus.manual ? Style.frameImgUrl : Style.qrImgUrl
         anchors.centerIn: parent
@@ -217,7 +229,8 @@ BasePage {
                 }
             }
 
-            width: s(Style.checkSvgImageHeight); height: s(Style.checkSvgImageHeight)
+            width: s(Static.checkSvgImageHeight)
+            height: s(Static.checkSvgImageHeight)
 
             opacity: allow()
             enabled: allow()

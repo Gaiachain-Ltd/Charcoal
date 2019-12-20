@@ -17,28 +17,27 @@ BasePage {
 
     function refreshData() {
         // called from BasePage
-        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+        latestRangeTransactionsModel.clearRowCount()
     }
 
     function updateCooperativeOnlyFiltering(active) {
-        cooperativeFilteringEvents.active = active
-        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+        transactionsModel.setCooperativeOnly(active)
+        latestRangeTransactionsModel.clearRowCount()
     }
 
     function updateSearch() {
-        searchEventsModel.search(searchInput.text)
-        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+        transactionsModel.setKeyword(searchInput.text)
+        latestRangeTransactionsModel.clearRowCount()
     }
 
     function updatePackageTypeFiltering(packageType, checked) {
-        packagesTypeSearchEventsModel.setPackageTypeFiltering(packageType, checked)
-        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+        transactionsModel.setPackageTypeActive(packageType, checked)
+        latestRangeTransactionsModel.clearRowCount()
     }
 
     Component.onDestruction: {
-        searchEventsModel.clearSearch()
-        packagesTypeSearchEventsModel.clearFiltering()
-        latestRangePackagesTypeSearchEventsModel.clearRowCount()
+        transactionsModel.clear()
+        latestRangeTransactionsModel.clearRowCount()
     }
 
     ListModel {
@@ -76,7 +75,8 @@ BasePage {
 
             focus: false
 
-            inputMethodHints: Qt.ImhUppercaseOnly
+            font.capitalization: text.length ? Font.AllUppercase : Font.MixedCase
+
             placeholderText: Strings.searchForTransaction
             iconSource: Style.searchImgUrl
             iconEdge: Enums.Edge.RightEdge
@@ -89,7 +89,6 @@ BasePage {
             onFocusChanged: if (!focus) top.updateSearch()
             onAccepted: top.updateSearch()
         }
-
 
         Items.BasicCheckBox {
             checked: true
@@ -151,7 +150,7 @@ BasePage {
 
                     text: packageName
 
-                    Component.onCompleted: packagesFilteringRepeater.updatePackageTypeFiltering(packageType, checked)
+                    Component.onCompleted: transactionsModel.isPackageTypeActive(packageType)
                     onCheckedChanged: packagesFilteringRepeater.updatePackageTypeFiltering(packageType, checked)
                 }
             }
@@ -161,7 +160,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: latestRangePackagesTypeSearchEventsModel
+            viewModel: latestRangeTransactionsModel
 
             onDelegateClicked:  {
                 pageManager.enter(Enums.Page.PackageData, { "title": top.title, "packageId": packageId, "packageType": DataGlobals.packageType(action) })

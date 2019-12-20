@@ -43,8 +43,8 @@ QtObject {
     readonly property string november: qsTr("November")
     readonly property string december: qsTr("December")
 
-    readonly property string aboutApp: qsTr("<h2>%1</h2><br/>v. %2 (%3)<br/><a href=\"http://%4\">http://%4</a>")
-    readonly property string userInfo: qsTr("Current user:<br/><b>%1</b>")
+    readonly property string aboutApp: "<h2>%1</h2><br/>v. %2 (%3)<br/><a href=\"http://%4\">http://%4</a>"
+    readonly property string userInfo: qsTr("Current user") + ":<br/><b>%1</b>"
 
     // login
     readonly property string emailAddress: qsTr("Email address")
@@ -99,16 +99,25 @@ QtObject {
     readonly property string recentTransactions: qsTr("Recent transactions")
 
     // supply chain pages
+    readonly property string search: qsTr("Search")
     readonly property string proceed: qsTr("Proceed")
 
     readonly property string addActionErrorOffline: qsTr("Cannot reach the server. Please try again later.")
     readonly property string addActionErrorUnknown: qsTr("Cannot add the action to the server.")
     readonly property string addActionErrorMissing: qsTr("Data is missing. Please check your input and try again.")
     readonly property string addActionErrorDuplicated: qsTr("The action already exists. Please check your input and try again.")
-    readonly property string offlineActionAdded: qsTr("Cannot add the action to the server. It has been added to queue.")
+    readonly property string addActionErrorLocalData: qsTr("Cannot add the action to the server. Local action data was corrupted! Possible attempt to change the action data!")
+    readonly property string offlineActionAdded: qsTr("Created in offline mode. It will be added automatically to the database when the application is online.")
 
     readonly property string toSelect: qsTr("To select")
     readonly property string askForExit: qsTr("Are you sure you want to exit?")
+    readonly property string askForActionDelete: qsTr("Are you sure you want to delete the action?")
+
+    readonly property string gpsCoordinates: qsTr("GPS coordinates")
+    readonly property string gpsInvalid: qsTr("Please check your GPS signal")
+    readonly property string gpsTurnedOff: qsTr("GPS turned off")
+    readonly property string gpsNotAvailable: qsTr("GPS not available")
+    readonly property string enableGpsLocation: qsTr("Enable GPS location")
 
     // package data details pages
     readonly property string nameOfProducer: qsTr("Name of the producer")
@@ -126,6 +135,7 @@ QtObject {
     readonly property string selectedAutomatically: qsTr("[selected automatically]")
     readonly property string selectProducer: qsTr("[select producer]")
 
+    readonly property string noEntries: qsTr("No valid entries")
     readonly property string notRequired: qsTr("not required")
 
     readonly property string endFermentationDate: qsTr("End of fermentation date")
@@ -152,6 +162,9 @@ QtObject {
     readonly property string receptionInCooperativeHQ: qsTr("Reception in Cooperative HQ")
     readonly property string lotWeight: qsTr("Weight of LOT")
 
+    readonly property string summary: qsTr("Summary")
+    readonly property string confirm: qsTr("Confirm")
+
     // qr code page
     readonly property string qrCode: qsTr("QR Code")
     readonly property string scanning: qsTr("Scanning")
@@ -166,5 +179,4 @@ QtObject {
     readonly property string dateFormat: qsTr("MM/dd/yyyy")
     readonly property string checkMark: "\u2713"
     readonly property string minus: "-"
-    readonly property string qrIdMask: "   -   -   "
 }

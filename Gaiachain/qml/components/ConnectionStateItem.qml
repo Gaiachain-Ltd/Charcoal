@@ -55,13 +55,13 @@ Item {
         Items.NumberImageButton {
             Layout.alignment: Qt.AlignVCenter
 
-            number: localOnlyEventsModel.size
+            number: localEventsModel.size
 
             source: Utility.fakeData() ? Style.dummyTestIconUrl : Style.userImgUrl
             palette.button: top.currentColor
 
             disabledColorTint: Style.blank
-            enabled: localOnlyEventsModel.size > 0
+            enabled: localEventsModel.size > 0
 
             onClicked: pageManager.enter(Enums.Page.WaitingTransactions)
         }

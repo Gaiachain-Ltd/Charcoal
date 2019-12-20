@@ -5,8 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
-import com.gaiachain.modelhelper 1.0
-import com.gaiachain.packagedata 1.0
+import com.gaiachain.types 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -19,8 +18,8 @@ Pages.SupplyChainPage {
 
     property string scannedId
 
-    proceedButtonEnabled: !(qrCodeInputHeader.inputText === Strings.empty ||
-                            lotWeightInputHeader.inputText === Strings.empty)
+    validPageData: !(qrCodeInputHeader.inputText === Strings.empty ||
+                     lotWeightInputHeader.inputText === Strings.empty)
 
     Component.onCompleted: refreshData()
 
@@ -28,6 +27,18 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary(), "proceedButtonText": Strings.proceed })
+    }
+
+    function summary() {
+        return [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText),
+            createSummaryItem(Strings.kg.arg(Strings.lotWeight), Strings.kg.arg(lotWeightInputHeader.inputText))
+        ]
+    }
+
+    function addAction() {
         showOverlay()
 
         var codeData = qrCodeInputHeader.inputText
@@ -40,43 +51,40 @@ Pages.SupplyChainPage {
         top.packageCodeData = codeData
         dataManager.addAction(Enums.SupplyChainAction.ExportReception,
                               codeData,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ButtonInputHeader {
+        id: qrCodeInputHeader
 
-        Items.ButtonInputHeader {
-            id: qrCodeInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        iconSource: Style.qrImgUrl
 
-            iconSource: Style.qrImgUrl
+        inputText: top.scannedId
+        headerText: Strings.qrCode
+        placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
 
-            inputText: top.scannedId
-            headerText: Strings.qrCode
-            placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
+        onClicked: pageManager.enter(Enums.Page.QRScanner, {
+                                         "title": title,
+                                         "backSupplyChainPage": page,
+                                         "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })
+    }
 
-            onClicked: pageManager.enter(Enums.Page.QRScanner, {
-                                                 "title": title,
-                                                 "backSupplyChainPage": page,
-                                                 "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })
-        }
+    Items.InputHeader {
+        id: lotWeightInputHeader
 
-        Items.InputHeader {
-            id: lotWeightInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        validator: IntValidator {}
+        additionalInputMethodHints: Qt.ImhDigitsOnly
 
-            validator: IntValidator {}
-            inputMethodHints: Qt.ImhDigitsOnly
+        headerText: Strings.kg.arg(Strings.lotWeight)
 
-            headerText: Strings.kg.arg(Strings.lotWeight)
+        iconSource: Style.rightArrowImgUrl
 
-            iconSource: Style.rightArrowImgUrl
-
-            placeholderText: Strings.typeHere + "..."
-        }
+        placeholderText: Strings.typeHere + "..."
     }
 }

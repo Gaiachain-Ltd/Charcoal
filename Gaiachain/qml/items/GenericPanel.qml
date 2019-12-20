@@ -5,7 +5,8 @@ import QtQuick.Controls 2.4
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
-Page {
+Page
+{
     property int page: Enums.Page.InvalidPage
     property bool isPopup: false
 

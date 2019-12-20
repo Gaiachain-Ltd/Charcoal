@@ -64,9 +64,8 @@ void AbstractSessionManager::updateConnectionStateBeforeRequest()
 
 void AbstractSessionManager::updateConnectionStateAfterRequest(const QNetworkReply::NetworkError &errorCode)
 {
-    auto newState = (RequestsHelper::isNetworkError(errorCode) ||
-                     RequestsHelper::isServerError(errorCode)) ? Enums::ConnectionState::ConnectionError
-                                                               : Enums::ConnectionState::ConnectionSuccessful;
+    auto newState = RequestsHelper::isOfflineError(errorCode) ? Enums::ConnectionState::ConnectionError
+                                                              : Enums::ConnectionState::ConnectionSuccessful;
     if (m_connectionState == newState) {
         return;
     }

@@ -1,11 +1,11 @@
 pragma Singleton
 
-import QtQuick 2.11
-
-import com.gaiachain.enums 1.0
+import QtQuick 2.12
 
 QtObject {
     readonly property real logoHeight: 170
+
+    readonly property int keyboardAnimationDuration: 200
 
     // Colors
     readonly property color primaryColor: "#65cb00"
@@ -21,6 +21,7 @@ QtObject {
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
     readonly property color textDisabledColor: "#a4a4a4"
+    readonly property color textReadonlyColor: "#868686"
     readonly property color textLinkColor: primaryColor
     readonly property color notRequiredTextInputColor: "#8c8c8c"
 
@@ -112,6 +113,7 @@ QtObject {
 
     readonly property url backImgUrl: "qrc:/ui/back"
     readonly property url closeImgUrl: "qrc:/ui/close"
+    readonly property url closeBlackImgUrl: "qrc:/ui/close-black"
     readonly property url logoutImgUrl: "qrc:/ui/logout"
     readonly property url userImgUrl: "qrc:/ui/user"
 
@@ -155,12 +157,19 @@ QtObject {
     readonly property url plusImgUrl: "qrc:/ui/plus"
     readonly property url qrImgUrl: "qrc:/ui/qr"
     readonly property url threeDotsImgUrl: "qrc:/ui/threeDots"
+    readonly property url deleteImgUrl: "qrc:/ui/delete"
 
     readonly property url checkImgUrl: "qrc:/ui/check"
     readonly property url frameImgUrl: "qrc:/ui/frame"
 
     readonly property url typeManuallyImgUrl: "qrc:/ui/typeManually"
     readonly property url enterImgUrl: "qrc:/ui/enter"
+
+    readonly property url warningImgUrl: "qrc:/ui/warning"
+
+    readonly property url gpsOkImgUrl: "qrc:/ui/gpsOk"
+    readonly property url gpsFailedImgUrl: "qrc:/ui/gpsFailed"
+    readonly property url gpsImgUrl: "qrc:/ui/gps"
 
     // control
     readonly property int controlDefaultBorderWidth: 1
@@ -188,6 +197,8 @@ QtObject {
     readonly property int requestOverlayInterval: 2000
     readonly property int commentPopupOpenedDefaultInterval: 2000
     readonly property int notificationPopupOpenedDefaultInterval: 2600
+    readonly property int notificationPopupOpenedLongInterval: 5600
+    readonly property int notificationPopupIconHeight: 60
     readonly property int transitionMoveYRange: 100
     readonly property int genericTextAreaHeight: 280
 
@@ -221,10 +232,4 @@ QtObject {
     readonly property int calendarMonthMinWidth: 150
     readonly property int calendarMonthMinHeight: 120
     readonly property int calendarYearStartYear: 2018
-
-    // qr scanner page
-    readonly property int frameSvgImgHeight: 550
-    readonly property int checkSvgImageHeight: 250
-    readonly property real normalizedScanSize: 0.6 // Should be between 0 and 1
-    readonly property var codeDataRegExpPattern: /[A-Za-z0-9\-]+/
 }

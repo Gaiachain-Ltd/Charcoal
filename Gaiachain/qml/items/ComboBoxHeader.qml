@@ -10,8 +10,8 @@ import "../items" as Items
 Items.GenericHeader {
     id: top
 
-    property alias model: comboBox.model
-
+    property alias filteredModel: comboBox.model
+    property alias model: comboBox.sourceModel
     property alias currentIndex: comboBox.currentIndex
     property alias currentText: comboBox.currentText
     property alias displayRole: comboBox.textRole
@@ -23,25 +23,16 @@ Items.GenericHeader {
     property alias footerVisible: comboBox.footerVisible
     property alias footerText: comboBox.footerText
 
+    signal activated(var index)
     signal footerClicked()
 
-    signal activated(string activatedText)
-
-    function selectItem(itemName) {
-        var index = comboBox.find(itemName)
-
-        if (index !== -1) {
-            comboBox.currentIndex = index
-        }
-    }
-
-    widget: Items.GenericComboBox {
+    widget: Items.FilterComboBox {
         id: comboBox
 
         Layout.fillWidth: true
+        enabled: top.enabled
 
-        onActivated: top.activated(currentText)
-
+        onActivated: top.activated(index)
         onFooterClicked: top.footerClicked()
     }
 }

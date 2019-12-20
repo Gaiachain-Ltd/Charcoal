@@ -2,39 +2,48 @@ import QtQuick 2.11
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.11
 
-import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.style 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.platforms 1.0
 
 import "../items" as Items
-import "../components" as Components
+import "../common"
 
-
-BasePage {
+SupplyChainPageBase {
     id: top
 
     property string packageId
     property string packageCodeData
     property var action: Enums.SupplyChainAction.Unknown
 
-    property alias pageContent: contentLayout.data
-    property alias proceedButtonEnabled: proceedButton.enabled
-    property alias proceedButtonText: proceedButton.text
+    readonly property alias gpsCoordinates: gpsCoordinatesButtonInputHeader.inputText
 
-    property string buttonText: Strings.proceed
+    proceedButtonEnabled: validPageData && gpsSource.validCoordinate
 
-    function proceed() { // redefined in supply chain pages
-
+    Component.onCompleted:  {
+        if (AndroidPermissionsHandler) {
+            AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
+        }
+    }
+ 
+    function coordinate() {
+        return gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()
     }
 
-    function backToHomeHandler() {
-        pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit })
+    function createSummaryItem(header, value, inputIconSource = "", suffix = "") {
+        return {
+          "headerValue": header,
+          "value": value,
+          "inputIconSource": inputIconSource.toString(),
+          "suffixValue": suffix
+        }
     }
 
     function isCurrentAction(packageId, codeData, action) {
         var currentPackage = (top.packageId !== "" &&
                 (top.packageId === packageId)) ||
-                top.packageId === "" && codeData &&
+                top.packageId === "" && codeData.toString().length &&
                 (top.packageCodeData === codeData.toString());
 
         return currentPackage && (top.action === action);
@@ -42,19 +51,21 @@ BasePage {
 
     function handleActionAdded(local = false) {
         hideOverlay()
-        pageManager.backTo(pageManager.homePage())
 
         if (local) {
-            pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.offlineActionAdded, "backgroundColor": Style.warningColor})
+            pageManager.backToAndOpenPopup(pageManager.homePage(), Enums.Popup.Notification, {},
+                                           {"text": Strings.offlineActionAdded, "backgroundColor": Style.warningColor,
+                                               "iconSource": Style.warningImgUrl, "openedInterval": Style.notificationPopupOpenedLongInterval})
         } else {
-            pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.success})
+            pageManager.backToAndOpenPopup(pageManager.homePage(), Enums.Popup.Notification, {},
+                                           {"text": Strings.success})
         }
     }
     function handleActionError(code) {
         hideOverlay()
 
         var errorText = Strings.addActionErrorUnknown
-        if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
+        if (RequestHelper.isOfflineError(code)) {
             errorText = Strings.addActionErrorOffline
         } else if (RequestHelper.isActionMissingError(code)) {
             errorText = Strings.addActionErrorMissing
@@ -62,21 +73,7 @@ BasePage {
             errorText = Strings.addActionErrorDuplicated
         }
 
-        pageManager.openPopup(Enums.Popup.Notification, {"text": errorText, "backgroundColor": Style.errorColor})
-    }
-
-    Connections {
-        target: pageManager
-        enabled: pageManager.isOnTop(page)
-        onPopupAction: {
-            switch (action) {
-            case Enums.PopupAction.Accept:
-                pageManager.backTo(pageManager.homePage())
-                break
-            default:
-                break
-            }
-        }
+        pageManager.openPopup(Enums.Popup.Notification, {"text": errorText, "backgroundColor": Style.errorColor, "openedInterval": Style.notificationPopupOpenedLongInterval})
     }
 
     Connections {
@@ -104,6 +101,7 @@ BasePage {
             }
         }
     }
+
     Connections {
         id: addActionResponseHandler
         target: sessionManager
@@ -124,7 +122,7 @@ BasePage {
             }
 
             if (DataGlobals.availableOfflineActionsQml().includes(Number(action)) &&
-                    (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) ) {
+                    RequestHelper.isOfflineError(code)) {
                 if (locallyDuplicated) {
                     handleActionError(RequestHelper.actionDuplicatedError())
                 } else {
@@ -138,54 +136,31 @@ BasePage {
         }
     }
 
-    ColumnLayout {
-        anchors {
-            fill: parent
-            margins: s(Style.hugeMargin)
-        }
+    PositionSourceHandler {
+        id: gpsSource
 
-        spacing: s(Style.bigMargin)
-
-        Flickable {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            contentHeight: contentLayout.implicitHeight
-
-            clip: true
-
-            boundsBehavior: Flickable.StopAtBounds
-
-            onHeightChanged: {
-                // To avoid overlapping inputs by keyboard
-                var desiredVisibleY = Qt.inputMethod.cursorRectangle.y + Qt.inputMethod.cursorRectangle.height + s(Style.hugeMargin)
-                var realVisibleY = mapToGlobal(0, y + height).y
-
-                if (desiredVisibleY > realVisibleY) {
-                    contentY += desiredVisibleY - realVisibleY
-                }
-            }
-
-            ColumnLayout {
-                id: contentLayout
-
-                anchors.fill: parent
+        function errorMessage() {
+            if (noAccess) {
+                return Strings.enableGpsLocation
+            } else if (!valid) {
+                return Strings.gpsNotAvailable
+            } else if (!positioningSupported) {
+                return Strings.gpsTurnedOff
+            } else {
+                return Strings.gpsInvalid
             }
         }
+    }
 
-        Items.GenericButton {
-            id: proceedButton
+    Items.ButtonInputHeader {
+        id: gpsCoordinatesButtonInputHeader
 
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignBottom
+        Layout.fillWidth: true
 
-            padding: s(Style.bigMargin)
+        headerText: Strings.gpsCoordinates
+        inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinate.toString()) : gpsSource.errorMessage())
+        iconSource: (gpsSource.validCoordinate ? Style.gpsOkImgUrl : Style.gpsFailedImgUrl)
 
-            enabled: false
-
-            text: Strings.proceed
-
-            onClicked: top.proceed()
-        }
+        onClicked: gpsSource.update()
     }
 }

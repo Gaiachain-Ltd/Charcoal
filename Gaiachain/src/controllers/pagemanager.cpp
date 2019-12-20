@@ -74,12 +74,14 @@ void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, c
     emit topPageChanged(topPage());
 }
 
-void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties)
+void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties, const QString &id)
 {
     qCDebug(corePageManager) << CYAN("[POPUP] Print stack on enter") << m_pageStack;
     qCDebug(corePageManager) << CYAN("[POPUP] Enter:") << popup << "properties:" << properties;
 
-    m_popupStack.append(popup);
+    properties.insert(QStringLiteral("popup"), static_cast<int>(popup));
+    properties.insert(QStringLiteral("popupId"), id);
+    m_popupStack.append({ popup, id });
     emit popupManagerOpen(toFilePath(popup), properties);
 }
 
@@ -93,18 +95,27 @@ void PageManager::closePopup()
         return;
     }
 
-    auto poppedPopup = m_popupStack.takeLast();
-    qCDebug(corePageManager) << "Closing popup" << toFilePath(poppedPopup);
-    emit popupClosed(poppedPopup);
+    auto [ popup, popupId ] = m_popupStack.takeLast();
+    qCDebug(corePageManager) << "Closing popup" << toFilePath(popup);
+    emit popupClosed(popup, popupId);
     emit popupManagerClose();
 }
 
 void PageManager::sendAction(Enums::PopupAction action)
 {
     // close popup first
+    auto [ popup, popupId ] = m_popupStack.last();
     closePopup();
 
-    emit popupAction(action);
+    emit popupAction(action, popupId);
+}
+
+bool PageManager::backToAndOpenPopup(const Enums::Page page, const Enums::Popup popup, QVariantMap pageProperties, QVariantMap popupProperties, const bool immediateBack, const QString &popupId)
+{
+    auto result = backTo(page, pageProperties, immediateBack);
+    openPopup(popup, popupProperties, popupId);
+
+    return result;
 }
 
 void PageManager::back(const bool immediate)
@@ -132,7 +143,7 @@ void PageManager::back(const bool immediate)
     emit topPageChanged(topPage());
 }
 
-bool PageManager::backTo(const Enums::Page page, const QVariantMap properties, const bool immediate)
+bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const bool immediate)
 {
     if (!m_popupStack.isEmpty()) {
         qCWarning(corePageManager) << "Trying back with popup opened! Aborting!";

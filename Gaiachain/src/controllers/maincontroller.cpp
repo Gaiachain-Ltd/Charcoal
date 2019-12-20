@@ -7,6 +7,10 @@
 
 #include <QZXing.h>
 
+#ifdef Q_OS_ANDROID
+#include "androidpermissionshandler.h"
+#endif
+
 #include "../common/enums.h"
 #include "../common/packagedata.h"
 #include "../common/dataglobals.h"
@@ -14,10 +18,7 @@
 #include "../helpers/requestshelper.h"
 #include "../helpers/modelhelper.h"
 #include "../helpers/packagedataproperties.h"
-
-#ifdef Q_OS_ANDROID
-    #include <QtAndroidExtras/QtAndroid>
-#endif
+#include "../helpers/keywordfilterproxymodel.h"
 
 #ifdef USE_COMBOBOX
 #include "../common/dummy/commondummydata.h"
@@ -49,7 +50,6 @@ void MainController::setupConnections()
     connect(&m_userManager, &UserManager::offlineModeChanged,
             &m_sessionManager, [sessionManager = &m_sessionManager](bool offlineMode) { sessionManager->setEnabled(!offlineMode); });
     connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
-    connect(&m_userManager, &UserManager::loggedIn, &m_sessionManager, &AbstractSessionManager::getAdditionalData);
     connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
     connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
 
@@ -61,17 +61,17 @@ void MainController::setupConnections()
 void MainController::setupDataConnections()
 {
     connect(&m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
     connect(&m_dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
     connect(&m_dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
 
     connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
             &m_dataManager, &DataManager::onActionAdded);
@@ -92,8 +92,8 @@ void MainController::setupDataConnections()
             &m_sessionManager, qOverload<const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
     connect(&m_dataManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&DataManager::eventsInfoNeeded),
             &m_sessionManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
-    connect(&m_dataManager, qOverload<int, int, const QString &>(&DataManager::eventsInfoNeeded),
-            &m_sessionManager, qOverload<int, int, const QString &>(&AbstractSessionManager::getEntitiesInfo));
+    connect(&m_dataManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&DataManager::eventsInfoNeeded),
+            &m_sessionManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&AbstractSessionManager::getEntitiesInfo));
     connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
     connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
     connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
@@ -106,32 +106,14 @@ void MainController::setupDataConnections()
 
 void MainController::initialWork()
 {
+#ifdef Q_OS_ANDROID
+    QMetaObject::invokeMethod(&Android::PermissionsHandler::instance(),
+                              std::bind(&Android::PermissionsHandler::requestPermissions, &Android::PermissionsHandler::instance(),
+                                        QList<Android::PermissionsHandler::Permissions>{ Android::PermissionsHandler::Permissions::Internet,
+                                                                                         Android::PermissionsHandler::Permissions::Storage }));
+#endif
     m_dbManager.setupDatabase();
 }
-
-#ifdef Q_OS_ANDROID
-void MainController::setupAppPermissions()
-{
-    const auto appPermissions = QStringList{
-            "android.permission.ACCESS_COARSE_LOCATION",
-            "android.permission.ACCESS_FINE_LOCATION",
-            "android.permission.CAMERA",
-            "android.permission.INTERNET",
-            "android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE"
-    };
-
-    // TODO: shift some permissions only after login
-    // check for permissions before opening scanner page to load camera faster
-    auto permissionsToRequest = QStringList{};
-    std::copy_if(appPermissions.constBegin(), appPermissions.constEnd(),
-                 std::back_inserter(permissionsToRequest), [](const auto &permission) {
-        return QtAndroid::checkPermission(permission) == QtAndroid::PermissionResult::Denied;
-    });
-
-    QtAndroid::requestPermissions(permissionsToRequest, [](const QtAndroid::PermissionResultMap &) {});
-}
-#endif
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 {
@@ -163,13 +145,29 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // register singleton types
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
     qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
+    qmlRegisterSingletonType(QUrl("qrc:///GaiaStatic.qml"), "com.gaiachain.static", 1, 0, "Static");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");
 
-    qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0, "Utility", &registerCppOwnershipSingletonType<Utility>);
-    qmlRegisterSingletonType<RequestsHelper>("com.gaiachain.helpers", 1, 0, "RequestHelper", &registerCppOwnershipSingletonType<RequestsHelper>);
-    qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0, "DataGlobals", &registerCppOwnershipSingletonType<DataGlobals>);
-    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0, "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);
-    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0, "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
+    qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0,
+                                      "Utility", &registerCppOwnershipSingletonType<Utility>);
+    qmlRegisterSingletonType<RequestsHelper>("com.gaiachain.helpers", 1, 0,
+                                             "RequestHelper", &registerCppOwnershipSingletonType<RequestsHelper>);
+    qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0,
+                                          "DataGlobals", &registerCppOwnershipSingletonType<DataGlobals>);
+    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.helpers", 1, 0,
+                                          "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);
+    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.types", 1, 0,
+                                                    "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
+
+#ifdef Q_OS_ANDROID
+    qmlRegisterSingletonType<Android::PermissionsHandler>("com.gaiachain.platforms", 1, 0,
+                                                          "AndroidPermissionsHandler", &registerCppOwnershipSingletonType<Android::PermissionsHandler>);
+#else
+    qmlRegisterModule("com.gaiachain.platforms", 1, 0);
+#endif
+
+    // register qml types
+    qmlRegisterType<KeywordFilterProxyModel>("com.gaiachain.helpers", 1, 0, "KeywordFilterProxyModel");
 
     // add context properties
     engine.rootContext()->setContextProperty(QStringLiteral("AppName"), AppName);

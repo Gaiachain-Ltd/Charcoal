@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QGeoCoordinate>
 
 #include "../../common/tags.h"
 #include "../../common/globals.h"
@@ -115,7 +116,8 @@ void SessionManager::getEntitiesInfo(int limit, int offset, const QDateTime &fro
     sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, from, to), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keyword)
+void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keyword,
+                                     const QSet<Enums::PackageType> &filteredPackages, int cooperativeId)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
@@ -124,7 +126,7 @@ void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keywo
         emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
     };
 
-    sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, keyword), errorHandler, replyHandler);
+    sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, keyword, filteredPackages, cooperativeId), errorHandler, replyHandler);
 }
 
 void SessionManager::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
@@ -153,7 +155,7 @@ void SessionManager::getEntities(const QStringList &packageIds)
 }
 
 void SessionManager::postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
-                                   const QDateTime &timestamp, const QVariantMap &properties)
+                                   const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitySaveError(packageId, {}, action, code);
@@ -163,13 +165,13 @@ void SessionManager::postNewEntity(const QString &packageId, const Enums::Supply
     };
 
     if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, packageId, EntityRequest::EntityData{ action, timestamp, properties }),
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, packageId, EntityRequest::EntityData{ action, coordinate, timestamp, properties }),
                     errorHandler, replyHandler);
     }
 }
 
 void SessionManager::postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                   const QDateTime &timestamp, const QVariantMap &properties)
+                                   const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitySaveError(packageId, {}, action, code);
@@ -179,13 +181,13 @@ void SessionManager::postNewEntity(const QString &packageId, const QByteArray &c
     };
 
     if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, packageId, codeData, EntityRequest::EntityData{ action, timestamp, properties }),
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, packageId, codeData, EntityRequest::EntityData{ action, coordinate, timestamp, properties }),
                     errorHandler, replyHandler);
     }
 }
 
 void SessionManager::postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                   const QDateTime &timestamp, const QVariantMap &properties)
+                                   const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto errorHandler = [this, codeData, action](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitySaveError({}, codeData, action, code);
@@ -195,7 +197,7 @@ void SessionManager::postNewEntity(const QByteArray &codeData, const Enums::Supp
     };
 
     if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, codeData, EntityRequest::EntityData{ action, timestamp, properties }),
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, codeData, EntityRequest::EntityData{ action, coordinate, timestamp, properties }),
                     errorHandler, replyHandler);
     }
 }

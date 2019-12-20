@@ -3,7 +3,7 @@
 
 #include <QPointer>
 
-#include "../proxy/sqlquerymodel.h"
+#include "../query/sqlquerymodel.h"
 
 class AbstractModelView
 {

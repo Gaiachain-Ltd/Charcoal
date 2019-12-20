@@ -1,6 +1,6 @@
 #include "parcelviewmodel.h"
 
-#include "../proxy/produceridquery.h"
+#include "../query/produceridquery.h"
 
 ParcelViewModel::ParcelViewModel(QObject *parent)
     : ParcelModel(parent)

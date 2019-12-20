@@ -5,6 +5,7 @@
 #include "pagemanager.h"
 #include "usermanager.h"
 #include "data/datamanager.h"
+
 #ifndef FAKE_DATA
 #include "session/sessionmanager.h"
 #else
@@ -37,9 +38,6 @@ private:
     FakeSessionManager m_sessionManager;
 #endif
 
-#ifdef Q_OS_ANDROID
-    void setupAppPermissions();
-#endif
     void setupQZXing(QQmlApplicationEngine &engine);
 };
 

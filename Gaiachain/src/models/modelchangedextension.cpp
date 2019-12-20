@@ -13,6 +13,8 @@ void ModelChangedExtension::setupConnections(const QObject *iObject)
                      iObject, SIGNAL(modelChanged()) );
     QObject::connect(iObject, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
                      iObject, SIGNAL(modelChanged()) );
+    QObject::connect(iObject, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)),
+                     iObject, SIGNAL(modelChanged()) );
     QObject::connect(iObject, SIGNAL(modelReset()),
                      iObject, SIGNAL(modelChanged()) );
 }
