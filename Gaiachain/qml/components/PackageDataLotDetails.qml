@@ -15,7 +15,7 @@ Components.PackageDataDetails {
 
     relatedPackagesModel: relatedPackagesModel
 
-    onPackageDataChanged: {
+    function updatePackageData() {
         if (typeof(top.packageData) === "undefined") {
             return
         }
@@ -27,9 +27,9 @@ Components.PackageDataDetails {
         var destinationName = ModelHelper.findItem("id", destinationId, "name", destinationsModel)
 
         const data = [
-           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": Helper.emptyIfNotDefined(transporterName) },
-           { "headerValue": Strings.destination,                "inputValue": Helper.emptyIfNotDefined(destinationName) },
-           { "headerValue": Strings.transportDate,              "inputValue": Helper.emptyIfNotDate(packageData.properties[PackageDataProperties.TransportDate]) }
+           { "headerValue": Strings.organicCocoaTransporter,    "inputValue": Helper.minusIfNotDefined(transporterName) },
+           { "headerValue": Strings.destination,                "inputValue": Helper.minusIfNotDefined(destinationName) },
+           { "headerValue": Strings.transportDate,              "inputValue": Helper.minusIfNotTimestamp(packageData.properties[PackageDataProperties.TransportDate]) }
        ]
 
         detailsModel.clear()
@@ -46,6 +46,8 @@ Components.PackageDataDetails {
                                           "inputSuffixValue": Strings.empty })
         }
     }
+
+    onPackageDataChanged: updatePackageData()
 
     ListModel {
         id: detailsModel

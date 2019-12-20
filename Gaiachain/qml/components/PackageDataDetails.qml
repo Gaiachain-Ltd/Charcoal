@@ -58,7 +58,7 @@ Item {
             visible: Number(packageType) !== Enums.PackageType.Harvest
 
             color: String(Helper.packageTypeColor(Number(packageType)))
-            inputText: packageData ? Helper.emptyIfNotDefined(ModelHelper.findItem("id", packageData.cooperativeId, "name", cooperativesModel))
+            inputText: packageData ? Helper.minusIfNotDefined(ModelHelper.findItem("id", packageData.cooperativeId, "name", cooperativesModel))
                                    : ""
         }
     }
