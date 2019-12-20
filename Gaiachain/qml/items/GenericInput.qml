@@ -9,7 +9,7 @@ TextField
     id: top
 
     property bool isPassword: false
-    property int additionalInputMethodHints: 0
+    property int additionalInputMethodHints: Qt.ImhNone
 
     property alias iconSource: icon.source
     property var iconEdge: Enums.Edge.LeftEdge
@@ -46,7 +46,7 @@ TextField
     placeholderTextColor: Style.textPrimaryColor
 
     echoMode: isPassword ? TextInput.Password : TextInput.Normal
-    inputMethodHints: Qt.ImhNoPredictiveText | additionalInputMethodHints
+    inputMethodHints: Qt.ImhNoPredictiveText | (isPassword ? Qt.ImhSensitiveData : Qt.ImhNone) | additionalInputMethodHints
 
     Keys.onReturnPressed: { accepted(); moveToNextInput() }
     Keys.onEnterPressed: { accepted(); moveToNextInput() }

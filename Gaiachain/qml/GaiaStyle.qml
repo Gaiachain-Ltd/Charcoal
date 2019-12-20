@@ -5,6 +5,8 @@ import QtQuick 2.12
 QtObject {
     readonly property real logoHeight: 170
 
+    readonly property int keyboardAnimationDuration: 200
+
     // Colors
     readonly property color primaryColor: "#65cb00"
 
@@ -110,6 +112,7 @@ QtObject {
 
     readonly property url backImgUrl: "qrc:/ui/back"
     readonly property url closeImgUrl: "qrc:/ui/close"
+    readonly property url closeBlackImgUrl: "qrc:/ui/close-black"
     readonly property url logoutImgUrl: "qrc:/ui/logout"
     readonly property url userImgUrl: "qrc:/ui/user"
 

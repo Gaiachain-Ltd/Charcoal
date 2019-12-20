@@ -49,7 +49,12 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
   Main routine. Remember to update the application name and initialise logger
   class, if present.
   */
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
+#ifdef Q_OS_ANDROID
+    qputenv("QT_ANDROID_ENABLE_WORKAROUND_TO_DISABLE_PREDICTIVE_TEXT", QByteArrayLiteral("1"));
+#endif
+
     MLog::instance()->enableLogToFile(AppName);
 
     // Set up basic application data. Modify this to your needs

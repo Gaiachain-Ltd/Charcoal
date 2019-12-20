@@ -12,9 +12,6 @@ ItemDelegate {
 
     property bool separatorVisible: false
 
-    implicitWidth: indicatorInput.width
-    implicitHeight: indicatorInput.implicitHeight
-
     background: Rectangle {
         anchors.fill: parent
 

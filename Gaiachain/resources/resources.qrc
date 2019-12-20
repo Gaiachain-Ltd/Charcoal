@@ -17,6 +17,7 @@
         <file alias="menuCalendar">ui/icon-calendar.svg</file>
         <file alias="menuTransactions">ui/icon-transactions.svg</file>
         <file alias="close">ui/close-icon.svg</file>
+        <file alias="close-black">ui/close-black-icon.svg</file>
         <file alias="logo-black">ui/gaiachain-logo-black.svg</file>
         <file alias="submenuLotCreation">ui/icon-submenu-create-lot.svg</file>
         <file alias="submenuBagging">ui/icon-submenu-drying.svg</file>

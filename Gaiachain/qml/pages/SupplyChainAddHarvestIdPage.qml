@@ -73,7 +73,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
 
         validator: IntValidator {}
-        inputMethodHints: Qt.ImhDigitsOnly
+        additionalInputMethodHints: Qt.ImhDigitsOnly
 
         optional: true
         headerText: Strings.kg.arg(Strings.bagWeight) + " (" + Strings.notRequired + ")"

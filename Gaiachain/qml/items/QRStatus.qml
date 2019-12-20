@@ -57,12 +57,10 @@ Rectangle {
 
             Layout.fillWidth: true
 
-            placeholderText: Strings.qrIdMask
-            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+            inputMask: Strings.qrInputMask
+
             focus: false
             visible: top.manual
-
-            validator: RegExpValidator { regExp: Static.codeDataRegExpPattern }
         }
 
         Items.PureImageButton {

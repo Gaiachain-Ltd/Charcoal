@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
-import com.gaiachain.packagedata 1.0
+import com.gaiachain.types 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -82,7 +82,7 @@ Pages.SupplyChainPage {
         Layout.fillWidth: true
 
         validator: IntValidator {}
-        inputMethodHints: Qt.ImhDigitsOnly
+        additionalInputMethodHints: Qt.ImhDigitsOnly
 
         optional: true
         headerText: Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")"

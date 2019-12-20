@@ -12,7 +12,7 @@ ComboBox {
 
     currentIndex: -1
 
-    property alias placeholderText: indicatorInput.placeholderText
+    property alias placeholderText: input.placeholderText
     property string emptyListText: Strings.noEntries
 
     property bool optional: false
@@ -24,7 +24,7 @@ ComboBox {
     signal footerClicked
 
     function togglePopup() {
-        popup.visible = !popup.visible
+        top.popup.visible = !top.popup.visible
     }
 
     function clear() {
@@ -32,6 +32,8 @@ ComboBox {
     }
 
     delegate: Items.GenericItemDelegate {
+        width: ListView.view ? ListView.view.width : implicitWidth
+
         highlighted: (highlightedIndex === index)
         separatorVisible: (index !== 0)
 
@@ -39,7 +41,7 @@ ComboBox {
     }
 
     indicator: Items.GenericInput {
-        id: indicatorInput
+        id: input
 
         width: top.width
 
@@ -77,10 +79,12 @@ ComboBox {
     background: Item {}
 
     popup: Popup {
-        id: comboBoxPopup
+        id: popup
 
         y: top.height
         width: top.width
+
+        focus: true
 
         onYChanged: {
             if (y !== 0 && Math.abs(y) < top.height) {
@@ -88,7 +92,7 @@ ComboBox {
             }
         }
 
-        focus: true
+        onClosed: top.indicator.focus = false
 
         contentItem: ListView {
             id: entriesList
@@ -102,6 +106,8 @@ ComboBox {
             model: top.delegateModel
 
             header: Items.GenericItemDelegate {
+                width: entriesList.width
+
                 text: emptyListText
                 visible: !entriesList.count
                 height: visible ? implicitHeight : Style.none
@@ -114,8 +120,8 @@ ComboBox {
                 separatorVisible: true
 
                 onClicked: {
-                    comboBoxPopup.parent.footerClicked()
-                    comboBoxPopup.parent.popup.visible = false
+                    popup.parent.footerClicked()
+                    popup.parent.popup.visible = false
                 }
             }
         }

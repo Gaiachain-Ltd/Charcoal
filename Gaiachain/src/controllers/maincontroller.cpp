@@ -18,6 +18,7 @@
 #include "../helpers/requestshelper.h"
 #include "../helpers/modelhelper.h"
 #include "../helpers/packagedataproperties.h"
+#include "../helpers/keywordfilterproxymodel.h"
 
 #ifdef USE_COMBOBOX
 #include "../common/dummy/commondummydata.h"
@@ -153,10 +154,10 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
                                              "RequestHelper", &registerCppOwnershipSingletonType<RequestsHelper>);
     qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0,
                                           "DataGlobals", &registerCppOwnershipSingletonType<DataGlobals>);
-    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.modelhelper", 1, 0,
-                                          "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);   // TODO: move to com.gaiachain.helpers
-    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.packagedata", 1, 0,
-                                                    "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>); // TODO: move to com.gaiachain.types
+    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.helpers", 1, 0,
+                                          "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);
+    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.types", 1, 0,
+                                                    "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
 
 #ifdef Q_OS_ANDROID
     qmlRegisterSingletonType<Android::PermissionsHandler>("com.gaiachain.platforms", 1, 0,
@@ -164,6 +165,9 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 #else
     qmlRegisterModule("com.gaiachain.platforms", 1, 0);
 #endif
+
+    // register qml types
+    qmlRegisterType<KeywordFilterProxyModel>("com.gaiachain.helpers", 1, 0, "KeywordFilterProxyModel");
 
     // add context properties
     engine.rootContext()->setContextProperty(QStringLiteral("AppName"), AppName);
