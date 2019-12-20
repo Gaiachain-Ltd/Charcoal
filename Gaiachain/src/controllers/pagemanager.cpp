@@ -110,6 +110,14 @@ void PageManager::sendAction(Enums::PopupAction action)
     emit popupAction(action, popupId);
 }
 
+bool PageManager::backToAndOpenPopup(const Enums::Page page, const Enums::Popup popup, QVariantMap pageProperties, QVariantMap popupProperties, const bool immediateBack, const QString &popupId)
+{
+    auto result = backTo(page, pageProperties, immediateBack);
+    openPopup(popup, popupProperties, popupId);
+
+    return result;
+}
+
 void PageManager::back(const bool immediate)
 {
     qCDebug(corePageManager) << CYAN("[PAGE] Print stack on pop") << m_pageStack;

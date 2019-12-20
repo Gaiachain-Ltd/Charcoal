@@ -18,21 +18,10 @@ QtObject
         target: sessionManager
         enabled: (Number(pageManager.topPage) === page)
 
-        function isSupplyChainPage() {
-            return page === Enums.SupplyChainHarvest ||
-                    page === Enums.SupplyChainGrainProcessing ||
-                    page === Enums.SupplyChainSectionReception ||
-                    page === Enums.SupplyChainBagging ||
-                    page === Enums.SupplyChainAddHarvestId ||
-                    page === Enums.SupplyChainLotCreation ||
-                    page === Enums.SupplyChainWarehouseTransport ||
-                    page === Enums.SupplyChainExportReception;
-        }
-
         // handle notification for package sent error (here for offline added actions)
         onEntitySaveError: {
-            if (isSupplyChainPage()
-                    && isCurrentAction(packageId, codeData, action)) {
+            if ((page === Enums.SupplyChainSummary)
+                    && supplyChainPage.isCurrentAction(packageId, codeData, action)) {
                 return
             }
 

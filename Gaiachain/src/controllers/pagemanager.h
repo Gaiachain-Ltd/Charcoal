@@ -52,6 +52,10 @@ public slots:
     void closePopup();
     void sendAction(Enums::PopupAction action);
 
+    bool backToAndOpenPopup(const Enums::Page page, const Enums::Popup popup,
+                            QVariantMap pageProperties = QVariantMap{}, QVariantMap popupProperties = QVariantMap{},
+                            const bool immediateBack = false, const QString &popupId = {});
+
 private:
     const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
     const QString m_popupsPrefix = QStringLiteral("qrc:/popups/");

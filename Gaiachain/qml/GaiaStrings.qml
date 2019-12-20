@@ -161,6 +161,9 @@ QtObject {
     readonly property string receptionInCooperativeHQ: qsTr("Reception in Cooperative HQ")
     readonly property string lotWeight: qsTr("Weight of LOT")
 
+    readonly property string summary: qsTr("Summary")
+    readonly property string confirm: qsTr("Confirm")
+
     // qr code page
     readonly property string qrCode: qsTr("QR Code")
     readonly property string scanning: qsTr("Scanning")

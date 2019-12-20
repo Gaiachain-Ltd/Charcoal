@@ -26,6 +26,20 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary() })
+    }
+
+    function summary() {
+        return [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.harvestId, harvestIdComboBox.currentText),
+            createSummaryItem(Strings.breakingDate, breakingDateInputDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
+            createSummaryItem(Strings.endFermentationDate, endFermentationDateInputDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
+            createSummaryItem(Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")", Strings.kg.arg(Helper.minusIfNotDefined(estimatedBeansVolumeInputHeader.inputText)))
+        ]
+    }
+
+    function addAction() {
         showOverlay()
 
         var harvestId = harvestIdComboBox.currentText

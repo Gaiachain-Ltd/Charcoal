@@ -40,6 +40,28 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary() })
+    }
+
+    function summary() {
+        var summary = [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.lotIdTheSackBelongsTo, lotIdComboBox.currentText),
+            createSummaryItem(Strings.nameCooperative, nameCooperativeInputHeader.inputText),
+            createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText)
+        ]
+
+        for (var i=0; i<harvestPidsRepeater.count; ++i) {
+            var repeaterItem = harvestPidsRepeater.itemAt(i)
+            summary.push(createSummaryItem(i === 0 ? Strings.harvestId
+                                                   : Strings.empty,
+                                           repeaterItem.inputText, repeaterItem.suffixText))
+        }
+
+        return summary
+    }
+
+    function addAction() {
         showOverlay()
 
         var codeData = qrCodeInputHeader.inputText

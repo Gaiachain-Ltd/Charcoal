@@ -21,6 +21,7 @@ QtObject {
     readonly property color textPrimaryColor: "black"
     readonly property color textSecondaryColor: "white"
     readonly property color textDisabledColor: "#a4a4a4"
+    readonly property color textReadonlyColor: "#868686"
     readonly property color textLinkColor: primaryColor
     readonly property color notRequiredTextInputColor: "#8c8c8c"
 

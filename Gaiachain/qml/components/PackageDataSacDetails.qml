@@ -31,7 +31,7 @@ Components.PackageDataDetails {
             var weight = weightsMap[packageId]
             relatedPackagesModel.append({ "headerValue": Strings.empty,
                                           "inputValue": packageId,
-                                          "inputSuffixValue": Strings.kg.arg(minusIfNotDefinedOrZero(weight)) })
+                                          "inputSuffixValue": Strings.kg.arg(Helper.minusIfNotDefinedOrZero(weight)) })
         }
     }
 

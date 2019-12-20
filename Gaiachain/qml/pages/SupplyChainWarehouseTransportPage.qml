@@ -30,6 +30,20 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary(), "proceedButtonText": Strings.proceed })
+    }
+
+    function summary() {
+        return [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText),
+            createSummaryItem(Strings.organicCocoaTransporter, transporterComboBox.currentText),
+            createSummaryItem(Strings.destination, destinationComboBox.currentText),
+            createSummaryItem(Strings.transportDate, inputDateHeader.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat))
+        ]
+    }
+
+    function addAction() {
         showOverlay()
 
         var codeData = qrCodeInputHeader.inputText

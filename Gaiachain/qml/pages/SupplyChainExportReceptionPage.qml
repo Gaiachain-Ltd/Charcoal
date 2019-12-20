@@ -27,6 +27,18 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary(), "proceedButtonText": Strings.proceed })
+    }
+
+    function summary() {
+        return [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText),
+            createSummaryItem(Strings.kg.arg(Strings.lotWeight), Strings.kg.arg(lotWeightInputHeader.inputText))
+        ]
+    }
+
+    function addAction() {
         showOverlay()
 
         var codeData = qrCodeInputHeader.inputText

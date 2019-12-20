@@ -29,6 +29,21 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary() })
+    }
+
+    function summary() {
+        return [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.nameOfProducer, producerNameComboBox.currentText),
+            createSummaryItem(Strings.producerIdNumber, producerCodeComboBox.currentText),
+            createSummaryItem(Strings.village, villageInputHeader.inputText),
+            createSummaryItem(Strings.parcelCode, parcelCodesComboBox.currentText),
+            createSummaryItem(Strings.harvestDate, inputHarvestDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat))
+        ]
+    }
+
+    function addAction() {
         showOverlay()
 
         var parcelCode = parcelCodesComboBox.currentText
@@ -48,6 +63,8 @@ Pages.SupplyChainPage {
                               coordinate(),
                               new Date,
                               properties)
+
+        console.log("ADDED", top.packageId, harvestId)
     }
 
     Items.ComboBoxHeader {
