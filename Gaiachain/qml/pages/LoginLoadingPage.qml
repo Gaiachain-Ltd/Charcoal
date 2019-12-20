@@ -105,7 +105,7 @@ BasePage
             return true
         }
         function handleLoginError(code) {
-            if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
+            if (RequestHelper.isOfflineError(code)) {
                 if (userManager.offlineAvailable(login)) {
                     pageManager.openPopup(Enums.Popup.YesNoQuestion,
                                           { "text": Strings.offlineModeQuestion },

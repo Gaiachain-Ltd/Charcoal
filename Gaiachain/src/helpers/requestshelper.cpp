@@ -52,6 +52,11 @@ QNetworkReply::NetworkError RequestsHelper::actionDuplicatedError()
     return QNetworkReply::NetworkError::ContentConflictError;
 }
 
+bool RequestsHelper::isOfflineError(const QNetworkReply::NetworkError &error)
+{
+    return isNetworkError(error) || isServerError(error);
+}
+
 bool RequestsHelper::isNetworkError(const QNetworkReply::NetworkError &error)
 {
     switch (error) {

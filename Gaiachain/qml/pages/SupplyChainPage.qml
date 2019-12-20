@@ -21,8 +21,12 @@ SupplyChainPageBase {
 
     proceedButtonEnabled: validPageData && gpsSource.validCoordinate
 
-    Component.onCompleted: AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
-
+    Component.onCompleted:  {
+        if (AndroidPermissionsHandler) {
+            AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
+        }
+    }
+ 
     function coordinate() {
         return gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()
     }
@@ -61,7 +65,7 @@ SupplyChainPageBase {
         hideOverlay()
 
         var errorText = Strings.addActionErrorUnknown
-        if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
+        if (RequestHelper.isOfflineError(code)) {
             errorText = Strings.addActionErrorOffline
         } else if (RequestHelper.isActionMissingError(code)) {
             errorText = Strings.addActionErrorMissing
@@ -118,7 +122,7 @@ SupplyChainPageBase {
             }
 
             if (DataGlobals.availableOfflineActionsQml().includes(Number(action)) &&
-                    (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) ) {
+                    RequestHelper.isOfflineError(code)) {
                 if (locallyDuplicated) {
                     handleActionError(RequestHelper.actionDuplicatedError())
                 } else {

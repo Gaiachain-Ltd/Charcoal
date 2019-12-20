@@ -49,7 +49,7 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: delegateClicked(packageId, action)
+                onClicked: delegateClicked(model.packageId, model.action)   // use model because action resolve wronlgy
             }
 
             GridLayout {
@@ -92,7 +92,7 @@ Item {
                     visible: hasIcon
                     source: delegateIcon
 
-                    onClicked: delegateIconClicked(packageId, action)
+                    onClicked: delegateIconClicked(model.packageId, model.action)   // use model because action resolve wronlgy
                 }
 
                 // row 2
