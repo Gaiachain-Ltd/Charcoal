@@ -5,8 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
-import com.gaiachain.modelhelper 1.0
-import com.gaiachain.packagedata 1.0
+import com.gaiachain.types 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -18,7 +17,7 @@ Pages.SupplyChainPage {
     title: Strings.supplyChainMenuActionHarvest
 
     validPageData: !(parcelCodesComboBox.currentText === Strings.empty ||
-                     producerIdComboBox.currentText === Strings.empty ||
+                     producerCodeComboBox.currentText === Strings.empty ||
                      producerNameComboBox.currentText === Strings.empty ||
                      villageInputHeader.inputText === Strings.empty)
 
@@ -59,12 +58,13 @@ Pages.SupplyChainPage {
         headerText: Strings.nameOfProducer
 
         onActivated: {
-            producerIdComboBox.currentIndex = currentIndex
+            var producerCode = ModelHelper.getData(index, "code", filteredModel)
+            producerCodeComboBox.currentIndex = ModelHelper.findRow("code", producerCode, producerCodeComboBox.model)
 
-            var village = ModelHelper.getData(currentIndex, "village", model)
+            var village = ModelHelper.getData(index, "village", filteredModel)
             villageInputHeader.inputText = village
 
-            var producerId = ModelHelper.getData(currentIndex, "id", model)
+            var producerId = ModelHelper.getData(index, "id", filteredModel)
             parcelsModel.producerId = producerId
             parcelCodesComboBox.updateCurrentIndex()
         }
@@ -74,19 +74,20 @@ Pages.SupplyChainPage {
     }
 
     Items.ComboBoxHeader {
-        id: producerIdComboBox
+        id: producerCodeComboBox
 
         Layout.fillWidth: true
 
         headerText: Strings.producerIdNumber
 
         onActivated: {
-            producerNameComboBox.currentIndex = currentIndex
+            var producerName = ModelHelper.getData(index, "name", filteredModel)
+            producerNameComboBox.currentIndex = ModelHelper.findRow("name", producerName, producerNameComboBox.model)
 
-            var village = ModelHelper.getData(currentIndex, "village", model)
+            var village = ModelHelper.getData(index, "village", filteredModel)
             villageInputHeader.inputText = village
 
-            var producerId = ModelHelper.getData(currentIndex, "id", model)
+            var producerId = ModelHelper.getData(index, "id", filteredModel)
             parcelsModel.producerId = producerId
             parcelCodesComboBox.updateCurrentIndex()
         }

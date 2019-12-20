@@ -99,6 +99,7 @@ QtObject {
     readonly property string recentTransactions: qsTr("Recent transactions")
 
     // supply chain pages
+    readonly property string search: qsTr("Search")
     readonly property string proceed: qsTr("Proceed")
 
     readonly property string addActionErrorOffline: qsTr("Cannot reach the server. Please try again later.")
@@ -174,5 +175,4 @@ QtObject {
     readonly property string dateFormat: qsTr("MM/dd/yyyy")
     readonly property string checkMark: "\u2713"
     readonly property string minus: "-"
-    readonly property string qrIdMask: "   -   -   "
 }

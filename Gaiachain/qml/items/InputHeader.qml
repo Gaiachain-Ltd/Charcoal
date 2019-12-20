@@ -13,7 +13,7 @@ Items.GenericHeader {
     property url iconSource
     property alias placeholderText: input.placeholderText
     property alias validator: input.validator
-    property alias inputMethodHints: input.inputMethodHints
+    property alias additionalInputMethodHints: input.additionalInputMethodHints
 
     property alias readOnly: input.readOnly
 

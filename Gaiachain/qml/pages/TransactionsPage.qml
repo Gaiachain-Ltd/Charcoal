@@ -75,7 +75,8 @@ BasePage {
 
             focus: false
 
-            inputMethodHints: Qt.ImhUppercaseOnly
+            font.capitalization: text.length ? Font.AllUppercase : Font.MixedCase
+
             placeholderText: Strings.searchForTransaction
             iconSource: Style.searchImgUrl
             iconEdge: Enums.Edge.RightEdge
@@ -88,7 +89,6 @@ BasePage {
             onFocusChanged: if (!focus) top.updateSearch()
             onAccepted: top.updateSearch()
         }
-
 
         Items.BasicCheckBox {
             checked: true

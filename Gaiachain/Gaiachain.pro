@@ -66,6 +66,7 @@ HEADERS += \
     src/database/dbmigrationmanager.h \
     src/database/dbmigrations.h \
     src/helpers/cryptohelper.h \
+    src/helpers/keywordfilterproxymodel.h \
     src/helpers/modelhelper.h \
     src/helpers/packagedataproperties.h \
     src/helpers/requestshelper.h \
@@ -146,6 +147,7 @@ SOURCES += src/main.cpp \
     src/database/dbmigrationmanager.cpp \
     src/database/dbmigrations.cpp \
     src/helpers/cryptohelper.cpp \
+    src/helpers/keywordfilterproxymodel.cpp \
     src/helpers/modelhelper.cpp \
     src/helpers/packagedataproperties.cpp \
     src/helpers/requestshelper.cpp \
