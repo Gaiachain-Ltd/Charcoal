@@ -79,9 +79,9 @@ signals:
     void entitySaved(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action) const;
 
     void unusedLotIdsLoadError(const QNetworkReply::NetworkError &code) const;
-    void unusedLotIdsLoaded(const QJsonArray &ids) const;
+    void unusedLotIdsLoaded(const QJsonArray &packageIds) const;
     void unusedLotIdCreateError(const QNetworkReply::NetworkError &code) const;
-    void unusedLotIdCreated(const QString &id) const;
+    void unusedLotIdCreated(const QString &packageId) const;
 
 protected:
     bool m_enabled = true;
