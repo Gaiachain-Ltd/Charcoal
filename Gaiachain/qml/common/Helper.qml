@@ -8,7 +8,7 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
 QtObject {
-    function convertTimestampToDate(timestamp) {
+    function formatDate(timestamp) {
         return (new Date(timestamp)).toLocaleDateString(Qt.locale(), Strings.dateFormat)
     }
 
@@ -29,10 +29,6 @@ QtObject {
         return (items.length === 3 ? items.slice(0, -1) : items).join(", ")
     }
 
-    function emptyIfNotDefined(data) {
-        return data ? data : Strings.empty
-    }
-
     function minusIfNotDefined(str) {
          return str ? str : Strings.minus
      }
@@ -41,12 +37,12 @@ QtObject {
         return value && value > 0 ? value : Strings.minus
     }
 
-    function emptyIfNotDate(date) {
-        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), Strings.dateFormat) : Strings.empty
+    function minusIfNotDate(date) {
+        return date ? formatDate(date) : Strings.minus
     }
 
-    function minusIfNotDate(date) {
-        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), Strings.dateFormat) : Strings.minus
+    function minusIfNotTimestamp(timestamp) {
+        return timestamp ? formatDate(timestamp * 1000) : Strings.minus
     }
 
     function getMonthName(month) {
