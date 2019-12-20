@@ -11,6 +11,11 @@ Popups.GenericPopup {
 
     property int openedInterval: Style.notificationPopupOpenedDefaultInterval
 
+    function forceClose() {
+        popupTimer.stop()
+        close()
+    }
+
     onOpened: popupTimer.start()
     onClosed: pageManager.closePopup()
 
