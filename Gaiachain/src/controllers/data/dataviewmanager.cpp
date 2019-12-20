@@ -21,7 +21,12 @@ DataViewManager::DataViewManager(QObject *parent)
     connect(&m_updateTimer, &QTimer::timeout, this, &DataViewManager::updateModels);
 
     connect(&m_latestRangeTransactionsModel, &LatestRangeEventsProxyModel::fetchEvents,
-            this, [this](int number, int offset) { emit limitKeywordEventsNeeded(number, offset, m_transactionsViewModel.keyword()); });
+            this, [this](int number, int offset) {
+        const auto keyword = m_transactionsViewModel.keyword();
+        const auto activePackageTypes = m_transactionsViewModel.activePackageTypes();
+        const auto cooperativeId = m_transactionsViewModel.filterCooperativeId();
+        emit limitKeywordEventsNeeded(number, offset, keyword, activePackageTypes, cooperativeId);
+    });
     connect(&m_latestRangeDateModel, &LatestRangeEventsProxyModel::fetchEvents,
             this, [this](int number, int offset) {
         emit limitRangeEventsNeeded(number, offset,

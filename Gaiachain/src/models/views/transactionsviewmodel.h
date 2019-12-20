@@ -18,6 +18,8 @@ public:
     Q_INVOKABLE bool isPackageTypeActive(const Enums::PackageType &type) const;
     Q_INVOKABLE QString keyword() const;
 
+    Q_INVOKABLE QSet<Enums::PackageType> activePackageTypes() const;
+
 public slots:
     void setPackageTypeActive(const Enums::PackageType &type, bool active);
     void setKeyword(const QString &keyword);

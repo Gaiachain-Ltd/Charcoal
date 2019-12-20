@@ -46,7 +46,8 @@ public:
     Q_INVOKABLE void fetchEventData(const QString &packageId, const Enums::PackageType &type);
     Q_INVOKABLE void fetchRangeEvents(const QDateTime &from, const QDateTime &to);
     Q_INVOKABLE void fetchLimitRangeEvents(int limit, int offset, const QDateTime &from, const QDateTime &to);
-    Q_INVOKABLE void fetchLimitKeywordEvents(int limit, int offset, const QString &keyword = {});
+    Q_INVOKABLE void fetchLimitKeywordEvents(int limit, int offset, const QString &keyword,
+                                             const QSet<Enums::PackageType> &filteredPackages, int cooperativeId);
     Q_INVOKABLE void fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction);
 
 signals:
@@ -61,7 +62,8 @@ signals:
 
     void eventsInfoNeeded(const QDateTime &from, const QDateTime &to) const;
     void eventsInfoNeeded(int limit, int offset, const QDateTime &from, const QDateTime &to) const;
-    void eventsInfoNeeded(int limit, int offset, const QString &keyword) const;
+    void eventsInfoNeeded(int limit, int offset, const QString &keyword,
+                          const QSet<Enums::PackageType> &filteredPackages, int cooperativeId) const;
     void lastActionEventsInfoNeeded(const Enums::SupplyChainAction &lastAction) const;
     void eventsNeeded(const QStringList &ids) const;
 

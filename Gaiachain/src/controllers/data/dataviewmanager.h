@@ -51,7 +51,8 @@ public slots:
 signals:
     void packagesEventsNeeded(const Gaia::ModelData &modelData) const;
 
-    void limitKeywordEventsNeeded(int count, int offset, const QString &keyword) const;
+    void limitKeywordEventsNeeded(int count, int offset, const QString &keyword,
+                                  const QSet<Enums::PackageType> &filteredPackages, int cooperativeId) const;
     void limitRangeEventsNeeded(int count, int offset, const QDateTime &from, const QDateTime &to) const;
 
 private:

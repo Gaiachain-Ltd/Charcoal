@@ -24,6 +24,11 @@ bool CooperativeViewModel::cooperativeOnly() const
     return m_cooperativeOnly;
 }
 
+quint32 CooperativeViewModel::filterCooperativeId() const
+{
+    return m_cooperativeOnly ? m_cooperativeId : 0;
+}
+
 void CooperativeViewModel::setCooperativeId(quint32 cooperativeId)
 {
     if (m_cooperativeId == cooperativeId) {
