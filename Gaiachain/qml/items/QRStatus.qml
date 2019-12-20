@@ -57,7 +57,7 @@ Rectangle {
 
             Layout.fillWidth: true
 
-            inputMask: Strings.qrInputMask
+            inputMask: Static.qrInputMask
 
             focus: false
             visible: top.manual
