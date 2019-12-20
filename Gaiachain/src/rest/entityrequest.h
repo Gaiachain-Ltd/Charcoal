@@ -36,7 +36,7 @@ public:
     EntityRequest(const QStringList &packageIds = {});
     EntityRequest(const QDateTime &from, const QDateTime &to);
     EntityRequest(int limit, int offset, const QDateTime &from, const QDateTime &to);
-    EntityRequest(int limit, int offset, const QString &keyword = {});
+    EntityRequest(int limit, int offset, const QString &keyword, const QSet<Enums::PackageType> &filteredPackages, int cooperativeId);
     EntityRequest(const QString &token, const Enums::SupplyChainAction &lastAction);
 
     EntityRequest(const QString &token, const QString &packageId, const EntityData &entityData);

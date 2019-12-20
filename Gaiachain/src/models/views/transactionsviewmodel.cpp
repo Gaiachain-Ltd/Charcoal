@@ -36,6 +36,11 @@ QString TransactionsViewModel::keyword() const
     return m_keyword;
 }
 
+QSet<Enums::PackageType> TransactionsViewModel::activePackageTypes() const
+{
+    return m_activePackageTypes;
+}
+
 void TransactionsViewModel::setPackageTypeActive(const Enums::PackageType &type, bool active)
 {
     if (isPackageTypeActive(type) == active) {

@@ -122,9 +122,10 @@ void DataManager::fetchLimitRangeEvents(int limit, int offset, const QDateTime &
     emit eventsInfoNeeded(limit, offset, from, to);
 }
 
-void DataManager::fetchLimitKeywordEvents(int limit, int offset, const QString &keyword)
+void DataManager::fetchLimitKeywordEvents(int limit, int offset, const QString &keyword,
+                                          const QSet<Enums::PackageType> &filteredPackages, int cooperativeId)
 {
-    emit eventsInfoNeeded(limit, offset, keyword);
+    emit eventsInfoNeeded(limit, offset, keyword, filteredPackages, cooperativeId);
 }
 
 void DataManager::fetchLastActionPackageEvents(const Enums::SupplyChainAction &lastAction)

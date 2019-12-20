@@ -20,6 +20,8 @@ public:
     Q_INVOKABLE quint32 cooperativeId() const;
     Q_INVOKABLE bool cooperativeOnly() const;
 
+    Q_INVOKABLE quint32 filterCooperativeId() const;
+
 public slots:
     void setCooperativeId(quint32 cooperativeId);
     void setCooperativeOnly(bool cooperativeOnly);
