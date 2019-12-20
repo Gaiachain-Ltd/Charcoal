@@ -1,5 +1,8 @@
 CONFIG += tests
 
+# here because of QTBUG-48416
+include(Gaiachain/translations/translations.pri)
+
 TEMPLATE = subdirs
 
 docs {

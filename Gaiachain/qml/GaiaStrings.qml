@@ -43,8 +43,8 @@ QtObject {
     readonly property string november: qsTr("November")
     readonly property string december: qsTr("December")
 
-    readonly property string aboutApp: qsTr("<h2>%1</h2><br/>v. %2 (%3)<br/><a href=\"http://%4\">http://%4</a>")
-    readonly property string userInfo: qsTr("Current user:<br/><b>%1</b>")
+    readonly property string aboutApp: "<h2>%1</h2><br/>v. %2 (%3)<br/><a href=\"http://%4\">http://%4</a>"
+    readonly property string userInfo: qsTr("Current user") + ":<br/><b>%1</b>"
 
     // login
     readonly property string emailAddress: qsTr("Email address")
