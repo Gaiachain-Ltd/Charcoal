@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.helpers 1.0
 import com.gaiachain.enums 1.0
-import com.gaiachain.modelhelper 1.0
 
 import "../items" as Items
 
@@ -34,18 +33,6 @@ Item {
         return Strings.empty
     }
 
-    function emptyIfNotDefined(data) {
-        return data ? data : Strings.empty
-    }
-
-    function minusIfNotDefinedOrZero(value) {
-        return value && value > 0 ? value : Strings.minus
-    }
-
-    function emptyIfNotDate(date) {
-        return date ? (new Date(date)).toLocaleDateString(Qt.locale(), Strings.dateFormat) : Strings.empty
-    }
-
     ColumnLayout {
         id: topLayout
 
@@ -71,7 +58,7 @@ Item {
             visible: Number(packageType) !== Enums.PackageType.Harvest
 
             color: String(Helper.packageTypeColor(Number(packageType)))
-            inputText: packageData ? emptyIfNotDefined(ModelHelper.findItem("id", packageData.cooperativeId, "name", cooperativesModel))
+            inputText: packageData ? Helper.emptyIfNotDefined(ModelHelper.findItem("id", packageData.cooperativeId, "name", cooperativesModel))
                                    : ""
         }
     }

@@ -17,6 +17,7 @@
         <file alias="menuCalendar">ui/icon-calendar.svg</file>
         <file alias="menuTransactions">ui/icon-transactions.svg</file>
         <file alias="close">ui/close-icon.svg</file>
+        <file alias="close-black">ui/close-black-icon.svg</file>
         <file alias="logo-black">ui/gaiachain-logo-black.svg</file>
         <file alias="submenuLotCreation">ui/icon-submenu-create-lot.svg</file>
         <file alias="submenuBagging">ui/icon-submenu-drying.svg</file>
@@ -43,7 +44,12 @@
         <file alias="frame">ui/frame.svg</file>
         <file alias="clear">ui/clear-icon.svg</file>
         <file alias="typeManually">ui/button-type-in-manually.svg</file>
-        <file alias="enter">ui/button-enter.svg</file> 
+        <file alias="enter">ui/button-enter.svg</file>
+        <file alias="delete">ui/delete-icon.svg</file>
+        <file alias="warning">ui/warning-icon.svg</file>
+        <file alias="gps">ui/GPS.svg</file>
+        <file alias="gpsFailed">ui/GPS-FAILED.svg</file>
+        <file alias="gpsOk">ui/GPS-OK.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

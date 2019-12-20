@@ -10,7 +10,7 @@ import "../items" as Items
 import "../components" as Components
 import "../pages" as Pages
 
-Pages.SupplyChainPage {
+Pages.SupplyChainPageBase {
     id: top
 
     property bool firstEntry: true
@@ -18,7 +18,7 @@ Pages.SupplyChainPage {
     title: Strings.addHarvestId
 
     proceedButtonText: Strings.addHarvestId
-    proceedButtonEnabled: !(harvestIdComboBox.currentText === Strings.empty)
+    validPageData: !(harvestIdComboBox.currentText === Strings.empty)
 
     Component.onCompleted: refreshData()
 
@@ -29,7 +29,7 @@ Pages.SupplyChainPage {
 
     function proceed() {
         if (firstEntry) {
-            pageManager.openPopup(Enums.Popup.Comment, { "text": Strings.cocoaFromSeveralPlotsComment })
+            pageManager.openPopup(Enums.Popup.Comment, { "text": Strings.cocoaFromSeveralPlotsComment }, "COCOA_COMMENT")
         } else {
             processHarvestData()
         }
@@ -50,43 +50,37 @@ Pages.SupplyChainPage {
         target: pageManager
         enabled: pageManager.isOnTop(page)
         onPopupClosed: {
-            switch (popup) {
-            case Enums.Popup.Comment:
-                processHarvestData()
-                break
-            default:
-                break
+            if (popupId != "COCOA_COMMENT") {
+                return
             }
+
+            processHarvestData()
         }
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ComboBoxHeader {
+        id: harvestIdComboBox
 
-        Items.ComboBoxHeader {
-            id: harvestIdComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        displayRole: "packageId"
+        model: lastActionSectionReceptionModel
+    }
 
-            displayRole: "packageId"
-            model: lastActionSectionReceptionModel
-        }
+    Items.InputHeader {
+        id: weightInputHeader
 
-        Items.InputHeader {
-            id: weightInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        validator: IntValidator {}
+        additionalInputMethodHints: Qt.ImhDigitsOnly
 
-            validator: IntValidator {}
-            inputMethodHints: Qt.ImhDigitsOnly
+        optional: true
+        headerText: Strings.kg.arg(Strings.bagWeight) + " (" + Strings.notRequired + ")"
+        headerTextColor: Style.notRequiredTextInputColor
 
-            optional: true
-            headerText: Strings.kg.arg(Strings.bagWeight) + " (" + Strings.notRequired + ")"
-            headerTextColor: Style.notRequiredTextInputColor
+        iconSource: Style.rightArrowImgUrl
 
-            iconSource: Style.rightArrowImgUrl
-
-            placeholderText: Strings.typeHere + "..."
-        }
+        placeholderText: Strings.typeHere + "..."
     }
 }

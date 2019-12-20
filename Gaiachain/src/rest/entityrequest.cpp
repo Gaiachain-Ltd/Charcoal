@@ -71,7 +71,7 @@ EntityRequest::EntityRequest(int limit, int offset, const QDateTime &from, const
     setQuery(query);
 }
 
-EntityRequest::EntityRequest(int limit, int offset, const QString &keyword)
+EntityRequest::EntityRequest(int limit, int offset, const QString &keyword, const QSet<Enums::PackageType> &filteredPackages, int cooperativeId)
     : EntityRequest(RequestType::GetFilterLimit)
 {
     auto query = QUrlQuery{};
@@ -79,6 +79,15 @@ EntityRequest::EntityRequest(int limit, int offset, const QString &keyword)
     query.addQueryItem(Tags::offset, QString::number(offset));
     if (!keyword.isEmpty()) {
         query.addQueryItem(Tags::keyword, keyword);
+    }
+    if (filteredPackages.count() != DataGlobals::availablePackageTypes().count()) {
+        auto packageTypesList = QStringList{};
+        std::transform(filteredPackages.begin(), filteredPackages.end(),
+                       std::back_inserter(packageTypesList), &RequestsHelper::packageTypeToString);
+        query.addQueryItem(Tags::types, packageTypesList.join(StaticValues::separator));
+    }
+    if (cooperativeId > 0) {
+        query.addQueryItem(Tags::cooperativeId, QString::number(cooperativeId));
     }
     setQuery(query);
 }
@@ -137,6 +146,8 @@ QJsonObject EntityRequest::entityDataObject(const EntityRequest::EntityData &ent
 {
     return {
         { Tags::action,     RequestsHelper::supplyChainActionToString(entityData.action) },
+        { Tags::location,   QJsonObject{ { Tags::latitude, entityData.coordinate.latitude() },
+                                         { Tags::longitude, entityData.coordinate.longitude() } } },
         { Tags::timestamp,  static_cast<qint64>(entityData.timestamp.toSecsSinceEpoch()) },
         { Tags::properties, QJsonObject::fromVariantMap(
                         RequestsHelper::convertProperties(entityData.properties)) }

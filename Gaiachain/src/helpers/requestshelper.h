@@ -18,6 +18,7 @@ public:
     static Q_INVOKABLE QNetworkReply::NetworkError authenticationError();
     static Q_INVOKABLE QNetworkReply::NetworkError actionDuplicatedError();
 
+    static Q_INVOKABLE bool isOfflineError(const QNetworkReply::NetworkError &error);
     static Q_INVOKABLE bool isNetworkError(const QNetworkReply::NetworkError &error);
     static Q_INVOKABLE bool isServerError(const QNetworkReply::NetworkError &error);
     static Q_INVOKABLE bool isAuthenticationError(const QNetworkReply::NetworkError &error);

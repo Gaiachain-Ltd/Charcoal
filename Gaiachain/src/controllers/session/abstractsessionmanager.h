@@ -7,6 +7,8 @@
 #include <QNetworkReply>
 #include <QLoggingCategory>
 
+class QGeoCoordinate;
+
 Q_DECLARE_LOGGING_CATEGORY(sessionManager)
 
 class AbstractSessionManager : public AbstractManager
@@ -34,17 +36,18 @@ public:
 
     Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to) = 0;
     Q_INVOKABLE virtual void getEntitiesInfo(int limit, int offset, const QDateTime &from, const QDateTime &to) = 0;
-    Q_INVOKABLE virtual void getEntitiesInfo(int limit, int offset, const QString &keyword) = 0;
+    Q_INVOKABLE virtual void getEntitiesInfo(int limit, int offset, const QString &keyword,
+                                             const QSet<Enums::PackageType> &filteredPackages, int cooperativeId) = 0;
     Q_INVOKABLE virtual void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) = 0;
 
     Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;
 
     Q_INVOKABLE virtual void postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
-                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+                                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) = 0;
     Q_INVOKABLE virtual void postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+                                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) = 0;
     Q_INVOKABLE virtual void postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                           const QDateTime &timestamp, const QVariantMap &properties) = 0;
+                                           const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) = 0;
 
     Q_INVOKABLE virtual void getUnusedLotIds() = 0;
     Q_INVOKABLE virtual void postUnusedLotId() = 0;
@@ -76,9 +79,9 @@ signals:
     void entitySaved(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action) const;
 
     void unusedLotIdsLoadError(const QNetworkReply::NetworkError &code) const;
-    void unusedLotIdsLoaded(const QJsonArray &ids) const;
+    void unusedLotIdsLoaded(const QJsonArray &packageIds) const;
     void unusedLotIdCreateError(const QNetworkReply::NetworkError &code) const;
-    void unusedLotIdCreated(const QString &id) const;
+    void unusedLotIdCreated(const QString &packageId) const;
 
 protected:
     bool m_enabled = true;

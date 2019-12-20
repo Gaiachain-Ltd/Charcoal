@@ -7,6 +7,9 @@ Popup
 {
     id: top
 
+    property int popup: Enums.Popup.InvalidPopup
+    property string popupId
+
     anchors.centerIn: parent
 
     leftMargin: s(Style.hugeMargin)

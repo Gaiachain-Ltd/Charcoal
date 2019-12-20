@@ -20,10 +20,15 @@ namespace Tags {
     const QLatin1String limit = QLatin1String("limit");
     const QLatin1String offset = QLatin1String("offset");
     const QLatin1String keyword = QLatin1String("keyword");
+    const QLatin1String types = QLatin1String("types");
+    const QLatin1String cooperativeId = QLatin1String("cooperative_id");
     const QLatin1String lastAction = QLatin1String("last_action");
     const QLatin1String results = QLatin1String("results");
     const QLatin1String packageType = QLatin1String("package_type");
     const QLatin1String action = QLatin1String("action");
+    const QLatin1String location = QLatin1String("location");
+    const QLatin1String latitude = QLatin1String("latitude");
+    const QLatin1String longitude = QLatin1String("longitude");
     const QLatin1String timestamp = QLatin1String("timestamp");
     const QLatin1String properties = QLatin1String("properties");
     const QLatin1String relations = QLatin1String("relations");
@@ -41,6 +46,7 @@ namespace Tags {
 };
 
 namespace StaticValues {
+    const QLatin1String separator = QLatin1String(",");
     const QLatin1String all = QLatin1String("ALL");
 
     const QLatin1String userSuperUser = QLatin1String("SUPER_USER");

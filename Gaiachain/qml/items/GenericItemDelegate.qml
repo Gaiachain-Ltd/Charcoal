@@ -10,10 +10,10 @@ import "../items" as Items
 ItemDelegate {
     id: itemDelegate
 
+    property bool bold: false
     property bool separatorVisible: false
 
-    implicitWidth: indicatorInput.width
-    implicitHeight: indicatorInput.implicitHeight
+    verticalPadding: s(Style.middleMargin)
 
     background: Rectangle {
         anchors.fill: parent
@@ -35,7 +35,7 @@ ItemDelegate {
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignLeft
 
-        font.bold: itemDelegate.highlighted
+        font.bold: itemDelegate.bold | itemDelegate.highlighted
 
         text: itemDelegate.text
     }

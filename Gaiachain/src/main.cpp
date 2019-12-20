@@ -49,7 +49,12 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
   Main routine. Remember to update the application name and initialise logger
   class, if present.
   */
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
+#ifdef Q_OS_ANDROID
+    qputenv("QT_ANDROID_ENABLE_WORKAROUND_TO_DISABLE_PREDICTIVE_TEXT", QByteArrayLiteral("1"));
+#endif
+
     MLog::instance()->enableLogToFile(AppName);
 
     // Set up basic application data. Modify this to your needs
@@ -70,13 +75,16 @@ int main(int argc, char *argv[]) {
     MainController mc;
     mc.setupQmlContext(engine);
 
+    QLocale::setDefault(QLocale(LocaleLanguage["english"]));
 #ifndef ENGLISH_LANGUAGE
     QTranslator translator;
-    translator.load(QLocale(), QLatin1String(DEFAULT_LANGUAGE), QLatin1String(), QLatin1String(":/translations"), QLatin1String(".qm"));
-    QLocale::setDefault(QLocale(LocaleLanguage[DEFAULT_LANGUAGE]));
-    qApp->installTranslator(&translator);
-#else
-    QLocale::setDefault(QLocale(LocaleLanguage["english"]));
+    if (!translator.load(QLocale(), QLatin1String(DEFAULT_LANGUAGE), QLatin1String(),
+                         QLatin1String(":/translations"), QLatin1String(".qm"))) {
+        qCWarning(coreMain) << "Cannot load translaction! Language:" << DEFAULT_LANGUAGE;
+    } else {
+        QLocale::setDefault(QLocale(LocaleLanguage[DEFAULT_LANGUAGE]));
+        QCoreApplication::installTranslator(&translator);
+    }
 #endif
 
 #ifdef Q_OS_ANDROID

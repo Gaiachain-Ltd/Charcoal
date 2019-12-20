@@ -15,12 +15,16 @@ CalendarPageBase {
         dataManager.fetchRangeEvents(getMonthStartDate(), getMonthEndDate())
     }
 
+    function updateCooperativeOnlyFiltering(active) {
+        calendarMonthModel.setCooperativeOnly(active)
+    }
+
     function updateModelRange() {
         // called from CalendarPageBase
         var from = getMonthStartDate()
         var to = getMonthEndDate()
 
-        calendarModel.setDateRange(from, to)
+        calendarMonthModel.setDateRange(from, to)
         dataManager.fetchRangeEvents(from, to)
     }
 
@@ -32,7 +36,7 @@ CalendarPageBase {
     }
 
     function initialize() {
-        onlyMyTransactionsCheckBox.updateCooperativeOnlyFiltering()
+        onlyMyTransactionsCheckBox.checked = calendarMonthModel.cooperativeOnly
     }
 
     onMonthHeaderClicked: {
@@ -51,10 +55,6 @@ CalendarPageBase {
         Items.BasicCheckBox {
             id: onlyMyTransactionsCheckBox
 
-            function updateCooperativeOnlyFiltering() {
-                cooperativeFilteringEvents.active = checked
-            }
-
             Layout.fillWidth: true
             Layout.leftMargin: s(Style.hugeMargin) * 2
             Layout.bottomMargin: s(Style.bigMargin) * 1.5
@@ -63,10 +63,10 @@ CalendarPageBase {
             opacity: userManager.loggedIn ? 1 : 0
 
             text: Strings.onlyMyTransactions
-            checked: cooperativeFilteringEvents.active
+            checked: true
 
-            Component.onCompleted: updateCooperativeOnlyFiltering()
-            onCheckedChanged: updateCooperativeOnlyFiltering()
+            Component.onCompleted: top.updateCooperativeOnlyFiltering(checked)
+            onCheckedChanged: top.updateCooperativeOnlyFiltering(checked)
         }
     }
 

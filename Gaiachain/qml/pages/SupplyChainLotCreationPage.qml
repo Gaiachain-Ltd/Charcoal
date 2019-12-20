@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
-import com.gaiachain.packagedata 1.0
+import com.gaiachain.types 1.0
 
 import "../items" as Items
 import "../components" as Components
@@ -18,8 +18,8 @@ Pages.SupplyChainPage {
 
     property string scannedId
 
-    proceedButtonEnabled: !(lotIdComboBox.currentText === Strings.empty ||
-                            qrCodeInputHeader.inputText === Strings.empty)
+    validPageData: !(lotIdComboBox.currentText === Strings.empty ||
+                     qrCodeInputHeader.inputText === Strings.empty)
 
     Component.onCompleted: refreshData()
 
@@ -28,6 +28,19 @@ Pages.SupplyChainPage {
     }
 
     function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, { "supplyChainPage": this, "summary": summary() })
+    }
+
+    function summary() {
+       return [
+            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, Style.gpsImgUrl),
+            createSummaryItem(Strings.lotIdForThePackage, lotIdComboBox.currentText),
+            createSummaryItem(Strings.registerQrCodeToLotId, qrCodeInputHeader.inputText),
+            createSummaryItem(Strings.description, descriptionHeader.inputText)
+       ]
+    }
+
+    function addAction() {
         showOverlay()
 
         var lotId = lotIdComboBox.currentText
@@ -42,48 +55,45 @@ Pages.SupplyChainPage {
         dataManager.addAction(lotId,
                               Enums.SupplyChainAction.LotCreation,
                               codeData,
+                              coordinate(),
                               new Date,
                               properties)
     }
 
-    pageContent: ColumnLayout {
-        spacing: s(Style.smallMargin)
+    Items.ComboBoxHeader {
+        id: lotIdComboBox
 
-        Items.ComboBoxHeader {
-            id: lotIdComboBox
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        headerText: Strings.lotIdForThePackage
 
-            headerText: Strings.lotIdForThePackage
+        displayRole: "packageId"
+        model: unusedLotIdsModel
+    }
 
-            displayRole: "packageId"
-            model: unusedLotIdsModel
-        }
+    Items.ButtonInputHeader {
+        id: qrCodeInputHeader
 
-        Items.ButtonInputHeader {
-            id: qrCodeInputHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
+        iconSource: Style.qrImgUrl
 
-            iconSource: Style.qrImgUrl
+        inputText: top.scannedId
+        headerText: Strings.registerQrCodeToLotId
+        placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
 
-            inputText: top.scannedId
-            headerText: Strings.registerQrCodeToLotId
-            placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
+        onClicked: pageManager.enter(Enums.Page.QRScanner, {
+                                         "title": title,
+                                         "backSupplyChainPage": page,
+                                         "popupText": Strings.attachQr.arg(Strings.lot.toUpperCase()) })
+    }
 
-            onClicked: pageManager.enter(Enums.Page.QRScanner, {
-                                             "title": title,
-                                             "backSupplyChainPage": page,
-                                             "popupText": Strings.attachQr.arg(Strings.lot.toUpperCase()) })
-        }
+    Items.TextAreaHeader {
+        id: descriptionHeader
 
-        Items.TextAreaHeader {
-            id: descriptionHeader
+        Layout.fillWidth: true
 
-            Layout.fillWidth: true
-
-            placeholderText: Strings.typeHere
-            headerText: Strings.description
-        }
+        placeholderText: Strings.typeHere
+        headerText: Strings.description
     }
 }

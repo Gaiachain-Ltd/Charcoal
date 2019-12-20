@@ -5,6 +5,8 @@
 #include "../../rest/restapiclient.h"
 #include "../../rest/baserequest.h"
 
+class QGeoCoordinate;
+
 class SessionManager : public AbstractSessionManager
 {
     Q_OBJECT
@@ -22,17 +24,18 @@ public:
 
     Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to) override;
     Q_INVOKABLE void getEntitiesInfo(int limit, int offset, const QDateTime &from, const QDateTime &to) override;
-    Q_INVOKABLE void getEntitiesInfo(int limit, int offset, const QString &keyword) override;
+    Q_INVOKABLE void getEntitiesInfo(int limit, int offset, const QString &keyword,
+                                     const QSet<Enums::PackageType> &filteredPackages, int cooperativeId) override;
     Q_INVOKABLE void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) override;
 
     Q_INVOKABLE void getEntities(const QStringList &packageIds) override;
 
     Q_INVOKABLE void postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
-                                   const QDateTime &timestamp, const QVariantMap &properties) override;
+                                   const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) override;
     Q_INVOKABLE void postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                   const QDateTime &timestamp, const QVariantMap &properties) override;
+                                   const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) override;
     Q_INVOKABLE void postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
-                                   const QDateTime &timestamp, const QVariantMap &properties) override;
+                                   const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties) override;
 
     Q_INVOKABLE void getUnusedLotIds() override;
     Q_INVOKABLE void postUnusedLotId() override;

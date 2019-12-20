@@ -12,7 +12,8 @@ ComboBox {
 
     currentIndex: -1
 
-    property alias placeholderText: indicatorInput.placeholderText
+    property alias placeholderText: input.placeholderText
+    property string emptyListText: Strings.noEntries
 
     property bool optional: false
     readonly property bool isEmpty: currentIndex == -1
@@ -23,7 +24,7 @@ ComboBox {
     signal footerClicked
 
     function togglePopup() {
-        popup.visible = !popup.visible
+        top.popup.visible = !top.popup.visible
     }
 
     function clear() {
@@ -31,6 +32,8 @@ ComboBox {
     }
 
     delegate: Items.GenericItemDelegate {
+        width: ListView.view ? ListView.view.width : implicitWidth
+
         highlighted: (highlightedIndex === index)
         separatorVisible: (index !== 0)
 
@@ -38,7 +41,7 @@ ComboBox {
     }
 
     indicator: Items.GenericInput {
-        id: indicatorInput
+        id: input
 
         width: top.width
 
@@ -64,7 +67,7 @@ ComboBox {
         MouseArea {
             id: ma
             anchors.fill: parent
-            enabled: top.model !== undefined && top.model.rowCount() > 0
+            enabled: top.model !== undefined
 
             onClicked: {
                 forceActiveFocus()
@@ -76,10 +79,16 @@ ComboBox {
     background: Item {}
 
     popup: Popup {
-        id: comboBoxPopup
+        id: popup
+
+        function footerClicked() {
+            top.footerClicked()
+        }
 
         y: top.height
         width: top.width
+
+        focus: true
 
         onYChanged: {
             if (y !== 0 && Math.abs(y) < top.height) {
@@ -87,9 +96,10 @@ ComboBox {
             }
         }
 
-        focus: true
+        onClosed: top.indicator.focus = false
 
         contentItem: ListView {
+            id: entriesList
             implicitHeight: contentHeight
 
             clip: true
@@ -99,14 +109,24 @@ ComboBox {
 
             model: top.delegateModel
 
+            header: Items.GenericItemDelegate {
+                width: entriesList.width
+
+                text: emptyListText
+                visible: !entriesList.count
+                height: visible ? implicitHeight : Style.none
+            }
             footer: Items.GenericItemDelegate {
                 text: footerText
                 visible: footerVisible
-                height: footerVisible ? implicitHeight : Style.none
+                height: visible ? implicitHeight : Style.none
+
+                bold: true
+                separatorVisible: true
 
                 onClicked: {
-                    comboBoxPopup.parent.footerClicked()
-                    comboBoxPopup.parent.popup.visible = false
+                    popup.footerClicked()
+                    popup.close()
                 }
             }
         }
