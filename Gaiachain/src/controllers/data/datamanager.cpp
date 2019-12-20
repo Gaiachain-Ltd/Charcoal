@@ -7,6 +7,7 @@
 #include <QGeoCoordinate>
 
 #include "../../common/dataglobals.h"
+#include "../../helpers/requestshelper.h"
 #include "../../helpers/packagedataproperties.h"
 
 #include <QLoggingCategory>
@@ -142,12 +143,16 @@ void DataManager::onActionAdded(const QString &packageId, const QByteArray &, co
     }
 }
 
-void DataManager::onActionAddError(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action)
+void DataManager::onActionAddError(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action,
+                                   const QNetworkReply::NetworkError &error)
 {
     const auto isOfflineAction = DataGlobals::availableOfflineActions().contains(action);
     if (isOfflineAction) {
         QMetaObject::invokeMethod(&m_requestsHandler, std::bind(&DataRequestsManager::offlineActionError, &m_requestsHandler,
                                                                 packageId, action));
+        if (!RequestsHelper::isOfflineError(error)) {
+            removeOfflineAction(packageId, action);
+        }
     }
 }
 

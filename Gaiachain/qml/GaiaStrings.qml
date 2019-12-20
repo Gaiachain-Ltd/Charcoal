@@ -111,6 +111,7 @@ QtObject {
 
     readonly property string toSelect: qsTr("To select")
     readonly property string askForExit: qsTr("Are you sure you want to exit?")
+    readonly property string askForActionDelete: qsTr("Are you sure you want to delete the action?")
 
     readonly property string gpsCoordinates: qsTr("GPS coordinates")
     readonly property string gpsInvalid: qsTr("Please check your GPS signal")

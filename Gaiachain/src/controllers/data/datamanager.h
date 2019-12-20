@@ -77,7 +77,8 @@ signals:
 
 public slots:
     void onActionAdded(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action);
-    void onActionAddError(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action);
+    void onActionAddError(const QString &packageId, const QByteArray &, const Enums::SupplyChainAction &action,
+                          const QNetworkReply::NetworkError &error);
 
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);

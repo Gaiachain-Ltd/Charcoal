@@ -67,8 +67,8 @@ QModelIndexList AbstractReadModel::find(const Gaia::ModelEntry &entryData)
 
         auto searchIndexes = QModelIndexList{};
         for (auto searchColumn = column + 1; searchColumn < LastColumn && (searchColumn - FirstColumn) < entryData.count(); ++searchColumn) {
-            const auto role = roleShift(column);
-            const auto entryValue = entryData.value(column - FirstColumn);
+            const auto role = roleShift(searchColumn);
+            const auto entryValue = entryData.value(searchColumn - FirstColumn);
             std::copy_if(dataIndexes.constBegin(), dataIndexes.constEnd(), std::back_inserter(searchIndexes),
                          [this, &role, &entryValue](const auto &index) {
                 return (this->data(index, role) == entryValue);

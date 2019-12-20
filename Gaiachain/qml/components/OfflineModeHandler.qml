@@ -26,7 +26,7 @@ QtObject
             }
 
             // is offline added action
-            if (RequestHelper.isNetworkError(code) || RequestHelper.isServerError(code)) {
+            if (RequestHelper.isOfflineError(code)) {
                 return
             }
 

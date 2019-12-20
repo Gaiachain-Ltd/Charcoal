@@ -108,7 +108,7 @@ void DataRequestsManager::processUnusedLotIdsLoaded(const QJsonArray &idsArray)
 void DataRequestsManager::processOfflineActions(const Gaia::ModelData &offlineData)
 {
     for (const auto &modelEntry : offlineData) {
-        Q_ASSERT(modelEntry.size() >= 6);
+        Q_ASSERT(modelEntry.size() >= 7);
 
         const auto packageId = modelEntry.at(0).toString();
         const auto action = modelEntry.at(1).value<Enums::SupplyChainAction>();
@@ -118,10 +118,10 @@ void DataRequestsManager::processOfflineActions(const Gaia::ModelData &offlineDa
 
             emit sendOfflineAction(packageId,
                                    action,
-                                   QGeoCoordinate(modelEntry.at(4).toDouble(),
-                                                  modelEntry.at(5).toDouble()),
+                                   QGeoCoordinate(modelEntry.at(5).toDouble(),
+                                                  modelEntry.at(6).toDouble()),
                                    modelEntry.at(2).toDateTime(),
-                                   modelEntry.at(3).toMap());
+                                   modelEntry.at(4).toMap());
         }
     }
 }
