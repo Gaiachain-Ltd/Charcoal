@@ -81,6 +81,10 @@ ComboBox {
     popup: Popup {
         id: popup
 
+        function footerClicked() {
+            top.footerClicked()
+        }
+
         y: top.height
         width: top.width
 
@@ -117,11 +121,12 @@ ComboBox {
                 visible: footerVisible
                 height: visible ? implicitHeight : Style.none
 
+                bold: true
                 separatorVisible: true
 
                 onClicked: {
-                    popup.parent.footerClicked()
-                    popup.parent.popup.visible = false
+                    popup.footerClicked()
+                    popup.close()
                 }
             }
         }

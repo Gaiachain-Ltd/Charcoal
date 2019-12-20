@@ -99,11 +99,15 @@ GenericComboBox {
                     visible: footerVisible
                     height: visible ? implicitHeight : Style.none
 
+                    bold: true
                     separatorVisible: true
 
                     z: 3    // https://doc.qt.io/qt-5/qml-qtquick-listview.html#stacking-order-in-listview - to be above delegates
 
-                    onClicked: popup.footerClicked()
+                    onClicked: {
+                        popup.footerClicked()
+                        popup.close()
+                    }
                 }
             }
 

@@ -129,6 +129,8 @@ Pages.SupplyChainPage {
     Items.ComboBoxHeader {
         id: lotIdComboBox
 
+        property string addedLotId
+
         Layout.fillWidth: true
 
         headerText: Strings.lotIdTheSackBelongsTo
@@ -139,6 +141,27 @@ Pages.SupplyChainPage {
         footerVisible: true
         footerText: Strings.addLot.toUpperCase()
         onFooterClicked: sessionManager.postUnusedLotId()
+
+        Connections {
+            target: sessionManager
+            onUnusedLotIdCreated: {
+                lotIdComboBox.addedLotId = packageId
+                lotModelUpdate.enabled = true
+            }
+        }
+        Connections {
+            id: lotModelUpdate
+
+            target: unusedLotIdsModel
+            enabled: false
+
+            onModelChanged: {
+                lotIdComboBox.currentIndex = ModelHelper.findRow("packageId", lotIdComboBox.addedLotId, lotIdComboBox.model)
+
+                lotIdComboBox.addedLotId = ""
+                enabled = false
+            }
+        }
     }
 
     Items.InputHeader {
