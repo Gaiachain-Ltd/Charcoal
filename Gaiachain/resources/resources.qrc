@@ -44,7 +44,8 @@
         <file alias="clear">ui/clear-icon.svg</file>
         <file alias="typeManually">ui/button-type-in-manually.svg</file>
         <file alias="enter">ui/button-enter.svg</file>
-        <file alias="delete">ui/delete-icon.svg</file> 
+        <file alias="delete">ui/delete-icon.svg</file>
+        <file alias="warning">ui/warning-icon.svg</file>
         <file alias="gps">ui/GPS.svg</file>
         <file alias="gpsFailed">ui/GPS-FAILED.svg</file>
         <file alias="gpsOk">ui/GPS-OK.svg</file>

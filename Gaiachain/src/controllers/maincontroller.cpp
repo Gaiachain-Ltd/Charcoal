@@ -161,6 +161,8 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 #ifdef Q_OS_ANDROID
     qmlRegisterSingletonType<Android::PermissionsHandler>("com.gaiachain.platforms", 1, 0,
                                                           "AndroidPermissionsHandler", &registerCppOwnershipSingletonType<Android::PermissionsHandler>);
+#else
+    qmlRegisterModule("com.gaiachain.platforms", 1, 0);
 #endif
 
     // add context properties

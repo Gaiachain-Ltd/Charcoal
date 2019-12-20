@@ -39,7 +39,8 @@ SupplyChainPageBase {
         pageManager.backTo(pageManager.homePage())
 
         if (local) {
-            pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.offlineActionAdded, "backgroundColor": Style.warningColor})
+            pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.offlineActionAdded, "backgroundColor": Style.warningColor,
+                                      "iconSource": Style.warningImgUrl, "openedInterval": Style.notificationPopupOpenedLongInterval})
         } else {
             pageManager.openPopup(Enums.Popup.Notification, {"text": Strings.success})
         }
@@ -56,7 +57,7 @@ SupplyChainPageBase {
             errorText = Strings.addActionErrorDuplicated
         }
 
-        pageManager.openPopup(Enums.Popup.Notification, {"text": errorText, "backgroundColor": Style.errorColor})
+        pageManager.openPopup(Enums.Popup.Notification, {"text": errorText, "backgroundColor": Style.errorColor, "openedInterval": Style.notificationPopupOpenedLongInterval})
     }
 
     Connections {

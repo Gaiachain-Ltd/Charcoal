@@ -53,7 +53,7 @@ Popups.TimedPopup {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: top.close()
+            onClicked: top.forceClose()
         }
     }
 }

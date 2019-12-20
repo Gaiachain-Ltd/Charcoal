@@ -161,6 +161,8 @@ QtObject {
     readonly property url typeManuallyImgUrl: "qrc:/ui/typeManually"
     readonly property url enterImgUrl: "qrc:/ui/enter"
 
+    readonly property url warningImgUrl: "qrc:/ui/warning"
+
     readonly property url gpsOkImgUrl: "qrc:/ui/gpsOk"
     readonly property url gpsFailedImgUrl: "qrc:/ui/gpsFailed"
     readonly property url gpsImgUrl: "qrc:/ui/gps"
@@ -191,6 +193,8 @@ QtObject {
     readonly property int requestOverlayInterval: 2000
     readonly property int commentPopupOpenedDefaultInterval: 2000
     readonly property int notificationPopupOpenedDefaultInterval: 2600
+    readonly property int notificationPopupOpenedLongInterval: 5600
+    readonly property int notificationPopupIconHeight: 60
     readonly property int transitionMoveYRange: 100
     readonly property int genericTextAreaHeight: 280
 

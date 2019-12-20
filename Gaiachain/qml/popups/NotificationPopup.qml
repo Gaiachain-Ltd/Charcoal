@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 
 import com.gaiachain.style 1.0
 
@@ -16,22 +17,43 @@ Popups.TimedPopup {
     readonly property int topMarginStart: (parent.height - height - s(Style.hugeMargin) * 6 - s(Style.transitionMoveYRange))
     readonly property int topMarginFinish: (parent.height - height - s(Style.hugeMargin) * 6)
 
+    property alias iconSource: icon.source
+
     openedInterval: Style.notificationPopupOpenedDefaultInterval
 
     topMargin: topMarginStart
     padding: s(Style.hugeMargin)
 
-    contentItem: Items.BasicText {
-        color: Style.textSecondaryColor
-        style: Text.Raised
-        styleColor: Style.textSecondaryColor
-        font {
-            pixelSize: s(Style.popupPixelSize)
-            weight: Font.DemiBold
+    contentItem: ColumnLayout {
+        spacing: (icon.hasImage ? s(Style.tinyMargin) : Style.none)
+
+        Items.SvgImage {
+            id: icon
+
+            readonly property bool hasImage: (status === Image.Ready)
+
+            visible: hasImage
+
+            Layout.preferredHeight: s(Style.notificationPopupIconHeight)
+            Layout.preferredWidth: s(Style.notificationPopupIconHeight)
+            Layout.alignment: Qt.AlignHCenter
         }
 
-        wrapMode: Text.WordWrap
-        text: top.text
+        Items.BasicText {
+            Layout.fillWidth: true
+
+            color: Style.textSecondaryColor
+            style: Text.Raised
+            styleColor: Style.textSecondaryColor
+            font {
+                pixelSize: s(Style.popupPixelSize)
+                weight: Font.DemiBold
+            }
+
+            wrapMode: Text.WordWrap
+            text: top.text
+        }
+
     }
 
     enter: Transition {
@@ -58,6 +80,11 @@ Popups.TimedPopup {
 
     background: Rectangle {
         color: top.backgroundColor
-        radius: top.height/2
+        radius: s(Style.hugeMargin) * 1.5
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: top.forceClose()
+        }
     }
 }
