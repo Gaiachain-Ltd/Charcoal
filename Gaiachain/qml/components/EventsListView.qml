@@ -74,6 +74,7 @@ Item {
                 Items.BasicText {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    Layout.columnSpan: displayDate ? 1 : 2
 
                     horizontalAlignment: Text.AlignLeft
 
