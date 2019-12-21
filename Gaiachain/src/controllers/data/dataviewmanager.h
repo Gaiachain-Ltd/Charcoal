@@ -3,7 +3,6 @@
 
 #include "abstractdatamodelsmanager.h"
 
-#include <QSqlDatabase>
 #include <QTimer>
 
 #include "../../common/enums.h"

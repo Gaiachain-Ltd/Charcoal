@@ -9,14 +9,9 @@ ExistsQueryModel::ExistsQueryModel(QObject *parent)
     : QObject(parent)
 {}
 
-ExistsQueryModel::ExistsQueryModel(QSqlDatabase db, QObject *parent)
-    : QObject(parent), m_db(db)
+ExistsQueryModel::ExistsQueryModel(const QString &dbConnectionName, QObject *parent)
+    : QObject(parent), c_dbConnectionName(dbConnectionName)
 {}
-
-void ExistsQueryModel::setDatabase(QSqlDatabase db)
-{
-    m_db = db;
-}
 
 bool ExistsQueryModel::prepareQuery(const QString &tableName, const QStringList &conditionFields)
 {
@@ -26,7 +21,7 @@ bool ExistsQueryModel::prepareQuery(const QString &tableName, const QStringList 
     m_conditionFields = conditionFields;
     if (conditionFields.isEmpty()) {
         qCWarning(databaseQuery) << "No conditions for exist query";
-        m_query.clear();
+        m_queryStr.clear();
         return false;
     }
 
@@ -37,8 +32,7 @@ bool ExistsQueryModel::prepareQuery(const QString &tableName, const QStringList 
     });
     conditionString = conditionString.left(conditionString.count() - 4);  // " AND"
 
-    m_query = QSqlQuery(m_db);
-    m_query.prepare(ExistsQueryBase.arg(tableName).arg(conditionString));
+    m_queryStr = ExistsQueryBase.arg(tableName).arg(conditionString);
     return true;
 }
 
@@ -53,7 +47,7 @@ bool ExistsQueryModel::exists(const QString &tableName, const QVariantMap &condi
 
 bool ExistsQueryModel::exists(const QVariantList &conditionValues)
 {
-    if (m_query.lastQuery().isEmpty() ||
+    if (m_queryStr.isEmpty() ||
             m_conditionFields.isEmpty()) {
         qCWarning(databaseQuery) << "Exist query wasn't prepared properly";
         return false;
@@ -65,14 +59,16 @@ bool ExistsQueryModel::exists(const QVariantList &conditionValues)
         return false;
     }
 
+    auto query = QSqlQuery(db::Helpers::databaseConnection(c_dbConnectionName));
+    query.prepare(m_queryStr);
     std::for_each(conditionValues.constBegin(), conditionValues.constEnd(),
-                  [this](const auto &conditionValue) { m_query.addBindValue(conditionValue); });
-    db::Helpers::execQuery(m_query);
-    if (db::Helpers::hasError(m_query)) {
+                  [&query](const auto &conditionValue) { query.addBindValue(conditionValue); });
+    db::Helpers::execQuery(query);
+    if (db::Helpers::hasError(query)) {
         return false;
     }
 
-    auto result = m_query.first();
-    m_query.finish();
+    auto result = query.first();
+    query.finish();
     return result;
 }

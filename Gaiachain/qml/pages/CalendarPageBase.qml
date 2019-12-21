@@ -69,7 +69,6 @@ BasePage {
     function getMonthEndDate() { return new Date(currentYear, currentMonth + 1, 0) }
     function getTodayDate() { return new Date(currentYear, currentMonth, currentDay) }
 
-    Component.onCompleted: onDateChanged()
     onCurrentDayChanged: onDateChanged()
     onCurrentMonthChanged: onDateChanged()
     onCurrentYearChanged: onDateChanged()

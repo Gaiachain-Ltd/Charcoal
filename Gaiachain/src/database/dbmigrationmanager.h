@@ -2,7 +2,6 @@
 #define MIGRATIONMANAGER_H
 
 #include <QObject>
-#include <QSqlDatabase>
 #include <QVersionNumber>
 #include <functional>
 
@@ -23,8 +22,8 @@ public:
 
 private:
     const QString c_dbPath;
+    const QString c_dbConnectionName;
 
-    QSqlDatabase m_db;
     QVersionNumber m_dbVersion;
 
     bool dbExist() const;

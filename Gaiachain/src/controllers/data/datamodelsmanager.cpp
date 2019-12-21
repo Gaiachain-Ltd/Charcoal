@@ -6,7 +6,8 @@
 #include "../../common/dataglobals.h"
 
 DataModelsManager::DataModelsManager(QObject *parent)
-    : AbstractDataModelsManager(parent)
+    : AbstractDataModelsManager(parent),
+      m_existsQueryModel(c_dbConnectionName)
 {}
 
 void DataModelsManager::updateThread()
@@ -185,25 +186,23 @@ void DataModelsManager::processUnusedLotIds(const Gaia::ModelData &modelData)
 
 void DataModelsManager::setupModels()
 {
-    m_existsQueryModel.setDatabase(m_db);
-
     // -------------------------------------------------------------
 
     m_producersSourceModel.setSourceModel(new SqlTableModel(sc_databaseTableName.value(ModelType::Producers),
-                                                            m_db, &m_producersSourceModel));
+                                                            c_dbConnectionName, &m_producersSourceModel));
     m_parcelsSourceModel.setSourceModel(new SqlTableModel(sc_databaseTableName.value(ModelType::Parcels),
-                                                          m_db, &m_parcelsSourceModel));
+                                                          c_dbConnectionName, &m_parcelsSourceModel));
     m_companiesSourceModel.setSourceModel(new SqlTableModel(sc_databaseTableName.value(ModelType::Companies),
-                                                            m_db, &m_companiesSourceModel));
+                                                            c_dbConnectionName, &m_companiesSourceModel));
     m_destinationsSourceModel.setSourceModel(new SqlTableModel(sc_databaseTableName.value(ModelType::Destinations),
-                                                               m_db, &m_destinationsSourceModel));
+                                                               c_dbConnectionName, &m_destinationsSourceModel));
 
     m_eventsSourceModel.setSourceModel(new SqlTableModel(sc_databaseTableName.value(ModelType::Events),
-                                                         m_db, &m_eventsSourceModel));
+                                                         c_dbConnectionName, &m_eventsSourceModel));
     m_relationsSourceModel.setSourceModel(new SqlTableModel(sc_databaseTableName.value(ModelType::Relations),
-                                                            m_db, &m_relationsSourceModel));
+                                                            c_dbConnectionName, &m_relationsSourceModel));
     m_unusedLotIdsSourceModel.setSourceModel(new SqlTableModel(sc_databaseTableName.value(ModelType::UnusedIds),
-                                                               m_db, &m_unusedLotIdsSourceModel));
+                                                               c_dbConnectionName, &m_unusedLotIdsSourceModel));
 }
 
 void DataModelsManager::setupUpdateConnections()

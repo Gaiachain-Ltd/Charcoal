@@ -16,7 +16,7 @@ const QMap<AbstractDataModelsManager::ModelType, QLatin1String> AbstractDataMode
 };
 
 AbstractDataModelsManager::AbstractDataModelsManager(QObject *parent)
-    : AbstractManager(parent)
+    : AbstractManager(parent), c_dbConnectionName(metaObject()->className())
 {}
 
 void AbstractDataModelsManager::setupDatabaseModels(const QString &dbPath)
@@ -28,7 +28,7 @@ void AbstractDataModelsManager::setupDatabaseModels(const QString &dbPath)
 
 void AbstractDataModelsManager::setupDatabase(const QString &dbPath)
 {
-    db::Helpers::setupDatabaseConnection(m_db, dbPath, metaObject()->className());
+    db::Helpers::setupDatabaseConnection(dbPath, c_dbConnectionName);
 }
 
 namespace

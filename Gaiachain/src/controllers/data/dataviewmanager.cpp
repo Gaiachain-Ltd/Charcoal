@@ -96,44 +96,44 @@ void DataViewManager::onModelUpdated(const ModelType &type)
 
 void DataViewManager::setupModels()
 {
-    m_producersViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Producers), m_db,
+    m_producersViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Producers), c_dbConnectionName,
                                                           SortNameQuery(SortFilterQuery{}),
                                                           &m_producersViewModel));
-    m_parcelsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Parcels), m_db,
+    m_parcelsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Parcels), c_dbConnectionName,
                                                         &m_producersViewModel));
-    m_cooperativesViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Companies), m_db,
+    m_cooperativesViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Companies), c_dbConnectionName,
                                                              SortNameQuery(CompanyTypeQuery(Enums::CompanyType::Cooperative, SortFilterQuery{})),
                                                              &m_cooperativesViewModel));
-    m_buyersViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Companies), m_db,
+    m_buyersViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Companies), c_dbConnectionName,
                                                        SortNameQuery(CompanyTypeQuery(Enums::CompanyType::Buyer, SortFilterQuery{})),
                                                        &m_buyersViewModel));
-    m_transportersViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Companies), m_db,
+    m_transportersViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Companies), c_dbConnectionName,
                                                              SortNameQuery(CompanyTypeQuery(Enums::CompanyType::Transporter, SortFilterQuery{})),
                                                              &m_transportersViewModel));
-    m_destinationsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Destinations), m_db,
+    m_destinationsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Destinations), c_dbConnectionName,
                                                              SortNameQuery(SortFilterQuery{}),
                                                              &m_destinationsViewModel));
 
-    m_transactionsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+    m_transactionsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), c_dbConnectionName,
                                                              &m_transactionsViewModel));
-    m_calendarMonthViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+    m_calendarMonthViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), c_dbConnectionName,
                                                               &m_calendarMonthViewModel));
-    m_calendarDateViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+    m_calendarDateViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), c_dbConnectionName,
                                                              &m_calendarDateViewModel));
 
-    m_cooperativeEventsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+    m_cooperativeEventsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), c_dbConnectionName,
                                                                   &m_cooperativeEventsViewModel));
-    m_localEventsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+    m_localEventsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), c_dbConnectionName,
                                                             &m_localEventsViewModel));
 
-    m_packageViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), m_db,
+    m_packageViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Events), c_dbConnectionName,
                                                         SortFilterQuery{},
                                                         &m_packageViewModel));
-    m_packageRelationsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Relations), m_db,
+    m_packageRelationsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::Relations), c_dbConnectionName,
                                                                  SortFilterQuery{},
                                                                  &m_packageRelationsViewModel));
 
-    m_unusedLotIdsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::UnusedIds), m_db,
+    m_unusedLotIdsViewModel.setSourceModel(new SqlQueryModel(sc_databaseTableName.value(ModelType::UnusedIds), c_dbConnectionName,
                                                              SortFilterQuery{},
                                                              &m_unusedLotIdsViewModel));
     // -------------------------------------------------------------

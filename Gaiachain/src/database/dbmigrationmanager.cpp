@@ -1,6 +1,7 @@
 #include "dbmigrationmanager.h"
 
 #include <QDebug>
+#include <QSqlDatabase>
 #include <QStandardPaths>
 #include <QFile>
 #include <QFileInfo>
@@ -13,7 +14,7 @@
 using namespace db;
 
 MigrationManager::MigrationManager(const QString &dbPath, QObject *parent)
-    : QObject(parent), c_dbPath(dbPath)
+    : QObject(parent), c_dbPath(dbPath), c_dbConnectionName(metaObject()->className())
 {}
 
 bool MigrationManager::checkAndCreate()
@@ -58,15 +59,14 @@ bool MigrationManager::dbExist() const
 
 bool MigrationManager::openDb()
 {
-    db::Helpers::setupDatabaseConnection(m_db, c_dbPath, metaObject()->className());
-    return m_db.open();
+    return db::Helpers::setupDatabaseConnection(c_dbPath, c_dbConnectionName);
 }
 
 QVersionNumber MigrationManager::getVersionNumber() const
 {
     static const QLatin1String VersionQuery = QLatin1String("SELECT `version` from `Migrations` ORDER BY `id` DESC LIMIT 1");
 
-    auto query = QSqlQuery(m_db);
+    auto query = QSqlQuery(db::Helpers::databaseConnection(c_dbConnectionName));
     query.prepare(VersionQuery);
     Helpers::execQuery(query, true);
     if (!query.first()) {
@@ -79,13 +79,22 @@ QVersionNumber MigrationManager::getVersionNumber() const
 
 bool MigrationManager::updateDb()
 {
+    if (!db::Helpers::hasDatabaseConnection(c_dbConnectionName)) {
+        // we need a separate connection, because we're now in a different thread
+        db::Helpers::setupDatabaseConnection(c_dbPath, c_dbConnectionName);
+    }
+
+    auto db = db::Helpers::databaseConnection(c_dbConnectionName);
+    auto dbOpen = db.isOpen();
+    auto dbName = db.connectionName();
+
     if (m_dbVersion > LATEST_DB_VERSION) {
         // backward
-        return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(), std::bind(Migration::RunBackward, std::placeholders::_1, m_db), false);
+        return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(), std::bind(Migration::RunBackward, std::placeholders::_1, db), false);
     }
 
     // forward
-    return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(), std::bind(Migration::RunForward, std::placeholders::_1, m_db), true);
+    return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(), std::bind(Migration::RunForward, std::placeholders::_1, db), true);
 }
 
 template<typename It>
