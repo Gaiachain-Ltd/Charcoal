@@ -150,6 +150,6 @@ QJsonObject EntityRequest::entityDataObject(const EntityRequest::EntityData &ent
                                          { Tags::longitude, entityData.coordinate.longitude() } } },
         { Tags::timestamp,  static_cast<qint64>(entityData.timestamp.toSecsSinceEpoch()) },
         { Tags::properties, QJsonObject::fromVariantMap(
-                        RequestsHelper::convertProperties(entityData.properties)) }
+                        RequestsHelper::convertPropertiesToRemote(entityData.properties)) }
     };
 }

@@ -6,6 +6,7 @@
 #include "../common/globals.h"
 #include "../common/tags.h"
 #include "../common/types.h"
+#include "packagedataproperties.h"
 
 namespace {
 const QHash<Enums::UserType, QString> UserTypeStrings = {
@@ -34,6 +35,54 @@ const QHash<Enums::SupplyChainAction, QString> SupplyChainActionStrings = {
     { Enums::SupplyChainAction::WarehouseTransport, StaticValues::actionWarehouseTransport },
     { Enums::SupplyChainAction::ExportReception, StaticValues::actionExportReception }
 };
+
+auto PropertiesLocalTypes = QMap<QString, QMetaType::Type>{
+    { PackageDataProperties::ParcelId, QMetaType::Type::ULongLong },
+    { PackageDataProperties::HarvestDate, QMetaType::Type::QDate },
+    { PackageDataProperties::BreakingDate, QMetaType::Type::QDate },
+    { PackageDataProperties::FermentationEndDate, QMetaType::Type::QDate },
+    { PackageDataProperties::EstimatedBeansVolume, QMetaType::Type::QDate },
+    { PackageDataProperties::ReceptionDate, QMetaType::Type::QDate },
+    { PackageDataProperties::TransportDate, QMetaType::Type::QDate },
+    { PackageDataProperties::Buyer, QMetaType::Type::ULongLong },
+    { PackageDataProperties::LotPid, QMetaType::Type::QString },
+    { PackageDataProperties::HarvestWeights, QMetaType::Type::QVariantList },
+    { PackageDataProperties::Pid, QMetaType::Type::QString },
+    { PackageDataProperties::Weight, QMetaType::Type::UInt },
+    { PackageDataProperties::Notes, QMetaType::Type::QString },
+    { PackageDataProperties::TransporterId, QMetaType::Type::ULongLong },
+    { PackageDataProperties::DestinationId, QMetaType::Type::ULongLong }
+};
+
+auto PropertiesRemoteTypes = QMap<QString, QMetaType::Type>{
+    { PackageDataProperties::ParcelId, QMetaType::Type::ULongLong },
+    { PackageDataProperties::HarvestDate, QMetaType::Type::LongLong },
+    { PackageDataProperties::BreakingDate, QMetaType::Type::LongLong },
+    { PackageDataProperties::FermentationEndDate, QMetaType::Type::LongLong },
+    { PackageDataProperties::EstimatedBeansVolume, QMetaType::Type::LongLong },
+    { PackageDataProperties::ReceptionDate, QMetaType::Type::LongLong },
+    { PackageDataProperties::TransportDate, QMetaType::Type::LongLong },
+    { PackageDataProperties::Buyer, QMetaType::Type::ULongLong },
+    { PackageDataProperties::LotPid, QMetaType::Type::QString },
+    { PackageDataProperties::HarvestWeights, QMetaType::Type::QVariantList },
+    { PackageDataProperties::Pid, QMetaType::Type::QString },
+    { PackageDataProperties::Weight, QMetaType::Type::UInt },
+    { PackageDataProperties::Notes, QMetaType::Type::QString },
+    { PackageDataProperties::TransporterId, QMetaType::Type::ULongLong },
+    { PackageDataProperties::DestinationId, QMetaType::Type::ULongLong }
+};
+
+QVariantMap convertProperties(const QVariantMap &properties, const QMap<QString, QMetaType::Type> &conversionDefinition)
+{
+    auto updatedProperties = properties;
+    for (const auto &key : updatedProperties.keys()) {
+        auto &value = updatedProperties[key];
+
+        types::convert(value, conversionDefinition.value(key));
+    }
+    return updatedProperties;
+}
+
 }
 
 RequestsHelper &RequestsHelper::instance()
@@ -151,24 +200,14 @@ QString RequestsHelper::supplyChainActionToString(const Enums::SupplyChainAction
     return SupplyChainActionStrings.value(action);
 }
 
-QVariantMap RequestsHelper::convertProperties(const QVariantMap &properties)
+QVariantMap RequestsHelper::convertPropertiesToRemote(const QVariantMap &properties)
 {
-    static const auto ConversionTypes = QMap<QMetaType::Type, QMetaType::Type>{
-        { QMetaType::QDateTime, QMetaType::LongLong },
-        { QMetaType::QDate, QMetaType::LongLong }
-    };
+    return convertProperties(properties, PropertiesRemoteTypes);
+}
 
-    auto updatedProperties = properties;
-    for (const auto &key : updatedProperties.keys()) {
-        auto &value = updatedProperties[key];
-
-        auto metaType = static_cast<QMetaType::Type>(value.type());
-        if (ConversionTypes.contains(metaType)) {
-            types::convert(value, ConversionTypes.value(metaType));
-        }
-    }
-
-    return updatedProperties;
+QVariantMap RequestsHelper::convertPropertiesToLocal(const QVariantMap &properties)
+{
+    return convertProperties(properties, PropertiesLocalTypes);
 }
 
 RequestsHelper::RequestsHelper()
