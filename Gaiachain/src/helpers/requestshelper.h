@@ -39,7 +39,8 @@ public:
     static Enums::SupplyChainAction supplyChainActionFromString(const QString &text);
     static QString supplyChainActionToString(const Enums::SupplyChainAction &action);
 
-    static QVariantMap convertProperties(const QVariantMap &properties);
+    static QVariantMap convertPropertiesToRemote(const QVariantMap &properties);
+    static QVariantMap convertPropertiesToLocal(const QVariantMap &properties);
 
 private:
     RequestsHelper();
