@@ -1,5 +1,6 @@
 #include "dbmigrations.h"
 
+#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QDateTime>
 

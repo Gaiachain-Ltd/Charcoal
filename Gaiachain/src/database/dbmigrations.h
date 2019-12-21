@@ -1,13 +1,14 @@
 #ifndef MIGRATIONS_H
 #define MIGRATIONS_H
 
-#include <QSqlDatabase>
 #include <QVersionNumber>
 #include <functional>
 #include <QVector>
 
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(databaseMigration)
+
+class QSqlDatabase;
 
 namespace db {
 

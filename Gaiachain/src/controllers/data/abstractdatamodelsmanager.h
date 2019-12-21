@@ -3,8 +3,6 @@
 
 #include "../abstractmanager.h"
 
-#include <QSqlDatabase>
-
 class AbstractDataModelsManager : public AbstractManager
 {
     Q_OBJECT
@@ -25,8 +23,7 @@ public:
 
 protected:
     static const QMap<ModelType, QLatin1String> sc_databaseTableName;
-
-    QSqlDatabase m_db;
+    const QString c_dbConnectionName;
 
     void setupDatabase(const QString &dbPath);
     virtual void setupModels() = 0;

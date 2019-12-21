@@ -36,8 +36,6 @@ private slots:
     void onRowsInserted(const QModelIndex &parent, int first, int last);
     void onRowsToBeRemoved(const QModelIndex &parent, int first, int last);
     void onModelReset();
-
-    void onModelUpdate();
 };
 
 #endif // PACKAGETYPEEVENTSPROXYMODEL_H
