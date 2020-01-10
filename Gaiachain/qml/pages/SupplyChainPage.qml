@@ -22,7 +22,7 @@ SupplyChainPageBase {
     proceedButtonEnabled: validPageData && gpsSource.validCoordinate
 
     Component.onCompleted:  {
-        if (AndroidPermissionsHandler) {
+        if (typeof(AndroidPermissionsHandler) !== "undefined") {
             AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
         }
     }
