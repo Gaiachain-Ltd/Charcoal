@@ -55,7 +55,7 @@ Pages.SupplyChainPage {
             var repeaterItem = harvestPidsRepeater.itemAt(i)
             summary.push(createSummaryItem(i === 0 ? Strings.harvestId
                                                    : Strings.empty,
-                                           repeaterItem.inputText, repeaterItem.suffixText))
+                                           repeaterItem.inputText, "", repeaterItem.suffixText))
         }
 
         return summary

@@ -24,7 +24,7 @@ BasePage {
     property int backSupplyChainPage: Enums.Page.InvalidPage
 
     Component.onCompleted: {
-        if (AndroidPermissionsHandler) {
+        if (typeof(AndroidPermissionsHandler) !== "undefined") {
             AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Camera)
         }
         pageManager.openPopup(Enums.Popup.Text, { "text": top.popupText })

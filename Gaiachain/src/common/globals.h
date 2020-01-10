@@ -6,9 +6,9 @@
 #include <QLoggingCategory>
 
 #ifdef RELEASE_SERVER
-    #define SERVER_ADDRESS QStringLiteral("https://api.gaiachain.io")
+    #define SERVER_ADDRESS QStringLiteral("https://live.gaiachain.io")
 #else
-    #define SERVER_ADDRESS QStringLiteral("https://api-beta.gaiachain.io")
+    #define SERVER_ADDRESS QStringLiteral("https://live-beta.gaiachain.io")
 #endif
 
 #define QR_CODE_LENGTH 12
