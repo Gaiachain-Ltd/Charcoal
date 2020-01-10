@@ -3,8 +3,6 @@
 
 #include "abstractdatamodelsmanager.h"
 
-#include <QSqlDatabase>
-
 #include "../../common/enums.h"
 
 #include "../../models/existsquerymodel.h"

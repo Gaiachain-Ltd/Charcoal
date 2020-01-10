@@ -29,7 +29,7 @@ Components.PackageDataDetails {
         const data = [
            { "headerValue": Strings.organicCocoaTransporter,    "inputValue": Helper.minusIfNotDefined(transporterName) },
            { "headerValue": Strings.destination,                "inputValue": Helper.minusIfNotDefined(destinationName) },
-           { "headerValue": Strings.transportDate,              "inputValue": Helper.minusIfNotTimestamp(packageData.properties[PackageDataProperties.TransportDate]) }
+           { "headerValue": Strings.transportDate,              "inputValue": Helper.minusIfNotDate(packageData.properties[PackageDataProperties.TransportDate]) }
        ]
 
         detailsModel.clear()

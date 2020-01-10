@@ -38,6 +38,17 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
           value.setValue(QDateTime::fromSecsSinceEpoch(ll).date());
       } },
 
+    { { QMetaType::QDate, QMetaType::Double },
+      [](QVariant &value) {
+          auto dt = QDateTime(value.toDate());
+          value.setValue(static_cast<double>(dt.toSecsSinceEpoch()));
+      } },
+    { { QMetaType::Double, QMetaType::QDate },
+      [](QVariant &value) {
+          auto d = value.toDouble();
+          value.setValue(QDateTime::fromSecsSinceEpoch(static_cast<long long>(d)).date());
+      } },
+
     { { QMetaType::QStringList, QMetaType::QString },
       [](QVariant &value) {
           auto sl = value.toStringList();

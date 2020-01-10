@@ -41,10 +41,6 @@ QtObject {
         return date ? formatDate(date) : Strings.minus
     }
 
-    function minusIfNotTimestamp(timestamp) {
-        return timestamp ? formatDate(timestamp * 1000) : Strings.minus
-    }
-
     function getMonthName(month) {
         switch(month) {
         case Calendar.January:return Strings.january

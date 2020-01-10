@@ -10,9 +10,7 @@ class ExistsQueryModel : public QObject
     Q_OBJECT
 public:
     explicit ExistsQueryModel(QObject *parent = nullptr);
-    ExistsQueryModel(QSqlDatabase db, QObject *parent = nullptr);
-
-    void setDatabase(QSqlDatabase db);
+    ExistsQueryModel(const QString &dbConnectionName, QObject *parent = nullptr);
 
     bool prepareQuery(const QString &tableName, const QStringList &conditionFields);
 
@@ -20,10 +18,10 @@ public:
     bool exists(const QVariantList &conditionValues);
 
 private:
-    QSqlDatabase m_db;
+    const QString c_dbConnectionName;
 
+    QString m_queryStr;
     QStringList m_conditionFields;
-    QSqlQuery m_query;
 };
 
 #endif // EXISTSQUERYMODEL_H

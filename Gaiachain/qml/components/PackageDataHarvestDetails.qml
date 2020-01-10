@@ -32,8 +32,9 @@ Components.PackageDataDetails {
            { "headerValue": Strings.producerIdNumber,     "inputValue": Helper.minusIfNotDefined(producerData[1]) },
            { "headerValue": Strings.village,              "inputValue": Helper.minusIfNotDefined(producerData[2]) },
            { "headerValue": Strings.parcelCode,           "inputValue": Helper.minusIfNotDefined(parcelData[0]) },
-           { "headerValue": Strings.harvestDate,          "inputValue": Helper.minusIfNotTimestamp(packageData.properties[PackageDataProperties.HarvestDate]) },
-           { "headerValue": Strings.breakingDate,         "inputValue": Helper.minusIfNotTimestamp(packageData.properties[PackageDataProperties.BreakingDate]) },
+           { "headerValue": Strings.harvestDate,          "inputValue": Helper.minusIfNotDate(packageData.properties[PackageDataProperties.HarvestDate]) },
+           { "headerValue": Strings.breakingDate,         "inputValue": Helper.minusIfNotDate(packageData.properties[PackageDataProperties.BreakingDate]) },
+           { "headerValue": Strings.endFermentationDate,  "inputValue": Helper.minusIfNotDate(packageData.properties[PackageDataProperties.FermentationEndDate]) },
            { "headerValue": Strings.estimatedBeansVolume, "inputValue": Strings.kg.arg(Helper.minusIfNotDefinedOrZero(packageData.properties[PackageDataProperties.EstimatedBeansVolume])) }
        ]
 

@@ -1,18 +1,19 @@
 #ifndef DBHELPERS_H
 #define DBHELPERS_H
 
-#include "dbmigrations.h"
-
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(databaseQuery)
 
+class QSqlDatabase;
 class QSqlQuery;
 
 namespace db {
 class Helpers
 {
 public:
-    static void setupDatabaseConnection(QSqlDatabase &db, const QString &dbPath, const QString &connectionName);
+    static bool setupDatabaseConnection(const QString &dbPath, const QString &connectionName);
+    static bool hasDatabaseConnection(const QString &connectionName);
+    static QSqlDatabase databaseConnection(const QString &connectionName);
 
     static bool hasError(const QSqlQuery &query);
 

@@ -1,10 +1,12 @@
 #include "sqltablemodel.h"
 
-SqlTableModel::SqlTableModel(const QLatin1String &tableName, QSqlDatabase db, QObject *parent)
-    : QSqlTableModel(parent, db)
+#include "../database/dbhelpers.h"
+
+SqlTableModel::SqlTableModel(const QLatin1String &tableName, const QString &dbConnectionName, QObject *parent)
+    : QSqlTableModel(parent, db::Helpers::databaseConnection(dbConnectionName))
 {
     setTable(tableName);
-    setEditStrategy(QSqlTableModel::OnRowChange);
+    setEditStrategy(QSqlTableModel::OnManualSubmit);
 
     select();
 }

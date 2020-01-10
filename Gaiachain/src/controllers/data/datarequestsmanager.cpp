@@ -7,6 +7,7 @@
 
 #include "../../helpers/requestshelper.h"
 #include "../../common/tags.h"
+#include "../../common/types.h"
 #include "../../common/dataglobals.h"
 #include "../../helpers/packagedataproperties.h"
 
@@ -235,7 +236,8 @@ Gaia::ModelEntry DataRequestsManager::processEvent(const QJsonValue &value)
 
     const auto date = QDateTime::fromSecsSinceEpoch(
                 RequestsHelper::checkAndValue(object, Tags::timestamp).toVariant().value<qint64>());
-    const auto properties = RequestsHelper::checkAndValue(object, Tags::properties).toObject().toVariantMap();
+    const auto properties = RequestsHelper::convertPropertiesToLocal(
+                RequestsHelper::checkAndValue(object, Tags::properties).toObject().toVariantMap());
 
     const auto userObj = RequestsHelper::checkAndValue(object, Tags::user).toObject();
     const auto companyObj = RequestsHelper::checkAndValue(userObj, Tags::company).toObject();

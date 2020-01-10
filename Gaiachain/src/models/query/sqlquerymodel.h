@@ -8,16 +8,17 @@
 #include <QSqlError>
 
 #include "isortfilterquery.h"
+#include "../../database/dbhelpers.h"
 
 class SqlQueryModel : public QSqlQueryModel
 {
     Q_OBJECT
 public:
-    SqlQueryModel(const QLatin1String &tableName, QSqlDatabase db, QObject *parent = nullptr);
+    SqlQueryModel(const QLatin1String &tableName, const QString &dbConnectionName, QObject *parent = nullptr);
 
     template <typename SFQ, typename = std::enable_if_t<std::is_base_of<ISortFilterQuery, SFQ>::value>>
-    SqlQueryModel(const QLatin1String &tableName, QSqlDatabase db, const SFQ &query, QObject *parent = nullptr)
-        : QSqlQueryModel(parent), m_db(db), m_tableName(tableName)
+    SqlQueryModel(const QLatin1String &tableName, const QString &dbConnectionName, const SFQ &query, QObject *parent = nullptr)
+        : QSqlQueryModel(parent), c_dbConnectionName(dbConnectionName), m_tableName(tableName)
     {
         setSortFilterQuery(query);
     }
@@ -26,14 +27,10 @@ public:
     void setSortFilterQuery(const SFQ &queryData)
     {
         static const auto SelectQuery = QString{"SELECT * FROM `%1` %2;"};
-        auto [ queryFilterStr, bindValues ] = queryData.resolve();
-        auto queryStr = SelectQuery.arg(m_tableName).arg(queryFilterStr);
+        auto[ queryFilterStr, bindValues ] = queryData.resolve();
 
-        m_dbQuery = QSqlQuery(m_db);
-        m_dbQuery.prepare(queryStr);
-        for (const auto &bindValue : bindValues) {
-            m_dbQuery.addBindValue(bindValue);
-        }
+        m_queryStr = SelectQuery.arg(m_tableName).arg(queryFilterStr);
+        m_bindValues = bindValues;
 
         select();
     }
@@ -41,11 +38,12 @@ public:
     void select();
 
 protected:
-    QSqlDatabase m_db;
-    QSqlQuery m_dbQuery;
+    const QString c_dbConnectionName;
 
     QString m_tableName;
 
+    QString m_queryStr;
+    QVariantList m_bindValues;
 };
 
 #endif // SQLQUERYMODEL_H

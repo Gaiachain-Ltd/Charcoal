@@ -106,6 +106,10 @@ void AbstractModel::appendData(const Gaia::ModelData &modelData)
             qCWarning(dataModels) << "Error while inserting data:" << m_writableModel->lastError().text();
         }
     }
+
+    if (!m_writableModel->submitAll()) {
+        qCWarning(dataModels) << "Error while subbmitting data:" << m_writableModel->lastError().text();
+    }
 }
 
 void AbstractModel::updateData(const Gaia::ModelEntry &searchEntryData, const Gaia::ModelEntryInfo &updateEntryData)
@@ -119,7 +123,10 @@ void AbstractModel::updateData(const Gaia::ModelEntry &searchEntryData, const Ga
         for (const auto &role : updateEntryData.keys()) {
             setData(dataIndex, updateEntryData.value(role), role);
         }
-        submit();
+    }
+
+    if (!m_writableModel->submitAll()) {
+        qCWarning(dataModels) << "Error while subbmitting data:" << m_writableModel->lastError().text();
     }
 }
 
@@ -132,6 +139,10 @@ void AbstractModel::removeData(const Gaia::ModelEntry &entryData)
 
     for (const auto &dataIndex : find(entryData)) {
         removeRow(dataIndex.row());
+    }
+
+    if (!m_writableModel->submitAll()) {
+        qCWarning(dataModels) << "Error while subbmitting data:" << m_writableModel->lastError().text();
     }
 }
 

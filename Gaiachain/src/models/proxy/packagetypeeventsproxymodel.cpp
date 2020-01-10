@@ -162,44 +162,4 @@ void PackageTypeEventsProxyModel::onModelReset()
     for (const auto &date : prevDatesPackageTypeEvents.keys()) {
         emit datePackageTypesChanged(date);
     }
-
-    onModelUpdate();
 }
-
-void PackageTypeEventsProxyModel::onModelUpdate()
-{
-    auto packageTypesChanged = QSet<Enums::PackageType>{};
-    auto datesChanged = QSet<QDate>{};
-
-    for (auto row = 0; row < rowCount(); ++row) {
-        auto rowIndex = index(row, 0);
-
-        auto eventDate = data(rowIndex, EventModel::Timestamp).toDateTime().date();
-        auto action = data(rowIndex, EventModel::Action).value<Enums::SupplyChainAction>();
-        auto packageType = DataGlobals::packageType(action);
-        if (packageType == Enums::PackageType::Unknown) {
-            qCWarning(dataModels) << "Unknown package type for action:" << action;
-            continue;
-        }
-
-        // add package type event
-        m_packageTypeEvents.insert(packageType, m_packageTypeEvents.value(packageType, 0) + 1);
-
-        // add date package type event
-        auto &datePackageTypeEvents = m_datesPackageTypeEvents[eventDate];
-        datePackageTypeEvents.insert(packageType, datePackageTypeEvents.value(packageType, 0) + 1);
-
-        packageTypesChanged.insert(packageType);
-        if (datePackageTypeEvents.value(packageType) == 1) {   // first event on the date
-            datesChanged.insert(eventDate);
-        }
-    }
-
-    for (const auto &packageType : qAsConst(packageTypesChanged)) {
-        emit packageTypeEventsChanged(packageType);
-    }
-    for (const auto &date : qAsConst(datesChanged)) {
-        emit datePackageTypesChanged(date);
-    }
-}
-
