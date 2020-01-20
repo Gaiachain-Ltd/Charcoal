@@ -11,7 +11,7 @@ LocalViewModel::LocalViewModel(QObject *parent)
 void LocalViewModel::updateFilterQuery()
 {
     if (!m_queryModel.isNull()) {
-        auto baseQuery = LocalEventsQuery(SortTimestampQuery(SortFilterQuery()));
+        auto baseQuery = LocalEventsQuery(SortTimestampQuery(SortFilterQuery(), Qt::AscendingOrder));
         if (m_cooperativeOnly) {
             m_queryModel->setSortFilterQuery(CooperativeIdQuery(m_cooperativeId, baseQuery));
         } else {

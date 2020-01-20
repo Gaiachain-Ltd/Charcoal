@@ -8,22 +8,24 @@ template <typename SFQ>
 class SortTimestampQuery final : public AbstractSortFilterQueryExtension<SFQ>
 {
 public:
-    SortTimestampQuery(SFQ &&baseQuery)
-        : AbstractSortFilterQueryExtension<SFQ>(baseQuery)
+    SortTimestampQuery(SFQ &&baseQuery, Qt::SortOrder order = Qt::DescendingOrder)
+        : AbstractSortFilterQueryExtension<SFQ>(baseQuery), m_order(order)
     {
         prepareSortFilter();
     }
 
-    SortTimestampQuery(const SFQ &baseQuery)
-        : AbstractSortFilterQueryExtension<SFQ>(baseQuery)
+    SortTimestampQuery(const SFQ &baseQuery, Qt::SortOrder order = Qt::DescendingOrder)
+        : AbstractSortFilterQueryExtension<SFQ>(baseQuery), m_order(order)
     {
         prepareSortFilter();
     }
 
 protected:
+    Qt::SortOrder m_order = Qt::DescendingOrder;
+
     void prepareSortFilter() override
     {
-        this->addSort({ EventModel::columnName(EventModel::Columns::Timestamp), Qt::DescendingOrder });
+        this->addSort({ EventModel::columnName(EventModel::Columns::Timestamp), m_order });
     }
 };
 
