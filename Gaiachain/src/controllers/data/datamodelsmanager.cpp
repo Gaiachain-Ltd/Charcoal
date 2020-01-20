@@ -160,6 +160,14 @@ void DataModelsManager::processEntities(const Gaia::ModelData &modelData)
     missingEvents.erase(std::remove_if(missingEvents.begin(), missingEvents.end(), &DataModelsManager::isInvalidAction),
                         missingEvents.end());
 
+    // remove duplicates | TODO: find a better solution or at least create a function
+    std::sort(missingEvents.begin(), missingEvents.end());
+    missingEvents.erase(std::unique(missingEvents.begin(), missingEvents.end(),
+                                    [](const auto &left, const auto &right) {
+        Q_ASSERT (left.size() >= 2 && right.size() >=2);
+        return (left.at(0) == right.at(0)) && (left.at(1) == right.at(1));
+    }), missingEvents.end());
+
     removeExistingEvents(missingEvents);
     m_eventsSourceModel.appendData(missingEvents);
 }
@@ -170,6 +178,11 @@ void DataModelsManager::processRelations(const Gaia::ModelData &modelData)
 
     auto missingRelations = modelData;
     removeExistingRelations(missingRelations);
+
+    // remove duplicates | TODO: find a better solution or at least create a function
+    std::sort(missingRelations.begin(), missingRelations.end());
+    missingRelations.erase(std::unique(missingRelations.begin(), missingRelations.end()), missingRelations.end());
+
     m_relationsSourceModel.appendData(missingRelations);
 }
 
