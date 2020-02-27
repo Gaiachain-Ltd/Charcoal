@@ -107,7 +107,11 @@ public:
             return before;
         });
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
         return QList<Enum>(list.begin(), list.end());
+#else
+        return QList<Enum>(list);
+#endif
     }
 
 private:

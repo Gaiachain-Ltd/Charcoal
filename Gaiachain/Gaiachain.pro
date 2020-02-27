@@ -39,7 +39,6 @@ include($$QZXING_PATH/QZXing.pri)
 # https://www.kdab.com/uncovering-32-qt-best-practices-compile-time-clazy/
 # !!!
 DEFINES *= QT_USE_QSTRINGBUILDER
-QMAKE_CXXFLAGS += -Wno-deprecated-copy # because of QTBUG-75210
 
 msvc* {
     QMAKE_CXXFLAGS += /WX

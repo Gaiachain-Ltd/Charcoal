@@ -504,8 +504,11 @@ QVariantList FakeDataPopulator::getDestinations() const
 QList<QString> FakeDataPopulator::sortedLogins()
 {
     auto logins = CommonDummyData::usersData().keys();
-    qSort(logins.begin(), logins.end(),
-          [](const QString &l, const QString &r) { return CommonDummyData::usersData().value(l) < CommonDummyData::usersData().value(r); });
+    std::sort(logins.begin(), logins.end(),
+          [](const QString &l, const QString &r) {
+                  return CommonDummyData::usersData().value(l)
+                      < CommonDummyData::usersData().value(r);
+              });
 
     return logins;
 }
@@ -579,7 +582,7 @@ bool FakeDataPopulator::isNextPackageAction(const QString &packageId, const Enum
         return (action == DataGlobals::availableActions().constFirst());
     }
 
-    qSort(actionsForPackage.begin(), actionsForPackage.end(),
+    std::sort(actionsForPackage.begin(), actionsForPackage.end(),
           [](const QVariantMap &left, const QVariantMap &right) {
         auto leftAction = RequestsHelper::supplyChainActionFromString(left.value(Tags::action).toString());
         auto rightAction = RequestsHelper::supplyChainActionFromString(right.value(Tags::action).toString());

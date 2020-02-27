@@ -25,6 +25,8 @@
 #include <zxing/ReaderException.h>
 #include <zxing/qrcode/Version.h>
 #include <sstream>
+#include <memory>
+#include <algorithm>
 
 using zxing::qrcode::Mode;
 using std::ostringstream;
@@ -120,4 +122,19 @@ bool Mode::operator==(const Mode& other)
 bool Mode::operator!=(const zxing::qrcode::Mode &other)
 {
     return !(operator==(other));
+}
+
+zxing::qrcode::Mode &Mode::operator=(zxing::qrcode::Mode other)
+{
+    std::cout << "copy assignment of A\n";
+    std::swap(static_cast<Counted&>(*this), static_cast<Counted&>(other));
+    std::swap(characterCountBitsForVersions0To9_,
+              other.characterCountBitsForVersions0To9_);
+    std::swap(characterCountBitsForVersions10To26_,
+              other.characterCountBitsForVersions10To26_);
+    std::swap(characterCountBitsForVersions27AndHigher_,
+              other.characterCountBitsForVersions27AndHigher_);
+    std::swap(bits_, other.bits_);
+    std::swap(name_, other.name_);
+    return *this;
 }
