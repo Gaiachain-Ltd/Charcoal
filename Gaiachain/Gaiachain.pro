@@ -41,6 +41,25 @@ include($$QZXING_PATH/QZXing.pri)
 DEFINES *= QT_USE_QSTRINGBUILDER
 QMAKE_CXXFLAGS += -Wno-deprecated-copy # because of QTBUG-75210
 
+msvc* {
+    QMAKE_CXXFLAGS += /WX
+
+    lto {
+        QMAKE_CXXFLAGS += /GL
+        QMAKE_LFLAGS += /LTCG
+    }
+} else {
+    QMAKE_CXXFLAGS += -Werror
+    # issue with application/x-sharedlib vs application/x-executable, without it
+    # sharedlib is produced
+    QMAKE_LFLAGS += -no-pie
+
+    lto {
+        QMAKE_CXXFLAGS += -flto
+        QMAKE_LFLAGS += -flto
+    }
+}
+
 TEMPLATE = app
 CONFIG += c++17
 TARGET = Gaiachain

@@ -106,7 +106,8 @@ public:
             before = static_cast<Enum>(static_cast<int>(before) + 1);
             return before;
         });
-        return QList<Enum>::fromStdList(list);
+
+        return QList<Enum>(list.begin(), list.end());
     }
 
 private:

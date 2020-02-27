@@ -3,7 +3,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QThread>
-#include <QTime>
+#include <QElapsedTimer>
 
 #if QT_VERSION < 0x050000
     #include <QGraphicsObject>
@@ -33,14 +33,17 @@ QImage ImageHandler::extractQImage(QObject *imageObj, int offsetX, int offsetY, 
         return QImage();
     }
 
-    QTime timer;
+    QElapsedTimer timer;
     timer.start();
+
     QSharedPointer<QQuickItemGrabResult> result = item->grabToImage();
     pendingGrabbersLocker.lockForWrite();
     pendingGrabbers << result.data();
     pendingGrabbersLocker.unlock();
 
-    connect(result.data(), &QQuickItemGrabResult::ready, this, &ImageHandler::imageGrabberReady);
+    connect(result.data(), &QQuickItemGrabResult::ready,
+            this, &ImageHandler::imageGrabberReady);
+
     while (timer.elapsed() < 1000) {
         pendingGrabbersLocker.lockForRead();
         if (!pendingGrabbers.contains(result.data())) {

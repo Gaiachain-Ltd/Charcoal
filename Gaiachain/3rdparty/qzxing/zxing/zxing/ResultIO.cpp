@@ -25,10 +25,10 @@ using zxing::Result;
 using std::ostream;
 
 ostream& zxing::operator<<(ostream &out, Result& result) {
-  if (result.text_ != 0) {
-    out << result.text_->getText();
+  if (result.getText() != 0) {
+    out << result.getText()->getText();
   } else {
-    out << "[" << result.rawBytes_->size() << " bytes]";
+    out << "[" << result.getRawBytes()->size() << " bytes]";
   }
   return out;
 }

@@ -50,9 +50,8 @@ public:
   ArrayRef< Ref<ResultPoint> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;
   std::string getCharSet() const;
-
-  friend std::ostream& operator<<(std::ostream &out, Result& result);
 };
 
+std::ostream& operator<<(std::ostream &out, Result& result);
 }
 #endif // ZXING_RESULT_H
