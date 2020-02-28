@@ -3,7 +3,7 @@
 namespace zxing {
 
 EncodeHint::EncodeHint() :
-    errorCorrectionLevel_(NULL), characterSet_(""), margin_(0)
+    errorCorrectionLevel_(NULL), characterSet_("")//, margin_(0)
 {}
 
 }

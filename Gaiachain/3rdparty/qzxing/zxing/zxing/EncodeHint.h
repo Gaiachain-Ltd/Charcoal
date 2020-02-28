@@ -28,7 +28,7 @@ private:
    * by format; for example it controls margin before and after the barcode horizontally for
    * most 1D formats. (Type {@link Integer}).
    */
-    int margin_;
+    //int margin_;
 
 public:
     EncodeHint();
