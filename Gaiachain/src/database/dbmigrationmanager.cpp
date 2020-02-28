@@ -85,16 +85,20 @@ bool MigrationManager::updateDb()
     }
 
     auto db = db::Helpers::databaseConnection(c_dbConnectionName);
-    auto dbOpen = db.isOpen();
+    //auto dbOpen = db.isOpen();
     auto dbName = db.connectionName();
 
     if (m_dbVersion > LATEST_DB_VERSION) {
         // backward
-        return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(), std::bind(Migration::RunBackward, std::placeholders::_1, db), false);
+        return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(),
+                               std::bind(Migration::RunBackward,
+                                         std::placeholders::_1, db), false);
     }
 
     // forward
-    return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(), std::bind(Migration::RunForward, std::placeholders::_1, db), true);
+    return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(),
+                           std::bind(Migration::RunForward,
+                                     std::placeholders::_1, db), true);
 }
 
 template<typename It>

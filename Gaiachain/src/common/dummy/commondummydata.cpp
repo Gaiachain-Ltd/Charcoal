@@ -32,8 +32,10 @@ QString CommonDummyData::commonPassword()
 QList<QString> CommonDummyData::sortedLogins()
 {
     auto logins = UsersData.keys();
-    qSort(logins.begin(), logins.end(),
-          [](const QString &l, const QString &r) { return UsersData.value(l) < UsersData.value(r); });
+    std::sort(logins.begin(), logins.end(),
+          [](const QString &l, const QString &r) {
+                  return UsersData.value(l) < UsersData.value(r);
+              });
 
     return logins;
 }

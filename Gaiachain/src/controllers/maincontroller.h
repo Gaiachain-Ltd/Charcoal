@@ -6,11 +6,7 @@
 #include "usermanager.h"
 #include "data/datamanager.h"
 
-#ifndef FAKE_DATA
 #include "session/sessionmanager.h"
-#else
-#include "session/dummy/fakesessionmanager.h"
-#endif
 
 class MainController : public AbstractManager
 {
@@ -31,12 +27,7 @@ private:
 
     DatabaseManager m_dbManager;
     DataManager m_dataManager;
-
-#ifndef FAKE_DATA
     SessionManager m_sessionManager;
-#else
-    FakeSessionManager m_sessionManager;
-#endif
 
     void setupQZXing(QQmlApplicationEngine &engine);
 };

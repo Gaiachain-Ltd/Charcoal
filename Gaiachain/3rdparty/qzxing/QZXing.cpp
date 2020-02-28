@@ -7,7 +7,8 @@
 #include <zxing/DecodeHints.h>
 #include "CameraImageWrapper.h"
 #include "ImageHandler.h"
-#include <QTime>
+
+#include <QElapsedTimer>
 #include <QUrl>
 #include <QFileInfo>
 #include <zxing/qrcode/encoder/Encoder.h>
@@ -319,7 +320,7 @@ QRectF getTagRect(const ArrayRef<Ref<ResultPoint> > &resultPoints, const Ref<Bit
 
 QString QZXing::decodeImage(const QImage &image, int maxWidth, int maxHeight, bool smoothTransformation)
 {
-    QTime t;
+    QElapsedTimer t;
     t.start();
     processingTime = -1;
     Ref<Result> res;

@@ -60,6 +60,7 @@ public:
 
   bool operator==(const Mode& other);
   bool operator!=(const Mode& other);
+  Mode &operator=(const Mode &other) = default;
 
   std::string getName() const {
       if(name_ == "")

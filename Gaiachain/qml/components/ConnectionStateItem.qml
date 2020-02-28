@@ -57,7 +57,7 @@ Item {
 
             number: localEventsModel.size
 
-            source: Utility.fakeData() ? Style.dummyTestIconUrl : Style.userImgUrl
+            source: Style.userImgUrl
             palette.button: top.currentColor
 
             disabledColorTint: Style.blank

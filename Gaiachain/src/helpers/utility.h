@@ -43,7 +43,6 @@ public:
     Q_INVOKABLE QString formatRawId(QString id) const;
 
     Q_INVOKABLE bool useCombobox() const;
-    Q_INVOKABLE bool fakeData() const;
 
     template <typename C, std::enable_if_t<is_qt_array_type<C>::value, int> = 0>
     static QVariantList toVariantList(const C &arrayType, QMetaType::Type converToType = QMetaType::Void)
@@ -106,7 +105,12 @@ public:
             before = static_cast<Enum>(static_cast<int>(before) + 1);
             return before;
         });
-        return QList<Enum>::fromStdList(list);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+        return QList<Enum>(list.begin(), list.end());
+#else
+        return QList<Enum>(list);
+#endif
     }
 
 private:

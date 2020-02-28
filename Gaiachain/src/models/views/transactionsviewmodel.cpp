@@ -6,7 +6,15 @@
 #include "../query/idkeywordquery.h"
 
 TransactionsViewModel::TransactionsViewModel(QObject *parent)
-    : CooperativeViewModel(parent), m_activePackageTypes(DataGlobals::availablePackageTypes().toSet())
+    : CooperativeViewModel(parent),
+      m_activePackageTypes(
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+          DataGlobals::availablePackageTypes().begin(),
+          DataGlobals::availablePackageTypes().end()
+#else
+          DataGlobals::availablePackageTypes().toSet()
+#endif
+          )
 {}
 
 void TransactionsViewModel::clear()
@@ -14,7 +22,16 @@ void TransactionsViewModel::clear()
     auto activePackageTypes = m_activePackageTypes;
 
     m_keyword.clear();
-    m_activePackageTypes = DataGlobals::availablePackageTypes().toSet();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    m_activePackageTypes = QSet<Enums::PackageType>(
+        DataGlobals::availablePackageTypes().begin(),
+        DataGlobals::availablePackageTypes().end());
+#else
+    m_activePackageTypes = QSet<Enums::PackageType>(
+        DataGlobals::availablePackageTypes().toSet());
+#endif
+
     m_cooperativeOnly = true;
 
     activePackageTypes = m_activePackageTypes - activePackageTypes;

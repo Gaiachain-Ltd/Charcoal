@@ -13,10 +13,6 @@ use_combobox {
     DEFINES+=USE_COMBOBOX
 }
 
-fake_data {
-    DEFINES+=FAKE_DATA
-}
-
 release_server {
     DEFINES+=RELEASE_SERVER
 }
@@ -39,7 +35,27 @@ include($$QZXING_PATH/QZXing.pri)
 # https://www.kdab.com/uncovering-32-qt-best-practices-compile-time-clazy/
 # !!!
 DEFINES *= QT_USE_QSTRINGBUILDER
-QMAKE_CXXFLAGS += -Wno-deprecated-copy # because of QTBUG-75210
+
+msvc* {
+    QMAKE_CXXFLAGS += /WX
+
+    lto {
+        QMAKE_CXXFLAGS += /GL
+        QMAKE_LFLAGS += /LTCG
+    }
+} else {
+    QMAKE_CXXFLAGS += -Werror
+    # issue with application/x-sharedlib vs application/x-executable, without it
+    # sharedlib is produced
+    !android{
+        QMAKE_LFLAGS += -no-pie
+    }
+
+    lto {
+        QMAKE_CXXFLAGS += -flto
+        QMAKE_LFLAGS += -flto
+    }
+}
 
 TEMPLATE = app
 CONFIG += c++17
@@ -200,20 +216,6 @@ OTHER_FILES += \
     ../.gitignore \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
-
-fake_data {
-    HEADERS += \
-        src/controllers/session/dummy/fakeserver.h \
-        src/controllers/session/dummy/fakeserverstate.h \
-        src/controllers/session/dummy/fakesessionmanager.h \
-        src/controllers/session/dummy/fakedatapopulator.h
-
-    SOURCES += \
-        src/controllers/session/dummy/fakeserver.cpp \
-        src/controllers/session/dummy/fakeserverstate.cpp \
-        src/controllers/session/dummy/fakesessionmanager.cpp \
-        src/controllers/session/dummy/fakedatapopulator.cpp
-}
 
 INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
 

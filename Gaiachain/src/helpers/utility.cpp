@@ -129,12 +129,3 @@ bool Utility::useCombobox() const
     return false;
 #endif
 }
-
-bool Utility::fakeData() const
-{
-#ifdef FAKE_DATA
-    return true;
-#else
-    return false;
-#endif
-}
