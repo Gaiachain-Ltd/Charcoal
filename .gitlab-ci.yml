@@ -5,7 +5,7 @@ stages:
 
 #Global variables
 variables:
-    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.14.1/android_armv7"
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.14.1/android"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
     ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r21"
     ANDROID_NDK_HOME: "$ANDROID_NDK_ROOT"
@@ -42,7 +42,8 @@ linux_build:
     QT_PATH: "/home/tools/Qt-OpenSource/5.14.1/gcc_64"
   script:
     - cd $CI_PROJECT_DIR
-    - $QT_PATH/bin/qmake QMAKE_CC=gcc-9 QMAKE_CXX=g++-9 CONFIG+=lto
+    #  CONFIG+=lto
+    - $QT_PATH/bin/qmake QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
