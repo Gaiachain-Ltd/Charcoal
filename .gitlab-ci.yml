@@ -92,6 +92,8 @@ android_dev-server_build:
     - ls -la
     - cd Gaiachain
     - ls -la
+    # Available in Qt 5.14.1
+    #- make apk
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
     - cp -f android-build/build/outputs/apk/$BUILD_TYPE/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 

@@ -51,7 +51,9 @@ msvc* {
     QMAKE_CXXFLAGS += -Werror
     # issue with application/x-sharedlib vs application/x-executable, without it
     # sharedlib is produced
-    QMAKE_LFLAGS += -no-pie
+    !android{
+        QMAKE_LFLAGS += -no-pie
+    }
 
     lto {
         QMAKE_CXXFLAGS += -flto
