@@ -23,9 +23,6 @@
 #ifdef USE_COMBOBOX
 #include "../common/dummy/commondummydata.h"
 #endif
-#ifdef FAKE_DATA
-#include "session/dummy/fakeserverstate.h"
-#endif
 
 template <typename Singleton>
 QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
@@ -178,9 +175,6 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 #ifdef USE_COMBOBOX
     engine.rootContext()->setContextProperty(QStringLiteral("dummyLogins"), CommonDummyData::availableLogins());
     engine.rootContext()->setContextProperty(QStringLiteral("dummyPassword"), CommonDummyData::commonPassword());
-#endif
-#ifdef FAKE_DATA
-    engine.rootContext()->setContextProperty(QStringLiteral("fakeServer"), &FakeServerState::instance());
 #endif
 
     // setup other components
