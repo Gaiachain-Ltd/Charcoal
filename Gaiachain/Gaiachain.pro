@@ -13,10 +13,6 @@ use_combobox {
     DEFINES+=USE_COMBOBOX
 }
 
-fake_data {
-    DEFINES+=FAKE_DATA
-}
-
 release_server {
     DEFINES+=RELEASE_SERVER
 }
@@ -220,20 +216,6 @@ OTHER_FILES += \
     ../.gitignore \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
-
-fake_data {
-    HEADERS += \
-        src/controllers/session/dummy/fakeserver.h \
-        src/controllers/session/dummy/fakeserverstate.h \
-        src/controllers/session/dummy/fakesessionmanager.h \
-        src/controllers/session/dummy/fakedatapopulator.h
-
-    SOURCES += \
-        src/controllers/session/dummy/fakeserver.cpp \
-        src/controllers/session/dummy/fakeserverstate.cpp \
-        src/controllers/session/dummy/fakesessionmanager.cpp \
-        src/controllers/session/dummy/fakedatapopulator.cpp
-}
 
 INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
 
