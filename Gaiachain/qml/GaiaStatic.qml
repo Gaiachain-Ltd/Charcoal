@@ -11,4 +11,7 @@ QtObject {
 
     // gps tracking
     readonly property int gpsRefreshInterval: 1000 // ms
+
+    // internet connection
+    readonly property int internetCheckConnectionTimeInterval: 10000
 }
