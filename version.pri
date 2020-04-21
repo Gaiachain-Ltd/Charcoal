@@ -16,6 +16,9 @@ APP_DOMAIN = "gaiachain.io"
 COMPANY_NAME = "Milo Solutions"
 COMPANY_DOMAIN = "milosolutions.com"
 
+ANDROID_VERSION_NAME = "$$VERSION"
+ANDROID_VERSION_CODE = 5
+
 # add defines
 DEFINES += AppVersion='"\\\"$$APP_VERSION\\\""'
 DEFINES += AppName='"\\\"$$APP_NAME\\\""'
@@ -26,6 +29,6 @@ DEFINES += BuildDate=\\\"$$BUILD_DATE\\\"
 DEFINES += GitCommit=\\\"$$COMMIT\\\"
 
 # To use VERSION in non-Qt files, use QMAKE_SUBSTITUTES:
-# manifest.input = $$PWD/some/Gaiachain.xml.in
-# manifest.output = $$PWD/some/output.xml
-# QMAKE_SUBSTITUTES += manifest
+ manifest.input = $$PWD/AndroidManifest.xml.in
+ manifest.output = $$PWD/Gaiachain/platforms/android/android/AndroidManifest.xml
+ QMAKE_SUBSTITUTES += manifest
