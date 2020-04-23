@@ -53,3 +53,4 @@ Gaiachain/3rdparty/OpenSSL/OpenSSL/
 Gaiachain/3rdparty/OpenSSL/build/
 Gaiachain/3rdparty/OpenSSL/setenv-android.sh
 
+Gaiachain/platforms/android/android/AndroidManifest.xml
