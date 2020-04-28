@@ -11,9 +11,10 @@ TransactionsViewModel::TransactionsViewModel(QObject *parent)
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
         if (not DataGlobals::availablePackageTypes().isEmpty()) {
-            for (auto it = DataGlobals::availablePackageTypes().begin(); it != DataGlobals::availablePackageTypes().end(); ++it) {
-                m_activePackageTypes.insert(*it);
-            }
+            m_activePackageTypes = QSet<Enums::PackageType>(
+                DataGlobals::availablePackageTypes().begin(),
+                DataGlobals::availablePackageTypes().end()
+            );
         }
 #else
         m_activePackageTypes= DataGlobals::availablePackageTypes().toSet()
@@ -28,10 +29,10 @@ void TransactionsViewModel::clear()
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     if (not DataGlobals::availablePackageTypes().isEmpty()) {
-        m_activePackageTypes.clear();
-        for (auto it = DataGlobals::availablePackageTypes().begin(); it != DataGlobals::availablePackageTypes().end(); ++it) {
-            m_activePackageTypes.insert(*it);
-        }
+        m_activePackageTypes = QSet<Enums::PackageType>(
+            DataGlobals::availablePackageTypes().begin(),
+            DataGlobals::availablePackageTypes().end()
+        );
     }
 #else
     m_activePackageTypes = QSet<Enums::PackageType>(
