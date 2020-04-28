@@ -53,6 +53,7 @@ namespace Enums {
         Confirm,
         Comment,
         Text,
+        About,
 
         PopupCount
     };

@@ -98,6 +98,12 @@
         <file>common/PositionSourceHandler.qml</file>
         <file>components/OfflineModeHandler.qml</file>
         <file>items/FilterComboBox.qml</file>
-        <file>pages/SupplyChainSummaryPage.qml</file>  
+        <file>pages/SupplyChainSummaryPage.qml</file>
+        <file>popups/AboutPopup.qml</file>
+        <file>components/AboutGaia.qml</file>
+        <file>components/AboutGaiaDependency.qml</file>
+        <file>components/AboutGaiaDependencyInfo.qml</file>
+        <file>items/BaseTabBar.qml</file>
+        <file>items/BaseTabButton.qml</file>
     </qresource>
 </RCC>
