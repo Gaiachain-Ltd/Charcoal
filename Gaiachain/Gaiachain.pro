@@ -218,6 +218,8 @@ OTHER_FILES += \
     ../.gitlab-ci.yml
 
 INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
+# NOTE: Variable for MCrypto
+OPENSSL_PATH = $$PWD/3rdparty/OpenSSL/OpenSSL
 
 ## Put all build files into build directory
 ##  This also works with shadow building, so don't worry!
@@ -232,7 +234,7 @@ DESTDIR = $$BUILD_DIR/bin
 include(platforms/android/android.pri)
 include(platforms/linux/linux.pri)
 
-CONFIG += no-openssl    # disable openssl for mcrypto until issue #82497
+#CONFIG += no-openssl    # disable openssl for mcrypto until issue #82497
 ## Modules
 include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)

@@ -46,6 +46,8 @@ linux_build:
   stage: build
   script:
     - cd $CI_PROJECT_DIR
+    # TODO: fix OpenSSL path
+    #- cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
     #  CONFIG+=lto
     - $QT_PATH_DESKTOP/bin/qmake QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
     - make -j3
