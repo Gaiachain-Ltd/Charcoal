@@ -75,7 +75,7 @@ android_release-server_build:
     - cd Gaiachain
     - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 android_dev-server_build:
   <<: *common
@@ -100,7 +100,7 @@ android_dev-server_build:
     # Available in Qt 5.14.1
     #- make apk
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 android_dev-server_no-combobox_build:
   <<: *common
@@ -125,7 +125,7 @@ android_dev-server_no-combobox_build:
     - cd Gaiachain
     - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
 
 upload_job:
   <<: *common
