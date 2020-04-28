@@ -6,16 +6,19 @@
 #include "../query/idkeywordquery.h"
 
 TransactionsViewModel::TransactionsViewModel(QObject *parent)
-    : CooperativeViewModel(parent),
-      m_activePackageTypes(
+    : CooperativeViewModel(parent)
+{
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-          DataGlobals::availablePackageTypes().begin(),
-          DataGlobals::availablePackageTypes().end()
+        if (not DataGlobals::availablePackageTypes().isEmpty()) {
+            for (auto it = DataGlobals::availablePackageTypes().begin(); it != DataGlobals::availablePackageTypes().end(); ++it) {
+                m_activePackageTypes.insert(*it);
+            }
+        }
 #else
-          DataGlobals::availablePackageTypes().toSet()
+        m_activePackageTypes= DataGlobals::availablePackageTypes().toSet()
 #endif
-          )
-{}
+}
 
 void TransactionsViewModel::clear()
 {
@@ -24,9 +27,12 @@ void TransactionsViewModel::clear()
     m_keyword.clear();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-    m_activePackageTypes = QSet<Enums::PackageType>(
-        DataGlobals::availablePackageTypes().begin(),
-        DataGlobals::availablePackageTypes().end());
+    if (not DataGlobals::availablePackageTypes().isEmpty()) {
+        m_activePackageTypes.clear();
+        for (auto it = DataGlobals::availablePackageTypes().begin(); it != DataGlobals::availablePackageTypes().end(); ++it) {
+            m_activePackageTypes.insert(*it);
+        }
+    }
 #else
     m_activePackageTypes = QSet<Enums::PackageType>(
         DataGlobals::availablePackageTypes().toSet());
