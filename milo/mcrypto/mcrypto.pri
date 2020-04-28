@@ -15,18 +15,21 @@ win32 {
         CONFIG += openssl
     }
 }
-unix {
-    exists($$OPENSSL_PATH/*) {
-        LIBS += -lssl -lcrypto
-        INCLUDEPATH += $$OPENSSL_INCLUDE
-        CONFIG += openssl
-    }
-}
+
 android {
     exists($$OPENSSL_PATH/include/*) {
         INCLUDEPATH += $$OPENSSL_PATH/include
-        LIBS += -L$$OPENSSL_PATH/lib -lssl -lcrypto
+        # TODO: separate paths per architecture!
+        LIBS += -L$$OPENSSL_PATH/lib/android/arm -lssl_1_1 -lcrypto_1_1
         CONFIG += openssl
+    }
+} else {
+    unix {
+        exists($$OPENSSL_PATH/*) {
+            LIBS += -lssl -lcrypto
+            INCLUDEPATH += $$OPENSSL_INCLUDE
+            CONFIG += openssl
+        }
     }
 }
 
