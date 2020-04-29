@@ -37,6 +37,12 @@ int main(int argc, char *argv[])
     app.setApplicationName(AppName);
 
     qCInfo(coreMain) << "\nName:" << app.applicationName()
+                     << "\nFlavor:"
+#ifdef COCOA
+                     << "cocoa"
+#elif CHARCOAL
+                     << "charcoal"
+#endif
                      << "\nOrganisation:" << app.organizationName()
                      << "\nDomain:" << app.organizationDomain()
                      << "\nVersion:" << app.applicationVersion()
