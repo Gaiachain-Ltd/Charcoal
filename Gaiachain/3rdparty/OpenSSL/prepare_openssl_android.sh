@@ -9,7 +9,9 @@ echo "Script dir: "$SCRIPT_DIR
 
 source $SCRIPT_DIR/setenv-android.sh
 
-mkdir build
+if [ ! -d "build" ]; then
+  mkdir build
+fi
 cd build
 source $SCRIPT_DIR/build-openssl-android.sh
 
