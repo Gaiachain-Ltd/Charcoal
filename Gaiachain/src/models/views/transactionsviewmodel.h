@@ -29,6 +29,8 @@ signals:
     void keywordChanged(const QString &keyword) const;
 
 private:
+    void initialiseActivePackageTypes();
+
     QSet<Enums::PackageType> m_activePackageTypes;
     QString m_keyword;
 
