@@ -20,12 +20,18 @@ variables:
     PROJECT_NAME: "Gaiachain"
     SEAFILE_SERVER: "https://seafile.milosolutions.com"
     SEAFILE_REPO_ID: "3df1ca9d-bc95-4424-b061-3f98c91dae3b"
+    # android-build variables
+    QMAKE_CONFIG: "CONFIG+=release_server"
+    BUILD_TYPE: "release"
+    FLAVOR: "none"
 
 .common: &common
   allow_failure: false
   before_script:
     - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
     - mkdir -p $OUT_PACKAGES_DIR
+    - mkdir -p $OUT_PACKAGES_DIR/cocoa
+    - mkdir -p $OUT_PACKAGES_DIR/charcoal
     - git submodule sync --recursive
     - git submodule update --init --recursive
     - git submodule status --recursive
@@ -37,97 +43,128 @@ variables:
     - tags
     - merge_requests
 
-# Linux
-linux_build:
-  <<: *common
-  <<: *only-common
+# Script below is shared between all Linux builds
+.linux-build: &linux-build
   tags:
     - LinuxDesktop
-  stage: build
   script:
-    - cd $CI_PROJECT_DIR
-    # TODO: fix OpenSSL path
-    #- cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    #  CONFIG+=lto
-    - $QT_PATH_DESKTOP/bin/qmake QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
-    - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
+  - cd $CI_PROJECT_DIR
+  - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
+  #  CONFIG+=lto
+  - $QT_PATH_DESKTOP/bin/qmake CONFIG+=$FLAVOR QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
+  - make -j3
+  - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
-# Android
-android_release-server_build:
-  <<: *common
-  <<: *only-common
+# Script below is shared between all Android builds
+.android-build: &android-build
   tags:
     - LinuxAndroid
+  script:
+    - cd $CI_PROJECT_DIR
+    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=$FLAVOR $QMAKE_CONFIG ANDROID_ABIS=$ABIS
+    - cat Makefile
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
+    - cd $CI_PROJECT_DIR
+    - ls -la
+    - cd Gaiachain
+    - ls -la
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$FLAVOR/$PACKAGE_NAME
+
+# Linux
+linux-cocoa:
+  <<: *common
+  <<: *only-common
+  <<: *linux-build
   stage: build
   when: manual
   allow_failure: true
   variables:
-    BUILD_TYPE: "release"
-    PACKAGE_NAME: "Gaiachain_release-server_$CI_COMMIT_REF_SLUG.apk"
-  script:
-    - cd $CI_PROJECT_DIR
-    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake CONFIG+=release_server ANDROID_ABIS=$ABIS
-    - cat Makefile
-    - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
-    - cd $CI_PROJECT_DIR
-    - ls -la
-    - cd Gaiachain
-    - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    QMAKE_CONFIG: ""
+    FLAVOR: "cocoa"
 
-android_dev-server_build:
+linux-charcoal:
   <<: *common
   <<: *only-common
-  tags:
-    - LinuxAndroid
-  stage: build
-  variables:
-    BUILD_TYPE: "release"
-    PACKAGE_NAME: "Gaiachain_dev-server_$CI_COMMIT_REF_SLUG.apk"
-  script:
-    - cd $CI_PROJECT_DIR
-    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake CONFIG+=use_combobox ANDROID_ABIS=$ABIS
-    - cat Makefile
-    - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
-    - cd $CI_PROJECT_DIR
-    - ls -la
-    - cd Gaiachain
-    - ls -la
-    # Available in Qt 5.14.1
-    #- make apk
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
-
-android_dev-server_no-combobox_build:
-  <<: *common
-  <<: *only-common
-  tags:
-    - LinuxAndroid
+  <<: *linux-build
   stage: build
   when: manual
   allow_failure: true
   variables:
-    BUILD_TYPE: "release"
-    PACKAGE_NAME: "Gaiachain_dev-server_$CI_COMMIT_REF_SLUG.apk"
-  script:
-    - cd $CI_PROJECT_DIR
-    - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake CONFIG-=use_combobox ANDROID_ABIS=$ABIS
-    - cat Makefile
-    - make -j3
-    - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
-    - cd $CI_PROJECT_DIR
-    - ls -la
-    - cd Gaiachain
-    - ls -la
-    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    QMAKE_CONFIG: ""
+    FLAVOR: "charcoal"
+
+# Android Cocoa
+android-release-cocoa:
+  <<: *common
+  <<: *only-common
+  <<: *android-build
+  stage: build
+  when: manual
+  allow_failure: true
+  variables:
+    PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
+    QMAKE_CONFIG: "CONFIG+=release_server"
+    FLAVOR: "cocoa"
+
+android-dev-cocoa-combobox:
+  <<: *common
+  <<: *only-common
+  <<: *android-build
+  stage: build
+  variables:
+    PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
+    QMAKE_CONFIG: "CONFIG+=use_combobox"
+    FLAVOR: "cocoa"
+
+android-dev-cocoa:
+  <<: *common
+  <<: *only-common
+  <<: *android-build
+  stage: build
+  when: manual
+  allow_failure: true
+  variables:
+    PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
+    QMAKE_CONFIG: ""
+    FLAVOR: "cocoa"
+
+# Android Charcoal
+android-release-charcoal:
+  <<: *common
+  <<: *only-common
+  <<: *android-build
+  stage: build
+  when: manual
+  allow_failure: true
+  variables:
+    PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
+    QMAKE_CONFIG: "CONFIG+=release_server"
+    FLAVOR: "charcoal"
+
+android-dev-charcoal-combobox:
+  <<: *common
+  <<: *only-common
+  <<: *android-build
+  stage: build
+  variables:
+    PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
+    QMAKE_CONFIG: "CCONFIG+=use_combobox"
+    FLAVOR: "charcoal"
+
+android-dev-charcoal:
+  <<: *common
+  <<: *only-common
+  <<: *android-build
+  stage: build
+  when: manual
+  allow_failure: true
+  variables:
+    PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
+    QMAKE_CONFIG: ""
+    FLAVOR: "charcoal"
 
 upload_job:
   <<: *common
@@ -135,7 +172,7 @@ upload_job:
     - master
     - dev
     - schedules
-    #- merge_requests
+    - merge_requests
   tags:
     - LinuxAndroid
   stage: upload
@@ -144,11 +181,16 @@ upload_job:
     UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
   script:
     - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
-    - cd $OUT_PACKAGES_DIR
+    - cd $OUT_PACKAGES_DIR/cocoa
     - ls -lh
     - APK_PACKAGES=*.apk
-    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"_"$PACKAGE"; done
-    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "/charcoal/packages/" -t $SEAFILE_API_TOKEN; done
+    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN; done
+    - cd $OUT_PACKAGES_DIR/charcoal
+    - ls -lh
+    - APK_PACKAGES=*.apk
+    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN; done
 
 cleanup:
   <<: *common

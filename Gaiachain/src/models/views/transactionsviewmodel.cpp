@@ -8,17 +8,7 @@
 TransactionsViewModel::TransactionsViewModel(QObject *parent)
     : CooperativeViewModel(parent)
 {
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-        if (not DataGlobals::availablePackageTypes().isEmpty()) {
-            m_activePackageTypes = QSet<Enums::PackageType>(
-                DataGlobals::availablePackageTypes().begin(),
-                DataGlobals::availablePackageTypes().end()
-            );
-        }
-#else
-        m_activePackageTypes= DataGlobals::availablePackageTypes().toSet()
-#endif
+    initialiseActivePackageTypes();
 }
 
 void TransactionsViewModel::clear()
@@ -27,17 +17,7 @@ void TransactionsViewModel::clear()
 
     m_keyword.clear();
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-    if (not DataGlobals::availablePackageTypes().isEmpty()) {
-        m_activePackageTypes = QSet<Enums::PackageType>(
-            DataGlobals::availablePackageTypes().begin(),
-            DataGlobals::availablePackageTypes().end()
-        );
-    }
-#else
-    m_activePackageTypes = QSet<Enums::PackageType>(
-        DataGlobals::availablePackageTypes().toSet());
-#endif
+    initialiseActivePackageTypes();
 
     m_cooperativeOnly = true;
 
@@ -92,20 +72,37 @@ void TransactionsViewModel::setKeyword(const QString &keyword)
     emit keywordChanged(m_keyword);
 }
 
+void TransactionsViewModel::initialiseActivePackageTypes()
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    m_activePackageTypes.clear();
+    if (not DataGlobals::availablePackageTypes().isEmpty()) {
+        const auto types = DataGlobals::availablePackageTypes();
+        for (const auto &type : types) {
+            m_activePackageTypes.insert(type);
+        }
+    }
+#else
+    m_activePackageTypes = DataGlobals::availablePackageTypes().toSet()
+#endif
+}
+
 void TransactionsViewModel::updateFilterQuery()
 {
     if (!m_queryModel.isNull()) {
         if (m_cooperativeOnly) {
-            m_queryModel->setSortFilterQuery(IdKeywordQuery(m_keyword, false,
-                                                            PackageTypeQuery(m_activePackageTypes,
-                                                                             CooperativeIdQuery(m_cooperativeId,
-                                                                                                SortTimestampQuery(SortFilterQuery()))))
-                                             );
+            m_queryModel->setSortFilterQuery(
+                IdKeywordQuery(m_keyword, false,
+                               PackageTypeQuery(m_activePackageTypes,
+                                                CooperativeIdQuery(m_cooperativeId,
+                                                                   SortTimestampQuery(SortFilterQuery()))))
+                );
         } else {
-            m_queryModel->setSortFilterQuery(IdKeywordQuery(m_keyword, false,
-                                                            PackageTypeQuery(m_activePackageTypes,
-                                                                             SortTimestampQuery(SortFilterQuery())))
-                                             );
+            m_queryModel->setSortFilterQuery(
+                IdKeywordQuery(m_keyword, false,
+                               PackageTypeQuery(m_activePackageTypes,
+                                                SortTimestampQuery(SortFilterQuery())))
+                );
         }
     }
 }

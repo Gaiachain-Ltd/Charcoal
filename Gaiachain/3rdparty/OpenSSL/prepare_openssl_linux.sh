@@ -7,24 +7,22 @@ SCRIPT_DIR=$PWD
 
 echo "Script dir: "$SCRIPT_DIR
 
+# Get OpenSSL version to download
 source $SCRIPT_DIR/setenv-android.sh
 
 if [ ! -d "build" ]; then
   mkdir build
 fi
 cd build
-source $SCRIPT_DIR/build-openssl-android.sh
+source $SCRIPT_DIR/build-openssl-linux.sh
 
 cd ../
 
 INCLUDE_DIR=OpenSSL/include/
-LIBS_DIR=OpenSSL/lib/android/
+LIBS_DIR=OpenSSL/lib/linux/
 
 mkdir -p ${INCLUDE_DIR}
 mkdir -p ${LIBS_DIR}
 
 cp -r build/openssl-${OPENSSL_VERSION}/include/openssl ${INCLUDE_DIR}
-
-for arch in ${ANDROID_ARCHS}; do
-    cp -r build/${arch} ${LIBS_DIR}
-done
+cp -r build/linux ${LIBS_DIR}
