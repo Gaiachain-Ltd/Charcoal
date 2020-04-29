@@ -29,6 +29,8 @@ variables:
   before_script:
     - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
     - mkdir -p $OUT_PACKAGES_DIR
+    - mkdir -p $OUT_PACKAGES_DIR/cocoa
+    - mkdir -p $OUT_PACKAGES_DIR/charcoal
     - git submodule sync --recursive
     - git submodule update --init --recursive
     - git submodule status --recursive
@@ -159,7 +161,7 @@ upload_job:
     - master
     - dev
     - schedules
-    #- merge_requests
+    - merge_requests
   tags:
     - LinuxAndroid
   stage: upload
@@ -168,10 +170,15 @@ upload_job:
     UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
   script:
     - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
-    - cd $OUT_PACKAGES_DIR
+    - cd $OUT_PACKAGES_DIR/cocoa
     - ls -lh
     - APK_PACKAGES=*.apk
-    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"_"$PACKAGE"; done
+    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "/cocoa/packages/" -t $SEAFILE_API_TOKEN; done
+    - cd $OUT_PACKAGES_DIR/charcoal
+    - ls -lh
+    - APK_PACKAGES=*.apk
+    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
     - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "/charcoal/packages/" -t $SEAFILE_API_TOKEN; done
 
 cleanup:
