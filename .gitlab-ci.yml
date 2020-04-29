@@ -79,6 +79,7 @@ linux-cocoa:
   <<: *linux-build
   stage: build
   when: manual
+  allow_failure: true
   variables:
     QMAKE_CONFIG: "CONFIG+=cocoa"
 
@@ -88,6 +89,7 @@ linux-charcoal:
   <<: *linux-build
   stage: build
   when: manual
+  allow_failure: true
   variables:
     QMAKE_CONFIG: "CONFIG+=charcoal"
 
