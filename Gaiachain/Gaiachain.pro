@@ -22,7 +22,15 @@ english_language {
 }
 
 !cocoa:!charcoal {
-    error("Specify application flavour!")
+    error("Specify application flavor!")
+}
+
+cocoa {
+  DEFINES+=COCOA
+}
+
+charcoal {
+  DEFINES+=CHARCOAL
 }
 
 include(../version.pri)

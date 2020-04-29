@@ -23,6 +23,7 @@ variables:
     # android-build variables
     QMAKE_CONFIG: "CONFIG+=release_server"
     BUILD_TYPE: "release"
+    FLAVOR: "none"
 
 .common: &common
   allow_failure: false
@@ -50,7 +51,7 @@ variables:
   - cd $CI_PROJECT_DIR
   - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
   #  CONFIG+=lto
-  - $QT_PATH_DESKTOP/bin/qmake QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
+  - $QT_PATH_DESKTOP/bin/qmake CONFIG+=$FLAVOR QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
   - make -j3
   - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
@@ -61,7 +62,7 @@ variables:
   script:
     - cd $CI_PROJECT_DIR
     - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake $QMAKE_CONFIG ANDROID_ABIS=$ABIS
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=$FLAVOR $QMAKE_CONFIG ANDROID_ABIS=$ABIS
     - cat Makefile
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
@@ -70,7 +71,7 @@ variables:
     - cd Gaiachain
     - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$FLAVOR/$PACKAGE_NAME
 
 # Linux
 linux-cocoa:
@@ -81,7 +82,8 @@ linux-cocoa:
   when: manual
   allow_failure: true
   variables:
-    QMAKE_CONFIG: "CONFIG+=cocoa"
+    QMAKE_CONFIG: ""
+    FLAVOR: "cocoa"
 
 linux-charcoal:
   <<: *common
@@ -91,7 +93,8 @@ linux-charcoal:
   when: manual
   allow_failure: true
   variables:
-    QMAKE_CONFIG: "CONFIG+=charcoal"
+    QMAKE_CONFIG: ""
+    FLAVOR: "charcoal"
 
 # Android Cocoa
 android-release-cocoa:
@@ -103,7 +106,8 @@ android-release-cocoa:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "CONFIG+=cocoa CONFIG+=release_server"
+    QMAKE_CONFIG: "CONFIG+=release_server"
+    FLAVOR: "cocoa"
 
 android-dev-cocoa-combobox:
   <<: *common
@@ -112,7 +116,8 @@ android-dev-cocoa-combobox:
   stage: build
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "CONFIG+=cocoa CONFIG+=use_combobox"
+    QMAKE_CONFIG: "CONFIG+=use_combobox"
+    FLAVOR: "cocoa"
 
 android-dev-cocoa:
   <<: *common
@@ -123,7 +128,8 @@ android-dev-cocoa:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "CONFIG+=cocoa"
+    QMAKE_CONFIG: ""
+    FLAVOR: "cocoa"
 
 # Android Charcoal
 android-release-charcoal:
@@ -135,7 +141,8 @@ android-release-charcoal:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "CONFIG+=charcoal CONFIG+=release_server"
+    QMAKE_CONFIG: "CONFIG+=release_server"
+    FLAVOR: "charcoal"
 
 android-dev-charcoal-combobox:
   <<: *common
@@ -144,7 +151,8 @@ android-dev-charcoal-combobox:
   stage: build
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "CONFIG+=charcoal CONFIG+=use_combobox"
+    QMAKE_CONFIG: "CCONFIG+=use_combobox"
+    FLAVOR: "charcoal"
 
 android-dev-charcoal:
   <<: *common
@@ -155,7 +163,8 @@ android-dev-charcoal:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "CONFIG+=charcoal"
+    QMAKE_CONFIG: ""
+    FLAVOR: "charcoal"
 
 upload_job:
   <<: *common
