@@ -1,5 +1,5 @@
 # openssl version
-export OPENSSL_VERSION=1.1.1d
+export OPENSSL_VERSION=1.1.1g
 
 # android
 export ANDROID_NDK_HOME=/opt/android/ndk-newest
