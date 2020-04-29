@@ -185,12 +185,12 @@ upload_job:
     - ls -lh
     - APK_PACKAGES=*.apk
     - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
-    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "/cocoa/packages/" -t $SEAFILE_API_TOKEN; done
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN; done
     - cd $OUT_PACKAGES_DIR/charcoal
     - ls -lh
     - APK_PACKAGES=*.apk
     - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
-    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "/charcoal/packages/" -t $SEAFILE_API_TOKEN; done
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN; done
 
 cleanup:
   <<: *common
