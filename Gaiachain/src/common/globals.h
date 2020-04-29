@@ -5,10 +5,18 @@
 #include <QObject>
 #include <QLoggingCategory>
 
-#ifdef RELEASE_SERVER
-    #define SERVER_ADDRESS QStringLiteral("https://live.gaiachain.io")
-#else
-    #define SERVER_ADDRESS QStringLiteral("https://live-beta.gaiachain.io")
+#ifdef COCOA
+    #ifdef RELEASE_SERVER
+        #define SERVER_ADDRESS QStringLiteral("https://live.gaiachain.io")
+    #else
+        #define SERVER_ADDRESS QStringLiteral("https://live-beta.gaiachain.io")
+    #endif
+#elif CHARCOAL
+    #ifdef RELEASE_SERVER
+        #define SERVER_ADDRESS QStringLiteral("https://live.gaiachain.io")
+    #else
+        #define SERVER_ADDRESS QStringLiteral("https://live-beta.gaiachain.io")
+    #endif
 #endif
 
 #define QR_CODE_LENGTH 12
