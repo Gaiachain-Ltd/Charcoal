@@ -1,7 +1,7 @@
 ## Milo Solutions - project file TEMPLATE
 #
 #
-## (c) Milo Solutions, 2016
+## (c) Milo Solutions, 2016-2020
 
 QT += core gui qml quick svg sql location
 
@@ -19,6 +19,10 @@ release_server {
 
 english_language {
     DEFINES+=ENGLISH_LANGUAGE
+}
+
+!cocoa:!charcoal {
+    error("Specify application flavour!")
 }
 
 include(../version.pri)
