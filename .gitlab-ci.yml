@@ -21,7 +21,7 @@ variables:
     SEAFILE_SERVER: "https://seafile.milosolutions.com"
     SEAFILE_REPO_ID: "3df1ca9d-bc95-4424-b061-3f98c91dae3b"
     # android-build variables
-    QMAKE_CONFIG: "release_server"
+    QMAKE_CONFIG: "CONFIG+=release_server"
     BUILD_TYPE: "release"
 
 .common: &common
@@ -78,7 +78,7 @@ linux-cocoa:
   stage: build
   when: manual
   variables:
-    QMAKE_CONFIG: "cocoa"
+    QMAKE_CONFIG: "CONFIG+=cocoa"
 
 linux-charcoal:
   <<: *common
@@ -87,7 +87,7 @@ linux-charcoal:
   stage: build
   when: manual
   variables:
-    QMAKE_CONFIG: "charcoal"
+    QMAKE_CONFIG: "CONFIG+=charcoal"
 
 # Android Cocoa
 android-release-cocoa:
@@ -99,7 +99,7 @@ android-release-cocoa:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "cocoa release_server"
+    QMAKE_CONFIG: "CONFIG+=cocoa CONFIG+=release_server"
 
 android-dev-cocoa-combobox:
   <<: *common
@@ -108,7 +108,7 @@ android-dev-cocoa-combobox:
   stage: build
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "cocoa use_combobox"
+    QMAKE_CONFIG: "CONFIG+=cocoa CONFIG+=use_combobox"
 
 android-dev-cocoa:
   <<: *common
@@ -119,7 +119,7 @@ android-dev-cocoa:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "cocoa"
+    QMAKE_CONFIG: "CONFIG+=cocoa"
 
 # Android Charcoal
 android-release-charcoal:
@@ -131,7 +131,7 @@ android-release-charcoal:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "charcoal release_server"
+    QMAKE_CONFIG: "CONFIG+=charcoal CONFIG+=release_server"
 
 android-dev-charcoal-combobox:
   <<: *common
@@ -140,7 +140,7 @@ android-dev-charcoal-combobox:
   stage: build
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "charcoal use_combobox"
+    QMAKE_CONFIG: "CONFIG+=charcoal CONFIG+=use_combobox"
 
 android-dev-charcoal:
   <<: *common
@@ -151,7 +151,7 @@ android-dev-charcoal:
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "charcoal"
+    QMAKE_CONFIG: "CONFIG+=charcoal"
 
 upload_job:
   <<: *common
