@@ -9,9 +9,9 @@
 namespace {
 const QLatin1String UsersFileName =
 #ifdef COCOA
-    QLatin1String("users-cocoa.db");
+    QLatin1String("users");
 #elif CHARCOAL
-    QLatin1String("users-charcoal.db");
+    QLatin1String("users-charcoal");
 #else
     #error(Cannot determine users file name!)
 #endif

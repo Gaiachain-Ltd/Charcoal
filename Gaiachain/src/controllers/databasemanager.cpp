@@ -10,7 +10,7 @@ Q_LOGGING_CATEGORY(databaseManager, "database.manager")
 
 const QLatin1String DatabaseManager::sc_dbName =
 #ifdef COCOA
-    QLatin1String("local-cocoa.db");
+    QLatin1String("local.db");
 #elif CHARCOAL
     QLatin1String("local-charcoal.db");
 #else
