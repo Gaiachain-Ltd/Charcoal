@@ -15,7 +15,7 @@ class Application : public QObject
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString domain READ domain CONSTANT)
     Q_PROPERTY(QString version READ version CONSTANT)
-    Q_PROPERTY(QString commmit READ commit CONSTANT)
+    Q_PROPERTY(QString commit READ commit CONSTANT)
 
 public:
     Application(QObject *parent = nullptr) : QObject(parent)
@@ -54,7 +54,7 @@ class MainController : public AbstractManager
     Q_PROPERTY(QStringList easyLoginList READ easyLoginList CONSTANT)
     Q_PROPERTY(QString easyLoginPassword READ easyLoginPassword CONSTANT)
 
-    Q_PROPERTY(const Application* application READ application CONSTANT)
+    Q_PROPERTY(Application* application READ application CONSTANT)
 
 public:
     explicit MainController(QObject *parent = nullptr);
@@ -69,14 +69,14 @@ public:
     QStringList easyLoginList() const;
     QString easyLoginPassword() const;
 
-    const Application *application() const;
+    Application *application() const;
 
 private:
     void setupConnections();
     void setupDataConnections();
     void initialWork();
 
-    Application m_application;
+    Application *m_application = nullptr;
 
     PageManager m_pageManager;
     UserManager m_userManager;

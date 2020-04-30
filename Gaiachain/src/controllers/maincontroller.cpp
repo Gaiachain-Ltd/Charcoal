@@ -32,7 +32,8 @@ QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
 }
 
 MainController::MainController(QObject *parent)
-    : AbstractManager(parent)
+    : AbstractManager(parent),
+      m_application(new Application(this))
 {
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
@@ -224,9 +225,9 @@ QString MainController::easyLoginPassword() const
 #endif
 }
 
-const Application *MainController::application() const
+Application *MainController::application() const
 {
-    return &m_application;
+    return m_application;
 }
 
 void MainController::setupQZXing(QQmlApplicationEngine &engine)
