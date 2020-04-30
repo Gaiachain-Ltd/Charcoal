@@ -9,8 +9,8 @@ exists(../local.pri) {
     include(../local.pri)
 }
 
-use_combobox {
-    DEFINES+=USE_COMBOBOX
+easy_login {
+    DEFINES+=EASY_LOGIN
 }
 
 release_server {
@@ -23,6 +23,10 @@ english_language {
 
 !cocoa:!charcoal {
     error("Specify application flavor!")
+}
+
+cocoa:charcoal {
+    error("Can't compile BOTH cocoa and charcoal flavors! Pick one")
 }
 
 cocoa {

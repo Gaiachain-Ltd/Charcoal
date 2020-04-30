@@ -13,8 +13,8 @@ ApplicationWindow
 {
     id: mainWindow
 
-    width: isDesktop ? 480 : Screen.desktopAvailableWidth
-    height: isDesktop ? 800 : Screen.desktopAvailableHeight
+    width: mainController.isDesktop ? 480 : Screen.desktopAvailableWidth
+    height: mainController.isDesktop ? 800 : Screen.desktopAvailableHeight
     visible: true
 
     color: Style.backgroundColor

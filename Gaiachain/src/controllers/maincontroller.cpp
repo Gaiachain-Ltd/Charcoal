@@ -20,7 +20,7 @@
 #include "../helpers/packagedataproperties.h"
 #include "../helpers/keywordfilterproxymodel.h"
 
-#ifdef USE_COMBOBOX
+#ifdef EASY_LOGIN
 #include "../common/dummy/commondummydata.h"
 #endif
 
@@ -32,7 +32,8 @@ QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
 }
 
 MainController::MainController(QObject *parent)
-    : AbstractManager(parent)
+    : AbstractManager(parent),
+      m_application(new Application(this))
 {
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
@@ -114,13 +115,6 @@ void MainController::initialWork()
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 {
-    engine.rootContext()->setContextProperty("isDesktop",
-#ifdef DESKTOP_TESTS
-                                             true);
-#else
-                                             false);
-#endif
-
     // register namespace for enums
     qmlRegisterUncreatableMetaObject(Enums::staticMetaObject, "com.gaiachain.enums", 1, 0,
                                      "Enums", "Cannot create namespace Enums in QML");
@@ -166,16 +160,8 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // register qml types
     qmlRegisterType<KeywordFilterProxyModel>("com.gaiachain.helpers", 1, 0, "KeywordFilterProxyModel");
 
-    // add context properties
-    engine.rootContext()->setContextProperty(QStringLiteral("AppName"), AppName);
-    engine.rootContext()->setContextProperty(QStringLiteral("AppDomain"), AppDomain);
-    engine.rootContext()->setContextProperty(QStringLiteral("AppVersion"), AppVersion);
-    engine.rootContext()->setContextProperty(QStringLiteral("GitCommit"), GitCommit);
-
-#ifdef USE_COMBOBOX
-    engine.rootContext()->setContextProperty(QStringLiteral("dummyLogins"), CommonDummyData::availableLogins());
-    engine.rootContext()->setContextProperty(QStringLiteral("dummyPassword"), CommonDummyData::commonPassword());
-#endif
+    // add context property
+    engine.rootContext()->setContextProperty(QStringLiteral("mainController"), this);
 
     // setup other components
     m_pageManager.setupQmlContext(engine);
@@ -190,6 +176,58 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 void MainController::startInitialWork()
 {
     QMetaObject::invokeMethod(this, &MainController::initialWork);
+}
+
+QString MainController::flavor() const
+{
+#ifdef COCOA
+    return QStringLiteral("cocoa");
+#elif CHARCOAL
+    return QStringLiteral("charcoal");
+#else
+    return QString();
+#endif
+}
+
+bool MainController::isDesktop() const
+{
+#ifdef DESKTOP_TESTS
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool MainController::isEasyLogin() const
+{
+#ifdef EASY_LOGIN
+    return true;
+#else
+    return false;
+#endif
+}
+
+QStringList MainController::easyLoginList() const
+{
+#ifdef EASY_LOGIN
+    return CommonDummyData::availableLogins();
+#else
+    return QStringList();
+#endif
+}
+
+QString MainController::easyLoginPassword() const
+{
+#ifdef EASY_LOGIN
+    return CommonDummyData::commonPassword();
+#else
+    return QString();
+#endif
+}
+
+Application *MainController::application() const
+{
+    return m_application;
 }
 
 void MainController::setupQZXing(QQmlApplicationEngine &engine)

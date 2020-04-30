@@ -31,7 +31,7 @@ BasePage {
         property string login
 
         Component.onCompleted: {
-            if (!Utility.useCombobox()) {
+            if (!mainController.isEasyLogin) {
                 loginInput.text = login
             }
         }

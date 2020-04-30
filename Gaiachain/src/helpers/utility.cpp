@@ -120,12 +120,3 @@ QString Utility::defaultDateFormat() const
 {
     return m_dateFormat;
 }
-
-bool Utility::useCombobox() const
-{
-#ifdef USE_COMBOBOX
-    return true;
-#else
-    return false;
-#endif
-}
