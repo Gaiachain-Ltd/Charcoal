@@ -25,7 +25,7 @@ Item {
                 bold: true
             }
 
-            text: Qt.application.name
+            text: mainController.application.name
         }
 
         Items.BasicText {
@@ -33,7 +33,8 @@ Item {
 
             font.pixelSize: s(Style.subtitlePixelSize)
 
-            text: "v%1".arg(Qt.application.version)
+            text: "v%1:%2".arg(mainController.application.version)
+                          .arg(mainController.application.commit)
         }
 
         Items.LayoutSeparator {

@@ -9,8 +9,8 @@ exists(../local.pri) {
     include(../local.pri)
 }
 
-use_combobox {
-    DEFINES+=USE_COMBOBOX
+easy_login {
+    DEFINES+=EASY_LOGIN
 }
 
 release_server {

@@ -8,21 +8,21 @@ import com.gaiachain.helpers 1.0
 ComboBox
 {
     id: top
-    readonly property bool useDummy: Utility.useCombobox()
+    readonly property bool useEasyLogin: mainController.isEasyLogin
 
     property var loginInput
     property var passwordInput
 
     function updateInputsProperties() {
-        loginInput.text = useDummy ?  Qt.binding(function() { return currentText }) : ""
-        passwordInput.text = useDummy ?  dummyPassword : ""
+        loginInput.text = useEasyLogin ?  Qt.binding(function() { return currentText }) : ""
+        passwordInput.text = useEasyLogin ?  dummyPassword : ""
     }
 
     Component.onCompleted: updateInputsProperties()
-    onUseDummyChanged: updateInputsProperties()
+    onUseEasyLoginChanged: updateInputsProperties()
 
-    model: typeof (dummyLogins) !== "undefined" ? dummyLogins : {}
-    visible: useDummy
+    model: useEasyLogin ? mainController.easyLoginList : {}
+    visible: useEasyLogin
 
     anchors.centerIn: parent
     height: parent.height
