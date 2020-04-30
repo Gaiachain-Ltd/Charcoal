@@ -25,6 +25,10 @@ english_language {
     error("Specify application flavor!")
 }
 
+cocoa:charcoal {
+    error("Can't compile BOTH cocoa and charcoal flavors! Pick one")
+}
+
 cocoa {
   DEFINES+=COCOA
 }

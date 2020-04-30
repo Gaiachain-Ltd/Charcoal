@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
     qCInfo(coreMain) << "\nName:" << app.applicationName()
                      << "\nFlavor:"
 #ifdef COCOA
-                     << "cocoa"
+                     << "Cocoa"
 #elif CHARCOAL
-                     << "charcoal"
+                     << "Charcoal"
 #endif
                      << "\nOrganisation:" << app.organizationName()
                      << "\nDomain:" << app.organizationDomain()
