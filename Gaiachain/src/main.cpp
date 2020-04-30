@@ -4,14 +4,9 @@
 #include <QQmlContext>
 #include <QTimer>
 
-#ifndef ENGLISH_LANGUAGE
-#include <QTranslator>
-#endif
-
 #include "../src/controllers/maincontroller.h"
 #include "../milo/mlog/mlog.h"
 #include "../src/common/locale.h"
-
 
 // Prepare logging categories. Modify these to your needs
 //Q_DECLARE_LOGGING_CATEGORY(core) // already declared in MLog header
@@ -53,17 +48,8 @@ int main(int argc, char *argv[])
     MainController mc;
     mc.setupQmlContext(engine);
 
-    QLocale::setDefault(QLocale(LocaleLanguage["english"]));
-#ifndef ENGLISH_LANGUAGE
-    QTranslator translator;
-    if (!translator.load(QLocale(), QLatin1String(DEFAULT_LANGUAGE), QLatin1String(),
-                         QLatin1String(":/translations"), QLatin1String(".qm"))) {
-        qCWarning(coreMain) << "Cannot load translaction! Language:" << DEFAULT_LANGUAGE;
-    } else {
-        QLocale::setDefault(QLocale(LocaleLanguage[DEFAULT_LANGUAGE]));
-        QCoreApplication::installTranslator(&translator);
-    }
-#endif
+    Language language;
+    language.load();
 
 #ifdef Q_OS_ANDROID
     const int splashScreenTimeMs = 2000;
