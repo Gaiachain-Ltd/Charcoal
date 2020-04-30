@@ -7,7 +7,14 @@
 #include "../helpers/cryptohelper.h"
 
 namespace {
-const QLatin1String UsersFileName = QLatin1String("users");
+const QLatin1String UsersFileName =
+#ifdef COCOA
+    QLatin1String("users-cocoa.db");
+#elif CHARCOAL
+    QLatin1String("users-charcoal.db");
+#else
+    #error(Cannot determine users file name!)
+#endif
 }
 
 namespace SettingKey {

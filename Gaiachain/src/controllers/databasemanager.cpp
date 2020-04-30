@@ -8,7 +8,14 @@
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(databaseManager, "database.manager")
 
-const QLatin1String DatabaseManager::sc_dbName = QLatin1String("local.db");
+const QLatin1String DatabaseManager::sc_dbName =
+#ifdef COCOA
+    QLatin1String("local-cocoa.db");
+#elif CHARCOAL
+    QLatin1String("local-charcoal.db");
+#else
+    #error(Cannot determine database file name!)
+#endif
 
 DatabaseManager::DatabaseManager(QObject *parent)
     : AbstractManager(parent), c_dbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + sc_dbName),
