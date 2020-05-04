@@ -1,7 +1,9 @@
 pragma Singleton
 
-import QtQuick 2.12
+import QtQuick 2.14
 
-GStyle {
+import "../"
+
+AbstractStyle {
     // TODO: Fill this for new values specific for Charcoal
 }

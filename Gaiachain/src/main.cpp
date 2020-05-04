@@ -47,11 +47,18 @@ int main(int argc, char *argv[])
     MainController mc;
     mc.setupQmlContext(engine);
 
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+        &app, [url](QObject *obj, const QUrl &objUrl) {
+            if (!obj && url == objUrl)
+                QCoreApplication::exit(-1);
+        }, Qt::QueuedConnection);
+
 #ifdef Q_OS_ANDROID
     const int splashScreenTimeMs = 2000;
-    QTimer::singleShot(splashScreenTimeMs, [&engine]() { engine.load(QUrl(QStringLiteral("qrc:///main.qml"))); } );
+    QTimer::singleShot(splashScreenTimeMs, [&engine]() { engine.load(url); } );
 #else
-    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
+    engine.load(url);
 #endif
 
     mc.startInitialWork();

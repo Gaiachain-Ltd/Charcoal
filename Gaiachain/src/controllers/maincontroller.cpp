@@ -140,10 +140,10 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // register singleton types
     qmlRegisterSingletonType(QUrl("qrc:///GStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
 #ifdef COCOA
-    qmlRegisterSingletonType(QUrl("qrc:///CocoaStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
+    qmlRegisterSingletonType(QUrl("qrc:///cocoa/CocoaStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
 #endif
 #ifdef CHARCOAL
-    qmlRegisterSingletonType(QUrl("qrc:///CharcoalStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
+    qmlRegisterSingletonType(QUrl("qrc:///charcoal/CharcoalStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
 #endif
     qmlRegisterSingletonType(QUrl("qrc:///GStatic.qml"), "com.gaiachain.static", 1, 0, "Static");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");

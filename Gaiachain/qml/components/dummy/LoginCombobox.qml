@@ -15,7 +15,7 @@ ComboBox
 
     function updateInputsProperties() {
         loginInput.text = useEasyLogin ?  Qt.binding(function() { return currentText }) : ""
-        passwordInput.text = useEasyLogin ?  dummyPassword : ""
+        passwordInput.text = useEasyLogin ?  useEasyLogin : ""
     }
 
     Component.onCompleted: updateInputsProperties()
