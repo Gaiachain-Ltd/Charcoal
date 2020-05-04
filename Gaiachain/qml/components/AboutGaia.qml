@@ -1,4 +1,5 @@
 import QtQuick 2.14
+import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.12
 
 import com.gaiachain.style 1.0
@@ -46,8 +47,13 @@ Item {
         }
 
         ListView {
-            model: 2
-
+            readonly property QtObject controller: mainController.languageController
+            model: controller.languages
+            delegate: ItemDelegate {
+                text: modelData.language
+                icon.source: modelData.icon
+                onClicked: controller.currentLanguageIndex = index
+            }
         }
     }
 }

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     MainController mc;
-    mc.setupQmlContext(engine);;
+    mc.setupQmlContext(engine);
 
 #ifdef Q_OS_ANDROID
     const int splashScreenTimeMs = 2000;

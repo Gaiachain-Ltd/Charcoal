@@ -6,6 +6,8 @@
 #include <QLocale>
 #include <QTranslator>
 
+class QQmlApplicationEngine;
+
 class Language
 {
     Q_GADGET
@@ -25,6 +27,9 @@ class LanguageManager : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QList<Language> languages READ languages CONSTANT)
+    Q_PROPERTY(int currentLanguageIndex READ currentLanguageIndex WRITE setCurrentLanguageIndex NOTIFY currentLanguageIndexChanged)
+
 public:
     LanguageManager(QObject *parent = nullptr);
 
@@ -34,6 +39,17 @@ public:
     void load();
 
     QList<Language> languages() const;
+
+    int currentLanguageIndex() const;
+
+    void connectQmlEngine(QQmlApplicationEngine *engine);
+
+public slots:
+    void setCurrentLanguageIndex(int currentLanguage);
+
+signals:
+    void currentLanguageIndexChanged(const int currentLanguage) const;
+    void languageChanged() const;
 
 private:
     void load(const QLocale::Language language);

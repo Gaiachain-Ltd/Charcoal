@@ -5,6 +5,8 @@
 #include <QSettings>
 #include <QCoreApplication>
 
+#include <QQmlApplicationEngine>
+
 #include <QDebug>
 
 Language::Language(const QLocale::Language lang)
@@ -56,6 +58,40 @@ QList<Language> LanguageManager::languages() const
     return m_languages;
 }
 
+int LanguageManager::currentLanguageIndex() const
+{
+    int result = 0;
+    for (const auto &language : qAsConst(m_languages)) {
+        if (m_currentLanguage == language.languageValue) {
+            return result;
+        }
+
+        result++;
+    }
+
+    return -1;
+}
+
+void LanguageManager::connectQmlEngine(QQmlApplicationEngine *engine)
+{
+    connect(this, &LanguageManager::languageChanged,
+            engine, &QQmlApplicationEngine::retranslate);
+}
+
+void LanguageManager::setCurrentLanguageIndex(int currentLanguage)
+{
+    if (currentLanguageIndex() == currentLanguage)
+        return;
+
+    if (currentLanguage < 0 || currentLanguage >= m_languages.length()) {
+        qFatal("Invalid language index!");
+    }
+
+    setLanguage(m_languages.at(currentLanguage).languageValue);
+
+    emit currentLanguageIndexChanged(currentLanguage);
+}
+
 void LanguageManager::load(const QLocale::Language language)
 {
     const QLocale locale(language);
@@ -73,4 +109,6 @@ void LanguageManager::load(const QLocale::Language language)
         m_currentLanguage = QLocale::English;
         qWarning() << "Cannot load translaction! Language:" << language;
     }
+
+    emit languageChanged();
 }

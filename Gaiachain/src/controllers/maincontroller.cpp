@@ -19,6 +19,7 @@
 #include "../helpers/modelhelper.h"
 #include "../helpers/packagedataproperties.h"
 #include "../helpers/keywordfilterproxymodel.h"
+#include "../common/languagemanager.h"
 
 #ifdef EASY_LOGIN
 #include "../common/dummy/commondummydata.h"
@@ -33,14 +34,15 @@ QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
 
 MainController::MainController(QObject *parent)
     : AbstractManager(parent),
-      m_application(new Application(this))
+      m_application(new Application(this)),
+      m_languageManager(new LanguageManager(this))
 {
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
     setupConnections();
 
-    m_languageManager.load();
+    m_languageManager->load();
 }
 
 void MainController::setupConnections()
@@ -171,6 +173,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("mainController"), this);
 
     // setup other components
+    m_languageManager->connectQmlEngine(&engine);
     m_pageManager.setupQmlContext(engine);
     m_userManager.setupQmlContext(engine);
     m_dbManager.setupQmlContext(engine);
@@ -235,6 +238,11 @@ QString MainController::easyLoginPassword() const
 Application *MainController::application() const
 {
     return m_application;
+}
+
+LanguageManager *MainController::languageManager() const
+{
+    return m_languageManager;
 }
 
 void MainController::setupQZXing(QQmlApplicationEngine &engine)
