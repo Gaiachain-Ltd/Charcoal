@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include <QDebug>
 
@@ -83,8 +84,14 @@ int LanguageManager::currentLanguageIndex() const
 
 void LanguageManager::connectQmlEngine(QQmlApplicationEngine *engine)
 {
-    connect(this, &LanguageManager::languageChanged,
-            engine, &QQmlApplicationEngine::retranslate);
+    if (engine) {
+        engine->rootContext()->setContextProperty(QStringLiteral("tr"), this);
+    }
+}
+
+QString LanguageManager::empty() const
+{
+    return QString();
 }
 
 void LanguageManager::setCurrentLanguageIndex(int currentLanguage)
@@ -128,4 +135,5 @@ void LanguageManager::load(const QLocale::Language language)
     }
 
     emit languageChanged();
+    emit emptyChanged();
 }

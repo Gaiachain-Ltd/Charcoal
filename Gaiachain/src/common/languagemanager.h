@@ -28,6 +28,8 @@ class LanguageManager : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString empty READ empty NOTIFY emptyChanged)
+
     Q_PROPERTY(QVariantList languages READ languages CONSTANT)
     Q_PROPERTY(int currentLanguageIndex READ currentLanguageIndex WRITE setCurrentLanguageIndex NOTIFY currentLanguageIndexChanged)
 
@@ -45,12 +47,15 @@ public:
 
     void connectQmlEngine(QQmlApplicationEngine *engine);
 
+    QString empty() const;
+
 public slots:
     void setCurrentLanguageIndex(int currentLanguage);
 
 signals:
     void currentLanguageIndexChanged(const int currentLanguage) const;
     void languageChanged() const;
+    void emptyChanged();
 
 private:
     void load(const QLocale::Language language);
@@ -64,4 +69,5 @@ private:
 
     QLocale::Language m_currentLanguage = QLocale::French;
     std::unique_ptr<QTranslator> m_translator;
+    QString m_empty;
 };

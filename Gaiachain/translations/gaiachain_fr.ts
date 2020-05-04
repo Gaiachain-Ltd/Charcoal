@@ -370,7 +370,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="110"/>
         <source>Created in offline mode. It will be added automatically to the database when the application is online.</source>
-        <translation type="unfinished"></translation>
+        <translation>Créé en mode hors ligne. Il sera ajouté automatiquement à la base de données lorsque l&apos;application sera en ligne.</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="112"/>
@@ -595,7 +595,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="171"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="172"/>
