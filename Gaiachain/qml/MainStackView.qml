@@ -63,7 +63,7 @@ Item {
         id: stackView
         anchors.fill: parent
 
-        initialItem: pageManager.getInitialPageUrl()
+        //initialItem: pageManager.getInitialPageUrl()
 
         onCurrentItemChanged: currentItem.initialize()
 
@@ -72,8 +72,8 @@ Item {
                 property: "x"
                 from: windowWidth
                 to: 0
-                duration: Style.animationDuration
-                easing.type: Style.animationEasing
+                duration: GStyle.animationDuration
+                easing.type: GStyle.animationEasing
             }
         }
         pushExit: Transition {
@@ -81,8 +81,8 @@ Item {
                 property: "x"
                 from: 0
                 to: -windowWidth
-                duration: Style.animationDuration
-                easing.type: Style.animationEasing
+                duration: GStyle.animationDuration
+                easing.type: GStyle.animationEasing
             }
         }
         popEnter: Transition {
@@ -90,8 +90,8 @@ Item {
                 property: "x"
                 from: -windowWidth
                 to: 0
-                duration: Style.animationDuration
-                easing.type: Style.animationEasing
+                duration: GStyle.animationDuration
+                easing.type: GStyle.animationEasing
             }
         }
         popExit: Transition {
@@ -99,8 +99,8 @@ Item {
                 property: "x"
                 from: 0
                 to: windowWidth
-                duration: Style.animationDuration
-                easing.type: Style.animationEasing
+                duration: GStyle.animationDuration
+                easing.type: GStyle.animationEasing
             }
         }
         replaceEnter: Transition {
@@ -108,8 +108,8 @@ Item {
                 property: "x"
                 from: windowWidth
                 to: 0
-                duration: Style.animationDuration
-                easing.type: Style.animationEasing
+                duration: GStyle.animationDuration
+                easing.type: GStyle.animationEasing
             }
         }
         replaceExit: Transition {
@@ -117,8 +117,8 @@ Item {
                 property: "x"
                 from: 0
                 to: -windowWidth
-                duration: Style.animationDuration
-                easing.type: Style.animationEasing
+                duration: GStyle.animationDuration
+                easing.type: GStyle.animationEasing
             }
         }
     }

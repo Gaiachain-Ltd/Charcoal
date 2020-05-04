@@ -10,25 +10,25 @@ import "../components" as Components
 Item {
     id: top
 
-    implicitHeight: s(Style.footerHeight)
+    implicitHeight: s(GStyle.footerHeight)
 
     Items.BlockMouseArea{}
 
     Rectangle {
         id: background
         anchors.fill: parent
-        color: Style.footerBackgroundColor
+        color: GStyle.footerBackgroundColor
     }
 
     RowLayout {
         anchors {
             fill: parent
-            margins: s(Style.middleMargin)
+            margins: s(GStyle.middleMargin)
         }
 
         Components.ConnectionStateItem {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: s(Style.buttonImageHeight)
+            Layout.preferredHeight: s(GStyle.buttonImageHeight)
             Layout.fillWidth: true
 
             connectionState: sessionManager.connectionState
@@ -36,7 +36,7 @@ Item {
 
         Components.CommunicationStateItem {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: s(Style.buttonImageHeight)
+            Layout.preferredHeight: s(GStyle.buttonImageHeight)
             Layout.fillWidth: true
 
             communicationInProgress: sessionManager.processing || dataManager.processing

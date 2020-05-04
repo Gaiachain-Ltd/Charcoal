@@ -12,7 +12,7 @@ import com.gaiachain.platforms 1.0
 import "../items" as Items
 import "../components" as Components
 
-BasePage {
+GPage {
     id: top
 
     property string scannedId
@@ -87,7 +87,7 @@ BasePage {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: Style.none
+        spacing: GStyle.none
 
         Camera {
             id: camera
@@ -141,7 +141,7 @@ BasePage {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignBottom
 
-            implicitHeight: Style.none
+            implicitHeight: GStyle.none
 
             scanning: (scanStatus === Enums.QRScanStatus.Scanning)
 
@@ -162,38 +162,38 @@ BasePage {
                 Components.ChangeAnimation {
                     target: qrStatus.textItem
                     property: "opacity"
-                    inValue: Style.visible
-                    outValue: Style.hidden
-                    duration: Style.animationDuration/2
+                    inValue: GStyle.visible
+                    outValue: GStyle.hidden
+                    duration: GStyle.animationDuration/2
                 }
             }
 
             states: [
                 State {
                     name: "unknown"; when: (scanStatus ===  Enums.QRScanStatus.Unknown)
-                    PropertyChanges { target: qrStatus; implicitHeight: Style.none }
+                    PropertyChanges { target: qrStatus; implicitHeight: GStyle.none }
                 },
 
                 State {
                     name: "scanning"; when: (scanStatus === Enums.QRScanStatus.Scanning)
-                    PropertyChanges { target: qrStatus; color: Style.backgroundColor; textColor: Style.textPrimaryColor; implicitHeight: s(Style.footerHeight) }
+                    PropertyChanges { target: qrStatus; color: GStyle.backgroundColor; textColor: GStyle.textPrimaryColor; implicitHeight: s(GStyle.footerHeight) }
                 },
 
                 State {
                     name: "success"; when: (scanStatus === Enums.QRScanStatus.Success)
-                    PropertyChanges { target: qrStatus; color: Style.primaryColor; textColor: Style.textSecondaryColor; implicitHeight: s(Style.footerHeight) }
+                    PropertyChanges { target: qrStatus; color: GStyle.primaryColor; textColor: GStyle.textSecondaryColor; implicitHeight: s(GStyle.footerHeight) }
                 },
 
                 State {
                     name: "failed"; when: (scanStatus === Enums.QRScanStatus.Failed)
-                    PropertyChanges { target: qrStatus; color: Style.errorColor; textColor: Style.textSecondaryColor; implicitHeight: s(Style.footerHeight) }
+                    PropertyChanges { target: qrStatus; color: GStyle.errorColor; textColor: GStyle.textSecondaryColor; implicitHeight: s(GStyle.footerHeight) }
                 }
             ]
 
             transitions: Transition {
                 ParallelAnimation {
-                    ColorAnimation { target: qrStatus; duration: Style.animationDuration; easing.type: Style.animationEasing }
-                    PropertyAnimation { target: qrStatus; property: "implicitHeight"; duration: Style.animationDuration; easing.type: Style.animationEasing }
+                    ColorAnimation { target: qrStatus; duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
+                    PropertyAnimation { target: qrStatus; property: "implicitHeight"; duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
                 }
             }
         }
@@ -205,7 +205,7 @@ BasePage {
         width: s(Static.frameSvgImgHeight);
         height: s(Static.frameSvgImgHeight)
 
-        source: !qrStatus.manual ? Style.frameImgUrl : Style.qrImgUrl
+        source: !qrStatus.manual ? GStyle.frameImgUrl : GStyle.qrImgUrl
         anchors.centerIn: parent
 
         onClicked: {
@@ -223,8 +223,8 @@ BasePage {
 
             function source() {
                 switch (scanStatus) {
-                    case Enums.QRScanStatus.Success: return Style.checkImgUrl
-                    case Enums.QRScanStatus.Failed: return Style.refreshImgUrl
+                    case Enums.QRScanStatus.Success: return GStyle.checkImgUrl
+                    case Enums.QRScanStatus.Failed: return GStyle.refreshImgUrl
                     case Enums.QRScanStatus.Scanning: case Enums.QRScanStatus.Unknown: return Strings.empty
                 }
             }
@@ -246,22 +246,22 @@ BasePage {
             }
 
             Behavior on opacity {
-                NumberAnimation { duration: Style.animationDuration; easing.type: Style.animationEasing }
+                NumberAnimation { duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
             }
         }
 
-        Items.BasicText {
+        Items.GText {
             id: displayIdText
 
             text: top.scannedId
-            color: Style.textSecondaryColor
+            color: GStyle.textSecondaryColor
             visible: (top.displayId && scanStatus === Enums.QRScanStatus.Success)
             font.bold: true
 
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 top: parent.bottom
-                topMargin: s(Style.middleBigMargin)
+                topMargin: s(GStyle.middleBigMargin)
             }
         }
     }

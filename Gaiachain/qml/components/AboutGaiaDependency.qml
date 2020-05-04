@@ -43,9 +43,9 @@ Item {
         id: mainLayout
 
         anchors.fill: parent
-        spacing: s(Style.tinyMargin)
+        spacing: s(GStyle.tinyMargin)
 
-        Items.BaseTabBar {
+        Items.GTabBar {
             id: tabBar
 
             Layout.fillWidth: true
@@ -53,7 +53,7 @@ Item {
             Repeater {
                 model: dependencies
 
-                Items.BaseTabButton {
+                Items.GTabButton {
                     text: name
                 }
             }

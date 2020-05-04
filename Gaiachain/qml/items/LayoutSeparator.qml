@@ -5,7 +5,7 @@ import com.gaiachain.style 1.0
 
 Rectangle {
     Layout.fillWidth: true
-    implicitHeight: sr(Style.separatorHeight)
+    implicitHeight: sr(GStyle.separatorHeight)
 
-    color: Style.separatorColor
+    color: GStyle.separatorColor
 }

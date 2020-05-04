@@ -20,39 +20,39 @@ Rectangle {
 
     signal typedManually(string manualId)
 
-    implicitHeight: s(Style.footerHeight)
+    implicitHeight: s(GStyle.footerHeight)
 
-    color: Style.backgroundColor
+    color: GStyle.backgroundColor
 
     RowLayout {
         anchors {
             fill: parent
-            leftMargin: s(Style.hugeMargin)
-            rightMargin: s(Style.hugeMargin)
+            leftMargin: s(GStyle.hugeMargin)
+            rightMargin: s(GStyle.hugeMargin)
         }
 
-        spacing: s(Style.tinyMargin)
+        spacing: s(GStyle.tinyMargin)
 
-        Items.BasicText {
+        Items.GText {
             id: statusText
 
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
 
             font {
-                pixelSize: s(Style.buttonPixelSize)
-                family: Style.primaryFontFamily
+                pixelSize: s(GStyle.buttonPixelSize)
+                family: GStyle.primaryFontFamily
                 capitalization: Font.AllUppercase
-                letterSpacing: s(Style.buttonLetterSpacing)
+                letterSpacing: s(GStyle.buttonLetterSpacing)
                 weight: Font.DemiBold
             }
 
-            color: Style.textPrimaryColor
+            color: GStyle.textPrimaryColor
 
             visible: !top.manual
         }
 
-        Items.GenericInput {
+        Items.GInput {
             id: manualInput
 
             Layout.fillWidth: true
@@ -67,10 +67,10 @@ Rectangle {
             id: imageButton
 
             Layout.alignment: Qt.AlignRight
-            Layout.preferredHeight: s(Style.buttonImageMiddleBigHeight)
-            Layout.preferredWidth: s(Style.buttonImageMiddleBigHeight)
+            Layout.preferredHeight: s(GStyle.buttonImageMiddleBigHeight)
+            Layout.preferredWidth: s(GStyle.buttonImageMiddleBigHeight)
 
-            source: top.manual ? Style.enterImgUrl : Style.typeManuallyImgUrl
+            source: top.manual ? GStyle.enterImgUrl : GStyle.typeManuallyImgUrl
 
             function handleClick() {
                 if (!top.manual) {
@@ -96,16 +96,16 @@ Rectangle {
             PropertyAnimation {
                 target: imageButton
                 property: "opacity"
-                to: !top.scanning ? Style.visible : Style.hidden
-                duration: Style.animationDuration;
-                easing.type: Style.animationEasing
+                to: !top.scanning ? GStyle.visible : GStyle.hidden
+                duration: GStyle.animationDuration;
+                easing.type: GStyle.animationEasing
             }
             PropertyAnimation {
                 target: imageButton
                 property: "Layout.preferredWidth"
-                to: !top.scanning ? s(Style.buttonImageMiddleBigHeight) : Style.none
-                duration: Style.animationDuration;
-                easing.type: Style.animationEasing
+                to: !top.scanning ? s(GStyle.buttonImageMiddleBigHeight) : GStyle.none
+                duration: GStyle.animationDuration;
+                easing.type: GStyle.animationEasing
             }
         }
     }

@@ -10,12 +10,12 @@ Control {
     property alias fillMode: image.fillMode
 
     property alias backgroundColor: background.color
-    property int borderRadius: s(Style.buttonSmallRadius)
+    property int borderRadius: s(GStyle.buttonSmallRadius)
 
-    implicitWidth: s(Style.buttonImageHeight)
-    implicitHeight: s(Style.buttonImageHeight)
+    implicitWidth: s(GStyle.buttonImageHeight)
+    implicitHeight: s(GStyle.buttonImageHeight)
 
-    padding: s(Style.buttonImageMargin)
+    padding: s(GStyle.buttonImageMargin)
 
     contentItem: SvgImage { id: image }
 

@@ -6,7 +6,7 @@ import com.gaiachain.style 1.0
 ImageButton {
     id: top
 
-    property real numberRadius: s(Style.buttonNumberRadius)
+    property real numberRadius: s(GStyle.buttonNumberRadius)
     property int number: 0
 
     topPadding: numberRadius
@@ -28,16 +28,16 @@ ImageButton {
         color: palette.buttonText
 
         border {
-            width: sr(Style.controlBoldestBorderWidth)
+            width: sr(GStyle.controlBoldestBorderWidth)
             color: palette.button
         }
 
         visible: number != 0
 
-        BasicText {
+        GText {
             anchors {
                 fill: parent
-                margins: s(Style.tinyMargin) / 3
+                margins: s(GStyle.tinyMargin) / 3
             }
 
             font {
@@ -46,7 +46,7 @@ ImageButton {
             }
 
             fontSizeMode: Text.Fit
-            minimumPixelSize: s(Style.tinyPixelSize)
+            minimumPixelSize: s(GStyle.tinyPixelSize)
 
             color: palette.button
 

@@ -17,7 +17,7 @@ ApplicationWindow
     height: mainController.isDesktop ? 800 : Screen.desktopAvailableHeight
     visible: true
 
-    color: Style.backgroundColor
+    color: GStyle.backgroundColor
 
     function s(num) {
         return Utility.scaleByDpi(num)
@@ -53,10 +53,10 @@ ApplicationWindow
         }
 
         height: Qt.inputMethod.keyboardRectangle.y > 0 && Qt.inputMethod.keyboardRectangle.y < mainWindow.height
-                ? Qt.inputMethod.keyboardRectangle.y + Math.round(s(Style.footerHeight))
+                ? Qt.inputMethod.keyboardRectangle.y + Math.round(s(GStyle.footerHeight))
                 : parent.height
 
-        Behavior on height { NumberAnimation { duration: Style.keyboardAnimationDuration } }
+        Behavior on height { NumberAnimation { duration: GStyle.keyboardAnimationDuration } }
     }
 
     onClosing: close.accepted = mainStackView.onClosingEvent()

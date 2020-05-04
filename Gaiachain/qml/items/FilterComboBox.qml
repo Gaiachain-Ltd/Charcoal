@@ -8,7 +8,7 @@ import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 
-GenericComboBox {
+GComboBox {
     id: top
 
     property alias sourceModel: keywordFilter.sourceModel
@@ -29,19 +29,19 @@ GenericComboBox {
 
         parent: Overlay.overlay
 
-        margins: s(Style.bigMargin)
+        margins: s(GStyle.bigMargin)
 
         x: margins
         y: margins
         width: parent.width - 2 * margins
         height: parent.height - 2 * margins - (Qt.inputMethod.keyboardRectangle.y > 0 ? Qt.inputMethod.keyboardRectangle.height : 0)
 
-        Behavior on height { NumberAnimation { duration: Style.keyboardAnimationDuration } }
+        Behavior on height { NumberAnimation { duration: GStyle.keyboardAnimationDuration } }
 
         focus: true
 
         Overlay.modal: Rectangle {
-            color: Style.backgroundShadowColor
+            color: GStyle.backgroundShadowColor
         }
 
         onClosed: top.indicator.focus = false
@@ -50,9 +50,9 @@ GenericComboBox {
             RowLayout {
                 Layout.fillHeight: false
 
-                spacing: s(Style.smallSpacing)
+                spacing: s(GStyle.smallSpacing)
 
-                Items.GenericInput {
+                Items.GInput {
                     id: searchInput
                     Layout.fillWidth: true
 
@@ -61,9 +61,9 @@ GenericComboBox {
                     onTextChanged: keywordFilter.keyword = text
                 }
                 PureImageButton {
-                    Layout.preferredHeight: s(Style.buttonImageTinyHeight)
+                    Layout.preferredHeight: s(GStyle.buttonImageTinyHeight)
 
-                    source: Style.closeBlackImgUrl
+                    source: GStyle.closeBlackImgUrl
                     onClicked: popup.close()
                 }
             }
@@ -83,21 +83,21 @@ GenericComboBox {
 
                 ScrollBar.vertical: ScrollBar {}
 
-                header: Items.GenericItemDelegate {
+                header: Items.GItemDelegate {
                     width: entriesList.width
 
                     text: emptyListText
                     visible: !entriesList.count
-                    height: visible ? implicitHeight : Style.none
+                    height: visible ? implicitHeight : GStyle.none
                 }
 
                 footerPositioning: ListView.OverlayFooter
-                footer: Items.GenericItemDelegate {
+                footer: Items.GItemDelegate {
                     width: entriesList.width
 
                     text: footerText
                     visible: footerVisible
-                    height: visible ? implicitHeight : Style.none
+                    height: visible ? implicitHeight : GStyle.none
 
                     bold: true
                     separatorVisible: true
@@ -115,11 +115,11 @@ GenericComboBox {
         }
 
         background: Rectangle {
-            radius: sr(Style.tinyMargin)
-            color: Style.backgroundColor
+            radius: sr(GStyle.tinyMargin)
+            color: GStyle.backgroundColor
             border {
-                width: sr(Style.separatorHeight)
-                color: Style.separatorColor
+                width: sr(GStyle.separatorHeight)
+                color: GStyle.separatorColor
             }
         }
     }

@@ -21,32 +21,32 @@ Item {
     property string title
     property bool logoVisible: false
 
-    implicitHeight: s(Style.headerHeight)
+    implicitHeight: s(GStyle.headerHeight)
 
     Items.BlockMouseArea{}
 
     Rectangle {
         id: background
         anchors.fill: parent
-        color: Style.headerBackgroundColor
+        color: GStyle.headerBackgroundColor
     }
 
     RowLayout {
         anchors {
             fill: parent
-            leftMargin: s(Style.middleMargin)
-            rightMargin: s(Style.middleMargin)
-            topMargin: s(Style.smallMargin)
-            bottomMargin: s(Style.smallMargin)
+            leftMargin: s(GStyle.middleMargin)
+            rightMargin: s(GStyle.middleMargin)
+            topMargin: s(GStyle.smallMargin)
+            bottomMargin: s(GStyle.smallMargin)
         }
 
         Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: s(Style.buttonImageSmallHeight)
+            Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
             opacity: isOnHomePage || isBackToHomePage ? 0 : 1
             enabled: !isOnHomePage && !isBackToHomePage
-            source: Style.backImgUrl
+            source: GStyle.backImgUrl
 
             onClicked: backHandler()
         }
@@ -56,9 +56,9 @@ Item {
         Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
-            Layout.preferredHeight: s(Style.buttonImageBigHeight)
+            Layout.preferredHeight: s(GStyle.buttonImageBigHeight)
 
-            source: Style.logoWhiteImgUrl
+            source: GStyle.logoWhiteImgUrl
             visible: logoVisible
 
             onClicked: {
@@ -74,11 +74,11 @@ Item {
             }
         }
 
-        Items.BasicText {
+        Items.GText {
             Layout.fillWidth: true
             text: title
-            color: Style.textSecondaryColor
-            font.pixelSize: s(Style.titlePixelSize)
+            color: GStyle.textSecondaryColor
+            font.pixelSize: s(GStyle.titlePixelSize)
             wrapMode: Text.WordWrap
 
             visible: !logoVisible
@@ -88,18 +88,18 @@ Item {
 
         Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: s(Style.buttonImageSmallHeight)
+            Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
-            source: Style.closeImgUrl
+            source: GStyle.closeImgUrl
             visible: !isOnHomePage
 
             onClicked: backToHomeHandler()
         }
         Items.PureImageButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: s(Style.buttonImageSmallHeight)
+            Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
-            source: Style.logoutImgUrl
+            source: GStyle.logoutImgUrl
             visible: isOnHomePage
 
             onClicked: logout()

@@ -23,7 +23,7 @@ Item {
 
         spacing: sr(3)
 
-        BasicText {
+        GText {
             id: title
 
             Layout.fillWidth: true
@@ -34,7 +34,7 @@ Item {
             font.bold: true
         }
 
-        BasicText {
+        GText {
             id: content
 
             Layout.fillWidth: true

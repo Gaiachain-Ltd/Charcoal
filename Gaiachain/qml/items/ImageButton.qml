@@ -3,18 +3,18 @@ import QtQuick.Controls 2.4
 
 import com.gaiachain.style 1.0
 
-GenericButton {
+GButton {
     id: top
 
     property alias source: image.source
     property alias fillMode: image.fillMode
     property alias status: image.status
 
-    borderRadius: s(Style.buttonSmallRadius)
-    padding: s(Style.buttonImageMargin)
+    borderRadius: s(GStyle.buttonSmallRadius)
+    padding: s(GStyle.buttonImageMargin)
 
-    implicitWidth: s(Style.buttonImageHeight)
-    implicitHeight: s(Style.buttonImageHeight)
+    implicitWidth: s(GStyle.buttonImageHeight)
+    implicitHeight: s(GStyle.buttonImageHeight)
 
     contentItem: SvgImage { id: image }
 }

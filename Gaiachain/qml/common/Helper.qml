@@ -80,14 +80,14 @@ QtObject {
 
     function supplyChainActionIcon(action) {
         switch(action) {
-        case Enums.SupplyChainAction.Harvest: return Style.supplyChainSubmenuHarvestImgUrl
-        case Enums.SupplyChainAction.GrainProcessing: return Style.supplyChainSubmenuGrainProcessingImgUrl
-        case Enums.SupplyChainAction.Bagging: return Style.supplyChainSubmenuBaggingImgUrl
-        case Enums.SupplyChainAction.LotCreation: return Style.supplyChainSubmenuLotCreationImgUrl
+        case Enums.SupplyChainAction.Harvest: return GStyle.supplyChainSubmenuHarvestImgUrl
+        case Enums.SupplyChainAction.GrainProcessing: return GStyle.supplyChainSubmenuGrainProcessingImgUrl
+        case Enums.SupplyChainAction.Bagging: return GStyle.supplyChainSubmenuBaggingImgUrl
+        case Enums.SupplyChainAction.LotCreation: return GStyle.supplyChainSubmenuLotCreationImgUrl
 
-        case Enums.SupplyChainAction.WarehouseTransport: return Style.supplyChainSubmenuTransportImgUrl
-        case Enums.SupplyChainAction.SectionReception: return Style.supplyChainSubmenuReceptionImgUrl
-        case Enums.SupplyChainAction.ExportReception: return Style.supplyChainSubmenuReceptionImgUrl
+        case Enums.SupplyChainAction.WarehouseTransport: return GStyle.supplyChainSubmenuTransportImgUrl
+        case Enums.SupplyChainAction.SectionReception: return GStyle.supplyChainSubmenuReceptionImgUrl
+        case Enums.SupplyChainAction.ExportReception: return GStyle.supplyChainSubmenuReceptionImgUrl
         default:
             console.warn("supplyChainActionIcon: Invalid action provided!", action)
         }
@@ -121,18 +121,18 @@ QtObject {
             console.warn("packageTypeName: Invalid packageType provided!")
         }
 
-        return Style.unknownColor
+        return GStyle.unknownColor
     }
 
     function packageTypeColor(packageType) {
         switch(packageType) {
-        case Enums.PackageType.Harvest: return Style.harvestColor
-        case Enums.PackageType.Sac: return Style.sacColor
-        case Enums.PackageType.Lot: return Style.lotColor
+        case Enums.PackageType.Harvest: return GStyle.harvestColor
+        case Enums.PackageType.Sac: return GStyle.sacColor
+        case Enums.PackageType.Lot: return GStyle.lotColor
         default:
             console.warn("packageTypeColor: Invalid packageType provided!")
         }
 
-        return Style.unknownColor
+        return GStyle.unknownColor
     }
 }

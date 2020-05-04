@@ -8,7 +8,7 @@ SequentialAnimation {
     property QtObject target
 
     property string property
-    property int duration: Style.animationDuration
+    property int duration: GStyle.animationDuration
 
     property alias outValue: outAnimation.to
     property alias inValue: inAnimation.to
@@ -19,7 +19,7 @@ SequentialAnimation {
         target: top.target
         property: top.property
         duration: top.duration
-        easing.type: Style.animationEasing
+        easing.type: GStyle.animationEasing
     }
 
     PropertyAnimation {}
@@ -30,6 +30,6 @@ SequentialAnimation {
         target: top.target
         property: top.property
         duration: top.duration
-        easing.type: Style.animationEasing
+        easing.type: GStyle.animationEasing
     }
 }
