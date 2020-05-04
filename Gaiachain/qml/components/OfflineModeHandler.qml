@@ -11,7 +11,7 @@ QtObject
         errorText += "\n\n" + packageId
         errorText += "\n" + Helper.actionDescriptionStatusText(action)
 
-        pageManager.openPopup(Enums.Popup.Information, {"text": errorText, "buttonPrimaryColor": Style.errorColor})
+        pageManager.openPopup(Enums.Popup.Information, {"text": errorText, "buttonPrimaryColor": GStyle.errorColor})
     }
 
     property var sessionManagerConnections: Connections {

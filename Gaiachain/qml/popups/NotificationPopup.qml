@@ -10,22 +10,22 @@ import "../popups" as Popups
 Popups.TimedPopup {
     id: top
 
-    property color backgroundColor: Style.primaryColor
+    property color backgroundColor: GStyle.primaryColor
 
     property string text
 
-    readonly property int topMarginStart: (parent.height - height - s(Style.hugeMargin) * 6 - s(Style.transitionMoveYRange))
-    readonly property int topMarginFinish: (parent.height - height - s(Style.hugeMargin) * 6)
+    readonly property int topMarginStart: (parent.height - height - s(GStyle.hugeMargin) * 6 - s(GStyle.transitionMoveYRange))
+    readonly property int topMarginFinish: (parent.height - height - s(GStyle.hugeMargin) * 6)
 
     property alias iconSource: icon.source
 
-    openedInterval: Style.notificationPopupOpenedDefaultInterval
+    openedInterval: GStyle.notificationPopupOpenedDefaultInterval
 
     topMargin: topMarginStart
-    padding: s(Style.hugeMargin)
+    padding: s(GStyle.hugeMargin)
 
     contentItem: ColumnLayout {
-        spacing: (icon.hasImage ? s(Style.tinyMargin) : Style.none)
+        spacing: (icon.hasImage ? s(GStyle.tinyMargin) : GStyle.none)
 
         Items.SvgImage {
             id: icon
@@ -34,19 +34,19 @@ Popups.TimedPopup {
 
             visible: hasImage
 
-            Layout.preferredHeight: s(Style.notificationPopupIconHeight)
-            Layout.preferredWidth: s(Style.notificationPopupIconHeight)
+            Layout.preferredHeight: s(GStyle.notificationPopupIconHeight)
+            Layout.preferredWidth: s(GStyle.notificationPopupIconHeight)
             Layout.alignment: Qt.AlignHCenter
         }
 
-        Items.BasicText {
+        Items.GText {
             Layout.fillWidth: true
 
-            color: Style.textSecondaryColor
+            color: GStyle.textSecondaryColor
             style: Text.Raised
-            styleColor: Style.textSecondaryColor
+            styleColor: GStyle.textSecondaryColor
             font {
-                pixelSize: s(Style.popupPixelSize)
+                pixelSize: s(GStyle.popupPixelSize)
                 weight: Font.DemiBold
             }
 
@@ -58,29 +58,29 @@ Popups.TimedPopup {
 
     enter: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; to: 1.0; duration: Style.animationDuration; easing.type: Style.animationEasing }
-            NumberAnimation { property: "topMargin"; to: topMarginFinish; duration: Style.animationDuration; easing.type: Style.animationEasing }
+            NumberAnimation { property: "opacity"; to: 1.0; duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
+            NumberAnimation { property: "topMargin"; to: topMarginFinish; duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
         }
     }
 
     exit: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; to: 0.0; duration: Style.animationDuration; easing.type: Style.animationEasing }
-            NumberAnimation { property: "topMargin"; to: topMarginStart; duration: Style.animationDuration; easing.type: Style.animationEasing }
+            NumberAnimation { property: "opacity"; to: 0.0; duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
+            NumberAnimation { property: "topMargin"; to: topMarginStart; duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
         }
     }
 
     Overlay.modal: Rectangle {
-        color: Style.backgroundShadowColor
+        color: GStyle.backgroundShadowColor
 
         Behavior on opacity {
-            NumberAnimation { property: "opacity"; duration: Style.animationDuration; easing.type: Style.animationEasing }
+            NumberAnimation { property: "opacity"; duration: GStyle.animationDuration; easing.type: GStyle.animationEasing }
         }
     }
 
     background: Rectangle {
         color: top.backgroundColor
-        radius: s(Style.hugeMargin) * 1.5
+        radius: s(GStyle.hugeMargin) * 1.5
 
         MouseArea {
             anchors.fill: parent

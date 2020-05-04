@@ -15,23 +15,23 @@ Item {
         id: mainLayout
 
         anchors.fill: parent
-        spacing: s(Style.tinyMargin)
+        spacing: s(GStyle.tinyMargin)
 
-        Items.BasicText {
+        Items.GText {
             Layout.fillWidth: true
 
             font {
-                pixelSize: s(Style.titlePixelSize)
+                pixelSize: s(GStyle.titlePixelSize)
                 bold: true
             }
 
             text: mainController.application.name
         }
 
-        Items.BasicText {
+        Items.GText {
             Layout.fillWidth: true
 
-            font.pixelSize: s(Style.subtitlePixelSize)
+            font.pixelSize: s(GStyle.subtitlePixelSize)
 
             text: "v%1:%2".arg(mainController.application.version)
                           .arg(mainController.application.commit)

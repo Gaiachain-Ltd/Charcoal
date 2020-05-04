@@ -11,11 +11,11 @@ Item {
     property bool finished: false
     property color borderColor: {
         if (error) {
-            return Style.errorBorderColor
+            return GStyle.errorBorderColor
         } else if (finished) {
-            return Style.finishedBorderColor
+            return GStyle.finishedBorderColor
         } else {
-            return Style.normalBorderColor
+            return GStyle.normalBorderColor
         }
     }
 

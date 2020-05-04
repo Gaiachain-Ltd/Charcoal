@@ -134,9 +134,14 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qmlRegisterUncreatableType<PackageData>("com.gaiachain.types", 1, 0, "PackageData", "Cannot create types in QML");
 
     // register singleton types
-    qmlRegisterSingletonType(QUrl("qrc:///GaiaStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
-    qmlRegisterSingletonType(QUrl("qrc:///GaiaStyle.qml"), "com.gaiachain.style", 1, 0, "Style");
-    qmlRegisterSingletonType(QUrl("qrc:///GaiaStatic.qml"), "com.gaiachain.static", 1, 0, "Static");
+    qmlRegisterSingletonType(QUrl("qrc:///GStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
+#ifdef COCOA
+    qmlRegisterSingletonType(QUrl("qrc:///CocoaStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
+#endif
+#ifdef CHARCOAL
+    qmlRegisterSingletonType(QUrl("qrc:///CharcoalStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
+#endif
+    qmlRegisterSingletonType(QUrl("qrc:///GStatic.qml"), "com.gaiachain.static", 1, 0, "Static");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");
 
     qmlRegisterSingletonType<Utility>("com.gaiachain.helpers", 1, 0,

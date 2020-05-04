@@ -38,7 +38,7 @@ ComboBox
 
         contentItem: Text {
             text: modelData
-            color: Style.textPrimaryColor
+            color: GStyle.textPrimaryColor
             font: loginInput.font
 
             elide: Text.ElideRight

@@ -6,10 +6,10 @@ import com.gaiachain.style 1.0
 import "../items" as Items
 import "../popups" as Popups
 
-Popups.GenericPopup {
+Popups.GPopup {
     id: top
 
-    property int openedInterval: Style.notificationPopupOpenedDefaultInterval
+    property int openedInterval: GStyle.notificationPopupOpenedDefaultInterval
 
     function forceClose() {
         popupTimer.stop()

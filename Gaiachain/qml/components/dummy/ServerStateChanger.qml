@@ -9,7 +9,7 @@ Item
     anchors.fill: parent
     visible: typeof (fakeServer) !== "undefined"
 
-    Items.BasicText {
+    Items.GText {
         id: indicator
         anchors.fill: parent
 

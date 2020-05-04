@@ -7,7 +7,7 @@ import com.gaiachain.style 1.0
 import "../components" as Components
 import "../items" as Items
 
-BasePopup {
+ButtonPopup {
     id: top
 
     anchors.centerIn: Overlay.overlay
@@ -16,17 +16,17 @@ BasePopup {
     contentItem: Components.AboutGaia {}
 
     background: Rectangle {
-        radius: s(Style.tinyMargin)
+        radius: s(GStyle.tinyMargin)
 
         Items.PureImageButton {
             anchors {
                 right: parent.right
-                rightMargin: s(Style.smallMargin)
+                rightMargin: s(GStyle.smallMargin)
                 top: parent.top
-                topMargin: s(Style.smallMargin)
+                topMargin: s(GStyle.smallMargin)
             }
 
-            source: Style.clearImgUrl
+            source: GStyle.clearImgUrl
 
             width: 64
             height: 64

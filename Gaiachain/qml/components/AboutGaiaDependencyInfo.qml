@@ -26,15 +26,15 @@ Item {
         id: mainLayout
 
         anchors.fill: parent
-        spacing: s(Style.tinyMargin)
+        spacing: s(GStyle.tinyMargin)
 
-        Items.BasicText {
+        Items.GText {
             id: version
 
             Layout.fillWidth: true
         }
 
-        Items.BasicText {
+        Items.GText {
             id: license
 
             Layout.fillWidth: true

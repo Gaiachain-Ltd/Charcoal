@@ -9,10 +9,10 @@ Items.SvgImage {
 
     property bool running: true
 
-    height: s(Style.buttonHeight)
-    width: s(Style.buttonHeight)
+    height: s(GStyle.buttonHeight)
+    width: s(GStyle.buttonHeight)
 
-    source: Style.spinnerImgUrl
+    source: GStyle.spinnerImgUrl
 
     RotationAnimator {
         target: top
