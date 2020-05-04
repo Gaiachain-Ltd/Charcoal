@@ -46,22 +46,49 @@ Item {
             Layout.fillWidth: true
         }
 
-        ListView {
-            id: languageList
+        MouseArea {
+            id: row
 
+            readonly property QtObject manager: mainController.languageManager
+            property int currentIndex: manager.currentLanguageIndex
+
+            Layout.preferredHeight: 60
             Layout.fillWidth: true
-            height: 240
 
-            readonly property QtObject controller: mainController.languageManager
-            model: controller.languages
+            onClicked: {
+                console.log("Language switch clicked")
+                let newIndex = row.currentIndex + 1;
+                if (newIndex >= row.manager.languages.length) {
+                    newIndex = 0;
+                }
 
-            delegate: ItemDelegate {
-                height: 60
-                width: languageList.width
-                text: modelData.language
-                icon.source: modelData.icon
-                highlighted: languageList.controller.currentLanguageIndex === index
-                onClicked: languageList.controller.currentLanguageIndex = index
+                row.manager.currentLanguageIndex = newIndex;
+            }
+
+            Row {
+                anchors {
+                    centerIn: parent
+                }
+
+                height: parent.height
+                spacing: s(GStyle.buttonLetterSpacing)
+
+                Image {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                    }
+
+                    source: row.manager.languages[row.currentIndex].icon
+                }
+
+                Items.GText {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                    }
+                    Layout.fillWidth: true
+                    font.pixelSize: s(GStyle.subtitlePixelSize)
+                    text: row.manager.languages[row.currentIndex].language
+                }
             }
         }
     }
