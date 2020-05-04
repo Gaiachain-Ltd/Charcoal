@@ -9,11 +9,15 @@
 
 #include <QDebug>
 
+Language::Language()
+{
+}
+
 Language::Language(const QLocale::Language lang)
 {
     languageValue = lang;
     language = QLocale::languageToString(lang);
-    icon = QLatin1String(":/ui/") + QString(lang == QLocale::French? "fr" : "en");
+    icon = QLatin1String("qrc:/ui/") + QString(lang == QLocale::French? "fr" : "en");
 }
 
 LanguageManager::LanguageManager(QObject *parent) : QObject(parent)
@@ -24,8 +28,8 @@ void LanguageManager::setLanguage(const QLocale::Language language)
 {
     {
         QSettings settings;
-        settings.setValue(QLatin1String("language"),
-                          QLocale::languageToString(language));
+        const QLocale locale(language);
+        settings.setValue(m_languageSetting, locale.bcp47Name());
     }
 
     m_currentLanguage = language;
@@ -53,9 +57,14 @@ void LanguageManager::load()
     load(locale.language());
 }
 
-QList<Language> LanguageManager::languages() const
+QVariantList LanguageManager::languages() const
 {
-    return m_languages;
+    QVariantList result;
+    for (const auto &lang : m_languages) {
+        result.append(QVariant::fromValue(lang));
+    }
+
+    return result;
 }
 
 int LanguageManager::currentLanguageIndex() const
@@ -103,11 +112,19 @@ void LanguageManager::load(const QLocale::Language language)
     {
         QCoreApplication::installTranslator(m_translator.get());
         m_currentLanguage = language;
-        qDebug() << "Installed language:" << language;
+        qDebug() << "Installed language:"
+                 << language
+                 << locale.name()
+                 << locale.bcp47Name()
+                 << locale.uiLanguages();
     } else {
         QLocale::setDefault(QLocale::Language::English);
         m_currentLanguage = QLocale::English;
-        qWarning() << "Cannot load translaction! Language:" << language;
+        qWarning() << "Cannot load translaction! Language:"
+                   << language
+                   << locale.name()
+                   << locale.bcp47Name()
+                   << locale.uiLanguages();
     }
 
     emit languageChanged();

@@ -19,7 +19,6 @@
 #include "../helpers/modelhelper.h"
 #include "../helpers/packagedataproperties.h"
 #include "../helpers/keywordfilterproxymodel.h"
-#include "../common/languagemanager.h"
 
 #ifdef EASY_LOGIN
 #include "../common/dummy/commondummydata.h"

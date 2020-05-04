@@ -16,6 +16,7 @@ class Language
     Q_PROPERTY(QString icon MEMBER icon)
 
 public:
+    Language();
     Language(const QLocale::Language lang);
 
     QLocale::Language languageValue;
@@ -27,7 +28,7 @@ class LanguageManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QList<Language> languages READ languages CONSTANT)
+    Q_PROPERTY(QVariantList languages READ languages CONSTANT)
     Q_PROPERTY(int currentLanguageIndex READ currentLanguageIndex WRITE setCurrentLanguageIndex NOTIFY currentLanguageIndexChanged)
 
 public:
@@ -38,7 +39,7 @@ public:
 
     void load();
 
-    QList<Language> languages() const;
+    QVariantList languages() const;
 
     int currentLanguageIndex() const;
 

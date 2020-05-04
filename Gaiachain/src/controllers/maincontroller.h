@@ -7,8 +7,7 @@
 #include "data/datamanager.h"
 
 #include "session/sessionmanager.h"
-
-class LanguageManager;
+#include "../common/languagemanager.h"
 
 class Application : public QObject
 {

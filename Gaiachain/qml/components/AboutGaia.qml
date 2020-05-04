@@ -47,12 +47,21 @@ Item {
         }
 
         ListView {
-            readonly property QtObject controller: mainController.languageController
+            id: languageList
+
+            Layout.fillWidth: true
+            height: 240
+
+            readonly property QtObject controller: mainController.languageManager
             model: controller.languages
+
             delegate: ItemDelegate {
+                height: 60
+                width: languageList.width
                 text: modelData.language
                 icon.source: modelData.icon
-                onClicked: controller.currentLanguageIndex = index
+                highlighted: languageList.controller.currentLanguageIndex === index
+                onClicked: languageList.controller.currentLanguageIndex = index
             }
         }
     }

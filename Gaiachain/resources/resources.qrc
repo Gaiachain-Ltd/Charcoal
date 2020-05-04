@@ -50,8 +50,8 @@
         <file alias="gps">ui/GPS.svg</file>
         <file alias="gpsFailed">ui/GPS-FAILED.svg</file>
         <file alias="gpsOk">ui/GPS-OK.svg</file>
-        <file alias="en">ui/en.svg</file>
-        <file alias="fr">ui/fr.svg</file>
+        <file alias="en">ui/en.png</file>
+        <file alias="fr">ui/fr.png</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>
