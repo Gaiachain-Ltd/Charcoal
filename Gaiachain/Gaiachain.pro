@@ -78,7 +78,7 @@ TARGET = Gaiachain
 HEADERS += \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
-    src/common/locale.h \
+    src/common/languagemanager.h \
     src/common/types.h \
     src/common/userdata.h \
     src/controllers/data/abstractdatamodelsmanager.h \
@@ -156,6 +156,7 @@ HEADERS += \
 
 SOURCES += src/main.cpp \
     src/common/dummy/commondummydata.cpp \
+    src/common/languagemanager.cpp \
     src/common/logs.cpp \
     src/common/packagedata.cpp \
     src/common/dataglobals.cpp \

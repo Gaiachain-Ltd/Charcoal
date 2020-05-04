@@ -44,5 +44,10 @@ Item {
         AboutGaiaDependency {
             Layout.fillWidth: true
         }
+
+        ListView {
+            model: 2
+
+        }
     }
 }

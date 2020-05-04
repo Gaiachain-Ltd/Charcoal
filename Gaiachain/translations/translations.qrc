@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/translations">
         <file>gaiachain_fr.qm</file>
+        <file>gaiachain_en.qm</file>
     </qresource>
 </RCC>

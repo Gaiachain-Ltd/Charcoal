@@ -39,6 +39,8 @@ MainController::MainController(QObject *parent)
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
     setupConnections();
+
+    m_languageManager.load();
 }
 
 void MainController::setupConnections()

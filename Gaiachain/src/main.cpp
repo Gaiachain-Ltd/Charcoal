@@ -6,7 +6,6 @@
 
 #include "../src/controllers/maincontroller.h"
 #include "../milo/mlog/mlog.h"
-#include "../src/common/locale.h"
 
 // Prepare logging categories. Modify these to your needs
 //Q_DECLARE_LOGGING_CATEGORY(core) // already declared in MLog header
@@ -46,10 +45,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     MainController mc;
-    mc.setupQmlContext(engine);
-
-    Language language;
-    language.load();
+    mc.setupQmlContext(engine);;
 
 #ifdef Q_OS_ANDROID
     const int splashScreenTimeMs = 2000;

@@ -5,6 +5,7 @@
 #include "pagemanager.h"
 #include "usermanager.h"
 #include "data/datamanager.h"
+#include "src/common/languagemanager.h"
 
 #include "session/sessionmanager.h"
 
@@ -77,6 +78,8 @@ private:
     void initialWork();
 
     Application *m_application = nullptr;
+
+    LanguageManager m_languageManager;
 
     PageManager m_pageManager;
     UserManager m_userManager;
