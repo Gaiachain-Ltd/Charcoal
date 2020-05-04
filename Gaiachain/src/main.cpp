@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
 #ifdef Q_OS_ANDROID
     const int splashScreenTimeMs = 2000;
-    QTimer::singleShot(splashScreenTimeMs, [&engine]() { engine.load(url); } );
+    QTimer::singleShot(splashScreenTimeMs, [&engine, url]() { engine.load(url); } );
 #else
     engine.load(url);
 #endif
