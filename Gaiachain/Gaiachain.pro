@@ -17,10 +17,6 @@ release_server {
     DEFINES+=RELEASE_SERVER
 }
 
-english_language {
-    DEFINES+=ENGLISH_LANGUAGE
-}
-
 !cocoa:!charcoal {
     error("Specify application flavor!")
 }
