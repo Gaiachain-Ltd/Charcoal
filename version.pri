@@ -29,6 +29,6 @@ DEFINES += BuildDate=\\\"$$BUILD_DATE\\\"
 DEFINES += GitCommit=\\\"$$COMMIT\\\"
 
 # To use VERSION in non-Qt files, use QMAKE_SUBSTITUTES:
- manifest.input = $$PWD/AndroidManifest.xml.in
- manifest.output = $$PWD/Gaiachain/platforms/android/android/AndroidManifest.xml
- QMAKE_SUBSTITUTES += manifest
+#manifest.input = $$PWD/AndroidManifest.xml.in
+#manifest.output = $$PWD/Gaiachain/platforms/android/android/AndroidManifest.xml
+#QMAKE_SUBSTITUTES += manifest

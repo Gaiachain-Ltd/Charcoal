@@ -5,9 +5,6 @@ android {
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
-    SSL_LIB = $$PWD/../../3rdparty/OpenSSL/OpenSSL/lib/android/arm
-    ANDROID_EXTRA_LIBS += $$SSL_LIB/libcrypto_1_1.so $$SSL_LIB/libssl_1_1.so
-
     HEADERS += \
         $$PWD/androidpermissionshandler.h
 
@@ -32,4 +29,8 @@ android {
         $$PWD/android/build.gradle \
         $$PWD/android/gradle/wrapper/gradle-wrapper.properties \
         $$PWD/android/gradlew.bat
+
+    manifest.input = $$PWD/AndroidManifest.xml.in
+    manifest.output = $$PWD/android/AndroidManifest.xml
+    QMAKE_SUBSTITUTES += manifest
 }

@@ -36,6 +36,7 @@ charcoal {
 }
 
 include(../version.pri)
+include(3rdparty/OpenSSL/openssl.pri)
 
 # qzxing
 CONFIG += qzxing_qml
@@ -231,10 +232,6 @@ OTHER_FILES += \
     ../.gitignore \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
-
-INCLUDEPATH += $$PWD/3rdparty/OpenSSL/OpenSSL/include
-# NOTE: Variable for MCrypto
-OPENSSL_PATH = $$PWD/3rdparty/OpenSSL/OpenSSL
 
 ## Put all build files into build directory
 ##  This also works with shadow building, so don't worry!
