@@ -8,7 +8,8 @@ import com.gaiachain.helpers 1.0
 import com.gaiachain.platforms 1.0
 
 import "../items" as Items
-import "../../common"
+import "../headers" as Headers
+import "../common"
 
 SupplyChainPageBase {
     id: top
@@ -26,7 +27,7 @@ SupplyChainPageBase {
             AndroidPermissionsHandler.requestPermission(AndroidPermissionsHandler.Location)
         }
     }
- 
+
     function coordinate() {
         return gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()
     }
@@ -152,7 +153,7 @@ SupplyChainPageBase {
         }
     }
 
-    Items.ButtonInputHeader {
+    Headers.ButtonInputHeader {
         id: gpsCoordinatesButtonInputHeader
 
         Layout.fillWidth: true

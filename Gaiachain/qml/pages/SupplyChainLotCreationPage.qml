@@ -8,7 +8,7 @@ import com.gaiachain.helpers 1.0
 import com.gaiachain.types 1.0
 
 import "../items" as Items
-import "../../headers" as Headers
+import "../headers" as Headers
 import "../components" as Components
 import "../pages" as Pages
 
@@ -72,7 +72,7 @@ Pages.SupplyChainPage {
         model: unusedLotIdsModel
     }
 
-    Items.ButtonInputHeader {
+    Headers.ButtonInputHeader {
         id: qrCodeInputHeader
 
         Layout.fillWidth: true

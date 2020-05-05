@@ -8,7 +8,7 @@ import com.gaiachain.helpers 1.0
 import com.gaiachain.types 1.0
 
 import "../items" as Items
-import "../../headers" as Headers
+import "../headers" as Headers
 import "../components" as Components
 import "../pages" as Pages
 
@@ -177,7 +177,7 @@ Pages.SupplyChainPage {
         inputText: userManager.userData.cooperativeName
     }
 
-    Items.ButtonInputHeader {
+    Headers.ButtonInputHeader {
         id: qrCodeInputHeader
 
         Layout.fillWidth: true
@@ -195,7 +195,7 @@ Pages.SupplyChainPage {
                                          "popupText": Strings.attachQr.arg(Strings.sac.toUpperCase()) })
     }
 
-    Items.ButtonInputHeader {
+    Headers.ButtonInputHeader {
         Layout.fillWidth: true
 
         headerText: Strings.harvestId

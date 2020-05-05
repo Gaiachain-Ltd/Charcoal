@@ -5,7 +5,7 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
 
 import "../items" as Items
-import "../../popups" as Popups
+import "../popups" as Popups
 
 Popups.TimedPopup {
     id: top
