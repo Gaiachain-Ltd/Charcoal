@@ -33,12 +33,15 @@ QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
 
 MainController::MainController(QObject *parent)
     : AbstractManager(parent),
-      m_application(new Application(this))
+      m_application(new Application(this)),
+      m_languageManager(new LanguageManager(this))
 {
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
     setupConnections();
+
+    m_languageManager->load();
 }
 
 void MainController::setupConnections()
@@ -136,10 +139,10 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // register singleton types
     qmlRegisterSingletonType(QUrl("qrc:///GStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
 #ifdef COCOA
-    qmlRegisterSingletonType(QUrl("qrc:///CocoaStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
+    qmlRegisterSingletonType(QUrl("qrc:///cocoa/CocoaStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
 #endif
 #ifdef CHARCOAL
-    qmlRegisterSingletonType(QUrl("qrc:///CharcoalStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
+    qmlRegisterSingletonType(QUrl("qrc:///charcoal/CharcoalStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
 #endif
     qmlRegisterSingletonType(QUrl("qrc:///GStatic.qml"), "com.gaiachain.static", 1, 0, "Static");
     qmlRegisterSingletonType(QUrl("qrc:///common/Helper.qml"), "com.gaiachain.helpers", 1, 0, "Helper");
@@ -169,6 +172,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("mainController"), this);
 
     // setup other components
+    m_languageManager->connectQmlEngine(&engine);
     m_pageManager.setupQmlContext(engine);
     m_userManager.setupQmlContext(engine);
     m_dbManager.setupQmlContext(engine);
@@ -233,6 +237,11 @@ QString MainController::easyLoginPassword() const
 Application *MainController::application() const
 {
     return m_application;
+}
+
+LanguageManager *MainController::languageManager() const
+{
+    return m_languageManager;
 }
 
 void MainController::setupQZXing(QQmlApplicationEngine &engine)

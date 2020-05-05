@@ -63,7 +63,7 @@ Item {
         id: stackView
         anchors.fill: parent
 
-        //initialItem: pageManager.getInitialPageUrl()
+        initialItem: pageManager.getInitialPageUrl()
 
         onCurrentItemChanged: currentItem.initialize()
 

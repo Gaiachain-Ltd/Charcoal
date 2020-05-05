@@ -10,9 +10,18 @@ contains (HOST_MACHINE, .*win32.*) {
     BUILD_DATE = $$system(date +%Y-%m-%d)
 }
 
+
+cocoa {
+    APP_NAME = "Gaiachain Cocoa"
+    APP_DOMAIN = "cocoa.gaiachain.io"
+}
+
+charcoal {
+    APP_NAME = "Gaiachain Charcoal"
+    APP_DOMAIN = "charcoal.gaiachain.io"
+}
+
 APP_VERSION = "$$VERSION"
-APP_NAME = "Gaiachain"
-APP_DOMAIN = "gaiachain.io"
 COMPANY_NAME = "Milo Solutions"
 COMPANY_DOMAIN = "milosolutions.com"
 
@@ -29,6 +38,6 @@ DEFINES += BuildDate=\\\"$$BUILD_DATE\\\"
 DEFINES += GitCommit=\\\"$$COMMIT\\\"
 
 # To use VERSION in non-Qt files, use QMAKE_SUBSTITUTES:
- manifest.input = $$PWD/AndroidManifest.xml.in
- manifest.output = $$PWD/Gaiachain/platforms/android/android/AndroidManifest.xml
- QMAKE_SUBSTITUTES += manifest
+#manifest.input = $$PWD/AndroidManifest.xml.in
+#manifest.output = $$PWD/Gaiachain/platforms/android/android/AndroidManifest.xml
+#QMAKE_SUBSTITUTES += manifest

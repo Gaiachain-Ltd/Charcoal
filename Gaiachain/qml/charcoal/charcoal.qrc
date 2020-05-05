@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/charcoal/">
         <file>CharcoalStyle.qml</file>
     </qresource>
 </RCC>

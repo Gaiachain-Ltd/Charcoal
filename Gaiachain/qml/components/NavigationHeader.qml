@@ -62,15 +62,7 @@ Item {
             visible: logoVisible
 
             onClicked: {
-                var message = Strings.aboutApp.arg(mainController.application.name)
-                                              .arg(mainController.application.version)
-                                              .arg(mainController.application.commit)
-                                              .arg(mainController.application.domain);
-                if (userManager.loggedIn) {
-                    message += "<br/><br/>" + Strings.userInfo.arg(userManager.login)
-                }
-
-                pageManager.openPopup(Enums.Popup.Information, { "text": message, "textFormat": Text.StyledText })
+                pageManager.openPopup(Enums.Popup.About)
             }
         }
 

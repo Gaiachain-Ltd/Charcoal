@@ -1,8 +1,10 @@
 pragma Singleton
 
-import QtQuick 2.12
+import QtQuick 2.14
 
-GStyle {
+import "../"
+
+AbstractStyle {
     // PAGES SPECIFIC
     // login loading
     readonly property color loginLoadingTextColor: "#d6d6d6"

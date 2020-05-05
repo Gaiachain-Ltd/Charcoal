@@ -9,8 +9,9 @@ import com.gaiachain.helpers 1.0
 
 import Qt.labs.settings 1.1
 
-import "../items" as Items
-import "../components/dummy" as DummyComponents
+import "../../pages"
+import "../../items" as Items
+import "../../components/dummy" as DummyComponents
 
 GPage {
     id: top

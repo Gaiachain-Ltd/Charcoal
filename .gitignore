@@ -33,9 +33,6 @@ doc/html/
 .gitlab-ci.yml.*
 *.doxytag.*
 
-# Qt Linguist
-*.ts
-
 # Temp Python files (git hooks, see milo/mscripts/hooks)
 __pycache__/
 mconfig.py
@@ -54,3 +51,4 @@ Gaiachain/3rdparty/OpenSSL/build/
 Gaiachain/3rdparty/OpenSSL/setenv-android.sh
 
 Gaiachain/platforms/android/android/AndroidManifest.xml
+*.so

@@ -25,6 +25,7 @@
         <file>items/GCheckBox.qml</file>
         <file>items/GButton.qml</file>
         <file>items/FilterComboBox.qml</file>
+        <file>items/NumberImageButton.qml</file>
         <file>popups/NotificationPopup.qml</file>
         <file>popups/GPopup.qml</file>
         <file>popups/ButtonPopup.qml</file>
@@ -38,7 +39,7 @@
         <file>components/AboutGaia.qml</file>
         <file>popups/TimedPopup.qml</file>
         <file>items/ImageButton.qml</file>
-        <file>GStyle.qml</file>
+        <file>AbstractStyle.qml</file>
         <file>GStatic.qml</file>
         <file>GStrings.qml</file>
         <file>components/dummy/LoginCombobox.qml</file>
@@ -47,5 +48,57 @@
         <file>components/NavigationHeader.qml</file>
         <file>components/Footer.qml</file>
         <file>components/ChangeAnimation.qml</file>
+        <file>items/BlockMouseArea.qml</file>
+        <file>components/MenuButton.qml</file>
+        <file>components/SupplyChainCategorySubmenu.qml</file>
+        <file>components/PackageDataLotDetails.qml</file>
+        <file>popups/TextPopup.qml</file>
+        <file>pages/CalendarPage.qml</file>
+        <file>components/SupplyChainSubmenuButton.qml</file>
+        <file>pages/SupplyChainGrainProcessingPage.qml</file>
+        <file>pages/SupplyChainBaggingPage.qml</file>
+        <file>components/EventsListView.qml</file>
+        <file>components/SupplyChainCategorySubmenuButton.qml</file>
+        <file>components/CalendarWeekItem.qml</file>
+        <file>components/ConnectionStateItem.qml</file>
+        <file>popups/YesNoQuestionPopup.qml</file>
+        <file>components/CalendarPageItem.qml</file>
+        <file>pages/SupplyChainExportReceptionPage.qml</file>
+        <file>pages/SupplyChainSummaryPage.qml</file>
+        <file>pages/SupplyChainPage.qml</file>
+        <file>components/CalendarItem.qml</file>
+        <file>components/PackageDataSacDetails.qml</file>
+        <file>components/SupplyChainSubmenuExpandButton.qml</file>
+        <file>components/TodayIndicator.qml</file>
+        <file>components/CalendarYearItem.qml</file>
+        <file>pages/CalendarYearPage.qml</file>
+        <file>pages/SupplyChainWarehouseTransportPage.qml</file>
+        <file>pages/WaitingTransactionsPage.qml</file>
+        <file>pages/MapPage.qml</file>
+        <file>components/CalendarSupplyItem.qml</file>
+        <file>popups/CommentPopup.qml</file>
+        <file>pages/MainMenuPage.qml</file>
+        <file>pages/SupplyChainSectionReceptionPage.qml</file>
+        <file>components/CalendarItemGridExtension.qml</file>
+        <file>pages/SupplyChainHarvestPage.qml</file>
+        <file>components/CalendarNavigator.qml</file>
+        <file>components/PackageDataDetails.qml</file>
+        <file>popups/InformationPopup.qml</file>
+        <file>components/CommunicationStateItem.qml</file>
+        <file>pages/SupplyChainPageBase.qml</file>
+        <file>components/CalendarPackageEventsBars.qml</file>
+        <file>components/PackageDataHarvestDetails.qml</file>
+        <file>pages/PackageDataPage.qml</file>
+        <file>pages/TransactionsPage.qml</file>
+        <file>pages/CalendarPageBase.qml</file>
+        <file>popups/WaitOverlayPopup.qml</file>
+        <file>pages/SupplyChainLotCreationPage.qml</file>
+        <file>pages/CalendarEventsPage.qml</file>
+        <file>popups/ConfirmPopup.qml</file>
+        <file>pages/SupplyChainAddHarvestIdPage.qml</file>
+        <file>items/SpinnerItem.qml</file>
+        <file>pages/LoginLoadingPage.qml</file>
+        <file>components/CalendarMonthItem.qml</file>
+        <file>components/SupplyChainSubmenu.qml</file>
     </qresource>
 </RCC>

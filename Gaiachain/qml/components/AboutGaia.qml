@@ -1,4 +1,5 @@
 import QtQuick 2.14
+import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.12
 
 import com.gaiachain.style 1.0
@@ -43,6 +44,52 @@ Item {
 
         AboutGaiaDependency {
             Layout.fillWidth: true
+        }
+
+        MouseArea {
+            id: row
+
+            readonly property QtObject manager: mainController.languageManager
+            property int currentIndex: manager.currentLanguageIndex
+
+            Layout.preferredHeight: 60
+            Layout.fillWidth: true
+
+            onClicked: {
+                console.log("Language switch clicked")
+                let newIndex = row.currentIndex + 1;
+                if (newIndex >= row.manager.languages.length) {
+                    newIndex = 0;
+                }
+
+                row.manager.currentLanguageIndex = newIndex;
+            }
+
+            Row {
+                anchors {
+                    centerIn: parent
+                }
+
+                height: parent.height
+                spacing: s(GStyle.buttonLetterSpacing)
+
+                Image {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                    }
+
+                    source: row.manager.languages[row.currentIndex].icon
+                }
+
+                Items.GText {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                    }
+                    Layout.fillWidth: true
+                    font.pixelSize: s(GStyle.subtitlePixelSize)
+                    text: row.manager.languages[row.currentIndex].language
+                }
+            }
         }
     }
 }

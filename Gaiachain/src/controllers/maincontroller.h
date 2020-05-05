@@ -7,6 +7,7 @@
 #include "data/datamanager.h"
 
 #include "session/sessionmanager.h"
+#include "../common/languagemanager.h"
 
 class Application : public QObject
 {
@@ -55,6 +56,7 @@ class MainController : public AbstractManager
     Q_PROPERTY(QString easyLoginPassword READ easyLoginPassword CONSTANT)
 
     Q_PROPERTY(Application* application READ application CONSTANT)
+    Q_PROPERTY(LanguageManager* languageManager READ languageManager CONSTANT)
 
 public:
     explicit MainController(QObject *parent = nullptr);
@@ -70,6 +72,7 @@ public:
     QString easyLoginPassword() const;
 
     Application *application() const;
+    LanguageManager *languageManager() const;
 
 private:
     void setupConnections();
@@ -77,6 +80,7 @@ private:
     void initialWork();
 
     Application *m_application = nullptr;
+    LanguageManager *m_languageManager = nullptr;
 
     PageManager m_pageManager;
     UserManager m_userManager;

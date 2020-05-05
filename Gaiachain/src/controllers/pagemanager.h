@@ -2,6 +2,7 @@
 #define PAGEMANAGER_H
 
 #include <QVector>
+#include <QFileInfo>
 #include <QJsonObject>
 
 #include "abstractmanager.h"
@@ -57,8 +58,16 @@ public slots:
                             const bool immediateBack = false, const QString &popupId = {});
 
 private:
-    const QString m_pagePrefix = QStringLiteral("qrc:/pages/");
-    const QString m_popupsPrefix = QStringLiteral("qrc:/popups/");
+    const QString m_qrcPrefix = QStringLiteral("qrc:/");
+    const QString m_flavorPrefix =
+#ifdef COCOA
+        QStringLiteral("cocoa/");
+#elif CHARCOAL
+        QStringLiteral("charcoal/");
+#endif
+    const QString m_pagePrefix = QStringLiteral("pages/");
+    const QString m_popupsPrefix = QStringLiteral("popups/");
+
     const Enums::Page m_initialPage = Enums::Page::Login;
     const Enums::Page m_homePage = Enums::Page::MainMenu;
 
@@ -74,11 +83,24 @@ private:
     }
 
     QString toFilePath(Enums::Page p) const {
-        return m_pagePrefix + toFilePath<Enums::Page>(p, "Page");
+        const QString path(m_pagePrefix + toFilePath<Enums::Page>(p, "Page"));
+        return flavoredOrBasePath(path);
     }
 
     QString toFilePath(Enums::Popup p) const {
-        return m_popupsPrefix + toFilePath<Enums::Popup>(p, "Popup");
+        const QString path(m_popupsPrefix + toFilePath<Enums::Popup>(p, "Popup"));
+        return flavoredOrBasePath(path);
+    }
+
+    QString flavoredOrBasePath(const QString &path) const {
+        const QString plainPath(path);
+        const QString flavoredPath(m_flavorPrefix + path);
+
+        if (QFileInfo::exists(QLatin1String(":/") + flavoredPath)) {
+            return m_qrcPrefix + flavoredPath;
+        }
+
+        return m_qrcPrefix + plainPath;
     }
 };
 
