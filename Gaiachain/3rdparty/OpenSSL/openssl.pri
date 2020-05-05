@@ -31,7 +31,6 @@ android {
         OSSL_AND=$${OSSL_PATH}/lib/android
         OSSL_LIBS=$${OSSL_AND}/$${OSSL_ARCH}
         LIBS += -L$${OSSL_LIBS} -lssl_1_1 -lcrypto_1_1
-        #ANDROID_EXTRA_LIBS += $${OSSL_LIBS}/libcrypto_1_1.so $${OSSL_LIBS}/libssl_1_1.so
         CONFIG += openssl
 
         # Copies the given files to the destination directory
