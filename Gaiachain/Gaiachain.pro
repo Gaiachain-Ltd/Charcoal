@@ -26,13 +26,15 @@ cocoa:charcoal {
 }
 
 cocoa {
-  DEFINES+=COCOA
-  RESOURCES+=qml/cocoa/cocoa.qrc
+  DEFINES += COCOA
+  RESOURCES += qml/cocoa/cocoa.qrc
+  TARGET = GaiachainCocoa
 }
 
 charcoal {
-  DEFINES+=CHARCOAL
-  RESOURCES+=qml/charcoal/charcoal.qrc
+  DEFINES += CHARCOAL
+  RESOURCES += qml/charcoal/charcoal.qrc
+  TARGET = GaiachainCharcoal
 }
 
 include(../version.pri)
@@ -74,7 +76,6 @@ msvc* {
 
 TEMPLATE = app
 CONFIG += c++17
-TARGET = Gaiachain
 
 HEADERS += \
     src/common/dataglobals.h \
