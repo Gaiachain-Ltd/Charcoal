@@ -254,3 +254,35 @@ include(../milo/mlog/mlog.pri)
 #include(../milo/mscripts/mscripts.pri) # TODO disabling it until potential usecase
 include(../milo/mcrypto/mcrypto.pri)
 include(../milo/mrestapi/mrestapi.pri)
+
+asan {
+    message("Address sanitizer: enabled. Use only in debug builds")
+    LIBS += -lcurl
+    CONFIG += sanitizer sanitize_address
+    QMAKE_CXXFLAGS+="-fsanitize=address -fno-omit-frame-pointer"
+    QMAKE_CFLAGS+="-fsanitize=address -fno-omit-frame-pointer"
+    QMAKE_LFLAGS+="-fsanitize=address"
+    CONFIG += ubsan
+}
+
+msan {
+    message("Memory sanitizer: enabled. Use only in debug builds.")
+    LIBS += -lcurl
+    QMAKE_CXXFLAGS+="-fsanitize=memory"
+    QMAKE_LFLAGS+="-fsanitize=memory"
+    CONFIG += ubsan
+}
+
+tsan {
+    message("Thread sanitizer: enabled. Use only in debug builds")
+    LIBS += -lcurl
+    QMAKE_CXXFLAGS+="-fsanitize=thread"
+    QMAKE_LFLAGS+="-fsanitize=thread"
+    CONFIG += ubsan
+}
+
+ubsan {
+    message("Undefined behavior sanitizer: enabled. Use only in debug builds")
+    QMAKE_CXXFLAGS+="-fsanitize=undefined"
+    QMAKE_LFLAGS+="-fsanitize=undefined"
+}
