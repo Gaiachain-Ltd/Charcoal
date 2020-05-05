@@ -100,5 +100,9 @@
         <file>pages/LoginLoadingPage.qml</file>
         <file>components/CalendarMonthItem.qml</file>
         <file>components/SupplyChainSubmenu.qml</file>
+        <file>items/ImageItem.qml</file>
+        <file>items/ItemBorder.qml</file>
+        <file>items/RectCheckBox.qml</file>
+        <file>items/TextWithTitle.qml</file>
     </qresource>
 </RCC>
