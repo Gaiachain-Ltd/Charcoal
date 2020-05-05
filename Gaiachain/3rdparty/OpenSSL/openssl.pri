@@ -44,6 +44,8 @@ android {
             win32:from ~= s,/,\\,g
             win32:to ~= s,/,\\,g
 
+            QMAKE_POST_LINK += rm -rf $$quote($$to) $$escape_expand(\\n\\t)
+            QMAKE_POST_LINK += mkdir -p $$quote($$to) $$escape_expand(\\n\\t)
             QMAKE_POST_LINK += $$QMAKE_COPY $$quote($$from/libcrypto_1_1.so) $$quote($$to) $$escape_expand(\\n\\t)
             QMAKE_POST_LINK += $$QMAKE_COPY $$quote($$from/libssl_1_1.so) $$quote($$to) $$escape_expand(\\n\\t)
 
