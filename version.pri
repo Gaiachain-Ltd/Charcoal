@@ -13,16 +13,14 @@ contains (HOST_MACHINE, .*win32.*) {
 
 cocoa {
     APP_NAME = "Gaiachain Cocoa"
-    APP_DOMAIN = "cocoa.gaiachain.io"
+    APP_DOMAIN = "com.milosolutions.gaiachain"
+    #"cocoa.gaiachain.io"
 }
 
 charcoal {
     APP_NAME = "Gaiachain Charcoal"
     APP_DOMAIN = "charcoal.gaiachain.io"
 }
-
-# TODO: for Cocoa, reuse old domain:
-#com.milosolutions.gaiachain
 
 APP_VERSION = "$$VERSION"
 COMPANY_NAME = "Milo Solutions"
