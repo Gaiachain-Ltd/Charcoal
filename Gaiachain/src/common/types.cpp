@@ -101,13 +101,14 @@ bool types::customConvert(QVariant &value, const QMetaType::Type toType)
 
 void types::convert(QVariant &value, const QMetaType::Type toType)
 {
-    if (!value.isNull() && toType != QMetaType::Void &&
-            static_cast<QMetaType::Type>(value.type()) != toType) {
+    if (!value.isNull() && toType != QMetaType::Void
+        && static_cast<QMetaType::Type>(value.type()) != toType) {
         if (!canCustomConvert(value, toType)) {
             auto intToType = static_cast<int>(toType);
             if (!value.canConvert(intToType)) {
                 qCWarning(dataTypes) << "Error - cannot convert data"
-                                     << value.type() << "to:" << toType;
+                                     << value.type()
+                                     << "to:" << QVariant::Type(toType);
             } else {
                 value.convert(intToType);
             }

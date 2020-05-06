@@ -105,7 +105,11 @@ public:
         });
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-        return QList<Enum>(list.begin(), list.end());
+        QList<Enum> result;
+        for (const auto value : list) {
+            result.append(value);
+        }
+        return result;
 #else
         return QList<Enum>::fromStdList(list);
 #endif
