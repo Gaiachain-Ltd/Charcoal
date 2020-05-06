@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(AppName);
 
     qCInfo(coreMain) << "\nName:" << app.applicationName()
-                     << "\nApp domain:" << app.organizationDomain()
+                     << "\nApp domain:" << AppDomain
                      << "\nFlavor:"
 #ifdef COCOA
                      << "Cocoa"

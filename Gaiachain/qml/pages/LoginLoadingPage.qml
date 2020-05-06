@@ -147,7 +147,7 @@ GPage
         id: timer
         running: true
         repeat: true
-        interval: 500
+        interval: mainController.isEasyLogin? 250 : 500
         onTriggered: d.nextState()
     }
 

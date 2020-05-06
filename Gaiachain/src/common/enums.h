@@ -29,15 +29,22 @@ namespace Enums {
         WaitingTransactions,
         Tracking,
         PackageData,
+#ifdef COCOA
         SupplyChainHarvest,
         SupplyChainGrainProcessing,
         SupplyChainSectionReception,
-        SupplyChainBagging, 
+        SupplyChainBagging,
         SupplyChainAddHarvestId,
         SupplyChainLotCreation,
         SupplyChainWarehouseTransport,
         SupplyChainExportReception,
         SupplyChainSummary,
+#elif CHARCOAL
+        SupplyChainLogging,
+        SupplyChainCarbonization,
+        SupplyChainLoadingAndTransport,
+        SupplyChainReception,
+#endif
 
         PageCount
     };
