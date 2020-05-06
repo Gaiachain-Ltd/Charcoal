@@ -76,14 +76,14 @@ void TransactionsViewModel::initialiseActivePackageTypes()
 {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     m_activePackageTypes.clear();
-    if (not DataGlobals::availablePackageTypes().isEmpty()) {
-        const auto types = DataGlobals::availablePackageTypes();
-        for (const auto &type : types) {
+    const auto types = DataGlobals::availablePackageTypes();
+    if (not types.isEmpty()) {
+        for (const auto type : types) {
             m_activePackageTypes.insert(type);
         }
     }
 #else
-    m_activePackageTypes = DataGlobals::availablePackageTypes().toSet()
+    m_activePackageTypes = DataGlobals::availablePackageTypes().toSet();
 #endif
 }
 

@@ -21,6 +21,9 @@ charcoal {
     APP_DOMAIN = "charcoal.gaiachain.io"
 }
 
+# TODO: for Cocoa, reuse old domain:
+#com.milosolutions.gaiachain
+
 APP_VERSION = "$$VERSION"
 COMPANY_NAME = "Milo Solutions"
 COMPANY_DOMAIN = "milosolutions.com"
