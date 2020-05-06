@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(AppName);
 
     qCInfo(coreMain) << "\nName:" << app.applicationName()
+                     << "\nApp domain:" << app.organizationDomain()
                      << "\nFlavor:"
 #ifdef COCOA
                      << "Cocoa"
@@ -44,8 +45,8 @@ int main(int argc, char *argv[])
                      << "\nBuild date:" << BuildDate;
 
     QQmlApplicationEngine engine;
-    MainController mc;
-    mc.setupQmlContext(engine);
+    auto mc = new MainController(&engine);
+    mc->setupQmlContext(engine);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -61,6 +62,6 @@ int main(int argc, char *argv[])
     engine.load(url);
 #endif
 
-    mc.startInitialWork();
+    mc->startInitialWork();
     return app.exec();
 }

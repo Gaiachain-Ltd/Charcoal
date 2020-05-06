@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 import com.gaiachain.style 1.0
 
 import "../items" as Items
-import "../../popups" as Popups
+import "../popups" as Popups
 
 Popups.TimedPopup {
     id: top

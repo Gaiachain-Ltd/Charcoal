@@ -13,7 +13,8 @@ contains (HOST_MACHINE, .*win32.*) {
 
 cocoa {
     APP_NAME = "Gaiachain Cocoa"
-    APP_DOMAIN = "cocoa.gaiachain.io"
+    APP_DOMAIN = "com.milosolutions.gaiachain"
+    #"cocoa.gaiachain.io"
 }
 
 charcoal {

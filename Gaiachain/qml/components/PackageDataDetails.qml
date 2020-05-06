@@ -7,7 +7,7 @@ import com.gaiachain.helpers 1.0
 import com.gaiachain.enums 1.0
 
 import "../items" as Items
-import "../../headers" as Headers
+import "../headers" as Headers
 
 Item {
     id: top

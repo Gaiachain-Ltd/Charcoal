@@ -51,11 +51,13 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                                                 "`locationLat`		REAL NOT NULL,"
                                                 "`locationLon`		REAL NOT NULL,"
                                                 "`isLocal`			BOOLEAN DEFAULT false,"
+                                                "`lastUsed`			INTEGER,"
                                                 "UNIQUE(packageId, action)"
                                                 ")"),
             QLatin1String("CREATE TABLE Relations   (`id` 			INTEGER primary key AUTOINCREMENT,"
                                                     "`packageId`	TEXT NOT NULL,"
                                                     "`relatedId`	TEXT NOT NULL,"
+                                                    "`lastUsed`		INTEGER,"
                                                     "UNIQUE(packageId, relatedId)"
                                                     ")"),
             QLatin1String("CREATE TABLE UnusedIds   (`id` 			INTEGER primary key AUTOINCREMENT,"
