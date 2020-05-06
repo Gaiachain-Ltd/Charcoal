@@ -2,6 +2,7 @@
     <qresource prefix="/ui">
         <file alias="logo-white">charcoal/ui/gaiachain-logo-white.svg</file>
         <file alias="login-background">charcoal/ui/login-background.png</file>
+        <file alias="login-background-large">charcoal/ui/login-background-large.jpg</file>
     </qresource>
     <qresource prefix="/font">
     </qresource>

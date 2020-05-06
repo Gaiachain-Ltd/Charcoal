@@ -48,10 +48,12 @@ GPage {
 
     ColumnLayout
     {
+        property int margin: s(GStyle.bigMargin)
+
         id: layout
         anchors {
             fill: parent
-            margins: s(GStyle.bigMargin)
+            bottomMargin: layout.margin
         }
 
         spacing: s(GStyle.middleSmallMargin)
@@ -66,7 +68,7 @@ GPage {
                 id: logoBackground
                 source: GStyle.loginBackgroundUrl
                 anchors.fill: parent
-                fillMode: Image.PreserveAspectFit
+                //fillMode: Image.PreserveAspectFit
             }
 
             Items.SvgImage
@@ -77,10 +79,9 @@ GPage {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
                 }
+
                 height: s(GStyle.logoHeight)
-
                 source: GStyle.logoImgUrl
-
                 DummyComponents.ServerStateChanger {}
             }
         }
@@ -91,6 +92,11 @@ GPage {
         {
             id: loginInput
             Layout.fillWidth: true
+
+            anchors {
+                leftMargin: layout.margin
+                rightMargin: layout.margin
+            }
 
             property bool validInput: true
 
@@ -117,6 +123,11 @@ GPage {
             id: passwordInput
             Layout.fillWidth: true
 
+            anchors {
+                leftMargin: layout.margin
+                rightMargin: layout.margin
+            }
+
             placeholderText: Strings.password
             iconSource: GStyle.passwordImgUrl
             isPassword: true
@@ -138,6 +149,11 @@ GPage {
             id: loginButton
             Layout.fillWidth: true
 
+            anchors {
+                leftMargin: layout.margin
+                rightMargin: layout.margin
+            }
+
             text: Strings.login
 
             enabled: loginInput.text.length && passwordInput.text.length && loginInput.validInput
@@ -152,6 +168,11 @@ GPage {
         {
             id: skipLoginButton
             Layout.fillWidth: true
+
+            anchors {
+                leftMargin: layout.margin
+                rightMargin: layout.margin
+            }
 
             palette {
                 button: GStyle.buttonSecondaryColor
