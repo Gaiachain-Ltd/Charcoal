@@ -93,10 +93,8 @@ GPage {
             id: loginInput
             Layout.fillWidth: true
 
-            anchors {
-                leftMargin: layout.margin
-                rightMargin: layout.margin
-            }
+            Layout.leftMargin: layout.margin
+            Layout.rightMargin: layout.margin
 
             property bool validInput: true
 
@@ -123,10 +121,8 @@ GPage {
             id: passwordInput
             Layout.fillWidth: true
 
-            anchors {
-                leftMargin: layout.margin
-                rightMargin: layout.margin
-            }
+            Layout.leftMargin: layout.margin
+            Layout.rightMargin: layout.margin
 
             placeholderText: Strings.password
             iconSource: GStyle.passwordImgUrl
@@ -149,10 +145,8 @@ GPage {
             id: loginButton
             Layout.fillWidth: true
 
-            anchors {
-                leftMargin: layout.margin
-                rightMargin: layout.margin
-            }
+            Layout.leftMargin: layout.margin
+            Layout.rightMargin: layout.margin
 
             text: Strings.login
 
@@ -169,10 +163,8 @@ GPage {
             id: skipLoginButton
             Layout.fillWidth: true
 
-            anchors {
-                leftMargin: layout.margin
-                rightMargin: layout.margin
-            }
+            Layout.leftMargin: layout.margin
+            Layout.rightMargin: layout.margin
 
             palette {
                 button: GStyle.buttonSecondaryColor
