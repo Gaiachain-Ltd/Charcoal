@@ -106,7 +106,8 @@ void types::convert(QVariant &value, const QMetaType::Type toType)
         if (!canCustomConvert(value, toType)) {
             auto intToType = static_cast<int>(toType);
             if (!value.canConvert(intToType)) {
-                qCWarning(dataTypes) << "Error - cannot convert data" << static_cast<QMetaType::Type>(value.type()) << "to:" << toType;
+                qCWarning(dataTypes) << "Error - cannot convert data"
+                                     << value.type() << "to:" << toType;
             } else {
                 value.convert(intToType);
             }
