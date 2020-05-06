@@ -32,6 +32,7 @@
         <file>popups/AboutPopup.qml</file>
         <file>common/PositionSourceHandler.qml</file>
         <file>common/Helper.qml</file>
+        <file>pages/LoginPage.qml</file>
         <file>pages/QRScannerPage.qml</file>
         <file>pages/GPage.qml</file>
         <file>components/AboutGaiaDependencyInfo.qml</file>

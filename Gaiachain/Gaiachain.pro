@@ -1,6 +1,3 @@
-## Milo Solutions - project file TEMPLATE
-#
-#
 ## (c) Milo Solutions, 2016-2020
 
 QT += core gui qml quick svg sql location
@@ -23,18 +20,6 @@ release_server {
 
 cocoa:charcoal {
     error("Can't compile BOTH cocoa and charcoal flavors! Pick one")
-}
-
-cocoa {
-  DEFINES += COCOA
-  RESOURCES += qml/cocoa/cocoa.qrc
-  TARGET = GaiachainCocoa
-}
-
-charcoal {
-  DEFINES += CHARCOAL
-  RESOURCES += qml/charcoal/charcoal.qrc
-  TARGET = GaiachainCharcoal
 }
 
 include(../version.pri)
@@ -233,6 +218,20 @@ OTHER_FILES += \
     ../.gitignore \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
+
+cocoa {
+  DEFINES += COCOA
+  RESOURCES += qml/cocoa/cocoa.qrc
+  TARGET = GaiachainCocoa
+}
+
+charcoal {
+    DEFINES += CHARCOAL
+    RESOURCES += \
+        qml/charcoal/charcoal.qrc \
+        resources/resources-charcoal.qrc
+    TARGET = GaiachainCharcoal
+}
 
 ## Put all build files into build directory
 ##  This also works with shadow building, so don't worry!

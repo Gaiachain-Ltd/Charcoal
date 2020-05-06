@@ -9,9 +9,9 @@ import com.gaiachain.helpers 1.0
 
 import Qt.labs.settings 1.1
 
-import "../../pages"
-import "../../items" as Items
-import "../../components/dummy" as DummyComponents
+import "../pages"
+import "../items" as Items
+import "../components/dummy" as DummyComponents
 
 GPage {
     id: top
@@ -61,6 +61,13 @@ GPage {
             Layout.minimumHeight: logoImage.paintedHeight
             preferredHeight: parent.height * 0.42 - 2 * layout.spacing   // remove spacing for LayoutSpacer
             Layout.maximumHeight: preferredHeight
+
+            Image {
+                id: logoBackground
+                source: GStyle.loginBackgroundUrl
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectFit
+            }
 
             Items.SvgImage
             {

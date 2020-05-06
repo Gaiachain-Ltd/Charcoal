@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/ui">
+        <file alias="logo-white">charcoal/ui/gaiachain-logo-white.svg</file>
+        <file alias="login-background">charcoal/ui/login-background.png</file>
+    </qresource>
+    <qresource prefix="/font">
+    </qresource>
+</RCC>

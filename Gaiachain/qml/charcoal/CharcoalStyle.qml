@@ -5,5 +5,11 @@ import QtQuick 2.12
 import "../"
 
 AbstractStyle {
-    // TODO: Fill this for new values specific for Charcoal
+    logoImgUrl: logoWhiteImgUrl
+    loginBackgroundUrl: "qrc:/ui/login-background"
+
+    primaryColor: "#000000"
+    buttonSecondaryColor: "#888888"
+
+    pixelSize: 29
 }
