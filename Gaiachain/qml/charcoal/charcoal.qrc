@@ -2,5 +2,8 @@
     <qresource prefix="/charcoal/">
         <file>CharcoalStyle.qml</file>
         <file>pages/MainMenuPage.qml</file>
+        <file>components/MenuButton.qml</file>
+        <file>components/ExpandableMenuButton.qml</file>
+        <file>components/DoubleMenuButton.qml</file>
     </qresource>
 </RCC>

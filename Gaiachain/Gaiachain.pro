@@ -22,6 +22,20 @@ cocoa:charcoal {
     error("Can't compile BOTH cocoa and charcoal flavors! Pick one")
 }
 
+cocoa {
+    DEFINES += COCOA
+    RESOURCES += qml/cocoa/cocoa.qrc
+    TARGET = GaiachainCocoa
+}
+
+charcoal {
+    DEFINES += CHARCOAL
+    RESOURCES += \
+        qml/charcoal/charcoal.qrc \
+        resources/resources-charcoal.qrc
+    TARGET = GaiachainCharcoal
+}
+
 include(../version.pri)
 include(3rdparty/OpenSSL/openssl.pri)
 
@@ -218,20 +232,6 @@ OTHER_FILES += \
     ../.gitignore \
     ../license-Qt.txt \
     ../.gitlab-ci.yml
-
-cocoa {
-  DEFINES += COCOA
-  RESOURCES += qml/cocoa/cocoa.qrc
-  TARGET = GaiachainCocoa
-}
-
-charcoal {
-    DEFINES += CHARCOAL
-    RESOURCES += \
-        qml/charcoal/charcoal.qrc \
-        resources/resources-charcoal.qrc
-    TARGET = GaiachainCharcoal
-}
 
 ## Put all build files into build directory
 ##  This also works with shadow building, so don't worry!

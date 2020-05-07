@@ -6,7 +6,7 @@ import com.gaiachain.enums 1.0
 
 import "../../pages"
 import "../../items" as Items
-import "../../components" as Components
+import "../components" as Components
 
 GPage {
     id: top
@@ -68,107 +68,66 @@ GPage {
 
         ColumnLayout {
             id: menuColumn
-            property int margins: s(GStyle.hugeMargin)
 
             anchors {
                 top: parent.top
                 left: parent.left
                 right: parent.right
-                margins: margins
             }
-            spacing: s(GStyle.middleBigMargin)
 
-            ColumnLayout {
-                id: supplyChainButtonColumn
+            spacing: 0
 
-                visible: userManager.loggedIn && supplyChainSubmenu.availableActionsCount
-                spacing: 0
-
-                Components.MenuButton {
+                Components.ExpandableMenuButton {
                     Layout.fillWidth: true
 
                     text: Strings.supplyChain
-                    icon.source: GStyle.supplyChainButtonImgUrl
+                    icon: GStyle.menuSupplyChainUrl
+                    color: GStyle.menuSupplyChainColor
 
-                    onClicked: supplyChainSubmenu.menuVisible = !supplyChainSubmenu.menuVisible
+                    onClicked: supplyChainSubmenu.visible = !supplyChainSubmenu.visible
                 }
 
-                Components.SupplyChainSubmenu {
+                ColumnLayout {
                     id: supplyChainSubmenu
+                    spacing: 0
+                    visible: false
 
-                    property real initialHeight: GStyle.none
-                    property bool menuVisible: false
+                    Components.DoubleMenuButton {
+                        Layout.fillWidth: true
 
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: initialHeight
+                        text: Strings.logging
+                        color: GStyle.submenuLoggingColor
+                        icon: GStyle.submenuLoggingUrl
+                        fontColor: GStyle.textPrimaryColor
 
-                    opacity: GStyle.none
-                    clip: true
+                        leftText: Strings.loggingBeginning
+                        leftColor: GStyle.submenuLoggingBeginningColor
+                        leftIcon:  GStyle.submenuLoggingBeginningUrl
 
-                    onMenuVisibleChanged: menuVisibleAnimation.start()
-
-                    onContentHeightChanged: {
-                        if (menuVisible) {
-                            initialHeight = contentHeight
-                        }
-                    }
-
-                    onActionClicked: {
-                        if (navigateSupplyChainPages(action)) {
-                            supplyChainSubmenu.menuVisible = false
-                        }
-                    }
-
-                    ParallelAnimation {
-                        id: menuVisibleAnimation
-
-                        NumberAnimation {
-                            target: supplyChainSubmenu
-                            property: "opacity";
-                            from: supplyChainSubmenu.menuVisible ? 1 : 0
-                            to: supplyChainSubmenu.menuVisible ? 0 : 1
-                            duration: 300
-                        }
-                        NumberAnimation {
-                            target: supplyChainSubmenu
-                            property: "initialHeight"
-                            from: supplyChainSubmenu.menuVisible ? supplyChainSubmenu.contentHeight : GStyle.none
-                            to: supplyChainSubmenu.menuVisible ? GStyle.none : supplyChainSubmenu.contentHeight
-                            duration: 300
-                        }
-                        NumberAnimation {
-                            target: supplyChainButtonColumn
-                            property: "spacing"
-                            from: supplyChainSubmenu.menuVisible ? menuColumn.spacing : GStyle.none
-                            to: supplyChainSubmenu.menuVisible ? GStyle.none : menuColumn.spacing
-                            duration: 300
-                        }
+                        rightText: Strings.loggingEnding
+                        rightColor: GStyle.submenuLoggingEndingColor
+                        rightIcon:  GStyle.submenuLoggingEndingUrl
                     }
                 }
+
+            Components.MenuButton {
+                Layout.fillWidth: true
+
+                text: Strings.tracking
+                icon: GStyle.menuTrackingUrl
+                color: GStyle.menuTrackingColor
+
+                onClicked: pageManager.enter(Enums.Page.Tracking)
             }
 
             Components.MenuButton {
                 Layout.fillWidth: true
 
-                text: Strings.transactions
-                icon.source: GStyle.transactionsButtonImgUrl
+                text: Strings.replantation
+                icon: GStyle.menuReplantationUrl
+                color: GStyle.menuReplantationColor
 
-                onClicked: pageManager.enter(Enums.Page.Transactions)
-            }
-
-            Components.MenuButton {
-                Layout.fillWidth: true
-
-                text: Strings.calendar
-                icon.source: GStyle.calendarButtonImgUrl
-
-                onClicked: {
-                    var today = new Date()
-                    pageManager.enter(Enums.Page.Calendar, {
-                                          "currentDay": today.getDate(),
-                                          "currentMonth": today.getMonth(),
-                                          "currentYear": today.getFullYear() })
-                }
+                onClicked: pageManager.enter(Enums.Page.Replantation)
             }
         }
     }

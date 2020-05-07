@@ -179,4 +179,11 @@ QtObject {
     property string dateFormat: tr.empty + qsTr("MM/dd/yyyy")
     property string checkMark: "\u2713"
     property string minus: "-"
+
+    // Charcoal
+    property string tracking: tr.empty + qsTr("Tracking")
+    property string replantation: tr.empty + qsTr("Replantation")
+    property string logging: tr.empty + qsTr("Logging")
+    property string loggingBeginning: tr.empty + qsTr("Logging beginning")
+    property string loggingEnding: tr.empty + qsTr("Logging ending")
 }

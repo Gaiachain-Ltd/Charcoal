@@ -14,6 +14,7 @@
         <file alias="menuReplantation">charcoal/ui/replantation.svg</file>
         <file alias="menuSupplyChain">charcoal/ui/supply-chain.svg</file>
         <file alias="menuTracking">charcoal/ui/tracking.svg</file>
+        <file alias="arrow">charcoal/ui/arrow.svg</file>
     </qresource>
     <qresource prefix="/font"/>
 </RCC>
