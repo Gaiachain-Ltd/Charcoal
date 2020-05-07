@@ -87,9 +87,29 @@ private:
     // TODO: change this to clever sql query too
     PackageTypeEventsProxyModel m_packagesCalendarMonthModel;
 
-    PackageLastActionProxyModel m_lastActionHarvestModel{ Enums::SupplyChainAction::Harvest };
-    PackageLastActionProxyModel m_lastActionGrainProcessingModel{ Enums::SupplyChainAction::GrainProcessing };
-    PackageLastActionProxyModel m_lastActionSectionReceptionModel{ Enums::SupplyChainAction::SectionReception };
+    PackageLastActionProxyModel m_lastActionHarvestModel{
+#ifdef COCOA
+        Enums::SupplyChainAction::Harvest
+#elif CHARCOAL
+        Enums::SupplyChainAction::LoggingBeginning
+#endif
+    };
+
+    PackageLastActionProxyModel m_lastActionGrainProcessingModel{
+#ifdef COCOA
+        Enums::SupplyChainAction::GrainProcessing
+#elif CHARCOAL
+        Enums::SupplyChainAction::LoggingBeginning
+#endif
+    };
+
+    PackageLastActionProxyModel m_lastActionSectionReceptionModel{
+#ifdef COCOA
+        Enums::SupplyChainAction::SectionReception
+#elif CHARCOAL
+        Enums::SupplyChainAction::LoggingBeginning
+#endif
+    };
 
     void setupModels() override;
     void setupUpdateConnections() override;

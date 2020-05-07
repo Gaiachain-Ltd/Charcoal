@@ -20,24 +20,26 @@ GPage {
 
     function supplyChainPageForAction(action) {
         switch (Number(action)) {
-        case Enums.SupplyChainAction.Harvest:
-            return Enums.Page.SupplyChainHarvest
-        case Enums.SupplyChainAction.GrainProcessing:
-            return Enums.Page.SupplyChainGrainProcessing
-        case Enums.SupplyChainAction.Bagging:
-            return Enums.Page.SupplyChainBagging
-        case Enums.SupplyChainAction.LotCreation:
-            return Enums.Page.SupplyChainLotCreation
-        case Enums.SupplyChainAction.WarehouseTransport:
-            return Enums.Page.SupplyChainWarehouseTransport
-        case Enums.SupplyChainAction.SectionReception:
-            return Enums.Page.SupplyChainSectionReception
-        case Enums.SupplyChainAction.ExportReception:
-            return Enums.Page.SupplyChainExportReception
+        case Enums.SupplyChainAction.LoggingBeginning:
+            return Enums.Page.SupplyChainLoggingBeginning;
+        case Enums.SupplyChainAction.LoggingEnding:
+            return Enums.Page.SupplyChainLoggingEnding;
+        case Enums.SupplyChainAction.CarbonizationBeginning:
+            return Enums.Page.SupplyChainCarbonizationBeginning;
+        case Enums.SupplyChainAction.CarbonizationEnding:
+            return Enums.Page.SupplyChainCarbonizationEnding;
+        case Enums.SupplyChainAction.LoadingAndTransport:
+            return Enums.Page.SupplyChainLoadingAndTransport;
+        case Enums.SupplyChainAction.Reception:
+            return Enums.Page.SupplyChainReception;
+        case Enums.SupplyChainAction.Tracking:
+            return Enums.Page.SupplyChainTracking;
+        case Enums.SupplyChainAction.Replantation:
+            return Enums.Page.SupplyChainReplantation;
         default:
             console.warn("navigateSupplyChainPages: Invalid action provided!")
         }
-        return Enums.Page.InvalidPage
+        return Enums.Page.InvalidPage;
     }
 
     function navigateSupplyChainPages(action) {

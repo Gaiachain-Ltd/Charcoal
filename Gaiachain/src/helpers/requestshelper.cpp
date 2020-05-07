@@ -11,10 +11,13 @@
 namespace {
 const QHash<Enums::UserType, QString> UserTypeStrings = {
     { Enums::UserType::SuperUser, StaticValues::userSuperUser },
+#ifdef COCOA
     { Enums::UserType::Inspector, StaticValues::userInspector },
     { Enums::UserType::PCA, StaticValues::userPca },
     { Enums::UserType::Warehouseman, StaticValues::userWarehouseman },
     { Enums::UserType::CooperativeRepresentative, StaticValues::userCooperativeRepresentative }
+#elif CHARCOAL
+#endif
 };
 const QHash<Enums::CompanyType, QString> CompanyTypeStrings = {
     { Enums::CompanyType::Cooperative, StaticValues::companyCooperative },
@@ -27,6 +30,7 @@ const QHash<Enums::PackageType, QString> PackageTypeStrings = {
     { Enums::PackageType::Lot, StaticValues::packageLot }
 };
 const QHash<Enums::SupplyChainAction, QString> SupplyChainActionStrings = {
+#ifdef COCOA
     { Enums::SupplyChainAction::Harvest, StaticValues::actionHarvest },
     { Enums::SupplyChainAction::GrainProcessing, StaticValues::actionGrainProcessing },
     { Enums::SupplyChainAction::SectionReception, StaticValues::actionSectionReception },
@@ -34,6 +38,8 @@ const QHash<Enums::SupplyChainAction, QString> SupplyChainActionStrings = {
     { Enums::SupplyChainAction::LotCreation, StaticValues::actionLotCreation },
     { Enums::SupplyChainAction::WarehouseTransport, StaticValues::actionWarehouseTransport },
     { Enums::SupplyChainAction::ExportReception, StaticValues::actionExportReception }
+#elif CHARCOAL
+#endif
 };
 
 auto PropertiesLocalTypes = QMap<QString, QMetaType::Type>{

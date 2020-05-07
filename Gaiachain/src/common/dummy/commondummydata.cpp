@@ -5,10 +5,13 @@
 namespace {
 const QHash<QString, Enums::UserType> UsersData = {
     { QStringLiteral("god@gaiachain.io"), Enums::UserType::SuperUser },
+#ifdef COCOA
     { QStringLiteral("inspector@gaiachain.io"), Enums::UserType::Inspector },
     { QStringLiteral("pca@gaiachain.io"), Enums::UserType::PCA },
     { QStringLiteral("warehouseman@gaiachain.io"), Enums::UserType::Warehouseman },
     { QStringLiteral("cooperative@gaiachain.io"), Enums::UserType::CooperativeRepresentative }
+#elif CHARCOAL
+#endif
 };
 const QString CommonPassword = QStringLiteral("milo1024");
 }

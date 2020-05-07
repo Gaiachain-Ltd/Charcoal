@@ -40,10 +40,14 @@ namespace Enums {
         SupplyChainExportReception,
         SupplyChainSummary,
 #elif CHARCOAL
-        SupplyChainLogging,
-        SupplyChainCarbonization,
+        SupplyChainLoggingBeginning,
+        SupplyChainLoggingEnding,
+        SupplyChainCarbonizationBeginning,
+        SupplyChainCarbonizationEnding,
         SupplyChainLoadingAndTransport,
         SupplyChainReception,
+        SupplyChainTracking,
+        SupplyChainReplantation,
 #endif
 
         PageCount
@@ -124,11 +128,18 @@ namespace Enums {
 
     enum class UserType {
         Annonymous = -1,
+#ifdef COCOA
         SuperUser,
         Inspector,
         PCA,
         Warehouseman,
         CooperativeRepresentative,
+#elif CHARCOAL
+        SuperUser,
+        Director = SuperUser,
+        Logger,
+        Carbonizer,
+#endif
 
         UserTypeCount
     };
@@ -159,6 +170,7 @@ namespace Enums {
 
     enum class SupplyChainAction {
         Unknown = -1,
+#ifdef COCOA
         Harvest,
         GrainProcessing,
         SectionReception,
@@ -166,6 +178,16 @@ namespace Enums {
         LotCreation,
         WarehouseTransport,
         ExportReception,
+#elif CHARCOAL
+        LoggingBeginning,
+        LoggingEnding,
+        CarbonizationBeginning,
+        CarbonizationEnding,
+        LoadingAndTransport,
+        Reception,
+        Tracking,
+        Replantation,
+#endif
 
         SupplyChainActionCount
     };

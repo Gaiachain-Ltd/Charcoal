@@ -3,7 +3,17 @@
         <file alias="logo-white">charcoal/ui/gaiachain-logo-white.svg</file>
         <file alias="login-background">charcoal/ui/login-background.png</file>
         <file alias="login-background-large">charcoal/ui/login-background-large.jpg</file>
+        <file alias="submenuCarbonizationBeginning">charcoal/ui/carbonization-beginning.svg</file>
+        <file alias="submenuCarbonizationEnding">charcoal/ui/carbonization-ending.svg</file>
+        <file alias="submenuCarbonization">charcoal/ui/carbonization.svg</file>
+        <file alias="submenuLoadingAndTransport">charcoal/ui/loading.svg</file>
+        <file alias="submenuLoggingBeginning">charcoal/ui/logging-beginning.svg</file>
+        <file alias="submenuLoggingEnding">charcoal/ui/logging-ending.svg</file>
+        <file alias="submenuLogging">charcoal/ui/logging.svg</file>
+        <file alias="submenuReception">charcoal/ui/reception.svg</file>
+        <file alias="menuReplantation">charcoal/ui/replantation.svg</file>
+        <file alias="menuSupplyChain">charcoal/ui/supply-chain.svg</file>
+        <file alias="menuTracking">charcoal/ui/tracking.svg</file>
     </qresource>
-    <qresource prefix="/font">
-    </qresource>
+    <qresource prefix="/font"/>
 </RCC>
