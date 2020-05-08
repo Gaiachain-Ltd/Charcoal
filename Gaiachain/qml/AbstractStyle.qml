@@ -169,6 +169,8 @@ QtObject {
     property url gpsFailedImgUrl: "qrc:/ui/gpsFailed"
     property url gpsImgUrl: "qrc:/ui/gps"
 
+    property url helpButtonUrl: "qrc:/ui/helpButton"
+
     // control
     property int controlDefaultBorderWidth: 1
     property int controlBoldBorderWidth: 2
@@ -231,4 +233,8 @@ QtObject {
     property int calendarMonthMinWidth: 150
     property int calendarMonthMinHeight: 120
     property int calendarYearStartYear: 2018
+
+    // help page
+    property color helpPageBackgroundColor: "#96C354"
+    property url helpPageImageUrl: "qrc:/ui/helpImage"
 }

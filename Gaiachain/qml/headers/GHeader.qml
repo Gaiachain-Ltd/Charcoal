@@ -16,6 +16,10 @@ Item {
     property alias headerText: header.text
     property alias headerTextColor: header.color
 
+    property alias helpButtonVisible: image.visible
+    property string helpTitle: headerText
+    property string helpText: Strings.defaultHelp
+
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
 
@@ -25,16 +29,32 @@ Item {
         anchors.fill: parent
         spacing: headerIsEmpty ? GStyle.none : s(GStyle.smallMargin)
 
-        Items.GText {
-            id: header
+        RowLayout {
+            Items.GText {
+                id: header
 
-            Layout.fillWidth: true
+                Layout.fillWidth: true
 
-            font.bold: true
-            horizontalAlignment: Text.AlignLeft
+                font.bold: true
+                horizontalAlignment: Text.AlignLeft
 
-            visible: !headerIsEmpty
-            wrapMode: Text.WordWrap
+                visible: !headerIsEmpty
+                wrapMode: Text.WordWrap
+            }
+
+            Image {
+                id: image
+                visible: false
+                source: GStyle.helpButtonUrl
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: pageManager.enter(Enums.Page.Help, {
+                                                     "title": top.helpTitle,
+                                                     "text": top.helpText
+                                                 })
+                }
+            }
         }
     }
 }

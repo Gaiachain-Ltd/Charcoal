@@ -29,6 +29,7 @@ namespace Enums {
         WaitingTransactions,
         Tracking,
         PackageData,
+        Help,
 #ifdef COCOA
         SupplyChainHarvest,
         SupplyChainGrainProcessing,

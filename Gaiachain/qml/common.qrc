@@ -105,5 +105,6 @@
         <file>items/ItemBorder.qml</file>
         <file>items/RectCheckBox.qml</file>
         <file>items/TextWithTitle.qml</file>
+        <file>pages/HelpPage.qml</file>
     </qresource>
 </RCC>
