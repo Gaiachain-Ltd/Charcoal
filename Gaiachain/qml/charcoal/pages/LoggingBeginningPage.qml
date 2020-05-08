@@ -27,6 +27,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         headerText: Strings.parcel
         helpButtonVisible: true
+        helpText: Strings.loggingBeginningParcelHelp
     }
 
     Headers.InputHeader {
@@ -34,6 +35,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         headerText: Strings.malebiRepsId
         helpButtonVisible: true
+        helpText: Strings.loggingBeginningRepsIdHelp
     }
 
     Headers.ComboBoxHeader {
@@ -41,6 +43,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         headerText: Strings.village
         helpButtonVisible: true
+        helpText: Strings.loggingBeginningVillageHelp
     }
 
     Headers.ComboBoxHeader {
@@ -48,6 +51,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         headerText: Strings.treeSpecies
         helpButtonVisible: true
+        helpText: Strings.loggingBeginningTreeSpeciesHelp
     }
 
     Headers.InputDateHeader {
@@ -55,6 +59,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         headerText: Strings.beginningDate
         helpButtonVisible: true
+        helpText: Strings.loggingBeginningDateHelp
     }
 
     Common.PositionSourceHandler {
@@ -76,6 +81,7 @@ Pages.SupplyChainPageBase {
     Headers.ButtonInputHeader {
         id: gpsCoordinatesButtonInputHeader
         helpButtonVisible: true
+        helpText: Strings.loggingBeginningGpsHelp
 
         Layout.fillWidth: true
 

@@ -184,7 +184,6 @@ QtObject {
     property string helpTitle: tr.empty + qsTr("What is %1?")
 
     readonly property string defaultHelp: ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam augue, aliquam ut quam non, sollicitudin pharetra lacus. Duis molestie turpis vel urna ullamcorper elementum.")
-    property string parcelHelp: defaultHelp //tr.empty + qsTr("Lorem ipsum")
 
     // Charcoal
     property string tracking: tr.empty + qsTr("Tracking")
@@ -204,5 +203,13 @@ QtObject {
     //property string village: tr.empty + qsTr("Village")
     property string treeSpecies: tr.empty + qsTr("Tree species")
     property string beginningDate: tr.empty + qsTr("Beginning date")
+
+    // Charcoal help texts
+    property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")
+    property string loggingBeginningRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
+    property string loggingBeginningVillageHelp: tr.empty + qsTr("Dummy text - village help")
+    property string loggingBeginningTreeSpeciesHelp: tr.empty + qsTr("Dummy text - tree species help")
+    property string loggingBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
+    property string loggingBeginningGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
 
 }
