@@ -40,14 +40,14 @@ namespace Enums {
         SupplyChainExportReception,
         SupplyChainSummary,
 #elif CHARCOAL
-        SupplyChainLoggingBeginning,
-        SupplyChainLoggingEnding,
-        SupplyChainCarbonizationBeginning,
-        SupplyChainCarbonizationEnding,
-        SupplyChainLoadingAndTransport,
-        SupplyChainReception,
-        SupplyChainTracking,
-        SupplyChainReplantation,
+        LoggingBeginning,
+        LoggingEnding,
+        CarbonizationBeginning,
+        CarbonizationEnding,
+        LoadingAndTransport,
+        Reception,
+        //Tracking,
+        Replantation,
 #endif
 
         PageCount

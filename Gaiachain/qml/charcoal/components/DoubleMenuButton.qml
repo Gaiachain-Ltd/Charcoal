@@ -18,6 +18,9 @@ MenuButton {
     property alias leftColor: left.color
     property alias rightColor: right.color
 
+    signal leftClicked()
+    signal rightClicked()
+
     property bool open: false
     onClicked: {
         if (open === false) {
@@ -39,6 +42,7 @@ MenuButton {
             height: top.height
             width: row.half
             fontColor: GStyle.textPrimaryColor
+            onClicked: leftClicked()
         }
 
         MenuButton {
@@ -46,6 +50,7 @@ MenuButton {
             height: top.height
             width: row.half
             fontColor: GStyle.textPrimaryColor
+            onClicked: rightClicked()
         }
     }
 }

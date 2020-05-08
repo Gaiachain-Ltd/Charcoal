@@ -103,10 +103,53 @@ GPage {
                         leftText: Strings.loggingBeginning
                         leftColor: GStyle.submenuLoggingBeginningColor
                         leftIcon:  GStyle.submenuLoggingBeginningUrl
+                        onLeftClicked: pageManager.enter(Enums.Page.LoggingBeginning)
 
                         rightText: Strings.loggingEnding
                         rightColor: GStyle.submenuLoggingEndingColor
                         rightIcon:  GStyle.submenuLoggingEndingUrl
+                        onRightClicked: pageManager.enter(Enums.Page.LoggingEnding)
+                    }
+
+                    Components.DoubleMenuButton {
+                        Layout.fillWidth: true
+
+                        text: Strings.carbonization
+                        color: GStyle.submenuCarbonizationColor
+                        icon: GStyle.submenuCarbonizationUrl
+                        fontColor: GStyle.textPrimaryColor
+
+                        leftText: Strings.carbonizationBeginning
+                        leftColor: GStyle.submenuCarbonizationBeginningColor
+                        leftIcon:  GStyle.submenuCarbonizationBeginningUrl
+                        onLeftClicked: pageManager.enter(Enums.Page.CarbonizationBeginning)
+
+                        rightText: Strings.carbonizationEnding
+                        rightColor: GStyle.submenuCarbonizationEndingColor
+                        rightIcon:  GStyle.submenuCarbonizationEndingUrl
+                        onRightClicked: pageManager.enter(Enums.Page.CarbonizationEnding)
+                    }
+
+                    Components.MenuButton {
+                        Layout.fillWidth: true
+
+                        text: Strings.loadingAndTransport
+                        icon: GStyle.submenuLoadingAndTransportUrl
+                        color: GStyle.submenuLoadingAndTransportColor
+                        fontColor: GStyle.textPrimaryColor
+
+                        onClicked: pageManager.enter(Enums.Page.LoadingAndTransport)
+                    }
+
+                    Components.MenuButton {
+                        Layout.fillWidth: true
+
+                        text: Strings.reception
+                        icon: GStyle.submenuReceptionUrl
+                        color: GStyle.submenuReceptionColor
+                        fontColor: GStyle.textPrimaryColor
+
+                        onClicked: pageManager.enter(Enums.Page.Reception)
                     }
                 }
 

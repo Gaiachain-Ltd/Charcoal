@@ -10,7 +10,12 @@ AbstractStyle {
     readonly property color menuReplantationColor: "#F2CBA4"
     readonly property color submenuLoggingBeginningColor: "#F8F8F8"
     readonly property color submenuLoggingEndingColor: "#EBF1E6"
-    readonly property color submenuLoggingColor: "#FFFFFF"
+    readonly property color submenuLoggingColor: submenuLoggingBeginningColor
+    readonly property color submenuCarbonizationBeginningColor: submenuLoggingEndingColor
+    readonly property color submenuCarbonizationEndingColor: submenuLoggingBeginningColor
+    readonly property color submenuCarbonizationColor: submenuLoggingEndingColor
+    readonly property color submenuLoadingAndTransportColor: submenuLoggingBeginningColor
+    readonly property color submenuReceptionColor: submenuLoggingEndingColor
 
     readonly property url submenuCarbonizationBeginningUrl: "qrc:/ui/submenuCarbonizationBeginning"
     readonly property url submenuCarbonizationEndingUrl: "qrc:/ui/submenuCarbonizationEnding"
@@ -32,7 +37,7 @@ AbstractStyle {
     primaryColor: "#000000"
     buttonSecondaryColor: "#888888"
 
-    menuButtonHeight: 200
+    menuButtonHeight: 300
 
     pixelSize: 29
 }
