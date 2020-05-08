@@ -191,4 +191,12 @@ QtObject {
     property string carbonizationEnding: tr.empty + qsTr("Carbonization ending")
     property string loadingAndTransport: tr.empty + qsTr("Loading and transport")
     //property string reception: tr.empty + qsTr("Reception")
+
+    // Charcoal - logging beginning page
+    property string parcel: tr.empty + qsTr("Parcel")
+    property string malebiRepsId: tr.empty + qsTr("Malebi Rep's ID")
+    //property string village: tr.empty + qsTr("Village")
+    property string treeSpecies: tr.empty + qsTr("Tree species")
+    property string beginningDate: tr.empty + qsTr("Beginning date")
+
 }
