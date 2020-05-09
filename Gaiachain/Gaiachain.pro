@@ -246,7 +246,6 @@ DESTDIR = $$BUILD_DIR/bin
 include(platforms/android/android.pri)
 include(platforms/linux/linux.pri)
 
-#CONFIG += no-openssl    # disable openssl for mcrypto until issue #82497
 ## Modules
 include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)

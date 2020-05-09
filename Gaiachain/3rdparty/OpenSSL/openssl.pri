@@ -1,13 +1,15 @@
-OSSL_PATH = $$PWD/OpenSSL
-
-win32 {
-    exists($${OSSL_PATH}/include/*) {
-        LIBS += -L$${OSSL_PATH}/lib -lssleay32 -llibeay32
-        CONFIG += openssl
-    } else {
-        error("OpenSSL has not been found in $$OSSL_PATH")
-    }
+isEmpty(OSSL_PATH) {
+    OSSL_PATH = $$PWD/OpenSSL
 }
+
+#win32 {
+#    exists($${OSSL_PATH}/include/*) {
+#        LIBS += -L$${OSSL_PATH}/lib -lssleay32 -llibeay32
+#        CONFIG += openssl
+#    } else {
+#        error("OpenSSL has not been found in $$OSSL_PATH")
+#    }
+#}
 
 android {
     exists($${OSSL_PATH}/include/*) {
@@ -64,6 +66,13 @@ android {
     unix {
         exists($${OSSL_PATH}/*) {
             LIBS += -L$${OSSL_PATH}/lib/linux -lssl -lcrypto
+            CONFIG += openssl
+        }
+    }
+
+    win32 {
+        exists($${OSSL_PATH}/*) {
+            LIBS += -L$${OSSL_PATH}/lib -lssl -lcrypto
             CONFIG += openssl
         }
     }
