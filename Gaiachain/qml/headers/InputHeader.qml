@@ -36,6 +36,8 @@ Headers.GHeader {
         id: input
 
         Layout.fillWidth: true
+        Layout.leftMargin: top.margins
+        Layout.rightMargin: top.margins
 
         readonly property real iconItemSpacing: iconItem.visible ? iconItem.width + 2 * iconItem.horizontalMargins : GStyle.none
         readonly property real suffixItemSpacing: suffix.visible ? suffix.contentWidth + s(GStyle.hugeMargin) * 2 : GStyle.none
@@ -46,6 +48,7 @@ Headers.GHeader {
 
         backgroundColor: top.highlighted? GStyle.delegateHighlightColor : GStyle.backgroundColor
         color: top.highlighted? GStyle.fontHighlightColor : top.color
+        font.bold: top.highlighted? true : false
 
         iconEdge: Enums.Edge.RightEdge
 
@@ -72,7 +75,7 @@ Headers.GHeader {
             color: parent.color
             visible: (suffixText !== Strings.empty)
             palette {
-                base: paren.backgroundColor
+                base: parent.backgroundColor
             }
 
             text: suffixText

@@ -71,6 +71,7 @@ Item {
             text: title
             color: GStyle.textSecondaryColor
             font.pixelSize: s(GStyle.titlePixelSize)
+            font.capitalization: GStyle.headerCapitalization
             wrapMode: Text.WordWrap
 
             visible: !logoVisible

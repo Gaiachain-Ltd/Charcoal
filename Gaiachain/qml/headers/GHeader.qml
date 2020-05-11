@@ -11,6 +11,7 @@ Item {
 
     readonly property bool headerIsEmpty: (headerText === Strings.empty)
     property bool highlighted: false
+    property bool isFirstItem: true // false
 
     property alias widget: mainLayout.data
 
@@ -22,6 +23,8 @@ Item {
     property string helpText: Strings.defaultHelp
 
     property alias separatorVisible: separatorLine.visible
+
+    property int margins: s(GStyle.hugeMargin)
 
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
@@ -37,15 +40,20 @@ Item {
         id: mainLayout
 
         anchors.fill: parent
-        spacing: headerIsEmpty ? GStyle.none : s(GStyle.smallMargin)
+        spacing: headerIsEmpty ? GStyle.none : s(GStyle.tinyMargin)
 
         RowLayout {
+            Layout.topMargin: top.isFirstItem? top.margins : 0
+            Layout.leftMargin: top.margins
+            Layout.rightMargin: top.margins
+
             Items.GText {
                 id: header
 
                 Layout.fillWidth: true
 
                 font.bold: true
+                font.capitalization: top.highlighted? Font.AllUppercase : Font.MixedCase
                 horizontalAlignment: Text.AlignLeft
 
                 visible: !headerIsEmpty
@@ -68,6 +76,9 @@ Item {
         }
 
         Rectangle {
+            Layout.leftMargin: top.margins
+            Layout.rightMargin: top.margins
+
             id: separatorLine
             Layout.fillWidth: true
             height: 1

@@ -50,18 +50,14 @@ GPage {
     }
 
     ColumnLayout {
-        anchors {
-            fill: parent
-            margins: s(GStyle.hugeMargin)
-        }
-
+        anchors.fill: parent
         spacing: s(GStyle.bigMargin)
 
         Flickable {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            contentHeight: contentLayout.implicitHeight
+            contentHeight: contentLayout.height
 
             clip: true
 
@@ -86,6 +82,7 @@ GPage {
         }
 
         Items.GButton {
+            Layout.margins: s(GStyle.hugeMargin)
             id: proceedButton
 
             Layout.fillWidth: true

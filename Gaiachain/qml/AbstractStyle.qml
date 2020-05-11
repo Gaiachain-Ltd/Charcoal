@@ -96,6 +96,8 @@ QtObject {
         source: "qrc:/font/fonts/PublicSans/PublicSans-Bold.otf"
     }
 
+    property int headerCapitalization: Font.MixedCase
+
     // Components sizes
     property int headerHeight: 200
     property int footerHeight: 200

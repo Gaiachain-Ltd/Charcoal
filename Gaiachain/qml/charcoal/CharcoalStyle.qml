@@ -31,7 +31,6 @@ AbstractStyle {
 
     logoImgUrl: logoWhiteImgUrl
     loginBackgroundUrl: "qrc:/ui/login-background"
-
     downArrowImgUrl: "qrc:/ui/arrow"
 
     primaryColor: "#000000"
@@ -42,4 +41,6 @@ AbstractStyle {
     menuButtonHeight: 300
 
     pixelSize: 29
+
+    headerCapitalization: Font.AllUppercase
 }

@@ -54,7 +54,10 @@ Headers.GHeader {
 
     widget: Items.GInput {
         id: input
+
         Layout.fillWidth: true
+        Layout.leftMargin: top.margins
+        Layout.rightMargin: top.margins
 
         text: isEmpty ? Strings.empty : top.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)
 
