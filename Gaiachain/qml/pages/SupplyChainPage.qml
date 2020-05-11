@@ -32,15 +32,6 @@ SupplyChainPageBase {
         return gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()
     }
 
-    function createSummaryItem(header, value, inputIconSource = "", suffix = "") {
-        return {
-          "headerValue": header,
-          "value": value,
-          "inputIconSource": inputIconSource.toString(),
-          "suffixValue": suffix
-        }
-    }
-
     function isCurrentAction(packageId, codeData, action) {
         var currentPackage = (top.packageId !== "" &&
                 (top.packageId === packageId)) ||

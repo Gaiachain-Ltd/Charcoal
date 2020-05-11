@@ -30,6 +30,7 @@ namespace Enums {
         Tracking,
         PackageData,
         Help,
+        SupplyChainSummary,
 #ifdef COCOA
         SupplyChainHarvest,
         SupplyChainGrainProcessing,
@@ -39,7 +40,6 @@ namespace Enums {
         SupplyChainLotCreation,
         SupplyChainWarehouseTransport,
         SupplyChainExportReception,
-        SupplyChainSummary,
 #elif CHARCOAL
         LoggingBeginning,
         LoggingEnding,

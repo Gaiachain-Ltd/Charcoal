@@ -22,6 +22,28 @@ Pages.SupplyChainPageBase {
         //sessionManager.getUnusedLotIds()
     }
 
+    function proceed() {
+        pageManager.enter(Enums.Page.SupplyChainSummary, {
+                              "supplyChainPage": this, "summary": summary()
+                          });
+    }
+
+    function summary() {
+        var summary = [
+                    createSummaryItem(Strings.parcel, parcelComboBox.currentText),
+                    createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
+                    createSummaryItem(Strings.village, villageComboBox.currentText),
+                    createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
+                    createSummaryItem(Strings.beginningDate,
+                                      beginningDateHeader.selectedDate.toLocaleDateString(
+                                          Qt.locale(), Strings.dateFormat)),
+                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString(),
+                                      GStyle.gpsImgUrl),
+        ]
+
+        return summary
+    }
+
     Headers.ComboBoxHeader {
         id: parcelComboBox
         Layout.fillWidth: true

@@ -39,7 +39,7 @@ Pages.SupplyChainPageBase {
         id: dataSummaryListModel
     }
 
-   ColumnLayout {
+    ColumnLayout {
         spacing: s(GStyle.smallMargin)
 
         Repeater {

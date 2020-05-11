@@ -22,6 +22,15 @@ GPage {
         pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit }, "EXIT_CONFIRM")
     }
 
+    function createSummaryItem(header, value, inputIconSource = "", suffix = "") {
+        return {
+          "headerValue": header,
+          "value": value,
+          "inputIconSource": inputIconSource.toString(),
+          "suffixValue": suffix
+        }
+    }
+
     Connections {
         target: pageManager
         enabled: pageManager.isOnTop(page)
