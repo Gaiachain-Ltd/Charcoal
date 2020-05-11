@@ -10,6 +10,7 @@ Item {
     id: top
 
     readonly property bool headerIsEmpty: (headerText === Strings.empty)
+    property bool highlighted: false
 
     property alias widget: mainLayout.data
 
@@ -20,8 +21,17 @@ Item {
     property string helpTitle: headerText
     property string helpText: Strings.defaultHelp
 
+    property alias separatorVisible: separatorLine.visible
+
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
+
+    Rectangle {
+        id: backgroundHightlight
+        color: GStyle.delegateHighlightColor
+        visible: top.highlighted
+        anchors.fill: parent
+    }
 
     ColumnLayout {
         id: mainLayout
@@ -55,6 +65,28 @@ Item {
                                                  })
                 }
             }
+        }
+
+        Rectangle {
+            id: separatorLine
+            Layout.fillWidth: true
+            height: 1
+            color: top.highlighted ? GStyle.fontHighlightColor : GStyle.inputBorderColor
+            visible: false
+        }
+    }
+
+    Rectangle {
+        id: bottomLine
+        Layout.fillWidth: true
+        height: 1
+        color: GStyle.fontHighlightColor
+        visible: top.highlighted
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
         }
     }
 }

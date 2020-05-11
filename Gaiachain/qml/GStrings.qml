@@ -176,7 +176,9 @@ QtObject {
     property string activities: tr.empty + qsTr("activities")
 
     // special
-    property string dateFormat: tr.empty + qsTr("MM/dd/yyyy")
+    property string dateFormat: tr.empty + ((mainController.flavor === "cocoa")?
+                                                qsTr("MM/dd/yyyy") : qsTr("dd/MM/yyyy"))
+    property string idDateFormat: tr.empty + qsTr("dd-MM-yyyy")
     property string checkMark: "\u2713"
     property string minus: "-"
 
@@ -203,6 +205,8 @@ QtObject {
     //property string village: tr.empty + qsTr("Village")
     property string treeSpecies: tr.empty + qsTr("Tree species")
     property string beginningDate: tr.empty + qsTr("Beginning date")
+    property string createPlotId: tr.empty + qsTr("Create plot ID")
+    property string plotId: tr.empty + qsTr("Plot ID")
 
     // Charcoal help texts
     property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")

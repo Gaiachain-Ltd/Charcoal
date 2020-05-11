@@ -20,6 +20,9 @@ Pages.SupplyChainPageBase {
     proceedButtonEnabled: true
     proceedButtonText: Strings.confirm
 
+    property bool showRoundedBorder: true
+    property bool highlightFirstRow: false
+
     property var supplyChainPage
     property var summary
 
@@ -54,6 +57,9 @@ Pages.SupplyChainPageBase {
                 suffixText: suffixValue
                 readOnly: true
                 iconSource: inputIconSource ? inputIconSource : ""
+                borderWidth: showRoundedBorder? sr(1) : 0
+                separatorVisible: !showRoundedBorder
+                highlighted: (index === 0) && highlightFirstRow
             }
         }
     }

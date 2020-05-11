@@ -24,12 +24,22 @@ Pages.SupplyChainPageBase {
 
     function proceed() {
         pageManager.enter(Enums.Page.SupplyChainSummary, {
-                              "supplyChainPage": this, "summary": summary()
+                              "supplyChainPage": this,
+                              "summary": summary(),
+                              "proceedButtonText": Strings.createPlotId,
+                              "showRoundedBorder": false,
+                              "highlightFirstRow": true
                           });
     }
 
     function summary() {
         var summary = [
+                    createSummaryItem(Strings.plotId,
+                                      repsIdInputHeader.inputText
+                                      + "/" + parcelComboBox.currentText
+                                      + "/"
+                                      + beginningDateHeader.selectedDate.toLocaleDateString(
+                                          Qt.locale(), Strings.idDateFormat)),
                     createSummaryItem(Strings.parcel, parcelComboBox.currentText),
                     createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
                     createSummaryItem(Strings.village, villageComboBox.currentText),
@@ -37,9 +47,8 @@ Pages.SupplyChainPageBase {
                     createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString(),
-                                      GStyle.gpsImgUrl),
-        ]
+                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                ]
 
         return summary
     }

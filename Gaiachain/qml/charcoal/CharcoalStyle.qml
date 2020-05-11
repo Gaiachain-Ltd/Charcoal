@@ -36,6 +36,8 @@ AbstractStyle {
 
     primaryColor: "#000000"
     buttonSecondaryColor: "#888888"
+    delegateHighlightColor: "#EEF9FE"
+    fontHighlightColor: "#2581EB"
 
     menuButtonHeight: 300
 

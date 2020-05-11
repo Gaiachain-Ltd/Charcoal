@@ -10,7 +10,7 @@ import "../headers" as Headers
 Headers.GHeader {
     id: top
 
-    property alias color: input.color
+    property color color: input.color
     property url iconSource
     property alias placeholderText: input.placeholderText
     property alias validator: input.validator
@@ -23,6 +23,7 @@ Headers.GHeader {
 
     property bool optional: false
     readonly property bool isEmpty: (inputText === Strings.empty)
+    property alias borderWidth: input.borderWidth
 
     property alias showIcon: input.showIcon
     signal iconClicked
@@ -42,6 +43,9 @@ Headers.GHeader {
 
         focus: false
         rightPadding: (itemsSpacing === GStyle.none ? padding : itemsSpacing)
+
+        backgroundColor: top.highlighted? GStyle.delegateHighlightColor : GStyle.backgroundColor
+        color: top.highlighted? GStyle.fontHighlightColor : top.color
 
         iconEdge: Enums.Edge.RightEdge
 
@@ -67,6 +71,9 @@ Headers.GHeader {
             font: parent.font
             color: parent.color
             visible: (suffixText !== Strings.empty)
+            palette {
+                base: paren.backgroundColor
+            }
 
             text: suffixText
         }
