@@ -18,6 +18,12 @@ Pages.SupplyChainPageBase {
 
     Component.onCompleted: refreshData()
 
+    property string plotId: repsIdInputHeader.inputText
+                            + "/" + parcelComboBox.currentText
+                            + "/"
+                            + beginningDateHeader.selectedDate.toLocaleDateString(
+                                Qt.locale(), Strings.idDateFormat)
+
     function refreshData() {
         //sessionManager.getUnusedLotIds()
     }
@@ -34,12 +40,7 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId,
-                                      repsIdInputHeader.inputText
-                                      + "/" + parcelComboBox.currentText
-                                      + "/"
-                                      + beginningDateHeader.selectedDate.toLocaleDateString(
-                                          Qt.locale(), Strings.idDateFormat)),
+                    createSummaryItem(Strings.plotId, plotId),
                     createSummaryItem(Strings.parcel, parcelComboBox.currentText),
                     createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
                     createSummaryItem(Strings.village, villageComboBox.currentText),
@@ -51,6 +52,23 @@ Pages.SupplyChainPageBase {
                 ]
 
         return summary
+    }
+
+    function addAction() {
+        showOverlay()
+
+        var properties = {
+            [PackageDataProperties.LotPid]: 1,
+            [PackageDataProperties.HarvestWeights]: 1
+        }
+
+        // ID, action, coordiate, timestamp, props
+        dataManager.addAction(
+                    plotId,
+                    Enums.SupplyChainAction.LoggingBeginning,
+                    (gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()),
+                    new Date,
+                    properties)
     }
 
     Headers.ComboBoxHeader {
