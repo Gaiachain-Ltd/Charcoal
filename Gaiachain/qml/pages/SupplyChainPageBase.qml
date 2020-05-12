@@ -51,7 +51,7 @@ GPage {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: s(GStyle.bigMargin)
+        spacing: s(GStyle.mediumMargin)
 
         Flickable {
             Layout.fillWidth: true
@@ -82,9 +82,11 @@ GPage {
         }
 
         Items.GButton {
-            Layout.margins: s(GStyle.hugeMargin)
             id: proceedButton
 
+            Layout.leftMargin: s(GStyle.hugeMargin)
+            Layout.rightMargin: Layout.leftMargin
+            Layout.bottomMargin: Layout.leftMargin
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignBottom
 
