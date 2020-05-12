@@ -55,6 +55,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
+        /*
         showOverlay()
 
         var properties = {
@@ -66,9 +67,13 @@ Pages.SupplyChainPageBase {
         dataManager.addAction(
                     plotId,
                     Enums.SupplyChainAction.LoggingBeginning,
-                    (gpsSource.coordinate ? gpsSource.coordinate : QtPositioning.coordinate()),
+                    (gpsSource.coordinate? gpsSource.coordinate
+                                         : QtPositioning.coordinate()),
                     new Date,
                     properties)
+                    */
+        console.warn("Dummy action - TODO implement! Going back to main menu")
+        pageManager.enter(Enums.Page.MainMenu)
     }
 
     Headers.ComboBoxHeader {

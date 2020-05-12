@@ -27,11 +27,11 @@ namespace Enums {
         QRScanner,              // TODO check if still needed
         Transactions,
         WaitingTransactions,
-        Tracking,
         PackageData,
         Help,
         SupplyChainSummary,
 #ifdef COCOA
+        Tracking,
         SupplyChainHarvest,
         SupplyChainGrainProcessing,
         SupplyChainSectionReception,
@@ -41,14 +41,14 @@ namespace Enums {
         SupplyChainWarehouseTransport,
         SupplyChainExportReception,
 #elif CHARCOAL
-        LoggingBeginning,
-        LoggingEnding,
-        CarbonizationBeginning,
-        CarbonizationEnding,
-        LoadingAndTransport,
-        Reception,
-        //Tracking,
-        Replantation,
+        SupplyChainLoggingBeginning,
+        SupplyChainLoggingEnding,
+        SupplyChainCarbonizationBeginning,
+        SupplyChainCarbonizationEnding,
+        SupplyChainLoadingAndTransport,
+        SupplyChainReception,
+        PageTracking,
+        PageReplantation,
 #endif
 
         PageCount

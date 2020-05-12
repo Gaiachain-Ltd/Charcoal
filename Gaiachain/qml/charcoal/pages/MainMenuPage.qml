@@ -33,9 +33,9 @@ GPage {
         case Enums.SupplyChainAction.Reception:
             return Enums.Page.SupplyChainReception;
         case Enums.SupplyChainAction.Tracking:
-            return Enums.Page.SupplyChainTracking;
+            return Enums.Page.Tracking;
         case Enums.SupplyChainAction.Replantation:
-            return Enums.Page.SupplyChainReplantation;
+            return Enums.Page.Replantation;
         default:
             console.warn("navigateSupplyChainPages: Invalid action provided!")
         }
@@ -103,12 +103,14 @@ GPage {
                         leftText: Strings.loggingBeginning
                         leftColor: GStyle.submenuLoggingBeginningColor
                         leftIcon:  GStyle.submenuLoggingBeginningUrl
-                        onLeftClicked: pageManager.enter(Enums.Page.LoggingBeginning)
+                        onLeftClicked: pageManager.enter(
+                                           Enums.Page.SupplyChainLoggingBeginning)
 
                         rightText: Strings.loggingEnding
                         rightColor: GStyle.submenuLoggingEndingColor
                         rightIcon:  GStyle.submenuLoggingEndingUrl
-                        onRightClicked: pageManager.enter(Enums.Page.LoggingEnding)
+                        onRightClicked: pageManager.enter(
+                                            Enums.Page.SupplyChainLoggingEnding)
                     }
 
                     Components.DoubleMenuButton {
@@ -122,12 +124,14 @@ GPage {
                         leftText: Strings.carbonizationBeginning
                         leftColor: GStyle.submenuCarbonizationBeginningColor
                         leftIcon:  GStyle.submenuCarbonizationBeginningUrl
-                        onLeftClicked: pageManager.enter(Enums.Page.CarbonizationBeginning)
+                        onLeftClicked: pageManager.enter(
+                                           Enums.Page.SupplyChainCarbonizationBeginning)
 
                         rightText: Strings.carbonizationEnding
                         rightColor: GStyle.submenuCarbonizationEndingColor
                         rightIcon:  GStyle.submenuCarbonizationEndingUrl
-                        onRightClicked: pageManager.enter(Enums.Page.CarbonizationEnding)
+                        onRightClicked: pageManager.enter(
+                                            Enums.Page.SupplyChainCarbonizationEnding)
                     }
 
                     Components.MenuButton {
@@ -138,7 +142,8 @@ GPage {
                         color: GStyle.submenuLoadingAndTransportColor
                         fontColor: GStyle.textPrimaryColor
 
-                        onClicked: pageManager.enter(Enums.Page.LoadingAndTransport)
+                        onClicked: pageManager.enter(
+                                       Enums.Page.SupplyChainLoadingAndTransport)
                     }
 
                     Components.MenuButton {
@@ -149,7 +154,7 @@ GPage {
                         color: GStyle.submenuReceptionColor
                         fontColor: GStyle.textPrimaryColor
 
-                        onClicked: pageManager.enter(Enums.Page.Reception)
+                        onClicked: pageManager.enter(Enums.Page.SupplyChainReception)
                     }
                 }
 
@@ -160,7 +165,7 @@ GPage {
                 icon: GStyle.menuTrackingUrl
                 color: GStyle.menuTrackingColor
 
-                onClicked: pageManager.enter(Enums.Page.Tracking)
+                onClicked: pageManager.enter(Enums.Page.PageTracking)
             }
 
             Components.MenuButton {
@@ -170,7 +175,7 @@ GPage {
                 icon: GStyle.menuReplantationUrl
                 color: GStyle.menuReplantationColor
 
-                onClicked: pageManager.enter(Enums.Page.Replantation)
+                onClicked: pageManager.enter(Enums.Page.PageReplantation)
             }
         }
     }

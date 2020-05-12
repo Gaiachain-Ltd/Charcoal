@@ -66,15 +66,24 @@ QString DataManager::generateHarvestId(const QDate &date, const QString &parcelC
     return date.toString(QStringLiteral("%1/d-M-yyyy")).arg(parcelCode);
 }
 
-void DataManager::addAction(const QString &packageId, const Enums::SupplyChainAction &action,
-                            const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
+void DataManager::addAction(const QString &packageId,
+                            const Enums::SupplyChainAction &action,
+                            const QGeoCoordinate &coordinate,
+                            const QDateTime &timestamp,
+                            const QVariantMap &properties)
 {
     const auto isOfflineAction = DataGlobals::availableOfflineActions().contains(action);
     if (isOfflineAction && !m_userData.isAnonymous()) {
-        QMetaObject::invokeMethod(&m_modelsHandler, std::bind(&DataModelsManager::addLocalAction, &m_modelsHandler,
-                                                              packageId, action, coordinate, timestamp, m_userData.cooperativeId, properties));
-        QMetaObject::invokeMethod(&m_localHandler, std::bind(&DataLocalManager::addLocalAction, &m_localHandler,
-                                                             packageId, action, coordinate, timestamp, properties));
+        QMetaObject::invokeMethod(&m_modelsHandler,
+                                  std::bind(&DataModelsManager::addLocalAction,
+                                            &m_modelsHandler, packageId, action,
+                                            coordinate, timestamp,
+                                            m_userData.cooperativeId, properties));
+
+        QMetaObject::invokeMethod(&m_localHandler,
+                                  std::bind(&DataLocalManager::addLocalAction,
+                                            &m_localHandler, packageId, action,
+                                            coordinate, timestamp, properties));
     } else {
         emit addActionRequest(packageId, action, coordinate, timestamp, properties);
     }
