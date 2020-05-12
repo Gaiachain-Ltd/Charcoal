@@ -1,17 +1,19 @@
 <RCC>
     <qresource prefix="/charcoal">
         <file>CharcoalStyle.qml</file>
-        <file>pages/MainMenuPage.qml</file>
         <file>components/MenuButton.qml</file>
         <file>components/ExpandableMenuButton.qml</file>
         <file>components/DoubleMenuButton.qml</file>
+        <file>headers/UserInfoHeader.qml</file>
+        <file>pages/MainMenuPage.qml</file>
+        <file>pages/UserInfoPage.qml</file>
+        <file>pages/PageReplantationPage.qml</file>
+        <file>pages/PageTrackingPage.qml</file>
         <file>pages/SupplyChainCarbonizationBeginningPage.qml</file>
         <file>pages/SupplyChainCarbonizationEndingPage.qml</file>
         <file>pages/SupplyChainLoadingAndTransportPage.qml</file>
         <file>pages/SupplyChainLoggingBeginningPage.qml</file>
         <file>pages/SupplyChainLoggingEndingPage.qml</file>
         <file>pages/SupplyChainReceptionPage.qml</file>
-        <file>pages/PageReplantationPage.qml</file>
-        <file>pages/PageTrackingPage.qml</file>
     </qresource>
 </RCC>

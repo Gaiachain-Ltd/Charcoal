@@ -29,6 +29,11 @@ const QLatin1String Type = QLatin1String("type");
 const QLatin1String CooperativeId = QLatin1String("cooperativeId");
 const QLatin1String CooperativeCode = QLatin1String("cooperativeCode");
 const QLatin1String CooperativeName = QLatin1String("cooperativeName");
+// Charcoal user
+const QLatin1String Code = QLatin1String("code");
+const QLatin1String Contact = QLatin1String("contact");
+const QLatin1String Job = QLatin1String("job");
+const QLatin1String Name = QLatin1String("name");
 }
 
 OfflineUsersHandler::OfflineUsersHandler()
@@ -94,9 +99,16 @@ void OfflineUsersHandler::putUser(const QString &login, const UserData &userData
     m_usersData.setValue(SettingKey::Token, token);
     m_usersData.setValue(SettingKey::Email, userData.email);
     m_usersData.setValue(SettingKey::Type, QVariant::fromValue(userData.type));
+#ifdef COCOA
     m_usersData.setValue(SettingKey::CooperativeId, userData.cooperativeId);
     m_usersData.setValue(SettingKey::CooperativeCode, userData.cooperativeCode);
     m_usersData.setValue(SettingKey::CooperativeName, userData.cooperativeName);
+#elif CHARCOAL
+    m_usersData.setValue(SettingKey::Code, userData.code);
+    m_usersData.setValue(SettingKey::Contact, userData.contact);
+    m_usersData.setValue(SettingKey::Job, userData.job);
+    m_usersData.setValue(SettingKey::Name, userData.name);
+#endif
 
     m_usersData.endGroup();
 }
@@ -111,9 +123,16 @@ QPair<UserData, QString> OfflineUsersHandler::getUser(const QString &login) cons
         token = m_usersData.value(SettingKey::Token).toString();
         userData.email = m_usersData.value(SettingKey::Email).toString();
         userData.type = m_usersData.value(SettingKey::Type).value<Enums::UserType>();
+#ifdef COCOA
         userData.cooperativeId = m_usersData.value(SettingKey::CooperativeId).toUInt();
         userData.cooperativeCode = m_usersData.value(SettingKey::CooperativeCode).toString();
         userData.cooperativeName = m_usersData.value(SettingKey::CooperativeName).toString();
+#elif CHARCOAL
+        userData.code = m_usersData.value(SettingKey::Code).toString();
+        userData.contact = m_usersData.value(SettingKey::Contact).toString();
+        userData.job = m_usersData.value(SettingKey::Job).toString();
+        userData.name = m_usersData.value(SettingKey::Name).toString();
+#endif
 
         const_cast<QSettings &>(m_usersData).endGroup();        // endGroup is not a const function :(
     }

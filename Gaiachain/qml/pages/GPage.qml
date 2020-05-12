@@ -13,6 +13,7 @@ Items.GPanel
 {
     id: top
     property alias headerVisible: header.visible
+    property alias showCloseButton: header.showCloseButton
     property alias footerVisible: footer.visible
 
     property alias logoVisible: header.logoVisible

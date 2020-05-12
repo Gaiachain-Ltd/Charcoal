@@ -10,7 +10,11 @@
 #include "datalocalmanager.h"
 #include "dataviewmanager.h"
 
-#include "../../common/userdata.h"
+#ifdef COCOA
+#include "cocoa/cocoauserdata.h"
+#elif CHARCOAL
+#include "charcoal/charcoaluserdata.h"
+#endif
 
 class QGeoCoordinate;
 

@@ -10,6 +10,7 @@ import "../items" as Items
 Item {
     id: top
 
+    property bool showCloseButton: true
     readonly property bool isOnHomePage: pageManager.isOnHomePage()
     readonly property bool isBackToHomePage: pageManager.isBackToHomePage()
 
@@ -84,7 +85,7 @@ Item {
             Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
             source: GStyle.closeImgUrl
-            visible: !isOnHomePage
+            visible: !isOnHomePage && showCloseButton
 
             onClicked: backToHomeHandler()
         }

@@ -92,9 +92,16 @@ void UserManager::readLoginData(const QString &login, const QJsonObject &userDat
     userData.email = RequestsHelper::checkAndValue(userDataObj, Tags::login).toString();
 
     auto cooperativeObj = RequestsHelper::checkAndValue(userDataObj, Tags::company).toObject();
-    userData.cooperativeId = static_cast<quint32>(RequestsHelper::checkAndValue(cooperativeObj, Tags::id).toInt());
-    userData.cooperativeCode = RequestsHelper::checkAndValue(cooperativeObj, Tags::pid).toString();
-    userData.cooperativeName = RequestsHelper::checkAndValue(cooperativeObj, Tags::name).toString();
+#ifdef COCOA
+    userData.cooperativeId = static_cast<quint32>(
+        RequestsHelper::checkAndValue(cooperativeObj, Tags::id).toInt());
+    userData.cooperativeCode = RequestsHelper::checkAndValue(
+                                   cooperativeObj, Tags::pid).toString();
+    userData.cooperativeName = RequestsHelper::checkAndValue(
+                                   cooperativeObj, Tags::name).toString();
+#elif CHARCOAL
+    qDebug() << "TODO!";
+#endif
 
     const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
     const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();

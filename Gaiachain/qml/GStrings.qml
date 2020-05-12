@@ -199,6 +199,13 @@ QtObject {
     property string loadingAndTransport: tr.empty + qsTr("Loading and transport")
     //property string reception: tr.empty + qsTr("Reception")
 
+    // Charcoal - user info
+    property string userInfoPageTitle: tr.empty + qsTr("Malebi rep's ID details")
+    property string userInfoName: tr.empty + qsTr("Name and surname")
+    property string userInfoJob: tr.empty + qsTr("Function")
+    property string userInfoContact: tr.empty + qsTr("Contact")
+    property string userInfoCode: tr.empty + qsTr("Code")
+
     // Charcoal - logging beginning page
     property string parcel: tr.empty + qsTr("Parcel")
     property string malebiRepsId: tr.empty + qsTr("Malebi Rep's ID")
@@ -214,6 +221,12 @@ QtObject {
     property string updatePlotId: tr.empty + qsTr("Update Plot ID")
 
     // Charcoal help texts
+    // User info
+    property string userInfoNameHelp: tr.empty + qsTr("Dummy text - user name help")
+    property string userInfoJobHelp: tr.empty + qsTr("Dummy text - user function help")
+    property string userInfoContactHelp: tr.empty + qsTr("Dummy text - user contact help")
+    property string userInfoCodeHelp: tr.empty + qsTr("Dummy text - user code help")
+
     // Logging beginning
     property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")
     property string loggingBeginningRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")

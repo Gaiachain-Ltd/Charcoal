@@ -49,6 +49,7 @@ namespace Enums {
         SupplyChainReception,
         PageTracking,
         PageReplantation,
+        UserInfo,
 #endif
 
         PageCount

@@ -9,6 +9,7 @@ import com.gaiachain.types 1.0
 
 import "../../common" as Common
 import "../../headers" as Headers
+import "../headers" as CharcoalHeaders
 import "../../pages" as Pages
 
 Pages.SupplyChainPageBase {
@@ -84,12 +85,9 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loggingBeginningParcelHelp
     }
 
-    Headers.InputHeader {
+    CharcoalHeaders.UserInfoHeader {
         id: repsIdInputHeader
         Layout.fillWidth: true
-        headerText: Strings.malebiRepsId
-        readOnly: true
-        helpButtonVisible: true
         helpText: Strings.loggingBeginningRepsIdHelp
     }
 

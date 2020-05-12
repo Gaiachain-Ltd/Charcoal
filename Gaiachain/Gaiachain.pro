@@ -26,6 +26,9 @@ cocoa {
     DEFINES += COCOA
     RESOURCES += qml/cocoa/cocoa.qrc
     TARGET = GaiachainCocoa
+
+    HEADERS += \
+        src/cocoa/cocoauserdata.h
 }
 
 charcoal {
@@ -34,6 +37,9 @@ charcoal {
         qml/charcoal/charcoal.qrc \
         resources/resources-charcoal.qrc
     TARGET = GaiachainCharcoal
+
+    HEADERS += \
+        src/charcoal/charcoaluserdata.h
 }
 
 include(../version.pri)
@@ -76,12 +82,14 @@ msvc* {
 TEMPLATE = app
 CONFIG += c++17
 
+INCLUDEPATH += src
+
 HEADERS += \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
     src/common/languagemanager.h \
     src/common/types.h \
-    src/common/userdata.h \
+    src/common/abstractuserdata.h \
     src/controllers/data/abstractdatamodelsmanager.h \
     src/controllers/data/datalocalmanager.h \
     src/controllers/data/datamanager.h \
@@ -163,7 +171,7 @@ SOURCES += src/main.cpp \
     src/common/dataglobals.cpp \
     src/common/globals.cpp \
     src/common/types.cpp \
-    src/common/userdata.cpp \
+    src/common/abstractuserdata.cpp \
     src/controllers/data/abstractdatamodelsmanager.cpp \
     src/controllers/data/datalocalmanager.cpp \
     src/controllers/data/datamanager.cpp \

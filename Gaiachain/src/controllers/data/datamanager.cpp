@@ -47,7 +47,11 @@ void DataManager::setupDatabase(const QString &dbPath)
 void DataManager::updateUserData(const UserData &userData)
 {
     m_userData = userData;
+#ifdef COCOA
     m_viewHandler.updateCooperativeId(userData.cooperativeId);
+#elif CHARCOAL
+    qDebug() << "TODO!";
+#endif
 }
 
 bool DataManager::processing() const
@@ -74,11 +78,15 @@ void DataManager::addAction(const QString &packageId,
 {
     const auto isOfflineAction = DataGlobals::availableOfflineActions().contains(action);
     if (isOfflineAction && !m_userData.isAnonymous()) {
+#ifdef COCOA
         QMetaObject::invokeMethod(&m_modelsHandler,
                                   std::bind(&DataModelsManager::addLocalAction,
                                             &m_modelsHandler, packageId, action,
                                             coordinate, timestamp,
                                             m_userData.cooperativeId, properties));
+#elif CHARCOAL
+        qDebug() << "TODO!";
+#endif
 
         QMetaObject::invokeMethod(&m_localHandler,
                                   std::bind(&DataLocalManager::addLocalAction,
