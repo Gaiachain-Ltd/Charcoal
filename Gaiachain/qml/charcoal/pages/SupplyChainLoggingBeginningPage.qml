@@ -33,15 +33,15 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.SupplyChainSummary, {
                               "supplyChainPage": this,
                               "summary": summary(),
-                              "proceedButtonText": Strings.createPlotId,
-                              "showRoundedBorder": false,
-                              "highlightFirstRow": true
+                              "proceedButtonText": Strings.createPlotId
                           });
     }
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId, plotId),
+                    createSummaryItem(Strings.plotId, plotId, "", "",
+                                      GStyle.delegateHighlightColor,
+                                      GStyle.fontHighlightColor),
                     createSummaryItem(Strings.parcel, parcelComboBox.currentText),
                     createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
                     createSummaryItem(Strings.village, villageComboBox.currentText),
