@@ -208,12 +208,25 @@ QtObject {
     property string createPlotId: tr.empty + qsTr("Create plot ID")
     property string plotId: tr.empty + qsTr("Plot ID")
 
+    // Charcoal - logging ending page
+    property string endingDate: tr.empty + qsTr("Ending date")
+    property string numberOfTrees: tr.empty + qsTr("Number of trees")
+    property string updatePlotId: tr.empty + qsTr("Update Plot ID")
+
     // Charcoal help texts
+    // Logging beginning
     property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")
     property string loggingBeginningRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
     property string loggingBeginningVillageHelp: tr.empty + qsTr("Dummy text - village help")
     property string loggingBeginningTreeSpeciesHelp: tr.empty + qsTr("Dummy text - tree species help")
     property string loggingBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
     property string loggingBeginningGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
+
+    // Logging ending
+    property string loggingEndingPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
+    property string loggingEndingRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
+    property string loggingEndingEndingDateHelp: tr.empty + qsTr("Dummy text - ending date help")
+    property string loggingEndingNumberOfTreesHelp: tr.empty + qsTr("Dummy text - number of trees help")
+    property string loggingEndingGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
 
 }

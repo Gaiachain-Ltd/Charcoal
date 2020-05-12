@@ -88,6 +88,7 @@ Pages.SupplyChainPageBase {
         id: repsIdInputHeader
         Layout.fillWidth: true
         headerText: Strings.malebiRepsId
+        readOnly: true
         helpButtonVisible: true
         helpText: Strings.loggingBeginningRepsIdHelp
     }

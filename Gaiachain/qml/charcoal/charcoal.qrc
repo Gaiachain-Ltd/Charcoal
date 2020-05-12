@@ -5,13 +5,13 @@
         <file>components/MenuButton.qml</file>
         <file>components/ExpandableMenuButton.qml</file>
         <file>components/DoubleMenuButton.qml</file>
-        <file>pages/CarbonizationBeginningPage.qml</file>
-        <file>pages/CarbonizationEndingPage.qml</file>
-        <file>pages/LoadingAndTransportPage.qml</file>
-        <file>pages/LoggingBeginningPage.qml</file>
-        <file>pages/LoggingEndingPage.qml</file>
-        <file>pages/ReceptionPage.qml</file>
-        <file>pages/ReplantationPage.qml</file>
-        <file>pages/TrackingPage.qml</file>
+        <file>pages/SupplyChainCarbonizationBeginningPage.qml</file>
+        <file>pages/SupplyChainCarbonizationEndingPage.qml</file>
+        <file>pages/SupplyChainLoadingAndTransportPage.qml</file>
+        <file>pages/SupplyChainLoggingBeginningPage.qml</file>
+        <file>pages/SupplyChainLoggingEndingPage.qml</file>
+        <file>pages/SupplyChainReceptionPage.qml</file>
+        <file>pages/PageReplantationPage.qml</file>
+        <file>pages/PageTrackingPage.qml</file>
     </qresource>
 </RCC>
