@@ -26,14 +26,17 @@ const QLatin1String Password = QLatin1String("password");
 const QLatin1String Token = QLatin1String("token");
 const QLatin1String Email = QLatin1String("email");
 const QLatin1String Type = QLatin1String("type");
+#ifdef COCOA
 const QLatin1String CooperativeId = QLatin1String("cooperativeId");
 const QLatin1String CooperativeCode = QLatin1String("cooperativeCode");
 const QLatin1String CooperativeName = QLatin1String("cooperativeName");
+#elif CHARCOAL
 // Charcoal user
 const QLatin1String Code = QLatin1String("code");
 const QLatin1String Contact = QLatin1String("contact");
 const QLatin1String Job = QLatin1String("job");
 const QLatin1String Name = QLatin1String("name");
+#endif
 }
 
 OfflineUsersHandler::OfflineUsersHandler()
