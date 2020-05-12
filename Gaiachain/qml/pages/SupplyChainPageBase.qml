@@ -57,7 +57,7 @@ GPage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            contentHeight: contentLayout.height
+            contentHeight: contentLayout.implicitHeight
 
             clip: true
 
