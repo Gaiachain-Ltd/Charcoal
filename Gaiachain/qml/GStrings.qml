@@ -182,6 +182,11 @@ QtObject {
     property string checkMark: "\u2713"
     property string minus: "-"
 
+    // miscellaneous
+    property string height: tr.empty + qsTr("height")
+    property string length: tr.empty + qsTr("length")
+    property string width: tr.empty + qsTr("width")
+
     // Help
     property string helpTitle: tr.empty + qsTr("What is %1?")
 
@@ -206,6 +211,11 @@ QtObject {
     property string userInfoContact: tr.empty + qsTr("Contact")
     property string userInfoCode: tr.empty + qsTr("Code")
 
+    property string userInfoNameHelp: tr.empty + qsTr("Dummy text - user name help")
+    property string userInfoJobHelp: tr.empty + qsTr("Dummy text - user function help")
+    property string userInfoContactHelp: tr.empty + qsTr("Dummy text - user contact help")
+    property string userInfoCodeHelp: tr.empty + qsTr("Dummy text - user code help")
+
     // Charcoal - logging beginning page
     property string parcel: tr.empty + qsTr("Parcel")
     property string malebiRepsId: tr.empty + qsTr("Malebi Rep's ID")
@@ -215,19 +225,6 @@ QtObject {
     property string createPlotId: tr.empty + qsTr("Create plot ID")
     property string plotId: tr.empty + qsTr("Plot ID")
 
-    // Charcoal - logging ending page
-    property string endingDate: tr.empty + qsTr("Ending date")
-    property string numberOfTrees: tr.empty + qsTr("Number of trees")
-    property string updatePlotId: tr.empty + qsTr("Update Plot ID")
-
-    // Charcoal help texts
-    // User info
-    property string userInfoNameHelp: tr.empty + qsTr("Dummy text - user name help")
-    property string userInfoJobHelp: tr.empty + qsTr("Dummy text - user function help")
-    property string userInfoContactHelp: tr.empty + qsTr("Dummy text - user contact help")
-    property string userInfoCodeHelp: tr.empty + qsTr("Dummy text - user code help")
-
-    // Logging beginning
     property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")
     property string loggingBeginningRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
     property string loggingBeginningVillageHelp: tr.empty + qsTr("Dummy text - village help")
@@ -235,11 +232,28 @@ QtObject {
     property string loggingBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
     property string loggingBeginningGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
 
-    // Logging ending
+    // Charcoal - logging ending page
+    property string endingDate: tr.empty + qsTr("Ending date")
+    property string numberOfTrees: tr.empty + qsTr("Number of trees")
+    property string updatePlotId: tr.empty + qsTr("Update Plot ID")
+
     property string loggingEndingPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
     property string loggingEndingRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
     property string loggingEndingEndingDateHelp: tr.empty + qsTr("Dummy text - ending date help")
     property string loggingEndingNumberOfTreesHelp: tr.empty + qsTr("Dummy text - number of trees help")
     property string loggingEndingGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
 
+    // Charcoal - carbonization beginning page
+    property string ovenId: tr.empty + qsTr("Oven ID")
+    property string carbonizerId: tr.empty + qsTr("Carbonizer ID")
+    property string ovenType: tr.empty + qsTr("Oven type")
+    property string ovenDimensions: tr.empty + qsTr("Oven measurement (meters)")
+
+    property string carbonizationBeginningPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
+    property string carbonizationBeginningOvenIdHelp: tr.empty + qsTr("Dummy text - oven id help")
+    property string carbonizationBeginningCarbonizerIdHelp: tr.empty + qsTr("Dummy text - carbonizer id help")
+    property string carbonizationBeginningBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
+    property string carbonizationBeginningOvenTypeHelp: tr.empty + qsTr("Dummy text - oven type help")
+    property string carbonizationBeginningOvenDimensionsHelp: tr.empty + qsTr("Dummy text - oven measurements help")
+    property string carbonizationBeginningGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
 }
