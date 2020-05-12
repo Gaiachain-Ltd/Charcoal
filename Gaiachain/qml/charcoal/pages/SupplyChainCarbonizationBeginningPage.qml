@@ -27,25 +27,41 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.SupplyChainSummary, {
                               "supplyChainPage": this,
                               "summary": summary(),
-                              "proceedButtonText": Strings.createPlotId,
-                              "showRoundedBorder": false,
-                              "highlightFirstRow": true
+                              "proceedButtonText": Strings.proceed
                           });
     }
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId, plotId),
-                    createSummaryItem(Strings.parcel, parcelComboBox.currentText),
-                    createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
-                    createSummaryItem(Strings.village, villageComboBox.currentText),
-                    createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
+                    createSummaryItem(Strings.harvestId,
+                                      (plotIdComboBox.currentText
+                                       + "/" + carbonizerIdInputHeader.inputText),
+                                      "", "",
+                                      GStyle.delegateHighlightColor2,
+                                      GStyle.fontHighlightColor2),
+                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                                      "", "",
+                                      GStyle.delegateHighlightColor,
+                                      GStyle.fontHighlightColor),
+                    createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
+                                      "", "",
+                                      GStyle.delegateHighlightColor3,
+                                      GStyle.fontHighlightColor3),
+                    createSummaryItem(Strings.carbonizerId,
+                                      carbonizerIdInputHeader.inputText),
                     createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
+                    createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
+                    createSummaryItem(Strings.ovenDimensions,
+                                      //[
+                                     //     ovenDimensionsHeader.heightText,
+                                     //     ovenDimensionsHeader.lengthText,
+                                          ovenDimensionsHeader.widthText
+                                      //]
+                                      ),
                     createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
-
         return summary
     }
 
@@ -80,7 +96,7 @@ Pages.SupplyChainPageBase {
     }
 
     Headers.InputHeader {
-        id: ovenIdComboBox
+        id: ovenIdHeader
         Layout.fillWidth: true
         headerText: Strings.ovenId
         helpButtonVisible: true
@@ -111,7 +127,7 @@ Pages.SupplyChainPageBase {
     }
 
     Headers.DimensionsHeader {
-        id: ovenDimensionsComboBox
+        id: ovenDimensionsHeader
         Layout.fillWidth: true
         headerText: Strings.ovenDimensions
         helpButtonVisible: true

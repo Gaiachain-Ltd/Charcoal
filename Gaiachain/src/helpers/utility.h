@@ -42,6 +42,8 @@ public:
 
     Q_INVOKABLE QString formatRawId(QString id) const;
 
+    Q_INVOKABLE QString colorString(const QColor &color) const;
+
     template <typename C, std::enable_if_t<is_qt_array_type<C>::value, int> = 0>
     static QVariantList toVariantList(const C &arrayType, QMetaType::Type converToType = QMetaType::Void)
     {

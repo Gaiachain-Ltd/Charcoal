@@ -2,6 +2,7 @@
 
 #include <QGuiApplication>
 #include <QScreen>
+#include <QColor>
 
 #include "../common/logs.h"
 #include "../common/globals.h"
@@ -67,6 +68,11 @@ QString Utility::formatRawId(QString id) const
             id.insert(i, '-');
     }
     return id;
+}
+
+QString Utility::colorString(const QColor &color) const
+{
+    return color.name(QColor::HexArgb);
 }
 
 bool Utility::isWeekend(const QDate &date) const

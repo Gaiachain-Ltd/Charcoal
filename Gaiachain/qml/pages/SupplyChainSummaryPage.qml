@@ -20,8 +20,7 @@ Pages.SupplyChainPageBase {
     proceedButtonEnabled: true
     proceedButtonText: Strings.confirm
 
-    property bool showRoundedBorder: true
-    property bool highlightFirstRow: false
+    property bool isSummaryMode: (mainController.flavor === "cocoa")? false : true
 
     property var supplyChainPage
     property var summary
@@ -51,15 +50,16 @@ Pages.SupplyChainPageBase {
             Headers.InputHeader {
                 Layout.fillWidth: true
 
-                color: GStyle.textReadonlyColor
+                secondaryColor: isHighlighted? highlightSecondaryColor
+                                             : GStyle.textReadonlyColor
+                backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
                 headerText: headerValue
                 inputText: value
                 suffixText: suffixValue
                 readOnly: true
                 iconSource: inputIconSource ? inputIconSource : ""
-                borderWidth: showRoundedBorder? sr(1) : 0
-                separatorVisible: !showRoundedBorder
-                highlighted: (index === 0) && highlightFirstRow
+                summaryMode: isSummaryMode
+                highlighted: isHighlighted
             }
         }
     }

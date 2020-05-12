@@ -10,8 +10,16 @@ Item {
     id: top
 
     readonly property bool headerIsEmpty: (headerText === Strings.empty)
+
+    // "Flat" summary style
+    property bool summaryMode: false
+    // Background color of the whole control
+    property color backgroundColor: GStyle.backgroundColor
+    // Color of main header text
+    property color mainColor: GStyle.textPrimaryColor
+    // Color of second line of text and separator lines
+    property color secondaryColor: GStyle.textPrimaryColor
     property bool highlighted: false
-    property bool isFirstItem: true // false
 
     property alias widget: mainLayout.data
 
@@ -22,8 +30,6 @@ Item {
     property string helpTitle: headerText
     property string helpText: Strings.defaultHelp
 
-    property alias separatorVisible: separatorLine.visible
-
     property int margins: s(GStyle.hugeMargin)
 
     implicitWidth: mainLayout.implicitWidth
@@ -31,7 +37,7 @@ Item {
 
     Rectangle {
         id: backgroundHightlight
-        color: GStyle.delegateHighlightColor
+        color: top.backgroundColor
         visible: top.highlighted
         anchors.fill: parent
     }
@@ -53,6 +59,7 @@ Item {
                 Layout.fillWidth: true
 
                 font.bold: true
+                color: top.mainColor
                 font.capitalization: top.highlighted? Font.AllUppercase : Font.MixedCase
                 horizontalAlignment: Text.AlignLeft
 
@@ -82,8 +89,8 @@ Item {
             id: separatorLine
             Layout.fillWidth: true
             height: 1
-            color: top.highlighted ? GStyle.fontHighlightColor : GStyle.inputBorderColor
-            visible: false
+            color: top.secondaryColor
+            visible: top.summaryMode
         }
     }
 
@@ -91,7 +98,7 @@ Item {
         id: bottomLine
         Layout.fillWidth: true
         height: 1
-        color: GStyle.fontHighlightColor
+        color: top.secondaryColor
         visible: top.highlighted
 
         anchors {

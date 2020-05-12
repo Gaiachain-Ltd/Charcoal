@@ -46,7 +46,7 @@ Pages.GPage {
                 Layout.fillWidth: true
                 readOnly: true
                 borderWidth: 0
-                separatorVisible: true
+                summaryMode: true
                 headerText: Strings.userInfoName
                 inputText: userManager.userData.name
                 helpButtonVisible: true
@@ -58,7 +58,7 @@ Pages.GPage {
                 Layout.fillWidth: true
                 readOnly: true
                 borderWidth: 0
-                separatorVisible: true
+                summaryMode: true
                 headerText: Strings.userInfoJob
                 inputText: userManager.userData.job
                 helpButtonVisible: true
@@ -70,7 +70,7 @@ Pages.GPage {
                 Layout.fillWidth: true
                 readOnly: true
                 borderWidth: 0
-                separatorVisible: true
+                summaryMode: true
                 headerText: Strings.userInfoContact
                 inputText: userManager.userData.contact
                 helpButtonVisible: true
@@ -82,7 +82,7 @@ Pages.GPage {
                 Layout.fillWidth: true
                 readOnly: true
                 borderWidth: 0
-                separatorVisible: true
+                summaryMode: true
                 headerText: Strings.userInfoCode
                 inputText: userManager.userData.code
                 helpButtonVisible: true

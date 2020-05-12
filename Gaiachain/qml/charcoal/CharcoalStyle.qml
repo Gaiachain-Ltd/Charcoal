@@ -37,6 +37,10 @@ AbstractStyle {
     buttonSecondaryColor: "#888888"
     delegateHighlightColor: "#EEF9FE"
     fontHighlightColor: "#2581EB"
+    delegateHighlightColor2: "#EBF1E6"
+    fontHighlightColor2: "#65CB00"
+    delegateHighlightColor3: "#FFF3E8"
+    fontHighlightColor3: "#F8932E"
 
     menuButtonHeight: 300
 
