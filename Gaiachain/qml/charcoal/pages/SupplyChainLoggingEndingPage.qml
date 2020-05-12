@@ -88,7 +88,7 @@ Pages.SupplyChainPageBase {
     Headers.InputDateHeader {
         id: endingDateHeader
         Layout.fillWidth: true
-        headerText: Strings.beginningDate
+        headerText: Strings.endingDate
         helpButtonVisible: true
         helpText: Strings.loggingEndingEndingDateHelp
     }
@@ -96,9 +96,12 @@ Pages.SupplyChainPageBase {
     Headers.InputHeader {
         id: numberOfTreesHeader
         Layout.fillWidth: true
-        headerText: Strings.malebiRepsId
+        headerText: Strings.numberOfTrees
         helpButtonVisible: true
         helpText: Strings.loggingEndingNumberOfTreesHelp
+        validator: IntValidator {
+            bottom: 0
+        }
     }
 
     Common.PositionSourceHandler {
