@@ -30,7 +30,7 @@ Pages.SupplyChainPageBase {
     }
 
     ColumnLayout {
-        spacing: s(GStyle.smallMargin)
+        spacing: 0
 
         Repeater {
             model: summary
@@ -48,7 +48,6 @@ Pages.SupplyChainPageBase {
                 readonly property bool isHighlighted: summary[index].isHighlighted
 
                 sourceComponent: {
-                    console.warn("Delegate type:", delegateType)
                     if (delegateType === Pages.SupplyChainPageBase.Column) {
                         return columnComponent
                     } else if (delegateType === Pages.SupplyChainPageBase.Row) {

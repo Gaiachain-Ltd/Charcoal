@@ -16,24 +16,41 @@ Headers.AbstractListHeader {
         Layout.rightMargin: top.margins
 
         Repeater {
+            id: repeater
+            property alias readOnly: top.readOnly
+
             model: titles.length
 
-            Items.GInput {
+            ColumnLayout {
                 Layout.fillWidth: true
-                placeholderText: titles[index]
-                text: values[index]
-                onTextChanged: values[index] = text
 
-                readOnly: readOnly
-                borderWidth: borderWidth
-                focus: false
-                backgroundColor: highlighted? GStyle.delegateHighlightColor
-                                            : GStyle.backgroundColor
-                color: highlighted? GStyle.fontHighlightColor
-                                  : GStyle.textPrimaryColor
-                font.bold: highlighted? true : false
-                validator: DoubleValidator {
-                    bottom: 0.0
+                Items.GText {
+                    Layout.alignment: Qt.AlignHCenter
+
+                    visible: summaryMode
+                    text: titles[index]
+                }
+
+                Items.GInput {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+
+                    placeholderText: titles[index]
+                    text: values[index]
+                    onTextChanged: values[index] = text
+                    horizontalAlignment: TextInput.AlignHCenter
+
+                    readOnly: repeater.readOnly
+                    borderWidth: summaryMode? 0 : sr(1)
+                    focus: false
+                    backgroundColor: highlighted? GStyle.delegateHighlightColor
+                                                : GStyle.backgroundColor
+                    color: highlighted? GStyle.fontHighlightColor
+                                      : GStyle.textPrimaryColor
+                    font.bold: highlighted? true : false
+                    validator: DoubleValidator {
+                        bottom: 0.0
+                    }
                 }
             }
         }

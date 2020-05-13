@@ -48,6 +48,12 @@ Item {
         anchors.fill: parent
         spacing: headerIsEmpty ? GStyle.none : s(GStyle.tinyMargin)
 
+        Item {
+            id: topSpacer
+            width: 1
+            height: s(GStyle.middleMargin)
+        }
+
         RowLayout {
             Layout.topMargin: top.isFirstItem? top.margins : 0
             Layout.leftMargin: top.margins
