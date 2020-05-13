@@ -16,24 +16,42 @@ Headers.AbstractListHeader {
         Layout.rightMargin: top.margins
 
         Repeater {
+            id: repeater
+            property alias readOnly: top.readOnly
+            property alias backgroundColor: top.backgroundColor
+
             model: titles.length
 
-            Items.GInput {
-                id: inputHeight
+            RowLayout {
 
-                Layout.fillWidth: true
-                placeholderText: titles[index]
-                text: values[index]
-                onTextChanged: values[index] = text
+                Items.GText {
+                    Layout.alignment: Qt.AlignLeft
 
-                readOnly: readOnly
-                borderWidth: borderWidth
-                focus: false
-                backgroundColor: highlighted? GStyle.delegateHighlightColor : GStyle.backgroundColor
-                color: highlighted? GStyle.fontHighlightColor : GStyle.textPrimaryColor
-                font.bold: highlighted? true : false
-                validator: DoubleValidator {
-                    bottom: 0.0
+                    visible: summaryMode
+                    text: titles[index]
+                    color: highlighted? secondaryColor : mainColor
+                    font.bold: highlighted? true : false
+                }
+
+                Items.GInput {
+                    id: inputHeight
+
+                    Layout.fillWidth: true
+                    horizontalAlignment: TextInput.AlignRight
+
+                    placeholderText: titles[index]
+                    text: values[index]
+                    onTextChanged: values[index] = text
+
+                    readOnly: repeater.readOnly
+                    borderWidth: summaryMode? 0 : sr(1)
+                    focus: false
+                    backgroundColor: repeater.backgroundColor
+                    color: highlighted? secondaryColor : mainColor
+                    font.bold: false
+                    validator: DoubleValidator {
+                        bottom: 0.0
+                    }
                 }
             }
         }

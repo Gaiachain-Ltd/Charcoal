@@ -18,6 +18,7 @@ Headers.AbstractListHeader {
         Repeater {
             id: repeater
             property alias readOnly: top.readOnly
+            property alias backgroundColor: top.backgroundColor
 
             model: titles.length
 
@@ -29,6 +30,8 @@ Headers.AbstractListHeader {
 
                     visible: summaryMode
                     text: titles[index]
+                    color: highlighted? secondaryColor : mainColor
+                    font.bold: highlighted? true : false
                 }
 
                 Items.GInput {
@@ -43,10 +46,8 @@ Headers.AbstractListHeader {
                     readOnly: repeater.readOnly
                     borderWidth: summaryMode? 0 : sr(1)
                     focus: false
-                    backgroundColor: highlighted? GStyle.delegateHighlightColor
-                                                : GStyle.backgroundColor
-                    color: highlighted? GStyle.fontHighlightColor
-                                      : GStyle.textPrimaryColor
+                    backgroundColor: repeater.backgroundColor
+                    color: highlighted? secondaryColor : mainColor
                     font.bold: highlighted? true : false
                     validator: DoubleValidator {
                         bottom: 0.0
