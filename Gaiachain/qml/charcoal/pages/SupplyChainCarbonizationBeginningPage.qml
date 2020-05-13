@@ -17,8 +17,6 @@ Pages.SupplyChainPageBase {
 
     title: Strings.carbonizationBeginning
 
-    onTitleChanged: console.log("Title:", title)
-
     Component.onCompleted: refreshData()
 
     function refreshData() {
