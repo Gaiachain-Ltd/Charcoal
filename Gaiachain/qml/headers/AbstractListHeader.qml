@@ -28,9 +28,6 @@ Headers.GHeader {
             for (title in titles) {
                 values.push("")
             }
-            console.log("Values cleaned up", values)
         }
     }
-
-    onValuesChanged: console.log("Values are", values)
 }

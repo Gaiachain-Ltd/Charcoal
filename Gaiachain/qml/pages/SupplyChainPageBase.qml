@@ -10,6 +10,12 @@ import "../items" as Items
 GPage {
     id: top
 
+    enum DelegateType {
+        Standard,
+        Row,
+        Column
+    }
+
     default property alias pageContent: contentLayout.data
     property bool validPageData: true
 
@@ -24,12 +30,14 @@ GPage {
     }
 
     function createSummaryItem(header, value, inputIconSource = "", suffix = "",
+                               delegateType = SupplyChainPageBase.Standard,
                                highlightColor = "", highlightSecondaryColor = "") {
         return {
             "headerValue": header,
             "value": value,
             "inputIconSource": inputIconSource.toString(),
             "suffixValue": suffix,
+            "delegateType": delegateType,
             "highlightColor": Utility.colorString(highlightColor),
             "highlightSecondaryColor": Utility.colorString(highlightSecondaryColor),
             "isHighlighted": (highlightColor !== "")

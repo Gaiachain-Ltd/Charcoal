@@ -37,14 +37,17 @@ Pages.SupplyChainPageBase {
                                       (plotIdComboBox.currentText
                                        + "/" + carbonizerIdInputHeader.inputText),
                                       "", "",
+                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor2,
                                       GStyle.fontHighlightColor2),
                     createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
+                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor),
                     createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
                                       "", "",
+                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor3,
                                       GStyle.fontHighlightColor3),
                     createSummaryItem(Strings.carbonizerId,
@@ -55,7 +58,9 @@ Pages.SupplyChainPageBase {
                     createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
                     createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
-                                       ovenDimensionsHeader.values]),
+                                       ovenDimensionsHeader.values],
+                                      "", "",
+                                      Pages.SupplyChainPageBase.Row),
                     createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary

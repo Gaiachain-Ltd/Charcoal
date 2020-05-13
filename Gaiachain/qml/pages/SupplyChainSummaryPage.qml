@@ -39,6 +39,7 @@ Pages.SupplyChainPageBase {
                 Layout.fillWidth: true
 
                 readonly property var value: summary[index].value
+                readonly property int delegateType: summary[index].delegateType
                 readonly property string headerValue: summary[index].headerValue
                 readonly property string inputIconSource: summary[index].inputIconSource
                 readonly property string suffixValue: summary[index].suffixValue
@@ -47,18 +48,44 @@ Pages.SupplyChainPageBase {
                 readonly property bool isHighlighted: summary[index].isHighlighted
 
                 sourceComponent: {
-                    if (typeof(value) === "object") {
-                        return dimensionsComponent
-                    } else {
-                        return normalComponent
+                    console.warn("Delegate type:", delegateType)
+                    if (delegateType === Pages.SupplyChainPageBase.Column) {
+                        return columnComponent
+                    } else if (delegateType === Pages.SupplyChainPageBase.Row) {
+                        return rowComponent
+                    } else if (delegateType === Pages.SupplyChainPageBase.Standard) {
+                        return standardComponent
                     }
+
+                    console.warn("No handling specified for delegate type:",
+                                 delegateType)
                 }
             }
         }
     }
 
     Component {
-        id: dimensionsComponent
+        id: columnComponent
+        Headers.ColumnHeader {
+            readonly property var composite: value
+            Layout.fillWidth: true
+
+            Component.onCompleted: console.log("Comp:", composite, titles, values, value)
+
+            secondaryColor: isHighlighted? highlightSecondaryColor
+                                         : GStyle.textReadonlyColor
+            backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
+            headerText: headerValue
+            titles: composite[0]
+            values: composite[1]
+            readOnly: true
+            summaryMode: isSummaryMode
+            highlighted: isHighlighted
+        }
+    }
+
+    Component {
+        id: rowComponent
         Headers.RowHeader {
             readonly property var composite: value
             Layout.fillWidth: true
@@ -78,7 +105,7 @@ Pages.SupplyChainPageBase {
     }
 
     Component {
-        id: normalComponent
+        id: standardComponent
 
         Headers.InputHeader {
             Layout.fillWidth: true
