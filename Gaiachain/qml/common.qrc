@@ -9,7 +9,9 @@
         <file>headers/ComboBoxHeader.qml</file>
         <file>headers/ButtonInputHeaderWithExpandList.qml</file>
         <file>headers/ButtonInputHeader.qml</file>
-        <file>headers/DimensionsHeader.qml</file>
+        <file>headers/AbstractListHeader.qml</file>
+        <file>headers/ColumnHeader.qml</file>
+        <file>headers/RowHeader.qml</file>
         <file>items/SvgImage.qml</file>
         <file>items/QRStatus.qml</file>
         <file>items/PureImageButton.qml</file>

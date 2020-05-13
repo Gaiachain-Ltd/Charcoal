@@ -59,16 +59,18 @@ Pages.SupplyChainPageBase {
 
     Component {
         id: dimensionsComponent
-        Headers.DimensionsHeader {
+        Headers.RowHeader {
+            readonly property var composite: value
             Layout.fillWidth: true
+
+            Component.onCompleted: console.log("Comp:", composite, titles, values, value)
 
             secondaryColor: isHighlighted? highlightSecondaryColor
                                          : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
-            heightText: value["a"]
-            lengthText: value["b"]
-            widthText: value["c"]
+            titles: composite[0]
+            values: composite[1]
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted

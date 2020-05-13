@@ -54,12 +54,8 @@ Pages.SupplyChainPageBase {
                                           Qt.locale(), Strings.dateFormat)),
                     createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
                     createSummaryItem(Strings.ovenDimensions,
-                                      {
-                                         "a": ovenDimensionsHeader.heightText,
-                                          "b": ovenDimensionsHeader.lengthText,
-                                          "c": ovenDimensionsHeader.widthText
-                                      }
-                                      ),
+                                      [ovenDimensionsHeader.titles,
+                                       ovenDimensionsHeader.values]),
                     createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
@@ -126,12 +122,13 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationBeginningOvenTypeHelp
     }
 
-    Headers.DimensionsHeader {
+    Headers.RowHeader {
         id: ovenDimensionsHeader
         Layout.fillWidth: true
         headerText: Strings.ovenDimensions
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
+        titles: [ Strings.height, Strings.length, Strings.width ]
     }
 
     Common.PositionSourceHandler {
