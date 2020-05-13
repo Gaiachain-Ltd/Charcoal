@@ -256,4 +256,13 @@ QtObject {
     property string carbonizationBeginningOvenTypeHelp: tr.empty + qsTr("Dummy text - oven type help")
     property string carbonizationBeginningOvenDimensionsHelp: tr.empty + qsTr("Dummy text - oven measurements help")
     property string carbonizationBeginningGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
+
+    // Charcoal - carbonization ending page
+    property string carbonizationEndingDate: tr.empty + qsTr("Carbonization end date")
+
+    property string carbonizationEndingHarvestIdHelp: tr.empty + qsTr("Dummy text - harvest ID help")
+    property string carbonizationEndingOvenIdHelp: tr.empty + qsTr("Dummy text - oven ID help")
+    property string carbonizationEndingCarbonizerIdHelp: tr.empty + qsTr("Dummy text -  carbonizer ID help")
+    property string carbonizationEndingEndingDateHelp: tr.empty + qsTr("Dummy text - carbonization ending date help")
+    property string carbonizationEndingGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 }
