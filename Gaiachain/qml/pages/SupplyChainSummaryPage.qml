@@ -69,8 +69,6 @@ Pages.SupplyChainPageBase {
             readonly property var composite: value
             Layout.fillWidth: true
 
-            Component.onCompleted: console.log("Comp:", composite, titles, values, value)
-
             secondaryColor: isHighlighted? highlightSecondaryColor
                                          : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
@@ -88,8 +86,6 @@ Pages.SupplyChainPageBase {
         Headers.RowHeader {
             readonly property var composite: value
             Layout.fillWidth: true
-
-            Component.onCompleted: console.log("Comp:", composite, titles, values, value)
 
             secondaryColor: isHighlighted? highlightSecondaryColor
                                          : GStyle.textReadonlyColor

@@ -34,6 +34,7 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     createSummaryItem(Strings.plotId, plotIdComboBox.currentText, "", "",
+                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor),
                     createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),

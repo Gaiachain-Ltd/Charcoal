@@ -25,7 +25,7 @@ Headers.GHeader {
 
     onTitlesChanged: {
         if (values.length === 0) {
-            for (title in titles) {
+            for (var title in titles) {
                 values.push("")
             }
         }

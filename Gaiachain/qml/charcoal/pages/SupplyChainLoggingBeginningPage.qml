@@ -40,6 +40,7 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     createSummaryItem(Strings.plotId, plotId, "", "",
+                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor),
                     createSummaryItem(Strings.parcel, parcelComboBox.currentText),
