@@ -265,4 +265,18 @@ QtObject {
     property string carbonizationEndingCarbonizerIdHelp: tr.empty + qsTr("Dummy text -  carbonizer ID help")
     property string carbonizationEndingEndingDateHelp: tr.empty + qsTr("Dummy text - carbonization ending date help")
     property string carbonizationEndingGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // Charcoal - loading and transport page
+    property string transportId: tr.empty + qsTr("Transport Id")
+    property string numberOfBags: tr.empty + qsTr("Number of bags")
+    property string plateNumber: tr.empty + qsTr("Plate number")
+    property string loadAndScanBags: tr.empty + qsTr("Load & scan bags")
+    property string loadingDate: tr.empty + qsTr("Loading date")
+    property string deliveryDestination: tr.empty + qsTr("Delivery destination")
+
+    property string loadingAndTransportHarvestIdHelp: tr.empty + qsTr("Dummy text - harvest ID help")
+    property string loadingAndTransportPlateNumberHelp: tr.empty + qsTr("Dummy text - plate number help")
+    property string loadingAndTransportLoadingDateHelp: tr.empty + qsTr("Dummy text - loading date help")
+    property string loadingAndTransportDeliveryDestinationHelp: tr.empty + qsTr("Dummy text - delivery destination help")
+    property string loadingAndTransportGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 }

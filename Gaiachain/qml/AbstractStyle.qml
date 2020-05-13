@@ -52,6 +52,9 @@ QtObject {
     property color delegateHighlightColor3: "#fafafa"
     property color fontHighlightColor3: "#fafafa"
 
+    property color delegateHighlightColor4: "#fdfdfd"
+    property color fontHighlightColor4: "#fdfdfd"
+
     property color unknownColor: "#8f8f8f"
     property color okColor: "#65cb00"
     property color warningColor: "#de8c00"
