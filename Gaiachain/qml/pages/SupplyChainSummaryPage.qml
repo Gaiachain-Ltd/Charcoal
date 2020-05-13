@@ -25,42 +25,72 @@ Pages.SupplyChainPageBase {
     property var supplyChainPage
     property var summary
 
-    onSummaryChanged: {
-        dataSummaryListModel.clear()
-
-        for (var summaryItem of summary) {
-            dataSummaryListModel.append(summaryItem)
-        }
-    }
-
     function proceed() {
         supplyChainPage.addAction()
-    }
-
-    ListModel {
-        id: dataSummaryListModel
     }
 
     ColumnLayout {
         spacing: s(GStyle.smallMargin)
 
         Repeater {
-            model: dataSummaryListModel
+            model: summary
 
-            Headers.InputHeader {
+            delegate: Loader {
                 Layout.fillWidth: true
 
-                secondaryColor: isHighlighted? highlightSecondaryColor
-                                             : GStyle.textReadonlyColor
-                backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
-                headerText: headerValue
-                inputText: value
-                suffixText: suffixValue
-                readOnly: true
-                iconSource: inputIconSource ? inputIconSource : ""
-                summaryMode: isSummaryMode
-                highlighted: isHighlighted
+                readonly property var value: summary[index].value
+                readonly property string headerValue: summary[index].headerValue
+                readonly property string inputIconSource: summary[index].inputIconSource
+                readonly property string suffixValue: summary[index].suffixValue
+                readonly property string highlightColor: summary[index].highlightColor
+                readonly property string highlightSecondaryColor: summary[index].highlightSecondaryColor
+                readonly property bool isHighlighted: summary[index].isHighlighted
+
+                sourceComponent: {
+                    if (typeof(value) === "object") {
+                        return dimensionsComponent
+                    } else {
+                        return normalComponent
+                    }
+                }
             }
+        }
+    }
+
+    Component {
+        id: dimensionsComponent
+        Headers.DimensionsHeader {
+            Layout.fillWidth: true
+
+            secondaryColor: isHighlighted? highlightSecondaryColor
+                                         : GStyle.textReadonlyColor
+            backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
+            headerText: headerValue
+            heightText: value["a"]
+            lengthText: value["b"]
+            widthText: value["c"]
+            readOnly: true
+            summaryMode: isSummaryMode
+            highlighted: isHighlighted
+        }
+    }
+
+    Component {
+        id: normalComponent
+
+        Headers.InputHeader {
+            Layout.fillWidth: true
+
+            secondaryColor: isHighlighted? highlightSecondaryColor
+                                         : GStyle.textReadonlyColor
+            backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
+            headerText: headerValue
+            inputText: value
+            suffixText: suffixValue
+            readOnly: true
+            iconSource: inputIconSource ? inputIconSource : ""
+            summaryMode: isSummaryMode
+            highlighted: isHighlighted
         }
     }
 }

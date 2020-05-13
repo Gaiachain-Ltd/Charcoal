@@ -25,6 +25,7 @@ GPage {
 
     function createSummaryItem(header, value, inputIconSource = "", suffix = "",
                                highlightColor = "", highlightSecondaryColor = "") {
+        console.log("H", header, "value", value, "type", typeof(value))
         return {
             "headerValue": header,
             "value": value,

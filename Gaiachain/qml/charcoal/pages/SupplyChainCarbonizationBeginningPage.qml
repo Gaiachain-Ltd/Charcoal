@@ -54,11 +54,11 @@ Pages.SupplyChainPageBase {
                                           Qt.locale(), Strings.dateFormat)),
                     createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
                     createSummaryItem(Strings.ovenDimensions,
-                                      //[
-                                     //     ovenDimensionsHeader.heightText,
-                                     //     ovenDimensionsHeader.lengthText,
-                                          ovenDimensionsHeader.widthText
-                                      //]
+                                      {
+                                         "a": ovenDimensionsHeader.heightText,
+                                          "b": ovenDimensionsHeader.lengthText,
+                                          "c": ovenDimensionsHeader.widthText
+                                      }
                                       ),
                     createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
