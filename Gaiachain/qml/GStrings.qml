@@ -293,4 +293,18 @@ QtObject {
 
     property string receptionUnloadingDateHelp: tr.empty + qsTr("Dummy text - unloading timestamp help")
     property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // Charcoal - tracking page
+
+    // Charcoal - replantation page
+    property string numberOfTreesPlanted: tr.empty + qsTr("Number of trees planted")
+    property string userId: tr.empty + qsTr("User Id")
+
+    property string replantationPlotIdHelp: tr.empty + qsTr("Dummy text - plot ID help")
+    property string replantationNumberOfTreesHelp: tr.empty + qsTr("Dummy text - number of trees planted help")
+    property string replantationTreeSpeciesHelp: tr.empty + qsTr("Dummy text - tree species help")
+    property string replantationUserIdHelp: tr.empty + qsTr("Dummy text - user id help")
+    property string replantationBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
+    property string replantationEndingDateHelp: tr.empty + qsTr("Dummy text - ending date help")
+    property string replantationGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 }
