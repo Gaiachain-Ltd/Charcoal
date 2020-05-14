@@ -27,6 +27,9 @@ Headers.GHeader {
     property alias showIcon: input.showIcon
     signal iconClicked
 
+    property bool forceBoldValue: false
+    property int valueFontSize: s(GStyle.inputPixelSize)
+
     function clear() {
         inputText = Strings.empty
     }
@@ -47,7 +50,8 @@ Headers.GHeader {
 
         backgroundColor: top.backgroundColor
         color: top.secondaryColor
-        font.bold: top.highlighted
+        font.bold: top.highlighted || forceBoldValue
+        font.pixelSize: valueFontSize
         borderWidth: top.summaryMode? 0 : sr(1)
 
         iconEdge: Enums.Edge.RightEdge

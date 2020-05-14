@@ -99,18 +99,15 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loadingAndTransportPlateNumberHelp
     }
 
-    // TODO: prepare proper header!
-    Items.GInput {
+    Headers.ButtonInputHeader {
         id: loadAndScanBagsHeader
 
         Layout.fillWidth: true
         readOnly: true
-        text: Strings.loadAndScanBags
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: console.log("ZONK!")
-        }
+        forceBoldValue: true
+        valueFontSize: s(GStyle.titlePixelSize)
+        inputText: Strings.loadAndScanBags
+        onClicked: console.log("ZONK!")
     }
 
     Headers.InputDateHeader {
