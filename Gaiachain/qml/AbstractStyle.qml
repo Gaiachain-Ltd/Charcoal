@@ -22,6 +22,7 @@ QtObject {
     property color textReadonlyColor: "#868686"
     property color textLinkColor: primaryColor
     property color notRequiredTextInputColor: "#8c8c8c"
+    property color textTabColor: "#7E7E7E"
 
     property color buttonPrimaryColor: primaryColor
     property color buttonSecondaryColor: "white"
