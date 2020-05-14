@@ -34,12 +34,6 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.harvestId,
-                                      harvestIdComboBox.currentText,
-                                      "", "",
-                                      Pages.SupplyChainPageBase.Standard,
-                                      GStyle.delegateHighlightColor2,
-                                      GStyle.fontHighlightColor2),
                     createSummaryItem(Strings.transportId,
                                       harvestIdComboBox.currentText
                                       + "/" + plateNumberHeader.inputText,
@@ -47,10 +41,16 @@ Pages.SupplyChainPageBase {
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor4,
                                       GStyle.fontHighlightColor4),
-                    createSummaryItem(Strings.plateNumber,
-                                      plateNumberHeader.inputText),
                     createSummaryItem(Strings.numberOfBags,
                                       "123"),
+                    createSummaryItem(Strings.harvestId,
+                                      harvestIdComboBox.currentText,
+                                      "", "",
+                                      Pages.SupplyChainPageBase.Standard,
+                                      GStyle.delegateHighlightColor2,
+                                      GStyle.fontHighlightColor2),
+                    createSummaryItem(Strings.plateNumber,
+                                      plateNumberHeader.inputText),
                     createSummaryItem(Strings.loadingDate,
                                       loadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
