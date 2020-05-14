@@ -96,7 +96,7 @@ Item {
             Layout.fillWidth: true
             height: 1
             color: top.secondaryColor
-            visible: top.summaryMode
+            visible: top.summaryMode && !headerIsEmpty
         }
     }
 

@@ -279,4 +279,18 @@ QtObject {
     property string loadingAndTransportLoadingDateHelp: tr.empty + qsTr("Dummy text - loading date help")
     property string loadingAndTransportDeliveryDestinationHelp: tr.empty + qsTr("Dummy text - delivery destination help")
     property string loadingAndTransportGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // Charcoal - reception page
+    property string receiveDocumentsAndReceipt: tr.empty + qsTr("Receive documents and receipt")
+    property string scanAllBagsFromTruck: tr.empty + qsTr("Scan all bags from truck")
+    property string receptionDateCharcoal: tr.empty + qsTr("Time & Date stamp")
+
+    property string documents: tr.empty + qsTr("Documents")
+    property string receipt: tr.empty + qsTr("Receipt")
+    property string approved: tr.empty + qsTr("Approved")
+    property string rejected: tr.empty + qsTr("Rejected")
+    property string numberOfBagsDetail: tr.empty + qsTr("%1 of %2")
+
+    property string receptionUnloadingDateHelp: tr.empty + qsTr("Dummy text - unloading timestamp help")
+    property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 }
