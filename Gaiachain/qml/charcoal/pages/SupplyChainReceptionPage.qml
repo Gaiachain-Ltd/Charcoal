@@ -48,7 +48,8 @@ Pages.SupplyChainPageBase {
                                       "", "",
                                       Pages.SupplyChainPageBase.Column,
                                       GStyle.delegateHighlightColor4,
-                                      GStyle.fontHighlightColor4),
+                                      GStyle.fontHighlightColor4,
+                                      GStyle.textPrimaryColor),
                     createSummaryItem(Strings.plateNumber,
                                       // TODO: insert real data!
                                       "12345AA"),

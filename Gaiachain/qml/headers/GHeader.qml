@@ -19,6 +19,7 @@ Item {
     property color mainColor: GStyle.textPrimaryColor
     // Color of second line of text and separator lines
     property color secondaryColor: GStyle.textPrimaryColor
+    property color secondaryTextColor: secondaryColor
     property bool highlighted: false
 
     property alias widget: mainLayout.data

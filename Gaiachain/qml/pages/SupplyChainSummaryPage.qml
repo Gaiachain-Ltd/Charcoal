@@ -44,7 +44,8 @@ Pages.SupplyChainPageBase {
                 readonly property string inputIconSource: summary[index].inputIconSource
                 readonly property string suffixValue: summary[index].suffixValue
                 readonly property string highlightColor: summary[index].highlightColor
-                readonly property string highlightSecondaryColor: summary[index].highlightSecondaryColor
+                readonly property string decorationColor: summary[index].decorationColor
+                readonly property string secondaryFontColor: summary[index].secondaryTextColor
                 readonly property bool isHighlighted: summary[index].isHighlighted
 
                 sourceComponent: {
@@ -69,8 +70,10 @@ Pages.SupplyChainPageBase {
             readonly property var composite: value
             Layout.fillWidth: true
 
-            secondaryColor: isHighlighted? highlightSecondaryColor
+            secondaryColor: isHighlighted? decorationColor
                                          : GStyle.textReadonlyColor
+            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
+                                                                 : secondaryFontColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -87,8 +90,10 @@ Pages.SupplyChainPageBase {
             readonly property var composite: value
             Layout.fillWidth: true
 
-            secondaryColor: isHighlighted? highlightSecondaryColor
+            secondaryColor: isHighlighted? decorationColor
                                          : GStyle.textReadonlyColor
+            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
+                                                                 : secondaryFontColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -105,8 +110,10 @@ Pages.SupplyChainPageBase {
         Headers.InputHeader {
             Layout.fillWidth: true
 
-            secondaryColor: isHighlighted? highlightSecondaryColor
+            secondaryColor: isHighlighted? decorationColor
                                          : GStyle.textReadonlyColor
+            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
+                                                                 : secondaryFontColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             inputText: value

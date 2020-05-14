@@ -49,7 +49,7 @@ Headers.GHeader {
         rightPadding: (itemsSpacing === GStyle.none ? padding : itemsSpacing)
 
         backgroundColor: top.backgroundColor
-        color: top.secondaryColor
+        color: secondaryTextColor
         font.bold: top.highlighted || forceBoldValue
         font.pixelSize: valueFontSize
         borderWidth: top.summaryMode? 0 : sr(1)

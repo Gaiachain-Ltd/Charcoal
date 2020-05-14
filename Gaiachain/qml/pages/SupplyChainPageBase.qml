@@ -29,9 +29,11 @@ GPage {
         pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit }, "EXIT_CONFIRM")
     }
 
+    // TODO: use dedicated QtObject to hold these properties!
     function createSummaryItem(header, value, inputIconSource = "", suffix = "",
                                delegateType = SupplyChainPageBase.Standard,
-                               highlightColor = "", highlightSecondaryColor = "") {
+                               highlightColor = "", decorationColor = "",
+                               secondaryTextColor = "") {
         return {
             "headerValue": header,
             "value": value,
@@ -39,7 +41,8 @@ GPage {
             "suffixValue": suffix,
             "delegateType": delegateType,
             "highlightColor": Utility.colorString(highlightColor),
-            "highlightSecondaryColor": Utility.colorString(highlightSecondaryColor),
+            "decorationColor": Utility.colorString(decorationColor),
+            "secondaryTextColor": Utility.colorString(secondaryTextColor),
             "isHighlighted": (highlightColor !== "")
         }
     }

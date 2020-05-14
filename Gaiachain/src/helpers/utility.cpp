@@ -72,6 +72,10 @@ QString Utility::formatRawId(QString id) const
 
 QString Utility::colorString(const QColor &color) const
 {
+    if (color.isValid() == false) {
+        return QString();
+    }
+
     return color.name(QColor::HexArgb);
 }
 
