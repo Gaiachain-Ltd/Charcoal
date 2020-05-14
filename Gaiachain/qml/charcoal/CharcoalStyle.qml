@@ -28,6 +28,10 @@ AbstractStyle {
     readonly property url menuReplantationUrl: "qrc:/ui/menuReplantation"
     readonly property url menuSupplyChainUrl: "qrc:/ui/menuSupplyChain"
     readonly property url menuTrackingUrl: "qrc:/ui/menuTracking"
+    readonly property url noPhotoUrl: "qrc:/ui/noPhoto"
+    readonly property url skipUrl: "qrc:/ui/skip"
+    readonly property url uploadOkUrl: "qrc:/ui/uploadOk"
+    readonly property url warningUrl: "qrc:/ui/warning"
 
     logoImgUrl: logoWhiteImgUrl
     loginBackgroundUrl: "qrc:/ui/login-background"

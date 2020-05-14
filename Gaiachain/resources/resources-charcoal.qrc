@@ -16,6 +16,10 @@
         <file alias="menuTracking">charcoal/ui/tracking.svg</file>
         <file alias="arrow">charcoal/ui/arrow.svg</file>
         <file alias="helpImage">charcoal/ui/help-graphic.svg</file>
+        <file alias="noPhoto">charcoal/ui/icon-no-photo.svg</file>
+        <file alias="skip">charcoal/ui/icon-skip.svg</file>
+        <file alias="uploadOk">charcoal/ui/icon-upload-ok.svg</file>
+        <file alias="warning">charcoal/ui/icon-warning.svg</file>
     </qresource>
     <qresource prefix="/font"/>
 </RCC>

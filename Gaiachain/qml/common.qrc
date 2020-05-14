@@ -11,6 +11,7 @@
         <file>headers/ButtonInputHeader.qml</file>
         <file>headers/AbstractListHeader.qml</file>
         <file>headers/ColumnHeader.qml</file>
+        <file>headers/ColumnStackHeader.qml</file>
         <file>headers/RowHeader.qml</file>
         <file>items/SvgImage.qml</file>
         <file>items/QRStatus.qml</file>

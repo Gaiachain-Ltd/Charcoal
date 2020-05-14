@@ -288,7 +288,7 @@ QtObject {
     property string documents: tr.empty + qsTr("Documents")
     property string receipt: tr.empty + qsTr("Receipt")
     property string approved: tr.empty + qsTr("Approved")
-    property string rejected: tr.empty + qsTr("Rejected")
+    property string noPhoto: tr.empty + qsTr("No photo")
     property string numberOfBagsDetail: tr.empty + qsTr("%1 of %2")
 
     property string receptionUnloadingDateHelp: tr.empty + qsTr("Dummy text - unloading timestamp help")

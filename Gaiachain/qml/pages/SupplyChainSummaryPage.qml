@@ -51,6 +51,8 @@ Pages.SupplyChainPageBase {
                 sourceComponent: {
                     if (delegateType === Pages.SupplyChainPageBase.Column) {
                         return columnComponent
+                    } else if (delegateType === Pages.SupplyChainPageBase.ColumnStack) {
+                        return columnStackComponent
                     } else if (delegateType === Pages.SupplyChainPageBase.Row) {
                         return rowComponent
                     } else if (delegateType === Pages.SupplyChainPageBase.Standard) {
@@ -78,6 +80,28 @@ Pages.SupplyChainPageBase {
             headerText: headerValue
             titles: composite[0]
             values: composite[1]
+            icons: composite[2]
+            readOnly: true
+            summaryMode: isSummaryMode
+            highlighted: isHighlighted
+        }
+    }
+
+    Component {
+        id: columnStackComponent
+        Headers.ColumnStackHeader {
+            readonly property var composite: value
+            Layout.fillWidth: true
+
+            secondaryColor: isHighlighted? decorationColor
+                                         : GStyle.textReadonlyColor
+            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
+                                                                 : secondaryFontColor
+            backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
+            headerText: headerValue
+            titles: composite[0]
+            values: composite[1]
+            icons: composite[2]
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted
@@ -98,6 +122,7 @@ Pages.SupplyChainPageBase {
             headerText: headerValue
             titles: composite[0]
             values: composite[1]
+            icons: composite[2]
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted

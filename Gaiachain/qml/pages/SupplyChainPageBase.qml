@@ -13,7 +13,8 @@ GPage {
     enum DelegateType {
         Standard,
         Row,
-        Column
+        Column,
+        ColumnStack
     }
 
     default property alias pageContent: contentLayout.data

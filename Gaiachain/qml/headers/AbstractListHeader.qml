@@ -14,6 +14,7 @@ Headers.GHeader {
 
     property var titles: []
     property var values: []
+    property var icons: []
 
     readonly property bool isEmpty: (values === [])
 
@@ -25,8 +26,14 @@ Headers.GHeader {
 
     onTitlesChanged: {
         if (values.length === 0) {
-            for (var title in titles) {
+            for (let title in titles) {
                 values.push("")
+            }
+        }
+
+        if (icons.length === 0) {
+            for (let title in titles) {
+                icons.push("")
             }
         }
     }
