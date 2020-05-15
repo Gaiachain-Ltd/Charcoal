@@ -87,47 +87,25 @@ Pages.GPage {
                         bottom: parent.bottom
                     }
 
+                    z: 10
                     height: sr(1)
                     color: GStyle.headerBackgroundColor
                 }
             }
 
-            TabButton {
-                id: tab1
-                property bool isCurrent: bar.currentItem === this
+            CharcoalItems.CharcoalTabButton {
                 text: Strings.allTab
-
-                contentItem: Items.GText {
-                    text: tab1.text
-                    font.capitalization: Font.AllUppercase
-                    color: tab1.isCurrent? GStyle.backgroundColor
-                                         : GStyle.textTabColor
-                }
-
-                background: Rectangle {
-                    radius: s(5)
-                    border.color: GStyle.inputBorderColor
-                    border.width: sr(1)
-                    color: tab1.isCurrent? GStyle.headerBackgroundColor
-                                         : GStyle.backgroundColor
-                }
             }
-            TabButton {
-                id: tab2
+
+            CharcoalItems.CharcoalTabButton {
                 text: Strings.plotTab
-
-                background: Rectangle {
-                    radius: s(5)
-                    border.color: GStyle.inputBorderColor
-                    border.width: sr(1)
-                    color: bar.currentIndex === tab2.index? GStyle.headerBackgroundColor
-                                                     : GStyle.backgroundColor
-                }
             }
-            TabButton {
+
+            CharcoalItems.CharcoalTabButton {
                 text: Strings.harvestTab
             }
-            TabButton {
+
+            CharcoalItems.CharcoalTabButton {
                 text: Strings.transportTab
             }
         }

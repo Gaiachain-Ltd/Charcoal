@@ -5,7 +5,7 @@
         <file>components/ExpandableMenuButton.qml</file>
         <file>components/DoubleMenuButton.qml</file>
         <file>headers/UserInfoHeader.qml</file>
-        <file>items/DecoratedTabButton.qml</file>
+        <file>items/CharcoalTabButton.qml</file>
         <file>pages/MainMenuPage.qml</file>
         <file>pages/UserInfoPage.qml</file>
         <file>pages/PageReplantationPage.qml</file>
