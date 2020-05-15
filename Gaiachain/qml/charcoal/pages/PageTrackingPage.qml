@@ -22,25 +22,17 @@ Pages.GPage {
 
     function refreshData() {
         // called from GPage
-        //latestRangeTransactionsModel.clearRowCount()
+        latestRangeTransactionsModel.clearRowCount()
     }
 
-    ListModel {
-        id: packageModel
+    function updateSearch() {
+        transactionsModel.setKeyword(searchInput.text)
+        latestRangeTransactionsModel.clearRowCount()
+    }
 
-        function initData() {
-            var availablePackageTypes = DataGlobals.availablePackageTypes
-            for (var idx = 0; idx < availablePackageTypes.length; ++idx) {
-                var packageType = availablePackageTypes[idx]
-                append({"packageType": packageType,
-                           "packageColor": String(Helper.packageTypeColor(packageType)),
-                           "packageName": Helper.packageTypeName(packageType)})
-            }
-        }
-
-        Component.onCompleted: {
-            initData()
-        }
+    Component.onDestruction: {
+        transactionsModel.clear()
+        latestRangeTransactionsModel.clearRowCount()
     }
 
     ColumnLayout {
@@ -121,7 +113,8 @@ Pages.GPage {
 
             onDelegateClicked:  {
                 pageManager.enter(Enums.Page.PackageData,
-                                  { "title": top.title,
+                                  {
+                                      "title": top.title,
                                       "packageId": packageId,
                                       "packageType": DataGlobals.packageType(action) }
                                   )
