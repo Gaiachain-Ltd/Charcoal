@@ -13,7 +13,7 @@ ListView {
 
     //property real delegateHeight: GStyle.listViewDelegateDefaultHeight
 
-    signal delegateClicked(string packageId, int action)
+    signal delegateClicked(string packageId)
 
     spacing: s(GStyle.smallMargin)
     clip: true
@@ -23,34 +23,31 @@ ListView {
     boundsBehavior: Flickable.StopAtBounds
 
     delegate: Item {
-        id: delegate
 
-        width: top.width
-        //height: s(top.delegateHeight)
-        height: item.implicitHeight
-
-        //readonly property bool isLast: ((ListView.view.count - 1) === index)
-        //readonly property bool hasIcon: ListView.view.hasIcon
-        //readonly property url delegateIcon: ListView.view.delegateIcon
+        width: parent.width
+        height: item.height
 
         MouseArea {
             anchors.fill: parent
-            onClicked: delegateClicked(model.packageId, model.action)   // use model because action resolve wronlgy
+            // use model because action resolve wrongly
+            onClicked: delegateClicked(model.title)
         }
 
-        RowLayout {
+        Column {
             id: item
-            //anchors.fill: parent
+            width: parent.width
 
             spacing: s(GStyle.tinyMargin)
 
             Items.GText {
-                Layout.fillWidth: true
-                Layout.preferredHeight: contentHeight
-
                 horizontalAlignment: Text.AlignLeft
+                width: parent.width
+                height: contentHeight
 
                 font.bold: true
+                wrapMode: TextInput.WrapAnywhere
+                elide: Text.ElideNone
+                maximumLineCount: 5
 
                 text: title
                 //color: Helper.packageTypeColor(DataGlobals.packageType(action))
@@ -67,48 +64,37 @@ ListView {
             }
 
             Repeater {
-                model: values.length
+                model: rows
 
-                RowLayout {
-                    readonly property string key: values[index][0]
-                    readonly property string value: values[index][1]
-
+                ColumnLayout {
+                    width: parent.width
                     spacing: 0
 
-                    ColumnLayout {
+                    RowLayout {
                         Items.GText {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: contentHeight
 
                             horizontalAlignment: Text.AlignLeft
                             font.bold: true
 
-                            text: key
+                            text: (index === 0)? titleFrom : titleTo
                         }
 
                         Items.GText {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: contentHeight
-
                             horizontalAlignment: Text.AlignRight
 
-                            text: value
+                            text: (index === 0)? from : to
                             //text: Helper.formatDate(Number(value))
                         }
                     }
 
                     Items.LayoutSeparator {
                         Layout.fillWidth: true
-
+                        implicitHeight: (index === (rows-1))? (sr(GStyle.separatorHeight) * 2)
+                                                            : sr(GStyle.separatorHeight)
                         visible: true
                     }
                 }
-            }
-
-            Items.LayoutSeparator {
-                Layout.fillWidth: true
-
-                visible: true
             }
         }
 

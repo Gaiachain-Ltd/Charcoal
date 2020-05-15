@@ -110,6 +110,7 @@ Pages.GPage {
             model: dummyCharcoalModel
 
             onDelegateClicked:  {
+                console.log("Delegate clicked:", packageId)
                 pageManager.enter(Enums.Page.PackageData,
                                   {
                                       "title": top.title,
@@ -126,27 +127,31 @@ Pages.GPage {
                 append({
                            "title": "AM003PM/0595112/04-03-2020",
                            "type": "plot",
-                           "values": [
-                               ["Logging has ended", "07/03/2020"],
-                               ["Logging has begun", "04/03/2020"]
-                           ]})
+                           "rows": 2,
+                           "from": "04/03/2020",
+                           "to": "07/03/2020",
+                           "titleFrom": "Logging has begun",
+                           "titleTo": "Logging has ended"
+                       })
 
                 append({
                            "title": "AM003PM/0595112/04-03-2020/AM004NA",
                            "type": "harvest",
-                           "values": [
-                               ["Oven A - carbonization has ended", "29/03/2020"],
-                               ["Oven A - carbonization has begun", "08/03/2020"]
-                           ]
+                           "rows": 2,
+                           "from": "08/03/2020",
+                           "to": "29/03/2020",
+                           "titleFrom": "Oven A - carbonization has begun",
+                           "titleTo": "Oven A - carbonization has ended"
                        })
 
                 append({
                            "title": "AM003PM/0595112/04-03-2020/AM004NA/1234AB56/T1/31-03-2020",
                            "type": "transport",
-                           "values": [
-                               ["Bags have been loaded on truck 1234AB56", "31/03/2020"],
-                               ["Reception at storage facility", "01/04/2020"]
-                           ]
+                           "rows": 2,
+                           "from": "31/03/2020",
+                           "to": "01/04/2020",
+                           "titleFrom": "Bags have been loaded on truck 1234AB56",
+                           "titleTo": "Reception at storage facility"
                        })
             }
         }
