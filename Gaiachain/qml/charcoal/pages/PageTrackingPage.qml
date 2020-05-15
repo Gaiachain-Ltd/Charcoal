@@ -7,12 +7,10 @@ import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 import com.gaiachain.types 1.0
 
-import "../items" as CharcoalItems
 import "../../items" as Items
+import "../items" as CharcoalItems
 import "../../common" as Common
-import "../../components" as Components
-import "../../headers" as Headers
-import "../headers" as CharcoalHeaders
+import "../components" as CharcoalComponents
 import "../../pages" as Pages
 
 Pages.GPage {
@@ -105,11 +103,11 @@ Pages.GPage {
             }
         }
 
-        Components.EventsListView {
+        CharcoalComponents.EventsListView {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            viewModel: latestRangeTransactionsModel
+            model: dummyCharcoalModel
 
             onDelegateClicked:  {
                 pageManager.enter(Enums.Page.PackageData,
@@ -118,6 +116,38 @@ Pages.GPage {
                                       "packageId": packageId,
                                       "packageType": DataGlobals.packageType(action) }
                                   )
+            }
+        }
+
+        ListModel {
+            id: dummyCharcoalModel
+
+            Component.onCompleted: {
+                append({
+                           "title": "AM003PM/0595112/04-03-2020",
+                           "type": "plot",
+                           "values": [
+                               ["Logging has ended", "07/03/2020"],
+                               ["Logging has begun", "04/03/2020"]
+                           ]})
+
+                append({
+                           "title": "AM003PM/0595112/04-03-2020/AM004NA",
+                           "type": "harvest",
+                           "values": [
+                               ["Oven A - carbonization has ended", "29/03/2020"],
+                               ["Oven A - carbonization has begun", "08/03/2020"]
+                           ]
+                       })
+
+                append({
+                           "title": "AM003PM/0595112/04-03-2020/AM004NA/1234AB56/T1/31-03-2020",
+                           "type": "transport",
+                           "values": [
+                               ["Bags have been loaded on truck 1234AB56", "31/03/2020"],
+                               ["Reception at storage facility", "01/04/2020"]
+                           ]
+                       })
             }
         }
     }

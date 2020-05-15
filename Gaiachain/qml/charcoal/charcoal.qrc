@@ -4,6 +4,7 @@
         <file>components/MenuButton.qml</file>
         <file>components/ExpandableMenuButton.qml</file>
         <file>components/DoubleMenuButton.qml</file>
+        <file>components/EventsListView.qml</file>
         <file>headers/UserInfoHeader.qml</file>
         <file>items/CharcoalTabButton.qml</file>
         <file>pages/MainMenuPage.qml</file>
