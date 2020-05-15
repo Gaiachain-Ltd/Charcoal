@@ -40,13 +40,13 @@ AbstractStyle {
     primaryColor: "#000000"
     buttonSecondaryColor: "#888888"
     delegateHighlightColor: "#EEF9FE"
-    fontHighlightColor: "#2581EB"
+    fontHighlightColor: harvestColor
     delegateHighlightColor2: "#EBF1E6"
-    fontHighlightColor2: "#65CB00"
+    fontHighlightColor2: sacColor
     delegateHighlightColor3: "#FFF3E8"
     fontHighlightColor3: "#F8932E"
     delegateHighlightColor4: "#FFE8FD"
-    fontHighlightColor4: "#FF70F1"
+    fontHighlightColor4: lotColor
 
     menuButtonHeight: 300
 

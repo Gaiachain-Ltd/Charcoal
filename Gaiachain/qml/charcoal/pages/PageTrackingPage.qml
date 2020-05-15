@@ -75,38 +75,41 @@ Pages.GPage {
             onAccepted: top.updateSearch()
         }
 
-        TabBar {
-            id: bar
+        ColumnLayout {
             Layout.fillWidth: true
+            spacing: -bottomBar.height
 
-            background: Item {
-                Rectangle {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
+            TabBar {
+                id: bar
+                Layout.fillWidth: true
 
-                    z: 10
-                    height: sr(1)
-                    color: GStyle.headerBackgroundColor
+                CharcoalItems.CharcoalTabButton {
+                    text: Strings.allTab
                 }
+
+                CharcoalItems.CharcoalTabButton {
+                    text: Strings.plotTab
+                    selectedColor: GStyle.fontHighlightColor
+                }
+
+                CharcoalItems.CharcoalTabButton {
+                    text: Strings.harvestTab
+                    selectedColor: GStyle.fontHighlightColor2
+                }
+
+                CharcoalItems.CharcoalTabButton {
+                    text: Strings.transportTab
+                    selectedColor: GStyle.fontHighlightColor4
+                }
+
             }
 
-            CharcoalItems.CharcoalTabButton {
-                text: Strings.allTab
-            }
+            Rectangle {
+                id: bottomBar
+                Layout.fillWidth: true
 
-            CharcoalItems.CharcoalTabButton {
-                text: Strings.plotTab
-            }
-
-            CharcoalItems.CharcoalTabButton {
-                text: Strings.harvestTab
-            }
-
-            CharcoalItems.CharcoalTabButton {
-                text: Strings.transportTab
+                height: sr(1)
+                color: bar.currentItem.selectedColor
             }
         }
 
