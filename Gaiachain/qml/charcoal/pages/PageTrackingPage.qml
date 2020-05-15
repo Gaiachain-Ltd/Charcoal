@@ -111,12 +111,12 @@ Pages.GPage {
 
             onDelegateClicked:  {
                 console.log("Delegate clicked:", packageId)
-                pageManager.enter(Enums.Page.PackageData,
-                                  {
-                                      "title": top.title,
-                                      "packageId": packageId,
-                                      "packageType": DataGlobals.packageType(action) }
-                                  )
+//                pageManager.enter(Enums.Page.PackageData,
+//                                  {
+//                                      "title": top.title,
+//                                      "packageId": packageId,
+//                                      "packageType": DataGlobals.packageType(action) }
+//                                  )
             }
         }
 

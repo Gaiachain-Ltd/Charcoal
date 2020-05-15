@@ -161,9 +161,15 @@ namespace Enums {
 
     enum class PackageType {
         Unknown = -1,
+#ifdef COCOA
         Harvest,
         Sac,
         Lot,
+#elif CHARCOAL
+        Plot,
+        Harvest,
+        Transport,
+#endif
 
         PackageTypeCount
     };

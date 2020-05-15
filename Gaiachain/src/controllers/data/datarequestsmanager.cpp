@@ -289,6 +289,9 @@ Gaia::ModelEntry DataRequestsManager::processUnusedLotId(const QJsonValue &value
 {
     auto object = value.toObject();
     const auto id = RequestsHelper::checkAndValue(object, Tags::pid).toString();
-
+#ifdef COCOA
     return { id, QVariant::fromValue(Enums::PackageType::Lot) };
+#elif CHARCOAL
+    return { id, QVariant::fromValue(Enums::PackageType::Transport) };
+#endif
 }

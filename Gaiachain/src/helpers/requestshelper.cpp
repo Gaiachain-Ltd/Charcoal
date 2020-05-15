@@ -25,9 +25,15 @@ const QHash<Enums::CompanyType, QString> CompanyTypeStrings = {
     { Enums::CompanyType::Transporter, StaticValues::companyTransporter }
 };
 const QHash<Enums::PackageType, QString> PackageTypeStrings = {
+#ifdef COCOA
     { Enums::PackageType::Harvest, StaticValues::packageHarvest },
     { Enums::PackageType::Sac, StaticValues::packageSac },
     { Enums::PackageType::Lot, StaticValues::packageLot }
+#elif CHARCOAL
+//    { Enums::PackageType::Plot, StaticValues::packageHarvest },
+//    { Enums::PackageType::Harvest, StaticValues::packageSac },
+//    { Enums::PackageType::Transport, StaticValues::packageLot }
+#endif
 };
 const QHash<Enums::SupplyChainAction, QString> SupplyChainActionStrings = {
 #ifdef COCOA

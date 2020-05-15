@@ -204,6 +204,7 @@ void SessionManager::postNewEntity(const QByteArray &codeData, const Enums::Supp
 
 void SessionManager::getUnusedLotIds()
 {
+#ifdef COCOA
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit unusedLotIdsLoadError(code);
     };
@@ -214,10 +215,12 @@ void SessionManager::getUnusedLotIds()
     if (checkValidToken()) {
         sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot), errorHandler, replyHandler);
     }
+#endif
 }
 
 void SessionManager::postUnusedLotId()
 {
+#ifdef COCOA
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit unusedLotIdCreateError(code);
     };
@@ -228,6 +231,7 @@ void SessionManager::postUnusedLotId()
     if (checkValidToken()) {
         sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot, true), errorHandler, replyHandler);
     }
+#endif
 }
 
 void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,
