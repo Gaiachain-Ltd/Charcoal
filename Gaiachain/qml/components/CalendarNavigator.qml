@@ -19,6 +19,8 @@ Item {
     property bool returnButton: true
     property bool sparseLayout: false
 
+    property int fontCapitalization: Font.MixedCase
+
     signal next()
     signal previous()
     signal returnToCurrent()
@@ -60,6 +62,7 @@ Item {
             text: Helper.getMonthName(currentMonth) + " " + currentYear
             font.weight: Font.DemiBold
             font.pixelSize: s(GStyle.subtitlePixelSize)
+            font.capitalization: top.fontCapitalization
 
             MouseArea {
                 anchors.fill: parent

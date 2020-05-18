@@ -23,6 +23,8 @@ Item {
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()
 
+    property int fontCapitalization: Font.MixedCase
+
     signal dayClicked(date dayDate)
 
     ColumnLayout {
@@ -42,6 +44,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
 
                 font.pixelSize: s(GStyle.calendarNamePixelSize)
+                font.capitalization: fontCapitalization
                 text: Helper.formatShortName(model.shortName)
             }
         }

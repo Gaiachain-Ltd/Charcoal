@@ -63,6 +63,7 @@ Popup {
 
             returnButton: false
             sparseLayout: true
+            fontCapitalization: Font.AllUppercase
 
             currentMonth: calendarMonthItem.currentMonth
             currentYear: calendarMonthItem.currentYear
@@ -82,6 +83,8 @@ Popup {
 
             currentMonth: popup.currentDate.getMonth()
             currentYear: popup.currentDate.getFullYear()
+
+            fontCapitalization: Font.AllUppercase
 
             onDayClicked: {
                 popup.currentDate = dayDate
