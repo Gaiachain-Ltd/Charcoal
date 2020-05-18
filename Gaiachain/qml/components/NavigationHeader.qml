@@ -10,9 +10,12 @@ import "../items" as Items
 Item {
     id: top
 
-    property bool showCloseButton: true
     readonly property bool isOnHomePage: pageManager.isOnHomePage()
     readonly property bool isBackToHomePage: pageManager.isBackToHomePage()
+
+    property bool showCloseButton: true
+    property bool showBackButton: !(isOnHomePage || isBackToHomePage)
+    property bool enableBackButton: showBackButton
 
     function logout() {
         pageManager.backTo(Enums.Page.Login)
@@ -23,6 +26,13 @@ Item {
     property bool logoVisible: false
 
     implicitHeight: s(GStyle.headerHeight)
+
+    /*
+     * Reimplement in object for custom handling
+     */
+    function goBack() {
+        backHandler()
+    }
 
     Items.BlockMouseArea{}
 
@@ -45,11 +55,12 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
-            opacity: isOnHomePage || isBackToHomePage ? 0 : 1
-            enabled: !isOnHomePage && !isBackToHomePage
+            opacity: top.showBackButton
+            enabled: top.enableBackButton
+
             source: GStyle.backImgUrl
 
-            onClicked: backHandler()
+            onClicked: goBack()
         }
 
         Items.LayoutSpacer { visible: !logoVisible }

@@ -82,6 +82,7 @@ QString Utility::colorString(const QColor &color) const
 bool Utility::isWeekend(const QDate &date) const
 {
     const int day = date.dayOfWeek();
+    // TODO: Sat and Sun are not weekend days in all countries...
     return day == 6 || day == 7;
 }
 

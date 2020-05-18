@@ -311,4 +311,7 @@ QtObject {
     property string replantationBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
     property string replantationEndingDateHelp: tr.empty + qsTr("Dummy text - ending date help")
     property string replantationGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // Charcoal misc
+    property string selectDate: tr.empty + qsTr("Select date")
 }

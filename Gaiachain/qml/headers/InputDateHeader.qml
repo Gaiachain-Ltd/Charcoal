@@ -28,6 +28,7 @@ Headers.GHeader {
     property QtObject popup: Popups.CalendarPopup {
         currentDate: top.currentDate
         selectedDate: top.selectedDate
+        onClosed: top.selectedDate = selectedDate
     }
 
     function togglePopup() {

@@ -38,6 +38,8 @@ public:
 
     Q_INVOKABLE int getScannedIdLength() const;
 
+    // TODO: Consider creating QML-instantiatable, QObject-based date type
+    // with this functionality built-in
     Q_INVOKABLE bool isWeekend(const QDate &date) const;
     Q_INVOKABLE QDate previousMonth(const QDate &date) const;
     Q_INVOKABLE QDate nextMonth(const QDate &date) const;

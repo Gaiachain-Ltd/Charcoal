@@ -11,6 +11,7 @@ import "../../common" as Common
 import "../../headers" as Headers
 import "../headers" as CharcoalHeaders
 import "../../pages" as Pages
+import "../../popups" as Popups
 
 Pages.SupplyChainPageBase {
     id: top
@@ -113,7 +114,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.replantationUserIdHelp
     }
 
-    Headers.InputDateHeader {
+    CharcoalHeaders.CharcoalInputDateHeader {
         id: beginningDateHeader
         Layout.fillWidth: true
         headerText: Strings.beginningDate
@@ -121,7 +122,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.replantationBeginningDateHelp
     }
 
-    Headers.InputDateHeader {
+    CharcoalHeaders.CharcoalInputDateHeader {
         id: endingDateHeader
         Layout.fillWidth: true
         headerText: Strings.endingDate
