@@ -48,6 +48,8 @@ AbstractStyle {
     delegateHighlightColor4: "#FFE8FD"
     fontHighlightColor4: lotColor
 
+    calendarArrowButtonColor: "transparent"
+
     menuButtonHeight: 300
 
     pixelSize: 29
