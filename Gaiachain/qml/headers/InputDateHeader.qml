@@ -11,6 +11,7 @@ import com.gaiachain.enums 1.0
 import "../items" as Items
 import "../headers" as Headers
 import "../components" as Components
+import "../popups" as Popups
 
 Headers.GHeader {
     id: top
@@ -18,30 +19,15 @@ Headers.GHeader {
     property var selectedDate: optional ? undefined : currentDate
 
     property date currentDate: new Date
-    property int currentYear: currentDate.getFullYear()
-    property int currentMonth: currentDate.getMonth()
 
     property alias placeholderText: input.placeholderText
 
     property bool optional: false
     readonly property bool isEmpty: selectedDate === undefined
 
-    function previousMonth() {
-        if (currentMonth === Calendar.January) {
-            currentMonth = Calendar.December
-            --currentYear
-        } else {
-            --currentMonth
-        }
-    }
-
-    function nextMonth() {
-        if (currentMonth === Calendar.December) {
-            currentMonth = Calendar.January
-            ++currentYear
-        } else {
-            ++currentMonth
-        }
+    property QtObject popup: Popups.CalendarPopup {
+        currentDate: top.currentDate
+        selectedDate: top.selectedDate
     }
 
     function togglePopup() {
@@ -86,81 +72,5 @@ Headers.GHeader {
         }
     }
 
-    Popup {
-        id: popup
 
-        anchors.centerIn: Overlay.overlay
-
-        width: top.width
-        implicitHeight: width + s(GStyle.hugeMargin)
-
-        focus: true
-        modal: true
-
-        Overlay.modal: Rectangle {
-            color: GStyle.backgroundShadowColor
-        }
-
-        contentItem: ColumnLayout {
-            Layout.fillWidth: false
-            Layout.fillHeight: false
-
-            Layout.bottomMargin: GStyle.none
-
-            spacing: s(GStyle.hugeMargin)
-
-            Components.CalendarNavigator {
-                Layout.fillWidth: true
-
-                returnButton: false
-
-                currentMonth: calendarMonthItem.currentMonth
-                currentYear: calendarMonthItem.currentYear
-
-                onPrevious: previousMonth()
-                onNext: nextMonth()
-            }
-
-            Components.CalendarMonthItem {
-                id: calendarMonthItem
-
-                currentDate: top.currentDate
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.margins: GStyle.none
-
-                currentMonth: top.currentMonth
-                currentYear: top.currentYear
-
-                onDayClicked: {
-                    top.currentDate = dayDate
-                    top.selectedDate = dayDate
-                    popup.visible = false
-                }
-
-                delegate: Components.CalendarSupplyItem {
-                    Components.CalendarItemGridExtension {
-                        id: gridExtension
-
-                        modelDate: model.date
-                        modelDay: model.day
-                        modelMonth: model.month
-                        modelWeekNumber: model.weekNumber
-
-                        gridItem: calendarMonthItem.gridItem
-                    }
-
-                    visible: !gridExtension.additionalRow
-                    selectedDate: calendarMonthItem.currentDate
-                    currentMonth: calendarMonthItem.currentMonth
-                }
-            }
-        }
-
-        background: Rectangle {
-            color: GStyle.backgroundColor
-            radius: s(GStyle.tinyMargin)
-        }
-    }
 }

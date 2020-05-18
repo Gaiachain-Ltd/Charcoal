@@ -85,6 +85,16 @@ bool Utility::isWeekend(const QDate &date) const
     return day == 6 || day == 7;
 }
 
+QDate Utility::previousMonth(const QDate &date) const
+{
+    return date.addMonths(-1);
+}
+
+QDate Utility::nextMonth(const QDate &date) const
+{
+    return date.addMonths(1);
+}
+
 int Utility::parseInt(const QString &num) const
 {
     return num.toInt();

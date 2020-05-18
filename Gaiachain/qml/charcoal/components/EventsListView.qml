@@ -28,8 +28,7 @@ ListView {
         height: item.height
 
         MouseArea {
-            anchors.fill: parent
-            // use model because action resolve wrongly
+            anchors.fill: parent // use model because action resolve wrongly
             onClicked: delegateClicked(model.title, model.type)
         }
 

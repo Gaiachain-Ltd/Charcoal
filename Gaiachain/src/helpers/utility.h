@@ -39,6 +39,8 @@ public:
     Q_INVOKABLE int getScannedIdLength() const;
 
     Q_INVOKABLE bool isWeekend(const QDate &date) const;
+    Q_INVOKABLE QDate previousMonth(const QDate &date) const;
+    Q_INVOKABLE QDate nextMonth(const QDate &date) const;
 
     Q_INVOKABLE QString formatRawId(QString id) const;
 
