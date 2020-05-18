@@ -47,6 +47,9 @@ public:
 private:
     const RequestType m_requestType = RequestType::Invalid;
 
+    static RequestType getDefaultRequestType(const Enums::PackageType &packageType,
+                                             bool create);
+
     static const QString sc_basePath;
     static const QMap<RequestType, Type> sc_requestsType;
     static const QMap<RequestType, QString> sc_requestsPath;

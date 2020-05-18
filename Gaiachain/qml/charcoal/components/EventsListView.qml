@@ -53,11 +53,11 @@ ListView {
                 //color: Helper.packageTypeColor(DataGlobals.packageType(action))
 
                 color: {
-                    if (type === "plot") {
+                    if (type === Enums.PackageType.Plot) {
                         return GStyle.fontHighlightColor
-                    } else if (type === "harvest") {
+                    } else if (type === Enums.PackageType.Harvest) {
                         return GStyle.fontHighlightColor2
-                    } else if (type === "transport") {
+                    } else if (type === Enums.PackageType.Transport) {
                         return GStyle.fontHighlightColor3
                     }
                 }

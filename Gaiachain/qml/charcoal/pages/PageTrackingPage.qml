@@ -80,16 +80,19 @@ Pages.GPage {
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.plotTab
                     selectedColor: GStyle.fontHighlightColor
+                    packageTypes: Enums.PackageType.Plot
                 }
 
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.harvestTab
                     selectedColor: GStyle.fontHighlightColor2
+                    packageTypes: Enums.PackageType.Harvest
                 }
 
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.transportTab
                     selectedColor: GStyle.fontHighlightColor4
+                    packageTypes: Enums.PackageType.Transport
                 }
 
             }
@@ -126,7 +129,7 @@ Pages.GPage {
             Component.onCompleted: {
                 append({
                            "title": "AM003PM/0595112/04-03-2020",
-                           "type": "plot",
+                           "type": Enums.PackageType.Plot,
                            "rows": 2,
                            "from": "04/03/2020",
                            "to": "07/03/2020",
@@ -136,7 +139,7 @@ Pages.GPage {
 
                 append({
                            "title": "AM003PM/0595112/04-03-2020/AM004NA",
-                           "type": "harvest",
+                           "type": Enums.PackageType.Harvest,
                            "rows": 2,
                            "from": "08/03/2020",
                            "to": "29/03/2020",
@@ -146,7 +149,7 @@ Pages.GPage {
 
                 append({
                            "title": "AM003PM/0595112/04-03-2020/AM004NA/1234AB56/T1/31-03-2020",
-                           "type": "transport",
+                           "type": Enums.PackageType.Transport,
                            "rows": 2,
                            "from": "31/03/2020",
                            "to": "01/04/2020",
