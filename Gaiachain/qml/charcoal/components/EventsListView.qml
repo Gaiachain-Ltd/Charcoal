@@ -13,7 +13,7 @@ ListView {
 
     //property real delegateHeight: GStyle.listViewDelegateDefaultHeight
 
-    signal delegateClicked(string packageId)
+    signal delegateClicked(string packageId, int type)
 
     spacing: s(GStyle.smallMargin)
     clip: true
@@ -30,7 +30,7 @@ ListView {
         MouseArea {
             anchors.fill: parent
             // use model because action resolve wrongly
-            onClicked: delegateClicked(model.title)
+            onClicked: delegateClicked(model.title, model.type)
         }
 
         Column {

@@ -113,7 +113,7 @@ Pages.GPage {
             model: dummyCharcoalModel
 
             onDelegateClicked:  {
-                console.log("Delegate clicked:", packageId)
+                console.log("Delegate clicked:", packageId, type)
 //                pageManager.enter(Enums.Page.PackageData,
 //                                  {
 //                                      "title": top.title,
