@@ -43,10 +43,21 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor4),
                     createSummaryItem("",
                                       [
-                                          [ Strings.numberOfBags, Strings.documents, Strings.receipt ],
-                                          [ Strings.numberOfBagsDetail.arg("149").arg("150"),
-                                           Strings.approved, Strings.noPhoto ],
-                                          [ GStyle.warningUrl, GStyle.uploadOkUrl, GStyle.noPhotoUrl ]
+                                          [
+                                              Strings.numberOfBags,
+                                              Strings.documents,
+                                              Strings.receipt
+                                          ],
+                                          [
+                                              Strings.numberOfBagsDetail.arg("149").arg("150"),
+                                              Strings.approved,
+                                              Strings.noPhoto
+                                          ],
+                                          [
+                                              GStyle.warningUrl,
+                                              GStyle.uploadOkUrl,
+                                              GStyle.noPhotoUrl
+                                          ]
                                       ],
                                       "", "",
                                       Pages.SupplyChainPageBase.ColumnStack,

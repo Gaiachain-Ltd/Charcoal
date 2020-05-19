@@ -315,4 +315,10 @@ QtObject {
     // Charcoal misc
     property string selectDate: tr.empty + qsTr("Select date")
     property string cantSelectThisDay: tr.empty + qsTr("You can't select this day")
+
+    property string plotIdDetails: tr.empty + qsTr("Plot ID details")
+    property string harvestIdDetails: tr.empty + qsTr("Harvest ID details")
+    property string transportIdDetails: tr.empty + qsTr("Transport ID details")
+    property string transportReceptionDate: tr.empty + qsTr("Reception at the storage facility")
+    property string uploaded: tr.empty + qsTr("Uploaded")
 }

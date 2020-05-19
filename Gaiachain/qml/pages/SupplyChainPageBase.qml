@@ -20,6 +20,7 @@ GPage {
     default property alias pageContent: contentLayout.data
     property bool validPageData: true
 
+    property alias proceedButtonVisible: proceedButton.visible
     property alias proceedButtonEnabled: proceedButton.enabled
     property alias proceedButtonText: proceedButton.text
 
@@ -28,24 +29,6 @@ GPage {
 
     function backToHomeHandler() {
         pageManager.openPopup(Enums.Popup.Confirm, { "text": Strings.askForExit }, "EXIT_CONFIRM")
-    }
-
-    // TODO: use dedicated QtObject to hold these properties!
-    function createSummaryItem(header, value, inputIconSource = "", suffix = "",
-                               delegateType = SupplyChainPageBase.Standard,
-                               highlightColor = "", decorationColor = "",
-                               secondaryTextColor = "") {
-        return {
-            "headerValue": header,
-            "value": value,
-            "inputIconSource": inputIconSource.toString(),
-            "suffixValue": suffix,
-            "delegateType": delegateType,
-            "highlightColor": Utility.colorString(highlightColor),
-            "decorationColor": Utility.colorString(decorationColor),
-            "secondaryTextColor": Utility.colorString(secondaryTextColor),
-            "isHighlighted": (highlightColor !== "")
-        }
     }
 
     Connections {

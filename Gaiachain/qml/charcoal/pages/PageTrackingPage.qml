@@ -113,13 +113,117 @@ Pages.GPage {
             model: dummyCharcoalModel
 
             onDelegateClicked:  {
-                console.log("Delegate clicked:", packageId, type)
-//                pageManager.enter(Enums.Page.PackageData,
-//                                  {
-//                                      "title": top.title,
-//                                      "packageId": packageId,
-//                                      "packageType": DataGlobals.packageType(action) }
-//                                  )
+                let item
+                for (let index = 0; index < dummyCharcoalModel.count; ++index) {
+                    let current = dummyCharcoalModel.get(index)
+                    if (current.title === packageId) {
+                        item = current
+                        break;
+                    }
+                }
+
+                let summary = []
+                let summaryTitle
+
+                if (item.type === Enums.PackageType.Plot) {
+                    summaryTitle = Strings.plotIdDetails
+                    summary = [
+                        createSummaryItem(Strings.plotId,
+                                          item.title,
+                                          "", "",
+                                          Pages.SupplyChainPageBase.Standard,
+                                          GStyle.delegateHighlightColor,
+                                          GStyle.fontHighlightColor),
+                        createSummaryItem(Strings.malebiRepsId,
+                                          "AM003PM"),
+                        createSummaryItem(Strings.parcel,
+                                          "0595112"),
+                        createSummaryItem(Strings.village,
+                                          "Wąchock"),
+                        createSummaryItem(Strings.beginningDate,
+                                          item.from),
+                        createSummaryItem(Strings.endingDate,
+                                          item.to),
+                        createSummaryItem(Strings.treeSpecies,
+                                          "Cassia siamea"),
+
+                    ]
+                } else if (item.type === Enums.PackageType.Harvest) {
+                    summaryTitle = Strings.harvestIdDetails
+                    summary = [
+                        createSummaryItem(Strings.harvestId,
+                                          item.title,
+                                          "", "",
+                                          Pages.SupplyChainPageBase.Standard,
+                                          GStyle.delegateHighlightColor2,
+                                          GStyle.fontHighlightColor2),
+                        // TODO: BUTTON! o_O
+                        createSummaryItem(Strings.plotId,
+                                          "AM003PM/0595112/04-03-2020",
+                                          "", "",
+                                          Pages.SupplyChainPageBase.Standard,
+                                          GStyle.delegateHighlightColor,
+                                          GStyle.fontHighlightColor),
+                        // Collapsible delegate... ugh!
+                        createSummaryItem(Strings.beginningDate,
+                                          item.from),
+                        createSummaryItem(Strings.endingDate,
+                                          item.to)
+
+                    ]
+                } else if (item.type === Enums.PackageType.Transport) {
+                    summaryTitle = Strings.transportIdDetails
+                    summary = [
+                        createSummaryItem(Strings.transportId,
+                                          item.title,
+                                          "", "",
+                                          Pages.SupplyChainPageBase.Standard,
+                                          GStyle.delegateHighlightColor4,
+                                          GStyle.fontHighlightColor4),
+                        createSummaryItem("",
+                                          [
+                                              [
+                                                  Strings.numberOfBags,
+                                                  Strings.loadingDate,
+                                                  Strings.documents,
+                                                  Strings.receipt
+                                              ],
+                                              [
+                                                  "150",
+                                                  Strings.loadingDate,
+                                                  Strings.uploaded,
+                                                  Strings.noPhoto
+                                              ],
+                                              [
+                                                  "",
+                                                  "",
+                                                  GStyle.uploadOkUrl,
+                                                  GStyle.noPhotoUrl
+                                              ]
+                                          ],
+                                          "", "",
+                                          Pages.SupplyChainPageBase.ColumnStack,
+                                          GStyle.delegateHighlightColor4,
+                                          GStyle.fontHighlightColor4,
+                                          GStyle.textPrimaryColor),
+                        createSummaryItem(Strings.plateNumber,
+                                          "1234AB56"),
+                        createSummaryItem(Strings.transportReceptionDate,
+                                          item.to)
+
+                    ]
+
+                }
+
+                pageManager.enter(Enums.Page.SupplyChainSummary,
+                                  {
+                                      "title": summaryTitle,
+                                      "proceedButtonVisible": false,
+                                      "summary": summary
+
+                                      //"packageId": packageId,
+                                      //"packageType": DataGlobals.packageType(action)
+                                  })
             }
         }
 
@@ -154,7 +258,7 @@ Pages.GPage {
                            "from": "31/03/2020",
                            "to": "01/04/2020",
                            "titleFrom": "Bags have been loaded on truck 1234AB56",
-                           "titleTo": "Reception at storage facility"
+                           "titleTo": Strings.transportReceptionDate
                        })
             }
         }
