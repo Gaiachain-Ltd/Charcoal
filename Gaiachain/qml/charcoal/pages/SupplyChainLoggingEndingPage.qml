@@ -84,7 +84,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loggingEndingRepsIdHelp
     }
 
-    Headers.InputDateHeader {
+    CharcoalHeaders.CharcoalInputDateHeader {
         id: endingDateHeader
         Layout.fillWidth: true
         headerText: Strings.endingDate

@@ -111,7 +111,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationBeginningCarbonizerIdHelp
     }
 
-    Headers.InputDateHeader {
+    CharcoalHeaders.CharcoalInputDateHeader {
         id: beginningDateHeader
         Layout.fillWidth: true
         headerText: Strings.beginningDate

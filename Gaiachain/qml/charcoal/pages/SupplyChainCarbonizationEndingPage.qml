@@ -110,7 +110,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationEndingCarbonizerIdHelp
     }
 
-    Headers.InputDateHeader {
+    CharcoalHeaders.CharcoalInputDateHeader {
         id: endingDateHeader
         Layout.fillWidth: true
         headerText: Strings.carbonizationEndingDate

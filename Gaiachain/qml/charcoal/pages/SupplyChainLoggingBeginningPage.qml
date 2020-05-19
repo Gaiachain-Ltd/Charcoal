@@ -108,7 +108,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loggingBeginningTreeSpeciesHelp
     }
 
-    Headers.InputDateHeader {
+    CharcoalHeaders.CharcoalInputDateHeader {
         id: beginningDateHeader
         Layout.fillWidth: true
         headerText: Strings.beginningDate

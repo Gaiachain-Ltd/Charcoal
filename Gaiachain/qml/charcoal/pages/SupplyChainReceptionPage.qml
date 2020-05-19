@@ -108,7 +108,7 @@ Pages.SupplyChainPageBase {
         onClicked: console.log("ZONK 2!")
     }
 
-    Headers.InputDateHeader {
+    CharcoalHeaders.CharcoalInputDateHeader {
         id: unloadingDateHeader
         Layout.fillWidth: true
         headerText: Strings.receptionDateCharcoal
