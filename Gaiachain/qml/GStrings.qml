@@ -314,4 +314,5 @@ QtObject {
 
     // Charcoal misc
     property string selectDate: tr.empty + qsTr("Select date")
+    property string cantSelectThisDay: tr.empty + qsTr("You can't select this day")
 }

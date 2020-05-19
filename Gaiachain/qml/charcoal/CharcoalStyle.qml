@@ -23,6 +23,8 @@ AbstractStyle {
     readonly property color calendarBlockedFontColor: "#B1BFA3"
     readonly property color calendarNotCurrentColor: "#BEBEBE"
 
+    readonly property color notificationWarningColor: warningColor
+
     readonly property url submenuCarbonizationBeginningUrl: "qrc:/ui/submenuCarbonizationBeginning"
     readonly property url submenuCarbonizationEndingUrl: "qrc:/ui/submenuCarbonizationEnding"
     readonly property url submenuCarbonizationUrl: "qrc:/ui/submenuCarbonization"

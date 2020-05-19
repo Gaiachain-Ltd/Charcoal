@@ -93,7 +93,7 @@ Popup {
                 readonly property bool isCurrentDay: (isCurrentMonth && model.day === currentDate.getDate())
 
                 border {
-                    width: sr(1)
+                    width: isCurrentDay? sr(3) : sr(1)
                     color: isCurrentDay? GStyle.calendarCurrentGridColor
                                        : GStyle.calendarGridColor
                 }
@@ -126,9 +126,15 @@ Popup {
             }
 
             onDayClicked: {
-                popup.currentDate = dayDate
-                popup.selectedDate = dayDate
-                popup.visible = false
+                if (dayDate >= bottomDate) {
+                    popup.currentDate = dayDate
+                    popup.selectedDate = dayDate
+                    popup.visible = false
+                } else {
+                    console.log("Wrong date! Selected:", dayDate,
+                                "Minimum date:", bottomDate)
+                    notificationPopup.open()
+                }
             }
         }
 
@@ -142,6 +148,12 @@ Popup {
         Components.Footer {
             id: footer
             Layout.fillWidth: true
+        }
+
+        NotificationPopup {
+            id: notificationPopup
+            text: Strings.cantSelectThisDay
+            backgroundColor: GStyle.notificationWarningColor
         }
     }
 }
