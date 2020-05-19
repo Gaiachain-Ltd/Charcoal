@@ -12,8 +12,10 @@ import "../../popups" as Popups
 Headers.InputDateHeader {
     id: top
     helpButtonVisible: true
+    property alias minimumDate: popup.minimumDate
 
     popup: Popups.CalendarFullscreenPagePopup {
+        id: popup
         currentDate: top.currentDate
         selectedDate: top.selectedDate
         onClosed: top.selectedDate = selectedDate

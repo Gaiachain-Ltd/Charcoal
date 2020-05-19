@@ -16,6 +16,7 @@ Popup {
 
     property date currentDate: new Date
     property date selectedDate: currentDate
+    property alias minimumDate: calendarMonthItem.minimumDate
 
     property bool showCloseButton: false
     property bool logoVisible: false
@@ -89,7 +90,7 @@ Popup {
 
             delegate: Rectangle {
                 readonly property bool isCurrentMonth: (model.month === calendarMonthItem.gridItem.month)
-                readonly property bool isBlockedDay: (isCurrentMonth && (model.day < calendarMonthItem.bottomDate.getDate()))
+                readonly property bool isBlockedDay: (isCurrentMonth && (model.day < calendarMonthItem.minimumDate.getDate()))
                 readonly property bool isCurrentDay: (isCurrentMonth && model.day === currentDate.getDate())
 
                 border {
@@ -126,13 +127,13 @@ Popup {
             }
 
             onDayClicked: {
-                if (dayDate >= bottomDate) {
+                if (dayDate >= minimumDate) {
                     popup.currentDate = dayDate
                     popup.selectedDate = dayDate
                     popup.visible = false
                 } else {
                     console.log("Wrong date! Selected:", dayDate,
-                                "Minimum date:", bottomDate)
+                                "Minimum date:", minimumDate)
                     notificationPopup.open()
                 }
             }

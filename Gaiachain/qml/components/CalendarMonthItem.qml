@@ -17,8 +17,8 @@ ColumnLayout {
 
     property date currentDate
 
-    // Minimal selectable date
-    property date bottomDate: new Date(2020, 04, 18)
+    //! Minimal selectable date
+    property date minimumDate: new Date(2000, 0, 1)
 
     property int currentMonth: currentDate.getMonth()
     property int currentYear: currentDate.getFullYear()

@@ -128,6 +128,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.endingDate
         helpButtonVisible: true
         helpText: Strings.replantationEndingDateHelp
+        minimumDate: beginningDateHeader.selectedDate
     }
 
     Common.PositionSourceHandler {
