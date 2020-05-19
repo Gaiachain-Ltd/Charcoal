@@ -23,6 +23,7 @@ QtObject {
     property color textLinkColor: primaryColor
     property color notRequiredTextInputColor: "#8c8c8c"
     property color textTabColor: "#7E7E7E"
+    property color textCalendarDayRowColor: textPrimaryColor
 
     property color buttonPrimaryColor: primaryColor
     property color buttonSecondaryColor: "white"
@@ -76,6 +77,8 @@ QtObject {
     property int middleSmallMargin: 20
     property int smallMargin: 15
     property int tinyMargin: 10
+    property int microMargin: 5
+    property int picoMargin: 2
 
     // image
     property int imageSize: 30

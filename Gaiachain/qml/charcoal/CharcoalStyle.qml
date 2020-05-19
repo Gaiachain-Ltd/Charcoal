@@ -9,13 +9,19 @@ AbstractStyle {
     readonly property color menuTrackingColor: "#D9D9D9"
     readonly property color menuReplantationColor: "#F2CBA4"
     readonly property color submenuLoggingBeginningColor: "#F8F8F8"
-    readonly property color submenuLoggingEndingColor: "#EBF1E6"
+    readonly property color submenuLoggingEndingColor: delegateHighlightColor2
     readonly property color submenuLoggingColor: submenuLoggingBeginningColor
     readonly property color submenuCarbonizationBeginningColor: submenuLoggingEndingColor
     readonly property color submenuCarbonizationEndingColor: submenuLoggingBeginningColor
     readonly property color submenuCarbonizationColor: submenuLoggingEndingColor
     readonly property color submenuLoadingAndTransportColor: submenuLoggingBeginningColor
     readonly property color submenuReceptionColor: submenuLoggingEndingColor
+
+    readonly property color calendarGridColor: delegateHighlightColor2
+    readonly property color calendarCurrentGridColor: "#65CB00"
+    readonly property color calendarBlockedColor: "#DFE8D7"
+    readonly property color calendarBlockedFontColor: "#B1BFA3"
+    readonly property color calendarNotCurrentColor: "#BEBEBE"
 
     readonly property url submenuCarbonizationBeginningUrl: "qrc:/ui/submenuCarbonizationBeginning"
     readonly property url submenuCarbonizationEndingUrl: "qrc:/ui/submenuCarbonizationEnding"
@@ -49,6 +55,8 @@ AbstractStyle {
     fontHighlightColor4: lotColor
 
     calendarArrowButtonColor: "transparent"
+    calendarNumberPixelSize: tinyPixelSize
+    calendarDayMinHeight: calendarNumberPixelSize + (2 * picoMargin)
 
     menuButtonHeight: 300
 

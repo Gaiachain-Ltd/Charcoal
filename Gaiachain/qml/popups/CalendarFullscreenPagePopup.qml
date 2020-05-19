@@ -79,34 +79,56 @@ Popup {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.margins: GStyle.none
+            Layout.bottomMargin: GStyle.bigMargin
 
             currentMonth: popup.currentDate.getMonth()
             currentYear: popup.currentDate.getFullYear()
 
             fontCapitalization: Font.AllUppercase
+            dayRowFontColor: GStyle.textCalendarDayRowColor
+
+            delegate: Rectangle {
+                readonly property bool isCurrentMonth: (model.month === calendarMonthItem.gridItem.month)
+                readonly property bool isBlockedDay: (isCurrentMonth && (model.day < calendarMonthItem.bottomDate.getDate()))
+                readonly property bool isCurrentDay: (isCurrentMonth && model.day === currentDate.getDate())
+
+                border {
+                    width: sr(1)
+                    color: isCurrentDay? GStyle.calendarCurrentGridColor
+                                       : GStyle.calendarGridColor
+                }
+
+                color: (isCurrentMonth && isBlockedDay)? GStyle.calendarBlockedColor
+                                                       : GStyle.backgroundColor
+
+                Text {
+                    id: dayNumber
+                    anchors.centerIn: parent
+
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+
+                    text: model.day
+                    font.pixelSize: GStyle.calendarNumberPixelSize
+
+                    color: {
+                        if (isCurrentMonth) {
+                            if (isBlockedDay) {
+                                return GStyle.calendarBlockedFontColor
+                            } else {
+                                return GStyle.textPrimaryColor
+                            }
+                        }
+
+                        return GStyle.calendarNotCurrentColor
+                    }
+                }
+            }
 
             onDayClicked: {
                 popup.currentDate = dayDate
                 popup.selectedDate = dayDate
                 popup.visible = false
-            }
-
-            delegate: Components.CalendarSupplyItem {
-                Components.CalendarItemGridExtension {
-                    id: gridExtension
-
-                    modelDate: model.date
-                    modelDay: model.day
-                    modelMonth: model.month
-                    modelWeekNumber: model.weekNumber
-
-                    gridItem: calendarMonthItem.gridItem
-                }
-
-                visible: !gridExtension.additionalRow
-                selectedDate: calendarMonthItem.currentDate
-                currentMonth: calendarMonthItem.currentMonth
             }
         }
 
