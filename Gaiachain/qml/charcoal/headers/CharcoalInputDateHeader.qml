@@ -14,6 +14,13 @@ Headers.InputDateHeader {
     helpButtonVisible: true
     property alias minimumDate: popup.minimumDate
 
+    onMinimumDateChanged: {
+        if (optional === false && minimumDate > selectedDate) {
+            selectedDate = minimumDate
+            currentDate = minimumDate
+        }
+    }
+
     popup: Popups.CalendarFullscreenPagePopup {
         id: popup
         currentDate: top.currentDate

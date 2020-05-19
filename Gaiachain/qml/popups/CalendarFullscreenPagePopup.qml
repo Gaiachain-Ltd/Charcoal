@@ -18,6 +18,12 @@ Popup {
     property date selectedDate: currentDate
     property alias minimumDate: calendarMonthItem.minimumDate
 
+    onMinimumDateChanged: {
+        if (minimumDate > selectedDate) {
+            selectedDate = minimumDate
+        }
+    }
+
     property bool showCloseButton: false
     property bool logoVisible: false
 
@@ -91,7 +97,7 @@ Popup {
             delegate: Rectangle {
                 readonly property bool isCurrentMonth: (model.month === calendarMonthItem.gridItem.month)
                 readonly property bool isBlockedDay: (isCurrentMonth && (model.day < calendarMonthItem.minimumDate.getDate()))
-                readonly property bool isCurrentDay: (isCurrentMonth && model.day === currentDate.getDate())
+                readonly property bool isCurrentDay: (isCurrentMonth && model.day === selectedDate.getDate())
 
                 border {
                     width: isCurrentDay? sr(3) : sr(1)
