@@ -12,14 +12,7 @@ Headers.GHeader {
     id: top
 
     property alias model: comboBox.model
-    //property alias currentIndex: comboBox.currentIndex
-    //property alias currentText: comboBox.currentText
-    //property alias displayRole: comboBox.textRole
-    //property alias count: comboBox.count
-    //property alias optional: comboBox.optional
-
     property alias placeholderText: comboBox.placeholderText
-
     property alias popupTitle: comboBox.popupTitle
 
     widget: CharcoalItems.CharcoalComboBox {

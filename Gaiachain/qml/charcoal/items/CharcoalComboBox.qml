@@ -76,8 +76,11 @@ Items.GInput {
 
                 delegate: Item {
                     property string text: delegateText.text
+                    width: entriesList.width
+                    height: layout.implicitHeight
 
                     ColumnLayout {
+                        id: layout
                         anchors.fill: parent
                         RowLayout {
                             Items.GText {
@@ -85,11 +88,14 @@ Items.GInput {
                                 Layout.fillWidth: true
                                 text: modelData
                                 verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignLeft
+                                font.bold: true
+                                padding: s(GStyle.middleMargin)
                             }
 
                             Image {
                                 source: GStyle.uploadOkUrl
-                                visible: top.currentIndex === index
+                                visible: entriesList.currentIndex === index
                             }
                         }
 
@@ -103,7 +109,7 @@ Items.GInput {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: top.currentIndex = index
+                        onClicked: entriesList.currentIndex = index
                     }
                 }
 
@@ -126,7 +132,7 @@ Items.GInput {
                 text: Strings.select
 
                 onClicked: {
-                    top.inputText(entriesList.currentItem.text)
+                    top.text = entriesList.currentItem.text
                     popup.close()
                 }
             }
