@@ -20,6 +20,11 @@
         <file alias="skip">charcoal/ui/icon-skip.svg</file>
         <file alias="uploadOk">charcoal/ui/icon-upload-ok.svg</file>
         <file alias="warning">charcoal/ui/icon-warning.svg</file>
+        <file alias="checkBlack">charcoal/ui/check-black.svg</file>
+        <file alias="checkBlue">charcoal/ui/check-blue.svg</file>
+        <file alias="checkGreen">charcoal/ui/check-green.svg</file>
+        <file alias="checkPink">charcoal/ui/check-pink.svg</file>
+        <file alias="checkOrange">charcoal/ui/check-orange.svg</file>
     </qresource>
     <qresource prefix="/font"/>
 </RCC>

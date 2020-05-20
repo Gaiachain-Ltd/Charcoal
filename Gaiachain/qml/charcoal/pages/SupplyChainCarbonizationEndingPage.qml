@@ -87,20 +87,31 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.MainMenu)
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: harvestIdComboBox
         Layout.fillWidth: true
         headerText: Strings.harvestId
         helpButtonVisible: true
         helpText: Strings.carbonizationEndingHarvestIdHelp
+
+        checkIcon: GStyle.checkGreenUrl
+        delegateTextColor: GStyle.fontHighlightColor2
+
+        model: [ "AM003PM/0595112/04-03-2020/AM004NA" ]
     }
 
-    Headers.ComboBoxHeader {
+    // TODO: this needs a special combobox delegate! And multi-select!
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: ovenIdComboBox
         Layout.fillWidth: true
         headerText: Strings.ovenId
         helpButtonVisible: true
         helpText: Strings.carbonizationEndingOvenIdHelp
+
+        checkIcon: GStyle.checkOrangeUrl
+        //delegateTextColor: GStyle.fontHighlightColor2
+
+        model: [ "A", "B", "C" ]
     }
 
     CharcoalHeaders.UserInfoHeader {

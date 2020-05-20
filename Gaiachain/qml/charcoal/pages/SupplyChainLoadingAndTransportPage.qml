@@ -83,12 +83,17 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.MainMenu)
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: harvestIdComboBox
         Layout.fillWidth: true
         headerText: Strings.harvestId
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportHarvestIdHelp
+
+        checkIcon: GStyle.checkGreenUrl
+        delegateTextColor: GStyle.fontHighlightColor2
+
+        model: [ "AM003PM/0595112/04-03-2020/AM004NA" ]
     }
 
     Headers.InputHeader {
@@ -118,12 +123,14 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loadingAndTransportLoadingDateHelp
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: deliveryDestinationComboBox
         Layout.fillWidth: true
         headerText: Strings.deliveryDestination
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportDeliveryDestinationHelp
+
+        model: [ "Abidjan" ]
     }
 
     Common.PositionSourceHandler {

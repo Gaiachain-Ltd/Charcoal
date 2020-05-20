@@ -324,4 +324,7 @@ QtObject {
 
     property string select: tr.empty + qsTr("Select")
     property string selectParcel: tr.empty + qsTr("Select parcel")
+
+    property string traditionalOven: tr.empty + qsTr("Traditional oven")
+    property string metallicOven: tr.empty + qsTr("Metallic oven")
 }

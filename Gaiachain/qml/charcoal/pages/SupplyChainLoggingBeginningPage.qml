@@ -94,20 +94,24 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loggingBeginningRepsIdHelp
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: villageComboBox
         Layout.fillWidth: true
         headerText: Strings.village
         helpButtonVisible: true
         helpText: Strings.loggingBeginningVillageHelp
+
+        model: [ "Village 1", "Village 2" ]
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: treeSpeciesComboBox
         Layout.fillWidth: true
         headerText: Strings.treeSpecies
         helpButtonVisible: true
         helpText: Strings.loggingBeginningTreeSpeciesHelp
+
+        model: [ "Cassia siamea", "Technona grandis" ]
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {

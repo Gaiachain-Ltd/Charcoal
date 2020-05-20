@@ -88,12 +88,17 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.MainMenu)
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: plotIdComboBox
         Layout.fillWidth: true
         headerText: Strings.plotId
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningPlotIdHelp
+
+        checkIcon: GStyle.checkBlueUrl
+        delegateTextColor: GStyle.fontHighlightColor
+
+        model: [ "AM003PM/0595112/04-03-2020" ]
     }
 
     Headers.InputHeader {
@@ -119,12 +124,14 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationBeginningBeginningDateHelp
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: ovenTypeComboBox
         Layout.fillWidth: true
         headerText: Strings.ovenType
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenTypeHelp
+
+        model: [ Strings.traditionalOven, Strings.metallicOven ]
     }
 
     Headers.RowHeader {

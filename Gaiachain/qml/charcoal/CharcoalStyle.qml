@@ -40,6 +40,11 @@ AbstractStyle {
     readonly property url skipUrl: "qrc:/ui/skip"
     readonly property url uploadOkUrl: "qrc:/ui/uploadOk"
     readonly property url warningUrl: "qrc:/ui/warning"
+    readonly property url checkBlackUrl: "qrc:/ui/checkBlack"
+    readonly property url checkBlueUrl: "qrc:/ui/checkBlue"
+    readonly property url checkGreenUrl: "qrc:/ui/checkGreen"
+    readonly property url checkPinkUrl: "qrc:/ui/checkPink"
+    readonly property url checkOrangeUrl: "qrc:/ui/checkOrange"
 
     logoImgUrl: logoWhiteImgUrl
     loginBackgroundUrl: "qrc:/ui/login-background"

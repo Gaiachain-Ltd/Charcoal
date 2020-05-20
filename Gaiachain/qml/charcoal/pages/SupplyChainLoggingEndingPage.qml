@@ -70,12 +70,17 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.MainMenu)
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: plotIdComboBox
         Layout.fillWidth: true
         headerText: Strings.plotId
         helpButtonVisible: true
         helpText: Strings.loggingEndingPlotIdHelp
+
+        checkIcon: GStyle.checkBlueUrl
+        delegateTextColor: GStyle.fontHighlightColor
+
+        model: [ "AM003PM/0595112/04-03-2020" ]
     }
 
     CharcoalHeaders.UserInfoHeader {

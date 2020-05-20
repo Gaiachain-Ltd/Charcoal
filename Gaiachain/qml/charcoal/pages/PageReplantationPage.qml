@@ -80,12 +80,17 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.MainMenu)
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: plotIdComboBox
         Layout.fillWidth: true
         headerText: Strings.plotId
         helpButtonVisible: true
         helpText: Strings.replantationPlotIdHelp
+
+        checkIcon: GStyle.checkBlueUrl
+        delegateTextColor: GStyle.fontHighlightColor
+
+        model: [ "AM003PM/0595112/04-03-2020" ]
     }
 
     Headers.InputHeader {
@@ -99,12 +104,14 @@ Pages.SupplyChainPageBase {
         }
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: treeSpeciesComboBox
         Layout.fillWidth: true
         headerText: Strings.treeSpecies
         helpButtonVisible: true
         helpText: Strings.replantationTreeSpeciesHelp
+
+        model: [ "Cassia siamea", "Technona grandis" ]
     }
 
     CharcoalHeaders.UserInfoHeader {

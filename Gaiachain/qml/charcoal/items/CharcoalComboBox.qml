@@ -15,6 +15,9 @@ Items.GInput {
     property alias popupTitle: popup.title
     property alias model: entriesList.model
 
+    property url checkIcon: GStyle.checkBlackUrl
+    property color delegateTextColor: GStyle.textPrimaryColor
+
     readOnly: true
     iconSource: GStyle.downArrowImgUrl
     iconEdge: Enums.Edge.RightEdge
@@ -87,6 +90,7 @@ Items.GInput {
                                 id: delegateText
                                 Layout.fillWidth: true
                                 text: modelData
+                                color: delegateTextColor
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: Text.AlignLeft
                                 font.bold: true
@@ -95,7 +99,7 @@ Items.GInput {
 
                             Image {
                                 Layout.rightMargin: s(GStyle.middleMargin)
-                                source: GStyle.uploadOkUrl
+                                source: checkIcon
                                 visible: entriesList.currentIndex === index
                             }
                         }
