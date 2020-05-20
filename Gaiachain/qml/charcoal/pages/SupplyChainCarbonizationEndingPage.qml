@@ -109,11 +109,15 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationEndingOvenIdHelp
 
         checkIcon: GStyle.checkOrangeUrl
-        //delegateTextColor: GStyle.fontHighlightColor2
+        delegateTextColor: GStyle.fontHighlightColor3
 
         multiSelect: true
 
-        model: [ "A", "B", "C" ]
+        model: [
+            "A",
+            "B",
+            "C"
+        ]
     }
 
     CharcoalHeaders.UserInfoHeader {
