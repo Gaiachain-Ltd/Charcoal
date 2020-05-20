@@ -111,6 +111,8 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkOrangeUrl
         //delegateTextColor: GStyle.fontHighlightColor2
 
+        multiSelect: true
+
         model: [ "A", "B", "C" ]
     }
 

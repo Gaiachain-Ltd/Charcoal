@@ -18,6 +18,9 @@ Items.GInput {
     property url checkIcon: GStyle.checkBlackUrl
     property color delegateTextColor: GStyle.textPrimaryColor
 
+    property bool multiSelect: false
+    property var selection: []
+
     readOnly: true
     iconSource: GStyle.downArrowImgUrl
     iconEdge: Enums.Edge.RightEdge
@@ -78,7 +81,9 @@ Items.GInput {
                 boundsBehavior: Flickable.StopAtBounds
 
                 delegate: Item {
-                    property string text: delegateText.text
+                    property string text: modelData
+
+                    id: delegateItem
                     width: entriesList.width
                     height: layout.implicitHeight
 
@@ -89,7 +94,7 @@ Items.GInput {
                             Items.GText {
                                 id: delegateText
                                 Layout.fillWidth: true
-                                text: modelData
+                                text: delegateItem.text
                                 color: delegateTextColor
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: Text.AlignLeft
@@ -100,7 +105,9 @@ Items.GInput {
                             Image {
                                 Layout.rightMargin: s(GStyle.middleMargin)
                                 source: checkIcon
-                                visible: entriesList.currentIndex === index
+                                visible: selection.includes(text)
+
+                                    //entriesList.currentIndex === index
                             }
                         }
 
@@ -114,7 +121,21 @@ Items.GInput {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: entriesList.currentIndex = index
+                        onClicked: {
+                            let newSelection = selection
+
+                            if (multiSelect === false) {
+                                newSelection = []
+                            }
+
+                            if (newSelection.includes(text)) {
+                                newSelection.splice(newSelection.indexOf(text), 1)
+                            } else {
+                                newSelection.push(text)
+                            }
+                            newSelection.sort()
+                            selection = newSelection
+                        }
                     }
                 }
 
@@ -137,7 +158,15 @@ Items.GInput {
                 text: Strings.select
 
                 onClicked: {
-                    top.text = entriesList.currentItem.text
+                    top.text = ""
+                    for (let index = 0; index < selection.length; ++index) {
+                        if (top.text.length === 0) {
+                            top.text += selection[index]
+                        } else {
+                            top.text += ", " + selection[index]
+                        }
+                    }
+
                     popup.close()
                 }
             }

@@ -19,6 +19,8 @@ Headers.GHeader {
     property alias checkIcon: comboBox.checkIcon
     property alias delegateTextColor: comboBox.delegateTextColor
 
+    property alias multiSelect: comboBox.multiSelect
+
     widget: CharcoalItems.CharcoalComboBox {
         id: comboBox
 
