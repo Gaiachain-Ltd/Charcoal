@@ -7,7 +7,9 @@
         <file>components/EventsListView.qml</file>
         <file>headers/UserInfoHeader.qml</file>
         <file>headers/CharcoalInputDateHeader.qml</file>
+        <file>headers/CharcoalComboBoxHeader.qml</file>
         <file>items/CharcoalTabButton.qml</file>
+        <file>items/CharcoalComboBox.qml</file>
         <file>pages/MainMenuPage.qml</file>
         <file>pages/UserInfoPage.qml</file>
         <file>pages/PageReplantationPage.qml</file>

@@ -78,12 +78,14 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.MainMenu)
     }
 
-    Headers.ComboBoxHeader {
+    CharcoalHeaders.CharcoalComboBoxHeader {
         id: parcelComboBox
         Layout.fillWidth: true
         headerText: Strings.parcel
         helpButtonVisible: true
         helpText: Strings.loggingBeginningParcelHelp
+
+        model: [ "0595112", "1234567", "9955112" ]
     }
 
     CharcoalHeaders.UserInfoHeader {

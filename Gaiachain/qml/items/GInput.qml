@@ -78,8 +78,8 @@ TextField
             topMargin: top.padding
             bottomMargin: top.padding
         }
-        width: height
 
+        width: height
         visible: status != Image.Null && showIcon
 
         MouseArea {

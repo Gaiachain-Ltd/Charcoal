@@ -321,4 +321,7 @@ QtObject {
     property string transportIdDetails: tr.empty + qsTr("Transport ID details")
     property string transportReceptionDate: tr.empty + qsTr("Reception at the storage facility")
     property string uploaded: tr.empty + qsTr("Uploaded")
+
+    property string select: tr.empty + qsTr("Select")
+    property string selectParcel: tr.empty + qsTr("Select parcel")
 }
