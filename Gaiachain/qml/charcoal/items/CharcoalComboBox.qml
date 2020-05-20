@@ -81,7 +81,10 @@ Items.GInput {
                 boundsBehavior: Flickable.StopAtBounds
 
                 delegate: Item {
-                    property string text: modelData
+                    property bool hasExtra: modelData.length > 1
+                    property string text: hasExtra? modelData[0] : data
+                    property string extraHeader: hasExtra? modelData[1] : ""
+                    property string extraText: hasExtra? modelData[2] : ""
 
                     id: delegateItem
                     width: entriesList.width
@@ -93,13 +96,37 @@ Items.GInput {
                         RowLayout {
                             Items.GText {
                                 id: delegateText
-                                Layout.fillWidth: true
                                 text: delegateItem.text
                                 color: delegateTextColor
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: Text.AlignLeft
                                 font.bold: true
                                 padding: s(GStyle.middleMargin)
+                            }
+
+                            ColumnLayout {
+                                id: extraInfo
+                                visible: delegateItem.hasExtra
+
+                                Items.GText {
+                                    Layout.fillWidth: true
+                                    text: delegateItem.extraHeader
+                                    color: GStyle.textPrimaryColor
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    font.bold: true
+                                    font.pixelSize: s(GStyle.tinyPixelSize)
+                                }
+
+                                Items.GText {
+                                    Layout.fillWidth: true
+                                    text: delegateItem.extraText
+                                    color: GStyle.textPrimaryColor
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    font.bold: false
+                                    font.pixelSize: s(GStyle.tinyPixelSize)
+                                }
                             }
 
                             Image {

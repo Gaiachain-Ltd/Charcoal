@@ -100,7 +100,6 @@ Pages.SupplyChainPageBase {
         model: [ "AM003PM/0595112/04-03-2020/AM004NA" ]
     }
 
-    // TODO: this needs a special combobox delegate! And multi-select!
     CharcoalHeaders.CharcoalComboBoxHeader {
         id: ovenIdComboBox
         Layout.fillWidth: true
@@ -114,9 +113,9 @@ Pages.SupplyChainPageBase {
         multiSelect: true
 
         model: [
-            "A",
-            "B",
-            "C"
+            [ "A", "Traditional oven - 0.2 x 12 x 4m", "08/03/2020 12:57" ],
+            [ "B", "Traditional oven - 0.2 x 10 x 5m", "08/03/2020 13:25" ],
+            [ "C", "Traditional oven - 0.2 x 8 x 4m", "08/03/2020 14:02" ]
         ]
     }
 
