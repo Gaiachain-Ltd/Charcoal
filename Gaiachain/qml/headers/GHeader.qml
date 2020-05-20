@@ -95,7 +95,7 @@ Item {
 
             id: separatorLine
             Layout.fillWidth: true
-            height: 1
+            height: sr(1)
             color: top.secondaryColor
             visible: top.summaryMode && !headerIsEmpty
         }
@@ -104,7 +104,7 @@ Item {
     Rectangle {
         id: bottomLine
         Layout.fillWidth: true
-        height: 1
+        height: sr(1)
         color: top.secondaryColor
         visible: top.highlighted
 

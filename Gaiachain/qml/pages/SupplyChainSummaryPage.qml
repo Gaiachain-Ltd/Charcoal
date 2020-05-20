@@ -73,9 +73,9 @@ Pages.SupplyChainPageBase {
             Layout.fillWidth: true
 
             secondaryColor: isHighlighted? decorationColor
-                                         : GStyle.textReadonlyColor
+                                         : GStyle.separatorColor
             secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : secondaryFontColor
+                                                                 : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -94,9 +94,9 @@ Pages.SupplyChainPageBase {
             Layout.fillWidth: true
 
             secondaryColor: isHighlighted? decorationColor
-                                         : GStyle.textReadonlyColor
+                                         : GStyle.separatorColor
             secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : secondaryFontColor
+                                                                 : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -115,9 +115,9 @@ Pages.SupplyChainPageBase {
             Layout.fillWidth: true
 
             secondaryColor: isHighlighted? decorationColor
-                                         : GStyle.textReadonlyColor
+                                         : GStyle.separatorColor
             secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : secondaryFontColor
+                                                                 : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -136,9 +136,9 @@ Pages.SupplyChainPageBase {
             Layout.fillWidth: true
 
             secondaryColor: isHighlighted? decorationColor
-                                         : GStyle.textReadonlyColor
+                                         : GStyle.separatorColor
             secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : secondaryFontColor
+                                                                 : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             inputText: value

@@ -183,16 +183,16 @@ Pages.GPage {
                         createSummaryItem("",
                                           [
                                               [
+                                                  "150",
+                                                  item.from,
+                                                  Strings.uploaded,
+                                                  Strings.noPhoto
+                                              ],
+                                              [
                                                   Strings.numberOfBags,
                                                   Strings.loadingDate,
                                                   Strings.documents,
                                                   Strings.receipt
-                                              ],
-                                              [
-                                                  "150",
-                                                  Strings.loadingDate,
-                                                  Strings.uploaded,
-                                                  Strings.noPhoto
                                               ],
                                               [
                                                   "",
