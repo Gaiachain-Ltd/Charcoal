@@ -41,7 +41,7 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor2),
                     createSummaryItem(Strings.plotId,
                                       // Get the plot ID!
-                                      "kek!/lol/uhu",
+                                      "AM003PM/0595112/04-03-2020",
                                       "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,

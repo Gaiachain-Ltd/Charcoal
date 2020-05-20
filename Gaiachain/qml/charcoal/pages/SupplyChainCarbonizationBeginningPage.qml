@@ -132,6 +132,12 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationBeginningOvenTypeHelp
 
         model: [ Strings.traditionalOven, Strings.metallicOven ]
+
+        onCurrentTextChanged: {
+            if (currentText === Strings.metallicOven) {
+                ovenDimensionsHeader.clear()
+            }
+        }
     }
 
     Headers.RowHeader {
@@ -141,6 +147,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
         titles: [ Strings.height, Strings.length, Strings.width ]
+        enabled: ovenTypeComboBox.currentText === Strings.traditionalOven
     }
 
     Common.PositionSourceHandler {
