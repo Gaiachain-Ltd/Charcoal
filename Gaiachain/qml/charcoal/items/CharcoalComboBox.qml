@@ -94,6 +94,7 @@ Items.GInput {
                             }
 
                             Image {
+                                Layout.rightMargin: s(GStyle.middleMargin)
                                 source: GStyle.uploadOkUrl
                                 visible: entriesList.currentIndex === index
                             }
