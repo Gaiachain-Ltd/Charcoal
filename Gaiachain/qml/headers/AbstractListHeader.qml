@@ -21,7 +21,12 @@ Headers.GHeader {
     property int borderWidth: sr(1)
 
     function clear() {
-        values = []
+        let newValues = []
+        for (let index = 0; index < values.length; ++index) {
+            newValues.push("")
+        }
+
+        values = newValues
     }
 
     onTitlesChanged: {
@@ -31,7 +36,7 @@ Headers.GHeader {
             }
         }
 
-        if (icons.length === 0) {
+        if (icons !== undefined && icons.length === 0) {
             for (let title in titles) {
                 icons.push("")
             }
