@@ -81,10 +81,10 @@ Items.GInput {
                 boundsBehavior: Flickable.StopAtBounds
 
                 delegate: Item {
-                    property bool hasExtra: modelData.length > 1
-                    property string text: hasExtra? modelData[0] : data
-                    property string extraHeader: hasExtra? modelData[1] : ""
-                    property string extraText: hasExtra? modelData[2] : ""
+                    readonly property bool hasExtra: (typeof(modelData) === "object")
+                    readonly property string text: hasExtra? modelData[0] : modelData
+                    readonly property string extraHeader: hasExtra? modelData[1] : ""
+                    readonly property string extraText: hasExtra? modelData[2] : ""
 
                     id: delegateItem
                     width: entriesList.width
@@ -133,8 +133,6 @@ Items.GInput {
                                 Layout.rightMargin: s(GStyle.middleMargin)
                                 source: checkIcon
                                 visible: selection.includes(text)
-
-                                    //entriesList.currentIndex === index
                             }
                         }
 
