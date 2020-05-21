@@ -112,7 +112,7 @@ Pages.SupplyChainPageBase {
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
         inputText: Strings.loadAndScanBags
-        onClicked: console.log("ZONK!")
+        onClicked: pageManager.enter(Enums.Page.QRScanner)
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {

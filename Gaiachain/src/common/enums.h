@@ -50,8 +50,6 @@ namespace Enums {
         PageTracking,
         PageReplantation,
         UserInfo,
-        QRInfo,
-        QRScanning,
 #endif
 
         PageCount

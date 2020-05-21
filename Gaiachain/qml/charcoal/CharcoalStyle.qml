@@ -46,6 +46,26 @@ AbstractStyle {
     readonly property url checkPinkUrl: "qrc:/ui/checkPink"
     readonly property url checkOrangeUrl: "qrc:/ui/checkOrange"
 
+    readonly property url bagUrl: "qrc:/ui/bag"
+    readonly property url infoUrl: "qrc:/ui/info"
+    readonly property url bagsLoadingUrl: "qrc:/ui/bagsLoading"
+    readonly property url bagsReceptionUrl: "qrc:/ui/bagsReception"
+    readonly property url takePhotoUrl: "qrc:/ui/takePhoto"
+    readonly property url truckUrl: "qrc:/ui/truck"
+
+    readonly property url iconKeyboardUrl: "qrc:/ui/iconKeyboard"
+    readonly property url iconListUrl: "qrc:/ui/iconList"
+    readonly property url iconNoUrl: "qrc:/ui/iconNo"
+    readonly property url iconScanAnotherBlackUrl: "qrc:/ui/iconScanAnotherBlack"
+    readonly property url iconScanAnotherGreenUrl: "qrc:/ui/iconScanAnotherGreen"
+    readonly property url iconScanAnotherOrangeUrl: "qrc:/ui/iconScanAnotherOrange"
+    readonly property url iconScanAnotherRedUrl: "qrc:/ui/iconScanAnotherRed"
+    readonly property url iconYesUrl: "qrc:/ui/iconYes"
+    readonly property url iconRetryScanBlackUrl: "qrc:/ui/iconRetryScanBlack"
+    readonly property url iconRetryScanGreenUrl: "qrc:/ui/iconRetryScanGreen"
+    readonly property url iconRetryScanOrangeUrl: "qrc:/ui/iconRetryScanOrange"
+    readonly property url iconRetryScanRedUrl: "qrc:/ui/iconRetryScanRed"
+
     logoImgUrl: logoWhiteImgUrl
     loginBackgroundUrl: "qrc:/ui/login-background"
     downArrowImgUrl: "qrc:/ui/arrow"

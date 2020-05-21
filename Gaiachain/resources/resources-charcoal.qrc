@@ -25,6 +25,25 @@
         <file alias="checkGreen">charcoal/ui/check-green.svg</file>
         <file alias="checkPink">charcoal/ui/check-pink.svg</file>
         <file alias="checkOrange">charcoal/ui/check-orange.svg</file>
+        <file alias="bag">charcoal/ui/bag.svg</file>
+        <file alias="info">charcoal/ui/icon-info.svg</file>
+        <file alias="bagsLoading">charcoal/ui/loading-graphic.svg</file>
+        <file alias="bagsReception">charcoal/ui/reception-graphic.svg</file>
+        <file alias="takePhoto">charcoal/ui/take-photo-graphic.svg</file>
+        <file alias="truck">charcoal/ui/truck.svg</file>
+        <file alias="iconKeyboard">charcoal/ui/icon-black-keyboard.svg</file>
+        <file alias="iconList">charcoal/ui/icon-list.svg</file>
+        <file alias="iconNo">charcoal/ui/icon-no.svg</file>
+        <file alias="iconScanAnotherBlack">charcoal/ui/icon-scan-another-black.svg</file>
+        <file alias="iconScanAnotherGreen">charcoal/ui/icon-scan-another-green.svg</file>
+        <file alias="iconScanAnotherOrange">charcoal/ui/icon-scan-another-orange.svg</file>
+        <file alias="iconScanAnotherRed">charcoal/ui/icon-scan-another-red.svg</file>
+        <file alias="iconYes">charcoal/ui/icon-yes.svg</file>
+        <file alias="iconRetryScanBlack">charcoal/ui/icon-retry-scan-black.svg</file>
+        <file alias="iconRetryScanGreen">charcoal/ui/icon-retry-scan-green.svg</file>
+        <file alias="iconRetryScanOrange">charcoal/ui/icon-retry-scan-orange.svg</file>
+        <file alias="iconRetryScanRed">charcoal/ui/icon-retry-scan-red.svg</file>
+
     </qresource>
     <qresource prefix="/font"/>
 </RCC>
