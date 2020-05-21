@@ -16,6 +16,15 @@ import "../../pages" as Pages
 import "../../items" as Items
 
 Pages.GPage {
+    enum StatusType {
+        None,
+        Scanning,
+        Success,
+        Warning,
+        Error,
+        Proceed
+    }
+
     property bool infoVisible: true
     property bool infoDescriptionVisible: true
 
@@ -25,19 +34,14 @@ Pages.GPage {
     property string statusTextHeader: "Top row"
     property string statusTextValue: "Bottom row"
 
+    property int currentStatus: QRScannerPage.None
+
     id: top
 
     title: Strings.qrCode
 
     logoVisible: false
     showCloseButton: false
-
-    enum StatusType {
-        Normal,
-        Green,
-        Red,
-        Yellow
-    }
 
     function closeEventHandler() {
         pageManager.back()
@@ -127,7 +131,21 @@ Pages.GPage {
             id: statusRect
 
             Layout.fillWidth: true
-            color: "green"
+            color: {
+                switch (currentStatus) {
+                case QRScannerPage.None:
+                case QRScannerPage.Scanning:
+                    return GStyle.backgroundColor
+                case QRScannerPage.Success:
+                case QRScannerPage.Proceed:
+                    return GStyle.statusGreen
+                case QRScannerPage.Warning:
+                    return GStyle.statusYellow
+                case QRScannerPage.Error:
+                    return GStyle.statusRed
+                }
+            }
+
             height: s(350)
 
             /*
@@ -151,9 +169,6 @@ Pages.GPage {
                 anchors.verticalCenter: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                //anchors.left: parent.left
-                //anchors.right: parent.right
-
                 height: s(100)
                 spacing: s(40)
 
@@ -165,11 +180,13 @@ Pages.GPage {
                 RoundButton {
                     text: "A" // Add
                     visible: true
+                    onClicked: currentStatus = QRScannerPage.Success
                 }
 
                 RoundButton {
                     text: "L" // List
                     visible: true
+                    onClicked: currentStatus = QRScannerPage.Warning
                 }
 
                 RoundButton {
@@ -180,6 +197,7 @@ Pages.GPage {
                 RoundButton {
                     text: "E" // Exit
                     visible: true
+                    onClicked: currentStatus = QRScannerPage.Error
                 }
 
                 RoundButton {
@@ -198,12 +216,16 @@ Pages.GPage {
                 anchors.topMargin: s(GStyle.bigMargin)
                 spacing: s(GStyle.smallMargin)
 
+                property color textColor: currentStatus === QRScannerPage.None?
+                                            GStyle.textPrimaryColor
+                                            : GStyle.textSecondaryColor
+
                 Items.GText {
                     Layout.fillWidth: true
                     text: statusTextHeader
                     elide: Text.ElideNone
                     wrapMode: Text.WordWrap
-                    color: GStyle.textSecondaryColor
+                    color: parent.textColor
                     font.capitalization: Font.AllUppercase
                 }
 
@@ -212,7 +234,7 @@ Pages.GPage {
                     text: statusTextValue
                     elide: Text.ElideNone
                     wrapMode: Text.WordWrap
-                    color: GStyle.textSecondaryColor
+                    color: parent.textColor
                     font.capitalization: Font.AllUppercase
                 }
             }

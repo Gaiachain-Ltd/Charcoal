@@ -66,6 +66,10 @@ AbstractStyle {
     readonly property url iconRetryScanOrangeUrl: "qrc:/ui/iconRetryScanOrange"
     readonly property url iconRetryScanRedUrl: "qrc:/ui/iconRetryScanRed"
 
+    readonly property color statusGreen: "#65CB00"
+    readonly property color statusYellow: "#FFBB00"
+    readonly property color statusRed: "#E40000"
+
     logoImgUrl: logoWhiteImgUrl
     loginBackgroundUrl: "qrc:/ui/login-background"
     downArrowImgUrl: "qrc:/ui/arrow"
