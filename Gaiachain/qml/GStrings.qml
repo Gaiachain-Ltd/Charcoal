@@ -312,6 +312,11 @@ QtObject {
     property string replantationEndingDateHelp: tr.empty + qsTr("Dummy text - ending date help")
     property string replantationGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 
+    // QR
+    property string qrCodeAlreadyAssigned: tr.empty + qsTr("QR code already assigned!")
+    property string qrCodeScannedSuccessfully: tr.empty + qsTr("QR code scanned successfully")
+    property string doYouGoToTheNextOven: tr.empty + qsTr("Do you go to the next oven?")
+
     // Charcoal misc
     property string selectDate: tr.empty + qsTr("Select date")
     property string cantSelectThisDay: tr.empty + qsTr("You can't select this day")

@@ -30,11 +30,29 @@ Pages.GPage {
     property bool infoVisible: true
     property bool infoDescriptionVisible: true
 
-    property string infoText: "default"
+    property string infoText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sagittis non nibh quis aliquam. Praesent vitae tempus velit. Donec id sem finibus lacus blandit tempus ac commodo elit. Donec sagittis consectetur nisl non eleifend."
     property var infoImages: [ GStyle.takePhotoUrl ]
 
-    property string statusTextHeader: "Top row"
-    property string statusTextValue: "Bottom row"
+    property string statusTextHeader: {
+        switch (currentStatus) {
+        case QRScannerPage.None:
+            return Strings.empty
+        case QRScannerPage.Scanning:
+            return Strings.scanning
+        case QRScannerPage.ManualScan:
+            return Strings.empty
+        case QRScannerPage.Success:
+            return Strings.qrCodeScannedSuccessfully
+        case QRScannerPage.Proceed:
+            return Strings.doYouGoToTheNextOven
+        case QRScannerPage.Warning:
+            return Strings.qrCodeAlreadyAssigned
+        case QRScannerPage.Error:
+            return Strings.error
+        }
+    }
+
+    property string statusTextValue: "LH4U-3YJT-LFND"
 
     property int currentStatus: QRScannerPage.None
 
@@ -55,6 +73,7 @@ Pages.GPage {
     function hideInfoOverlay() {
         infoVisible = false
         currentStatus = QRScannerPage.Scanning
+        overlayTimer.stop()
     }
 
     Component.onCompleted: {
@@ -222,12 +241,16 @@ Pages.GPage {
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.topMargin: s(GStyle.bigMargin)
-                spacing: 0 //s(GStyle.smallMargin)
+                spacing: 0
 
                 property color textColor: currentStatus === QRScannerPage.None?
                                               GStyle.textPrimaryColor
                                             : GStyle.textSecondaryColor
+
+                Item {
+                    Layout.fillHeight: true
+                    width: 1
+                }
 
                 Items.GText {
                     Layout.fillWidth: true
@@ -237,6 +260,7 @@ Pages.GPage {
                     color: parent.textColor
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: s(GStyle.pixelSize)
+                    verticalAlignment: Text.AlignBottom
                 }
 
                 Items.GText {
@@ -247,6 +271,12 @@ Pages.GPage {
                     color: parent.textColor
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: s(GStyle.bigPixelSize)
+                    verticalAlignment: Text.AlignTop
+                }
+
+                Item {
+                    Layout.fillHeight: true
+                    width: 1
                 }
             }
         }
@@ -262,6 +292,7 @@ Pages.GPage {
         ColumnLayout {
             id: infoLayout
             anchors.fill: parent
+            spacing: s(GStyle.bigMargin)
 
             Item {
                 Layout.fillHeight: true
@@ -280,6 +311,7 @@ Pages.GPage {
                 color: GStyle.textSecondaryColor
                 elide: Text.ElideNone
                 wrapMode: Text.WordWrap
+                font.capitalization: Font.AllUppercase
                 visible: infoDescriptionVisible
             }
 
@@ -308,6 +340,7 @@ Pages.GPage {
         }
 
         Timer {
+            id: overlayTimer
             interval: GStyle.qrOverlayInterval
             running: true
             repeat: false
