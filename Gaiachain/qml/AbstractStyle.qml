@@ -214,6 +214,7 @@ QtObject {
     property int commentPopupOpenedDefaultInterval: 2000
     property int notificationPopupOpenedDefaultInterval: 2600
     property int notificationPopupOpenedLongInterval: 5600
+    property int qrOverlayInterval: notificationPopupOpenedLongInterval
     property int notificationPopupIconHeight: 60
     property int transitionMoveYRange: 100
     property int genericTextAreaHeight: 280

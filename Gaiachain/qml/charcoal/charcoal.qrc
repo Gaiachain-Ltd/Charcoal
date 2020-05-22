@@ -10,6 +10,7 @@
         <file>headers/CharcoalComboBoxHeader.qml</file>
         <file>items/CharcoalTabButton.qml</file>
         <file>items/CharcoalComboBox.qml</file>
+        <file>items/CharcoalRoundButton.qml</file>
         <file>pages/MainMenuPage.qml</file>
         <file>pages/UserInfoPage.qml</file>
         <file>pages/PageReplantationPage.qml</file>

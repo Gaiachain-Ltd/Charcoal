@@ -14,11 +14,13 @@ import "../../common" as Common
 import "../../headers" as Headers
 import "../../pages" as Pages
 import "../../items" as Items
+import "../items" as CharcoalItems
 
 Pages.GPage {
     enum StatusType {
         None,
         Scanning,
+        ManualScan,
         Success,
         Warning,
         Error,
@@ -36,6 +38,8 @@ Pages.GPage {
 
     property int currentStatus: QRScannerPage.None
 
+    backgroundColor: GStyle.backgroundShadowColor
+
     id: top
 
     title: Strings.qrCode
@@ -46,6 +50,11 @@ Pages.GPage {
     function closeEventHandler() {
         pageManager.back()
         return false
+    }
+
+    function hideInfoOverlay() {
+        infoVisible = false
+        currentStatus = QRScannerPage.Scanning
     }
 
     Component.onCompleted: {
@@ -135,6 +144,7 @@ Pages.GPage {
                 switch (currentStatus) {
                 case QRScannerPage.None:
                 case QRScannerPage.Scanning:
+                case QRScannerPage.ManualScan:
                     return GStyle.backgroundColor
                 case QRScannerPage.Success:
                 case QRScannerPage.Proceed:
@@ -148,76 +158,75 @@ Pages.GPage {
 
             height: s(350)
 
-            /*
-             Buttons:
-             * add (color)
-             * list
-             * exit
-             * retry (color)
-             * type manually
-             * yes (green)
-             * no (red)
-
-             Colors:
-             * white
-             * green
-             * yellow
-             * red
-             */
-
             Row {
                 anchors.verticalCenter: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                height: s(100)
-                spacing: s(40)
+                spacing: 40
 
-                RoundButton {
-                    text: "R" // Retry
-                    visible: false
+                CharcoalItems.CharcoalRoundButton {
+                    icon.source: GStyle.iconRetryScanRedUrl
+                    visible: currentStatus === QRScannerPage.Error
                 }
 
-                RoundButton {
-                    text: "A" // Add
-                    visible: true
+                CharcoalItems.CharcoalRoundButton {
+                    icon.source: currentStatus === QRScannerPage.Warning?
+                                     GStyle.iconScanAnotherYellowUrl
+                                   : GStyle.iconScanAnotherGreenUrl
+
+                    visible: (currentStatus === QRScannerPage.Warning
+                              || currentStatus === QRScannerPage.Success)
+
                     onClicked: currentStatus = QRScannerPage.Success
                 }
 
-                RoundButton {
-                    text: "L" // List
-                    visible: true
+                CharcoalItems.CharcoalRoundButton {
+                    icon.source: GStyle.iconListUrl
+
+                    visible: (currentStatus === QRScannerPage.Warning
+                              || currentStatus === QRScannerPage.Success)
+
                     onClicked: currentStatus = QRScannerPage.Warning
                 }
 
-                RoundButton {
-                    text: "K" // Keyboard - type manually
-                    visible: false
+                CharcoalItems.CharcoalRoundButton {
+                    icon.source: GStyle.iconKeyboardUrl
+
+                    visible: (currentStatus === QRScannerPage.Scanning
+                              || currentStatus === QRScannerPage.Error)
                 }
 
-                RoundButton {
-                    text: "E" // Exit
-                    visible: true
+                CharcoalItems.CharcoalRoundButton {
+                    icon.source: GStyle.logoutImgUrl
+
+                    visible: (currentStatus === QRScannerPage.Scanning
+                              || currentStatus === QRScannerPage.Success
+                              || currentStatus === QRScannerPage.Warning
+                              || currentStatus === QRScannerPage.Error)
+
                     onClicked: currentStatus = QRScannerPage.Error
                 }
 
-                RoundButton {
-                    text: "Y" // Yes
-                    visible: false
+                CharcoalItems.CharcoalRoundButton {
+                    icon.source: GStyle.iconYesUrl
+                    visible: (currentStatus === QRScannerPage.Proceed
+                              || currentStatus === QRScannerPage.ManualScan)
                 }
 
-                RoundButton {
-                    text: "N" // No
-                    visible: false
+                CharcoalItems.CharcoalRoundButton {
+                    icon.source: GStyle.iconNoUrl
+                    visible: (currentStatus === QRScannerPage.Proceed
+                              || currentStatus === QRScannerPage.ManualScan)
                 }
             }
 
             ColumnLayout {
                 anchors.fill: parent
                 anchors.topMargin: s(GStyle.bigMargin)
-                spacing: s(GStyle.smallMargin)
+                spacing: 0 //s(GStyle.smallMargin)
 
                 property color textColor: currentStatus === QRScannerPage.None?
-                                            GStyle.textPrimaryColor
+                                              GStyle.textPrimaryColor
                                             : GStyle.textSecondaryColor
 
                 Items.GText {
@@ -227,6 +236,7 @@ Pages.GPage {
                     wrapMode: Text.WordWrap
                     color: parent.textColor
                     font.capitalization: Font.AllUppercase
+                    font.pixelSize: s(GStyle.pixelSize)
                 }
 
                 Items.GText {
@@ -236,6 +246,7 @@ Pages.GPage {
                     wrapMode: Text.WordWrap
                     color: parent.textColor
                     font.capitalization: Font.AllUppercase
+                    font.pixelSize: s(GStyle.bigPixelSize)
                 }
             }
         }
@@ -266,6 +277,7 @@ Pages.GPage {
             Items.GText {
                 Layout.fillWidth: true
                 text: infoText
+                color: GStyle.textSecondaryColor
                 elide: Text.ElideNone
                 wrapMode: Text.WordWrap
                 visible: infoDescriptionVisible
@@ -292,14 +304,14 @@ Pages.GPage {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: infoVisible = false
+            onClicked: hideInfoOverlay()
         }
 
         Timer {
-            interval: 5000 // TODO: move to GStyle
+            interval: GStyle.qrOverlayInterval
             running: true
             repeat: false
-            onTriggered: infoVisible = false
+            onTriggered: hideInfoOverlay()
         }
     }
 }
