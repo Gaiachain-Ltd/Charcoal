@@ -114,7 +114,9 @@ Pages.SupplyChainPageBase {
         inputText: Strings.loadAndScanBags
         onClicked: pageManager.enter(Enums.Page.QRScanner,
                                      {
-                                         "infoText": GStyle.scanAllBagsInfoText
+                                         "title": top.title,
+                                         "infoText": Strings.scanAllBagsInfoText,
+                                         "backToPage": Enums.Page.SupplyChainLoadingAndTransport
                                      })
     }
 

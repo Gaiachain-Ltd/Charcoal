@@ -52,9 +52,18 @@ Pages.GPage {
         }
     }
 
-    property string statusTextValue: "LH4U-3YJT-LFND"
+    onStatusTextHeaderChanged: console.log("Header", statusTextHeader)
 
-    property int currentStatus: QRScannerPage.None
+    property string statusTextValue: currentId
+
+    property int currentStatus: QRScannerPage.Scanning
+
+    property int backToPage: Enums.Page.InvalidPage
+    property var scannedIds: [
+        "2222-2222-2222",
+        "3333-3333-3333"
+    ]
+    property string currentId: "LH4U-3YJT-LFND"
 
     backgroundColor: GStyle.backgroundShadowColor
 
@@ -66,7 +75,7 @@ Pages.GPage {
     showCloseButton: false
 
     function closeEventHandler() {
-        pageManager.back()
+        pageManager.backTo(backToPage, { "scannedIds": top.scannedIds })
         return false
     }
 
@@ -84,11 +93,22 @@ Pages.GPage {
 
     function parseScannedId(id) {
         if (Utility.validateId(id)) {
-            scannedId = Utility.formatRawId(id)
-            scanStatus = Enums.QRScanStatus.Success
+            currentId = Utility.formatRawId(id)
+
+            // Check for ID duplicates:
+            for (let scanned of scannedIds) {
+                console.log("Code check", currentId, id, scanned, scannedIds)
+                if (scanned === currentId) {
+                    console.log("Code duplicated!", currentId)
+                    currentStatus = QRScannerPage.Warning
+                    return
+                }
+            }
+
+            currentStatus = QRScannerPage.Success
         } else {
-            scannedId = id
-            scanStatus = Enums.QRScanStatus.Failed
+            currentId = id
+            currentStatus = QRScannerPage.Failed
             console.warn("Wrong code content", id)
         }
     }
@@ -134,7 +154,7 @@ Pages.GPage {
             decoder {
                 enabledDecoders: QZXing.DecoderFormat_QR_CODE
                 onTagFound: {
-                    if (scanStatus === Enums.QRScanStatus.Scanning && !qrStatus.manual) {
+                    if (currentStatus === QRScannerPage.Scanning) {
                         parseScannedId(tag)
                     }
                 }
@@ -175,6 +195,12 @@ Pages.GPage {
                 }
             }
 
+            Behavior on color {
+                ColorAnimation {
+                    duration: GStyle.animationDuration
+                }
+            }
+
             height: s(350)
 
             Row {
@@ -191,7 +217,7 @@ Pages.GPage {
 
                 CharcoalItems.CharcoalRoundButton {
                     icon.source: currentStatus === QRScannerPage.Warning?
-                                     GStyle.iconScanAnotherYellowUrl
+                                     GStyle.iconScanAnotherOrangeUrl
                                    : GStyle.iconScanAnotherGreenUrl
 
                     visible: (currentStatus === QRScannerPage.Warning
@@ -226,7 +252,8 @@ Pages.GPage {
                               || currentStatus === QRScannerPage.Warning
                               || currentStatus === QRScannerPage.Error)
 
-                    onClicked: pageManager.back()
+                    onClicked: pageManager.backTo(backToPage,
+                                                  { "scannedIds": top.scannedIds })
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -236,11 +263,10 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
-                            pageManager.back()
+                            pageManager.backTo(backToPage,
+                                               { "scannedIds": top.scannedIds })
                         } else if (currentStatus === QRScannerPage.ManualScan) {
-                            // Determine if code is correct, then display success,
-                            // warning or error
-                            console.log("TODO!!")
+                            parseScannedId(currentId)
                         }
                     }
                 }
@@ -252,7 +278,7 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
-                            pageManager.back()
+                            pageManager.backTo(backToPage)
                         } else if (currentStatus === QRScannerPage.ManualScan) {
                             currentStatus = QRScannerPage.Scanning
                         }
@@ -293,6 +319,23 @@ Pages.GPage {
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: s(GStyle.bigPixelSize)
                     verticalAlignment: Text.AlignTop
+                }
+
+                Items.GInput {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: s(GStyle.bigMargin)
+                    Layout.rightMargin: s(GStyle.bigMargin)
+
+                    id: manualInput
+
+                    inputMask: Static.qrInputMask
+
+                    focus: false
+                    visible: currentStatus === QRScannerPage.ManualScan
+                    font.pixelSize: s(GStyle.bigPixelSize)
+                    horizontalAlignment: TextInput.AlignHCenter
+
+                    onTextChanged: currentId = text
                 }
 
                 Item {

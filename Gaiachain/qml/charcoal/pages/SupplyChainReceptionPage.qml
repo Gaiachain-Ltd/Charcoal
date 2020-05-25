@@ -120,6 +120,11 @@ Pages.SupplyChainPageBase {
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
         inputText: Strings.scanAllBagsFromTruck
+        onClicked: pageManager.enter(Enums.Page.QRScanner,
+                                     {
+                                         "title": top.title,
+                                         "infoText": GStyle.scanAllBagsToCheckInfoText
+                                     })
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {
