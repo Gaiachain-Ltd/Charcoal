@@ -43,7 +43,7 @@
         <file alias="iconRetryScanGreen">charcoal/ui/icon-retry-scan-green.svg</file>
         <file alias="iconRetryScanOrange">charcoal/ui/icon-retry-scan-orange.svg</file>
         <file alias="iconRetryScanRed">charcoal/ui/icon-retry-scan-red.svg</file>
-
+        <file alias="iconDeleteAll">charcoal/ui/icon-delete-all.svg</file>
     </qresource>
     <qresource prefix="/font"/>
 </RCC>

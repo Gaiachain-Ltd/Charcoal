@@ -320,6 +320,8 @@ QtObject {
     property string scanAllBagsInfoText: tr.empty + qsTr("Scan all bags' QR codes that go to selected truck")
     property string scanAllBagsToCheckInfoText: tr.empty + qsTr("Scan QR code from all bags on truck to check transport")
 
+    property string deleteAllScannedCodes: tr.empty + qsTr("Delete all scanned QR codes")
+
     // Taking photos
     property string takePhotoDocumentsInfoText: tr.empty + qsTr("Take a photo of the signature and stamp on the permit and the Carnet de Voyage by the authorities")
     property string takePhotoReceiptInfoText: tr.empty + qsTr("Take a photo of the receipt")

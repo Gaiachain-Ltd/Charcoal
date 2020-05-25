@@ -11,6 +11,7 @@ import com.gaiachain.types 1.0
 import com.gaiachain.static 1.0
 
 import "../../common" as Common
+import "../../components" as Components
 import "../../headers" as Headers
 import "../../pages" as Pages
 import "../../items" as Items
@@ -60,10 +61,14 @@ Pages.GPage {
 
     property int backToPage: Enums.Page.InvalidPage
     property var scannedIds: [
-        "2222-2222-2222",
-        "3333-3333-3333"
+        [ "AM003PM/0595112/04-03-2020/AM004NA/B001", "2222-2222-2222" ],
+        [ "AM003PM/0595112/04-03-2020/AM004NA/B002", "3333-3333-3333"],
+        [ "AM003PM/0595112/04-03-2020/AM004NA/B003", "LH4U-3YJT-LFND"]
     ]
-    property string currentId: "LH4U-3YJT-LFND"
+
+    onScannedIdsChanged: console.log("Scanned IDs:", scannedIds)
+
+    property string currentId: ""
 
     backgroundColor: GStyle.backgroundShadowColor
 
@@ -97,8 +102,7 @@ Pages.GPage {
 
             // Check for ID duplicates:
             for (let scanned of scannedIds) {
-                console.log("Code check", currentId, id, scanned, scannedIds)
-                if (scanned === currentId) {
+                if (scanned[1] === currentId) {
                     console.log("Code duplicated!", currentId)
                     currentStatus = QRScannerPage.Warning
                     return
@@ -232,7 +236,7 @@ Pages.GPage {
                     visible: (currentStatus === QRScannerPage.Warning
                               || currentStatus === QRScannerPage.Success)
 
-                    onClicked: console.log("TODO!!!")
+                    onClicked: popup.open()
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -409,6 +413,146 @@ Pages.GPage {
             running: true
             repeat: false
             onTriggered: hideInfoOverlay()
+        }
+    }
+
+    Popup {
+        id: popup
+
+        property bool showCloseButton: false
+        property bool logoVisible: false
+
+        property string title: top.title + " (%1)".arg(entriesList.count)
+
+        anchors.centerIn: Overlay.overlay
+        width: Overlay.overlay? Overlay.overlay.width : 100
+        height: Overlay.overlay? Overlay.overlay.height : 100
+
+        focus: true
+        modal: true
+
+        ColumnLayout {
+            anchors.fill: parent
+
+            spacing: 0
+
+            Components.NavigationHeader {
+                id: header
+                Layout.fillWidth: true
+
+                title: popup.title
+                showCloseButton: popup.showCloseButton
+                showBackButton: true
+                enableBackButton: true
+                logoVisible: popup.logoVisible
+
+                // Reimplemented NavigationHeader.goBack()
+                function goBack() {
+                    popup.close()
+                }
+            }
+
+            ListView {
+                id: entriesList
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+
+                clip: true
+
+                boundsBehavior: Flickable.StopAtBounds
+
+                model: top.scannedIds
+
+                function removeRow(index) {
+                    let temp = top.scannedIds
+                    temp.splice(index, 1)
+                    top.scannedIds = temp
+                }
+
+                delegate: Item {
+                    readonly property string bagId: modelData[0]
+                    readonly property string qrCode: modelData[1]
+
+                    id: delegateItem
+                    width: entriesList.width
+                    height: layout.implicitHeight
+
+                    ColumnLayout {
+                        id: layout
+                        anchors.fill: parent
+                        RowLayout {
+                            Layout.topMargin: s(GStyle.smallMargin)
+
+                            ColumnLayout {
+                                Items.GText {
+                                    Layout.fillWidth: true
+                                    text: delegateItem.bagId
+                                    color: GStyle.textPrimaryColor
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    font.bold: true
+                                    font.pixelSize: s(GStyle.smallPixelSize)
+                                }
+
+                                Items.GText {
+                                    Layout.fillWidth: true
+                                    text: delegateItem.qrCode
+                                    color: GStyle.calendarBlockedFontColor
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    font.bold: false
+                                    font.pixelSize: s(GStyle.tinyPixelSize)
+                                }
+                            }
+
+                            Image {
+                                Layout.rightMargin: s(GStyle.middleMargin)
+                                source: GStyle.deleteImgUrl
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: entriesList.removeRow(index)
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            Layout.fillWidth: true
+
+                            color: GStyle.separatorColor
+                            height: 1
+                        }
+                    }
+                }
+
+                ScrollBar.vertical: ScrollBar {}
+            }
+
+            Headers.ButtonInputHeader {
+                id: selectButton
+
+                Layout.leftMargin: s(GStyle.hugeMargin)
+                Layout.rightMargin: Layout.leftMargin
+                Layout.bottomMargin: Layout.leftMargin
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignBottom
+
+                enabled: true
+
+                inputText: Strings.deleteAllScannedCodes
+                iconSource: GStyle.iconDeleteAll
+
+                onClicked: {
+                    top.scannedIds = []
+                    popup.close()
+                }
+            }
+
+            Components.Footer {
+                id: footer
+                Layout.fillWidth: true
+            }
+
         }
     }
 }

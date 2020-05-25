@@ -65,6 +65,7 @@ AbstractStyle {
     readonly property url iconRetryScanGreenUrl: "qrc:/ui/iconRetryScanGreen"
     readonly property url iconRetryScanOrangeUrl: "qrc:/ui/iconRetryScanOrange"
     readonly property url iconRetryScanRedUrl: "qrc:/ui/iconRetryScanRed"
+    readonly property url iconDeleteAll: "qrc:/ui/iconDeleteAll"
 
     readonly property color statusGreen: "#65CB00"
     readonly property color statusYellow: "#FFBB00"
