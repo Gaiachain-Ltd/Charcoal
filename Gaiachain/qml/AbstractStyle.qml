@@ -38,7 +38,7 @@ QtObject {
 
     property color expandButtonSubmenuColor: "#e6e6e6"
 
-    property color separatorColor: "#d6d6d6"
+    property color separatorColor: inputBorderColor
 
     property color disabledColorTint: "#C0a4a4a4"
     property color backgroundShadowColor: "#99000000"
@@ -228,7 +228,7 @@ QtObject {
 
     // PAGES SPECIFIC
     // login loading
-    property color loginLoadingTextColor: "#d6d6d6"
+    property color loginLoadingTextColor: inputBorderColor
     property url loginBackgroundUrl: ""
 
     // main menu

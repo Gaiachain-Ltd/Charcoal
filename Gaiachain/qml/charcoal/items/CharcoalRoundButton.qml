@@ -17,5 +17,11 @@ RoundButton {
     palette.buttonText: icon.source === GStyle.logoutImgUrl?
                             GStyle.textPrimaryColor : "transparent"
 
-    // TODO: add border!
+    Rectangle {
+        color: "transparent"
+        anchors.fill: parent
+        radius: parent.radius
+        border.width: 1
+        border.color: GStyle.buttonBorderColor
+    }
 }

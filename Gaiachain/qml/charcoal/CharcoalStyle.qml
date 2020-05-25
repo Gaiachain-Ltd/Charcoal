@@ -85,6 +85,8 @@ AbstractStyle {
     delegateHighlightColor4: "#FFE8FD"
     fontHighlightColor4: lotColor
 
+    buttonBorderColor: inputBorderColor
+
     calendarArrowButtonColor: "transparent"
     calendarNumberPixelSize: tinyPixelSize
     calendarDayMinHeight: calendarNumberPixelSize + (2 * picoMargin)
