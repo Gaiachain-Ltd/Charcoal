@@ -295,7 +295,6 @@ QtObject {
     property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 
     // Charcoal - tracking page
-    property string allTab: tr.empty + qsTr("All")
     property string plotTab: tr.empty + qsTr("Plot")
     property string harvestTab: tr.empty + qsTr("Harvest")
     property string transportTab: tr.empty + qsTr("Transport")
@@ -316,6 +315,14 @@ QtObject {
     property string qrCodeAlreadyAssigned: tr.empty + qsTr("QR code already assigned!")
     property string qrCodeScannedSuccessfully: tr.empty + qsTr("QR code scanned successfully")
     property string doYouGoToTheNextOven: tr.empty + qsTr("Do you go to the next oven?")
+
+    property string fixQrCodeToEachBagInfoText: tr.empty + qsTr("Fix QR code to each bag, then scan the qr code in order to assign it to the bag")
+    property string scanAllBagsInfoText: tr.empty + qsTr("Scan all bags' QR codes that go to selected truck")
+    property string scanAllBagsToCheckInfoText: tr.empty + qsTr("Scan QR code from all bags on truck to check transport")
+
+    // Taking photos
+    property string takePhotoDocumentsInfoText: tr.empty + qsTr("Take a photo of the signature and stamp on the permit and the Carnet de Voyage by the authorities")
+    property string takePhotoReceiptInfoText: tr.empty + qsTr("Take a photo of the receipt")
 
     // Charcoal misc
     property string selectDate: tr.empty + qsTr("Select date")

@@ -24,7 +24,7 @@ namespace Enums {
         Login,
         LoginLoading,
         MainMenu,
-        QRScanner,              // TODO check if still needed
+        QRScanner,
         Transactions,
         WaitingTransactions,
         PackageData,
@@ -50,6 +50,7 @@ namespace Enums {
         PageTracking,
         PageReplantation,
         UserInfo,
+        TakeDocumentPictures,
 #endif
 
         PageCount

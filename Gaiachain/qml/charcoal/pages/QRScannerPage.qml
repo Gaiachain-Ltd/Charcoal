@@ -186,6 +186,7 @@ Pages.GPage {
                 CharcoalItems.CharcoalRoundButton {
                     icon.source: GStyle.iconRetryScanRedUrl
                     visible: currentStatus === QRScannerPage.Error
+                    onClicked: currentStatus = QRScannerPage.Scanning
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -196,7 +197,7 @@ Pages.GPage {
                     visible: (currentStatus === QRScannerPage.Warning
                               || currentStatus === QRScannerPage.Success)
 
-                    onClicked: currentStatus = QRScannerPage.Success
+                    onClicked: currentStatus = QRScannerPage.Scanning
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -205,7 +206,7 @@ Pages.GPage {
                     visible: (currentStatus === QRScannerPage.Warning
                               || currentStatus === QRScannerPage.Success)
 
-                    onClicked: currentStatus = QRScannerPage.Warning
+                    onClicked: console.log("TODO!!!")
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -213,6 +214,8 @@ Pages.GPage {
 
                     visible: (currentStatus === QRScannerPage.Scanning
                               || currentStatus === QRScannerPage.Error)
+
+                    onClicked: currentStatus = QRScannerPage.ManualScan
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -223,19 +226,37 @@ Pages.GPage {
                               || currentStatus === QRScannerPage.Warning
                               || currentStatus === QRScannerPage.Error)
 
-                    onClicked: currentStatus = QRScannerPage.Error
+                    onClicked: pageManager.back()
                 }
 
                 CharcoalItems.CharcoalRoundButton {
                     icon.source: GStyle.iconYesUrl
                     visible: (currentStatus === QRScannerPage.Proceed
                               || currentStatus === QRScannerPage.ManualScan)
+
+                    onClicked: {
+                        if (currentStatus === QRScannerPage.Proceed) {
+                            pageManager.back()
+                        } else if (currentStatus === QRScannerPage.ManualScan) {
+                            // Determine if code is correct, then display success,
+                            // warning or error
+                            console.log("TODO!!")
+                        }
+                    }
                 }
 
                 CharcoalItems.CharcoalRoundButton {
                     icon.source: GStyle.iconNoUrl
                     visible: (currentStatus === QRScannerPage.Proceed
                               || currentStatus === QRScannerPage.ManualScan)
+
+                    onClicked: {
+                        if (currentStatus === QRScannerPage.Proceed) {
+                            pageManager.back()
+                        } else if (currentStatus === QRScannerPage.ManualScan) {
+                            currentStatus = QRScannerPage.Scanning
+                        }
+                    }
                 }
             }
 

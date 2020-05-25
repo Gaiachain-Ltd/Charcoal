@@ -112,7 +112,10 @@ Pages.SupplyChainPageBase {
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
         inputText: Strings.loadAndScanBags
-        onClicked: pageManager.enter(Enums.Page.QRScanner)
+        onClicked: pageManager.enter(Enums.Page.QRScanner,
+                                     {
+                                         "infoText": GStyle.scanAllBagsInfoText
+                                     })
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {

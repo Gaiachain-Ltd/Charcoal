@@ -105,7 +105,11 @@ Pages.SupplyChainPageBase {
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
         inputText: Strings.receiveDocumentsAndReceipt
-        onClicked: console.log("ZONK 1!")
+        onClicked: pageManager.enter(Enums.Page.TakeDocumentPictures,
+                                     {
+                                         "infoText1": GStyle.takePhotoDocumentsInfoText,
+                                         "infoText2": GStyle.takePhotoReceiptInfoText
+                                     })
     }
 
     Headers.ButtonInputHeader {
@@ -116,7 +120,6 @@ Pages.SupplyChainPageBase {
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
         inputText: Strings.scanAllBagsFromTruck
-        onClicked: console.log("ZONK 2!")
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {
