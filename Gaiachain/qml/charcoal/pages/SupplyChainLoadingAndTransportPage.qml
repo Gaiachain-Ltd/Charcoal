@@ -28,8 +28,7 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.SupplyChainSummary, {
                               "supplyChainPage": this,
                               "summary": summary(),
-                              "proceedButtonText": Strings.proceed,
-                              "infoImages": [ GStyle.bagsLoadingUrl ]
+                              "proceedButtonText": Strings.proceed
                           });
     }
 
@@ -117,7 +116,8 @@ Pages.SupplyChainPageBase {
                                      {
                                          "title": top.title,
                                          "infoText": Strings.scanAllBagsInfoText,
-                                         "backToPage": Enums.Page.SupplyChainLoadingAndTransport
+                                         "backToPage": Enums.Page.SupplyChainLoadingAndTransport,
+                                         "infoImages": [ GStyle.bagsLoadingUrl ]
                                      })
     }
 
