@@ -129,53 +129,58 @@ Pages.GPage {
         }
     }
 
+    // Camera
+    Camera {
+        id: camera
+
+        captureMode: Camera.CaptureVideo
+        focus {
+            focusMode: CameraFocus.FocusContinuous
+            focusPointMode: CameraFocus.FocusPointAuto
+        }
+    }
+
+    QZXingFilter {
+        id: zxingFilter
+
+        property real normalizedScanSize: Static.normalizedScanSize
+        property real normalizedScanPos: (1.0 - normalizedScanSize) * 0.5
+
+        captureRect: {
+            videoOutput.contentRect
+            videoOutput.sourceRect
+
+            return videoOutput.mapRectToSource(
+                        videoOutput.mapNormalizedRectToItem(
+                                Qt.rect(normalizedScanPos,
+                                        normalizedScanPos,
+                                        normalizedScanSize,
+                                        normalizedScanSize)
+                            )
+                        )
+        }
+
+
+
+        decoder {
+            enabledDecoders: QZXing.DecoderFormat_QR_CODE
+            onTagFound: {
+                console.log("Barcode data: " + tag)
+                if (currentStatus === QRScannerPage.Scanning) {
+                    parseScannedId(tag)
+                }
+            }
+
+            tryHarder: true
+        }
+    }
+
     ColumnLayout {
         id: column
 
         anchors.fill: parent
 
         spacing: 0
-
-        // Camera
-        Camera {
-            id: camera
-
-            captureMode: Camera.CaptureVideo
-            focus {
-                focusMode: CameraFocus.FocusContinuous
-                focusPointMode: CameraFocus.FocusPointAuto
-            }
-        }
-
-        QZXingFilter {
-            id: zxingFilter
-
-            property real normalizedScanSize: Static.normalizedScanSize
-            property real normalizedScanPos: (1.0 - normalizedScanSize) * 0.5
-
-            captureRect: {
-                videoOutput.contentRect
-                videoOutput.sourceRect
-
-                return videoOutput.mapRectToSource(
-                            videoOutput.mapNormalizedRectToItem(
-                                Qt.rect(normalizedScanPos,
-                                        normalizedScanPos,
-                                        normalizedScanSize,
-                                        normalizedScanSize)
-                                )
-                            )
-            }
-
-            decoder {
-                enabledDecoders: QZXing.DecoderFormat_QR_CODE
-                onTagFound: {
-                    if (currentStatus === QRScannerPage.Scanning) {
-                        parseScannedId(tag)
-                    }
-                }
-            }
-        }
 
         VideoOutput {
             id: videoOutput

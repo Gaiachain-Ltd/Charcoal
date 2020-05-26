@@ -48,7 +48,7 @@ include(3rdparty/OpenSSL/openssl.pri)
 # qzxing
 CONFIG += qzxing_qml
 CONFIG += qzxing_multimedia
-QZXING_PATH=$$PWD/3rdparty/qzxing
+QZXING_PATH=$$PWD/3rdparty/qzxing/src
 
 INCLUDEPATH += $$QZXING_PATH
 include($$QZXING_PATH/QZXing.pri)
