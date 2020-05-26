@@ -476,7 +476,8 @@ Pages.GPage {
 
                 delegate: Item {
                     // TODO: make sure number has 3 digits!
-                    readonly property string bagId: idBase + "/B" + index
+                    readonly property string bagId: idBase + "/B"
+                                                    + Utility.constDigitsNumber(index, 3)
                     readonly property string qrCode: modelData
 
                     id: delegateItem

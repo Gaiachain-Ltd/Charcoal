@@ -101,6 +101,24 @@ int Utility::parseInt(const QString &num) const
     return num.toInt();
 }
 
+/*!
+ * Returns a \a number with constant number of \a digits.
+ */
+QString Utility::constDigitsNumber(const int number, const int digits) const
+{
+    QString result(QString::number(number));
+
+    if (result.size() > digits) {
+        qWarning() << Q_FUNC_INFO << "Number is too big!" << number << digits;
+    }
+
+    while (result.size() < digits) {
+        result.prepend("0");
+    }
+
+    return result;
+}
+
 bool Utility::validateId(const QString &id) const
 {
     QString rawId = id;

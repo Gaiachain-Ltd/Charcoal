@@ -30,6 +30,8 @@ public:
     Q_INVOKABLE qreal clamp(qreal v, qreal min, qreal max) const;
 
     Q_INVOKABLE int parseInt(const QString &num) const;
+    Q_INVOKABLE QString constDigitsNumber(const int number, const int digits) const;
+
     Q_INVOKABLE QDate convertDateString(const QString &dateStr, const QString &dateFormat = QString()) const;
     Q_INVOKABLE QString defaultDateFormat() const;
 
