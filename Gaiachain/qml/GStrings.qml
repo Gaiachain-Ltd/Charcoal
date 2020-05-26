@@ -321,6 +321,11 @@ QtObject {
     property string scanAllBagsToCheckInfoText: tr.empty + qsTr("Scan QR code from all bags on truck to check transport")
 
     property string deleteAllScannedCodes: tr.empty + qsTr("Delete all scanned QR codes")
+    property string scannedBagsPopupText: tr.empty + qsTr("You have <font color=\"#65cb00\">%1</font> scanned bags in your local working copy")
+
+    property string deleteText: tr.empty + qsTr("Delete")
+    property string restore: tr.empty + qsTr("Restore")
+
 
     // Taking photos
     property string takePhotoDocumentsInfoText: tr.empty + qsTr("Take a photo of the signature and stamp on the permit and the Carnet de Voyage by the authorities")

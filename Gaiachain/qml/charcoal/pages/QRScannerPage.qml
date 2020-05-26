@@ -14,6 +14,7 @@ import "../../common" as Common
 import "../../components" as Components
 import "../../headers" as Headers
 import "../../pages" as Pages
+import "../../popups" as Popups
 import "../../items" as Items
 import "../items" as CharcoalItems
 
@@ -81,9 +82,12 @@ Pages.GPage {
     logoVisible: false
     showCloseButton: false
 
-    function closeEventHandler() {
-        // TODO: generate "scannedIds" as ID + QR pair
-        pageManager.backTo(backToPage, { "scannedIds": top.scannedQrs })
+    function backHandler() {
+        scannedBagsPopup.open()
+    }
+
+    function closePage() {
+        pageManager.backTo(backToPage, { "scannedIds": prepareScannedIds() })
         return false
     }
 
@@ -91,6 +95,15 @@ Pages.GPage {
         infoVisible = false
         currentStatus = QRScannerPage.Scanning
         overlayTimer.stop()
+    }
+
+    function prepareScannedIds() {
+        let result = []
+        for (let qr of scannedQrs) {
+            result.push([idBase + "/B" + Utility.constDigitsNumber(
+                             scannedQrs.indexOf(qr), 3), qr])
+        }
+        return result;
     }
 
     Component.onCompleted: {
@@ -112,6 +125,9 @@ Pages.GPage {
                 }
             }
 
+            let temp = scannedQrs
+            temp.push(currentQr)
+            scannedQrs = temp
             currentStatus = QRScannerPage.Success
         } else {
             currentQr = id
@@ -259,8 +275,7 @@ Pages.GPage {
                               || currentStatus === QRScannerPage.Warning
                               || currentStatus === QRScannerPage.Error)
 
-                    onClicked: pageManager.backTo(backToPage,
-                                                  { "scannedIds": top.scannedQrs })
+                    onClicked: backHandler()
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -270,8 +285,7 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
-                            pageManager.backTo(backToPage,
-                                               { "scannedIds": top.scannedQrs })
+                            backHandler()
                         } else if (currentStatus === QRScannerPage.ManualScan) {
                             parseScannedId(currentQr)
                         }
@@ -297,7 +311,8 @@ Pages.GPage {
                 anchors.fill: parent
                 spacing: 0
 
-                property color textColor: currentStatus === QRScannerPage.None?
+                property color textColor: (currentStatus === QRScannerPage.None
+                                           || currentStatus === QRScannerPage.Scanning)?
                                               GStyle.textPrimaryColor
                                             : GStyle.textSecondaryColor
 
@@ -323,6 +338,7 @@ Pages.GPage {
                     elide: Text.ElideNone
                     wrapMode: Text.WordWrap
                     color: parent.textColor
+                    visible: text.length > 2
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: s(GStyle.bigPixelSize)
                     verticalAlignment: Text.AlignTop
@@ -560,6 +576,85 @@ Pages.GPage {
                 Layout.fillWidth: true
             }
 
+        }
+    }
+
+    Popups.GPopup
+    {
+        id: scannedBagsPopup
+
+        readonly property int bigMargin: 3 * s(GStyle.bigMargin)
+
+        padding: 0
+        width: top.width - leftMargin - rightMargin
+        height: mainLayout.preferredHeight
+
+        ColumnLayout {
+            id: mainLayout
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                margins: s(GStyle.bigMargin)
+            }
+            spacing: scannedBagsPopup.bigMargin
+
+            Items.GText {
+                Layout.fillWidth: true
+                Layout.leftMargin: scannedBagsPopup.bigMargin
+                Layout.rightMargin: scannedBagsPopup.bigMargin
+
+                font {
+                    pixelSize: s(GStyle.bigPixelSize)
+                    weight: Font.DemiBold
+                }
+
+                horizontalAlignment: Qt.AlignHCenter
+                wrapMode: Text.Wrap
+
+                text: Strings.scannedBagsPopupText.arg(top.scannedQrs.length)
+            }
+
+            ColumnLayout {
+                spacing: s(GStyle.bigMargin)
+
+                Items.GButton {
+                    Layout.fillWidth: true
+                    implicitHeight: 74
+
+                    palette {
+                        buttonText: GStyle.textSecondaryColor
+                        button: GStyle.buttonPopupRejectColor
+                    }
+
+                    text: Strings.deleteText
+
+                    onClicked: {
+                        top.scannedQrs = []
+                        top.closePage()
+                    }
+                }
+
+                Items.GButton {
+                    Layout.fillWidth: true
+                    implicitHeight: 74
+
+                    palette {
+                        buttonText: GStyle.textSecondaryColor
+                        button: GStyle.buttonPopupAcceptSecondaryColor
+                    }
+
+                    text: Strings.restore
+
+                    onClicked: scannedBagsPopup.close()
+                }
+
+                Item {
+                    // spacer
+                    width: 1
+                    implicitHeight: s(GStyle.bigMargin)
+                }
+            }
         }
     }
 }
