@@ -16,8 +16,23 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
-    property var scannedIds
-    onScannedIdsChanged: console.log("Scanned IDs:", scannedIds)
+    property var scannedQrs: [
+        "2222-2222-2222",
+        "3333-3333-3333",
+        "LH4U-3YJT-LFND"
+    ]
+
+    onScannedQrsChanged: console.log("Scanned IDs:", prepareScannedIds)
+
+    function prepareScannedIds() {
+        let result = []
+        for (let qr of scannedQrs) {
+            result.push([harvestIdComboBox.currentText + "/B"
+                         + Utility.constDigitsNumber(
+                             scannedQrs.indexOf(qr), 3), qr])
+        }
+        return result;
+    }
 
     title: Strings.loadingAndTransport
 
@@ -105,6 +120,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.plateNumber
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportPlateNumberHelp
+        inputText: "1234AM56"
     }
 
     Headers.ButtonInputHeader {
@@ -119,8 +135,13 @@ Pages.SupplyChainPageBase {
                                      {
                                          "title": top.title,
                                          "infoText": Strings.scanAllBagsInfoText,
-                                         "backToPage": Enums.Page.SupplyChainLoadingAndTransport,
-                                         "infoImages": [ GStyle.bagsLoadingUrl ]
+                                         "backToPage":
+                                         Enums.Page.SupplyChainLoadingAndTransport,
+                                         "infoImages": [ GStyle.bagsLoadingUrl ],
+                                         "showProceedPage": true,
+                                         "truckId": plateNumberHeader.inputText,
+                                         "idBase": harvestIdComboBox.currentText,
+                                         "scannedQrs": scannedQrs
                                      })
     }
 

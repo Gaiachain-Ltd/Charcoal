@@ -62,12 +62,10 @@ Pages.GPage {
 
     property int backToPage: Enums.Page.InvalidPage
 
-    property string idBase: "AM003PM/0595112/04-03-2020/AM004NA"
-    property var scannedQrs: [
-        "2222-2222-2222",
-        "3333-3333-3333",
-        "LH4U-3YJT-LFND"
-    ]
+    property bool showProceedPage: false
+    property string truckId
+    property string idBase
+    property var scannedQrs
 
     onScannedQrsChanged: console.log("Scanned IDs:", scannedQrs)
 
@@ -98,12 +96,7 @@ Pages.GPage {
     }
 
     function prepareScannedIds() {
-        let result = []
-        for (let qr of scannedQrs) {
-            result.push([idBase + "/B" + Utility.constDigitsNumber(
-                             scannedQrs.indexOf(qr), 3), qr])
-        }
-        return result;
+        return scannedQrs;
     }
 
     Component.onCompleted: {
@@ -275,7 +268,14 @@ Pages.GPage {
                               || currentStatus === QRScannerPage.Warning
                               || currentStatus === QRScannerPage.Error)
 
-                    onClicked: backHandler()
+                    onClicked: {
+                        if (showProceedPage) {
+                            currentStatus = QRScannerPage.Proceed
+                            infoOverlay.visible = true
+                        } else {
+                            backHandler()
+                        }
+                    }
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -285,7 +285,7 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
-                            backHandler()
+                            closePage()
                         } else if (currentStatus === QRScannerPage.ManualScan) {
                             parseScannedId(currentQr)
                         }
@@ -299,7 +299,7 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
-                            pageManager.backTo(backToPage)
+                            closePage()
                         } else if (currentStatus === QRScannerPage.ManualScan) {
                             currentStatus = QRScannerPage.Scanning
                         }
@@ -376,6 +376,8 @@ Pages.GPage {
         color: GStyle.backgroundShadowColor
         visible: infoVisible
 
+        property bool isNotProceed: currentStatus !== QRScannerPage.Proceed
+
         ColumnLayout {
             id: infoLayout
             anchors.fill: parent
@@ -389,7 +391,7 @@ Pages.GPage {
             Image {
                 Layout.alignment: Qt.AlignHCenter
                 source: GStyle.infoUrl
-                visible: infoDescriptionVisible
+                visible: infoDescriptionVisible && infoOverlay.isNotProceed
             }
 
             Items.GText {
@@ -399,18 +401,40 @@ Pages.GPage {
                 elide: Text.ElideNone
                 wrapMode: Text.WordWrap
                 font.capitalization: Font.AllUppercase
-                visible: infoDescriptionVisible
+                visible: infoDescriptionVisible && infoOverlay.isNotProceed
             }
 
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
+                spacing: s(GStyle.bigMargin)
 
                 Repeater {
-                    model: infoImages
+                    id: repeater
+                    property bool isProceed: currentStatus === QRScannerPage.Proceed
+                    property alias truckId: top.truckId
+                    property int qrCount: scannedQrs.length
 
-                    Image {
-                        Layout.alignment: Qt.AlignHCenter
-                        source: modelData
+                    model: isProceed? [ GStyle.truckUrl, GStyle.bagUrl ] : infoImages
+
+                    ColumnLayout {
+                        spacing: 2 * s(GStyle.bigMargin)
+
+                        Image {
+                            Layout.alignment: Qt.AlignHCenter
+                            source: modelData
+                        }
+
+                        Items.GText {
+                            Layout.alignment: Qt.AlignHCenter
+                            text: index === 0? repeater.truckId : repeater.qrCount
+                            color: GStyle.statusGreen
+                            elide: Text.ElideNone
+                            wrapMode: Text.WordWrap
+                            font.capitalization: Font.AllUppercase
+                            font.bold: true
+                            font.pixelSize: s(GStyle.bigPixelSize)
+                            visible: repeater.isProceed
+                        }
                     }
                 }
             }
@@ -423,7 +447,7 @@ Pages.GPage {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: hideInfoOverlay()
+            onClicked: if (currentStatus !== QRScannerPage.Proceed) hideInfoOverlay()
         }
 
         Timer {
