@@ -10,6 +10,7 @@ QtObject {
     property string cancel: tr.empty + qsTr("Cancel")
     property string yes: tr.empty + qsTr("Yes")
     property string no: tr.empty + qsTr("No")
+    property string save: tr.empty + qsTr("Save")
 
     property string empty: ""
 
@@ -322,6 +323,7 @@ QtObject {
 
     property string deleteAllScannedCodes: tr.empty + qsTr("Delete all scanned QR codes")
     property string scannedBagsPopupText: tr.empty + qsTr("You have <font color=\"#65cb00\">%1</font> scanned bags in your local working copy")
+    property string scannedBagsSavePopupText: tr.empty + qsTr("You have <font color=\"#65cb00\">%1</font> scanned bags. Do you want to save them?")
 
     property string deleteText: tr.empty + qsTr("Delete")
     property string restore: tr.empty + qsTr("Restore")

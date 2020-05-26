@@ -123,7 +123,9 @@ Pages.SupplyChainPageBase {
         onClicked: pageManager.enter(Enums.Page.QRScanner,
                                      {
                                          "title": top.title,
-                                         "infoText": GStyle.scanAllBagsToCheckInfoText
+                                         "infoText": GStyle.scanAllBagsToCheckInfoText,
+                                         "backToPage": Enums.Page.SupplyChainReception,
+                                         "infoImages": [ GStyle.bagsReceptionUrl ]
                                      })
     }
 

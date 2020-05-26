@@ -379,7 +379,7 @@ Pages.GPage {
         ColumnLayout {
             id: infoLayout
             anchors.fill: parent
-            spacing: s(GStyle.bigMargin)
+            spacing: 2 * s(GStyle.bigMargin)
 
             Item {
                 Layout.fillHeight: true
@@ -585,6 +585,8 @@ Pages.GPage {
 
         readonly property int bigMargin: 3 * s(GStyle.bigMargin)
 
+        property bool isRestore: currentStatus === QRScannerPage.Scanning
+
         padding: 0
         width: top.width - leftMargin - rightMargin
         height: mainLayout.preferredHeight
@@ -612,7 +614,9 @@ Pages.GPage {
                 horizontalAlignment: Qt.AlignHCenter
                 wrapMode: Text.Wrap
 
-                text: Strings.scannedBagsPopupText.arg(top.scannedQrs.length)
+                text: scannedBagsPopup.isRestore?
+                          Strings.scannedBagsPopupText.arg(top.scannedQrs.length)
+                        : Strings.scannedBagsSavePopupText.arg(top.scannedQrs.length)
             }
 
             ColumnLayout {
@@ -627,7 +631,8 @@ Pages.GPage {
                         button: GStyle.buttonPopupRejectColor
                     }
 
-                    text: Strings.deleteText
+                    text: scannedBagsPopup.isRestore? Strings.deleteText
+                                                    : Strings.no
 
                     onClicked: {
                         top.scannedQrs = []
@@ -644,9 +649,16 @@ Pages.GPage {
                         button: GStyle.buttonPopupAcceptSecondaryColor
                     }
 
-                    text: Strings.restore
+                    text: scannedBagsPopup.isRestore? Strings.restore
+                                                    : Strings.save
 
-                    onClicked: scannedBagsPopup.close()
+                    onClicked: {
+                        if (scannedBagsPopup.isRestore) {
+                            scannedBagsPopup.close()
+                        } else {
+                            top.closePage()
+                        }
+                    }
                 }
 
                 Item {
