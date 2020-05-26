@@ -16,6 +16,9 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
+    property var scannedIds
+    onScannedIdsChanged: console.log("Scanned IDs:", scannedIds)
+
     title: Strings.loadingAndTransport
 
     Component.onCompleted: refreshData()
