@@ -55,20 +55,22 @@ Pages.GPage {
 
     onStatusTextHeaderChanged: console.log("Header", statusTextHeader)
 
-    property string statusTextValue: currentId
+    property string statusTextValue: currentQr
 
     property int currentStatus: QRScannerPage.Scanning
 
     property int backToPage: Enums.Page.InvalidPage
-    property var scannedIds: [
-        [ "AM003PM/0595112/04-03-2020/AM004NA/B001", "2222-2222-2222" ],
-        [ "AM003PM/0595112/04-03-2020/AM004NA/B002", "3333-3333-3333"],
-        [ "AM003PM/0595112/04-03-2020/AM004NA/B003", "LH4U-3YJT-LFND"]
+
+    property string idBase: "AM003PM/0595112/04-03-2020/AM004NA"
+    property var scannedQrs: [
+        "2222-2222-2222",
+        "3333-3333-3333",
+        "LH4U-3YJT-LFND"
     ]
 
-    onScannedIdsChanged: console.log("Scanned IDs:", scannedIds)
+    onScannedQrsChanged: console.log("Scanned IDs:", scannedQrs)
 
-    property string currentId: ""
+    property string currentQr: ""
 
     backgroundColor: GStyle.backgroundShadowColor
 
@@ -80,7 +82,8 @@ Pages.GPage {
     showCloseButton: false
 
     function closeEventHandler() {
-        pageManager.backTo(backToPage, { "scannedIds": top.scannedIds })
+        // TODO: generate "scannedIds" as ID + QR pair
+        pageManager.backTo(backToPage, { "scannedIds": top.scannedQrs })
         return false
     }
 
@@ -98,12 +101,12 @@ Pages.GPage {
 
     function parseScannedId(id) {
         if (Utility.validateId(id)) {
-            currentId = Utility.formatRawId(id)
+            currentQr = Utility.formatRawId(id)
 
             // Check for ID duplicates:
-            for (let scanned of scannedIds) {
-                if (scanned[1] === currentId) {
-                    console.log("Code duplicated!", currentId)
+            for (let scanned of scannedQrs) {
+                if (scanned === currentQr) {
+                    console.log("Code duplicated!", currentQr)
                     currentStatus = QRScannerPage.Warning
                     return
                 }
@@ -111,7 +114,7 @@ Pages.GPage {
 
             currentStatus = QRScannerPage.Success
         } else {
-            currentId = id
+            currentQr = id
             currentStatus = QRScannerPage.Failed
             console.warn("Wrong code content", id)
         }
@@ -257,7 +260,7 @@ Pages.GPage {
                               || currentStatus === QRScannerPage.Error)
 
                     onClicked: pageManager.backTo(backToPage,
-                                                  { "scannedIds": top.scannedIds })
+                                                  { "scannedIds": top.scannedQrs })
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -268,9 +271,9 @@ Pages.GPage {
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
                             pageManager.backTo(backToPage,
-                                               { "scannedIds": top.scannedIds })
+                                               { "scannedIds": top.scannedQrs })
                         } else if (currentStatus === QRScannerPage.ManualScan) {
-                            parseScannedId(currentId)
+                            parseScannedId(currentQr)
                         }
                     }
                 }
@@ -339,7 +342,7 @@ Pages.GPage {
                     font.pixelSize: s(GStyle.bigPixelSize)
                     horizontalAlignment: TextInput.AlignHCenter
 
-                    onTextChanged: currentId = text
+                    onTextChanged: currentQr = text
                 }
 
                 Item {
@@ -424,6 +427,8 @@ Pages.GPage {
 
         property string title: top.title + " (%1)".arg(entriesList.count)
 
+        readonly property string idBase: top.idBase
+
         anchors.centerIn: Overlay.overlay
         width: Overlay.overlay? Overlay.overlay.width : 100
         height: Overlay.overlay? Overlay.overlay.height : 100
@@ -461,17 +466,18 @@ Pages.GPage {
 
                 boundsBehavior: Flickable.StopAtBounds
 
-                model: top.scannedIds
+                model: top.scannedQrs
 
                 function removeRow(index) {
-                    let temp = top.scannedIds
+                    let temp = top.scannedQrs
                     temp.splice(index, 1)
-                    top.scannedIds = temp
+                    top.scannedQrs = temp
                 }
 
                 delegate: Item {
-                    readonly property string bagId: modelData[0]
-                    readonly property string qrCode: modelData[1]
+                    // TODO: make sure number has 3 digits!
+                    readonly property string bagId: idBase + "/B" + index
+                    readonly property string qrCode: modelData
 
                     id: delegateItem
                     width: entriesList.width
@@ -543,7 +549,7 @@ Pages.GPage {
                 iconSource: GStyle.iconDeleteAll
 
                 onClicked: {
-                    top.scannedIds = []
+                    top.scannedQrs = []
                     popup.close()
                 }
             }
