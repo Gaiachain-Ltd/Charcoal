@@ -22,5 +22,6 @@
         <file>pages/SupplyChainLoggingEndingPage.qml</file>
         <file>pages/SupplyChainReceptionPage.qml</file>
         <file>pages/QRScannerPage.qml</file>
+        <file>popups/ColumnButtonsPopup.qml</file>
     </qresource>
 </RCC>

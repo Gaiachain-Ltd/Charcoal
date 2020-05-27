@@ -15,6 +15,7 @@ import "../../components" as Components
 import "../../headers" as Headers
 import "../../pages" as Pages
 import "../../popups" as Popups
+import "../popups" as CharcoalPopups
 import "../../items" as Items
 import "../items" as CharcoalItems
 
@@ -73,7 +74,7 @@ Pages.GPage {
 
     backgroundColor: GStyle.backgroundShadowColor
 
-    id: top
+    id: root
 
     title: Strings.qrCode
 
@@ -449,7 +450,7 @@ Pages.GPage {
 
                 Repeater {
                     id: repeater
-                    property alias truckId: top.truckId
+                    property alias truckId: root.truckId
                     property int qrCount: scannedQrs.length
 
                     model: infoImages
@@ -491,9 +492,9 @@ Pages.GPage {
         property bool showCloseButton: false
         property bool logoVisible: false
 
-        property string title: top.title + " (%1)".arg(entriesList.count)
+        property string title: root.title + " (%1)".arg(entriesList.count)
 
-        readonly property string idBase: top.idBase
+        readonly property string idBase: root.idBase
 
         anchors.centerIn: Overlay.overlay
         width: Overlay.overlay? Overlay.overlay.width : 100
@@ -532,12 +533,12 @@ Pages.GPage {
 
                 boundsBehavior: Flickable.StopAtBounds
 
-                model: top.scannedQrs
+                model: root.scannedQrs
 
                 function removeRow(index) {
-                    let temp = top.scannedQrs
+                    let temp = root.scannedQrs
                     temp.splice(index, 1)
-                    top.scannedQrs = temp
+                    root.scannedQrs = temp
                 }
 
                 delegate: Item {
@@ -615,10 +616,7 @@ Pages.GPage {
                 inputText: Strings.deleteAllScannedCodes
                 iconSource: GStyle.iconDeleteAll
 
-                onClicked: {
-                    top.scannedQrs = []
-                    popup.close()
-                }
+                onClicked: clearBagsPopup.open()
             }
 
             Components.Footer {
@@ -629,93 +627,45 @@ Pages.GPage {
         }
     }
 
-    Popups.GPopup
-    {
+    CharcoalPopups.ColumnButtonsPopup {
+        id: clearBagsPopup
+
+        text: Strings.clearAllScannedQrCodes
+        rejectButtonText: Strings.no
+        acceptButtonText: Strings.clear
+
+        onRejected: clearBagsPopup.close()
+
+        onAccepted: {
+            root.scannedQrs = []
+            clearBagsPopup.close()
+        }
+    }
+
+    CharcoalPopups.ColumnButtonsPopup {
         id: scannedBagsPopup
-
-        readonly property int bigMargin: 3 * s(GStyle.bigMargin)
-
         property bool isRestore: currentStatus === QRScannerPage.Scanning
 
-        padding: 0
-        width: top.width - leftMargin - rightMargin
-        height: mainLayout.preferredHeight
+        text: scannedBagsPopup.isRestore?
+                  Strings.scannedBagsPopupText.arg(scannedQrs.length)
+                : Strings.scannedBagsSavePopupText.arg(scannedQrs.length)
 
-        ColumnLayout {
-            id: mainLayout
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-                margins: s(GStyle.bigMargin)
-            }
-            spacing: scannedBagsPopup.bigMargin
-
-            Items.GText {
-                Layout.fillWidth: true
-                Layout.leftMargin: scannedBagsPopup.bigMargin
-                Layout.rightMargin: scannedBagsPopup.bigMargin
-
-                font {
-                    pixelSize: s(GStyle.bigPixelSize)
-                    weight: Font.DemiBold
-                }
-
-                horizontalAlignment: Qt.AlignHCenter
-                wrapMode: Text.Wrap
-
-                text: scannedBagsPopup.isRestore?
-                          Strings.scannedBagsPopupText.arg(top.scannedQrs.length)
-                        : Strings.scannedBagsSavePopupText.arg(top.scannedQrs.length)
-            }
-
-            ColumnLayout {
-                spacing: s(GStyle.bigMargin)
-
-                Items.GButton {
-                    Layout.fillWidth: true
-                    implicitHeight: 74
-
-                    palette {
-                        buttonText: GStyle.textSecondaryColor
-                        button: GStyle.buttonPopupRejectColor
-                    }
-
-                    text: scannedBagsPopup.isRestore? Strings.deleteText
+        rejectButtonText: scannedBagsPopup.isRestore? Strings.deleteText
                                                     : Strings.no
 
-                    onClicked: {
-                        top.scannedQrs = []
-                        top.closePage()
-                    }
-                }
-
-                Items.GButton {
-                    Layout.fillWidth: true
-                    implicitHeight: 74
-
-                    palette {
-                        buttonText: GStyle.textSecondaryColor
-                        button: GStyle.buttonPopupAcceptSecondaryColor
-                    }
-
-                    text: scannedBagsPopup.isRestore? Strings.restore
+        acceptButtonText: scannedBagsPopup.isRestore? Strings.restore
                                                     : Strings.save
 
-                    onClicked: {
-                        if (scannedBagsPopup.isRestore) {
-                            scannedBagsPopup.close()
-                        } else {
-                            top.closePage()
-                        }
-                    }
-                }
+        onRejected: {
+            scannedQrs = []
+            closePage()
+        }
 
-                Item {
-                    // spacer
-                    width: 1
-                    implicitHeight: s(GStyle.bigMargin)
-                }
+        onAccepted: {
+            if (scannedBagsPopup.isRestore) {
+                scannedBagsPopup.close()
+            } else {
+                closePage()
             }
         }
     }

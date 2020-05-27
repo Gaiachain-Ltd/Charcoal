@@ -11,6 +11,7 @@ QtObject {
     property string yes: tr.empty + qsTr("Yes")
     property string no: tr.empty + qsTr("No")
     property string save: tr.empty + qsTr("Save")
+    property string clear: tr.empty + qsTr("Clear")
 
     property string empty: ""
 
@@ -325,9 +326,10 @@ QtObject {
     property string scannedBagsPopupText: tr.empty + qsTr("You have <font color=\"#65cb00\">%1</font> scanned bags in your local working copy")
     property string scannedBagsSavePopupText: tr.empty + qsTr("You have <font color=\"#65cb00\">%1</font> scanned bags. Do you want to save them?")
 
+    property string clearAllScannedQrCodes: tr.empty + qsTr("Do you want to <font color=\"#E40000\">clear</font> all scanned QR codes?")
+
     property string deleteText: tr.empty + qsTr("Delete")
     property string restore: tr.empty + qsTr("Restore")
-
 
     // Taking photos
     property string takePhotoDocumentsInfoText: tr.empty + qsTr("Take a photo of the signature and stamp on the permit and the Carnet de Voyage by the authorities")
