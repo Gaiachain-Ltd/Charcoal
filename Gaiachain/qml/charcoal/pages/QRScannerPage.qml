@@ -12,6 +12,7 @@ import com.gaiachain.static 1.0
 
 import "../../common" as Common
 import "../../components" as Components
+import "../components" as CharcoalComponents
 import "../../headers" as Headers
 import "../../pages" as Pages
 import "../../popups" as Popups
@@ -31,7 +32,6 @@ Pages.GPage {
     }
 
     property bool infoVisible: true
-    property bool infoDescriptionVisible: true
 
     property string infoText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sagittis non nibh quis aliquam. Praesent vitae tempus velit. Donec id sem finibus lacus blandit tempus ac commodo elit. Donec sagittis consectetur nisl non eleifend."
     property var infoImages: [ GStyle.takePhotoUrl ]
@@ -88,12 +88,6 @@ Pages.GPage {
     function closePage() {
         pageManager.backTo(backToPage, { "scannedQrs": prepareScannedIds() })
         return false
-    }
-
-    function hideInfoOverlay() {
-        infoVisible = false
-        currentStatus = QRScannerPage.Scanning
-        overlayTimer.stop()
     }
 
     function prepareScannedIds() {
@@ -226,6 +220,10 @@ Pages.GPage {
                     spacing: 2 * s(GStyle.bigMargin)
 
                     Repeater {
+                        property alias truckId: root.truckId
+                        property int qrCount: scannedQrs.length
+
+                        id: repeater
                         model: [ GStyle.truckUrl, GStyle.bagUrl ]
 
                         ColumnLayout {
@@ -432,79 +430,15 @@ Pages.GPage {
         }
     }
 
-    Rectangle {
+    CharcoalComponents.InfoOverlay {
         id: infoOverlay
         anchors.fill: parent
 
-        color: GStyle.backgroundShadowColor
         visible: infoVisible
+        images: infoImages
+        text: infoText
 
-        ColumnLayout {
-            id: infoLayout
-            anchors.fill: parent
-            spacing: 2 * s(GStyle.bigMargin)
-
-            Item {
-                Layout.fillHeight: true
-                width: 1
-            }
-
-            Image {
-                Layout.alignment: Qt.AlignHCenter
-                source: GStyle.infoUrl
-                visible: infoDescriptionVisible
-            }
-
-            Items.GText {
-                Layout.fillWidth: true
-                text: infoText
-                color: GStyle.textSecondaryColor
-                elide: Text.ElideNone
-                wrapMode: Text.WordWrap
-                font.capitalization: Font.AllUppercase
-                visible: infoDescriptionVisible
-            }
-
-            RowLayout {
-                Layout.alignment: Qt.AlignHCenter
-                spacing: s(GStyle.bigMargin)
-
-                Repeater {
-                    id: repeater
-                    property alias truckId: root.truckId
-                    property int qrCount: scannedQrs.length
-
-                    model: infoImages
-
-                    ColumnLayout {
-                        spacing: 2 * s(GStyle.bigMargin)
-
-                        Image {
-                            Layout.alignment: Qt.AlignHCenter
-                            source: modelData
-                        }
-                    }
-                }
-            }
-
-            Item {
-                Layout.fillHeight: true
-                width: 1
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: hideInfoOverlay()
-        }
-
-        Timer {
-            id: overlayTimer
-            interval: GStyle.qrOverlayInterval
-            running: true
-            repeat: false
-            onTriggered: hideInfoOverlay()
-        }
+        onHidden: currentStatus = QRScannerPage.Scanning
     }
 
     Popup {

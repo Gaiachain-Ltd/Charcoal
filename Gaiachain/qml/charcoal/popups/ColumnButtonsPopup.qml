@@ -10,13 +10,8 @@ import com.gaiachain.helpers 1.0
 import com.gaiachain.types 1.0
 import com.gaiachain.static 1.0
 
-import "../../common" as Common
-import "../../components" as Components
-import "../../headers" as Headers
-import "../../pages" as Pages
 import "../../popups" as Popups
 import "../../items" as Items
-import "../items" as CharcoalItems
 
 Popups.GPopup
 {

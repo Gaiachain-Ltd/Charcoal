@@ -5,6 +5,7 @@
         <file>components/ExpandableMenuButton.qml</file>
         <file>components/DoubleMenuButton.qml</file>
         <file>components/EventsListView.qml</file>
+        <file>components/InfoOverlay.qml</file>
         <file>headers/UserInfoHeader.qml</file>
         <file>headers/CharcoalInputDateHeader.qml</file>
         <file>headers/CharcoalComboBoxHeader.qml</file>
