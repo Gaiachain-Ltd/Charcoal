@@ -58,7 +58,7 @@ Pages.GPage {
 
     property string statusTextValue: currentQr
 
-    property int currentStatus: QRScannerPage.Scanning
+    property int currentStatus: QRScannerPage.None
 
     property int backToPage: Enums.Page.InvalidPage
 
@@ -85,7 +85,7 @@ Pages.GPage {
     }
 
     function closePage() {
-        pageManager.backTo(backToPage, { "scannedIds": prepareScannedIds() })
+        pageManager.backTo(backToPage, { "scannedQrs": prepareScannedIds() })
         return false
     }
 
@@ -192,10 +192,45 @@ Pages.GPage {
             filters: [zxingFilter]
             fillMode: VideoOutput.PreserveAspectCrop
             autoOrientation: true
+
+            Rectangle {
+                id: proceedOverlay
+                anchors.fill: parent
+                color: GStyle.backgroundShadowColor
+                visible: currentStatus === QRScannerPage.Proceed
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 2 * s(GStyle.bigMargin)
+
+                    Repeater {
+                        model: [ GStyle.truckUrl, GStyle.bagUrl ]
+
+                        ColumnLayout {
+                            spacing: 2 * s(GStyle.bigMargin)
+
+                            Image {
+                                Layout.alignment: Qt.AlignHCenter
+                                source: modelData
+                            }
+
+                            Items.GText {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: index === 0? repeater.truckId : repeater.qrCount
+                                color: GStyle.statusGreen
+                                elide: Text.ElideNone
+                                wrapMode: Text.WordWrap
+                                font.capitalization: Font.AllUppercase
+                                font.bold: true
+                                font.pixelSize: s(GStyle.bigPixelSize)
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Buttons & status
-        // TODO: make it into an independent component?
         Rectangle {
             id: statusRect
 
@@ -215,6 +250,8 @@ Pages.GPage {
                     return GStyle.statusRed
                 }
             }
+
+            visible: currentStatus !== QRScannerPage.None
 
             Behavior on color {
                 ColorAnimation {
@@ -276,7 +313,6 @@ Pages.GPage {
                     onClicked: {
                         if (showProceedPage) {
                             currentStatus = QRScannerPage.Proceed
-                            infoOverlay.visible = true
                         } else {
                             backHandler()
                         }
@@ -381,8 +417,6 @@ Pages.GPage {
         color: GStyle.backgroundShadowColor
         visible: infoVisible
 
-        property bool isNotProceed: currentStatus !== QRScannerPage.Proceed
-
         ColumnLayout {
             id: infoLayout
             anchors.fill: parent
@@ -396,7 +430,7 @@ Pages.GPage {
             Image {
                 Layout.alignment: Qt.AlignHCenter
                 source: GStyle.infoUrl
-                visible: infoDescriptionVisible && infoOverlay.isNotProceed
+                visible: infoDescriptionVisible
             }
 
             Items.GText {
@@ -406,7 +440,7 @@ Pages.GPage {
                 elide: Text.ElideNone
                 wrapMode: Text.WordWrap
                 font.capitalization: Font.AllUppercase
-                visible: infoDescriptionVisible && infoOverlay.isNotProceed
+                visible: infoDescriptionVisible
             }
 
             RowLayout {
@@ -415,11 +449,10 @@ Pages.GPage {
 
                 Repeater {
                     id: repeater
-                    property bool isProceed: currentStatus === QRScannerPage.Proceed
                     property alias truckId: top.truckId
                     property int qrCount: scannedQrs.length
 
-                    model: isProceed? [ GStyle.truckUrl, GStyle.bagUrl ] : infoImages
+                    model: infoImages
 
                     ColumnLayout {
                         spacing: 2 * s(GStyle.bigMargin)
@@ -427,18 +460,6 @@ Pages.GPage {
                         Image {
                             Layout.alignment: Qt.AlignHCenter
                             source: modelData
-                        }
-
-                        Items.GText {
-                            Layout.alignment: Qt.AlignHCenter
-                            text: index === 0? repeater.truckId : repeater.qrCount
-                            color: GStyle.statusGreen
-                            elide: Text.ElideNone
-                            wrapMode: Text.WordWrap
-                            font.capitalization: Font.AllUppercase
-                            font.bold: true
-                            font.pixelSize: s(GStyle.bigPixelSize)
-                            visible: repeater.isProceed
                         }
                     }
                 }
@@ -452,7 +473,7 @@ Pages.GPage {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: if (currentStatus !== QRScannerPage.Proceed) hideInfoOverlay()
+            onClicked: hideInfoOverlay()
         }
 
         Timer {

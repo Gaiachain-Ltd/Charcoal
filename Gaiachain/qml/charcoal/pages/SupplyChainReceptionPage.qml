@@ -141,7 +141,7 @@ Pages.SupplyChainPageBase {
         onClicked: pageManager.enter(Enums.Page.QRScanner,
                                      {
                                          "title": top.title,
-                                         "infoText": GStyle.scanAllBagsToCheckInfoText,
+                                         "infoText": Strings.scanAllBagsToCheckInfoText,
                                          "backToPage": Enums.Page.SupplyChainReception,
                                          "infoImages": [ GStyle.bagsReceptionUrl ],
                                          "idBase": "AM003PM/0595112/04-03-2020/AM004NA",
