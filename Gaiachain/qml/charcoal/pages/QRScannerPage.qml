@@ -125,7 +125,7 @@ Pages.GPage {
             currentStatus = QRScannerPage.Success
         } else {
             currentQr = id
-            currentStatus = QRScannerPage.Failed
+            currentStatus = QRScannerPage.Error
             console.warn("Wrong code content", id)
         }
     }
