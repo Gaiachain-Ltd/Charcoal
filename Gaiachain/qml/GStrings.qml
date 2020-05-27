@@ -334,6 +334,12 @@ QtObject {
     // Taking photos
     property string takePhotoDocumentsInfoText: tr.empty + qsTr("Take a photo of the signature and stamp on the permit and the Carnet de Voyage by the authorities")
     property string takePhotoReceiptInfoText: tr.empty + qsTr("Take a photo of the receipt")
+    property string skip: tr.empty + qsTr("Skip")
+    property string takeAPhoto: tr.empty + qsTr("Take a photo")
+    property string photoTaken: tr.empty + qsTr("Photo taken")
+    property string uploadThis: tr.empty + qsTr("Upload this?")
+    property string photoAdded: tr.empty + qsTr("Photo added")
+    property string addAnother: tr.empty + qsTr("Add another?")
 
     // Charcoal misc
     property string selectDate: tr.empty + qsTr("Select date")

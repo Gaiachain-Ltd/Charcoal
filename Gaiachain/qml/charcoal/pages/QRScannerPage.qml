@@ -34,7 +34,7 @@ Pages.GPage {
     property bool infoVisible: true
 
     property string infoText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sagittis non nibh quis aliquam. Praesent vitae tempus velit. Donec id sem finibus lacus blandit tempus ac commodo elit. Donec sagittis consectetur nisl non eleifend."
-    property var infoImages: [ GStyle.takePhotoUrl ]
+    property var infoImages: [ GStyle.iconPhotoCameraGreenUrl ]
 
     property string statusTextHeader: {
         switch (currentStatus) {
@@ -438,7 +438,10 @@ Pages.GPage {
         images: infoImages
         text: infoText
 
-        onHidden: currentStatus = QRScannerPage.Scanning
+        onHidden: {
+            currentStatus = QRScannerPage.Scanning
+            infoVisible = false
+        }
     }
 
     Popup {

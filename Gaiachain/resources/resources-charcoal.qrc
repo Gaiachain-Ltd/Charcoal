@@ -29,7 +29,8 @@
         <file alias="info">charcoal/ui/icon-info.svg</file>
         <file alias="bagsLoading">charcoal/ui/loading-graphic.svg</file>
         <file alias="bagsReception">charcoal/ui/reception-graphic.svg</file>
-        <file alias="takePhoto">charcoal/ui/take-photo-graphic.svg</file>
+        <file alias="iconPhotoCameraGreen">charcoal/ui/icon-photo-camera-green.svg</file>
+        <file alias="iconPhotoCamera">charcoal/ui/icon-photo-camera.svg</file>
         <file alias="truck">charcoal/ui/truck.svg</file>
         <file alias="iconKeyboard">charcoal/ui/icon-black-keyboard.svg</file>
         <file alias="iconList">charcoal/ui/icon-list.svg</file>

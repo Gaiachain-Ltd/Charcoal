@@ -50,7 +50,8 @@ AbstractStyle {
     readonly property url infoUrl: "qrc:/ui/info"
     readonly property url bagsLoadingUrl: "qrc:/ui/bagsLoading"
     readonly property url bagsReceptionUrl: "qrc:/ui/bagsReception"
-    readonly property url takePhotoUrl: "qrc:/ui/takePhoto"
+    readonly property url iconPhotoCameraGreenUrl: "qrc:/ui/iconPhotoCameraGreen"
+    readonly property url iconPhotoCameraUrl: "qrc:/ui/iconPhotoCamera"
     readonly property url truckUrl: "qrc:/ui/truck"
 
     readonly property url iconKeyboardUrl: "qrc:/ui/iconKeyboard"

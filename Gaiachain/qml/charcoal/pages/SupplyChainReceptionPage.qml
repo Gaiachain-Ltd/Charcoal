@@ -125,8 +125,7 @@ Pages.SupplyChainPageBase {
         inputText: Strings.receiveDocumentsAndReceipt
         onClicked: pageManager.enter(Enums.Page.TakeDocumentPictures,
                                      {
-                                         "infoText1": GStyle.takePhotoDocumentsInfoText,
-                                         "infoText2": GStyle.takePhotoReceiptInfoText
+                                         "backToPage": Enums.Page.SupplyChainReception
                                      })
     }
 

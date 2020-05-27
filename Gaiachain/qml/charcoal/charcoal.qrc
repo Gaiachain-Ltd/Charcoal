@@ -23,6 +23,7 @@
         <file>pages/SupplyChainLoggingEndingPage.qml</file>
         <file>pages/SupplyChainReceptionPage.qml</file>
         <file>pages/QRScannerPage.qml</file>
+        <file>pages/TakeDocumentPicturesPage.qml</file>
         <file>popups/ColumnButtonsPopup.qml</file>
     </qresource>
 </RCC>

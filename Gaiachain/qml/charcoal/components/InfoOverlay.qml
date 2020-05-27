@@ -23,7 +23,6 @@ Rectangle {
     signal hidden()
 
     function hideInfoOverlay() {
-        infoVisible = false
         overlayTimer.stop()
         hidden()
     }
