@@ -153,15 +153,13 @@ Pages.GPage {
 
             return videoOutput.mapRectToSource(
                         videoOutput.mapNormalizedRectToItem(
-                                Qt.rect(normalizedScanPos,
-                                        normalizedScanPos,
-                                        normalizedScanSize,
-                                        normalizedScanSize)
+                            Qt.rect(normalizedScanPos,
+                                    normalizedScanPos,
+                                    normalizedScanSize,
+                                    normalizedScanSize)
                             )
                         )
         }
-
-
 
         decoder {
             enabledDecoders: QZXing.DecoderFormat_QR_CODE
@@ -193,6 +191,14 @@ Pages.GPage {
             filters: [zxingFilter]
             fillMode: VideoOutput.PreserveAspectCrop
             autoOrientation: true
+
+            Image {
+                width: zxingFilter.normalizedScanSize * videoOutput.width
+                height: zxingFilter.normalizedScanSize * videoOutput.height
+
+                source: GStyle.frameImgUrl
+                anchors.centerIn: parent
+            }
 
             Rectangle {
                 id: proceedOverlay
