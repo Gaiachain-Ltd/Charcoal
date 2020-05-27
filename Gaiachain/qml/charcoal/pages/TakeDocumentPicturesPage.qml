@@ -111,46 +111,46 @@ Pages.GPage {
         }
     }
 
-    // Camera
-    Camera {
-        id: camera
-
-        cameraState: (currentStatus === TakeDocumentPicturesPage.Documents
-                      || currentStatus === TakeDocumentPicturesPage.Receipts)?
-                         Camera.ActiveState : Camera.LoadedState
-
-        captureMode: Camera.CaptureStillImage
-
-        focus {
-            focusMode: CameraFocus.FocusContinuous
-            focusPointMode: CameraFocus.FocusPointAuto
-        }
-
-        onErrorStringChanged: console.log("Error!", errorCode, errorString)
-
-        imageCapture {
-            onCaptureFailed: console.log("Capture failed!") // TODO: toast message!
-            onImageCaptured: {
-                photoPreview.source = preview
-                console.log("Image captured", preview)
-
-                if (currentStatus === TakeDocumentPicturesPage.Documents) {
-                    currentStatus = TakeDocumentPicturesPage.DocumentsConfirm
-                } else if (currentStatus === TakeDocumentPicturesPage.Receipts) {
-                    currentStatus = TakeDocumentPicturesPage.ReceiptsConfirm
-                }
-            }
-
-            onErrorStringChanged: console.log("Capture error!", errorString)
-        }
-    }
-
     ColumnLayout {
         id: column
 
         anchors.fill: parent
 
         spacing: 0
+
+        // Camera
+        Camera {
+            id: camera
+
+            //cameraState: Camera.ActiveState
+            captureMode: Camera.CaptureStillImage
+
+            onCameraStatusChanged: console.log("Cam status:", cameraStatus)
+
+//            focus {
+//                focusMode: CameraFocus.FocusContinuous
+//                focusPointMode: CameraFocus.FocusPointAuto
+//            }
+
+            onErrorStringChanged: console.log("Error!", errorCode, errorString)
+
+            imageCapture {
+                onCaptureFailed: console.log("Capture failed!") // TODO: toast message!
+                onImageCaptured: {
+                    console.log("Image captured", preview)
+                    photoPreview.source = preview
+                    camera.unlock()
+
+                    if (currentStatus === TakeDocumentPicturesPage.Documents) {
+                        currentStatus = TakeDocumentPicturesPage.DocumentsConfirm
+                    } else if (currentStatus === TakeDocumentPicturesPage.Receipts) {
+                        currentStatus = TakeDocumentPicturesPage.ReceiptsConfirm
+                    }
+                }
+
+                onErrorStringChanged: console.log("Capture error!", errorString)
+            }
+        }
 
         VideoOutput {
             id: videoOutput
@@ -161,17 +161,6 @@ Pages.GPage {
             source: camera
             fillMode: VideoOutput.PreserveAspectCrop
             autoOrientation: true
-
-//            Image {
-//                source: GStyle.loginBackgroundOriginalUrl
-//                anchors {
-//                    left: parent.left
-//                    right: parent.right
-//                }
-
-//                fillMode: Image.Tile
-//                visible: camera.cameraState !== Camera.ActiveState
-//            }
 
             Image {
                 id: photoPreview
@@ -215,7 +204,15 @@ Pages.GPage {
                     icon.source: GStyle.iconPhotoCameraUrl
                     visible: (currentStatus === TakeDocumentPicturesPage.Documents
                               || currentStatus === TakeDocumentPicturesPage.Receipts)
-                    onClicked: { camera.start(); console.log("Camera started") }
+                    onClicked: {
+                        camera.searchAndLock()
+                        camera.start()
+                        console.log("Camera started",
+                                    camera.availability,
+                                    camera.cameraState,
+                                    camera.cameraStatus,
+                                    camera.errorString)
+                    }
                 }
 
                 CharcoalItems.CharcoalRoundButton {
