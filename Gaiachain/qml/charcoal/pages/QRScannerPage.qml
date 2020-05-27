@@ -134,6 +134,9 @@ Pages.GPage {
     Camera {
         id: camera
 
+        cameraState: (currentStatus === QRScannerPage.Scanning)? Camera.ActiveState
+                                                               : Camera.LoadedState
+
         captureMode: Camera.CaptureVideo
         focus {
             focusMode: CameraFocus.FocusContinuous
@@ -193,11 +196,23 @@ Pages.GPage {
             autoOrientation: true
 
             Image {
+                source: GStyle.loginBackgroundOriginalUrl
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+
+                fillMode: Image.Tile
+                visible: camera.cameraState !== Camera.ActiveState
+            }
+
+            Image {
                 width: zxingFilter.normalizedScanSize * videoOutput.width
                 height: zxingFilter.normalizedScanSize * videoOutput.height
 
                 source: GStyle.frameImgUrl
                 anchors.centerIn: parent
+                visible: camera.cameraState === Camera.ActiveState
             }
 
             Rectangle {
@@ -386,7 +401,7 @@ Pages.GPage {
                     elide: Text.ElideNone
                     wrapMode: Text.WordWrap
                     color: parent.textColor
-                    visible: text.length > 2
+                    visible: text.length > 2 && (currentStatus !== QRScannerPage.Scanning)
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: s(GStyle.bigPixelSize)
                     verticalAlignment: Text.AlignTop

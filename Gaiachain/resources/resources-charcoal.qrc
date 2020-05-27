@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/ui">
-        <file alias="logo-white">charcoal/ui/gaiachain-logo-white.svg</file>
-        <file alias="login-background">charcoal/ui/login-background.png</file>
-        <file alias="login-background-large">charcoal/ui/login-background-large.jpg</file>
+        <file alias="logoWhite">charcoal/ui/gaiachain-logo-white.svg</file>
+        <file alias="loginBackground">charcoal/ui/login-background.png</file>
+        <file alias="loginBackgroundOriginal">charcoal/ui/login-background-original.jpg</file>
         <file alias="submenuCarbonizationBeginning">charcoal/ui/carbonization-beginning.svg</file>
         <file alias="submenuCarbonizationEnding">charcoal/ui/carbonization-ending.svg</file>
         <file alias="submenuCarbonization">charcoal/ui/carbonization.svg</file>

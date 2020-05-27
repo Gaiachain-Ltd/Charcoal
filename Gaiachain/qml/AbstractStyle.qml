@@ -120,14 +120,14 @@ QtObject {
     // urls
     property url dummyTestIconUrl: "qrc:/ui/dummy/testIcon"
 
-    property url logoBlackImgUrl: "qrc:/ui/logo-black"
-    property url logoWhiteImgUrl: "qrc:/ui/logo-white"
+    property url logoBlackImgUrl: "qrc:/ui/logoBlack"
+    property url logoWhiteImgUrl: "qrc:/ui/logoWhite"
     property url logoImgUrl: logoBlackImgUrl
-    property url logoIconImgUrl: "qrc:/ui/logo-icon"
+    property url logoIconImgUrl: "qrc:/ui/logoIcon"
 
     property url backImgUrl: "qrc:/ui/back"
     property url closeImgUrl: "qrc:/ui/close"
-    property url closeBlackImgUrl: "qrc:/ui/close-black"
+    property url closeBlackImgUrl: "qrc:/ui/closeBlack"
     property url logoutImgUrl: "qrc:/ui/logout"
     property url userImgUrl: "qrc:/ui/user"
 

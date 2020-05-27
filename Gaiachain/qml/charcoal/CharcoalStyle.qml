@@ -71,8 +71,10 @@ AbstractStyle {
     readonly property color statusYellow: "#FFBB00"
     readonly property color statusRed: "#E40000"
 
+    readonly property url loginBackgroundOriginalUrl: "qrc:/ui/loginBackgroundOriginal"
+
     logoImgUrl: logoWhiteImgUrl
-    loginBackgroundUrl: "qrc:/ui/login-background"
+    loginBackgroundUrl: "qrc:/ui/loginBackground"
     downArrowImgUrl: "qrc:/ui/arrow"
 
     primaryColor: "#000000"
