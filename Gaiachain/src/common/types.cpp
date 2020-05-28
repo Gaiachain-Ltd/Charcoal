@@ -29,7 +29,8 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
 
     { { QMetaType::QDate, QMetaType::LongLong },
       [](QVariant &value) {
-          auto dt = QDateTime(value.toDate());
+         const QDate d(value.toDate());
+         auto dt = d.startOfDay();
           value.setValue(dt.toSecsSinceEpoch());
       } },
     { { QMetaType::LongLong, QMetaType::QDate },
@@ -40,7 +41,8 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
 
     { { QMetaType::QDate, QMetaType::Double },
       [](QVariant &value) {
-          auto dt = QDateTime(value.toDate());
+         const QDate d(value.toDate());
+         auto dt = d.startOfDay();
           value.setValue(static_cast<double>(dt.toSecsSinceEpoch()));
       } },
     { { QMetaType::Double, QMetaType::QDate },
@@ -57,7 +59,7 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
     { { QMetaType::QString, QMetaType::QStringList },
       [](QVariant &value) {
           auto s = value.toString();
-          value.setValue(s.split(StringListDelimeter, QString::SkipEmptyParts));
+          value.setValue(s.split(StringListDelimeter, Qt::SkipEmptyParts));
       } },
 
     { { QMetaType::QVariantMap, QMetaType::QByteArray },
