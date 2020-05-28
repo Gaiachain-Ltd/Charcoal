@@ -4,6 +4,11 @@
 #include <QScreen>
 #include <QColor>
 
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+
 #include "../common/logs.h"
 #include "../common/globals.h"
 
@@ -77,6 +82,71 @@ QString Utility::colorString(const QColor &color) const
     }
 
     return color.name(QColor::HexArgb);
+}
+
+QString Utility::pictureStoragePath() const
+{
+    const QString base(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+    const QString pics("pictures");
+    const QString path(base + "/" + pics);
+
+    if (QDir(path).exists() == false) {
+        if (QDir(base).mkdir(pics) == false) {
+            qWarning() << "Could not create the path for pictures!" << path;
+        }
+    }
+
+    return path;
+}
+
+void Utility::saveDocumentPhoto(const QString &path) const
+{
+    savePhoto(path, true);
+}
+
+void Utility::saveReceiptPhoto(const QString &path) const
+{
+    savePhoto(path, false);
+}
+
+void Utility::savePhoto(const QString &path, const bool isDocument) const
+{
+    qDebug() << "Checking photo:" << path << isDocument;
+    if (QFile::exists(path)) {
+        QString type;
+        if (isDocument) {
+            type = "document";
+        } else {
+            type = "receipt";
+        }
+
+        const QString base(Utility::pictureStoragePath());
+        const QString saved("saved");
+        const QString dir(base + "/" + saved);
+
+        if (QDir(dir).exists() == false) {
+            if (QDir(base).mkdir(saved) == false) {
+                qWarning() << "Could not create the path for pictures!" << dir;
+                QFile::remove(path);
+                return;
+            }
+        }
+
+        const QString fileName(type + "-" + QDateTime::currentDateTime()
+                                                .toString(Qt::DateFormat::ISODate));
+        const QString destination(dir + "/" + fileName + "." + QFileInfo(path).suffix());
+        qDebug() << "Saving photo:" << destination;
+
+        QFile::rename(path, destination);
+    }
+}
+
+void Utility::discardPhoto(const QString &path) const
+{
+    if (QFile::exists(path)) {
+        qDebug() << "Removing photo:" << path;
+        QFile::remove(path);
+    }
 }
 
 bool Utility::isWeekend(const QDate &date) const

@@ -27,6 +27,12 @@ Rectangle {
         hidden()
     }
 
+    onVisibleChanged: {
+        if (visible === true) {
+            overlayTimer.start()
+        }
+    }
+
     ColumnLayout {
         id: infoLayout
         anchors.fill: parent
@@ -45,7 +51,6 @@ Rectangle {
         Items.GText {
             id: infoText
             Layout.fillWidth: true
-            text: infoText
             color: GStyle.textSecondaryColor
             elide: Text.ElideNone
             wrapMode: Text.WordWrap

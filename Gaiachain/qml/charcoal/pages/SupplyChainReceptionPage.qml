@@ -24,6 +24,9 @@ Pages.SupplyChainPageBase {
 
     onScannedQrsChanged: console.log("Scanned IDs:", prepareScannedIds)
 
+    property var documents: []
+    property var receipts: []
+
     function prepareScannedIds() {
         let result = []
         for (let qr of scannedQrs) {

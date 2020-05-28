@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.11
 import QtMultimedia 5.12
-import QZXing 2.3
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
@@ -33,11 +32,13 @@ Pages.GPage {
         ReceiptsSummary
     }
 
+    readonly property string imageCaptureDirectory: Utility.pictureStoragePath()
+
     property string infoText: {
         switch (currentStatus) {
         case TakeDocumentPicturesPage.DocumentsInfo:
             return Strings.takePhotoDocumentsInfoText
-        case TakeDocumentPicturesPage.ReceiptInfo:
+        case TakeDocumentPicturesPage.ReceiptsInfo:
             return Strings.takePhotoReceiptInfoText
         default:
             return Strings.empty
@@ -79,9 +80,6 @@ Pages.GPage {
     property var receiptPhotos: []
 
     property int currentStatus: TakeDocumentPicturesPage.DocumentsInfo
-
-    onCurrentStatusChanged: console.log("Status:", currentStatus)
-
     property int backToPage: Enums.Page.InvalidPage
 
     backgroundColor: GStyle.backgroundShadowColor
@@ -111,6 +109,42 @@ Pages.GPage {
         }
     }
 
+    // Camera
+    Camera {
+        id: camera
+
+        cameraState: Camera.ActiveState
+        captureMode: Camera.CaptureStillImage
+
+            focus {
+                focusMode: CameraFocus.FocusContinuous
+                focusPointMode: CameraFocus.FocusPointAuto
+            }
+
+        onErrorStringChanged: console.log("Error!", errorCode, errorString)
+
+        imageCapture {
+            onCaptureFailed: console.log("Capture failed!")
+
+            onImageCaptured: {
+                console.log("Saving to path:", imageCaptureDirectory)
+                photoPreview.source = preview
+            }
+
+            onImageSaved: {
+                photoPreview.savedPath = path
+
+                if (currentStatus === TakeDocumentPicturesPage.Documents) {
+                    currentStatus = TakeDocumentPicturesPage.DocumentsConfirm
+                } else if (currentStatus === TakeDocumentPicturesPage.Receipts) {
+                    currentStatus = TakeDocumentPicturesPage.ReceiptsConfirm
+                }
+            }
+
+            onErrorStringChanged: console.log("Capture error!", errorString)
+        }
+    }
+
     ColumnLayout {
         id: column
 
@@ -118,37 +152,46 @@ Pages.GPage {
 
         spacing: 0
 
-        // Camera
-        Camera {
-            id: camera
+        Rectangle {
+            Layout.fillWidth: true
 
-            //cameraState: Camera.ActiveState
-            captureMode: Camera.CaptureStillImage
+            color: GStyle.skipColor
+            implicitHeight: 80
 
-            onCameraStatusChanged: console.log("Cam status:", cameraStatus)
+            visible: (currentStatus === TakeDocumentPicturesPage.Documents
+                      || currentStatus === TakeDocumentPicturesPage.Receipts)
 
-//            focus {
-//                focusMode: CameraFocus.FocusContinuous
-//                focusPointMode: CameraFocus.FocusPointAuto
-//            }
+            Row {
+                anchors.centerIn: parent
+                spacing: s(GStyle.bigMargin)
 
-            onErrorStringChanged: console.log("Error!", errorCode, errorString)
-
-            imageCapture {
-                onCaptureFailed: console.log("Capture failed!") // TODO: toast message!
-                onImageCaptured: {
-                    console.log("Image captured", preview)
-                    photoPreview.source = preview
-                    camera.unlock()
-
-                    if (currentStatus === TakeDocumentPicturesPage.Documents) {
-                        currentStatus = TakeDocumentPicturesPage.DocumentsConfirm
-                    } else if (currentStatus === TakeDocumentPicturesPage.Receipts) {
-                        currentStatus = TakeDocumentPicturesPage.ReceiptsConfirm
+                Items.GText {
+                    font {
+                        pixelSize: s(GStyle.bigPixelSize)
+                        capitalization: Font.AllUppercase
+                        letterSpacing: 5
                     }
+
+                    text: Strings.skip
+                    color: GStyle.textSecondaryColor
                 }
 
-                onErrorStringChanged: console.log("Capture error!", errorString)
+                Image {
+                    id: name
+
+                    source: GStyle.skipUrl
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    if (currentStatus === TakeDocumentPicturesPage.Documents) {
+                        currentStatus = TakeDocumentPicturesPage.ReceiptsInfo
+                    } else if (currentStatus === TakeDocumentPicturesPage.Receipts) {
+                        backHandler()
+                    }
+                }
             }
         }
 
@@ -162,16 +205,24 @@ Pages.GPage {
             fillMode: VideoOutput.PreserveAspectCrop
             autoOrientation: true
 
-            Image {
-                id: photoPreview
-
+            Rectangle {
                 anchors.fill: parent
+                color: "black"
 
-                fillMode: Image.PreserveAspectFit
                 visible: (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm
                           || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm
                           || currentStatus === TakeDocumentPicturesPage.DocumentsSummary
                           || currentStatus === TakeDocumentPicturesPage.ReceiptsSummary)
+
+                Image {
+                    property string savedPath
+
+                    id: photoPreview
+
+                    anchors.fill: parent
+
+                    fillMode: Image.PreserveAspectFit
+                }
             }
         }
 
@@ -204,15 +255,7 @@ Pages.GPage {
                     icon.source: GStyle.iconPhotoCameraUrl
                     visible: (currentStatus === TakeDocumentPicturesPage.Documents
                               || currentStatus === TakeDocumentPicturesPage.Receipts)
-                    onClicked: {
-                        camera.searchAndLock()
-                        camera.start()
-                        console.log("Camera started",
-                                    camera.availability,
-                                    camera.cameraState,
-                                    camera.cameraStatus,
-                                    camera.errorString)
-                    }
+                    onClicked: camera.imageCapture.captureToLocation(imageCaptureDirectory)
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -252,10 +295,10 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm) {
-                            // TODO: add photo
+                            Utility.saveDocumentPhoto(photoPreview.savedPath)
                             currentStatus = TakeDocumentPicturesPage.DocumentsSummary
                         } else if (currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm) {
-                            // TODO: add photo
+                            Utility.saveReceiptPhoto(photoPreview.savedPath)
                             currentStatus = TakeDocumentPicturesPage.ReceiptsSummary
                         }
                     }
@@ -267,6 +310,8 @@ Pages.GPage {
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
                     onClicked: {
+                        Utility.discardPhoto(photoPreview.savedPath)
+
                         if (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm) {
                             currentStatus = TakeDocumentPicturesPage.DocumentsSummary
                         } else if (currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm) {
