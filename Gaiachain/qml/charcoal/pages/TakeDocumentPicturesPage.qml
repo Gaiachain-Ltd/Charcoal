@@ -32,8 +32,6 @@ Pages.GPage {
         ReceiptsSummary
     }
 
-    readonly property string imageCaptureDirectory: Utility.pictureStoragePath()
-
     property string infoText: {
         switch (currentStatus) {
         case TakeDocumentPicturesPage.DocumentsInfo:
@@ -127,7 +125,7 @@ Pages.GPage {
             onCaptureFailed: console.log("Capture failed!")
 
             onImageCaptured: {
-                console.log("Saving to path:", imageCaptureDirectory)
+                console.log("Saving to path:", picturesManager.pictureStoragePath)
                 photoPreview.source = preview
             }
 
@@ -255,7 +253,8 @@ Pages.GPage {
                     icon.source: GStyle.iconPhotoCameraUrl
                     visible: (currentStatus === TakeDocumentPicturesPage.Documents
                               || currentStatus === TakeDocumentPicturesPage.Receipts)
-                    onClicked: camera.imageCapture.captureToLocation(imageCaptureDirectory)
+                    onClicked: camera.imageCapture.captureToLocation(
+                                   picturesManager.pictureStoragePath)
                 }
 
                 CharcoalItems.CharcoalRoundButton {
@@ -295,10 +294,10 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm) {
-                            Utility.saveDocumentPhoto(photoPreview.savedPath)
+                            picturesManager.saveDocumentPhoto(photoPreview.savedPath)
                             currentStatus = TakeDocumentPicturesPage.DocumentsSummary
                         } else if (currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm) {
-                            Utility.saveReceiptPhoto(photoPreview.savedPath)
+                            picturesManager.saveReceiptPhoto(photoPreview.savedPath)
                             currentStatus = TakeDocumentPicturesPage.ReceiptsSummary
                         }
                     }
@@ -310,7 +309,7 @@ Pages.GPage {
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
                     onClicked: {
-                        Utility.discardPhoto(photoPreview.savedPath)
+                        picturesManager.discardPhoto(photoPreview.savedPath)
 
                         if (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm) {
                             currentStatus = TakeDocumentPicturesPage.DocumentsSummary

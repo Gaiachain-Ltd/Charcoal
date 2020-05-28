@@ -1,6 +1,7 @@
 #ifndef MAINCONTROLLER_H
 #define MAINCONTROLLER_H
 
+#include "abstractmanager.h"
 #include "databasemanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
@@ -8,6 +9,10 @@
 
 #include "session/sessionmanager.h"
 #include "../common/languagemanager.h"
+
+#ifdef CHARCOAL
+#include "charcoal/picturesmanager.h"
+#endif
 
 class Application : public QObject
 {
@@ -88,6 +93,10 @@ private:
     DatabaseManager m_dbManager;
     DataManager m_dataManager;
     SessionManager m_sessionManager;
+
+#ifdef CHARCOAL
+    PicturesManager m_picturesManager;
+#endif
 
     void setupQZXing(QQmlApplicationEngine &engine);
 };

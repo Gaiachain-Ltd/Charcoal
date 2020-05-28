@@ -50,14 +50,6 @@ public:
 
     Q_INVOKABLE QString colorString(const QColor &color) const;
 
-    // TODO: move picture handling to a separate class!
-    Q_INVOKABLE QString pictureStoragePath() const;
-    Q_INVOKABLE void saveDocumentPhoto(const QString &path) const;
-    Q_INVOKABLE void saveReceiptPhoto(const QString &path) const;
-    // TODO: use enum
-    void savePhoto(const QString &path, const bool isDocument) const;
-    Q_INVOKABLE void discardPhoto(const QString &path) const;
-
     template <typename C, std::enable_if_t<is_qt_array_type<C>::value, int> = 0>
     static QVariantList toVariantList(const C &arrayType, QMetaType::Type converToType = QMetaType::Void)
     {

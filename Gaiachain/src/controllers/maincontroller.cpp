@@ -178,6 +178,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     m_dbManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);
     m_sessionManager.setupQmlContext(engine);
+    m_picturesManager.setupQmlContext(engine);
 
     setupQZXing(engine);
 }

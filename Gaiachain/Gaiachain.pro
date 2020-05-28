@@ -39,7 +39,11 @@ charcoal {
     TARGET = GaiachainCharcoal
 
     HEADERS += \
-        src/charcoal/charcoaluserdata.h
+        src/charcoal/charcoaluserdata.h \
+        src/charcoal/picturesmanager.h
+
+    SOURCES += \
+        src/charcoal/picturesmanager.cpp
 }
 
 include(../version.pri)
