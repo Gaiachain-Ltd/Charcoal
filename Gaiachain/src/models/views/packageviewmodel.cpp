@@ -34,7 +34,11 @@ void PackageViewModel::fillPackageData(PackageData &packageData) const
         packageData.actionDates.insert(action, timestamp);
 
         const auto properties = actionEntry[idShift(Columns::Properties)].toMap();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+        packageData.properties.insert(properties);
+#else
         packageData.properties.unite(properties);
+#endif
     });
 
     packageData.type = packageData.actionDates.isEmpty() ? Enums::PackageType::Unknown
