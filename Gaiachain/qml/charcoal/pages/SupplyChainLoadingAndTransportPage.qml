@@ -60,7 +60,7 @@ Pages.SupplyChainPageBase {
                                       GStyle.delegateHighlightColor4,
                                       GStyle.fontHighlightColor4),
                     createSummaryItem(Strings.numberOfBags,
-                                      "123"),
+                                      scannedQrs.length),
                     createSummaryItem(Strings.harvestId,
                                       harvestIdComboBox.currentText,
                                       "", "",
