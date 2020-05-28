@@ -178,7 +178,10 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     m_dbManager.setupQmlContext(engine);
     m_dataManager.setupQmlContext(engine);
     m_sessionManager.setupQmlContext(engine);
+
+#ifdef CHARCOAL
     m_picturesManager.setupQmlContext(engine);
+#endif
 
     setupQZXing(engine);
 }
