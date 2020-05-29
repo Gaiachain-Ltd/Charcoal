@@ -119,10 +119,10 @@ Pages.GPage {
                 focusPointMode: CameraFocus.FocusPointAuto
             }
 
-        onErrorStringChanged: console.log("Error!", errorCode, errorString)
+        onErrorStringChanged: showError(errorString)
 
         imageCapture {
-            onCaptureFailed: console.log("Capture failed!")
+            onCaptureFailed: showError(message)
 
             onImageCaptured: {
                 console.log("Saving to path:", picturesManager.pictureStoragePath)
@@ -139,7 +139,7 @@ Pages.GPage {
                 }
             }
 
-            onErrorStringChanged: console.log("Capture error!", errorString)
+            onErrorStringChanged: showError(errorString)
         }
     }
 
@@ -378,5 +378,15 @@ Pages.GPage {
                 currentStatus = TakeDocumentPicturesPage.Receipts
             }
         }
+    }
+
+    function showError(text) {
+        notificationPopup.text = Strings.cameraErrorString.arg(text)
+        notificationPopup.open()
+    }
+
+    Popups.NotificationPopup {
+        id: notificationPopup
+        backgroundColor: GStyle.errorColor
     }
 }

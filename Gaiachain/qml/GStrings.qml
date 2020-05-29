@@ -340,6 +340,7 @@ QtObject {
     property string uploadThis: tr.empty + qsTr("Upload this?")
     property string photoAdded: tr.empty + qsTr("Photo added")
     property string addAnother: tr.empty + qsTr("Add another?")
+    property string cameraErrorString: tr.empty + qsTr("Camera error: %1")
 
     // Charcoal misc
     property string selectDate: tr.empty + qsTr("Select date")
