@@ -51,6 +51,7 @@ namespace Enums {
         PageReplantation,
         UserInfo,
         TakeDocumentPictures,
+        PhotoGallery,
 #endif
 
         PageCount

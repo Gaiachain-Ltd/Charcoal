@@ -25,6 +25,7 @@
         <file alias="checkGreen">charcoal/ui/check-green.svg</file>
         <file alias="checkPink">charcoal/ui/check-pink.svg</file>
         <file alias="checkOrange">charcoal/ui/check-orange.svg</file>
+        <file alias="loupe">charcoal/ui/loupe.svg</file>
         <file alias="bag">charcoal/ui/bag.svg</file>
         <file alias="info">charcoal/ui/icon-info.svg</file>
         <file alias="bagsLoading">charcoal/ui/loading-graphic.svg</file>

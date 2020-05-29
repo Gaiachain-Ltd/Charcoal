@@ -65,12 +65,28 @@ Headers.AbstractListHeader {
                     Layout.preferredWidth: 44
                     Layout.preferredHeight: 44
 
-                    //width: 50
-                    //height: width
                     fillMode: Image.Pad
                     source: icons[index]
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
+
+                    MouseArea {
+                        property bool hasLinks: links[index].length > 0
+
+                        onHasLinksChanged: console.log("hasLinks", hasLinks, links[index])
+
+                        property string propertyName: hasLinks? links[index][1] : ""
+
+                        enabled: hasLinks
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("Clickety click", links[index][0], "#",
+                                        propertyName, "#", links[index][2])
+                            pageManager.enter(links[index][0],
+                                              { "urls": links[index][2] } )
+                                              //{ propertyName: links[index][2] } )
+                        }
+                    }
                 }
             }
         }

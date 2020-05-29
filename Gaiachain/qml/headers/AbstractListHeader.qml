@@ -15,6 +15,7 @@ Headers.GHeader {
     property var titles: []
     property var values: []
     property var icons: []
+    property var links: []
 
     readonly property bool isEmpty: (values === [])
 
@@ -39,6 +40,12 @@ Headers.GHeader {
         if (icons !== undefined && icons.length === 0) {
             for (let title in titles) {
                 icons.push("")
+            }
+        }
+
+        if (links !== undefined && links.length === 0) {
+            for (let title in titles) {
+                links.push("")
             }
         }
     }

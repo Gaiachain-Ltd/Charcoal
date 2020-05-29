@@ -24,6 +24,7 @@
         <file>pages/SupplyChainReceptionPage.qml</file>
         <file>pages/QRScannerPage.qml</file>
         <file>pages/TakeDocumentPicturesPage.qml</file>
+        <file>pages/PhotoGalleryPage.qml</file>
         <file>popups/ColumnButtonsPopup.qml</file>
     </qresource>
 </RCC>

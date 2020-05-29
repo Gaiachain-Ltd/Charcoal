@@ -5,6 +5,8 @@ import QtQuick 2.12
 import "../"
 
 AbstractStyle {
+    readonly property color photoGalleryBackgroundColor: "black"
+
     readonly property color menuSupplyChainColor: "#C0DA95"
     readonly property color menuTrackingColor: "#D9D9D9"
     readonly property color menuReplantationColor: "#F2CBA4"
@@ -46,6 +48,7 @@ AbstractStyle {
     readonly property url checkPinkUrl: "qrc:/ui/checkPink"
     readonly property url checkOrangeUrl: "qrc:/ui/checkOrange"
 
+    readonly property url loupeUrl: "qrc:/ui/loupe"
     readonly property url bagUrl: "qrc:/ui/bag"
     readonly property url infoUrl: "qrc:/ui/info"
     readonly property url bagsLoadingUrl: "qrc:/ui/bagsLoading"

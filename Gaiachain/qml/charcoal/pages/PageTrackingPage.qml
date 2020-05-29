@@ -157,11 +157,15 @@ Pages.GPage {
                                           Pages.SupplyChainPageBase.Standard,
                                           GStyle.delegateHighlightColor2,
                                           GStyle.fontHighlightColor2),
-                        // TODO: BUTTON! o_O
-                        createSummaryItem(Strings.plotId,
-                                          "AM003PM/0595112/04-03-2020",
+                        createSummaryItem("",
+                                          [
+                                              [ Strings.plotId ],
+                                              [ "AM003PM/0595112/04-03-2020" ],
+                                              [ GStyle.loupeUrl ],
+                                              [ "" ]
+                                          ],
                                           "", "",
-                                          Pages.SupplyChainPageBase.Standard,
+                                          Pages.SupplyChainPageBase.ColumnStack,
                                           GStyle.delegateHighlightColor,
                                           GStyle.fontHighlightColor),
                         // Collapsible delegate... ugh!
@@ -199,6 +203,26 @@ Pages.GPage {
                                                   "",
                                                   GStyle.uploadOkUrl,
                                                   GStyle.noPhotoUrl
+                                              ],
+                                              [
+                                                  "",
+                                                  "",
+                                                  [
+                                                      Enums.Page.PhotoGallery,
+                                                      "urls",
+                                                      [
+                                                          "/home/sierdzio/Pictures/Screenshot_20200428_103642.png",
+                                                          "/home/sierdzio/Pictures/Screenshot_20200507_141659.png"
+                                                      ]
+                                                  ],
+                                                  [
+                                                      Enums.Page.PhotoGallery,
+                                                      "urls",
+                                                      [
+                                                          "/home/sierdzio/Pictures/IMG_6737.jpg",
+                                                          "/home/sierdzio/Pictures/IMG_6761.jpg"
+                                                      ]
+                                                  ]
                                               ]
                                           ],
                                           "", "",
