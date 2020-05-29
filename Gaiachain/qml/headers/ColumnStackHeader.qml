@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.12
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
+import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 import "../headers" as Headers
@@ -75,16 +76,13 @@ Headers.AbstractListHeader {
 
                         onHasLinksChanged: console.log("hasLinks", hasLinks, links[index])
 
-                        property string propertyName: hasLinks? links[index][1] : ""
-
                         enabled: hasLinks
                         anchors.fill: parent
                         onClicked: {
-                            console.log("Clickety click", links[index][0], "#",
-                                        propertyName, "#", links[index][2])
+                            console.log("Clickety click", links[index][0],
+                                        "#", links[index][1])
                             pageManager.enter(links[index][0],
-                                              { "urls": links[index][2] } )
-                                              //{ propertyName: links[index][2] } )
+                                              Utility.arrayToObject(links[index][1]))
                         }
                     }
                 }

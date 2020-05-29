@@ -209,19 +209,19 @@ Pages.GPage {
                                                   "",
                                                   [
                                                       Enums.Page.PhotoGallery,
-                                                      "urls",
+                                                      ["urls",
                                                       [
                                                           "/home/sierdzio/Pictures/Screenshot_20200428_103642.png",
                                                           "/home/sierdzio/Pictures/Screenshot_20200507_141659.png"
-                                                      ]
+                                                      ]]
                                                   ],
                                                   [
                                                       Enums.Page.PhotoGallery,
-                                                      "urls",
+                                                      ["urls",
                                                       [
                                                           "/home/sierdzio/Pictures/IMG_6737.jpg",
                                                           "/home/sierdzio/Pictures/IMG_6761.jpg"
-                                                      ]
+                                                      ]]
                                                   ]
                                               ]
                                           ],

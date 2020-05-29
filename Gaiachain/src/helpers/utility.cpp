@@ -143,6 +143,44 @@ int Utility::getScannedIdLength() const
     return QR_CODE_LENGTH;
 }
 
+/*!
+ * Converts a \a list into a map which is then returned. JS will interpret the
+ * map as an object.
+ *
+ * \a list elements are inserted in pairs:
+ \code
+  let arr = [ "key", "value", "anotherKey", ["another", "values"]]
+  let obj = Utility.arrayToObject(arr)
+  // obj is:
+  // {
+  //    key: "value",
+  //    anotherKey: ["another", "values]
+  // }
+ \endcode
+ */
+QVariantMap Utility::arrayToObject(const QVariantList &list) const
+{
+    const int size = list.size();
+    QVariantMap result;
+    if ((size % 2) != 0) {
+        qWarning() << "Odd-sized list" << size
+                   <<"cannot be converted into an object!" << list;
+        return result;
+    }
+
+    QString key;
+    for (int i = 0; i < size; ++i) {
+        if (i % 2) {
+            result.insert(key, list.at(i));
+            key.clear();
+        } else {
+            key = list.at(i).toString();
+        }
+    }
+
+    return result;
+}
+
 QDate Utility::convertDateString(const QString &dateStr, const QString &dateFormat) const
 {
     QString format;
