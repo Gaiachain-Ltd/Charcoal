@@ -204,8 +204,10 @@ Pages.GPage {
                 } else if (item.type === Enums.PackageType.Transport) {
                     let docs = picturesManager.documents()
                     let recs = picturesManager.receipts()
-                    let docsIcon = "image://tickmark/document-" + (docs.length > 0)
-                    let recsIcon = "image://tickmark/receipt-" + (recs.length > 0)
+                    let hasDocs = docs.length > 0
+                    let hasRecs = recs.length > 0
+                    let docsIcon = "image://tickmark/document-" + hasDocs
+                    let recsIcon = "image://tickmark/receipt-" + hasRecs
 
                     summaryTitle = Strings.transportIdDetails
                     summary = [
@@ -239,7 +241,7 @@ Pages.GPage {
                                                   "",
                                                   "",
                                                   [
-                                                      docs.length > 0?
+                                                      hasDocs?
                                                           Enums.Page.PhotoGallery
                                                         : Enums.Page.InvalidPage,
                                                       [
@@ -247,7 +249,7 @@ Pages.GPage {
                                                       ]
                                                   ],
                                                   [
-                                                      recs.length > 0?
+                                                      hasRecs?
                                                           Enums.Page.PhotoGallery
                                                         : Enums.Page.InvalidPage,
                                                       [

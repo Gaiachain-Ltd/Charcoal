@@ -19,8 +19,6 @@ TickMarkIconProvider::TickMarkIconProvider()
 QPixmap TickMarkIconProvider::requestPixmap(const QString &id, QSize *size,
                                             const QSize &requestedSize)
 {
-    qDebug() << "Pixmap request!" << id << *size << requestedSize;
-
     const int fullWidth = 44;
     const int fullHeight = 44;
     const int border = 1;
@@ -48,7 +46,6 @@ QPixmap TickMarkIconProvider::requestPixmap(const QString &id, QSize *size,
 
     if (hasPhotos == false) {
         pixmap = QPixmap::fromImage(QImage(":/ui/noPhoto"));
-        //qDebug() << "No photos! Returning:" << id << pixmap.size() << *size;
         return pixmap;
     }
 
@@ -80,12 +77,12 @@ QPixmap TickMarkIconProvider::requestPixmap(const QString &id, QSize *size,
     painter.drawRoundedRect(borderRect, radius, radius);
     pixmap.setMask(map);
 
+    // Border
     QPainter painter2(&pixmap);
     painter2.setRenderHint(QPainter::Antialiasing);
     painter2.setPen(QPen(QColor(QStringLiteral("#FF70F1")), border));
     painter2.drawRoundedRect(borderRect, radius, radius);
 
-    //qDebug() << "Returning pixmap:" << id << pixmap.size() << *size;
     return pixmap;
 }
 
