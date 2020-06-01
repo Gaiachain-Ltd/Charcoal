@@ -32,7 +32,7 @@ Headers.AbstractListHeader {
 
                         visible: summaryMode
                         text: titles[index]
-                        color: highlighted? secondaryTextColor : mainColor
+                        color: mainColor
                         font.bold: highlighted? true : false
                         font.capitalization: Font.AllUppercase
                     }

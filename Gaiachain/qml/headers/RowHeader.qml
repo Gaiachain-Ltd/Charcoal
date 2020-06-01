@@ -30,7 +30,7 @@ Headers.AbstractListHeader {
 
                     visible: summaryMode
                     text: titles[index]
-                    color: highlighted? secondaryTextColor : mainColor
+                    color: mainColor
                     font.bold: highlighted? true : false
                 }
 
@@ -47,7 +47,7 @@ Headers.AbstractListHeader {
                     borderWidth: summaryMode? 0 : sr(1)
                     focus: false
                     backgroundColor: repeater.backgroundColor
-                    color: highlighted? secondaryTextColor : mainColor
+                    color: highlighted || summaryMode? secondaryTextColor : mainColor
                     font.bold: highlighted? true : false
                     validator: DoubleValidator {
                         bottom: 0.0
