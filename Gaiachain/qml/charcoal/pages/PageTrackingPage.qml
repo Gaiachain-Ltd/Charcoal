@@ -125,9 +125,7 @@ Pages.GPage {
                 let summary = []
                 let summaryTitle
 
-                if (item.type === Enums.PackageType.Plot) {
-                    summaryTitle = Strings.plotIdDetails
-                    summary = [
+                let plotSummary = [
                         createSummaryItem(Strings.plotId,
                                           item.title,
                                           "", "",
@@ -148,6 +146,10 @@ Pages.GPage {
                                           "Cassia siamea"),
 
                     ]
+
+                if (item.type === Enums.PackageType.Plot) {
+                    summaryTitle = Strings.plotIdDetails
+                    summary = plotSummary
                 } else if (item.type === Enums.PackageType.Harvest) {
                     summaryTitle = Strings.harvestIdDetails
                     summary = [
@@ -162,17 +164,41 @@ Pages.GPage {
                                               [ Strings.plotId ],
                                               [ "AM003PM/0595112/04-03-2020" ],
                                               [ GStyle.loupeUrl ],
-                                              [ "" ]
+                                              [
+                                                  [
+                                                      Enums.Page.SupplyChainSummary,
+                                                      [
+                                                          "title", Strings.plotIdDetails,
+                                                          "proceedButtonVisible", false,
+                                                          "summary", plotSummary
+                                                      ]
+                                                  ]
+                                              ]
                                           ],
                                           "", "",
                                           Pages.SupplyChainPageBase.ColumnStack,
                                           GStyle.delegateHighlightColor,
                                           GStyle.fontHighlightColor),
-                        // Collapsible delegate... ugh!
+                        // TODO: Collapsible delegate... ugh!
                         createSummaryItem(Strings.beginningDate,
                                           item.from),
                         createSummaryItem(Strings.endingDate,
-                                          item.to)
+                                          item.to),
+                        createSummaryItem(Strings.carbonizerId,
+                                          "AM004NA"),
+                        createSummaryItem(Strings.ovenDimensions,
+                                          [
+                                              [
+                                                  Strings.height,
+                                                  Strings.length,
+                                                  Strings.width
+                                              ],
+                                              [ 0.2, 12.0, 4.0 ]
+                                          ],
+                                          "", "",
+                                          Pages.SupplyChainPageBase.Row),
+                        createSummaryItem(Strings.timberVolume,
+                                          "12 m3"),
 
                     ]
                 } else if (item.type === Enums.PackageType.Transport) {
@@ -215,15 +241,13 @@ Pages.GPage {
                                                   [
                                                       Enums.Page.PhotoGallery,
                                                       [
-                                                          "urls",
-                                                          docs
+                                                          "urls", docs
                                                       ]
                                                   ],
                                                   [
                                                       Enums.Page.PhotoGallery,
                                                       [
-                                                          "urls",
-                                                          recs
+                                                          "urls", recs
                                                       ]
                                                   ]
                                               ]

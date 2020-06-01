@@ -6,9 +6,6 @@ import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
 
-//import "../items" as Items
-//import "../headers" as Headers
-//import "../components" as Components
 import "../../pages" as Pages
 
 Pages.GPage {

@@ -248,6 +248,7 @@ QtObject {
     // Charcoal - carbonization beginning page
     property string ovenId: tr.empty + qsTr("Oven ID")
     property string carbonizerId: tr.empty + qsTr("Carbonizer ID")
+    property string timberVolume: tr.empty + qsTr("Timber volume")
     property string ovenType: tr.empty + qsTr("Oven type")
     property string ovenDimensions: tr.empty + qsTr("Oven measurement (meters)")
 
