@@ -54,6 +54,13 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
+        let docs = picturesManager.documents()
+        let recs = picturesManager.receipts()
+        let hasDocs = docs.length > 0
+        let hasRecs = recs.length > 0
+        let docsIcon = "image://tickmark/document-" + hasDocs
+        let recsIcon = "image://tickmark/receipt-" + hasRecs
+
         var summary = [
                     createSummaryItem(Strings.transportId,
                                       // TODO: insert real data!
@@ -71,13 +78,32 @@ Pages.SupplyChainPageBase {
                                           ],
                                           [
                                               Strings.numberOfBagsDetail.arg("149").arg("150"),
-                                              Strings.approved,
-                                              Strings.noPhoto
+                                              hasDocs? Strings.approved : Strings.noPhoto,
+                                              hasRecs? Strings.approved : Strings.noPhoto
                                           ],
                                           [
                                               GStyle.warningUrl,
-                                              GStyle.uploadOkUrl,
-                                              GStyle.noPhotoUrl
+                                              docsIcon,
+                                              recsIcon
+                                          ],
+                                          [
+                                              "",
+                                              [
+                                                  hasDocs?
+                                                      Enums.Page.PhotoGallery
+                                                    : Enums.Page.InvalidPage,
+                                                  [
+                                                      "urls", docs
+                                                  ]
+                                              ],
+                                              [
+                                                  hasRecs?
+                                                      Enums.Page.PhotoGallery
+                                                    : Enums.Page.InvalidPage,
+                                                  [
+                                                      "urls", recs
+                                                  ]
+                                              ]
                                           ]
                                       ],
                                       "", "",

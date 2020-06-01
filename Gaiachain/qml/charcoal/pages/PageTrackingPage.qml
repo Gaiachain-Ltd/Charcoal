@@ -222,8 +222,8 @@ Pages.GPage {
                                               [
                                                   "150",
                                                   item.from,
-                                                  Strings.uploaded,
-                                                  Strings.noPhoto
+                                                  hasDocs? Strings.uploaded : Strings.noPhoto,
+                                                  hasRecs? Strings.uploaded : Strings.noPhoto
                                               ],
                                               [
                                                   Strings.numberOfBags,
