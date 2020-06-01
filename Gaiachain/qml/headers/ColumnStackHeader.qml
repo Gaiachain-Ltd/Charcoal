@@ -72,15 +72,11 @@ Headers.AbstractListHeader {
                     verticalAlignment: Image.AlignVCenter
 
                     MouseArea {
-                        property bool hasLinks: links[index].length > 0
+                        property bool hasLink: links[index][0] !== Enums.Page.InvalidPage
 
-                        onHasLinksChanged: console.log("hasLinks", hasLinks, links[index])
-
-                        enabled: hasLinks
+                        enabled: hasLink
                         anchors.fill: parent
                         onClicked: {
-                            console.log("Clickety click", links[index][0],
-                                        "#", links[index][1])
                             pageManager.enter(links[index][0],
                                               Utility.arrayToObject(links[index][1]))
                         }

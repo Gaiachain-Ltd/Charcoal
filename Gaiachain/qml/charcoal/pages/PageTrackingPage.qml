@@ -239,13 +239,17 @@ Pages.GPage {
                                                   "",
                                                   "",
                                                   [
-                                                      Enums.Page.PhotoGallery,
+                                                      docs.length > 0?
+                                                          Enums.Page.PhotoGallery
+                                                        : Enums.Page.InvalidPage,
                                                       [
                                                           "urls", docs
                                                       ]
                                                   ],
                                                   [
-                                                      Enums.Page.PhotoGallery,
+                                                      recs.length > 0?
+                                                          Enums.Page.PhotoGallery
+                                                        : Enums.Page.InvalidPage,
                                                       [
                                                           "urls", recs
                                                       ]
