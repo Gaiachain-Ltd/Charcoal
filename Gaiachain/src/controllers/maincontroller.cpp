@@ -185,6 +185,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 
 #ifdef CHARCOAL
     m_picturesManager.setupQmlContext(engine);
+    m_notificationsManager.setupQmlContext(engine);
 
     auto tickMarkProvider = new TickMarkIconProvider;
     tickMarkProvider->setPicturesManager(&m_picturesManager);

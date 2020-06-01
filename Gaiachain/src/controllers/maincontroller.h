@@ -12,6 +12,7 @@
 
 #ifdef CHARCOAL
 #include "charcoal/picturesmanager.h"
+#include "charcoal/notificationmanager.h"
 #endif
 
 class Application : public QObject
@@ -96,6 +97,7 @@ private:
 
 #ifdef CHARCOAL
     PicturesManager m_picturesManager;
+    NotificationManager m_notificationsManager;
 #endif
 
     void setupQZXing(QQmlApplicationEngine &engine);

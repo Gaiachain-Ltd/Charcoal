@@ -39,6 +39,7 @@
         <file>components/CommunicationStateItem.qml</file>
         <file>components/CalendarPackageEventsBars.qml</file>
         <file>components/PackageDataHarvestDetails.qml</file>
+        <file>components/NotificationWithLink.qml</file>
         <file>headers/TextAreaHeader.qml</file>
         <file>headers/InputHeader.qml</file>
         <file>headers/InputDateHeader.qml</file>

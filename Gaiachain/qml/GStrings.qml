@@ -359,4 +359,7 @@ QtObject {
 
     property string traditionalOven: tr.empty + qsTr("Traditional oven")
     property string metallicOven: tr.empty + qsTr("Metallic oven")
+
+    // Notifications
+    property string redirect: tr.empty + qsTr("Go to: %1")
 }
