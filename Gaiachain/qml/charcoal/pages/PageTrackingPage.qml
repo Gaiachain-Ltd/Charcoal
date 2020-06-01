@@ -176,6 +176,11 @@ Pages.GPage {
 
                     ]
                 } else if (item.type === Enums.PackageType.Transport) {
+                    let docs = picturesManager.documents()
+                    let recs = picturesManager.receipts()
+                    let docsIcon = docs.length > 0? GStyle.uploadOkUrl : GStyle.noPhotoUrl
+                    let recsIcon = recs.length > 0? GStyle.uploadOkUrl : GStyle.noPhotoUrl
+
                     summaryTitle = Strings.transportIdDetails
                     summary = [
                         createSummaryItem(Strings.transportId,
@@ -201,8 +206,8 @@ Pages.GPage {
                                               [
                                                   "",
                                                   "",
-                                                  GStyle.uploadOkUrl,
-                                                  GStyle.noPhotoUrl
+                                                  docsIcon,
+                                                  recsIcon
                                               ],
                                               [
                                                   "",
@@ -211,14 +216,14 @@ Pages.GPage {
                                                       Enums.Page.PhotoGallery,
                                                       [
                                                           "urls",
-                                                          picturesManager.documents()
+                                                          docs
                                                       ]
                                                   ],
                                                   [
                                                       Enums.Page.PhotoGallery,
                                                       [
                                                           "urls",
-                                                          picturesManager.receipts()
+                                                          recs
                                                       ]
                                                   ]
                                               ]
