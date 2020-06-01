@@ -8,6 +8,8 @@
 #include <QFileInfo>
 #include <QDateTime>
 
+#include <QMetaEnum>
+
 #include <QDebug>
 
 PicturesManager::PicturesManager(QObject *parent) : AbstractManager(parent)
@@ -59,6 +61,12 @@ QStringList PicturesManager::documents() const
 QStringList PicturesManager::receipts() const
 {
     return photosOfType(PicturesManager::PictureType::Receipt);
+}
+
+QString PicturesManager::pictureTypeString(const PicturesManager::PictureType type)
+{
+    const auto se = QMetaEnum::fromType<PicturesManager::PictureType>();
+    return se.valueToKey(int(type));
 }
 
 void PicturesManager::prepareDirectories() const

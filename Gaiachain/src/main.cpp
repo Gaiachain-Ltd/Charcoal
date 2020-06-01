@@ -4,7 +4,7 @@
 #include <QQmlContext>
 #include <QTimer>
 
-#include "../src/controllers/maincontroller.h"
+#include "src/controllers/maincontroller.h"
 #include "../milo/mlog/mlog.h"
 
 // Prepare logging categories. Modify these to your needs

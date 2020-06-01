@@ -204,8 +204,8 @@ Pages.GPage {
                 } else if (item.type === Enums.PackageType.Transport) {
                     let docs = picturesManager.documents()
                     let recs = picturesManager.receipts()
-                    let docsIcon = docs.length > 0? GStyle.uploadOkUrl : GStyle.noPhotoUrl
-                    let recsIcon = recs.length > 0? GStyle.uploadOkUrl : GStyle.noPhotoUrl
+                    let docsIcon = "image://tickmark/document-" + (docs.length > 0)
+                    let recsIcon = "image://tickmark/receipt-" + (recs.length > 0)
 
                     summaryTitle = Strings.transportIdDetails
                     summary = [

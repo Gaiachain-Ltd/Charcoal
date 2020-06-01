@@ -40,10 +40,12 @@ charcoal {
 
     HEADERS += \
         src/charcoal/charcoaluserdata.h \
-        src/charcoal/picturesmanager.h
+        src/charcoal/picturesmanager.h \
+        src/charcoal/tickmarkiconprovider.h
 
     SOURCES += \
-        src/charcoal/picturesmanager.cpp
+        src/charcoal/picturesmanager.cpp \
+        src/charcoal/tickmarkiconprovider.cpp
 }
 
 include(../version.pri)

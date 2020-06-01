@@ -34,6 +34,8 @@ public:
     Q_INVOKABLE QStringList documents() const;
     Q_INVOKABLE QStringList receipts() const;
 
+    static QString pictureTypeString(const PictureType type);
+
 private:
     void prepareDirectories() const;
     void savePhoto(const QString &path, const PicturesManager::PictureType type) const;

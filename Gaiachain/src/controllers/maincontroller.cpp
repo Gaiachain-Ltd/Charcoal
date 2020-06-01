@@ -24,6 +24,10 @@
 #include "../common/dummy/commondummydata.h"
 #endif
 
+#ifdef CHARCOAL
+#include "../charcoal/tickmarkiconprovider.h"
+#endif
+
 template <typename Singleton>
 QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
 {
@@ -181,6 +185,10 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 
 #ifdef CHARCOAL
     m_picturesManager.setupQmlContext(engine);
+
+    auto tickMarkProvider = new TickMarkIconProvider;
+    tickMarkProvider->setPicturesManager(&m_picturesManager);
+    engine.addImageProvider(TickMarkIconProvider::name(), tickMarkProvider);
 #endif
 
     setupQZXing(engine);
