@@ -31,12 +31,18 @@ public:
     Q_INVOKABLE void saveReceiptPhoto(const QString &path) const;
     Q_INVOKABLE void discardPhoto(const QString &path) const;
 
+    Q_INVOKABLE QStringList documents() const;
+    Q_INVOKABLE QStringList receipts() const;
+
 private:
     void prepareDirectories() const;
     void savePhoto(const QString &path, const PicturesManager::PictureType type) const;
     void cleanUp() const;
+    QStringList photosOfType(const PicturesManager::PictureType type) const;
 
     const QString m_base = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    const QString m_document_keyword = "document";
+    const QString m_receipt_keyword = "receipt";
     const QString m_savedDir = "saved";
     const QString m_picturesDir = "pictures";
     const QString m_path = m_base + "/" + m_picturesDir;

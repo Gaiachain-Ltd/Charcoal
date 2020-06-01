@@ -22,7 +22,7 @@ Pages.GPage {
 
     ListView {
         anchors.fill: parent
-        spacing: s(GStyle.bigMargin)
+        spacing: 5 * s(GStyle.bigMargin)
 
         model: urls
 
