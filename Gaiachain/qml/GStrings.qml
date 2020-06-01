@@ -298,6 +298,7 @@ QtObject {
     property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 
     // Charcoal - tracking page
+    property string allTab: tr.empty + qsTr("All")
     property string plotTab: tr.empty + qsTr("Plot")
     property string harvestTab: tr.empty + qsTr("Harvest")
     property string transportTab: tr.empty + qsTr("Transport")
