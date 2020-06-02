@@ -157,15 +157,19 @@ bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const b
 
     Enums::Page currentTop = m_pageStack.last();
     const Enums::Page closedPage = currentTop;
+#ifdef CHARCOAL
     Enums::Page stepPage = Enums::Page::InvalidPage;
+#endif
     while (currentTop != page) {
         m_pageStack.removeLast();
         currentTop = m_pageStack.last();
+#ifdef CHARCOAL
         if (currentTop == Enums::Page::SupplyChainLoggingEnding
             || currentTop == Enums::Page::SupplyChainCarbonizationEnding
             || currentTop == Enums::Page::SupplyChainLoadingAndTransport) {
             stepPage = currentTop;
         }
+#endif
     }
 
     qCDebug(corePageManager) << "Going back to page" << toFilePath(page)
@@ -174,6 +178,7 @@ bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const b
     emit stackViewPopTo(page, properties, immediate);
     emit topPageChanged(topPage());
 
+#ifdef CHARCOAL
     /*
      * TODO WARNING TEMPORARY CODE
      *
@@ -191,6 +196,7 @@ bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const b
         break;
     default: break;
     }
+#endif
 
     return true;
 }
