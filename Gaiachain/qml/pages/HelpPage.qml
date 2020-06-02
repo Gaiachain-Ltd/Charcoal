@@ -66,7 +66,6 @@ Items.GPanel {
             id: helpText
             Layout.fillHeight: true
             Layout.fillWidth: true
-            text: Strings.defaultHelp
             color: GStyle.textSecondaryColor
             wrapMode: Text.Wrap
             verticalAlignment: Text.AlignTop

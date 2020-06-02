@@ -192,8 +192,6 @@ QtObject {
     // Help
     property string helpTitle: tr.empty + qsTr("What is %1?")
 
-    readonly property string defaultHelp: ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam augue, aliquam ut quam non, sollicitudin pharetra lacus. Duis molestie turpis vel urna ullamcorper elementum.")
-
     // Charcoal
     property string tracking: tr.empty + qsTr("Tracking")
     property string replantation: tr.empty + qsTr("Replantation")

@@ -11,8 +11,6 @@ import "../../items" as Items
 ListView {
     id: top
 
-    //property real delegateHeight: GStyle.listViewDelegateDefaultHeight
-
     signal delegateClicked(string packageId, int type)
 
     spacing: s(GStyle.smallMargin)
@@ -28,7 +26,8 @@ ListView {
         height: item.height
 
         MouseArea {
-            anchors.fill: parent // use model because action resolve wrongly
+            anchors.fill: parent
+            // use model because action resolves it wrongly
             onClicked: delegateClicked(model.title, model.type)
         }
 
@@ -49,7 +48,6 @@ ListView {
                 maximumLineCount: 5
 
                 text: title
-                //color: Helper.packageTypeColor(DataGlobals.packageType(action))
 
                 color: {
                     if (type === Enums.PackageType.Plot) {
@@ -83,7 +81,6 @@ ListView {
                             horizontalAlignment: Text.AlignRight
 
                             text: (index === 0)? from : to
-                            //text: Helper.formatDate(Number(value))
                         }
                     }
 

@@ -29,7 +29,7 @@ Item {
 
     property alias helpButtonVisible: image.visible
     property string helpTitle: headerText
-    property string helpText: Strings.defaultHelp
+    property string helpText
 
     property int margins: s(GStyle.hugeMargin)
 
