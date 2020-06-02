@@ -15,6 +15,7 @@ public:
 
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
+public slots:
     void stepComplete(const Enums::SupplyChainAction step, const QString &id) const;
 
 signals:

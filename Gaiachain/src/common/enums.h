@@ -69,6 +69,7 @@ namespace Enums {
         Comment,
         Text,
         About,
+        NotificationWithLink,
 
         PopupCount
     };

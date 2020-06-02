@@ -39,7 +39,6 @@
         <file>components/CommunicationStateItem.qml</file>
         <file>components/CalendarPackageEventsBars.qml</file>
         <file>components/PackageDataHarvestDetails.qml</file>
-        <file>components/NotificationWithLink.qml</file>
         <file>headers/TextAreaHeader.qml</file>
         <file>headers/InputHeader.qml</file>
         <file>headers/InputDateHeader.qml</file>
@@ -113,5 +112,6 @@
         <file>popups/InformationPopup.qml</file>
         <file>popups/WaitOverlayPopup.qml</file>
         <file>popups/ConfirmPopup.qml</file>
+        <file>popups/NotificationWithLinkPopup.qml</file>
     </qresource>
 </RCC>

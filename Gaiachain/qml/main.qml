@@ -8,7 +8,6 @@ import com.gaiachain.static 1.0
 import com.gaiachain.helpers 1.0
 
 import "items" as Items
-import "components" as Components
 
 ApplicationWindow
 {
@@ -61,28 +60,4 @@ ApplicationWindow
     }
 
     onClosing: close.accepted = mainStackView.onClosingEvent()
-
-    Components.NotificationWithLink {
-        id: notification
-
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-
-        height: parent.height * .4
-        visible: false
-
-        Connections {
-            target: notificationManager? notificationManager : null
-            onNotify: {
-                notification.redirectPage = page
-                notification.headerText = header
-                notification.text = text
-                notification.redirectText = redirectText
-                notification.visible = true
-            }
-        }
-    }
 }

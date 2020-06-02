@@ -107,6 +107,28 @@ void MainController::setupDataConnections()
     connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
+
+#ifdef CHARCOAL
+    // TODO: use a regular slot in PageManager
+    connect(&m_notificationsManager, &NotificationManager::notify,
+            &m_pageManager, [this](const Enums::Page page,
+                               const QString &header,
+                               const QString &text,
+                               const QString &redirectText) {
+                qDebug() << "Please notify!" << page << header << text << redirectText;
+                m_pageManager.openPopup(Enums::Popup::NotificationWithLink,
+                                        {
+                                            { "headerText", header },
+                                            { "text", text },
+                                            { "redirectText", redirectText },
+                                            { "redirectPage", int(page) }
+                                        });
+            });
+
+    connect(&m_pageManager, &PageManager::stepComplete,
+            &m_notificationsManager, &NotificationManager::stepComplete,
+            Qt::QueuedConnection);
+#endif
 }
 
 void MainController::initialWork()

@@ -17,26 +17,22 @@ void NotificationManager::setupQmlContext(QQmlApplicationEngine &engine)
 void NotificationManager::stepComplete(const Enums::SupplyChainAction step,
                                        const QString &id) const
 {
-    Q_UNUSED(id)
-
-    // "AM003PM/0595112/04-03-2020"
-
     switch (step) {
     case Enums::SupplyChainAction::LoggingEnding:
         emit notify(Enums::Page::SupplyChainLoggingEnding,
-                    tr("Logging process for %1 has ended.").arg(id),
+                    tr("Logging process for <b>%1</b> has ended.").arg(id),
                     tr("Logs are ready to carbonize!"),
                     tr("Carbonization - beggining"));
         break;
     case Enums::SupplyChainAction::CarbonizationEnding:
         emit notify(Enums::Page::SupplyChainLoadingAndTransport,
-                    tr("Carbonization process for %1 has ended.").arg(id),
+                    tr("Carbonization process for <b>%1</b> has ended.").arg(id),
                     tr("Charcoal is ready for loading and transport!"),
                     tr("Loading and transport"));
         break;
     case Enums::SupplyChainAction::LoadingAndTransport:
         emit notify(Enums::Page::SupplyChainReception,
-                    tr("Loading and transport process for %1 has ended.").arg(id),
+                    tr("Loading and transport process for <b>%1</b> has ended.").arg(id),
                     tr("If the truck has arrived, you can register it!"),
                     tr("Reception"));
         break;
