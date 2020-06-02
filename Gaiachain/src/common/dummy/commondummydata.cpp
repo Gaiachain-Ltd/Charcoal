@@ -4,13 +4,14 @@
 
 namespace {
 const QHash<QString, Enums::UserType> UsersData = {
-    { QStringLiteral("god@gaiachain.io"), Enums::UserType::SuperUser },
 #ifdef COCOA
+    { QStringLiteral("god@gaiachain.io"), Enums::UserType::SuperUser },
     { QStringLiteral("inspector@gaiachain.io"), Enums::UserType::Inspector },
     { QStringLiteral("pca@gaiachain.io"), Enums::UserType::PCA },
     { QStringLiteral("warehouseman@gaiachain.io"), Enums::UserType::Warehouseman },
     { QStringLiteral("cooperative@gaiachain.io"), Enums::UserType::CooperativeRepresentative }
 #elif CHARCOAL
+    { QStringLiteral("god@milosolutions.com"), Enums::UserType::SuperUser },
 #endif
 };
 const QString CommonPassword = QStringLiteral("milo1024");
@@ -36,7 +37,7 @@ QList<QString> CommonDummyData::sortedLogins()
 {
     auto logins = UsersData.keys();
     std::sort(logins.begin(), logins.end(),
-          [](const QString &l, const QString &r) {
+              [](const QString &l, const QString &r) {
                   return UsersData.value(l) < UsersData.value(r);
               });
 

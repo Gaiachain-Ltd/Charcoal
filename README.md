@@ -1,6 +1,6 @@
 [Gaiachain](https://gaiachain.io/)
 
-Proof of concept v2
+Proof of concept v2 & Charcoal flavor.
 
 # Intro
 
@@ -19,14 +19,7 @@ Recommended Qt version for the project is the newest LTS version (currently **Qt
 
 There are two 3rd party libraries used in the project
 * [qzxing](https://github.com/ftylitak/qzxing) - used in QR code scanner (sources included in the project structure)
-* [OpenSSL] - which need to be built separately, especially for Android platform.
-
-#### OpenSSL
-
-To build OpenSSL libraries for Android use scripts located in *Gaiachain/3rdparty/OpenSSL* directory.
-
-1. Copy *setenv-android.sh.example* to *setenv-android.sh* and adjust all properties.
-2. Run *prepare_openssl_android.sh*
+* [OpenSSL] - needs to be built separately. To do it, copy `setenv-android.sh.example` into `setenv-android.sh`, modify it to add relevant Android paths and newest OpenSSL version. Then you can use `prepare_openssl_android.sh` and `prepare_openssl_linux.sh` to compile. Scripts do everything automatically, and `openssl.pri` will pick this build up automatically as well
 
 ## Source info
 
