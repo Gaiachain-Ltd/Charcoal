@@ -19,7 +19,7 @@ void NotificationManager::stepComplete(const Enums::SupplyChainAction step,
 {
     switch (step) {
     case Enums::SupplyChainAction::LoggingEnding:
-        emit notify(Enums::Page::SupplyChainLoggingEnding,
+        emit notify(Enums::Page::SupplyChainCarbonizationBeginning,
                     tr("Logging process for <b>%1</b> has ended.").arg(id),
                     tr("Logs are ready to carbonize!"),
                     tr("Carbonization - beggining"));

@@ -50,7 +50,6 @@ GPopup {
     }
 
     contentItem: ColumnLayout {
-        //anchors.fill: parent
         anchors.margins: s(GStyle.bigMargin)
         spacing: s(GStyle.bigMargin)
 
@@ -106,8 +105,8 @@ GPopup {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    pageManager.enter(redirectPage)
                     hide()
+                    pageManager.enter(redirectPage)
                 }
             }
 
