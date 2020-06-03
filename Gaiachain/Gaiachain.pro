@@ -29,6 +29,9 @@ cocoa {
 
     HEADERS += \
         src/cocoa/cocoauserdata.h
+
+    SOURCES = \
+        src/cocoa/cocoamigrations.cpp
 }
 
 charcoal {
@@ -47,7 +50,8 @@ charcoal {
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
         src/charcoal/tickmarkiconprovider.cpp \
-        src/charcoal/notificationmanager.cpp
+        src/charcoal/notificationmanager.cpp \
+        src/charcoal/charcoalmigrations.cpp
 }
 
 include(../version.pri)
