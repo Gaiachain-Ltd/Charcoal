@@ -18,13 +18,13 @@
 
 class QGeoCoordinate;
 
-class DataManager : public AbstractManager
+class AbstractDataManager : public AbstractManager
 {
     Q_OBJECT
 
 public:
-    DataManager(QObject *parent = nullptr);
-    ~DataManager() override;
+    AbstractDataManager(QObject *parent = nullptr);
+    ~AbstractDataManager() override;
 
     void setupQmlContext(QQmlApplicationEngine &engine) override;
     void setupDatabase(const QString &dbPath);
@@ -109,9 +109,8 @@ public slots:
     void onAdditionalDataLoaded(const QJsonObject &additionalData);
     void onEntitiesInfoLoaded(const QJsonArray &entitiesInfo);
     void onEntitiesLoaded(const QJsonArray &entities);
-    void onUnusedLotIdsLoaded(const QJsonArray &idsArray);
 
-private:
+protected:
     QThread m_processingThread;
 
     DataRequestsManager m_requestsHandler;

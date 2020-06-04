@@ -5,9 +5,8 @@
 #include "databasemanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
-#include "data/datamanager.h"
 
-#include "../common/languagemanager.h"
+#include "common/languagemanager.h"
 
 #ifdef CHARCOAL
 #include "charcoal/picturesmanager.h"
@@ -15,6 +14,7 @@
 #endif
 
 class RestSessionManager;
+class AbstractDataManager;
 
 class Application : public QObject
 {
@@ -95,10 +95,9 @@ private:
     DatabaseManager m_dbManager;
 
     RestSessionManager *m_sessionManager = nullptr;
+    AbstractDataManager *m_dataManager = nullptr;
 
-#ifdef COCOA
-    DataManager m_dataManager;
-#elif CHARCOAL
+#ifdef CHARCOAL
     PicturesManager m_picturesManager;
     NotificationManager m_notificationsManager;
 #endif

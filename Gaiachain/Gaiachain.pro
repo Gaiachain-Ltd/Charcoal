@@ -101,14 +101,15 @@ CONFIG += c++17
 INCLUDEPATH += src
 
 HEADERS += \
+    src/cocoa/cocoadatamanager.h \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
     src/common/languagemanager.h \
     src/common/types.h \
     src/common/abstractuserdata.h \
+    src/controllers/data/abstractdatamanager.h \
     src/controllers/data/abstractdatamodelsmanager.h \
     src/controllers/data/datalocalmanager.h \
-    src/controllers/data/datamanager.h \
     src/controllers/data/datamodelsmanager.h \
     src/controllers/data/datarequestsmanager.h \
     src/controllers/data/dataviewmanager.h \
@@ -180,6 +181,7 @@ HEADERS += \
     src/common/logs.h
 
 SOURCES += src/main.cpp \
+    src/cocoa/cocoadatamanager.cpp \
     src/common/dummy/commondummydata.cpp \
     src/common/languagemanager.cpp \
     src/common/logs.cpp \
@@ -188,9 +190,9 @@ SOURCES += src/main.cpp \
     src/common/globals.cpp \
     src/common/types.cpp \
     src/common/abstractuserdata.cpp \
+    src/controllers/data/abstractdatamanager.cpp \
     src/controllers/data/abstractdatamodelsmanager.cpp \
     src/controllers/data/datalocalmanager.cpp \
-    src/controllers/data/datamanager.cpp \
     src/controllers/data/datamodelsmanager.cpp \
     src/controllers/data/datarequestsmanager.cpp \
     src/controllers/data/dataviewmanager.cpp \
