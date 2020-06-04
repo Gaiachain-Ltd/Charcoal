@@ -75,19 +75,16 @@ void MainController::setupConnections()
     connect(m_sessionManager, &AbstractSessionManager::loginFinished,
             &m_userManager, &UserManager::readLoginData);
 
-#ifdef COCOA
     connect(&m_dbManager, &DatabaseManager::databaseReady,
             m_dataManager, &AbstractDataManager::setupDatabase);
     connect(&m_userManager, &UserManager::userDataChanged,
             m_dataManager, &AbstractDataManager::updateUserData);
-#endif
 
     setupDataConnections();
 }
 
 void MainController::setupDataConnections()
 {
-#ifdef COCOA
     connect(m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
                                       const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractDataManager::addActionRequest),
             m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
@@ -107,7 +104,10 @@ void MainController::setupDataConnections()
             m_dataManager, &AbstractDataManager::onActionAddError);
 
     connect(m_sessionManager, &AbstractSessionManager::connectionStateChanged,
-            m_dataManager, [dataManager = m_dataManager, userManager = &m_userManager, pageManager = &m_pageManager](Enums::ConnectionState connectionState) {
+            m_dataManager, [dataManager = m_dataManager,
+                            userManager = &m_userManager,
+                            pageManager = &m_pageManager]
+            (Enums::ConnectionState connectionState) {
                 if (connectionState == Enums::ConnectionState::ConnectionSuccessful &&
                     !userManager->isOfflineMode() &&
                     pageManager->topPage() != Enums::Page::Login &&
@@ -135,6 +135,8 @@ void MainController::setupDataConnections()
             m_dataManager, &AbstractDataManager::onEntitiesLoaded);
     connect(m_sessionManager, &AbstractSessionManager::additionalDataLoaded,
             m_dataManager, &AbstractDataManager::onAdditionalDataLoaded);
+
+#ifdef COCOA
     connect(qobject_cast<CocoaSessionManager*>(m_sessionManager),
             &CocoaSessionManager::unusedLotIdsLoaded,
             qobject_cast<CocoaDataManager*>(m_dataManager),
