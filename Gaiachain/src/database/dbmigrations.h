@@ -15,7 +15,11 @@ namespace db {
 class Migration;
 
 //!!! Always remember to update current version for any db changes!
+#ifdef COCOA
 const QVersionNumber LATEST_DB_VERSION = { 0, 9, 1 };
+#elif CHARCOAL
+const QVersionNumber LATEST_DB_VERSION = { 0, 0, 4 };
+#endif
 
 extern const QVector<Migration> DB_MIGRATIONS;
 

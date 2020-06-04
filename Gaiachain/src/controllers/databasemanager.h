@@ -5,7 +5,7 @@
 
 #include <QFutureWatcher>
 
-#include "../database/dbmigrationmanager.h"
+#include "database/dbmigrationmanager.h"
 
 class DatabaseManager : public AbstractManager
 {

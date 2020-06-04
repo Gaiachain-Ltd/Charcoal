@@ -92,10 +92,11 @@ private:
     UserManager m_userManager;
 
     DatabaseManager m_dbManager;
+
+#ifdef COCOA
     DataManager m_dataManager;
     SessionManager m_sessionManager;
-
-#ifdef CHARCOAL
+#elif CHARCOAL
     PicturesManager m_picturesManager;
     NotificationManager m_notificationsManager;
 #endif

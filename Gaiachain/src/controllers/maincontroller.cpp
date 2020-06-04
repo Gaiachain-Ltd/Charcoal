@@ -50,33 +50,43 @@ MainController::MainController(QObject *parent)
 
 void MainController::setupConnections()
 {
-    connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupDatabase);
+#ifdef COCOA
+    connect(&m_dbManager, &DatabaseManager::databaseReady,
+            &m_dataManager, &DataManager::setupDatabase);
 
     connect(&m_userManager, &UserManager::offlineModeChanged,
-            &m_sessionManager, [sessionManager = &m_sessionManager](bool offlineMode) { sessionManager->setEnabled(!offlineMode); });
-    connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
-    connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
-    connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
+            &m_sessionManager, [sessionManager = &m_sessionManager](bool offlineMode) {
+                sessionManager->setEnabled(!offlineMode);
+            });
+    connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager,
+            &AbstractSessionManager::updateToken);
+    connect(&m_sessionManager, &AbstractSessionManager::loginAttempt,
+            &m_userManager, &UserManager::handleLoginAttempt);
+    connect(&m_sessionManager, &AbstractSessionManager::loginFinished,
+            &m_userManager, &UserManager::readLoginData);
 
-    connect(&m_userManager, &UserManager::userDataChanged, &m_dataManager, &DataManager::updateUserData);
+    connect(&m_userManager, &UserManager::userDataChanged,
+            &m_dataManager, &DataManager::updateUserData);
+#endif
 
     setupDataConnections();
 }
 
 void MainController::setupDataConnections()
 {
+#ifdef COCOA
     connect(&m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
     connect(&m_dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
     connect(&m_dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
             &m_sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
 
     connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
             &m_dataManager, &DataManager::onActionAdded);
@@ -85,13 +95,13 @@ void MainController::setupDataConnections()
 
     connect(&m_sessionManager, &AbstractSessionManager::connectionStateChanged,
             &m_dataManager, [dataManager = &m_dataManager, userManager = &m_userManager, pageManager = &m_pageManager](Enums::ConnectionState connectionState) {
-        if (connectionState == Enums::ConnectionState::ConnectionSuccessful &&
-                !userManager->isOfflineMode() &&
-                pageManager->topPage() != Enums::Page::Login &&
-                pageManager->topPage() != Enums::Page::LoginLoading) {
-            dataManager->sendOfflineActions();
-        }
-    });
+                if (connectionState == Enums::ConnectionState::ConnectionSuccessful &&
+                    !userManager->isOfflineMode() &&
+                    pageManager->topPage() != Enums::Page::Login &&
+                    pageManager->topPage() != Enums::Page::LoginLoading) {
+                    dataManager->sendOfflineActions();
+                }
+            });
 
     connect(&m_dataManager, qOverload<const QDateTime &, const QDateTime &>(&DataManager::eventsInfoNeeded),
             &m_sessionManager, qOverload<const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
@@ -108,13 +118,13 @@ void MainController::setupDataConnections()
     connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
     connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
 
-#ifdef CHARCOAL
+#elif CHARCOAL
     // TODO: use a regular slot in PageManager
     connect(&m_notificationsManager, &NotificationManager::notify,
             &m_pageManager, [this](const Enums::Page page,
-                               const QString &header,
-                               const QString &text,
-                               const QString &redirectText) {
+                                   const QString &header,
+                                   const QString &text,
+                                   const QString &redirectText) {
                 qDebug() << "Please notify!" << page << header << text << redirectText;
                 m_pageManager.openPopup(Enums::Popup::NotificationWithLink,
                                         {
@@ -202,10 +212,11 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     m_pageManager.setupQmlContext(engine);
     m_userManager.setupQmlContext(engine);
     m_dbManager.setupQmlContext(engine);
+
+#ifdef COCOA
     m_dataManager.setupQmlContext(engine);
     m_sessionManager.setupQmlContext(engine);
-
-#ifdef CHARCOAL
+#elif CHARCOAL
     m_picturesManager.setupQmlContext(engine);
     m_notificationsManager.setupQmlContext(engine);
 

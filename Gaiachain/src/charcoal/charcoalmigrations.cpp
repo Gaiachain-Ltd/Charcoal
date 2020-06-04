@@ -22,15 +22,15 @@ const QVector<Migration> db::DB_MIGRATIONS = {
         { 0, 0, 2 },
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
-            QLatin1String("CREATE TABLE Villages (`id` INTEGER primary key UNIQUE, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key UNIQUE, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key UNIQUE, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key UNIQUE, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key UNIQUE, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE Villages (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             // SupplyChain
-            QLatin1String("CREATE TABLE Transactions (`id` INTEGER primary key UNIQUE, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE TransactionTypes (`id` INTEGER primary key UNIQUE, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE Steps (`id` INTEGER primary key UNIQUE, `date` INTEGER NOT NULL, `locationLat` REAL NOT NULL, `locationLon` REAL NOT NULL, `properties` TEXT NOT NULL)")
+            QLatin1String("CREATE TABLE Transactions (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE TransactionTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE Steps (`id` INTEGER primary key AUTOINCREMENT, `date` INTEGER NOT NULL, `locationLat` REAL NOT NULL, `locationLon` REAL NOT NULL, `properties` TEXT NOT NULL)")
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
@@ -52,12 +52,13 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             // Additional data
             // Nothing static here
             // Supply chain
-            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (`Plot`)"),
-            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (`Harvest`)"),
-            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (`Transport`)"),
+            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (\"Plot\")"),
+            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (\"Harvest\")"),
+            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (\"Transport\")"),
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String()
+            QLatin1String("DELETE FROM TransactionTypes"),
+            QLatin1String("VACUUM")
         }, true)
     },
     // This inserts some DUMMY data!
@@ -66,14 +67,17 @@ const QVector<Migration> db::DB_MIGRATIONS = {
         { 0, 0, 4 },
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
-            QLatin1String("INSERT INTO Villages (name) VALUES (`Village One`)"),
-            QLatin1String("INSERT INTO Villages (name) VALUES (`Village Two`)"),
+            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village One\")"),
+            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Two\")"),
+            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Three\")"),
             // Supply chain
-            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (`Cassia siamea`)"),
-            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (`Technona grandis`)"),
+            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Cassia siamea\")"),
+            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Technona grandis\")"),
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String()
+            QLatin1String("DELETE FROM Villages"),
+            QLatin1String("DELETE FROM TreeSpecies"),
+            QLatin1String("VACUUM")
         }, true)
     },
 };
