@@ -1,8 +1,8 @@
 #ifndef ABSTRACTSESSIONMANAGER_H
 #define ABSTRACTSESSIONMANAGER_H
 
-#include "../abstractmanager.h"
-#include "../../common/enums.h"
+#include "controllers/abstractmanager.h"
+#include "common/enums.h"
 
 #include <QNetworkReply>
 #include <QLoggingCategory>

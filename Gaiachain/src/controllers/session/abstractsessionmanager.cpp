@@ -3,7 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "../../helpers/requestshelper.h"
+#include "helpers/requestshelper.h"
 
 #include <QLoggingCategory>
 Q_LOGGING_CATEGORY(sessionManager, "session.manager")

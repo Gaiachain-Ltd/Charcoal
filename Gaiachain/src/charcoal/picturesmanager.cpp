@@ -1,4 +1,5 @@
 ﻿#include "picturesmanager.h"
+#include "common/logs.h"
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -19,7 +20,7 @@ PicturesManager::PicturesManager(QObject *parent) : AbstractManager(parent)
 
 PicturesManager::~PicturesManager()
 {
-    qWarning() << "TODO: clean up photos! By this point, they should be in the DB already";
+    qWarning() << RED("TODO: clean up photos! By this point, they should be in the DB already");
     //cleanUp();
 }
 

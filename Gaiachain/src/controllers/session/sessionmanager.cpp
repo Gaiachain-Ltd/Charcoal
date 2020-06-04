@@ -6,11 +6,11 @@
 #include <QJsonArray>
 #include <QGeoCoordinate>
 
-#include "../../common/tags.h"
-#include "../../common/globals.h"
-#include "../../rest/authrequest.h"
-#include "../../rest/entityrequest.h"
-#include "../../rest/additionaldatarequest.h"
+#include "common/tags.h"
+#include "common/globals.h"
+#include "rest/authrequest.h"
+#include "rest/entityrequest.h"
+#include "rest/additionaldatarequest.h"
 
 SessionManager::SessionManager(QObject *parent)
     : AbstractSessionManager(parent)
