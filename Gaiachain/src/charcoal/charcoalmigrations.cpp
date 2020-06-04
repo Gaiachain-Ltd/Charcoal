@@ -28,8 +28,9 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             // SupplyChain
-            QLatin1String("CREATE TABLE Transactions (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE TransactionTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            // Entities are how Transactions are called on Web side
+            QLatin1String("CREATE TABLE Entities (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE EntityTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             QLatin1String("CREATE TABLE Steps (`id` INTEGER primary key AUTOINCREMENT, `date` INTEGER NOT NULL, `locationLat` REAL NOT NULL, `locationLon` REAL NOT NULL, `properties` TEXT NOT NULL)")
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
@@ -40,8 +41,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("DROP TABLE Destinations"),
             QLatin1String("DROP TABLE OvenTypes"),
             // Supply chain
-            QLatin1String("DROP TABLE Transactions"),
-            QLatin1String("DROP TABLE TransactionTypes"),
+            QLatin1String("DROP TABLE Entities"),
+            QLatin1String("DROP TABLE EntityTypes"),
             QLatin1String("DROP TABLE Steps"),
         }, true)
     },
@@ -52,12 +53,12 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             // Additional data
             // Nothing static here
             // Supply chain
-            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (\"Plot\")"),
-            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (\"Harvest\")"),
-            QLatin1String("INSERT INTO TransactionTypes (name) VALUES (\"Transport\")"),
+            QLatin1String("INSERT INTO EntityTypes (name) VALUES (\"Plot\")"),
+            QLatin1String("INSERT INTO EntityTypes (name) VALUES (\"Harvest\")"),
+            QLatin1String("INSERT INTO EntityTypes (name) VALUES (\"Transport\")"),
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("DELETE FROM TransactionTypes"),
+            QLatin1String("DELETE FROM EntityTypes"),
             QLatin1String("VACUUM")
         }, true)
     },

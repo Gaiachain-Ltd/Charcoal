@@ -1,4 +1,4 @@
-#include "sessionmanager.h"
+#include "restsessionmanager.h"
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -12,11 +12,11 @@
 #include "rest/entityrequest.h"
 #include "rest/additionaldatarequest.h"
 
-SessionManager::SessionManager(QObject *parent)
+RestSessionManager::RestSessionManager(QObject *parent)
     : AbstractSessionManager(parent)
 {}
 
-void SessionManager::ping()
+void RestSessionManager::ping()
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit pingError(code);
@@ -27,7 +27,7 @@ void SessionManager::ping()
     sendRequest(QSharedPointer<AuthRequest>::create(), errorHandler, replyHandler, true);
 }
 
-void SessionManager::login(const QString &login, const QString &password)
+void RestSessionManager::login(const QString &login, const QString &password)
 {
     emit loginAttempt(login, password);
 
@@ -44,7 +44,7 @@ void SessionManager::login(const QString &login, const QString &password)
     sendRequest(QSharedPointer<AuthRequest>::create(login, password), errorHandler, replyHandler);
 }
 
-void SessionManager::getAdditionalData()
+void RestSessionManager::getAdditionalData()
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit additionalDataLoadError(code);
@@ -56,43 +56,7 @@ void SessionManager::getAdditionalData()
                 errorHandler, replyHandler);
 }
 
-void SessionManager::getProducers()
-{
-    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
-        emit additionalDataLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit additionalDataLoaded(QJsonObject{ { Tags::producers, reply.object().value(Tags::results).toArray() } });
-    };
-    sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::Producers),
-                errorHandler, replyHandler);
-}
-
-void SessionManager::getCompanies()
-{
-    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
-        emit additionalDataLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit additionalDataLoaded(QJsonObject{ { Tags::companies, reply.object().value(Tags::results).toArray() } });
-    };
-    sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::Companies),
-                errorHandler, replyHandler);
-}
-
-void SessionManager::getDestinations()
-{
-    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
-        emit additionalDataLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit additionalDataLoaded(QJsonObject{ { Tags::destinations, reply.object().value(Tags::results).toArray() } });
-    };
-    sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::Destinations),
-                errorHandler, replyHandler);
-}
-
-void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
+void RestSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
@@ -104,7 +68,7 @@ void SessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
     sendRequest(QSharedPointer<EntityRequest>::create(from, to), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntitiesInfo(int limit, int offset, const QDateTime &from, const QDateTime &to)
+void RestSessionManager::getEntitiesInfo(int limit, int offset, const QDateTime &from, const QDateTime &to)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
@@ -116,7 +80,7 @@ void SessionManager::getEntitiesInfo(int limit, int offset, const QDateTime &fro
     sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, from, to), errorHandler, replyHandler);
 }
 
-void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keyword,
+void RestSessionManager::getEntitiesInfo(int limit, int offset, const QString &keyword,
                                      const QSet<Enums::PackageType> &filteredPackages, int cooperativeId)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
@@ -129,7 +93,7 @@ void SessionManager::getEntitiesInfo(int limit, int offset, const QString &keywo
     sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, keyword, filteredPackages, cooperativeId), errorHandler, replyHandler);
 }
 
-void SessionManager::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
+void RestSessionManager::getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
@@ -143,7 +107,7 @@ void SessionManager::getLastActionEntitiesInfo(const Enums::SupplyChainAction &l
     }
 }
 
-void SessionManager::getEntities(const QStringList &packageIds)
+void RestSessionManager::getEntities(const QStringList &packageIds)
 {
     const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
         emit entitiesLoadError(code);
@@ -154,7 +118,7 @@ void SessionManager::getEntities(const QStringList &packageIds)
     sendRequest(QSharedPointer<EntityRequest>::create(packageIds), errorHandler, replyHandler);
 }
 
-void SessionManager::postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
+void RestSessionManager::postNewEntity(const QString &packageId, const Enums::SupplyChainAction &action,
                                    const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
@@ -170,7 +134,7 @@ void SessionManager::postNewEntity(const QString &packageId, const Enums::Supply
     }
 }
 
-void SessionManager::postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
+void RestSessionManager::postNewEntity(const QString &packageId, const QByteArray &codeData, const Enums::SupplyChainAction &action,
                                    const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
@@ -186,7 +150,7 @@ void SessionManager::postNewEntity(const QString &packageId, const QByteArray &c
     }
 }
 
-void SessionManager::postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
+void RestSessionManager::postNewEntity(const QByteArray &codeData, const Enums::SupplyChainAction &action,
                                    const QGeoCoordinate &coordinate, const QDateTime &timestamp, const QVariantMap &properties)
 {
     const auto errorHandler = [this, codeData, action](const QString &, const QNetworkReply::NetworkError &code) {
@@ -202,39 +166,7 @@ void SessionManager::postNewEntity(const QByteArray &codeData, const Enums::Supp
     }
 }
 
-void SessionManager::getUnusedLotIds()
-{
-#ifdef COCOA
-    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
-        emit unusedLotIdsLoadError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit unusedLotIdsLoaded(reply.object().value(Tags::results).toArray());
-    };
-
-    if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot), errorHandler, replyHandler);
-    }
-#endif
-}
-
-void SessionManager::postUnusedLotId()
-{
-#ifdef COCOA
-    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
-        emit unusedLotIdCreateError(code);
-    };
-    const auto replyHandler = [this](const QJsonDocument &reply) {
-        emit unusedLotIdCreated(reply.object().value(Tags::pid).toString());
-    };
-
-    if (checkValidToken()) {
-        sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot, true), errorHandler, replyHandler);
-    }
-#endif
-}
-
-void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,
+void RestSessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,
                                  const std::function<void (const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
                                  const std::function<void (const QJsonDocument &)> &replyHandler,
                                  bool force)
@@ -250,7 +182,7 @@ void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request,
     sendRequest(request);
 }
 
-void SessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
+void RestSessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
 {
     connect(request.data(), &BaseRequest::requestFinished,
             this, [this](const QJsonDocument &) {

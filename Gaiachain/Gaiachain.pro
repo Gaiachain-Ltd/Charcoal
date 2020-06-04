@@ -28,10 +28,12 @@ cocoa {
     TARGET = GaiachainCocoa
 
     HEADERS += \
-        src/cocoa/cocoauserdata.h
+        src/cocoa/cocoauserdata.h \
+        src/cocoa/cocoasessionmanager.h
 
     SOURCES = \
-        src/cocoa/cocoamigrations.cpp
+        src/cocoa/cocoamigrations.cpp \
+        src/cocoa/cocoasessionmanager.cpp
 }
 
 charcoal {
@@ -45,13 +47,15 @@ charcoal {
         src/charcoal/charcoaluserdata.h \
         src/charcoal/picturesmanager.h \
         src/charcoal/tickmarkiconprovider.h \
-        src/charcoal/notificationmanager.h
+        src/charcoal/notificationmanager.h \
+        src/charcoal/charcoalsessionmanager.h
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
         src/charcoal/tickmarkiconprovider.cpp \
         src/charcoal/notificationmanager.cpp \
-        src/charcoal/charcoalmigrations.cpp
+        src/charcoal/charcoalmigrations.cpp \
+        src/charcoal/charcoalsessionmanager.cpp
 }
 
 include(../version.pri)
@@ -111,6 +115,7 @@ HEADERS += \
     src/controllers/databasemanager.h \
     src/controllers/offlineusershandler.h \
     src/controllers/session/abstractsessionmanager.h \
+    src/controllers/session/restsessionmanager.h \
     src/database/dbhelpers.h \
     src/database/dbmigrationmanager.h \
     src/database/dbmigrations.h \
@@ -167,7 +172,6 @@ HEADERS += \
     src/rest/authrequest.h \
     src/rest/baserequest.h \
     src/rest/restapiclient.h \
-    src/controllers/session/sessionmanager.h \
     src/controllers/usermanager.h \
     src/controllers/abstractmanager.h \
     src/models/proxy/abstractsortfilterproxymodel.h \
@@ -193,6 +197,7 @@ SOURCES += src/main.cpp \
     src/controllers/databasemanager.cpp \
     src/controllers/offlineusershandler.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
+    src/controllers/session/restsessionmanager.cpp \
     src/database/dbhelpers.cpp \
     src/database/dbmigrationmanager.cpp \
     src/database/dbmigrations.cpp \
@@ -234,7 +239,6 @@ SOURCES += src/main.cpp \
     src/rest/authrequest.cpp \
     src/rest/baserequest.cpp \
     src/rest/restapiclient.cpp \
-    src/controllers/session/sessionmanager.cpp \
     src/controllers/usermanager.cpp \
     src/rest/entityrequest.cpp \
     src/controllers/abstractmanager.cpp \
