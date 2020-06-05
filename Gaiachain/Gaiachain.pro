@@ -54,6 +54,8 @@ charcoal {
         src/charcoal/charcoalsessionmanager.h \
         src/charcoal/charcoaldatamanager.h \
         src/charcoal/models/treespeciesmodel.h \
+        src/charcoal/models/parcelsmodel.h \
+        src/charcoal/models/villagesmodel.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -63,6 +65,8 @@ charcoal {
         src/charcoal/charcoalsessionmanager.cpp \
         src/charcoal/charcoaldatamanager.cpp \
         src/charcoal/models/treespeciesmodel.cpp \
+        src/charcoal/models/parcelsmodel.cpp \
+        src/charcoal/models/villagesmodel.cpp \
 
 }
 

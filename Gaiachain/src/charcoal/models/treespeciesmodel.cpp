@@ -2,9 +2,6 @@
 
 #include "database/dbhelpers.h"
 
-#include <QSqlDatabase>
-#include <QSqlQuery>
-
 TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : QSqlQueryModel(parent)
 {
 }

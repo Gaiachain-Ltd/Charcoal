@@ -71,9 +71,15 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("INSERT INTO Villages (name) VALUES (\"Village One\")"),
             QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Two\")"),
             QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Three\")"),
-            // Supply chain
+
             QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Cassia siamea\")"),
             QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Technona grandis\")"),
+
+            QLatin1String("INSERT INTO Parcels (name) VALUES (\"0595112\")"),
+            QLatin1String("INSERT INTO Parcels (name) VALUES (\"1234567\")"),
+            QLatin1String("INSERT INTO Parcels (name) VALUES (\"9955112\")"),
+            QLatin1String("INSERT INTO Parcels (name) VALUES (\"1100110\")"),
+            // Supply chain
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             QLatin1String("DELETE FROM Villages"),

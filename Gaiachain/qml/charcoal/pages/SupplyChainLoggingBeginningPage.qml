@@ -85,7 +85,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loggingBeginningParcelHelp
 
-        model: [ "0595112", "1234567", "9955112" ]
+        model: dataManager.parcelsModel
     }
 
     CharcoalHeaders.UserInfoHeader {
@@ -101,7 +101,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loggingBeginningVillageHelp
 
-        model: [ "Village 1", "Village 2" ]
+        model: dataManager.villagesModel
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {
@@ -111,7 +111,6 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loggingBeginningTreeSpeciesHelp
 
-        //model: [ "Cassia siamea", "Technona grandis" ]
         model: dataManager.treeSpeciesModel
     }
 

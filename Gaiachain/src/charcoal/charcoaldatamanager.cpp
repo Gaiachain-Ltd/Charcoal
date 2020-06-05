@@ -8,7 +8,9 @@
 
 CharcoalDataManager::CharcoalDataManager(QObject *parent)
     : AbstractDataManager(parent),
-      m_treeSpeciesModel(new TreeSpeciesModel(this))
+      m_treeSpeciesModel(new TreeSpeciesModel(this)),
+      m_villagesModel(new VillagesModel(this)),
+      m_parcelsModel(new ParcelsModel(this))
 {
 }
 
@@ -20,6 +22,8 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
 
     db::Helpers::setupDatabaseConnection(dbPath, m_dbConnectionName);
     m_treeSpeciesModel->setDatabasePath(m_dbConnectionName);
+    m_villagesModel->setDatabasePath(m_dbConnectionName);
+    m_parcelsModel->setDatabasePath(m_dbConnectionName);
 }
 
 QString CharcoalDataManager::generatePlotId(const QString &userId,
@@ -48,4 +52,14 @@ QString CharcoalDataManager::generateTransportId(const QString &harvestId,
 TreeSpeciesModel *CharcoalDataManager::treeSpeciesModel() const
 {
     return m_treeSpeciesModel;
+}
+
+VillagesModel *CharcoalDataManager::villagesModel() const
+{
+    return m_villagesModel;
+}
+
+ParcelsModel *CharcoalDataManager::parcelsModel() const
+{
+    return m_parcelsModel;
 }
