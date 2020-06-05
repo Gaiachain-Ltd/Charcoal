@@ -35,8 +35,6 @@ public:
 
     Q_INVOKABLE void preparePackageData(const QString &packageId);
 
-    Q_INVOKABLE QString generateHarvestId(const QDate &date, const QString &parcelCode);
-
     Q_INVOKABLE void addAction(const QString &packageId,
                                const Enums::SupplyChainAction &action,
                                const QGeoCoordinate &coordinate,

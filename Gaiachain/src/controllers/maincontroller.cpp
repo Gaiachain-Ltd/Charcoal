@@ -31,7 +31,7 @@
 #elif CHARCOAL
 #include "charcoal/tickmarkiconprovider.h"
 #include "charcoal/charcoalsessionmanager.h"
-#include "data/abstractdatamanager.h"
+#include "charcoal/charcoaldatamanager.h"
 #endif
 
 template <typename Singleton>
@@ -50,7 +50,7 @@ MainController::MainController(QObject *parent)
       m_dataManager(new CocoaDataManager(this))
 #elif CHARCOAL
       m_sessionManager(new CharcoalSessionManager(this)),
-      m_dataManager(new AbstractDataManager(this))
+      m_dataManager(new CharcoalDataManager(this))
 #endif
 {
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");

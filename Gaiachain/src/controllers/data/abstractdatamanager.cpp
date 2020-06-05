@@ -65,11 +65,6 @@ void AbstractDataManager::preparePackageData(const QString &packageId)
     emit packageData(data);
 }
 
-QString AbstractDataManager::generateHarvestId(const QDate &date, const QString &parcelCode)
-{
-    return date.toString(QStringLiteral("%1/d-M-yyyy")).arg(parcelCode);
-}
-
 void AbstractDataManager::addAction(const QString &packageId,
                             const Enums::SupplyChainAction &action,
                             const QGeoCoordinate &coordinate,

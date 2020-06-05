@@ -101,6 +101,7 @@ CONFIG += c++17
 INCLUDEPATH += src
 
 HEADERS += \
+    src/charcoal/charcoaldatamanager.h \
     src/cocoa/cocoadatamanager.h \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
@@ -181,6 +182,7 @@ HEADERS += \
     src/common/logs.h
 
 SOURCES += src/main.cpp \
+    src/charcoal/charcoaldatamanager.cpp \
     src/cocoa/cocoadatamanager.cpp \
     src/common/dummy/commondummydata.cpp \
     src/common/languagemanager.cpp \

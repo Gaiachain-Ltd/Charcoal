@@ -8,6 +8,11 @@ CocoaDataManager::CocoaDataManager(QObject *parent)
 {
 }
 
+QString CocoaDataManager::generateHarvestId(const QDate &date, const QString &parcelCode)
+{
+    return date.toString(QStringLiteral("%1/d-M-yyyy")).arg(parcelCode);
+}
+
 void CocoaDataManager::onUnusedLotIdsLoaded(const QJsonArray &idsArray)
 {
     QMetaObject::invokeMethod(

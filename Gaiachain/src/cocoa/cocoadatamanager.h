@@ -11,6 +11,9 @@ class CocoaDataManager : public AbstractDataManager
 public:
     CocoaDataManager(QObject *parent = nullptr);
 
+    Q_INVOKABLE QString generateHarvestId(const QDate &date,
+                                          const QString &parcelCode);
+
 public slots:
     void onUnusedLotIdsLoaded(const QJsonArray &idsArray);
 };
