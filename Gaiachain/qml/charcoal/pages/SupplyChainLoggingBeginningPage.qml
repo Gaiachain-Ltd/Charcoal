@@ -111,7 +111,8 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loggingBeginningTreeSpeciesHelp
 
-        model: [ "Cassia siamea", "Technona grandis" ]
+        //model: [ "Cassia siamea", "Technona grandis" ]
+        model: dataManager.treeSpeciesModel
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {

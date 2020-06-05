@@ -26,6 +26,7 @@ void AbstractDataManager::setupQmlContext(QQmlApplicationEngine &engine)
 
 void AbstractDataManager::updateUserData(const UserData &userData)
 {
+    qDebug() << "Update user data:" << userData.name << userData.code;
     m_userData = userData;
 }
 

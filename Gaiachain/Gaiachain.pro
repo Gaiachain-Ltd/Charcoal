@@ -53,6 +53,7 @@ charcoal {
         src/charcoal/notificationmanager.h \
         src/charcoal/charcoalsessionmanager.h \
         src/charcoal/charcoaldatamanager.h \
+        src/charcoal/models/treespeciesmodel.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -61,6 +62,7 @@ charcoal {
         src/charcoal/charcoalmigrations.cpp \
         src/charcoal/charcoalsessionmanager.cpp \
         src/charcoal/charcoaldatamanager.cpp \
+        src/charcoal/models/treespeciesmodel.cpp \
 
 }
 
@@ -105,6 +107,8 @@ TEMPLATE = app
 CONFIG += c++17
 
 INCLUDEPATH += src
+
+### TODO!!! Move cocoa-only classes to cocoa/ folder
 
 HEADERS += \
     src/common/dataglobals.h \
