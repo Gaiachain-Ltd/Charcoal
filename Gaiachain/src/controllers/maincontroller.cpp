@@ -85,24 +85,6 @@ void MainController::setupConnections()
 
 void MainController::setupDataConnections()
 {
-    connect(m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractDataManager::addActionRequest),
-            m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
-    connect(m_dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractDataManager::addActionRequest),
-            m_sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
-    connect(m_dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractDataManager::addActionRequest),
-            m_sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
-
-    connect(m_sessionManager, &AbstractSessionManager::entitySaved,
-            m_dataManager, &AbstractDataManager::onActionAdded);
-    connect(m_sessionManager, &AbstractSessionManager::entitySaveError,
-            m_dataManager, &AbstractDataManager::onActionAddError);
-
     connect(m_sessionManager, &AbstractSessionManager::connectionStateChanged,
             m_dataManager, [dataManager = m_dataManager,
                             userManager = &m_userManager,
@@ -116,31 +98,50 @@ void MainController::setupDataConnections()
                 }
             });
 
-    connect(m_dataManager, qOverload<const QDateTime &, const QDateTime &>(&AbstractDataManager::eventsInfoNeeded),
-            m_sessionManager, qOverload<const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
-    connect(m_dataManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&AbstractDataManager::eventsInfoNeeded),
-            m_sessionManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
-    connect(m_dataManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&AbstractDataManager::eventsInfoNeeded),
-            m_sessionManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&AbstractSessionManager::getEntitiesInfo));
-    connect(m_dataManager, &AbstractDataManager::lastActionEventsInfoNeeded,
-            m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
-    connect(m_dataManager, &AbstractDataManager::eventsNeeded,
-            m_sessionManager, &AbstractSessionManager::getEntities);
-    connect(m_dataManager, &AbstractDataManager::lastActionEventsInfoNeeded,
-            m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
-
-    connect(m_sessionManager, &AbstractSessionManager::entitiesInfoLoaded,
-            m_dataManager, &AbstractDataManager::onEntitiesInfoLoaded);
-    connect(m_sessionManager, &AbstractSessionManager::entitiesLoaded,
-            m_dataManager, &AbstractDataManager::onEntitiesLoaded);
-    connect(m_sessionManager, &AbstractSessionManager::additionalDataLoaded,
-            m_dataManager, &AbstractDataManager::onAdditionalDataLoaded);
-
 #ifdef COCOA
-    connect(qobject_cast<CocoaSessionManager*>(m_sessionManager),
-            &CocoaSessionManager::unusedLotIdsLoaded,
-            qobject_cast<CocoaDataManager*>(m_dataManager),
-            &CocoaDataManager::onUnusedLotIdsLoaded);
+    const auto sessionManager = qobject_cast<CocoaSessionManager*>(m_sessionManager);
+    const auto dataManager = qobject_cast<CocoaDataManager*>(m_dataManager);
+
+    connect(dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaDataManager::addActionRequest),
+            sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaSessionManager::postNewEntity));
+    connect(dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaDataManager::addActionRequest),
+            sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaSessionManager::postNewEntity));
+    connect(dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaDataManager::addActionRequest),
+            sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaSessionManager::postNewEntity));
+
+    connect(sessionManager, &CocoaSessionManager::entitySaved,
+            dataManager, &CocoaDataManager::onActionAdded);
+    connect(sessionManager, &CocoaSessionManager::entitySaveError,
+            dataManager, &CocoaDataManager::onActionAddError);
+
+    connect(dataManager, qOverload<const QDateTime &, const QDateTime &>(&CocoaDataManager::eventsInfoNeeded),
+            sessionManager, qOverload<const QDateTime &, const QDateTime &>(&CocoaSessionManager::getEntitiesInfo));
+    connect(dataManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&CocoaDataManager::eventsInfoNeeded),
+            sessionManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&CocoaSessionManager::getEntitiesInfo));
+    connect(dataManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&CocoaDataManager::eventsInfoNeeded),
+            sessionManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&CocoaSessionManager::getEntitiesInfo));
+    connect(dataManager, &CocoaDataManager::lastActionEventsInfoNeeded,
+            sessionManager, &CocoaSessionManager::getLastActionEntitiesInfo);
+    connect(dataManager, &CocoaDataManager::eventsNeeded,
+            sessionManager, &CocoaSessionManager::getEntities);
+    connect(dataManager, &CocoaDataManager::lastActionEventsInfoNeeded,
+            sessionManager, &CocoaSessionManager::getLastActionEntitiesInfo);
+
+    connect(sessionManager, &CocoaSessionManager::entitiesInfoLoaded,
+            dataManager, &CocoaDataManager::onEntitiesInfoLoaded);
+    connect(sessionManager, &CocoaSessionManager::entitiesLoaded,
+            dataManager, &CocoaDataManager::onEntitiesLoaded);
+    connect(sessionManager, &CocoaSessionManager::additionalDataLoaded,
+            dataManager, &CocoaDataManager::onAdditionalDataLoaded);
+
+    connect(sessionManager, &CocoaSessionManager::unusedLotIdsLoaded,
+            dataManager, &CocoaDataManager::onUnusedLotIdsLoaded);
 
 #elif CHARCOAL
     // TODO: use a regular slot in PageManager

@@ -1,5 +1,7 @@
 #include "charcoaldatamanager.h"
 
+#include <QDate>
+
 CharcoalDataManager::CharcoalDataManager(QObject *parent)
     : AbstractDataManager(parent)
 {

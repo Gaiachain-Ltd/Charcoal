@@ -29,11 +29,14 @@ cocoa {
 
     HEADERS += \
         src/cocoa/cocoauserdata.h \
-        src/cocoa/cocoasessionmanager.h
+        src/cocoa/cocoasessionmanager.h \
+        src/cocoa/cocoadatamanager.h \
 
     SOURCES = \
         src/cocoa/cocoamigrations.cpp \
-        src/cocoa/cocoasessionmanager.cpp
+        src/cocoa/cocoasessionmanager.cpp \
+        src/cocoa/cocoadatamanager.cpp \
+
 }
 
 charcoal {
@@ -48,14 +51,17 @@ charcoal {
         src/charcoal/picturesmanager.h \
         src/charcoal/tickmarkiconprovider.h \
         src/charcoal/notificationmanager.h \
-        src/charcoal/charcoalsessionmanager.h
+        src/charcoal/charcoalsessionmanager.h \
+        src/charcoal/charcoaldatamanager.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
         src/charcoal/tickmarkiconprovider.cpp \
         src/charcoal/notificationmanager.cpp \
         src/charcoal/charcoalmigrations.cpp \
-        src/charcoal/charcoalsessionmanager.cpp
+        src/charcoal/charcoalsessionmanager.cpp \
+        src/charcoal/charcoaldatamanager.cpp \
+
 }
 
 include(../version.pri)
@@ -101,8 +107,6 @@ CONFIG += c++17
 INCLUDEPATH += src
 
 HEADERS += \
-    src/charcoal/charcoaldatamanager.h \
-    src/cocoa/cocoadatamanager.h \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
     src/common/languagemanager.h \
@@ -182,8 +186,6 @@ HEADERS += \
     src/common/logs.h
 
 SOURCES += src/main.cpp \
-    src/charcoal/charcoaldatamanager.cpp \
-    src/cocoa/cocoadatamanager.cpp \
     src/common/dummy/commondummydata.cpp \
     src/common/languagemanager.cpp \
     src/common/logs.cpp \

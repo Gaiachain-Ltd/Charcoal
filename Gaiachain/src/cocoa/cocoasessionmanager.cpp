@@ -75,3 +75,140 @@ void CocoaSessionManager::postUnusedLotId()
         sendRequest(QSharedPointer<EntityRequest>::create(m_token, Enums::PackageType::Lot, true), errorHandler, replyHandler);
     }
 }
+
+void CocoaSessionManager::getAdditionalData()
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit additionalDataLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit additionalDataLoaded(reply.object());
+    };
+    sendRequest(QSharedPointer<AdditionalDataRequest>::create(AdditionalDataRequest::DataType::All),
+                errorHandler, replyHandler);
+}
+
+void CocoaSessionManager::getEntitiesInfo(const QDateTime &from, const QDateTime &to)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
+    };
+
+    sendRequest(QSharedPointer<EntityRequest>::create(from, to), errorHandler, replyHandler);
+}
+
+void CocoaSessionManager::getEntitiesInfo(int limit, int offset,
+                                          const QDateTime &from,
+                                          const QDateTime &to)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
+    };
+
+    sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, from, to), errorHandler, replyHandler);
+}
+
+void CocoaSessionManager::getEntitiesInfo(int limit, int offset,
+                                          const QString &keyword,
+                                          const QSet<Enums::PackageType> &filteredPackages,
+                                          int cooperativeId)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
+    };
+
+    sendRequest(QSharedPointer<EntityRequest>::create(limit, offset, keyword, filteredPackages, cooperativeId), errorHandler, replyHandler);
+}
+
+void CocoaSessionManager::getLastActionEntitiesInfo(
+    const Enums::SupplyChainAction &lastAction)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesInfoLoaded(reply.object().value(Tags::results).toArray());
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, lastAction), errorHandler, replyHandler);
+    }
+}
+
+void CocoaSessionManager::getEntities(const QStringList &packageIds)
+{
+    const auto errorHandler = [this](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitiesLoadError(code);
+    };
+    const auto replyHandler = [this](const QJsonDocument &reply) {
+        emit entitiesLoaded(reply.object().value(Tags::results).toArray());
+    };
+    sendRequest(QSharedPointer<EntityRequest>::create(packageIds), errorHandler, replyHandler);
+}
+
+void CocoaSessionManager::postNewEntity(const QString &packageId,
+                                        const Enums::SupplyChainAction &action,
+                                        const QGeoCoordinate &coordinate,
+                                        const QDateTime &timestamp,
+                                        const QVariantMap &properties)
+{
+    const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError(packageId, {}, action, code);
+    };
+    const auto replyHandler = [this, action](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::pid).toString(), {}, action);
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, packageId, EntityRequest::EntityData{ action, coordinate, timestamp, properties }),
+                    errorHandler, replyHandler);
+    }
+}
+
+void CocoaSessionManager::postNewEntity(const QString &packageId,
+                                        const QByteArray &codeData,
+                                        const Enums::SupplyChainAction &action,
+                                        const QGeoCoordinate &coordinate,
+                                        const QDateTime &timestamp,
+                                        const QVariantMap &properties)
+{
+    const auto errorHandler = [this, packageId, action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError(packageId, {}, action, code);
+    };
+    const auto replyHandler = [this, action](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::pid).toString(), {}, action);
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, packageId, codeData, EntityRequest::EntityData{ action, coordinate, timestamp, properties }),
+                    errorHandler, replyHandler);
+    }
+}
+
+void CocoaSessionManager::postNewEntity(const QByteArray &codeData,
+                                        const Enums::SupplyChainAction &action,
+                                        const QGeoCoordinate &coordinate,
+                                        const QDateTime &timestamp,
+                                        const QVariantMap &properties)
+{
+    const auto errorHandler = [this, codeData, action](const QString &, const QNetworkReply::NetworkError &code) {
+        emit entitySaveError({}, codeData, action, code);
+    };
+    const auto replyHandler = [this, codeData, action](const QJsonDocument &reply) {
+        emit entitySaved(reply.object().value(Tags::pid).toString(), codeData, action);
+    };
+
+    if (checkValidToken()) {
+        sendRequest(QSharedPointer<EntityRequest>::create(m_token, codeData, EntityRequest::EntityData{ action, coordinate, timestamp, properties }),
+                    errorHandler, replyHandler);
+    }
+}

@@ -10,10 +10,4 @@ class CharcoalSessionManager : public RestSessionManager
 
 public:
     CharcoalSessionManager(QObject *parent = nullptr);
-
-    Q_INVOKABLE void getDestinations();
-    Q_INVOKABLE void getOvenTypes();
-    Q_INVOKABLE void getParcels();
-    Q_INVOKABLE void getTreeSpecies();
-    Q_INVOKABLE void getVillages();
 };

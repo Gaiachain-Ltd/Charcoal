@@ -29,37 +29,6 @@ public:
 
     Q_INVOKABLE virtual void login(const QString &login, const QString &password) = 0;
 
-    Q_INVOKABLE virtual void getAdditionalData() = 0;
-
-    Q_INVOKABLE virtual void getEntitiesInfo(const QDateTime &from, const QDateTime &to) = 0;
-    Q_INVOKABLE virtual void getEntitiesInfo(int limit, int offset,
-                                             const QDateTime &from,
-                                             const QDateTime &to) = 0;
-    Q_INVOKABLE virtual void getEntitiesInfo(int limit, int offset,
-                                             const QString &keyword,
-                                             const QSet<Enums::PackageType> &filteredPackages,
-                                             int cooperativeId) = 0;
-    Q_INVOKABLE virtual void getLastActionEntitiesInfo(const Enums::SupplyChainAction &lastAction) = 0;
-
-    Q_INVOKABLE virtual void getEntities(const QStringList &ids) = 0;
-
-    Q_INVOKABLE virtual void postNewEntity(const QString &packageId,
-                                           const Enums::SupplyChainAction &action,
-                                           const QGeoCoordinate &coordinate,
-                                           const QDateTime &timestamp,
-                                           const QVariantMap &properties) = 0;
-    Q_INVOKABLE virtual void postNewEntity(const QString &packageId,
-                                           const QByteArray &codeData,
-                                           const Enums::SupplyChainAction &action,
-                                           const QGeoCoordinate &coordinate,
-                                           const QDateTime &timestamp,
-                                           const QVariantMap &properties) = 0;
-    Q_INVOKABLE virtual void postNewEntity(const QByteArray &codeData,
-                                           const Enums::SupplyChainAction &action,
-                                           const QGeoCoordinate &coordinate,
-                                           const QDateTime &timestamp,
-                                           const QVariantMap &properties) = 0;
-
 public slots:
     void setEnabled(bool enabled);
     void updateToken(const QString &token);
@@ -74,19 +43,6 @@ signals:
     void loginAttempt(const QString &login, const QString &password) const;
     void loginError(const QString &login, const int &code) const;
     void loginFinished(const QString &login, const QJsonObject &userDataObj) const;
-
-    void additionalDataLoadError(const QNetworkReply::NetworkError &code) const;
-    void additionalDataLoaded(const QJsonObject &data) const;
-
-    void entitiesLoadError(const QNetworkReply::NetworkError &code) const;
-    void entitiesInfoLoaded(const QJsonArray &entitiesInfo) const;
-    void entitiesLoaded(const QJsonArray &entities) const;
-
-    void entitySaveError(const QString &packageId, const QByteArray &codeData,
-                         const Enums::SupplyChainAction &action,
-                         const QNetworkReply::NetworkError &code) const;
-    void entitySaved(const QString &packageId, const QByteArray &codeData,
-                     const Enums::SupplyChainAction &action) const;
 
 protected:
     bool m_enabled = true;
