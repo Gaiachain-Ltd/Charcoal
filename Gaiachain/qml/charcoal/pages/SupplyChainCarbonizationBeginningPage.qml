@@ -34,8 +34,10 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     createSummaryItem(Strings.harvestId,
-                                      (plotIdComboBox.currentText
-                                       + "/" + carbonizerIdInputHeader.inputText),
+                                      dataManager.generateHarvestId(
+                                          plotIdComboBox.currentText,
+                                          carbonizerIdInputHeader.inputText
+                                          ),
                                       "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor2,

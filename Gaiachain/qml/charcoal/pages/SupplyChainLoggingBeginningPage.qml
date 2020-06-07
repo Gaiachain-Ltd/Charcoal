@@ -19,12 +19,6 @@ Pages.SupplyChainPageBase {
 
     Component.onCompleted: refreshData()
 
-    property string plotId: repsIdInputHeader.inputText
-                            + "/" + parcelComboBox.currentText
-                            + "/"
-                            + beginningDateHeader.selectedDate.toLocaleDateString(
-                                Qt.locale(), Strings.idDateFormat)
-
     function refreshData() {
         //sessionManager.getUnusedLotIds()
     }
@@ -39,7 +33,13 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId, plotId, "", "",
+                    createSummaryItem(Strings.plotId,
+                                      dataManager.generatePlotId(
+                                          repsIdInputHeader.inputText,
+                                          parcelComboBox.currentText,
+                                          beginningDateHeader.selectedDate
+                                          ),
+                                      "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor),

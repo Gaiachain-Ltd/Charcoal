@@ -53,8 +53,13 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     createSummaryItem(Strings.transportId,
-                                      harvestIdComboBox.currentText
-                                      + "/" + plateNumberHeader.inputText,
+                                      dataManager.generateTransportId(
+                                          harvestIdComboBox.currentText,
+                                          plateNumberHeader.inputText,
+                                          // TODO: implement transport numbers!
+                                          1,
+                                          loadingDateHeader.selectedDate
+                                          ),
                                       "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor4,
