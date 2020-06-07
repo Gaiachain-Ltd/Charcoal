@@ -56,6 +56,9 @@ charcoal {
         src/charcoal/models/treespeciesmodel.h \
         src/charcoal/models/parcelsmodel.h \
         src/charcoal/models/villagesmodel.h \
+        src/charcoal/models/destinationsmodel.h \
+        src/charcoal/models/entitiesmodel.h \
+        src/charcoal/models/oventypesmodel.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -67,6 +70,9 @@ charcoal {
         src/charcoal/models/treespeciesmodel.cpp \
         src/charcoal/models/parcelsmodel.cpp \
         src/charcoal/models/villagesmodel.cpp \
+        src/charcoal/models/destinationsmodel.cpp \
+        src/charcoal/models/entitiesmodel.cpp \
+        src/charcoal/models/oventypesmodel.cpp \
 
 }
 
@@ -115,8 +121,6 @@ INCLUDEPATH += src
 ### TODO!!! Move cocoa-only classes to cocoa/ folder
 
 HEADERS += \
-    src/charcoal/models/destinationsmodel.h \
-    src/charcoal/models/oventypesmodel.h \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
     src/common/languagemanager.h \
@@ -196,8 +200,6 @@ HEADERS += \
     src/common/logs.h
 
 SOURCES += src/main.cpp \
-    src/charcoal/models/destinationsmodel.cpp \
-    src/charcoal/models/oventypesmodel.cpp \
     src/common/dummy/commondummydata.cpp \
     src/common/languagemanager.cpp \
     src/common/logs.cpp \
