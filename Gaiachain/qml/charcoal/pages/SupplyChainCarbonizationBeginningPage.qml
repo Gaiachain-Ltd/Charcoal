@@ -131,7 +131,9 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenTypeHelp
 
-        model: [ Strings.traditionalOven, Strings.metallicOven ]
+        // TODO: translations!
+        // [ Strings.traditionalOven, Strings.metallicOven ]
+        model: dataManager.ovenTypesModel
 
         onCurrentTextChanged: {
             if (currentText === Strings.metallicOven) {

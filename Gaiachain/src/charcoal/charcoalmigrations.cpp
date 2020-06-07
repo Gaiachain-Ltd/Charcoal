@@ -26,7 +26,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `width` DECIMAL(5,2), `height` DECIMAL(5,2), `depth` DECIMAL(5,2))"),
             // SupplyChain
             // Entities are how Transactions are called on Web side
             QLatin1String("CREATE TABLE Entities (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
@@ -79,6 +79,11 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("INSERT INTO Parcels (name) VALUES (\"1234567\")"),
             QLatin1String("INSERT INTO Parcels (name) VALUES (\"9955112\")"),
             QLatin1String("INSERT INTO Parcels (name) VALUES (\"1100110\")"),
+
+            QLatin1String("INSERT INTO Destinations (name) VALUES (\"Abidjan\")"),
+
+            QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"Traditional\")"),
+            QLatin1String("INSERT INTO OvenTypes (name, width, height, depth) VALUES (\"Metallic\", 4, 5, 6)"),
             // Supply chain
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{

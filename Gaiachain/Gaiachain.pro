@@ -115,6 +115,8 @@ INCLUDEPATH += src
 ### TODO!!! Move cocoa-only classes to cocoa/ folder
 
 HEADERS += \
+    src/charcoal/models/destinationsmodel.h \
+    src/charcoal/models/oventypesmodel.h \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
     src/common/languagemanager.h \
@@ -194,6 +196,8 @@ HEADERS += \
     src/common/logs.h
 
 SOURCES += src/main.cpp \
+    src/charcoal/models/destinationsmodel.cpp \
+    src/charcoal/models/oventypesmodel.cpp \
     src/common/dummy/commondummydata.cpp \
     src/common/languagemanager.cpp \
     src/common/logs.cpp \

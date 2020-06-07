@@ -2,12 +2,11 @@
 
 #include <QSqlQueryModel>
 
-class ParcelsModel : public QSqlQueryModel
+class DestinationsModel : public QSqlQueryModel
 {
     Q_OBJECT
-
 public:
-    explicit ParcelsModel(QObject *parent = nullptr);
+    explicit DestinationsModel(QObject *parent = nullptr);
 
     void setDbConnection(const QString &connectionName);
 };

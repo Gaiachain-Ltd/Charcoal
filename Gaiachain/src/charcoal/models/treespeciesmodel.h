@@ -10,5 +10,5 @@ class TreeSpeciesModel : public QSqlQueryModel
 public:
     explicit TreeSpeciesModel(QObject *parent = nullptr);
 
-    void setDatabasePath(const QString &connectionName);
+    void setDbConnection(const QString &connectionName);
 };

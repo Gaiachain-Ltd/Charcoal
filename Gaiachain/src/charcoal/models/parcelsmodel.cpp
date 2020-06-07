@@ -6,7 +6,7 @@ ParcelsModel::ParcelsModel(QObject *parent) : QSqlQueryModel(parent)
 {
 }
 
-void ParcelsModel::setDatabasePath(const QString &connectionName)
+void ParcelsModel::setDbConnection(const QString &connectionName)
 {
     setQuery("SELECT name FROM Parcels",
              db::Helpers::databaseConnection(connectionName));

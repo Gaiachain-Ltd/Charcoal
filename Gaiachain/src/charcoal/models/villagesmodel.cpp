@@ -6,7 +6,7 @@ VillagesModel::VillagesModel(QObject *parent) : QSqlQueryModel(parent)
 {
 }
 
-void VillagesModel::setDatabasePath(const QString &connectionName)
+void VillagesModel::setDbConnection(const QString &connectionName)
 {
     setQuery("SELECT name FROM Villages",
              db::Helpers::databaseConnection(connectionName));

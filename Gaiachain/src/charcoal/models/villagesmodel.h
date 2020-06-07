@@ -9,5 +9,5 @@ class VillagesModel : public QSqlQueryModel
 public:
     explicit VillagesModel(QObject *parent = nullptr);
 
-    void setDatabasePath(const QString &connectionName);
+    void setDbConnection(const QString &connectionName);
 };

@@ -160,7 +160,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportDeliveryDestinationHelp
 
-        model: [ "Abidjan" ]
+        model: dataManager.destinationsModel
     }
 
     Common.PositionSourceHandler {

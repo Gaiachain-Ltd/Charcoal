@@ -6,7 +6,7 @@ TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : QSqlQueryModel(parent)
 {
 }
 
-void TreeSpeciesModel::setDatabasePath(const QString &connectionName)
+void TreeSpeciesModel::setDbConnection(const QString &connectionName)
 {
     setQuery("SELECT name FROM TreeSpecies",
              db::Helpers::databaseConnection(connectionName));
