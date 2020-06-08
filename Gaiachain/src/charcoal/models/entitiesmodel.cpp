@@ -4,8 +4,12 @@
 #include "common/logs.h"
 
 #include <QGeoCoordinate>
+
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlRecord>
+
+#include <QMetaEnum>
 #include <QDateTime>
 #include <QDate>
 
@@ -65,10 +69,18 @@ void EntitiesModel::registerLoggingBeginning(
 
     // First, insert a new Entity into table
     const QString plotId(generatePlotId(malebiRepsId, parcel, timestamp.date()));
+    const QString typeId(getEntityTypeId(Enums::PackageType::Plot));
+
+    if (typeId.isEmpty()) {
+        qWarning() << RED("Plot ID type not found!");
+        return;
+    }
+
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (name, isUsed, isCommitted) "
-                  "VALUES (:plotId, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, isUsed, isCommitted) "
+                  "VALUES (:typeId, :plotId, 0, 0)");
+    query.bindValue(":typeId", typeId);
     query.bindValue(":plotId", plotId);
 
     if (query.exec() == false) {
@@ -81,11 +93,19 @@ void EntitiesModel::registerLoggingBeginning(
 
     // Then, insert a new Event under that Entity
     const QString entityId(query.lastInsertId().toString());
-    query.prepare("INSERT INTO Events (entityId, date, locationLatitude, "
-                  "locationLongitude, properties) "
-                  "VALUES (:entityId, :date, :locationLatitude, :locationLongitude,"
+    const QString eventTypeId(getEventTypeId(Enums::SupplyChainAction::LoggingBeginning));
+
+    if (eventTypeId.isEmpty()) {
+        qWarning() << RED("Event Type ID not found!");
+        return;
+    }
+
+    query.prepare("INSERT INTO Events (entityId, typeId, "
+                  "date, locationLatitude, locationLongitude, properties) "
+                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
                   ":properties)");
     query.bindValue(":entityId", entityId);
+    query.bindValue(":typeId", eventTypeId);
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
@@ -104,4 +124,70 @@ void EntitiesModel::registerLoggingBeginning(
     }
 
     // Lastly, send a request to server to add it, too.
+}
+
+QString EntitiesModel::getEntityTypeId(const Enums::PackageType type) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    const QString typeString(QMetaEnum::fromType<Enums::PackageType>()
+                                 .valueToKey(int(type)));
+
+    query.prepare("SELECT id FROM EntityTypes WHERE name=:typeString");
+    query.bindValue(":typeString", typeString);
+
+    if (query.exec()) {
+        qDebug() << type << typeString << query.record();
+        query.next();
+        return query.value("id").toString();
+    }
+
+    qWarning() << RED("Getting EntityType has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return QString();
+}
+
+QString EntitiesModel::getEventTypeId(const Enums::SupplyChainAction action) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    const QString typeString(getActionAbbreviation(action));
+
+    query.prepare("SELECT id FROM EventTypes WHERE actionName=:typeString");
+    query.bindValue(":typeString", typeString);
+
+    if (query.exec()) {
+        qDebug() << action << typeString << query.record();
+        query.next();
+        return query.value("id").toString();
+    }
+
+    qWarning() << RED("Getting EventType has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return QString();
+}
+
+QString EntitiesModel::getActionAbbreviation(const Enums::SupplyChainAction action) const
+{
+    switch (action) {
+    case Enums::SupplyChainAction::LoggingBeginning:
+        return QStringLiteral("LB");
+    case Enums::SupplyChainAction::LoggingEnding:
+        return QStringLiteral("LE");
+    case Enums::SupplyChainAction::CarbonizationBeginning:
+        return QStringLiteral("CB");
+    case Enums::SupplyChainAction::CarbonizationEnding:
+        return QStringLiteral("CE");
+    case Enums::SupplyChainAction::LoadingAndTransport:
+        return QStringLiteral("TR");
+    case Enums::SupplyChainAction::Reception:
+        return QStringLiteral("RE");
+    default: return QString();
+    }
+
+    return QString();
 }

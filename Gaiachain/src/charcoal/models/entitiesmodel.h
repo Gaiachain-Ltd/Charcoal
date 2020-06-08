@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common/enums.h"
+
 #include <QSqlQueryModel>
 
 class QGeoCoordinate;
@@ -37,5 +39,9 @@ private:
     const QString dateFormat = "dd-MM-yyyy";
 
     QString m_dbConnName;
+
+    QString getEntityTypeId(const Enums::PackageType type) const;
+    QString getEventTypeId(const Enums::SupplyChainAction action) const;
+    QString getActionAbbreviation(const Enums::SupplyChainAction action) const;
 };
 

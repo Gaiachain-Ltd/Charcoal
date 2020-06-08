@@ -29,9 +29,9 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `width` DECIMAL(5,2), `height` DECIMAL(5,2), `depth` DECIMAL(5,2))"),
             // SupplyChain
             // Entities are how Transactions are called on Web side
-            QLatin1String("CREATE TABLE Entities (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `isUsed` BOOLEAN NOT NULL CHECK (isUsed IN (0,1)), `isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)))"),
+            QLatin1String("CREATE TABLE Entities (`id` INTEGER primary key AUTOINCREMENT, `typeId` INTEGER NOT NULL, `name` TEXT NOT NULL, `isUsed` BOOLEAN NOT NULL CHECK (isUsed IN (0,1)), `isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)), FOREIGN KEY(typeId) REFERENCES EntityTypes(id))"),
             QLatin1String("CREATE TABLE EntityTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE Events (`id` INTEGER primary key AUTOINCREMENT, `entityId` INTEGER, `date` INTEGER NOT NULL, `locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, `properties` TEXT NOT NULL, FOREIGN KEY(entityId) REFERENCES Entities(id))"),
+            QLatin1String("CREATE TABLE Events (`id` INTEGER primary key AUTOINCREMENT, `entityId` INTEGER NOT NULL, `typeId` INTEGER NOT NULL, `date` INTEGER NOT NULL, `locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, `properties` TEXT NOT NULL, FOREIGN KEY(entityId) REFERENCES Entities(id), FOREIGN KEY(typeId) REFERENCES EventTypes(id))"),
             QLatin1String("CREATE TABLE EventTypes (`id` INTEGER primary key AUTOINCREMENT, `actionName` TEXT NOT NULL)"),
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
