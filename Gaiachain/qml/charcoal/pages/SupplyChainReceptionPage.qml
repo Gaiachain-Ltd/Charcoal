@@ -61,6 +61,7 @@ Pages.SupplyChainPageBase {
         let docsIcon = "image://tickmark/document-" + hasDocs
         let recsIcon = "image://tickmark/receipt-" + hasRecs
 
+        // TODO: guess transport ID based on bags codes!
         var summary = [
                     createSummaryItem(Strings.transportId,
                                       // TODO: insert real data!

@@ -32,7 +32,15 @@ public:
         const QString &malebiRepsId,
         const QString &village,
         const QString &treeSpecies
-        );
+        ) const;
+
+    Q_INVOKABLE void registerLoggingEnding(
+        const QString &plotId,
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QString &malebiRepsId,
+        const int numberOfTrees
+        ) const;
 
 private:
     const QString sep = "/";
@@ -40,8 +48,10 @@ private:
 
     QString m_dbConnName;
 
-    QString getEntityTypeId(const Enums::PackageType type) const;
-    QString getEventTypeId(const Enums::SupplyChainAction action) const;
-    QString getActionAbbreviation(const Enums::SupplyChainAction action) const;
+    QString findEntityId(const QString &name) const;
+    QString findEntityTypeId(const Enums::PackageType type) const;
+    QString findEventTypeId(const Enums::SupplyChainAction action) const;
+
+    QString actionAbbreviation(const Enums::SupplyChainAction action) const;
 };
 

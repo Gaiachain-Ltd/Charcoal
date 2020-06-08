@@ -57,8 +57,6 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        //showOverlay()
-
         dataManager.entitiesModel.registerLoggingBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),

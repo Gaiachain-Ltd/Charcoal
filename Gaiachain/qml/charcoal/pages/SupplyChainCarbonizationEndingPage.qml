@@ -97,7 +97,7 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkGreenUrl
         delegateTextColor: GStyle.fontHighlightColor2
 
-        model: [ "AM003PM/0595112/04-03-2020/AM004NA" ]
+        model: dataManager.unusedHarvestIdsModel
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {

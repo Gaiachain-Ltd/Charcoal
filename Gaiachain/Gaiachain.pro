@@ -59,6 +59,9 @@ charcoal {
         src/charcoal/models/destinationsmodel.h \
         src/charcoal/models/entitiesmodel.h \
         src/charcoal/models/oventypesmodel.h \
+        src/charcoal/models/unusedplotidsmodel.h \
+        src/charcoal/models/unusedharvestidsmodel.h \
+        src/charcoal/models/unusedtransportidsmodel.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -73,6 +76,9 @@ charcoal {
         src/charcoal/models/destinationsmodel.cpp \
         src/charcoal/models/entitiesmodel.cpp \
         src/charcoal/models/oventypesmodel.cpp \
+        src/charcoal/models/unusedplotidsmodel.cpp \
+        src/charcoal/models/unusedharvestidsmodel.cpp \
+        src/charcoal/models/unusedtransportidsmodel.cpp \
 
 }
 

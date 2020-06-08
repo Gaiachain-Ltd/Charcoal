@@ -17,7 +17,7 @@ EntitiesModel::EntitiesModel(QObject *parent) : QSqlQueryModel(parent)
 {
 }
 
-void EntitiesModel::setDbConnection(/*const QString &path, */const QString &connectionName)
+void EntitiesModel::setDbConnection(const QString &connectionName)
 {
 
     m_dbConnName = connectionName;
@@ -54,7 +54,7 @@ void EntitiesModel::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QString &parcel,
     const QString &malebiRepsId, const QString &village,
-    const QString &treeSpecies)
+    const QString &treeSpecies) const
 {
     /*
      * Algorithm is:
@@ -69,7 +69,7 @@ void EntitiesModel::registerLoggingBeginning(
 
     // First, insert a new Entity into table
     const QString plotId(generatePlotId(malebiRepsId, parcel, timestamp.date()));
-    const QString typeId(getEntityTypeId(Enums::PackageType::Plot));
+    const QString typeId(findEntityTypeId(Enums::PackageType::Plot));
 
     if (typeId.isEmpty()) {
         qWarning() << RED("Plot ID type not found!");
@@ -93,7 +93,7 @@ void EntitiesModel::registerLoggingBeginning(
 
     // Then, insert a new Event under that Entity
     const QString entityId(query.lastInsertId().toString());
-    const QString eventTypeId(getEventTypeId(Enums::SupplyChainAction::LoggingBeginning));
+    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoggingBeginning));
 
     if (eventTypeId.isEmpty()) {
         qWarning() << RED("Event Type ID not found!");
@@ -126,7 +126,83 @@ void EntitiesModel::registerLoggingBeginning(
     // Lastly, send a request to server to add it, too.
 }
 
-QString EntitiesModel::getEntityTypeId(const Enums::PackageType type) const
+void EntitiesModel::registerLoggingEnding(
+    const QString &plotId, const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp, const QString &malebiRepsId,
+    const int numberOfTrees) const
+{
+    /*
+     * Algorithm is:
+     * - find entity ID in table (created in Logging Beginning step)
+     * - insert event into table
+     * - send action to web server
+     */
+
+    qDebug() << "Registering logging ending" << coordinate << timestamp
+             << plotId << malebiRepsId << numberOfTrees;
+
+    const QString entityId(findEntityId(plotId));
+
+    if (entityId.isEmpty()) {
+        qWarning() << RED("Entity ID not found!");
+        return;
+    }
+
+    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoggingEnding));
+
+    if (eventTypeId.isEmpty()) {
+        qWarning() << RED("Event Type ID not found!");
+        return;
+    }
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    query.prepare("INSERT INTO Events (entityId, typeId, "
+                  "date, locationLatitude, locationLongitude, properties) "
+                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
+                  ":properties)");
+    query.bindValue(":entityId", entityId);
+    query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":date", timestamp);
+    query.bindValue(":locationLatitude", coordinate.latitude());
+    query.bindValue(":locationLongitude", coordinate.longitude());
+    // TODO: use Tags to denote the properties more reliably!
+    query.bindValue(":properties", QVariantMap {
+                                       { "numberOfTrees", numberOfTrees },
+                                       { "userId", malebiRepsId }
+                                   });
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting Logging Ending event has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
+}
+
+/*!
+ * Returns Entity entry ID (from DB) for package of given \a name, where \a name
+ * is PlotId, HarvestId or TransportId.
+ */
+QString EntitiesModel::findEntityId(const QString &name) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM Entities WHERE name=:nameString");
+    query.bindValue(":nameString", name);
+
+    if (query.exec()) {
+        query.next();
+        return query.value("id").toString();
+    }
+
+    qWarning() << RED("Getting Entity ID has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return QString();
+}
+
+QString EntitiesModel::findEntityTypeId(const Enums::PackageType type) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     const QString typeString(QMetaEnum::fromType<Enums::PackageType>()
@@ -136,7 +212,6 @@ QString EntitiesModel::getEntityTypeId(const Enums::PackageType type) const
     query.bindValue(":typeString", typeString);
 
     if (query.exec()) {
-        qDebug() << type << typeString << query.record();
         query.next();
         return query.value("id").toString();
     }
@@ -149,16 +224,15 @@ QString EntitiesModel::getEntityTypeId(const Enums::PackageType type) const
     return QString();
 }
 
-QString EntitiesModel::getEventTypeId(const Enums::SupplyChainAction action) const
+QString EntitiesModel::findEventTypeId(const Enums::SupplyChainAction action) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    const QString typeString(getActionAbbreviation(action));
+    const QString typeString(actionAbbreviation(action));
 
     query.prepare("SELECT id FROM EventTypes WHERE actionName=:typeString");
     query.bindValue(":typeString", typeString);
 
     if (query.exec()) {
-        qDebug() << action << typeString << query.record();
         query.next();
         return query.value("id").toString();
     }
@@ -171,7 +245,7 @@ QString EntitiesModel::getEventTypeId(const Enums::SupplyChainAction action) con
     return QString();
 }
 
-QString EntitiesModel::getActionAbbreviation(const Enums::SupplyChainAction action) const
+QString EntitiesModel::actionAbbreviation(const Enums::SupplyChainAction action) const
 {
     switch (action) {
     case Enums::SupplyChainAction::LoggingBeginning:

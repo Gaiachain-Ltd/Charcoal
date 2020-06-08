@@ -7,6 +7,9 @@
 #include "charcoal/models/destinationsmodel.h"
 #include "charcoal/models/oventypesmodel.h"
 #include "charcoal/models/entitiesmodel.h"
+#include "charcoal/models/unusedplotidsmodel.h"
+#include "charcoal/models/unusedharvestidsmodel.h"
+#include "charcoal/models/unusedtransportidsmodel.h"
 
 #include <QObject>
 
@@ -20,6 +23,9 @@ class CharcoalDataManager : public AbstractDataManager
     Q_PROPERTY(DestinationsModel* destinationsModel READ destinationsModel CONSTANT)
     Q_PROPERTY(OvenTypesModel* ovenTypesModel READ ovenTypesModel CONSTANT)
     Q_PROPERTY(EntitiesModel* entitiesModel READ entitiesModel CONSTANT)
+    Q_PROPERTY(UnusedPlotIdsModel* unusedPlotIdsModel READ unusedPlotIdsModel CONSTANT)
+    Q_PROPERTY(UnusedHarvestIdsModel* unusedHarvestIdsModel READ unusedHarvestIdsModel CONSTANT)
+    Q_PROPERTY(UnusedTransportIdsModel* unusedTransportIdsModel READ unusedTransportIdsModel CONSTANT)
 
 public:
     CharcoalDataManager(QObject *parent = nullptr);
@@ -32,6 +38,9 @@ public:
     DestinationsModel* destinationsModel() const;
     OvenTypesModel* ovenTypesModel() const;
     EntitiesModel* entitiesModel() const;
+    UnusedPlotIdsModel* unusedPlotIdsModel() const;
+    UnusedHarvestIdsModel* unusedHarvestIdsModel() const;
+    UnusedTransportIdsModel* unusedTransportIdsModel() const;
 
 private:
     const QString m_dbConnectionName = staticMetaObject.className();
@@ -43,4 +52,7 @@ private:
     DestinationsModel* m_destinationsModel = nullptr;
     OvenTypesModel* m_ovenTypesModel = nullptr;
     EntitiesModel* m_entitiesModel = nullptr;
+    UnusedPlotIdsModel* m_unusedPlotIdsModel = nullptr;
+    UnusedHarvestIdsModel* m_unusedHarvestIdsModel = nullptr;
+    UnusedTransportIdsModel* m_unusedTransportIdsModel = nullptr;
 };

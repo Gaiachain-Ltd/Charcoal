@@ -33,7 +33,8 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText, "", "",
+                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                                      "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor),
@@ -49,24 +50,14 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        /*
-        showOverlay()
-
-        var properties = {
-            [PackageDataProperties.LotPid]: 1,
-            [PackageDataProperties.HarvestWeights]: 1
-        }
-
-        // ID, action, coordiate, timestamp, props
-        dataManager.addAction(
-                    plotId,
-                    Enums.SupplyChainAction.LoggingBeginning,
+        dataManager.entitiesModel.registerLoggingBeginning(
+                    plotIdComboBox.currentText,
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    new Date,
-                    properties)
-                    */
-        console.warn("Dummy action - TODO implement! Going back to main menu")
+                    endingDateHeader.selectedDate,
+                    repsIdInputHeader.inputText,
+                    numberOfTreesHeader.inputText)
+
         pageManager.enter(Enums.Page.MainMenu)
     }
 
@@ -80,7 +71,7 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkBlueUrl
         delegateTextColor: GStyle.fontHighlightColor
 
-        model: [ "AM003PM/0595112/04-03-2020" ]
+        model: dataManager.unusedPlotIdsModel
     }
 
     CharcoalHeaders.UserInfoHeader {
