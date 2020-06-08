@@ -127,8 +127,8 @@ void EntitiesModel::registerLoggingBeginning(
 }
 
 void EntitiesModel::registerLoggingEnding(
-    const QString &plotId, const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QString &malebiRepsId,
+    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QString &plotId, const QString &malebiRepsId,
     const int numberOfTrees) const
 {
     /*
@@ -176,6 +176,82 @@ void EntitiesModel::registerLoggingEnding(
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
+}
+
+void EntitiesModel::registerCarbonizationBeginning(
+    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QString &plotId, const QString &ovenId, const QString &malebiRepsId,
+    const QString &ovenType, const QVariantMap &ovenDimensions) const
+{
+    /*
+     * Algorithm is:
+     * - insert entity into table
+     * - get new entity's ID
+     * - insert event into table
+     * - send action to web server
+     */
+
+    qDebug() << "Registering carbonization beginning" << coordinate << timestamp
+             << plotId << ovenId << malebiRepsId << ovenType << ovenDimensions;
+
+    // First, insert a new Entity into table
+    const QString harvestId(generateHarvestId(plotId, malebiRepsId));
+    const QString typeId(findEntityTypeId(Enums::PackageType::Harvest));
+
+    if (typeId.isEmpty()) {
+        qWarning() << RED("Harvest ID type not found!");
+        return;
+    }
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("INSERT INTO Entities (typeId, name, isUsed, isCommitted) "
+                  "VALUES (:typeId, :harvestId, 0, 0)");
+    query.bindValue(":typeId", typeId);
+    query.bindValue(":harvestId", harvestId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting Carbonization entity has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "DB:" << m_dbConnName;
+        return;
+    }
+
+    // Then, insert a new Event under that Entity
+    const QString entityId(query.lastInsertId().toString());
+    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::CarbonizationBeginning));
+
+    if (eventTypeId.isEmpty()) {
+        qWarning() << RED("Event Type ID not found!");
+        return;
+    }
+
+    query.prepare("INSERT INTO Events (entityId, typeId, "
+                  "date, locationLatitude, locationLongitude, properties) "
+                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
+                  ":properties)");
+    query.bindValue(":entityId", entityId);
+    query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":date", timestamp);
+    query.bindValue(":locationLatitude", coordinate.latitude());
+    query.bindValue(":locationLongitude", coordinate.longitude());
+    // TODO: use Tags to denote the properties more reliably!
+    query.bindValue(":properties", QVariantMap {
+                                       { "plotId", plotId },
+                                       { "ovenId", ovenId },
+                                       { "ovenType", ovenType },
+                                       { "ovenDimensions", ovenDimensions },
+                                       { "userId", malebiRepsId }
+                                   });
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting Carbonization Beginning event has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
+
+    // Lastly, send a request to server to add it, too.
 }
 
 /*!

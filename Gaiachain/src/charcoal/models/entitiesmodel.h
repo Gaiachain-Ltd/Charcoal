@@ -35,11 +35,21 @@ public:
         ) const;
 
     Q_INVOKABLE void registerLoggingEnding(
-        const QString &plotId,
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QString &plotId,
         const QString &malebiRepsId,
         const int numberOfTrees
+        ) const;
+
+    Q_INVOKABLE void registerCarbonizationBeginning(
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QString &plotId,
+        const QString &ovenId,
+        const QString &malebiRepsId,
+        const QString &ovenType,
+        const QVariantMap &ovenDimensions
         ) const;
 
 private:

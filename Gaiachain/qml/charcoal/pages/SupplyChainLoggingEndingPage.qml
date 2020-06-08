@@ -50,7 +50,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerLoggingBeginning(
+        dataManager.entitiesModel.registerLoggingEnding(
                     plotIdComboBox.currentText,
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
