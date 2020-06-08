@@ -34,7 +34,7 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     createSummaryItem(Strings.plotId,
-                                      dataManager.generatePlotId(
+                                      dataManager.entitiesModel.generatePlotId(
                                           repsIdInputHeader.inputText,
                                           parcelComboBox.currentText,
                                           beginningDateHeader.selectedDate
@@ -57,24 +57,17 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        /*
-        showOverlay()
+        //showOverlay()
 
-        var properties = {
-            [PackageDataProperties.LotPid]: 1,
-            [PackageDataProperties.HarvestWeights]: 1
-        }
-
-        // ID, action, coordiate, timestamp, props
-        dataManager.addAction(
-                    plotId,
-                    Enums.SupplyChainAction.LoggingBeginning,
+        dataManager.entitiesModel.registerLoggingBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    new Date,
-                    properties)
-                    */
-        console.warn("Dummy action - TODO implement! Going back to main menu")
+                    beginningDateHeader.selectedDate,
+                    parcelComboBox.currentText,
+                    repsIdInputHeader.inputText,
+                    villageComboBox.currentText,
+                    treeSpeciesComboBox.currentText)
+
         pageManager.enter(Enums.Page.MainMenu)
     }
 

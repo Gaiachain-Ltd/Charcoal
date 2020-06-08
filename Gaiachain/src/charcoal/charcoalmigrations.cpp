@@ -29,9 +29,9 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `width` DECIMAL(5,2), `height` DECIMAL(5,2), `depth` DECIMAL(5,2))"),
             // SupplyChain
             // Entities are how Transactions are called on Web side
-            QLatin1String("CREATE TABLE Entities (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `isUsed` BOOLEAN REQUIRED, `isCommitted` BOOLEAN REQUIRED)"),
+            QLatin1String("CREATE TABLE Entities (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `isUsed` BOOLEAN NOT NULL CHECK (isUsed IN (0,1)), `isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)))"),
             QLatin1String("CREATE TABLE EntityTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE Events (`id` INTEGER primary key AUTOINCREMENT, `date` INTEGER NOT NULL, `locationLat` REAL NOT NULL, `locationLon` REAL NOT NULL, `properties` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE Events (`id` INTEGER primary key AUTOINCREMENT, `entityId` INTEGER, `date` INTEGER NOT NULL, `locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, `properties` TEXT NOT NULL, FOREIGN KEY(entityId) REFERENCES Entities(id))"),
             QLatin1String("CREATE TABLE EventTypes (`id` INTEGER primary key AUTOINCREMENT, `actionName` TEXT NOT NULL)"),
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
@@ -45,6 +45,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("DROP TABLE Entities"),
             QLatin1String("DROP TABLE EntityTypes"),
             QLatin1String("DROP TABLE Events"),
+            QLatin1String("DROP TABLE EventTypes"),
         }, true)
     },
     // This inserts some static data!
@@ -59,12 +60,12 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("INSERT INTO EntityTypes (name) VALUES (\"Transport\")"),
 
             // action names are same as Web API actions, to make it simple
-            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"LB\")"),
-            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"LE\")"),
-            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"CB\")"),
-            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"CE\")"),
-            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"TR\")"),
-            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"RE\")"),
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"LB\")"), // Logging beginning
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"LE\")"), // Logging ending
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"CB\")"), // Carbonization beginning
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"CE\")"), // Carbonization ending
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"TR\")"), // Loading & transport
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"RE\")"), // Reception
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             QLatin1String("DELETE FROM EntityTypes"),

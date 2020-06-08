@@ -12,7 +12,8 @@ CharcoalDataManager::CharcoalDataManager(QObject *parent)
       m_villagesModel(new VillagesModel(this)),
       m_parcelsModel(new ParcelsModel(this)),
       m_destinationsModel(new DestinationsModel(this)),
-      m_ovenTypesModel(new OvenTypesModel(this))
+      m_ovenTypesModel(new OvenTypesModel(this)),
+      m_entitiesModel(new EntitiesModel(this))
 {
 }
 
@@ -28,29 +29,7 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     m_parcelsModel->setDbConnection(m_dbConnectionName);
     m_destinationsModel->setDbConnection(m_dbConnectionName);
     m_ovenTypesModel->setDbConnection(m_dbConnectionName);
-}
-
-QString CharcoalDataManager::generatePlotId(const QString &userId,
-                                            const QString &parcelCode,
-                                            const QDate &date)
-{
-    return userId + sep + parcelCode + sep + date.toString(dateFormat);
-}
-
-QString CharcoalDataManager::generateHarvestId(const QString &plotId,
-                                               const QString &userId)
-{
-    return plotId + sep + userId;
-}
-
-QString CharcoalDataManager::generateTransportId(const QString &harvestId,
-                                                 const QString &licensePlate,
-                                                 const int transportNumber,
-                                                 const QDate &date)
-{
-    return harvestId + sep + licensePlate
-        + sep + "T" + QString::number(transportNumber)
-        + sep + date.toString(dateFormat);
+    m_entitiesModel->setDbConnection(m_dbConnectionName);
 }
 
 TreeSpeciesModel *CharcoalDataManager::treeSpeciesModel() const
@@ -76,4 +55,9 @@ DestinationsModel *CharcoalDataManager::destinationsModel() const
 OvenTypesModel *CharcoalDataManager::ovenTypesModel() const
 {
     return m_ovenTypesModel;
+}
+
+EntitiesModel *CharcoalDataManager::entitiesModel() const
+{
+    return m_entitiesModel;
 }
