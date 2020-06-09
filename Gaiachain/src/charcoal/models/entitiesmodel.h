@@ -64,7 +64,8 @@ public:
         const QString &userId,
         const QString &harvestId,
         const QString &plotId,
-        const QVariantList &ovenIds
+        // TODO: use just IDs!
+        const QString &ovenIds
         ) const;
 
     Q_INVOKABLE void registerTransportAndLoading(

@@ -303,7 +303,7 @@ void EntitiesModel::registerCarbonizationBeginning(
 void EntitiesModel::registerCarbonizationEnding(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &harvestId, const QString &plotId,
-    const QVariantList &ovenIds) const
+    const QString &ovenIds) const
 {
     /*
      * Algorithm is:

@@ -72,7 +72,7 @@ Pages.SupplyChainPageBase {
                     carbonizerIdInputHeader.inputText,
                     harvestIdComboBox.currentText,
                     dataManager.entitiesModel.getPlotId(harvestIdComboBox.currentText),
-                    ovenIdComboBox.values
+                    ovenIdComboBox.currentText
                     )
 
         pageManager.enter(Enums.Page.MainMenu)
