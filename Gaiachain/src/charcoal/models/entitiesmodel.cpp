@@ -50,11 +50,48 @@ QString EntitiesModel::generateTransportId(const QString &harvestId,
             + sep + date.toString(dateFormat);
 }
 
-QString EntitiesModel::getPlotId(const QString &harvestId) const
+QString EntitiesModel::getPlotId(const QString &id) const
 {
-    QStringList parts(harvestId.split(sep));
-    parts.removeLast();
-    return parts.join(sep);
+    const QStringList parts(id.split(sep));
+
+    if (parts.length() < 3) {
+        qWarning() << RED("Invalid ID passed to getPlotId") << id;
+        return QString();
+    }
+
+    const QStringList plot(parts.mid(0, 3));
+    return plot.join(sep);
+}
+
+QString EntitiesModel::getTransportIdFromBags(const QVariantList &scannedQrs) const
+{
+    Q_UNUSED(scannedQrs)
+
+    // TODO!
+    return QString();
+}
+
+int EntitiesModel::nextTransportNumber(const QString &harvestId) const
+{
+    const QString plotId(getPlotId(harvestId));
+
+    return -1;
+}
+
+int EntitiesModel::bagCountInTransport(const QString &transportId) const
+{
+    Q_UNUSED(transportId)
+
+    // TODO!
+    return -1;
+}
+
+QString EntitiesModel::plateNumberInTransport(const QString &transportId) const
+{
+    Q_UNUSED(transportId)
+
+    // TODO!
+    return QString();
 }
 
 void EntitiesModel::registerLoggingBeginning(
@@ -85,7 +122,7 @@ void EntitiesModel::registerLoggingBeginning(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, isUsed, isCommitted) "
+    query.prepare("INSERT INTO Entities (typeId, name, isFinished, isCommitted) "
                   "VALUES (:typeId, :plotId, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":plotId", plotId);
@@ -107,12 +144,13 @@ void EntitiesModel::registerLoggingBeginning(
         return;
     }
 
-    query.prepare("INSERT INTO Events (entityId, typeId, "
+    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, locationLatitude, locationLongitude, properties) "
-                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
-                  ":properties)");
+                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  ":locationLatitude, :locationLongitude, :properties)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
@@ -120,8 +158,7 @@ void EntitiesModel::registerLoggingBeginning(
     query.bindValue(":properties", QVariantMap {
                                        { "parcel", parcel },
                                        { "village", village },
-                                       { "treeSpecies", treeSpecies },
-                                       { "userId", userId }
+                                       { "treeSpecies", treeSpecies }
                                    });
 
     if (query.exec() == false) {
@@ -163,19 +200,19 @@ void EntitiesModel::registerLoggingEnding(
     }
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("INSERT INTO Events (entityId, typeId, "
+    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, locationLatitude, locationLongitude, properties) "
-                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
-                  ":properties)");
+                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  ":locationLatitude, :locationLongitude, :properties)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties", QVariantMap {
-                                       { "numberOfTrees", numberOfTrees },
-                                       { "userId", userId }
+                                       { "numberOfTrees", numberOfTrees }
                                    });
 
     if (query.exec() == false) {
@@ -204,6 +241,7 @@ void EntitiesModel::registerCarbonizationBeginning(
     // First, insert a new Entity into table
     const QString harvestId(generateHarvestId(plotId, userId));
     const QString typeId(findEntityTypeId(Enums::PackageType::Harvest));
+    const QString parentEntityId(findEntityId(plotId));
 
     if (typeId.isEmpty()) {
         qWarning() << RED("Harvest ID type not found!");
@@ -212,10 +250,11 @@ void EntitiesModel::registerCarbonizationBeginning(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, isUsed, isCommitted) "
-                  "VALUES (:typeId, :harvestId, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted) "
+                  "VALUES (:typeId, :harvestId, :parent, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":harvestId", harvestId);
+    query.bindValue(":parent", parentEntityId);
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization entity has failed!")
@@ -234,12 +273,13 @@ void EntitiesModel::registerCarbonizationBeginning(
         return;
     }
 
-    query.prepare("INSERT INTO Events (entityId, typeId, "
+    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, locationLatitude, locationLongitude, properties) "
-                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
-                  ":properties)");
+                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  ":locationLatitude, :locationLongitude, :properties)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
@@ -248,8 +288,7 @@ void EntitiesModel::registerCarbonizationBeginning(
                                        { "plotId", plotId },
                                        { "ovenId", ovenId },
                                        { "ovenType", ovenType },
-                                       { "ovenDimensions", ovenDimensions },
-                                       { "userId", userId }
+                                       { "ovenDimensions", ovenDimensions }
                                    });
 
     if (query.exec() == false) {
@@ -291,20 +330,20 @@ void EntitiesModel::registerCarbonizationEnding(
     }
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("INSERT INTO Events (entityId, typeId, "
+    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, locationLatitude, locationLongitude, properties) "
-                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
-                  ":properties)");
+                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  ":locationLatitude, :locationLongitude, :properties)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties", QVariantMap {
                                        { "plotId", plotId },
-                                       { "ovenIds", ovenIds },
-                                       { "userId", userId }
+                                       { "ovenIds", ovenIds }
                                    });
 
     if (query.exec() == false) {
@@ -318,7 +357,7 @@ void EntitiesModel::registerTransportAndLoading(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &transportId, const QString &harvestId,
     const QString &plateNumber, const QString &destination,
-    const QVariantMap &scannedQrs) const
+    const QVariantList &scannedQrs) const
 {
     /*
      * Algorithm is:
@@ -334,6 +373,7 @@ void EntitiesModel::registerTransportAndLoading(
 
     // First, insert a new Entity into table
     const QString typeId(findEntityTypeId(Enums::PackageType::Transport));
+    const QString parentEntityId(findEntityId(getPlotId(transportId)));
 
     if (typeId.isEmpty()) {
         qWarning() << RED("Transport ID type not found!");
@@ -342,10 +382,11 @@ void EntitiesModel::registerTransportAndLoading(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, isUsed, isCommitted) "
-                  "VALUES (:typeId, :transportId, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted) "
+                  "VALUES (:typeId, :transportId, :parent, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":transportId", transportId);
+    query.bindValue(":parent", parentEntityId);
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Loading and Transport entity has failed!")
@@ -364,18 +405,18 @@ void EntitiesModel::registerTransportAndLoading(
         return;
     }
 
-    query.prepare("INSERT INTO Events (entityId, typeId, "
+    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, locationLatitude, locationLongitude, properties) "
-                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
-                  ":properties)");
+                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  ":locationLatitude, :locationLongitude, :properties)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties", QVariantMap {
-                                       { "userId", userId },
                                        { "harvestId", harvestId },
                                        { "plateNumber", plateNumber },
                                        { "destination", destination },
@@ -389,6 +430,81 @@ void EntitiesModel::registerTransportAndLoading(
     }
 
     // Lastly, send a request to server to add it, too.
+}
+
+void EntitiesModel::registerReception(
+    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QString &userId, const QString &transportId,
+    const QVariantList &documents, const QVariantList &receipts,
+    const QVariantList &scannedQrs) const
+{
+    /*
+     * Algorithm is:
+     * - find entity ID in table (created in Loading and Transport step)
+     * - insert event into table
+     * - mark PlotId, HarvestId and TransportId as finished
+     * - send action to web server
+     */
+
+    qDebug() << "Registering reception" << coordinate << timestamp
+             << userId << transportId << documents << receipts
+             << scannedQrs.size();
+
+    const QString entityId(findEntityId(transportId));
+
+    if (entityId.isEmpty()) {
+        qWarning() << RED("Entity ID not found!");
+        return;
+    }
+
+    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::Reception));
+
+    if (eventTypeId.isEmpty()) {
+        qWarning() << RED("Event Type ID not found!");
+        return;
+    }
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
+                  "date, locationLatitude, locationLongitude, properties) "
+                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  ":locationLatitude, :locationLongitude, :properties)");
+    query.bindValue(":entityId", entityId);
+    query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":userId", userId);
+    query.bindValue(":date", timestamp);
+    query.bindValue(":locationLatitude", coordinate.latitude());
+    query.bindValue(":locationLongitude", coordinate.longitude());
+    // TODO: use Tags to denote the properties more reliably!
+    query.bindValue(":properties", QVariantMap {
+                                       { "transportId", transportId },
+                                       { "documents", documents },
+                                       { "receipts", receipts },
+                                       { "scannedQrs", scannedQrs }
+                                   });
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting reception event has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
+
+    // Lastly, send a request to server to add it, too.
+}
+
+void EntitiesModel::finalizeSupplyChain(const QString &plotId) const
+{
+    const QString parentId(findEntityId(plotId));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId OR parentName=:parentId");
+    query.bindValue(":plotId", plotId);
+    query.bindValue(":parentId", parentId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Finishing a supply chain has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
 }
 
 /*!

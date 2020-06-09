@@ -25,7 +25,11 @@ public:
                                             const int transportNumber,
                                             const QDate &date) const;
 
-    Q_INVOKABLE QString getPlotId(const QString &harvestId) const;
+    Q_INVOKABLE QString getPlotId(const QString &id) const;
+    Q_INVOKABLE QString getTransportIdFromBags(const QVariantList &scannedQrs) const;
+    Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
+    Q_INVOKABLE int bagCountInTransport(const QString &transportId) const;
+    Q_INVOKABLE QString plateNumberInTransport(const QString &transportId) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,
@@ -71,8 +75,20 @@ public:
         const QString &harvestId,
         const QString &plateNumber,
         const QString &destination,
-        const QVariantMap &scannedQrs
+        const QVariantList &scannedQrs
         ) const;
+
+    Q_INVOKABLE void registerReception(
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QString &userId,
+        const QString &transportId,
+        const QVariantList &documents,
+        const QVariantList &receipts,
+        const QVariantList &scannedQrs
+        ) const;
+
+    Q_INVOKABLE void finalizeSupplyChain(const QString &plotId) const;
 
 private:
     const QString sep = "/";

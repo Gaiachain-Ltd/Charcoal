@@ -8,7 +8,7 @@ UnusedTransportIdsModel::UnusedTransportIdsModel(QObject *parent) : QSqlQueryMod
 
 void UnusedTransportIdsModel::setDbConnection(const QString &connectionName)
 {
-    setQuery("SELECT name FROM Entities WHERE isUsed=0 AND typeId IN "
+    setQuery("SELECT name FROM Entities WHERE isFinished=0 AND typeId IN "
              "(SELECT id FROM EntityTypes WHERE name=\"Transport\")",
              db::Helpers::databaseConnection(connectionName));
 }

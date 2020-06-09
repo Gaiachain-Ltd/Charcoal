@@ -16,6 +16,8 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
+    property string transportId
+
     property var scannedQrs: [
         "2222-2222-2222",
         "3333-3333-3333",
@@ -61,11 +63,12 @@ Pages.SupplyChainPageBase {
         let docsIcon = "image://tickmark/document-" + hasDocs
         let recsIcon = "image://tickmark/receipt-" + hasRecs
 
-        // TODO: guess transport ID based on bags codes!
+        transportId = dataManager.entitiesModel.getTransportIdFromBags(scannedQrs)
+        let bagCount = dataManager.entitiesModel.bagCountInTransport(transportId)
+
         var summary = [
                     createSummaryItem(Strings.transportId,
-                                      // TODO: insert real data!
-                                      "AM003PM/0595112/04-03-2020/AM004NA/1234AB56/31-03-2020",
+                                      transportId,
                                       "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor4,
@@ -78,7 +81,9 @@ Pages.SupplyChainPageBase {
                                               Strings.receipt
                                           ],
                                           [
-                                              Strings.numberOfBagsDetail.arg("149").arg("150"),
+                                              Strings.numberOfBagsDetail
+                                                .arg(scannedQrs.length)
+                                                .arg(bagCount),
                                               hasDocs? Strings.approved : Strings.noPhoto,
                                               hasRecs? Strings.approved : Strings.noPhoto
                                           ],
@@ -113,8 +118,7 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor4,
                                       GStyle.textPrimaryColor),
                     createSummaryItem(Strings.plateNumber,
-                                      // TODO: insert real data!
-                                      "12345AA"),
+                                      dataManager.entitiesModel.plateNumberInTransport(transportId)),
                     createSummaryItem(Strings.receptionDateCharcoal,
                                       unloadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
@@ -124,24 +128,17 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        /*
-        showOverlay()
-
-        var properties = {
-            [PackageDataProperties.LotPid]: 1,
-            [PackageDataProperties.HarvestWeights]: 1
-        }
-
-        // ID, action, coordiate, timestamp, props
-        dataManager.addAction(
-                    plotId,
-                    Enums.SupplyChainAction.LoggingBeginning,
+        dataManager.entitiesModel.registerReception(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    new Date,
-                    properties)
-                    */
-        console.warn("Dummy action - TODO implement! Going back to main menu")
+                    endingDateHeader.selectedDate,
+                    userManager.userData.code,
+                    transportId,
+                    picturesManager.documents(),
+                    picturesManager.receipts(),
+                    scannedQrs
+                    )
+
         pageManager.enter(Enums.Page.MainMenu)
     }
 
