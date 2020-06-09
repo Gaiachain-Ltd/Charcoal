@@ -51,11 +51,11 @@ Pages.SupplyChainPageBase {
 
     function addAction() {
         dataManager.entitiesModel.registerLoggingEnding(
-                    plotIdComboBox.currentText,
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     endingDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
+                    plotIdComboBox.currentText,
                     numberOfTreesHeader.inputText)
 
         pageManager.enter(Enums.Page.MainMenu)

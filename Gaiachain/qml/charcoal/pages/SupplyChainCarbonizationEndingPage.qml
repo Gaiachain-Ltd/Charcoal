@@ -40,8 +40,7 @@ Pages.SupplyChainPageBase {
                                       GStyle.delegateHighlightColor2,
                                       GStyle.fontHighlightColor2),
                     createSummaryItem(Strings.plotId,
-                                      // Get the plot ID!
-                                      "AM003PM/0595112/04-03-2020",
+                                      dataManager.entitiesModel.getPlotId(harvestIdComboBox.currentText),
                                       "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
@@ -66,24 +65,16 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        /*
-        showOverlay()
-
-        var properties = {
-            [PackageDataProperties.LotPid]: 1,
-            [PackageDataProperties.HarvestWeights]: 1
-        }
-
-        // ID, action, coordiate, timestamp, props
-        dataManager.addAction(
-                    plotId,
-                    Enums.SupplyChainAction.LoggingBeginning,
+        dataManager.entitiesModel.registerCarbonizationEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    new Date,
-                    properties)
-                    */
-        console.warn("Dummy action - TODO implement! Going back to main menu")
+                    endingDateHeader.selectedDate,
+                    carbonizerIdInputHeader.inputText,
+                    harvestIdComboBox.currentText,
+                    dataManager.entitiesModel.getPlotId(harvestIdComboBox.currentText),
+                    ovenIdComboBox.values
+                    )
+
         pageManager.enter(Enums.Page.MainMenu)
     }
 

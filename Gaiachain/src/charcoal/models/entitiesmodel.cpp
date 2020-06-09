@@ -47,13 +47,20 @@ QString EntitiesModel::generateTransportId(const QString &harvestId,
 {
     return harvestId + sep + licensePlate
         + sep + "T" + QString::number(transportNumber)
-        + sep + date.toString(dateFormat);
+            + sep + date.toString(dateFormat);
+}
+
+QString EntitiesModel::getPlotId(const QString &harvestId) const
+{
+    QStringList parts(harvestId.split(sep));
+    parts.removeLast();
+    return parts.join(sep);
 }
 
 void EntitiesModel::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QString &parcel,
-    const QString &malebiRepsId, const QString &village,
+    const QDateTime &timestamp, const QString &userId,
+    const QString &parcel, const QString &village,
     const QString &treeSpecies) const
 {
     /*
@@ -65,10 +72,10 @@ void EntitiesModel::registerLoggingBeginning(
      */
 
     qDebug() << "Registering logging beginning" << coordinate << timestamp
-             << parcel << malebiRepsId << village << treeSpecies;
+             << parcel << userId << village << treeSpecies;
 
     // First, insert a new Entity into table
-    const QString plotId(generatePlotId(malebiRepsId, parcel, timestamp.date()));
+    const QString plotId(generatePlotId(userId, parcel, timestamp.date()));
     const QString typeId(findEntityTypeId(Enums::PackageType::Plot));
 
     if (typeId.isEmpty()) {
@@ -114,7 +121,7 @@ void EntitiesModel::registerLoggingBeginning(
                                        { "parcel", parcel },
                                        { "village", village },
                                        { "treeSpecies", treeSpecies },
-                                       { "userId", malebiRepsId }
+                                       { "userId", userId }
                                    });
 
     if (query.exec() == false) {
@@ -128,7 +135,7 @@ void EntitiesModel::registerLoggingBeginning(
 
 void EntitiesModel::registerLoggingEnding(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
-    const QString &plotId, const QString &malebiRepsId,
+    const QString &userId, const QString &plotId,
     const int numberOfTrees) const
 {
     /*
@@ -139,7 +146,7 @@ void EntitiesModel::registerLoggingEnding(
      */
 
     qDebug() << "Registering logging ending" << coordinate << timestamp
-             << plotId << malebiRepsId << numberOfTrees;
+             << plotId << userId << numberOfTrees;
 
     const QString entityId(findEntityId(plotId));
 
@@ -168,7 +175,7 @@ void EntitiesModel::registerLoggingEnding(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties", QVariantMap {
                                        { "numberOfTrees", numberOfTrees },
-                                       { "userId", malebiRepsId }
+                                       { "userId", userId }
                                    });
 
     if (query.exec() == false) {
@@ -180,7 +187,7 @@ void EntitiesModel::registerLoggingEnding(
 
 void EntitiesModel::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
-    const QString &plotId, const QString &ovenId, const QString &malebiRepsId,
+    const QString &userId, const QString &plotId, const QString &ovenId,
     const QString &ovenType, const QVariantMap &ovenDimensions) const
 {
     /*
@@ -192,10 +199,10 @@ void EntitiesModel::registerCarbonizationBeginning(
      */
 
     qDebug() << "Registering carbonization beginning" << coordinate << timestamp
-             << plotId << ovenId << malebiRepsId << ovenType << ovenDimensions;
+             << plotId << ovenId << userId << ovenType << ovenDimensions;
 
     // First, insert a new Entity into table
-    const QString harvestId(generateHarvestId(plotId, malebiRepsId));
+    const QString harvestId(generateHarvestId(plotId, userId));
     const QString typeId(findEntityTypeId(Enums::PackageType::Harvest));
 
     if (typeId.isEmpty()) {
@@ -242,7 +249,7 @@ void EntitiesModel::registerCarbonizationBeginning(
                                        { "ovenId", ovenId },
                                        { "ovenType", ovenType },
                                        { "ovenDimensions", ovenDimensions },
-                                       { "userId", malebiRepsId }
+                                       { "userId", userId }
                                    });
 
     if (query.exec() == false) {
@@ -252,6 +259,59 @@ void EntitiesModel::registerCarbonizationBeginning(
     }
 
     // Lastly, send a request to server to add it, too.
+}
+
+void EntitiesModel::registerCarbonizationEnding(
+    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QString &userId, const QString &harvestId, const QString &plotId,
+    const QVariantList &ovenIds) const
+{
+    /*
+     * Algorithm is:
+     * - find entity ID in table (created in Carbonization Beginning step)
+     * - insert event into table
+     * - send action to web server
+     */
+
+    qDebug() << "Registering carbonization ending" << coordinate << timestamp
+             << harvestId << plotId << ovenIds << userId;
+
+    const QString entityId(findEntityId(harvestId));
+
+    if (entityId.isEmpty()) {
+        qWarning() << RED("Entity ID not found!");
+        return;
+    }
+
+    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::CarbonizationEnding));
+
+    if (eventTypeId.isEmpty()) {
+        qWarning() << RED("Event Type ID not found!");
+        return;
+    }
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    query.prepare("INSERT INTO Events (entityId, typeId, "
+                  "date, locationLatitude, locationLongitude, properties) "
+                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
+                  ":properties)");
+    query.bindValue(":entityId", entityId);
+    query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":date", timestamp);
+    query.bindValue(":locationLatitude", coordinate.latitude());
+    query.bindValue(":locationLongitude", coordinate.longitude());
+    // TODO: use Tags to denote the properties more reliably!
+    query.bindValue(":properties", QVariantMap {
+                                       { "plotId", plotId },
+                                       { "ovenIds", ovenIds },
+                                       { "userId", userId }
+                                   });
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting Logging Ending event has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
 }
 
 /*!

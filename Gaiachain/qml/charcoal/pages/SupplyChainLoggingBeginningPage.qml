@@ -61,8 +61,8 @@ Pages.SupplyChainPageBase {
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     beginningDateHeader.selectedDate,
-                    parcelComboBox.currentText,
                     repsIdInputHeader.inputText,
+                    parcelComboBox.currentText,
                     villageComboBox.currentText,
                     treeSpeciesComboBox.currentText)
 

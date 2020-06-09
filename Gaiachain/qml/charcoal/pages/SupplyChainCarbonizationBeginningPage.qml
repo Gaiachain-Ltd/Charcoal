@@ -73,9 +73,9 @@ Pages.SupplyChainPageBase {
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     beginningDateHeader.selectedDate,
+                    carbonizerIdInputHeader.inputText,
                     plotIdComboBox.currentText,
                     ovenIdHeader.inputText,
-                    carbonizerIdInputHeader.inputText,
                     ovenTypeComboBox.currentText,
                     ovenDimensionsHeader.values)
 

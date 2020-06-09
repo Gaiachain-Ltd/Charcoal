@@ -25,11 +25,13 @@ public:
                                             const int transportNumber,
                                             const QDate &date) const;
 
+    Q_INVOKABLE QString getPlotId(const QString &harvestId) const;
+
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QString &userId,
         const QString &parcel,
-        const QString &malebiRepsId,
         const QString &village,
         const QString &treeSpecies
         ) const;
@@ -37,19 +39,28 @@ public:
     Q_INVOKABLE void registerLoggingEnding(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QString &userId,
         const QString &plotId,
-        const QString &malebiRepsId,
         const int numberOfTrees
         ) const;
 
     Q_INVOKABLE void registerCarbonizationBeginning(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QString &userId,
         const QString &plotId,
         const QString &ovenId,
-        const QString &malebiRepsId,
         const QString &ovenType,
         const QVariantMap &ovenDimensions
+        ) const;
+
+    Q_INVOKABLE void registerCarbonizationEnding(
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QString &userId,
+        const QString &harvestId,
+        const QString &plotId,
+        const QVariantList &ovenIds
         ) const;
 
 private:
