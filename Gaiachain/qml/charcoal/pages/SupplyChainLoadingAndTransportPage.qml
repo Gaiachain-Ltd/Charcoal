@@ -53,10 +53,10 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
-        transportId = dataManager.entitiesManager.generateTransportId(
+        transportId = dataManager.entitiesModel.generateTransportId(
                         harvestIdComboBox.currentText,
                         plateNumberHeader.inputText,
-                        dataManager.entitiesManager.nextTransportNumber(
+                        dataManager.entitiesModel.nextTransportNumber(
                             harvestIdComboBox.currentText),
                         loadingDateHeader.selectedDate
                     )

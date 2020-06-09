@@ -131,7 +131,7 @@ Pages.SupplyChainPageBase {
         dataManager.entitiesModel.registerReception(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    endingDateHeader.selectedDate,
+                    unloadingDateHeader.selectedDate,
                     userManager.userData.code,
                     transportId,
                     picturesManager.documents(),
