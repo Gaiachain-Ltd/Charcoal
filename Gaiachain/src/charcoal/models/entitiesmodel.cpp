@@ -314,6 +314,83 @@ void EntitiesModel::registerCarbonizationEnding(
     }
 }
 
+void EntitiesModel::registerTransportAndLoading(
+    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QString &userId, const QString &transportId, const QString &harvestId,
+    const QString &plateNumber, const QString &destination,
+    const QVariantMap &scannedQrs) const
+{
+    /*
+     * Algorithm is:
+     * - insert entity into table
+     * - get new entity's ID
+     * - insert event into table
+     * - send action to web server
+     */
+
+    qDebug() << "Registering transport and loading" << coordinate << timestamp
+             << userId << transportId << harvestId << plateNumber
+             << destination << scannedQrs.size();
+
+    // First, insert a new Entity into table
+    const QString typeId(findEntityTypeId(Enums::PackageType::Transport));
+
+    if (typeId.isEmpty()) {
+        qWarning() << RED("Transport ID type not found!");
+        return;
+    }
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("INSERT INTO Entities (typeId, name, isUsed, isCommitted) "
+                  "VALUES (:typeId, :transportId, 0, 0)");
+    query.bindValue(":typeId", typeId);
+    query.bindValue(":transportId", transportId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting Loading and Transport entity has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "DB:" << m_dbConnName;
+        return;
+    }
+
+    // Then, insert a new Event under that Entity
+    const QString entityId(query.lastInsertId().toString());
+    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoadingAndTransport));
+
+    if (eventTypeId.isEmpty()) {
+        qWarning() << RED("Event Type ID not found!");
+        return;
+    }
+
+    query.prepare("INSERT INTO Events (entityId, typeId, "
+                  "date, locationLatitude, locationLongitude, properties) "
+                  "VALUES (:entityId, :typeId, :date, :locationLatitude, :locationLongitude,"
+                  ":properties)");
+    query.bindValue(":entityId", entityId);
+    query.bindValue(":typeId", eventTypeId);
+    query.bindValue(":date", timestamp);
+    query.bindValue(":locationLatitude", coordinate.latitude());
+    query.bindValue(":locationLongitude", coordinate.longitude());
+    // TODO: use Tags to denote the properties more reliably!
+    query.bindValue(":properties", QVariantMap {
+                                       { "userId", userId },
+                                       { "harvestId", harvestId },
+                                       { "plateNumber", plateNumber },
+                                       { "destination", destination },
+                                       { "scannedQrs", scannedQrs }
+                                   });
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting Carbonization Beginning event has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
+
+    // Lastly, send a request to server to add it, too.
+}
+
 /*!
  * Returns Entity entry ID (from DB) for package of given \a name, where \a name
  * is PlotId, HarvestId or TransportId.

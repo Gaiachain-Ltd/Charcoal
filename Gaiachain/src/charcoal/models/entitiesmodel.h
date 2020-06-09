@@ -63,6 +63,17 @@ public:
         const QVariantList &ovenIds
         ) const;
 
+    Q_INVOKABLE void registerTransportAndLoading(
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QString &userId,
+        const QString &transportId,
+        const QString &harvestId,
+        const QString &plateNumber,
+        const QString &destination,
+        const QVariantMap &scannedQrs
+        ) const;
+
 private:
     const QString sep = "/";
     const QString dateFormat = "dd-MM-yyyy";

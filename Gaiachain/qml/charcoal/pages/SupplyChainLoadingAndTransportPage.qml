@@ -16,6 +16,8 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
+    property string transportId
+
     property var scannedQrs: [
         "2222-2222-2222",
         "3333-3333-3333",
@@ -51,15 +53,16 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
+        harvestId = dataManager.generateTransportId(
+                        harvestIdComboBox.currentText,
+                        plateNumberHeader.inputText,
+                        // TODO: implement transport numbers!
+                        1,
+                        loadingDateHeader.selectedDate
+                    )
         var summary = [
                     createSummaryItem(Strings.transportId,
-                                      dataManager.generateTransportId(
-                                          harvestIdComboBox.currentText,
-                                          plateNumberHeader.inputText,
-                                          // TODO: implement transport numbers!
-                                          1,
-                                          loadingDateHeader.selectedDate
-                                          ),
+                                      transportId,
                                       "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor4,
@@ -85,24 +88,18 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        /*
-        showOverlay()
-
-        var properties = {
-            [PackageDataProperties.LotPid]: 1,
-            [PackageDataProperties.HarvestWeights]: 1
-        }
-
-        // ID, action, coordiate, timestamp, props
-        dataManager.addAction(
-                    plotId,
-                    Enums.SupplyChainAction.LoggingBeginning,
+        dataManager.entitiesModel.registerTransportAndLoading(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    new Date,
-                    properties)
-                    */
-        console.warn("Dummy action - TODO implement! Going back to main menu")
+                    loadingDateHeader.selectedDate,
+                    userManager.userData.code,
+                    transportId,
+                    harvestIdComboBox.currentText,
+                    plateNumberHeader.inputText,
+                    deliveryDestinationComboBox.currentText,
+                    scannedQrs
+                    )
+
         pageManager.enter(Enums.Page.MainMenu)
     }
 
