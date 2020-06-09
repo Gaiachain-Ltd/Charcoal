@@ -90,6 +90,16 @@ public:
 
     Q_INVOKABLE void finalizeSupplyChain(const QString &plotId) const;
 
+    Q_INVOKABLE void registerReplantation(
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QString &userId,
+        const QString &plotId,
+        const int numberOfTrees,
+        const QString &treeSpecies,
+        const QDateTime &beginningDate
+        ) const;
+
 private:
     const QString sep = "/";
     const QString dateFormat = "dd-MM-yyyy";
@@ -99,6 +109,7 @@ private:
     QString findEntityId(const QString &name) const;
     QString findEntityTypeId(const Enums::PackageType type) const;
     QString findEventTypeId(const Enums::SupplyChainAction action) const;
+    QString findTreeSpeciesId(const QString &species) const;
 
     QString actionAbbreviation(const Enums::SupplyChainAction action) const;
 };

@@ -59,24 +59,17 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        /*
-        showOverlay()
-
-        var properties = {
-            [PackageDataProperties.LotPid]: 1,
-            [PackageDataProperties.HarvestWeights]: 1
-        }
-
-        // ID, action, coordiate, timestamp, props
-        dataManager.addAction(
-                    plotId,
-                    Enums.SupplyChainAction.LoggingBeginning,
+        dataManager.entitiesModel.registerReplantation(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    new Date,
-                    properties)
-                    */
-        console.warn("Dummy action - TODO implement! Going back to main menu")
+                    endingDateHeader.selectedDate,
+                    userManager.userData.code,
+                    plotIdComboBox.currentText,
+                    numberOfTreesHeader.inputText,
+                    treeSpeciesComboBox.currentText,
+                    beginningDateHeader.selectedDate
+                    )
+
         pageManager.enter(Enums.Page.MainMenu)
     }
 

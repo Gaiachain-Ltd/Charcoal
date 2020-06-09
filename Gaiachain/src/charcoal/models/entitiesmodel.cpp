@@ -122,8 +122,8 @@ void EntitiesModel::registerLoggingBeginning(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, isFinished, isCommitted) "
-                  "VALUES (:typeId, :plotId, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, isFinished, isCommitted, isReplanted) "
+                  "VALUES (:typeId, :plotId, 0, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":plotId", plotId);
 
@@ -250,8 +250,8 @@ void EntitiesModel::registerCarbonizationBeginning(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted) "
-                  "VALUES (:typeId, :harvestId, :parent, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted, isReplanted) "
+                  "VALUES (:typeId, :harvestId, :parent, 0, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":harvestId", harvestId);
     query.bindValue(":parent", parentEntityId);
@@ -351,6 +351,8 @@ void EntitiesModel::registerCarbonizationEnding(
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
+
+    // Lastly, send a request to server to add it, too.
 }
 
 void EntitiesModel::registerTransportAndLoading(
@@ -382,8 +384,8 @@ void EntitiesModel::registerTransportAndLoading(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted) "
-                  "VALUES (:typeId, :transportId, :parent, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted, isReplanted) "
+                  "VALUES (:typeId, :transportId, :parent, 0, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":transportId", transportId);
     query.bindValue(":parent", parentEntityId);
@@ -507,6 +509,66 @@ void EntitiesModel::finalizeSupplyChain(const QString &plotId) const
     }
 }
 
+void EntitiesModel::registerReplantation(
+    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QString &userId, const QString &plotId,
+    const int numberOfTrees, const QString &treeSpecies,
+    const QDateTime &beginningDate) const
+{
+    /*
+     * Algorithm is:
+     * - insert replantation entry into table
+     * - mark parent entity (plot) as replanted (set isReplanted to 1)
+     * - send action to web server
+     */
+
+    qDebug() << "Registering replantation" << coordinate << timestamp
+             << userId << plotId << numberOfTrees << treeSpecies
+             << beginningDate;
+
+    const QString parentId(findEntityId(plotId));
+    const QString treeSpeciesId(findTreeSpeciesId(treeSpecies));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("INSERT INTO Replantations (plotId, userId, "
+                  "numberOfTrees, treeSpecies, "
+                  "locationLatitude, locationLongitude, "
+                  "beginningDate, endingDate) "
+                  "VALUES (:plotId, :userId, "
+                  ":numberOfTrees, :treeSpecies, "
+                  ":locationLatitude, :locationLongitude, "
+                  ":beginningDate, :endingDate)");
+    query.bindValue(":plotId", parentId);
+    query.bindValue(":userId", userId);
+    query.bindValue(":numberOfTrees", numberOfTrees);
+    query.bindValue(":treeSpecies", treeSpeciesId);
+    query.bindValue(":locationLatitude", coordinate.latitude());
+    query.bindValue(":locationLongitude", coordinate.longitude());
+    query.bindValue(":beginningDate", beginningDate);
+    query.bindValue(":endingDate", timestamp);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting Replantation has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "DB:" << m_dbConnName;
+        return;
+    }
+
+    // Mark parent Entity as replanted
+    query.prepare("UPDATE Entities SET isReplanted=1 WHERE name=:plotId");
+    query.bindValue(":plotId", plotId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Finishing replantation of a plot has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
+
+    // Lastly, send a request to server to add it, too.
+}
+
 /*!
  * Returns Entity entry ID (from DB) for package of given \a name, where \a name
  * is PlotId, HarvestId or TransportId.
@@ -567,6 +629,26 @@ QString EntitiesModel::findEventTypeId(const Enums::SupplyChainAction action) co
     }
 
     qWarning() << RED("Getting EventType has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return QString();
+}
+
+QString EntitiesModel::findTreeSpeciesId(const QString &species) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM TreeSpecies WHERE name=:species");
+    query.bindValue(":species", species);
+
+    if (query.exec()) {
+        query.next();
+        return query.value("id").toString();
+    }
+
+    qWarning() << RED("Getting TreeSpecies has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
                << "DB:" << m_dbConnName;
