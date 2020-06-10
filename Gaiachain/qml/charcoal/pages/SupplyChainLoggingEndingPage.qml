@@ -20,7 +20,7 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        //sessionManager.getUnusedLotIds()
+        dataManager.unusedPlotIdsModel.refresh()
     }
 
     function proceed() {

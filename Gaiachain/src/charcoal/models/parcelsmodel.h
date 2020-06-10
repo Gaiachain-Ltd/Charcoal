@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QSqlQueryModel>
+#include "querymodel.h"
 
-class ParcelsModel : public QSqlQueryModel
+class ParcelsModel : public QueryModel
 {
     Q_OBJECT
 
 public:
     explicit ParcelsModel(QObject *parent = nullptr);
-
-    void setDbConnection(const QString &connectionName);
 };
 

@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QSqlQueryModel>
+#include "querymodel.h"
 
-class OvenTypesModel : public QSqlQueryModel
+class OvenTypesModel : public QueryModel
 {
     Q_OBJECT
 
 public:
     explicit OvenTypesModel(QObject *parent = nullptr);
-
-    void setDbConnection(const QString &connectionName);
 };
 

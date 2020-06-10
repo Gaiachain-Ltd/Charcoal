@@ -1,14 +1,11 @@
 #pragma once
 
-#include <QObject>
-#include <QSqlQueryModel>
+#include "querymodel.h"
 
-class TreeSpeciesModel : public QSqlQueryModel
+class TreeSpeciesModel : public QueryModel
 {
     Q_OBJECT
 
 public:
     explicit TreeSpeciesModel(QObject *parent = nullptr);
-
-    void setDbConnection(const QString &connectionName);
 };

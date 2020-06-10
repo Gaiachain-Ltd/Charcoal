@@ -13,18 +13,13 @@
 #include <QDateTime>
 #include <QDate>
 
-ActionController::ActionController(QObject *parent) : QSqlQueryModel(parent)
+ActionController::ActionController(QObject *parent) : QObject(parent)
 {
 }
 
 void ActionController::setDbConnection(const QString &connectionName)
 {
-
     m_dbConnName = connectionName;
-
-    setQuery("SELECT name FROM Entities", db::Helpers::databaseConnection(connectionName));
-
-    // TODO: we need to also return Events for each Entity!
 }
 
 QString ActionController::generatePlotId(const QString &userId,

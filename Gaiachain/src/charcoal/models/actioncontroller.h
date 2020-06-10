@@ -2,11 +2,11 @@
 
 #include "common/enums.h"
 
-#include <QSqlQueryModel>
+#include <QObject>
 
 class QGeoCoordinate;
 
-class ActionController : public QSqlQueryModel
+class ActionController : public QObject
 {
     Q_OBJECT
 

@@ -21,7 +21,8 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        //sessionManager.getUnusedLotIds()
+        dataManager.unusedPlotIdsForReplantationModel.refresh()
+        dataManager.treeSpeciesModel.refresh()
     }
 
     function proceed() {
@@ -83,7 +84,7 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkBlueUrl
         delegateTextColor: GStyle.fontHighlightColor
 
-        model: [ "AM003PM/0595112/04-03-2020" ]
+        model: dataManager.unusedPlotIdsForReplantationModel
     }
 
     Headers.InputHeader {
@@ -104,7 +105,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.replantationTreeSpeciesHelp
 
-        model: [ "Cassia siamea", "Technona grandis" ]
+        model: dataManager.treeSpeciesModel
     }
 
     CharcoalHeaders.UserInfoHeader {

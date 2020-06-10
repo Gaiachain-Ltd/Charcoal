@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QSqlQueryModel>
+#include "querymodel.h"
 
-class UnusedPlotIdsModel : public QSqlQueryModel
+class UnusedPlotIdsModel : public QueryModel
 {
     Q_OBJECT
 
 public:
     explicit UnusedPlotIdsModel(QObject *parent = nullptr);
-
-    void setDbConnection(const QString &connectionName);
 };
 

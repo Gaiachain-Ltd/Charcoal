@@ -1,14 +1,6 @@
 #include "destinationsmodel.h"
 
-#include "database/dbhelpers.h"
-
-DestinationsModel::DestinationsModel(QObject *parent) : QSqlQueryModel(parent)
+DestinationsModel::DestinationsModel(QObject *parent) : QueryModel(parent)
 {
-
-}
-
-void DestinationsModel::setDbConnection(const QString &connectionName)
-{
-    setQuery("SELECT name FROM Destinations",
-             db::Helpers::databaseConnection(connectionName));
+    setDbQuery("SELECT name FROM Destinations");
 }

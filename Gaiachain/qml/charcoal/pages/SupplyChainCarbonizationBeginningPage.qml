@@ -20,7 +20,8 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        //sessionManager.getUnusedLotIds()
+        dataManager.unusedPlotIdsModel.refresh()
+        dataManager.ovenTypesModel.refresh()
     }
 
     function proceed() {

@@ -44,7 +44,7 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        //sessionManager.getUnusedLotIds()
+        // Nothing to do
     }
 
     function proceed() {

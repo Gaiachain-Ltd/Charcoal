@@ -20,7 +20,9 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        //sessionManager.getUnusedLotIds()
+        dataManager.parcelsModel.refresh()
+        dataManager.villagesModel.refresh()
+        dataManager.treeSpeciesModel.refresh()
     }
 
     function proceed() {

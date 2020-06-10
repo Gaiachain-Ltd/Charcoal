@@ -41,7 +41,8 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        //sessionManager.getUnusedLotIds()
+        dataManager.nusedHarvestIdsModel.refresh()
+        dataManager.destinationsModel.refresh()
     }
 
     function proceed() {
