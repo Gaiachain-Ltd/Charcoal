@@ -55,7 +55,13 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "
                 "`beginningDate` INTEGER NOT NULL, `endingDate` INTEGER NOT NULL, "
                 "FOREIGN KEY(plotId) REFERENCES Entities(id), "
-                "FOREIGN KEY(treeSpecies) REFERENCES TreeSpecies(id))")
+                "FOREIGN KEY(treeSpecies) REFERENCES TreeSpecies(id))"),
+            QLatin1String("CREATE TABLE Ovens (`id` INTEGER primary key AUTOINCREMENT, "
+                "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, "
+                "`name` TEXT NOT NULL, "
+                "`width` DECIMAL(5,2), `height` DECIMAL(5,2), `depth` DECIMAL(5,2), "
+                "FOREIGN KEY(type) REFERENCES OvenTypes(id), "
+                "FOREIGN KEY(plot) REFERENCES Entities(id))")
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
@@ -70,6 +76,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("DROP TABLE Events"),
             QLatin1String("DROP TABLE EventTypes"),
             QLatin1String("DROP TABLE Replantations"),
+            QLatin1String("DROP TABLE Ovens"),
         }, true)
     },
     // This inserts some static data!
