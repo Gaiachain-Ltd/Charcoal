@@ -113,5 +113,7 @@ private:
     QString findTreeSpeciesId(const QString &species) const;
 
     QString actionAbbreviation(const Enums::SupplyChainAction action) const;
+
+    QString propertiesToString(const QVariantMap &properties) const;
 };
 

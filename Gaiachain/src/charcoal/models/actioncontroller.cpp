@@ -9,6 +9,10 @@
 #include <QSqlError>
 #include <QSqlRecord>
 
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
 #include <QMetaEnum>
 #include <QDateTime>
 #include <QDate>
@@ -60,9 +64,60 @@ QString ActionController::getPlotId(const QString &id) const
 
 QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
 {
-    Q_UNUSED(scannedQrs)
+    //const QString transportEntityId(findEntityId(transportId));
 
-    // TODO!
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    // TODO: restrict only to events of Entities where isFinished is FALSE!!!
+    query.prepare("SELECT properties, entityId FROM Events");
+
+    QString transportEntityId;
+    if (query.exec()) {
+        while (query.next()) {
+            const QByteArray propertiesString(query.value("properties").toByteArray());
+            const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+            const QVariantMap properties(propertiersJson.toVariant().toMap());
+            const QVariantList qrs(properties.value("scannedQrs").toList());
+
+            for (const QVariant &qr : scannedQrs) {
+                if (qrs.contains(qr)) {
+                    transportEntityId = query.value("entityId").toString();
+                    //qDebug() << "HIT!" << qr.toString() << transportEntityId;
+                    break;
+                }
+            }
+
+            if (transportEntityId.isEmpty() == false) {
+                break;
+            }
+        }
+    } else {
+        qWarning() << RED("Getting transport ID from bags has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "DB:" << m_dbConnName;
+    }
+
+    if (transportEntityId.isEmpty()) {
+        qWarning() << RED("No transport matching scanned bags has been found!")
+                   << scannedQrs;
+        return QString();
+    }
+
+    query.prepare("SELECT name FROM Entities WHERE id=:transportEntityId");
+    query.bindValue(":transportEntityId", transportEntityId);
+
+    if (query.exec()) {
+        query.next();
+        return query.value("name").toString();
+    }
+
+    qWarning() << RED("Getting Transport ID for bags has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName
+               << scannedQrs;
+
     return QString();
 }
 
@@ -99,17 +154,55 @@ int ActionController::nextTransportNumber(const QString &harvestId) const
 
 int ActionController::bagCountInTransport(const QString &transportId) const
 {
-    Q_UNUSED(transportId)
+    const QString transportEntityId(findEntityId(transportId));
 
-    // TODO!
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT properties FROM Events WHERE entityId=:transportEntityId");
+    query.bindValue(":transportEntityId", transportEntityId);
+
+    if (query.exec()) {
+        query.next();
+        const QByteArray propertiesString(query.value("properties").toByteArray());
+        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+        const QVariantMap properties(propertiersJson.toVariant().toMap());
+        //qDebug() << "Plate number?" << properties;
+        // TODO: use Tags!
+        return properties.value("scannedQrs").toList().size();
+    }
+
+    qWarning() << RED("Getting bag count has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
     return -1;
 }
 
 QString ActionController::plateNumberInTransport(const QString &transportId) const
 {
-    Q_UNUSED(transportId)
+    const QString transportEntityId(findEntityId(transportId));
 
-    // TODO!
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT properties FROM Events WHERE entityId=:transportEntityId");
+    query.bindValue(":transportEntityId", transportEntityId);
+
+    if (query.exec()) {
+        query.next();
+        const QByteArray propertiesString(query.value("properties").toByteArray());
+        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+        const QVariantMap properties(propertiersJson.toVariant().toMap());
+        //qDebug() << "Plate number?" << properties;
+        // TODO: use Tags!
+        return properties.value("plateNumber").toString();
+    }
+
+    qWarning() << RED("Getting plate number has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
     return QString();
 }
 
@@ -174,11 +267,12 @@ void ActionController::registerLoggingBeginning(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties", QVariantMap {
-                                       { "parcel", parcel },
-                                       { "village", village },
-                                       { "treeSpecies", treeSpecies }
-                                   });
+    query.bindValue(":properties",
+                    propertiesToString(QVariantMap {
+                        { "parcel", parcel },
+                        { "village", village },
+                        { "treeSpecies", treeSpecies }
+                    }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Logging Beginning event has failed!")
@@ -230,9 +324,10 @@ void ActionController::registerLoggingEnding(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties", QVariantMap {
-                                       { "numberOfTrees", numberOfTrees }
-                                   });
+    query.bindValue(":properties",
+                    propertiesToString(QVariantMap {
+                        { "numberOfTrees", numberOfTrees }
+                    }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Logging Ending event has failed!")
@@ -303,12 +398,13 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties", QVariantMap {
-                                       { "plotId", plotId },
-                                       { "ovenId", ovenId },
-                                       { "ovenType", ovenType },
-                                       { "ovenDimensions", ovenDimensions }
-                                   });
+    query.bindValue(":properties",
+                    propertiesToString(QVariantMap {
+                        { "plotId", plotId },
+                        { "ovenId", ovenId },
+                        { "ovenType", ovenType },
+                        { "ovenDimensions", ovenDimensions }
+                    }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
@@ -360,10 +456,11 @@ void ActionController::registerCarbonizationEnding(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties", QVariantMap {
-                                       { "plotId", plotId },
-                                       { "ovenIds", ovenIds }
-                                   });
+    query.bindValue(":properties",
+                    propertiesToString(QVariantMap {
+                        { "plotId", plotId },
+                        { "ovenIds", ovenIds }
+                    }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Logging Ending event has failed!")
@@ -437,12 +534,13 @@ void ActionController::registerTransportAndLoading(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties", QVariantMap {
-                                       { "harvestId", harvestId },
-                                       { "plateNumber", plateNumber },
-                                       { "destination", destination },
-                                       { "scannedQrs", scannedQrs }
-                                   });
+    query.bindValue(":properties",
+                    propertiesToString(QVariantMap {
+                        { "harvestId", harvestId },
+                        { "plateNumber", plateNumber },
+                        { "destination", destination },
+                        { "scannedQrs", scannedQrs }
+                    }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
@@ -497,12 +595,13 @@ void ActionController::registerReception(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties", QVariantMap {
-                                       { "transportId", transportId },
-                                       { "documents", documents },
-                                       { "receipts", receipts },
-                                       { "scannedQrs", scannedQrs }
-                                   });
+    query.bindValue(":properties",
+                    propertiesToString(QVariantMap {
+                        { "transportId", transportId },
+                        { "documents", documents },
+                        { "receipts", receipts },
+                        { "scannedQrs", scannedQrs }
+                    }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting reception event has failed!")
@@ -694,4 +793,9 @@ QString ActionController::actionAbbreviation(const Enums::SupplyChainAction acti
     }
 
     return QString();
+}
+
+QString ActionController::propertiesToString(const QVariantMap &properties) const
+{
+    return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);
 }
