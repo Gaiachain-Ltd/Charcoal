@@ -3,7 +3,6 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QThread>
-
 #include "common/logs.h"
 
 Q_LOGGING_CATEGORY(databaseQuery, "database.query")

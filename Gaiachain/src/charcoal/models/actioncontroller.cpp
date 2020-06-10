@@ -69,7 +69,31 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
 int ActionController::nextTransportNumber(const QString &harvestId) const
 {
     const QString plotId(getPlotId(harvestId));
+    const QString parentEntityId(findEntityId(plotId));
+    const QString transportTypeId(findEntityTypeId(Enums::PackageType::Transport));
 
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM Entities WHERE parent=:parentEntityId "
+                  "AND typeId=:transportTypeId");
+    query.bindValue(":parentEntityId", parentEntityId);
+    query.bindValue(":transportTypeId", transportTypeId);
+
+    if (query.exec()) {
+        // We can't use query.size() because SQLITE does not support it
+        int size = 0;
+        while (query.next()) {
+            size++;
+        }
+        size++;
+
+        return size;
+    }
+
+    qWarning() << RED("Getting next transport number has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
     return -1;
 }
 
