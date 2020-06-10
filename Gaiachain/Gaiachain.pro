@@ -48,6 +48,7 @@ charcoal {
 
     HEADERS += \
         src/charcoal/charcoaluserdata.h \
+    src/charcoal/models/actioncontroller.h \
         src/charcoal/picturesmanager.h \
         src/charcoal/tickmarkiconprovider.h \
         src/charcoal/notificationmanager.h \
@@ -57,13 +58,13 @@ charcoal {
         src/charcoal/models/parcelsmodel.h \
         src/charcoal/models/villagesmodel.h \
         src/charcoal/models/destinationsmodel.h \
-        src/charcoal/models/entitiesmodel.h \
         src/charcoal/models/oventypesmodel.h \
         src/charcoal/models/unusedplotidsmodel.h \
         src/charcoal/models/unusedharvestidsmodel.h \
         src/charcoal/models/unusedtransportidsmodel.h \
 
     SOURCES += \
+    src/charcoal/models/actioncontroller.cpp \
         src/charcoal/picturesmanager.cpp \
         src/charcoal/tickmarkiconprovider.cpp \
         src/charcoal/notificationmanager.cpp \
@@ -74,7 +75,6 @@ charcoal {
         src/charcoal/models/parcelsmodel.cpp \
         src/charcoal/models/villagesmodel.cpp \
         src/charcoal/models/destinationsmodel.cpp \
-        src/charcoal/models/entitiesmodel.cpp \
         src/charcoal/models/oventypesmodel.cpp \
         src/charcoal/models/unusedplotidsmodel.cpp \
         src/charcoal/models/unusedharvestidsmodel.cpp \

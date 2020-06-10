@@ -53,10 +53,10 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
-        transportId = dataManager.entitiesModel.generateTransportId(
+        transportId = dataManager.actionController.generateTransportId(
                         harvestIdComboBox.currentText,
                         plateNumberHeader.inputText,
-                        dataManager.entitiesModel.nextTransportNumber(
+                        dataManager.actionController.nextTransportNumber(
                             harvestIdComboBox.currentText),
                         loadingDateHeader.selectedDate
                     )
@@ -88,7 +88,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerTransportAndLoading(
+        dataManager.actionController.registerTransportAndLoading(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     loadingDateHeader.selectedDate,

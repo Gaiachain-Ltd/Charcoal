@@ -50,7 +50,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerLoggingEnding(
+        dataManager.actionController.registerLoggingEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     endingDateHeader.selectedDate,

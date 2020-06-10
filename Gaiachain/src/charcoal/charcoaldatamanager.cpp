@@ -13,7 +13,7 @@ CharcoalDataManager::CharcoalDataManager(QObject *parent)
       m_parcelsModel(new ParcelsModel(this)),
       m_destinationsModel(new DestinationsModel(this)),
       m_ovenTypesModel(new OvenTypesModel(this)),
-      m_entitiesModel(new EntitiesModel(this)),
+      m_actionController(new ActionController(this)),
       m_unusedPlotIdsModel(new UnusedPlotIdsModel(this)),
       m_unusedHarvestIdsModel(new UnusedHarvestIdsModel(this)),
       m_unusedTransportIdsModel(new UnusedTransportIdsModel(this)),
@@ -33,7 +33,7 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     m_parcelsModel->setDbConnection(m_dbConnectionName);
     m_destinationsModel->setDbConnection(m_dbConnectionName);
     m_ovenTypesModel->setDbConnection(m_dbConnectionName);
-    m_entitiesModel->setDbConnection(m_dbConnectionName);
+    m_actionController->setDbConnection(m_dbConnectionName);
     m_unusedPlotIdsModel->setDbConnection(m_dbConnectionName);
     m_unusedHarvestIdsModel->setDbConnection(m_dbConnectionName);
     m_unusedTransportIdsModel->setDbConnection(m_dbConnectionName);
@@ -65,9 +65,9 @@ OvenTypesModel *CharcoalDataManager::ovenTypesModel() const
     return m_ovenTypesModel;
 }
 
-EntitiesModel *CharcoalDataManager::entitiesModel() const
+ActionController *CharcoalDataManager::actionController() const
 {
-    return m_entitiesModel;
+    return m_actionController;
 }
 
 UnusedPlotIdsModel *CharcoalDataManager::unusedPlotIdsModel() const

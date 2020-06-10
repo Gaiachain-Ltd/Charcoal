@@ -40,7 +40,7 @@ Pages.SupplyChainPageBase {
                                       GStyle.delegateHighlightColor2,
                                       GStyle.fontHighlightColor2),
                     createSummaryItem(Strings.plotId,
-                                      dataManager.entitiesModel.getPlotId(harvestIdComboBox.currentText),
+                                      dataManager.actionController.getPlotId(harvestIdComboBox.currentText),
                                       "", "",
                                       Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
@@ -65,13 +65,13 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerCarbonizationEnding(
+        dataManager.actionController.registerCarbonizationEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     endingDateHeader.selectedDate,
                     carbonizerIdInputHeader.inputText,
                     harvestIdComboBox.currentText,
-                    dataManager.entitiesModel.getPlotId(harvestIdComboBox.currentText),
+                    dataManager.actionController.getPlotId(harvestIdComboBox.currentText),
                     ovenIdComboBox.currentText
                     )
 

@@ -34,7 +34,7 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     createSummaryItem(Strings.plotId,
-                                      dataManager.entitiesModel.generatePlotId(
+                                      dataManager.actionController.generatePlotId(
                                           repsIdInputHeader.inputText,
                                           parcelComboBox.currentText,
                                           beginningDateHeader.selectedDate
@@ -57,7 +57,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerLoggingBeginning(
+        dataManager.actionController.registerLoggingBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     beginningDateHeader.selectedDate,

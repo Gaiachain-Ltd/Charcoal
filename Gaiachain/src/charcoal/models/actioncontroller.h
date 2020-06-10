@@ -6,12 +6,12 @@
 
 class QGeoCoordinate;
 
-class EntitiesModel : public QSqlQueryModel
+class ActionController : public QSqlQueryModel
 {
     Q_OBJECT
 
 public:
-    explicit EntitiesModel(QObject *parent = nullptr);
+    explicit ActionController(QObject *parent = nullptr);
 
     void setDbConnection(const QString &connectionName);
 

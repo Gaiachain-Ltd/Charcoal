@@ -59,7 +59,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerReplantation(
+        dataManager.actionController.registerReplantation(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     endingDateHeader.selectedDate,

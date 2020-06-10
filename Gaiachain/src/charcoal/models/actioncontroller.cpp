@@ -1,4 +1,4 @@
-#include "entitiesmodel.h"
+#include "actioncontroller.h"
 
 #include "database/dbhelpers.h"
 #include "common/logs.h"
@@ -13,11 +13,11 @@
 #include <QDateTime>
 #include <QDate>
 
-EntitiesModel::EntitiesModel(QObject *parent) : QSqlQueryModel(parent)
+ActionController::ActionController(QObject *parent) : QSqlQueryModel(parent)
 {
 }
 
-void EntitiesModel::setDbConnection(const QString &connectionName)
+void ActionController::setDbConnection(const QString &connectionName)
 {
 
     m_dbConnName = connectionName;
@@ -27,20 +27,20 @@ void EntitiesModel::setDbConnection(const QString &connectionName)
     // TODO: we need to also return Events for each Entity!
 }
 
-QString EntitiesModel::generatePlotId(const QString &userId,
+QString ActionController::generatePlotId(const QString &userId,
                                       const QString &parcelCode,
                                       const QDate &date) const
 {
     return userId + sep + parcelCode + sep + date.toString(dateFormat);
 }
 
-QString EntitiesModel::generateHarvestId(const QString &plotId,
+QString ActionController::generateHarvestId(const QString &plotId,
                                          const QString &userId) const
 {
     return plotId + sep + userId;
 }
 
-QString EntitiesModel::generateTransportId(const QString &harvestId,
+QString ActionController::generateTransportId(const QString &harvestId,
                                            const QString &licensePlate,
                                            const int transportNumber,
                                            const QDate &date) const
@@ -50,7 +50,7 @@ QString EntitiesModel::generateTransportId(const QString &harvestId,
             + sep + date.toString(dateFormat);
 }
 
-QString EntitiesModel::getPlotId(const QString &id) const
+QString ActionController::getPlotId(const QString &id) const
 {
     const QStringList parts(id.split(sep));
 
@@ -63,7 +63,7 @@ QString EntitiesModel::getPlotId(const QString &id) const
     return plot.join(sep);
 }
 
-QString EntitiesModel::getTransportIdFromBags(const QVariantList &scannedQrs) const
+QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
 {
     Q_UNUSED(scannedQrs)
 
@@ -71,14 +71,14 @@ QString EntitiesModel::getTransportIdFromBags(const QVariantList &scannedQrs) co
     return QString();
 }
 
-int EntitiesModel::nextTransportNumber(const QString &harvestId) const
+int ActionController::nextTransportNumber(const QString &harvestId) const
 {
     const QString plotId(getPlotId(harvestId));
 
     return -1;
 }
 
-int EntitiesModel::bagCountInTransport(const QString &transportId) const
+int ActionController::bagCountInTransport(const QString &transportId) const
 {
     Q_UNUSED(transportId)
 
@@ -86,7 +86,7 @@ int EntitiesModel::bagCountInTransport(const QString &transportId) const
     return -1;
 }
 
-QString EntitiesModel::plateNumberInTransport(const QString &transportId) const
+QString ActionController::plateNumberInTransport(const QString &transportId) const
 {
     Q_UNUSED(transportId)
 
@@ -94,7 +94,7 @@ QString EntitiesModel::plateNumberInTransport(const QString &transportId) const
     return QString();
 }
 
-void EntitiesModel::registerLoggingBeginning(
+void ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QString &userId,
     const QString &parcel, const QString &village,
@@ -170,7 +170,7 @@ void EntitiesModel::registerLoggingBeginning(
     // Lastly, send a request to server to add it, too.
 }
 
-void EntitiesModel::registerLoggingEnding(
+void ActionController::registerLoggingEnding(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &plotId,
     const int numberOfTrees) const
@@ -222,7 +222,7 @@ void EntitiesModel::registerLoggingEnding(
     }
 }
 
-void EntitiesModel::registerCarbonizationBeginning(
+void ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &plotId, const QString &ovenId,
     const QString &ovenType, const QVariantMap &ovenDimensions) const
@@ -300,7 +300,7 @@ void EntitiesModel::registerCarbonizationBeginning(
     // Lastly, send a request to server to add it, too.
 }
 
-void EntitiesModel::registerCarbonizationEnding(
+void ActionController::registerCarbonizationEnding(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &harvestId, const QString &plotId,
     const QString &ovenIds) const
@@ -355,7 +355,7 @@ void EntitiesModel::registerCarbonizationEnding(
     // Lastly, send a request to server to add it, too.
 }
 
-void EntitiesModel::registerTransportAndLoading(
+void ActionController::registerTransportAndLoading(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &transportId, const QString &harvestId,
     const QString &plateNumber, const QString &destination,
@@ -434,7 +434,7 @@ void EntitiesModel::registerTransportAndLoading(
     // Lastly, send a request to server to add it, too.
 }
 
-void EntitiesModel::registerReception(
+void ActionController::registerReception(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &transportId,
     const QVariantList &documents, const QVariantList &receipts,
@@ -494,7 +494,7 @@ void EntitiesModel::registerReception(
     // Lastly, send a request to server to add it, too.
 }
 
-void EntitiesModel::finalizeSupplyChain(const QString &plotId) const
+void ActionController::finalizeSupplyChain(const QString &plotId) const
 {
     const QString parentId(findEntityId(plotId));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
@@ -509,7 +509,7 @@ void EntitiesModel::finalizeSupplyChain(const QString &plotId) const
     }
 }
 
-void EntitiesModel::registerReplantation(
+void ActionController::registerReplantation(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &plotId,
     const int numberOfTrees, const QString &treeSpecies,
@@ -573,7 +573,7 @@ void EntitiesModel::registerReplantation(
  * Returns Entity entry ID (from DB) for package of given \a name, where \a name
  * is PlotId, HarvestId or TransportId.
  */
-QString EntitiesModel::findEntityId(const QString &name) const
+QString ActionController::findEntityId(const QString &name) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -593,7 +593,7 @@ QString EntitiesModel::findEntityId(const QString &name) const
     return QString();
 }
 
-QString EntitiesModel::findEntityTypeId(const Enums::PackageType type) const
+QString ActionController::findEntityTypeId(const Enums::PackageType type) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     const QString typeString(QMetaEnum::fromType<Enums::PackageType>()
@@ -615,7 +615,7 @@ QString EntitiesModel::findEntityTypeId(const Enums::PackageType type) const
     return QString();
 }
 
-QString EntitiesModel::findEventTypeId(const Enums::SupplyChainAction action) const
+QString ActionController::findEventTypeId(const Enums::SupplyChainAction action) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     const QString typeString(actionAbbreviation(action));
@@ -636,7 +636,7 @@ QString EntitiesModel::findEventTypeId(const Enums::SupplyChainAction action) co
     return QString();
 }
 
-QString EntitiesModel::findTreeSpeciesId(const QString &species) const
+QString ActionController::findTreeSpeciesId(const QString &species) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -656,7 +656,7 @@ QString EntitiesModel::findTreeSpeciesId(const QString &species) const
     return QString();
 }
 
-QString EntitiesModel::actionAbbreviation(const Enums::SupplyChainAction action) const
+QString ActionController::actionAbbreviation(const Enums::SupplyChainAction action) const
 {
     switch (action) {
     case Enums::SupplyChainAction::LoggingBeginning:

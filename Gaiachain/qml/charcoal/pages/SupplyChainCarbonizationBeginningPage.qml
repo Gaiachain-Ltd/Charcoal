@@ -34,7 +34,7 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     createSummaryItem(Strings.harvestId,
-                                      dataManager.entitiesModel.generateHarvestId(
+                                      dataManager.actionController.generateHarvestId(
                                           plotIdComboBox.currentText,
                                           carbonizerIdInputHeader.inputText
                                           ),
@@ -69,7 +69,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerCarbonizationBeginning(
+        dataManager.actionController.registerCarbonizationBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     beginningDateHeader.selectedDate,

@@ -63,8 +63,8 @@ Pages.SupplyChainPageBase {
         let docsIcon = "image://tickmark/document-" + hasDocs
         let recsIcon = "image://tickmark/receipt-" + hasRecs
 
-        transportId = dataManager.entitiesModel.getTransportIdFromBags(scannedQrs)
-        let bagCount = dataManager.entitiesModel.bagCountInTransport(transportId)
+        transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
+        let bagCount = dataManager.actionController.bagCountInTransport(transportId)
 
         var summary = [
                     createSummaryItem(Strings.transportId,
@@ -118,7 +118,7 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor4,
                                       GStyle.textPrimaryColor),
                     createSummaryItem(Strings.plateNumber,
-                                      dataManager.entitiesModel.plateNumberInTransport(transportId)),
+                                      dataManager.actionController.plateNumberInTransport(transportId)),
                     createSummaryItem(Strings.receptionDateCharcoal,
                                       unloadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
@@ -128,7 +128,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.entitiesModel.registerReception(
+        dataManager.actionController.registerReception(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     unloadingDateHeader.selectedDate,
