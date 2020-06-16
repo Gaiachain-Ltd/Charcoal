@@ -14,19 +14,22 @@ QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
         return {};
     }
 
-    const int row = index.row();
-    query().seek(row);
-    if (role == Qt::ItemDataRole::DisplayRole || role == OvenTypesRole::TranslatedName) {
+    query().seek(index.row());
+
+    switch (role) {
+    case Qt::ItemDataRole::DisplayRole:
+    case OvenTypesRole::TranslatedName:
         if (isTraditional()) {
             return tr("Traditional oven");
         } else {
             return tr("Metallic oven");
         }
-    } else if (role == OvenTypesRole::Id) {
+        break;
+    case OvenTypesRole::Id:
         return query().value("id").toInt();
-    } else if (role == OvenTypesRole::Name) {
+    case OvenTypesRole::Name:
         return query().value("name").toString();
-    } else if (role == OvenTypesRole::IsTraditionalOven) {
+    case OvenTypesRole::IsTraditionalOven:
         return isTraditional();
     }
 

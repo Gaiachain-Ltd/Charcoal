@@ -101,10 +101,9 @@ Headers.GHeader {
                     boundsBehavior: Flickable.StopAtBounds
 
                     delegate: Item {
-                        readonly property bool hasExtra: (typeof(modelData) === "object")
-                        readonly property string text: hasExtra? modelData[0] : modelData
-                        readonly property string extraHeader: hasExtra? modelData[1] : ""
-                        readonly property string extraText: hasExtra? modelData[2] : ""
+                        readonly property string text: letterId
+                        readonly property string extraHeader: firstRow
+                        readonly property string extraText: secondRow
 
                         id: delegateItem
                         width: entriesList.width
@@ -126,7 +125,6 @@ Headers.GHeader {
 
                                 ColumnLayout {
                                     id: extraInfo
-                                    visible: delegateItem.hasExtra
 
                                     Items.GText {
                                         Layout.fillWidth: true

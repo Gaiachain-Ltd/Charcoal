@@ -22,7 +22,6 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
         dataManager.ovensModel.plotId = ""
-        dataManager.ovensModel.refresh()
     }
 
     function proceed() {
@@ -95,7 +94,6 @@ Pages.SupplyChainPageBase {
         onCurrentTextChanged: {
             // Refresh available ovens
             dataManager.ovensModel.plotId = dataManager.actionController.getPlotId(currentText)
-            dataManager.ovensModel.refresh()
         }
     }
 
@@ -112,11 +110,6 @@ Pages.SupplyChainPageBase {
         multiSelect: true
 
         model: dataManager.ovensModel
-//            [
-//            [ "A", "Traditional oven - 0.2 x 12 x 4m", "Carbonization beginning: 08/03/2020" ],
-//            [ "B", "Traditional oven - 0.2 x 10 x 5m", "Carbonization beginning: 08/03/2020" ],
-//            [ "C", "Traditional oven - 0.2 x 8 x 4m", "Carbonization beginning: 08/03/2020" ]
-//        ]
     }
 
     CharcoalHeaders.UserInfoHeader {
