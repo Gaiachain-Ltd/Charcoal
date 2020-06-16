@@ -59,7 +59,7 @@ Pages.SupplyChainPageBase {
                     createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.ovenType, ovenTypeComboBox.ovenType),
+                    createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
                     createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
                                        ovenDimensionsHeader.values],
@@ -78,7 +78,7 @@ Pages.SupplyChainPageBase {
                     carbonizerIdInputHeader.inputText,
                     plotIdComboBox.currentText,
                     ovenIdHeader.inputText,
-                    ovenTypeComboBox.currentText,
+                    ovenTypeComboBox.ovenName,
                     ovenDimensionsHeader.values)
 
         pageManager.enter(Enums.Page.MainMenu)
@@ -95,6 +95,8 @@ Pages.SupplyChainPageBase {
         delegateTextColor: GStyle.fontHighlightColor
 
         model: dataManager.unusedPlotIdsModel
+
+        onCurrentTextChanged: ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentText)
     }
 
     Headers.InputHeader {
@@ -104,8 +106,6 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenIdHelp
         readOnly: true
-
-        // TODO: get next valid Oven letter and display it here
     }
 
     CharcoalHeaders.UserInfoHeader {

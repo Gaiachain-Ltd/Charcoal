@@ -16,8 +16,8 @@ Headers.GHeader {
     property alias model: comboBox.model
     property alias placeholderText: comboBox.placeholderText
     property alias currentText: comboBox.text
-    property bool isTraditional: false
-    property string ovenName
+    property alias isTraditional: entriesList.isTraditional
+    property alias ovenName: entriesList.ovenName
     property alias popupTitle: comboBox.popupTitle
 
     property alias checkIcon: comboBox.checkIcon
@@ -93,7 +93,11 @@ Headers.GHeader {
                 }
 
                 ListView {
+                    property bool isTraditional: false
+                    property string ovenName
+
                     id: entriesList
+
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
@@ -155,8 +159,8 @@ Headers.GHeader {
                                     newSelection.splice(newSelection.indexOf(text), 1)
                                 } else {
                                     newSelection.push(text)
-                                    top.isTraditional = delegateItem.isTraditional
-                                    top.ovenName = delegateItem.ovenName
+                                    entriesList.isTraditional = delegateItem.isTraditional
+                                    entriesList.ovenName = delegateItem.ovenName
                                 }
                                 newSelection.sort()
                                 comboBox.selection = newSelection

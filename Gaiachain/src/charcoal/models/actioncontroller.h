@@ -30,6 +30,7 @@ public:
     Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
     Q_INVOKABLE int bagCountInTransport(const QString &transportId) const;
     Q_INVOKABLE QString plateNumberInTransport(const QString &transportId) const;
+    Q_INVOKABLE QString nextOvenNumber(const QString &plotId) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,

@@ -206,6 +206,38 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
     return QString();
 }
 
+QString ActionController::nextOvenNumber(const QString &plotId) const
+{
+    const QString parentEntityId(findEntityId(plotId));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM Ovens WHERE plot=:parentEntityId");
+    query.bindValue(":parentEntityId", parentEntityId);
+
+    if (query.exec()) {
+        // We can't use query.size() because SQLITE does not support it
+        char size = 'A';
+        while (query.next()) {
+            size++;
+        }
+
+        if (size > 'Z') {
+            qWarning() << RED("Too many ovens!") << size;
+            return "-2";
+        }
+
+        return QChar(size);
+    }
+
+    qWarning() << RED("Getting next transport number has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return "-1";
+}
+
 void ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QString &userId,
@@ -417,7 +449,7 @@ void ActionController::registerCarbonizationBeginning(
                   "width, height, depth) "
                   "VALUES (:type, :plot, :event, :name, :width, :height, :depth)");
     query.bindValue(":type", ovenTypeId);
-    query.bindValue(":plot", plotId);
+    query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
     query.bindValue(":width", ovenDimensions.value("width"));
