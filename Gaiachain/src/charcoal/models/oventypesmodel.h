@@ -7,13 +7,13 @@ class OvenTypesModel : public QueryModel
     Q_OBJECT
 
 public:
-    enum OvenRole {
+    enum OvenTypesRole {
         Id = Qt::UserRole + 1,
         Name,
         TranslatedName,
         IsTraditionalOven
     };
-    Q_ENUM(OvenRole)
+    Q_ENUM(OvenTypesRole)
 
     explicit OvenTypesModel(QObject *parent = nullptr);
 
@@ -22,10 +22,10 @@ public:
 
 private:
     QHash<int, QByteArray> m_roleNames = {
-        { OvenRole::Id, "id" },
-        { OvenRole::Name, "name" },
-        { OvenRole::TranslatedName, "translatedName" },
-        { OvenRole::IsTraditionalOven, "isTraditionalOven" }
+        { OvenTypesRole::Id, "id" },
+        { OvenTypesRole::Name, "name" },
+        { OvenTypesRole::TranslatedName, "translatedName" },
+        { OvenTypesRole::IsTraditionalOven, "isTraditionalOven" }
     };
 
     bool isTraditional() const;

@@ -1,6 +1,5 @@
 #include "oventypesmodel.h"
 
-#include <QSqlRecord>
 #include <QSqlQuery>
 #include <QDebug>
 
@@ -17,17 +16,17 @@ QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
 
     const int row = index.row();
     query().seek(row);
-    if (role == Qt::ItemDataRole::DisplayRole || role == OvenRole::TranslatedName) {
+    if (role == Qt::ItemDataRole::DisplayRole || role == OvenTypesRole::TranslatedName) {
         if (isTraditional()) {
             return tr("Traditional oven");
         } else {
             return tr("Metallic oven");
         }
-    } else if (role == OvenRole::Id) {
+    } else if (role == OvenTypesRole::Id) {
         return query().value("id").toInt();
-    } else if (role == OvenRole::Name) {
+    } else if (role == OvenTypesRole::Name) {
         return query().value("name").toString();
-    } else if (role == OvenRole::IsTraditionalOven) {
+    } else if (role == OvenTypesRole::IsTraditionalOven) {
         return isTraditional();
     }
 

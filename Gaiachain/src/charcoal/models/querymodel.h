@@ -11,7 +11,7 @@ public:
     void setDbQuery(const QString &query);
     void setDbConnection(const QString &connectionName);
 
-    Q_INVOKABLE void refresh();
+    Q_INVOKABLE virtual void refresh();
 
 protected:
     QString m_query;
