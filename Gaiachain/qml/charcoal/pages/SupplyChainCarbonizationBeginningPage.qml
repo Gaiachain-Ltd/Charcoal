@@ -10,6 +10,7 @@ import com.gaiachain.types 1.0
 import "../../common" as Common
 import "../../headers" as Headers
 import "../headers" as CharcoalHeaders
+import "../items" as CharcoalItems
 import "../../pages" as Pages
 
 Pages.SupplyChainPageBase {
@@ -58,7 +59,7 @@ Pages.SupplyChainPageBase {
                     createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
+                    createSummaryItem(Strings.ovenType, ovenTypeComboBox.ovenType),
                     createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
                                        ovenDimensionsHeader.values],
@@ -102,6 +103,9 @@ Pages.SupplyChainPageBase {
         headerText: Strings.ovenId
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenIdHelp
+        readOnly: true
+
+        // TODO: get next valid Oven letter and display it here
     }
 
     CharcoalHeaders.UserInfoHeader {
@@ -119,22 +123,14 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationBeginningBeginningDateHelp
     }
 
-    CharcoalHeaders.CharcoalComboBoxHeader {
+    CharcoalHeaders.OvenTypeComboBox {
         id: ovenTypeComboBox
         Layout.fillWidth: true
         headerText: Strings.ovenType
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenTypeHelp
 
-        // TODO: translations!
-        // [ Strings.traditionalOven, Strings.metallicOven ]
         model: dataManager.ovenTypesModel
-
-        onCurrentTextChanged: {
-            if (currentText === Strings.metallicOven) {
-                ovenDimensionsHeader.clear()
-            }
-        }
     }
 
     Headers.RowHeader {
@@ -144,7 +140,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
         titles: [ Strings.height, Strings.length, Strings.width ]
-        enabled: ovenTypeComboBox.currentText === Strings.traditionalOven
+        enabled: ovenTypeComboBox.isTraditional
     }
 
     Common.PositionSourceHandler {

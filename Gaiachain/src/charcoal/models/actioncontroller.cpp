@@ -346,6 +346,7 @@ void ActionController::registerCarbonizationBeginning(
      * - insert entity into table
      * - get new entity's ID
      * - insert event into table
+     * - insert new OVEN into Ovens table
      * - send action to web server
      */
 
@@ -400,14 +401,31 @@ void ActionController::registerCarbonizationBeginning(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "plotId", plotId },
-                        { "ovenId", ovenId },
-                        { "ovenType", ovenType },
-                        { "ovenDimensions", ovenDimensions }
+                        { "ovenId", ovenId }
                     }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
+
+    const QString eventId(query.lastInsertId().toString());
+    const QString ovenTypeId(findOvenTypeId(ovenType));
+
+    query.prepare("INSERT INTO Ovens (type, plot, carbonizationEvent, name, "
+                  "width, height, depth) "
+                  "VALUES (:type, :plot, :event, :name, :width, :height, :depth)");
+    query.bindValue(":type", ovenTypeId);
+    query.bindValue(":plot", plotId);
+    query.bindValue(":event", eventId);
+    query.bindValue(":name", ovenId);
+    query.bindValue(":width", ovenDimensions.value("width"));
+    query.bindValue(":height", ovenDimensions.value("height"));
+    query.bindValue(":depth", ovenDimensions.value("depth"));
+
+    if (query.exec() == false) {
+        qWarning() << RED("Inserting new oven has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
@@ -767,6 +785,26 @@ QString ActionController::findTreeSpeciesId(const QString &species) const
     }
 
     qWarning() << RED("Getting TreeSpecies has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return QString();
+}
+
+QString ActionController::findOvenTypeId(const QString &ovenType) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM OvenTypes WHERE name=:ovenType");
+    query.bindValue(":ovenType", ovenType);
+
+    if (query.exec()) {
+        query.next();
+        return query.value("id").toString();
+    }
+
+    qWarning() << RED("Getting OvenTypeId has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
                << "DB:" << m_dbConnName;

@@ -64,7 +64,6 @@ public:
         const QString &userId,
         const QString &harvestId,
         const QString &plotId,
-        // TODO: use just IDs!
         const QString &ovenIds
         ) const;
 
@@ -111,6 +110,7 @@ private:
     QString findEntityTypeId(const Enums::PackageType type) const;
     QString findEventTypeId(const Enums::SupplyChainAction action) const;
     QString findTreeSpeciesId(const QString &species) const;
+    QString findOvenTypeId(const QString &ovenType) const;
 
     QString actionAbbreviation(const Enums::SupplyChainAction action) const;
 

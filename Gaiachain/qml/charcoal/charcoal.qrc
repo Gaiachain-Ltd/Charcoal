@@ -9,6 +9,8 @@
         <file>headers/UserInfoHeader.qml</file>
         <file>headers/CharcoalInputDateHeader.qml</file>
         <file>headers/CharcoalComboBoxHeader.qml</file>
+        <file>headers/OvenSelectionComboBox.qml</file>
+        <file>headers/OvenTypeComboBox.qml</file>
         <file>items/CharcoalTabButton.qml</file>
         <file>items/CharcoalComboBox.qml</file>
         <file>items/CharcoalRoundButton.qml</file>

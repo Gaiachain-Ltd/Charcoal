@@ -21,7 +21,8 @@ Pages.SupplyChainPageBase {
 
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
-        //dataManager.ovenIdsModel.refresh()
+        dataManager.ovensModel.plotId = ""
+        dataManager.ovensModel.refresh()
     }
 
     function proceed() {
@@ -90,9 +91,15 @@ Pages.SupplyChainPageBase {
         delegateTextColor: GStyle.fontHighlightColor2
 
         model: dataManager.unusedHarvestIdsModel
+
+        onCurrentTextChanged: {
+            // Refresh available ovens
+            dataManager.ovensModel.plotId = dataManager.actionController.getPlotId(currentText)
+            dataManager.ovensModel.refresh()
+        }
     }
 
-    CharcoalHeaders.CharcoalComboBoxHeader {
+    CharcoalHeaders.OvenSelectionComboBox {
         id: ovenIdComboBox
         Layout.fillWidth: true
         headerText: Strings.ovenId
@@ -104,7 +111,8 @@ Pages.SupplyChainPageBase {
 
         multiSelect: true
 
-        model: [
+        model: //dataManager.ovensModel
+            [
             [ "A", "Traditional oven - 0.2 x 12 x 4m", "Carbonization beginning: 08/03/2020" ],
             [ "B", "Traditional oven - 0.2 x 10 x 5m", "Carbonization beginning: 08/03/2020" ],
             [ "C", "Traditional oven - 0.2 x 8 x 4m", "Carbonization beginning: 08/03/2020" ]

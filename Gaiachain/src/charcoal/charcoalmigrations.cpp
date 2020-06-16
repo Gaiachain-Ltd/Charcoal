@@ -57,11 +57,12 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "FOREIGN KEY(plotId) REFERENCES Entities(id), "
                 "FOREIGN KEY(treeSpecies) REFERENCES TreeSpecies(id))"),
             QLatin1String("CREATE TABLE Ovens (`id` INTEGER primary key AUTOINCREMENT, "
-                "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, "
+                "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, `carbonizationEvent` INTEGER NOT NULL, "
                 "`name` TEXT NOT NULL, "
                 "`width` DECIMAL(5,2), `height` DECIMAL(5,2), `depth` DECIMAL(5,2), "
                 "FOREIGN KEY(type) REFERENCES OvenTypes(id), "
-                "FOREIGN KEY(plot) REFERENCES Entities(id))")
+                "FOREIGN KEY(plot) REFERENCES Entities(id), "
+                "FOREIGN KEY(carbonizationEvent) REFERENCES Events(id))")
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
@@ -124,8 +125,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
 
             QLatin1String("INSERT INTO Destinations (name) VALUES (\"Abidjan\")"),
 
-            QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"Traditional\")"),
-            QLatin1String("INSERT INTO OvenTypes (name, width, height, depth) VALUES (\"Metallic\", 4, 5, 6)"),
+            QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"traditional\")"),
+            QLatin1String("INSERT INTO OvenTypes (name, width, height, depth) VALUES (\"metallic\", 4, 5, 6)"),
             // Supply chain
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{

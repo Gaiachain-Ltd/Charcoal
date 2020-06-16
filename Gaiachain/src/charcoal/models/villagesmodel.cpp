@@ -2,12 +2,7 @@
 
 #include "database/dbhelpers.h"
 
-VillagesModel::VillagesModel(QObject *parent) : QSqlQueryModel(parent)
+VillagesModel::VillagesModel(QObject *parent) : QueryModel(parent)
 {
-}
-
-void VillagesModel::setDbConnection(const QString &connectionName)
-{
-    setQuery("SELECT name FROM Villages",
-             db::Helpers::databaseConnection(connectionName));
+    setDbQuery("SELECT name FROM Villages");
 }

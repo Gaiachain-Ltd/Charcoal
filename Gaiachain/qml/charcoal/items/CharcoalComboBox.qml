@@ -95,6 +95,7 @@ Items.GInput {
                         anchors.fill: parent
                         RowLayout {
                             Items.GText {
+                                Layout.fillWidth: true
                                 id: delegateText
                                 text: delegateItem.text
                                 color: delegateTextColor

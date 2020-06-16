@@ -17,7 +17,8 @@ CharcoalDataManager::CharcoalDataManager(QObject *parent)
       m_unusedPlotIdsModel(new UnusedPlotIdsModel(this)),
       m_unusedHarvestIdsModel(new UnusedHarvestIdsModel(this)),
       m_unusedTransportIdsModel(new UnusedTransportIdsModel(this)),
-      m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this))
+      m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
+      m_ovensModel(new OvensModel(this))
 {
 }
 
@@ -38,6 +39,7 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     m_unusedHarvestIdsModel->setDbConnection(m_dbConnectionName);
     m_unusedTransportIdsModel->setDbConnection(m_dbConnectionName);
     m_unusedPlotIdsForReplantationModel->setDbConnection(m_dbConnectionName);
+    m_ovensModel->setDbConnection(m_dbConnectionName);
 }
 
 TreeSpeciesModel *CharcoalDataManager::treeSpeciesModel() const
@@ -88,4 +90,9 @@ UnusedTransportIdsModel *CharcoalDataManager::unusedTransportIdsModel() const
 UnusedPlotIdsForReplantationModel *CharcoalDataManager::unusedPlotIdsForReplantationModel() const
 {
     return m_unusedPlotIdsForReplantationModel;
+}
+
+OvensModel *CharcoalDataManager::ovensModel() const
+{
+    return m_ovensModel;
 }
