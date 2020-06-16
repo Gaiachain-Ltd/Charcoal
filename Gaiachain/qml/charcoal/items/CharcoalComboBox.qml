@@ -81,10 +81,7 @@ Items.GInput {
                 boundsBehavior: Flickable.StopAtBounds
 
                 delegate: Item {
-                    readonly property bool hasExtra: (typeof(modelData) === "object")
-                    readonly property string text: hasExtra? modelData[0] : modelData
-                    readonly property string extraHeader: hasExtra? modelData[1] : ""
-                    readonly property string extraText: hasExtra? modelData[2] : ""
+                    readonly property string text: modelData
 
                     id: delegateItem
                     width: entriesList.width
@@ -103,31 +100,6 @@ Items.GInput {
                                 horizontalAlignment: Text.AlignLeft
                                 font.bold: true
                                 padding: s(GStyle.middleMargin)
-                            }
-
-                            ColumnLayout {
-                                id: extraInfo
-                                visible: delegateItem.hasExtra
-
-                                Items.GText {
-                                    Layout.fillWidth: true
-                                    text: delegateItem.extraHeader
-                                    color: GStyle.textPrimaryColor
-                                    verticalAlignment: Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignLeft
-                                    font.bold: true
-                                    font.pixelSize: s(GStyle.tinyPixelSize)
-                                }
-
-                                Items.GText {
-                                    Layout.fillWidth: true
-                                    text: delegateItem.extraText
-                                    color: GStyle.textPrimaryColor
-                                    verticalAlignment: Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignLeft
-                                    font.bold: false
-                                    font.pixelSize: s(GStyle.tinyPixelSize)
-                                }
                             }
 
                             Image {

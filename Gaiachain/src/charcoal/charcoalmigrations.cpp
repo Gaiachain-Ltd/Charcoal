@@ -26,7 +26,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
             QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL)"),
-            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `width` DECIMAL(5,2), `height` DECIMAL(5,2), `depth` DECIMAL(5,2))"),
+            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL, `height` DECIMAL(5,2), `length` DECIMAL(5,2), `width` DECIMAL(5,2))"),
 
             // SupplyChain
             // Entities are how Transactions are called on Web side
@@ -59,7 +59,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE Ovens (`id` INTEGER primary key AUTOINCREMENT, "
                 "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, `carbonizationEvent` INTEGER NOT NULL, "
                 "`name` TEXT NOT NULL, "
-                "`width` DECIMAL(5,2), `height` DECIMAL(5,2), `depth` DECIMAL(5,2), "
+                "`height` DECIMAL(5,2), `length` DECIMAL(5,2), `width` DECIMAL(5,2), "
                 "FOREIGN KEY(type) REFERENCES OvenTypes(id), "
                 "FOREIGN KEY(plot) REFERENCES Entities(id), "
                 "FOREIGN KEY(carbonizationEvent) REFERENCES Events(id))")
@@ -126,7 +126,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("INSERT INTO Destinations (name) VALUES (\"Abidjan\")"),
 
             QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"traditional\")"),
-            QLatin1String("INSERT INTO OvenTypes (name, width, height, depth) VALUES (\"metallic\", 4, 5, 6)"),
+            QLatin1String("INSERT INTO OvenTypes (name, height, length, width) VALUES (\"metallic\", 4, 5, 6)"),
             // Supply chain
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{

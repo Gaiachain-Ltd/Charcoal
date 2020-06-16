@@ -49,14 +49,13 @@ public:
         const int numberOfTrees
         ) const;
 
-    Q_INVOKABLE void registerCarbonizationBeginning(
-        const QGeoCoordinate &coordinate,
+    Q_INVOKABLE void registerCarbonizationBeginning(const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QString &userId,
         const QString &plotId,
         const QString &ovenId,
         const QString &ovenType,
-        const QVariantMap &ovenDimensions
+        const QVariantList &ovenDimensions
         ) const;
 
     Q_INVOKABLE void registerCarbonizationEnding(

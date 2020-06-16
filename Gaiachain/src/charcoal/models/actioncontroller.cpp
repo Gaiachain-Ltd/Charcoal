@@ -371,7 +371,7 @@ void ActionController::registerLoggingEnding(
 void ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &plotId, const QString &ovenId,
-    const QString &ovenType, const QVariantMap &ovenDimensions) const
+    const QString &ovenType, const QVariantList &ovenDimensions) const
 {
     /*
      * Algorithm is:
@@ -446,15 +446,15 @@ void ActionController::registerCarbonizationBeginning(
     const QString ovenTypeId(findOvenTypeId(ovenType));
 
     query.prepare("INSERT INTO Ovens (type, plot, carbonizationEvent, name, "
-                  "width, height, depth) "
-                  "VALUES (:type, :plot, :event, :name, :width, :height, :depth)");
+                  "height, length, width) "
+                  "VALUES (:type, :plot, :event, :name, :height, :length, :width)");
     query.bindValue(":type", ovenTypeId);
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
-    query.bindValue(":width", ovenDimensions.value("width"));
-    query.bindValue(":height", ovenDimensions.value("height"));
-    query.bindValue(":depth", ovenDimensions.value("depth"));
+    query.bindValue(":height", ovenDimensions.at(0));
+    query.bindValue(":length", ovenDimensions.at(1));
+    query.bindValue(":width", ovenDimensions.at(2));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")
