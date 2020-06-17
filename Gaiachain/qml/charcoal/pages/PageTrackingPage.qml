@@ -20,17 +20,17 @@ Pages.GPage {
 
     function refreshData() {
         // called from GPage
-        latestRangeTransactionsModel.clearRowCount()
+        //latestRangeTransactionsModel.clearRowCount()
     }
 
     function updateSearch() {
-        transactionsModel.setKeyword(searchInput.text)
-        latestRangeTransactionsModel.clearRowCount()
+        //transactionsModel.setKeyword(searchInput.text)
+        //latestRangeTransactionsModel.clearRowCount()
     }
 
     Component.onDestruction: {
-        transactionsModel.clear()
-        latestRangeTransactionsModel.clearRowCount()
+        //transactionsModel.clear()
+        //latestRangeTransactionsModel.clearRowCount()
     }
 
     ColumnLayout {

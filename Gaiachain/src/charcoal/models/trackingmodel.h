@@ -1,6 +1,7 @@
 #pragma once
 
 #include "querymodel.h"
+#include "common/enums.h"
 
 class TrackingModel : public QueryModel
 {
@@ -27,5 +28,7 @@ private:
         { TrackingRole::Type, "type" },
         { TrackingRole::Events, "events" }
     };
+
+    Enums::SupplyChainAction eventType(const QString &id) const;
 };
 

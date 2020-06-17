@@ -1,11 +1,12 @@
 #include "trackingmodel.h"
 
 #include "database/dbhelpers.h"
-#include "common/enums.h"
 #include "common/logs.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
+
+#include <QJsonDocument>
 
 #include <QDate>
 
@@ -63,7 +64,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
     {
         const QString id(query().value("id").toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("SELECT date FROM Events WHERE entityId=:id");
+        query.prepare("SELECT id, date, typeId, properties FROM Events WHERE entityId=:id");
         query.bindValue(":id", id);
 
         if (query.exec() == false) {
@@ -75,7 +76,37 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         QVariantList events;
         while (query.next()) {
             const QDate date(query.value("date").toDate());
-            const QString name(QString("Event %1").arg(events.count() + 1));
+            Enums::SupplyChainAction action = eventType(query.value("typeId").toString());
+
+            QString name;
+            switch (action) {
+            case Enums::SupplyChainAction::LoggingBeginning:
+                name = tr("Logging has begun");
+                break;
+            case Enums::SupplyChainAction::LoggingEnding:
+                name = tr("Logging has ended");
+                break;
+            case Enums::SupplyChainAction::CarbonizationBeginning:
+                name = tr("Oven %1 - carbonization has begun");
+                break;
+            case Enums::SupplyChainAction::CarbonizationEnding:
+                name = tr("Oven %1 - carbonization has ended");
+                break;
+            case Enums::SupplyChainAction::LoadingAndTransport:
+            {
+                const QByteArray propertiesString(query.value("properties").toByteArray());
+                const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+                const QVariantMap properties(propertiersJson.toVariant().toMap());
+                name = tr("Bags have been loaded on truck %1")
+                           .arg(properties.value("plateNumber").toString());
+            }
+                break;
+            case Enums::SupplyChainAction::Reception:
+                name = tr("Reception at storage facility");
+                break;
+            default: name = QString();
+            }
+
             const QVariantMap event {
                 { "eventName", name },
                 { "date", date.toString("dd/MM/yyyy") }
@@ -94,4 +125,36 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> TrackingModel::roleNames() const
 {
     return m_roleNames;
+}
+
+Enums::SupplyChainAction TrackingModel::eventType(const QString &id) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+    query.prepare("SELECT actionName FROM EventTypes WHERE id=:id");
+    query.bindValue(":id", id);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Getting event type has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return {};
+    }
+
+    query.next();
+    const QString name(query.value("actionName").toString());
+
+    if (name == "LB") {
+        return Enums::SupplyChainAction::LoggingBeginning;
+    } else if (name == "LE") {
+        return Enums::SupplyChainAction::LoggingEnding;
+    } else if (name == "CB") {
+        return Enums::SupplyChainAction::CarbonizationBeginning;
+    } else if (name == "CE") {
+        return Enums::SupplyChainAction::CarbonizationEnding;
+    } else if (name == "TR") {
+        return Enums::SupplyChainAction::LoadingAndTransport;
+    } else if (name == "RE") {
+        return Enums::SupplyChainAction::Reception;
+    }
+
+    return Enums::SupplyChainAction::Unknown;
 }
