@@ -12,6 +12,7 @@
 #include "charcoal/models/unusedtransportidsmodel.h"
 #include "charcoal/models/unusedplotidsforreplantationmodel.h"
 #include "charcoal/models/ovensmodel.h"
+#include "charcoal/models/trackingmodel.h"
 
 #include <QObject>
 
@@ -30,6 +31,7 @@ class CharcoalDataManager : public AbstractDataManager
     Q_PROPERTY(UnusedTransportIdsModel* unusedTransportIdsModel READ unusedTransportIdsModel CONSTANT)
     Q_PROPERTY(UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel READ unusedPlotIdsForReplantationModel CONSTANT)
     Q_PROPERTY(OvensModel* ovensModel READ ovensModel CONSTANT)
+    Q_PROPERTY(TrackingModel* trackingModel READ trackingModel CONSTANT)
 
 public:
     CharcoalDataManager(QObject *parent = nullptr);
@@ -47,6 +49,7 @@ public:
     UnusedTransportIdsModel* unusedTransportIdsModel() const;
     UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel() const;
     OvensModel* ovensModel() const;
+    TrackingModel* trackingModel() const;
 
 private:
     const QString m_dbConnectionName = staticMetaObject.className();
@@ -63,4 +66,7 @@ private:
     UnusedTransportIdsModel* m_unusedTransportIdsModel = nullptr;
     UnusedPlotIdsForReplantationModel* m_unusedPlotIdsForReplantationModel = nullptr;
     OvensModel* m_ovensModel = nullptr;
+    TrackingModel* m_trackingModel = nullptr;
+
+    bool checkModels() const;
 };

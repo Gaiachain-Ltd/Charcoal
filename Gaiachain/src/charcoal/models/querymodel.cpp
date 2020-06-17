@@ -20,6 +20,11 @@ void QueryModel::setDbConnection(const QString &connectionName)
     refresh();
 }
 
+bool QueryModel::isValid() const
+{
+    return m_connectionName.isEmpty() == false;
+}
+
 void QueryModel::refresh()
 {
     if (m_query.isEmpty()) {

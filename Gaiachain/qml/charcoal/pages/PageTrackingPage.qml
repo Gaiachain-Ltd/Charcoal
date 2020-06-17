@@ -110,13 +110,13 @@ Pages.GPage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            model: dummyCharcoalModel
+            model: dataManager.trackingModel
 
             onDelegateClicked:  {
                 let item
                 for (let index = 0; index < dummyCharcoalModel.count; ++index) {
                     let current = dummyCharcoalModel.get(index)
-                    if (current.title === packageId) {
+                    if (current.type === type) {
                         item = current
                         break;
                     }

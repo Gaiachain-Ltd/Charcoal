@@ -10,6 +10,7 @@ public:
 
     void setDbQuery(const QString &query);
     void setDbConnection(const QString &connectionName);
+    bool isValid() const;
 
     Q_INVOKABLE virtual void refresh();
 

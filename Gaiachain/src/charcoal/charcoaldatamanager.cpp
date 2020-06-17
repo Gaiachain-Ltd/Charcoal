@@ -1,6 +1,7 @@
 #include "charcoaldatamanager.h"
 
 #include "database/dbhelpers.h"
+#include "common/logs.h"
 
 #include <QDate>
 
@@ -18,7 +19,8 @@ CharcoalDataManager::CharcoalDataManager(QObject *parent)
       m_unusedHarvestIdsModel(new UnusedHarvestIdsModel(this)),
       m_unusedTransportIdsModel(new UnusedTransportIdsModel(this)),
       m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
-      m_ovensModel(new OvensModel(this))
+      m_ovensModel(new OvensModel(this)),
+      m_trackingModel(new TrackingModel(this))
 {
 }
 
@@ -40,6 +42,11 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     m_unusedTransportIdsModel->setDbConnection(m_dbConnectionName);
     m_unusedPlotIdsForReplantationModel->setDbConnection(m_dbConnectionName);
     m_ovensModel->setDbConnection(m_dbConnectionName);
+    m_trackingModel->setDbConnection(m_dbConnectionName);
+
+    if (checkModels() == false) {
+        qWarning() << RED("Data models are initialized improperly!");
+    }
 }
 
 TreeSpeciesModel *CharcoalDataManager::treeSpeciesModel() const
@@ -95,4 +102,27 @@ UnusedPlotIdsForReplantationModel *CharcoalDataManager::unusedPlotIdsForReplanta
 OvensModel *CharcoalDataManager::ovensModel() const
 {
     return m_ovensModel;
+}
+
+TrackingModel *CharcoalDataManager::trackingModel() const
+{
+    return m_trackingModel;
+}
+
+bool CharcoalDataManager::checkModels() const
+{
+    const auto models = findChildren<QueryModel*>();
+
+    for (const auto model : models) {
+        if (model == nullptr) {
+            return false;
+        }
+
+        if (model->isValid() == false) {
+            qWarning() << "Uninitialized model" << model->metaObject()->className();
+            return false;
+        }
+    }
+
+    return true;
 }

@@ -28,7 +28,7 @@ ListView {
         MouseArea {
             anchors.fill: parent
             // use model because action resolves it wrongly
-            onClicked: delegateClicked(model.title, model.type)
+            onClicked: delegateClicked(model.name, model.type)
         }
 
         Column {
@@ -47,7 +47,7 @@ ListView {
                 elide: Text.ElideNone
                 maximumLineCount: 5
 
-                text: title
+                text: name
 
                 color: {
                     if (type === Enums.PackageType.Plot) {
@@ -61,7 +61,7 @@ ListView {
             }
 
             Repeater {
-                model: rows
+                model: events
 
                 ColumnLayout {
                     width: parent.width
@@ -74,20 +74,21 @@ ListView {
                             horizontalAlignment: Text.AlignLeft
                             font.bold: true
 
-                            text: (index === 0)? titleFrom : titleTo
+                            text: modelData.eventName
                         }
 
                         Items.GText {
                             horizontalAlignment: Text.AlignRight
 
-                            text: (index === 0)? from : to
+                            text: modelData.date
                         }
                     }
 
                     Items.LayoutSeparator {
                         Layout.fillWidth: true
-                        implicitHeight: (index === (rows-1))? (sr(GStyle.separatorHeight) * 2)
-                                                            : sr(GStyle.separatorHeight)
+                        implicitHeight: (index === (events.length-1))?
+                                            (sr(GStyle.separatorHeight) * 2)
+                                          : sr(GStyle.separatorHeight)
                         visible: true
                     }
                 }
