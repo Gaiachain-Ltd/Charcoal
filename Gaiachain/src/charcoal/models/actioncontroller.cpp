@@ -378,6 +378,7 @@ void ActionController::registerCarbonizationBeginning(
      * - insert entity into table
      * - get new entity's ID
      * - insert event into table
+     * - get proper oven dimensions (defaults if metallic oven is chosen)
      * - insert new OVEN into Ovens table
      * - send action to web server
      */
@@ -442,6 +443,28 @@ void ActionController::registerCarbonizationBeginning(
         return;
     }
 
+    // Get proper oven dimensions
+    QVariantList dimensions;
+    const bool isMetallic = (ovenType == "metallic");
+    if (isMetallic) {
+        query.prepare("SELECT height, length, width FROM OvenTypes WHERE name=:ovenType");
+        query.bindValue(":ovenType", ovenType);
+
+        if (query.exec() == false) {
+            qWarning() << RED("Getting metallic oven dimensions has failed!")
+                       << query.lastError().text() << "for query:" << query.lastQuery();
+            return;
+        }
+
+        query.next();
+        dimensions.append(query.value("height").toString());
+        dimensions.append(query.value("length").toString());
+        dimensions.append(query.value("width").toString());
+    } else {
+        dimensions = ovenDimensions;
+    }
+
+    // Insert new oven into Ovens table
     const QString eventId(query.lastInsertId().toString());
     const QString ovenTypeId(findOvenTypeId(ovenType));
 
@@ -452,9 +475,9 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
-    query.bindValue(":height", ovenDimensions.at(0));
-    query.bindValue(":length", ovenDimensions.at(1));
-    query.bindValue(":width", ovenDimensions.at(2));
+    query.bindValue(":height", dimensions.at(0));
+    query.bindValue(":length", dimensions.at(1));
+    query.bindValue(":width", dimensions.at(2));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")
