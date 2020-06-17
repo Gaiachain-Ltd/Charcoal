@@ -78,7 +78,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
             const QString name(QString("Event %1").arg(events.count() + 1));
             const QVariantMap event {
                 { "eventName", name },
-                { "date", date }
+                { "date", date.toString("dd/MM/yyyy") }
             };
 
             events.append(event);
