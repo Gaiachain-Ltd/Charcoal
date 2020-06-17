@@ -90,6 +90,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.plotId
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningPlotIdHelp
+        popupTitle: Strings.selectPlotId
 
         checkIcon: GStyle.checkBlueUrl
         delegateTextColor: GStyle.fontHighlightColor
@@ -129,6 +130,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.ovenType
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenTypeHelp
+        popupTitle: Strings.selectOvenType
 
         model: dataManager.ovenTypesModel
     }

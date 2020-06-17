@@ -80,6 +80,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.plotId
         helpButtonVisible: true
         helpText: Strings.replantationPlotIdHelp
+        popupTitle: Strings.selectPlotId
 
         checkIcon: GStyle.checkBlueUrl
         delegateTextColor: GStyle.fontHighlightColor
@@ -104,6 +105,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.treeSpecies
         helpButtonVisible: true
         helpText: Strings.replantationTreeSpeciesHelp
+        popupTitle: Strings.selectTreeSpecies
 
         model: dataManager.treeSpeciesModel
     }

@@ -77,6 +77,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.parcel
         helpButtonVisible: true
         helpText: Strings.loggingBeginningParcelHelp
+        popupTitle: Strings.selectParcel
 
         model: dataManager.parcelsModel
     }
@@ -93,6 +94,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.village
         helpButtonVisible: true
         helpText: Strings.loggingBeginningVillageHelp
+        popupTitle: Strings.selectVillage
 
         model: dataManager.villagesModel
     }
@@ -103,6 +105,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.treeSpecies
         helpButtonVisible: true
         helpText: Strings.loggingBeginningTreeSpeciesHelp
+        popupTitle: Strings.selectTreeSpecies
 
         model: dataManager.treeSpeciesModel
     }

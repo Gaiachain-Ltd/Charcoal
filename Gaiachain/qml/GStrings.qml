@@ -224,6 +224,9 @@ QtObject {
     property string beginningDate: tr.empty + qsTr("Beginning date")
     property string createPlotId: tr.empty + qsTr("Create plot ID")
     property string plotId: tr.empty + qsTr("Plot ID")
+    property string selectParcel: tr.empty + qsTr("Select parcel")
+    property string selectVillage: tr.empty + qsTr("Select village")
+    property string selectTreeSpecies: tr.empty + qsTr("Select tree species")
 
     property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")
     property string loggingBeginningRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
@@ -249,6 +252,8 @@ QtObject {
     property string timberVolume: tr.empty + qsTr("Timber volume")
     property string ovenType: tr.empty + qsTr("Oven type")
     property string ovenDimensions: tr.empty + qsTr("Oven measurement (meters)")
+    property string selectPlotId: tr.empty + qsTr("Select plot ID")
+    property string selectOvenType: tr.empty + qsTr("Select oven type")
 
     property string carbonizationBeginningPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
     property string carbonizationBeginningOvenIdHelp: tr.empty + qsTr("Dummy text - oven id help")
@@ -260,6 +265,8 @@ QtObject {
 
     // Charcoal - carbonization ending page
     property string carbonizationEndingDate: tr.empty + qsTr("Carbonization end date")
+    property string selectOvenId: tr.empty + qsTr("Select oven ID")
+    property string selectHarvestId: tr.empty + qsTr("Select harvest ID")
 
     property string carbonizationEndingHarvestIdHelp: tr.empty + qsTr("Dummy text - harvest ID help")
     property string carbonizationEndingOvenIdHelp: tr.empty + qsTr("Dummy text - oven ID help")
@@ -274,6 +281,7 @@ QtObject {
     property string loadAndScanBags: tr.empty + qsTr("Load & scan bags")
     property string loadingDate: tr.empty + qsTr("Loading date")
     property string deliveryDestination: tr.empty + qsTr("Delivery destination")
+    property string selectDeliveryDestination: tr.empty + qsTr("Select delivery destination")
 
     property string loadingAndTransportHarvestIdHelp: tr.empty + qsTr("Dummy text - harvest ID help")
     property string loadingAndTransportPlateNumberHelp: tr.empty + qsTr("Dummy text - plate number help")

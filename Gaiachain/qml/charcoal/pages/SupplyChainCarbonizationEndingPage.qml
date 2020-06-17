@@ -85,6 +85,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.harvestId
         helpButtonVisible: true
         helpText: Strings.carbonizationEndingHarvestIdHelp
+        popupTitle: Strings.selectHarvestId
 
         checkIcon: GStyle.checkGreenUrl
         delegateTextColor: GStyle.fontHighlightColor2
@@ -103,6 +104,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.ovenId
         helpButtonVisible: true
         helpText: Strings.carbonizationEndingOvenIdHelp
+        popupTitle: Strings.selectOvenId
 
         checkIcon: GStyle.checkOrangeUrl
         delegateTextColor: GStyle.fontHighlightColor3

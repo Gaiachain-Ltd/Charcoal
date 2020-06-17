@@ -110,6 +110,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.harvestId
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportHarvestIdHelp
+        popupTitle: Strings.selectHarvestId
 
         checkIcon: GStyle.checkGreenUrl
         delegateTextColor: GStyle.fontHighlightColor2
@@ -162,6 +163,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.deliveryDestination
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportDeliveryDestinationHelp
+        popupTitle: Strings.selectDeliveryDestination
 
         model: dataManager.destinationsModel
     }

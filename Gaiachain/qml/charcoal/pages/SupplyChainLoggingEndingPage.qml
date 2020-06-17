@@ -67,6 +67,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.plotId
         helpButtonVisible: true
         helpText: Strings.loggingEndingPlotIdHelp
+        popupTitle: Strings.selectPlotId
 
         checkIcon: GStyle.checkBlueUrl
         delegateTextColor: GStyle.fontHighlightColor
