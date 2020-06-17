@@ -206,6 +206,49 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
     return QString();
 }
 
+int ActionController::scannedBagsCount(const QString &transportId) const
+{
+    Q_UNUSED(transportId)
+    return -1;
+}
+
+int ActionController::scannedBagsTotal(const QString &transportId) const
+{
+    Q_UNUSED(transportId)
+    return -1;
+}
+
+int ActionController::registeredTrucksCount(const QString &transportId) const
+{
+    Q_UNUSED(transportId)
+    return -1;
+}
+
+int ActionController::registeredTrucksTotal(const QString &transportId) const
+{
+    const QString plotId(getPlotId(transportId));
+    const QString parentEntityId(findEntityId(plotId));
+    const QString transportTypeId(findEntityTypeId(Enums::PackageType::Transport));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT COUNT(id) FROM Entities WHERE parent=:parentEntityId "
+                  "AND typeId=:transportTypeId");
+    query.bindValue(":parentEntityId", parentEntityId);
+    query.bindValue(":transportTypeId", transportTypeId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Getting total number of trucks has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "DB:" << m_dbConnName;
+        return -1;
+    }
+
+    query.next();
+    return query.value(0).toInt();
+}
+
 QString ActionController::nextOvenNumber(const QString &plotId) const
 {
     const QString parentEntityId(findEntityId(plotId));

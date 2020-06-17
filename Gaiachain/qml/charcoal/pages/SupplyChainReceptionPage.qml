@@ -127,13 +127,18 @@ Pages.SupplyChainPageBase {
                     scannedQrs
                     )
 
-        //let bagCount = dataManager.actionController.bagCountInTransport(transportId)
+        let plotId = dataManager.actionController.getPlotId(transportId)
+        let scannedBagsCount = dataManager.actionController.scannedBagsCount(transportId)
+        let scannedBagsTotal = dataManager.actionController.scannedBagsTotal(transportId)
+        let registeredTrucksCount = dataManager.actionController.registeredTrucksCount(transportId)
+        let registeredTrucksTotal = dataManager.actionController.registeredTrucksTotal(transportId)
+
         pageManager.enter(Enums.Page.SupplyChainFinalize, {
-                              "plotId": dataManager.actionController.getPlotId(transportId),
-                              "scannedBagsCount": 140, //scannedQrs.length,
-                              "scannedBagsTotal": 150, //bagCount,
-                              "registeredTrucksCount": 5,
-                              "registeredTrucksTotal": 6
+                              "plotId": plotId,
+                              "scannedBagsCount": scannedBagsCount,
+                              "scannedBagsTotal": scannedBagsTotal,
+                              "registeredTrucksCount": registeredTrucksCount,
+                              "registeredTrucksTotal": registeredTrucksTotal
                           })
     }
 

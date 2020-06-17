@@ -26,10 +26,16 @@ public:
                                             const QDate &date) const;
 
     Q_INVOKABLE QString getPlotId(const QString &id) const;
+
     Q_INVOKABLE QString getTransportIdFromBags(const QVariantList &scannedQrs) const;
     Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
     Q_INVOKABLE int bagCountInTransport(const QString &transportId) const;
     Q_INVOKABLE QString plateNumberInTransport(const QString &transportId) const;
+    Q_INVOKABLE int scannedBagsCount(const QString &transportId) const;
+    Q_INVOKABLE int scannedBagsTotal(const QString &transportId) const;
+    Q_INVOKABLE int registeredTrucksCount(const QString &transportId) const;
+    Q_INVOKABLE int registeredTrucksTotal(const QString &transportId) const;
+
     Q_INVOKABLE QString nextOvenNumber(const QString &plotId) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
