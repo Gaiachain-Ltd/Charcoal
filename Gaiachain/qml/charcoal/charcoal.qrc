@@ -6,6 +6,7 @@
         <file>components/DoubleMenuButton.qml</file>
         <file>components/EventsListView.qml</file>
         <file>components/InfoOverlay.qml</file>
+        <file>components/SelectableListDelegate.qml</file>
         <file>headers/UserInfoHeader.qml</file>
         <file>headers/CharcoalInputDateHeader.qml</file>
         <file>headers/CharcoalComboBoxHeader.qml</file>
@@ -24,6 +25,7 @@
         <file>pages/SupplyChainLoggingBeginningPage.qml</file>
         <file>pages/SupplyChainLoggingEndingPage.qml</file>
         <file>pages/SupplyChainReceptionPage.qml</file>
+        <file>pages/SupplyChainFinalizePage.qml</file>
         <file>pages/QRScannerPage.qml</file>
         <file>pages/TakeDocumentPicturesPage.qml</file>
         <file>pages/PhotoGalleryPage.qml</file>

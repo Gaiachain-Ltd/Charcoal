@@ -24,20 +24,8 @@ Pages.SupplyChainPageBase {
         "LH4U-3YJT-LFND"
     ]
 
-    onScannedQrsChanged: console.log("Scanned IDs:", prepareScannedIds)
-
     property var documents: []
     property var receipts: []
-
-    function prepareScannedIds() {
-        let result = []
-        for (let qr of scannedQrs) {
-            result.push([harvestIdComboBox.currentText + "/B"
-                         + Utility.constDigitsNumber(
-                             scannedQrs.indexOf(qr), 3), qr])
-        }
-        return result;
-    }
 
     title: Strings.reception
 
@@ -139,7 +127,14 @@ Pages.SupplyChainPageBase {
                     scannedQrs
                     )
 
-        pageManager.enter(Enums.Page.MainMenu)
+        //let bagCount = dataManager.actionController.bagCountInTransport(transportId)
+        pageManager.enter(Enums.Page.SupplyChainFinalize, {
+                              "plotId": dataManager.actionController.getPlotId(transportId),
+                              "scannedBagsCount": 140, //scannedQrs.length,
+                              "scannedBagsTotal": 150, //bagCount,
+                              "registeredTrucksCount": 5,
+                              "registeredTrucksTotal": 6
+                          })
     }
 
     Headers.ButtonInputHeader {
@@ -170,6 +165,7 @@ Pages.SupplyChainPageBase {
                                          "infoText": Strings.scanAllBagsToCheckInfoText,
                                          "backToPage": Enums.Page.SupplyChainReception,
                                          "infoImages": [ GStyle.bagsReceptionUrl ],
+                                         // TODO: use proper harvest ID here!
                                          "idBase": "AM003PM/0595112/04-03-2020/AM004NA",
                                          "scannedQrs": scannedQrs
                                      })

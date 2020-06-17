@@ -47,6 +47,7 @@ namespace Enums {
         SupplyChainCarbonizationEnding,
         SupplyChainLoadingAndTransport,
         SupplyChainReception,
+        SupplyChainFinalize,
         PageTracking,
         PageReplantation,
         UserInfo,

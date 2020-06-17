@@ -303,6 +303,11 @@ QtObject {
     property string receptionUnloadingDateHelp: tr.empty + qsTr("Dummy text - unloading timestamp help")
     property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 
+    // Charcoal - supply chain finalization page
+    property string doYouWantToCompleteSupplyChain: tr.empty + qsTr("Do you want to complete the supply chain?")
+    property string totalNumberOfScannedBags: tr.empty + qsTr("total number of scanned bags")
+    property string totalNumberOfRegisteredTrucks: tr.empty + qsTr("total number of registered trucks")
+
     // Charcoal - tracking page
     property string allTab: tr.empty + qsTr("All")
     property string plotTab: tr.empty + qsTr("Plot")

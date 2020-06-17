@@ -705,13 +705,15 @@ void ActionController::finalizeSupplyChain(const QString &plotId) const
 {
     const QString parentId(findEntityId(plotId));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId OR parentName=:parentId");
+    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId OR parent=:parentId");
     query.bindValue(":plotId", plotId);
     query.bindValue(":parentId", parentId);
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing a supply chain has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "with params:" << plotId << parentId;
         return;
     }
 }

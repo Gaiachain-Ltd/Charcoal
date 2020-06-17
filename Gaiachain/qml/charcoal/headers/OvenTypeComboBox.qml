@@ -106,6 +106,7 @@ Headers.GHeader {
 
                     boundsBehavior: Flickable.StopAtBounds
 
+                    // TODO: use SelectableListDelegate!
                     delegate: Item {
                         readonly property string text: translatedName
                         readonly property bool isTraditional: isTraditionalOven
