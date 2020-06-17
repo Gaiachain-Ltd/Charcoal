@@ -28,8 +28,9 @@ void OvensModel::setPlotId(const QString &id)
 {
     m_plotId = id;
 
-    setDbQuery(QString("SELECT id, name, height, length, width, carbonizationEvent "
-                       "FROM Ovens WHERE plot IS (SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
+    setDbQuery(QString("SELECT id, type, name, height, length, width, carbonizationEvent "
+                       "FROM Ovens WHERE plot IS "
+                       "(SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
 
     refresh();
 }
@@ -54,10 +55,28 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
     case OvenRole::LetterId:
         return query().value("name").toString();
     case OvenRole::FirstRow:
-        return tr("Traditional oven - %1 x %2 x %3m")
+    {
+        const QString ovenTypeId(query().value("type").toString());
+        QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+        q.prepare("SELECT name FROM OvenTypes WHERE id=:ovenTypeId");
+        q.bindValue(":ovenTypeId", ovenTypeId);
+
+        if (q.exec() == false) {
+            qWarning() << RED("Getting oven type has failed!")
+                       << q.lastError().text() << "for query:" << q.lastQuery();
+            return {};
+        }
+
+        q.next();
+        const QString type(q.value("name").toString());
+        const bool isMetallic = (type == "metallic");
+
+        return tr("%1 - %2 x %3 x %4m")
+            .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))
             .arg(query().value("height").toString())
             .arg(query().value("length").toString())
             .arg(query().value("width").toString());
+    }
     case OvenRole::SecondRow:
     {
         const QString carbId(query().value("carbonizationEvent").toString());
