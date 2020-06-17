@@ -87,10 +87,22 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                 name = tr("Logging has ended");
                 break;
             case Enums::SupplyChainAction::CarbonizationBeginning:
-                name = tr("Oven %1 - carbonization has begun");
+            {
+                const QByteArray propertiesString(query.value("properties").toByteArray());
+                const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+                const QVariantMap properties(propertiersJson.toVariant().toMap());
+                name = tr("Oven %1 - carbonization has begun")
+                           .arg(properties.value("ovenId").toString());
+            }
                 break;
             case Enums::SupplyChainAction::CarbonizationEnding:
-                name = tr("Oven %1 - carbonization has ended");
+            {
+                const QByteArray propertiesString(query.value("properties").toByteArray());
+                const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+                const QVariantMap properties(propertiersJson.toVariant().toMap());
+                name = tr("Oven %1 - carbonization has ended")
+                           .arg(properties.value("ovenIds").toString());
+            }
                 break;
             case Enums::SupplyChainAction::LoadingAndTransport:
             {

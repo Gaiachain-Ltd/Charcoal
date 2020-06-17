@@ -517,6 +517,7 @@ void ActionController::registerCarbonizationBeginning(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
+                        // TODO: unnecessary... We have the Ovens table!
                         { "ovenId", ovenId }
                     }));
 
