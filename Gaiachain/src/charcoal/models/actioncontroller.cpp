@@ -375,7 +375,8 @@ void ActionController::registerCarbonizationBeginning(
 {
     /*
      * Algorithm is:
-     * - insert entity into table
+     * - check if harvest ID already exists
+     * - insert entity into table if necessary
      * - get new entity's ID
      * - insert event into table
      * - get proper oven dimensions (defaults if metallic oven is chosen)
@@ -386,8 +387,23 @@ void ActionController::registerCarbonizationBeginning(
     qDebug() << "Registering carbonization beginning" << coordinate << timestamp
              << plotId << ovenId << userId << ovenType << ovenDimensions;
 
-    // First, insert a new Entity into table
+    // Check if Harvest ID already exists
     const QString harvestId(generateHarvestId(plotId, userId));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT name FROM Entities WHERE name=:harvestId");
+    query.bindValue(":harvestId", harvestId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Determining whether harves already exists has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
+        return;
+    }
+
+    const bool alreadyPresent = query.next();
+
+    // Insert a new Entity into table, if needed
     const QString typeId(findEntityTypeId(Enums::PackageType::Harvest));
     const QString parentEntityId(findEntityId(plotId));
 
@@ -396,20 +412,20 @@ void ActionController::registerCarbonizationBeginning(
         return;
     }
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    if (alreadyPresent == false) {
+        query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted, isReplanted) "
+                      "VALUES (:typeId, :harvestId, :parent, 0, 0, 0)");
+        query.bindValue(":typeId", typeId);
+        query.bindValue(":harvestId", harvestId);
+        query.bindValue(":parent", parentEntityId);
 
-    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted, isReplanted) "
-                  "VALUES (:typeId, :harvestId, :parent, 0, 0, 0)");
-    query.bindValue(":typeId", typeId);
-    query.bindValue(":harvestId", harvestId);
-    query.bindValue(":parent", parentEntityId);
-
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Carbonization entity has failed!")
-                   << query.lastError().text()
-                   << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
-        return;
+        if (query.exec() == false) {
+            qWarning() << RED("Inserting Carbonization entity has failed!")
+                       << query.lastError().text()
+                       << "for query:" << query.lastQuery()
+                       << "DB:" << m_dbConnName;
+            return;
+        }
     }
 
     // Then, insert a new Event under that Entity
