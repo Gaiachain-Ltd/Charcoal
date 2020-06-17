@@ -361,7 +361,6 @@ QtObject {
     property string uploaded: tr.empty + qsTr("Uploaded")
 
     property string select: tr.empty + qsTr("Select")
-    property string selectParcel: tr.empty + qsTr("Select parcel")
 
     // Notifications
     property string redirect: tr.empty + qsTr("Go to: %1")
