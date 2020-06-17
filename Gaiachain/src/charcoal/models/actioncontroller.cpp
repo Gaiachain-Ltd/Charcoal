@@ -208,20 +208,41 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
 
 int ActionController::scannedBagsCount(const QString &transportId) const
 {
-    Q_UNUSED(transportId)
-    return -1;
+    return scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
 }
 
 int ActionController::scannedBagsTotal(const QString &transportId) const
 {
-    Q_UNUSED(transportId)
-    return -1;
+    return scannedBagsForAction(transportId, Enums::SupplyChainAction::LoadingAndTransport);
 }
 
 int ActionController::registeredTrucksCount(const QString &transportId) const
 {
-    Q_UNUSED(transportId)
-    return -1;
+    const QString plotId(getPlotId(transportId));
+    const QString transportTypeId(findEntityTypeId(Enums::PackageType::Transport));
+    const QString receptionTypeId(findEventTypeId(Enums::SupplyChainAction::Reception));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    // It's a bit "hacky" we count only Reception events, that gives us number
+    // of events where transport has left but not arrived yet.
+    query.prepare("SELECT COUNT(id) FROM Events WHERE typeId=:receptionTypeId "
+                  "AND entityId IN (SELECT id FROM Entities WHERE parent=:plotId "
+                  "AND typeId=:transportTypeId)");
+    query.bindValue(":receptionTypeId", receptionTypeId);
+    query.bindValue(":plotId", plotId);
+    query.bindValue(":transportTypeId", transportTypeId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Getting number of received trucks has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "DB:" << m_dbConnName;
+        return -1;
+    }
+
+    query.next();
+    return query.value(0).toInt();
 }
 
 int ActionController::registeredTrucksTotal(const QString &transportId) const
@@ -952,4 +973,53 @@ QString ActionController::actionAbbreviation(const Enums::SupplyChainAction acti
 QString ActionController::propertiesToString(const QVariantMap &properties) const
 {
     return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);
+}
+
+int ActionController::scannedBagsForAction(const QString &transportId,
+                                           const Enums::SupplyChainAction action) const
+{
+    const QString plotId(getPlotId(transportId));
+    const QString entityTypeId(findEntityTypeId(Enums::PackageType::Transport));
+    const QString eventTypeId(findEventTypeId(action));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM Events WHERE typeId=:eventTypeId "
+                  "AND entityId IN (SELECT id FROM Entities WHERE parent=:plotId "
+                  "AND typeId=:entityTypeId)");
+    query.bindValue(":eventTypeId", eventTypeId);
+    query.bindValue(":plotId", plotId);
+    query.bindValue(":entityTypeId", entityTypeId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Getting total number of bags has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "DB:" << m_dbConnName;
+        return -1;
+    }
+
+    int total = 0;
+    while(query.next()) {
+        const QString eventId(query.value("id").toString());
+
+        query.prepare("SELECT properties FROM Events WHERE id=:eventId");
+        query.bindValue(":eventId", eventId);
+
+        if (query.exec()) {
+            query.next();
+            const QByteArray propertiesString(query.value("properties").toByteArray());
+            const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+            const QVariantMap properties(propertiersJson.toVariant().toMap());
+            total += properties.value("scannedQrs").toList().size();
+        } else {
+            qWarning() << RED("Getting bag count has failed!")
+                       << query.lastError().text()
+                       << "for query:" << query.lastQuery()
+                       << "DB:" << m_dbConnName;
+            return -2;
+        }
+    }
+
+    return total;
 }

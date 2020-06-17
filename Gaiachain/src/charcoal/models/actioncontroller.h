@@ -122,5 +122,8 @@ private:
     QString actionAbbreviation(const Enums::SupplyChainAction action) const;
 
     QString propertiesToString(const QVariantMap &properties) const;
+
+    int scannedBagsForAction(const QString &transportId,
+                             const Enums::SupplyChainAction action) const;
 };
 
