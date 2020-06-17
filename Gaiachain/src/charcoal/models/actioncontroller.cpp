@@ -208,16 +208,19 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
 
 int ActionController::scannedBagsCount(const QString &transportId) const
 {
+    qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
     return scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
 }
 
 int ActionController::scannedBagsTotal(const QString &transportId) const
 {
+    qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
     return scannedBagsForAction(transportId, Enums::SupplyChainAction::LoadingAndTransport);
 }
 
 int ActionController::registeredTrucksCount(const QString &transportId) const
 {
+    qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
     const QString plotId(getPlotId(transportId));
     const QString transportTypeId(findEntityTypeId(Enums::PackageType::Transport));
     const QString receptionTypeId(findEventTypeId(Enums::SupplyChainAction::Reception));
