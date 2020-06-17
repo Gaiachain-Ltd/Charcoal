@@ -987,7 +987,7 @@ int ActionController::scannedBagsForAction(const QString &transportId,
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("SELECT id FROM Events WHERE typeId=:eventTypeId "
+    query.prepare("SELECT properties FROM Events WHERE typeId=:eventTypeId "
                   "AND entityId IN (SELECT id FROM Entities WHERE parent=:plotId "
                   "AND typeId=:entityTypeId)");
     query.bindValue(":eventTypeId", eventTypeId);
@@ -1004,24 +1004,10 @@ int ActionController::scannedBagsForAction(const QString &transportId,
 
     int total = 0;
     while(query.next()) {
-        const QString eventId(query.value("id").toString());
-
-        query.prepare("SELECT properties FROM Events WHERE id=:eventId");
-        query.bindValue(":eventId", eventId);
-
-        if (query.exec()) {
-            query.next();
-            const QByteArray propertiesString(query.value("properties").toByteArray());
-            const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-            const QVariantMap properties(propertiersJson.toVariant().toMap());
-            total += properties.value("scannedQrs").toList().size();
-        } else {
-            qWarning() << RED("Getting bag count has failed!")
-                       << query.lastError().text()
-                       << "for query:" << query.lastQuery()
-                       << "DB:" << m_dbConnName;
-            return -2;
-        }
+        const QByteArray propertiesString(query.value("properties").toByteArray());
+        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+        const QVariantMap properties(propertiersJson.toVariant().toMap());
+        total += properties.value("scannedQrs").toList().size();
     }
 
     return total;
