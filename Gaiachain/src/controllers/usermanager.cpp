@@ -83,6 +83,8 @@ void UserManager::handleLoginAttempt(const QString &login, const QString &passwo
 
 void UserManager::readLoginData(const QString &login, const QJsonObject &userDataObj)
 {
+    //qDebug().noquote() << "Reading login data" << login << QJsonDocument(userDataObj).toJson();
+
     setOfflineMode(false);
     m_offlineHandler.acknowledgePassword(login);
 
@@ -91,21 +93,34 @@ void UserManager::readLoginData(const QString &login, const QJsonObject &userDat
     auto userData = UserData{};
     userData.email = RequestsHelper::checkAndValue(userDataObj, Tags::login).toString();
 
-    auto cooperativeObj = RequestsHelper::checkAndValue(userDataObj, Tags::company).toObject();
 #ifdef COCOA
+    auto cooperativeObj = RequestsHelper::checkAndValue(userDataObj, Tags::company).toObject();
     userData.cooperativeId = static_cast<quint32>(
         RequestsHelper::checkAndValue(cooperativeObj, Tags::id).toInt());
     userData.cooperativeCode = RequestsHelper::checkAndValue(
                                    cooperativeObj, Tags::pid).toString();
     userData.cooperativeName = RequestsHelper::checkAndValue(
                                    cooperativeObj, Tags::name).toString();
-#elif CHARCOAL
-    qDebug() << "TODO!";
-#endif
-
     const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
     const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
     userData.type = RequestsHelper::userTypeFromString(role);
+#elif CHARCOAL
+    const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
+    const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
+    if (role == "SUPER_USER") {
+        userData.type = Enums::UserType::SuperUser;
+    }
+
+    userData.code = "AM123456D";
+    userData.contact = "123 456 789";
+    userData.job = "Lab rat";
+    userData.name = "Testing Tom";
+
+    qWarning() << RED("Dummy user data!") << userData.email << userData.type
+               << userData.code << userData.contact << userData.job
+               << userData.name;
+#endif
+
 
     const auto token = RequestsHelper::checkAndValue(userDataObj, Tags::accessToken).toString();
 
