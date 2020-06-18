@@ -459,7 +459,7 @@ void ActionController::registerCarbonizationBeginning(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("SELECT name FROM Entities WHERE name=:harvestId");
+    query.prepare("SELECT id, name FROM Entities WHERE name=:harvestId");
     query.bindValue(":harvestId", harvestId);
 
     if (query.exec() == false) {
@@ -496,7 +496,8 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     // Then, insert a new Event under that Entity
-    const QString entityId(query.lastInsertId().toString());
+    const QString entityId(alreadyPresent? query.value("id").toString()
+                                          : query.lastInsertId().toString());
     const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::CarbonizationBeginning));
 
     if (eventTypeId.isEmpty()) {

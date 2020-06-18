@@ -19,8 +19,7 @@ Pages.GPage {
     title: Strings.recentTransactions
 
     function refreshData() {
-        // called from GPage
-        //latestRangeTransactionsModel.clearRowCount()
+        dataManager.trackingModel.refresh()
     }
 
     function updateSearch() {
