@@ -64,12 +64,10 @@ QString ActionController::getPlotId(const QString &id) const
 
 QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
 {
-    //const QString transportEntityId(findEntityId(transportId));
-
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    // TODO: restrict only to events of Entities where isFinished is FALSE!!!
-    query.prepare("SELECT properties, entityId FROM Events");
+    query.prepare("SELECT properties, entityId FROM Events "
+                  "WHERE entityId IN (SELECT id FROM Entities WHERE isFinished=0)");
 
     QString transportEntityId;
     if (query.exec()) {
