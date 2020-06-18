@@ -53,6 +53,7 @@ Pages.SupplyChainPageBase {
 
         transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
         let bagCount = dataManager.actionController.bagCountInTransport(transportId)
+        // TODO: check if all QRs are MATCHING!
         let allBags = scannedQrs.length === bagCount
 
         var summary = [
