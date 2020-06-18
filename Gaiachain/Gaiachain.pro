@@ -65,6 +65,7 @@ charcoal {
         src/charcoal/models/querymodel.h \
         src/charcoal/models/unusedplotidsforreplantationmodel.h \
         src/charcoal/models/ovensmodel.h \
+        src/charcoal/models/trackingmodel.h \
 
     SOURCES += \
     src/charcoal/models/actioncontroller.cpp \
@@ -85,6 +86,7 @@ charcoal {
         src/charcoal/models/querymodel.cpp \
         src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
         src/charcoal/models/ovensmodel.cpp \
+        src/charcoal/models/trackingmodel.cpp \
 
 }
 
@@ -133,7 +135,6 @@ INCLUDEPATH += src
 ### TODO!!! Move cocoa-only classes to cocoa/ folder
 
 HEADERS += \
-    src/charcoal/models/trackingmodel.h \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
     src/common/languagemanager.h \
@@ -213,7 +214,6 @@ HEADERS += \
     src/common/logs.h
 
 SOURCES += src/main.cpp \
-    src/charcoal/models/trackingmodel.cpp \
     src/common/dummy/commondummydata.cpp \
     src/common/languagemanager.cpp \
     src/common/logs.cpp \
