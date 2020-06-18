@@ -65,13 +65,12 @@ public:
         const QVariantList &ovenDimensions
         ) const;
 
-    Q_INVOKABLE void registerCarbonizationEnding(
-        const QGeoCoordinate &coordinate,
+    Q_INVOKABLE void registerCarbonizationEnding(const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QString &userId,
         const QString &harvestId,
         const QString &plotId,
-        const QString &ovenIds
+        const QVariantList &ovenIds
         ) const;
 
     Q_INVOKABLE void registerTransportAndLoading(

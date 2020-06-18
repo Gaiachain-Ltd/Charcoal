@@ -47,10 +47,10 @@ Pages.SupplyChainPageBase {
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor),
                     createSummaryItem(Strings.ovenId,
-                                      [ ["A", "B"],
-                                      ["Traditional oven 1", "Traditional oven 2"] ],
-                                      //[ovenIdComboBox.titles,
-                                      // ovenIdComboBox.values],
+                                      [
+                                          ovenIdComboBox.letters,
+                                          ovenIdComboBox.descriptions
+                                      ],
                                       "", "",
                                       Pages.SupplyChainPageBase.Column,
                                       GStyle.delegateHighlightColor3,
@@ -73,7 +73,7 @@ Pages.SupplyChainPageBase {
                     carbonizerIdInputHeader.inputText,
                     harvestIdComboBox.currentText,
                     dataManager.actionController.getPlotId(harvestIdComboBox.currentText),
-                    ovenIdComboBox.currentText
+                    ovenIdComboBox.ids
                     )
 
         pageManager.enter(Enums.Page.MainMenu)

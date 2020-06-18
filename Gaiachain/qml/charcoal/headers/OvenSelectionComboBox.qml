@@ -22,6 +22,23 @@ Headers.GHeader {
     property alias delegateTextColor: comboBox.delegateTextColor
 
     property alias multiSelect: comboBox.multiSelect
+    property alias selectedItems: comboBox.selection
+
+    property var ids: []
+    property var letters: []
+    property var descriptions: []
+
+    onSelectedItemsChanged: {
+        ids = []
+        letters = []
+        descriptions = []
+        for (let i = 0; i < selectedItems.length; i++) {
+            let item = selectedItems[i]
+            ids.push(item["ovenId"])
+            letters.push(item["letterId"])
+            descriptions.push(item["firstRow"])
+        }
+    }
 
     widget: Items.GInput {
         id: comboBox
@@ -101,6 +118,7 @@ Headers.GHeader {
                     boundsBehavior: Flickable.StopAtBounds
 
                     delegate: Item {
+                        readonly property string oven: ovenId
                         readonly property string text: letterId
                         readonly property string extraHeader: firstRow
                         readonly property string extraText: secondRow
@@ -150,7 +168,7 @@ Headers.GHeader {
                                 Image {
                                     Layout.rightMargin: s(GStyle.middleMargin)
                                     source: checkIcon
-                                    visible: comboBox.selection.includes(text)
+                                    visible: comboBox.text.includes(text)
                                 }
                             }
 
@@ -165,19 +183,52 @@ Headers.GHeader {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                let newSelection = comboBox.selection
+                                let newSelection = []
 
-                                if (multiSelect === false) {
-                                    newSelection = []
-                                }
+                                if (multiSelect) {
+                                    let isNew = true
+                                    for (let i = 0; i < comboBox.selection.length; i++) {
+                                        let item = comboBox.selection[i]
+                                        if (delegateItem.oven === item["ovenId"]) {
+                                            isNew = false
+                                            continue
+                                        } else {
+                                            console.log("Pushing existing item", JSON.stringify(item))
+                                            newSelection.push(item)
+                                        }
+                                    }
 
-                                if (newSelection.includes(text)) {
-                                    newSelection.splice(newSelection.indexOf(text), 1)
+                                    if (isNew) {
+                                        console.log("Pushing new selection", oven, letterId)
+                                        newSelection.push(
+                                                    {
+                                                        "ovenId": oven,
+                                                        "letterId": letterId,
+                                                        "firstRow": extraHeader,
+                                                        "secondRow": extraText
+                                                    })
+                                    }
                                 } else {
-                                    newSelection.push(text)
+                                    newSelection.push(
+                                                {
+                                                    "ovenId": oven,
+                                                    "letterId": letterId,
+                                                    "firstRow": extraHeader,
+                                                    "secondRow": extraText
+                                                })
                                 }
-                                newSelection.sort()
+
                                 comboBox.selection = newSelection
+
+                                // Update text displayed when popup is closed
+                                comboBox.text = ""
+                                for (let index = 0; index < comboBox.selection.length; index++) {
+                                    if (comboBox.text.length === 0) {
+                                        comboBox.text += comboBox.selection[index]["letterId"]
+                                    } else {
+                                        comboBox.text += ", " + comboBox.selection[index]["letterId"]
+                                    }
+                                }
                             }
                         }
                     }
@@ -200,18 +251,7 @@ Headers.GHeader {
 
                     text: Strings.select
 
-                    onClicked: {
-                        comboBox.text = ""
-                        for (let index = 0; index < comboBox.selection.length; ++index) {
-                            if (comboBox.text.length === 0) {
-                                comboBox.text += comboBox.selection[index]
-                            } else {
-                                comboBox.text += ", " + comboBox.selection[index]
-                            }
-                        }
-
-                        popup.close()
-                    }
+                    onClicked: popup.close()
                 }
 
                 Components.Footer {

@@ -88,6 +88,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                 break;
             case Enums::SupplyChainAction::CarbonizationBeginning:
             {
+                // TODO: extract oven name from ID!
                 const QByteArray propertiesString(query.value("properties").toByteArray());
                 const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
                 const QVariantMap properties(propertiersJson.toVariant().toMap());
@@ -97,11 +98,12 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                 break;
             case Enums::SupplyChainAction::CarbonizationEnding:
             {
+                // TODO: extract oven name from ID!
                 const QByteArray propertiesString(query.value("properties").toByteArray());
                 const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
                 const QVariantMap properties(propertiersJson.toVariant().toMap());
                 name = tr("Oven %1 - carbonization has ended")
-                           .arg(properties.value("ovenIds").toString());
+                           .arg(properties.value("ovenId").toString());
             }
                 break;
             case Enums::SupplyChainAction::LoadingAndTransport:

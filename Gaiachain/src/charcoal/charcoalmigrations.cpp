@@ -57,12 +57,14 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "FOREIGN KEY(plotId) REFERENCES Entities(id), "
                 "FOREIGN KEY(treeSpecies) REFERENCES TreeSpecies(id))"),
             QLatin1String("CREATE TABLE Ovens (`id` INTEGER primary key AUTOINCREMENT, "
-                "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, `carbonizationEvent` INTEGER NOT NULL, "
+                "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, "
+                "`carbonizationBeginning` INTEGER NOT NULL, `carbonizationEnding` INTEGER, "
                 "`name` TEXT NOT NULL, "
                 "`height` DECIMAL(5,2), `length` DECIMAL(5,2), `width` DECIMAL(5,2), "
                 "FOREIGN KEY(type) REFERENCES OvenTypes(id), "
                 "FOREIGN KEY(plot) REFERENCES Entities(id), "
-                "FOREIGN KEY(carbonizationEvent) REFERENCES Events(id))")
+                "FOREIGN KEY(carbonizationBeginning) REFERENCES Events(id), "
+                "FOREIGN KEY(carbonizationEnding) REFERENCES Events(id))")
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data

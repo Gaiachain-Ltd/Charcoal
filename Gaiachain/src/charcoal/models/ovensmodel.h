@@ -32,7 +32,7 @@ signals:
 
 private:
     QHash<int, QByteArray> m_roleNames = {
-        { OvenRole::Id, "id" },
+        { OvenRole::Id, "ovenId" },
         { OvenRole::LetterId, "letterId" },
         { OvenRole::FirstRow, "firstRow" },
         { OvenRole::SecondRow, "secondRow" }

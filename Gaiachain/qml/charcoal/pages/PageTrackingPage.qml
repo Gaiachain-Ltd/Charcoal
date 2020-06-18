@@ -18,6 +18,8 @@ Pages.GPage {
 
     title: Strings.recentTransactions
 
+    Component.onCompleted: refreshData()
+
     function refreshData() {
         dataManager.trackingModel.refresh()
     }

@@ -28,7 +28,8 @@ void OvensModel::setPlotId(const QString &id)
 {
     m_plotId = id;
 
-    setDbQuery(QString("SELECT id, type, name, height, length, width, carbonizationEvent "
+    setDbQuery(QString("SELECT id, type, name, height, length, width, "
+                       "carbonizationBeginning "
                        "FROM Ovens WHERE plot IS "
                        "(SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
 
@@ -50,7 +51,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case OvenRole::Id:
-        return query().value("id").toInt();
+        return query().value("id").toString();
     case Qt::ItemDataRole::DisplayRole:
     case OvenRole::LetterId:
         return query().value("name").toString();
@@ -79,10 +80,10 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
     }
     case OvenRole::SecondRow:
     {
-        const QString carbId(query().value("carbonizationEvent").toString());
+        const QString carbId(query().value("carbonizationBeginning").toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("SELECT date FROM Events WHERE id=:carbonizationEvent");
-        query.bindValue(":carbonizationEvent", carbId);
+        query.prepare("SELECT date FROM Events WHERE id=:carbonizationBeginning");
+        query.bindValue(":carbonizationBeginning", carbId);
 
         if (query.exec() == false) {
             qWarning() << RED("Getting carbonization beginning date has failed!")

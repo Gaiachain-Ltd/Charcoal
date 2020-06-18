@@ -553,7 +553,7 @@ void ActionController::registerCarbonizationBeginning(
     const QString eventId(query.lastInsertId().toString());
     const QString ovenTypeId(findOvenTypeId(ovenType));
 
-    query.prepare("INSERT INTO Ovens (type, plot, carbonizationEvent, name, "
+    query.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
                   "height, length, width) "
                   "VALUES (:type, :plot, :event, :name, :height, :length, :width)");
     query.bindValue(":type", ovenTypeId);
@@ -576,12 +576,12 @@ void ActionController::registerCarbonizationBeginning(
 void ActionController::registerCarbonizationEnding(
     const QGeoCoordinate &coordinate, const QDateTime &timestamp,
     const QString &userId, const QString &harvestId, const QString &plotId,
-    const QString &ovenIds) const
+    const QVariantList &ovenIds) const
 {
     /*
      * Algorithm is:
      * - find entity ID in table (created in Carbonization Beginning step)
-     * - insert event into table
+     * - insert separate ending event for each carbonization beginning into table
      * - send action to web server
      */
 
@@ -602,28 +602,44 @@ void ActionController::registerCarbonizationEnding(
         return;
     }
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties) "
-                  "VALUES (:entityId, :typeId, :userId, :date, "
-                  ":locationLatitude, :locationLongitude, :properties)");
-    query.bindValue(":entityId", entityId);
-    query.bindValue(":typeId", eventTypeId);
-    query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp);
-    query.bindValue(":locationLatitude", coordinate.latitude());
-    query.bindValue(":locationLongitude", coordinate.longitude());
-    // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties",
-                    propertiesToString(QVariantMap {
-                        { "plotId", plotId },
-                        { "ovenIds", ovenIds }
-                    }));
+    for (const QVariant &idVar : ovenIds) {
+        const QString ovenId(idVar.toString());
+        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+        query.prepare("INSERT INTO Events (entityId, typeId, userId,"
+                      "date, locationLatitude, locationLongitude, properties) "
+                      "VALUES (:entityId, :typeId, :userId, :date, "
+                      ":locationLatitude, :locationLongitude, :properties)");
+        query.bindValue(":entityId", entityId);
+        query.bindValue(":typeId", eventTypeId);
+        query.bindValue(":userId", userId);
+        query.bindValue(":date", timestamp);
+        query.bindValue(":locationLatitude", coordinate.latitude());
+        query.bindValue(":locationLongitude", coordinate.longitude());
+        // TODO: use Tags to denote the properties more reliably!
+        query.bindValue(":properties",
+                        propertiesToString(QVariantMap {
+                            { "plotId", plotId },
+                            { "ovenId", ovenId }
+                        }));
 
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Logging Ending event has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
-        return;
+        if (query.exec() == false) {
+            qWarning() << RED("Inserting Logging Ending event has failed!")
+                       << query.lastError().text() << "for query:" << query.lastQuery();
+            return;
+        }
+
+        const QString eventId(query.lastInsertId().toString());
+
+        query.prepare("UPDATE Ovens SET carbonizationEnding=:carbonizationEndingId "
+                      "WHERE id=:ovenId");
+        query.bindValue(":carbonizationEndingId", eventId);
+        query.bindValue(":ovenId", ovenId);
+
+        if (query.exec() == false) {
+            qWarning() << RED("Updating oven with carbonization ending event ID has failed!")
+                       << query.lastError().text() << "for query:" << query.lastQuery();
+            return;
+        }
     }
 
     // Lastly, send a request to server to add it, too.
