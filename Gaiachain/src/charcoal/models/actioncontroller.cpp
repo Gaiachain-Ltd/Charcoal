@@ -505,7 +505,7 @@ void ActionController::registerCarbonizationBeginning(
         return;
     }
 
-    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
+    query.prepare("INSERT INTO Events (entityId, typeId, userId, "
                   "date, locationLatitude, locationLongitude, properties) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
                   ":locationLatitude, :locationLongitude, :properties)");
@@ -516,11 +516,7 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties",
-                    propertiesToString(QVariantMap {
-                        // TODO: unnecessary... We have the Ovens table!
-                        { "ovenId", ovenId }
-                    }));
+    query.bindValue(":properties", QString());
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
@@ -605,7 +601,7 @@ void ActionController::registerCarbonizationEnding(
     for (const QVariant &idVar : ovenIds) {
         const QString ovenId(idVar.toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-        query.prepare("INSERT INTO Events (entityId, typeId, userId,"
+        query.prepare("INSERT INTO Events (entityId, typeId, userId, "
                       "date, locationLatitude, locationLongitude, properties) "
                       "VALUES (:entityId, :typeId, :userId, :date, "
                       ":locationLatitude, :locationLongitude, :properties)");
@@ -616,11 +612,7 @@ void ActionController::registerCarbonizationEnding(
         query.bindValue(":locationLatitude", coordinate.latitude());
         query.bindValue(":locationLongitude", coordinate.longitude());
         // TODO: use Tags to denote the properties more reliably!
-        query.bindValue(":properties",
-                        propertiesToString(QVariantMap {
-                            { "plotId", plotId },
-                            { "ovenId", ovenId }
-                        }));
+        query.bindValue(":properties", QString());
 
         if (query.exec() == false) {
             qWarning() << RED("Inserting Logging Ending event has failed!")

@@ -23,7 +23,7 @@ public:
 
 private:
     QHash<int, QByteArray> m_roleNames = {
-        { TrackingRole::Id, "id" },
+        { TrackingRole::Id, "eventId" },
         { TrackingRole::Name, "name" },
         { TrackingRole::Type, "type" },
         { TrackingRole::Events, "events" }

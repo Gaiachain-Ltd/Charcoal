@@ -87,23 +87,36 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                 name = tr("Logging has ended");
                 break;
             case Enums::SupplyChainAction::CarbonizationBeginning:
-            {
-                // TODO: extract oven name from ID!
-                const QByteArray propertiesString(query.value("properties").toByteArray());
-                const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-                const QVariantMap properties(propertiersJson.toVariant().toMap());
-                name = tr("Oven %1 - carbonization has begun")
-                           .arg(properties.value("ovenId").toString());
-            }
-                break;
             case Enums::SupplyChainAction::CarbonizationEnding:
             {
-                // TODO: extract oven name from ID!
-                const QByteArray propertiesString(query.value("properties").toByteArray());
-                const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-                const QVariantMap properties(propertiersJson.toVariant().toMap());
-                name = tr("Oven %1 - carbonization has ended")
-                           .arg(properties.value("ovenId").toString());
+                const bool isBeginning = action == Enums::SupplyChainAction::CarbonizationBeginning;
+                const QString begin(tr("Oven %1 - carbonization has begun"));
+                const QString end(tr("Oven %1 - carbonization has ended"));
+                const QString eventId(query.value("id").toString());
+                const QString ovenQuery("SELECT name FROM Ovens WHERE %1=:eventId");
+
+                QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+                if (isBeginning) {
+                    q.prepare(ovenQuery.arg("carbonizationBeginning"));
+                } else {
+                    q.prepare(ovenQuery.arg("carbonizationEnding"));
+
+                }
+                q.bindValue(":eventId", eventId);
+
+                if (q.exec() == false) {
+                    qWarning() << RED("Getting oven name has failed!")
+                               << q.lastError().text() << "for query:" << q.lastQuery();
+                    return {};
+                }
+
+                q.next();
+                const QString ovenName(q.value("name").toString());
+                if (isBeginning) {
+                    name = begin.arg(ovenName);
+                } else {
+                    name = end.arg(ovenName);
+                }
             }
                 break;
             case Enums::SupplyChainAction::LoadingAndTransport:
