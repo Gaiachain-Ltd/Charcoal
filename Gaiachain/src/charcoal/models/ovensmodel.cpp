@@ -30,7 +30,8 @@ void OvensModel::setPlotId(const QString &id)
 
     setDbQuery(QString("SELECT id, type, name, height, length, width, "
                        "carbonizationBeginning "
-                       "FROM Ovens WHERE plot IS "
+                       "FROM Ovens WHERE carbonizationEnding IS NULL "
+                       "AND plot IS "
                        "(SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
 
     refresh();
