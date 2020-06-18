@@ -506,17 +506,15 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                  "date, locationLatitude, locationLongitude, properties) "
+                  "date, locationLatitude, locationLongitude) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
-                  ":locationLatitude, :locationLongitude, :properties)");
+                  ":locationLatitude, :locationLongitude)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-    // TODO: use Tags to denote the properties more reliably!
-    query.bindValue(":properties", QString());
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
@@ -602,17 +600,15 @@ void ActionController::registerCarbonizationEnding(
         const QString ovenId(idVar.toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
         query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                      "date, locationLatitude, locationLongitude, properties) "
+                      "date, locationLatitude, locationLongitude) "
                       "VALUES (:entityId, :typeId, :userId, :date, "
-                      ":locationLatitude, :locationLongitude, :properties)");
+                      ":locationLatitude, :locationLongitude)");
         query.bindValue(":entityId", entityId);
         query.bindValue(":typeId", eventTypeId);
         query.bindValue(":userId", userId);
         query.bindValue(":date", timestamp);
         query.bindValue(":locationLatitude", coordinate.latitude());
         query.bindValue(":locationLongitude", coordinate.longitude());
-        // TODO: use Tags to denote the properties more reliably!
-        query.bindValue(":properties", QString());
 
         if (query.exec() == false) {
             qWarning() << RED("Inserting Logging Ending event has failed!")

@@ -45,7 +45,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "(`id` INTEGER primary key AUTOINCREMENT, `entityId` INTEGER NOT NULL, "
                 "`typeId` INTEGER NOT NULL, `userId` TEXT NOT NULL, `date` INTEGER NOT NULL, "
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "
-                "`properties` TEXT NOT NULL, "
+                "`properties` TEXT, "
                 "FOREIGN KEY(entityId) REFERENCES Entities(id), "
                 "FOREIGN KEY(typeId) REFERENCES EventTypes(id))"),
             QLatin1String("CREATE TABLE EventTypes (`id` INTEGER primary key AUTOINCREMENT, `actionName` TEXT NOT NULL)"),
