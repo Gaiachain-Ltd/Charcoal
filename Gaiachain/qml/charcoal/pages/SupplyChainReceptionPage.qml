@@ -53,6 +53,7 @@ Pages.SupplyChainPageBase {
 
         transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
         let bagCount = dataManager.actionController.bagCountInTransport(transportId)
+        let allBags = scannedQrs.length === bagCount
 
         var summary = [
                     createSummaryItem(Strings.transportId,
@@ -76,7 +77,7 @@ Pages.SupplyChainPageBase {
                                               hasRecs? Strings.approved : Strings.noPhoto
                                           ],
                                           [
-                                              GStyle.warningUrl,
+                                              allBags? GStyle.checkGreenUrl : GStyle.warningUrl,
                                               docsIcon,
                                               recsIcon
                                           ],
