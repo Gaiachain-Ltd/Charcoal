@@ -11,6 +11,7 @@
 #include "androidpermissionshandler.h"
 #endif
 
+#include "common/globals.h"
 #include "common/enums.h"
 #include "common/packagedata.h"
 #include "common/dataglobals.h"

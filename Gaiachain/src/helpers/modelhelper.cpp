@@ -1,5 +1,7 @@
 #include "modelhelper.h"
 
+#include <QAbstractItemModel>
+
 ModelHelper::ModelHelper(QObject *parent)
     : QObject(parent)
 {}
