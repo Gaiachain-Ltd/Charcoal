@@ -18,7 +18,7 @@ Pages.SupplyChainPageBase {
     title: Strings.carbonizationEnding
 
     proceedButtonEnabled: (harvestIdComboBox.currentText.length > 0
-                           && ovenIdComboBox.ids.length > 0)
+                           && ovenIdComboBox.currentText.length > 0)
 
     Component.onCompleted: refreshData()
 

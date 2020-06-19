@@ -123,7 +123,6 @@ Pages.SupplyChainPageBase {
         headerText: Strings.plateNumber
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportPlateNumberHelp
-        inputText: "1234AM56"
     }
 
     Headers.ButtonInputHeader {

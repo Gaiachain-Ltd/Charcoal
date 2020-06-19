@@ -10,6 +10,8 @@ import "../headers" as Headers
 Headers.AbstractListHeader {
     id: top
 
+    signal valueChanged()
+
     widget: RowLayout {
         Layout.fillWidth: true
         Layout.leftMargin: top.margins
@@ -40,7 +42,10 @@ Headers.AbstractListHeader {
 
                     placeholderText: titles[index]
                     text: values[index]
-                    onTextChanged: values[index] = text
+                    onTextChanged: {
+                        values[index] = text
+                        valueChanged()
+                    }
                     horizontalAlignment: TextInput.AlignHCenter
 
                     readOnly: repeater.readOnly

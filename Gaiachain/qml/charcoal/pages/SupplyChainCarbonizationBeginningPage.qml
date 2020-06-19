@@ -141,8 +141,21 @@ Pages.SupplyChainPageBase {
     }
 
     Headers.RowHeader {
-        function isArgEmpty(value) { return (value.lenght === 0) }
-        property bool isEmpty: (values.every(isArgEmpty))
+        property bool isEmpty: true
+
+        onValueChanged: {
+            let emptyCheck = false;
+            for (let value of values) {
+                console.log("Value is", value, value.length)
+                if (value.length === 0) {
+                    emptyCheck = true
+                    break
+                }
+            }
+
+            console.log("isEmpty?", emptyCheck)
+            isEmpty = emptyCheck
+        }
 
         id: ovenDimensionsHeader
         Layout.fillWidth: true

@@ -25,8 +25,8 @@ Pages.SupplyChainPageBase {
     title: Strings.reception
 
     proceedButtonEnabled: (scannedQrs.length > 0
-                           && documents.length > 0
-                           && receipts.length > 0)
+                           /*&& documents.length > 0
+                           && receipts.length > 0*/)
 
     Component.onCompleted: refreshData()
 
