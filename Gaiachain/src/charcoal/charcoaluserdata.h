@@ -14,10 +14,10 @@ struct UserData : public AbstractUserData
     Q_PROPERTY(QString name MEMBER name)
 
 public:
-    QString code = "AM123456D";
-    QString contact = "123 456 789";
-    QString job = "Lab rat";
-    QString name = "Testing Tom";
+    QString code;
+    QString contact;
+    QString job;
+    QString name;
 };
 
 Q_DECLARE_METATYPE(UserData)

@@ -47,6 +47,10 @@ namespace Tags {
     const QLatin1String ovenTypes = QLatin1String("oven_types");
     const QLatin1String treeSpecies = QLatin1String("tree_species");
     const QLatin1String villages = QLatin1String("villages");
+    const QLatin1String code = QLatin1String("code");
+    const QLatin1String contact = QLatin1String("contact");
+    const QLatin1String function = QLatin1String("function");
+    const QLatin1String fullName = QLatin1String("full_name");
 };
 
 namespace StaticValues {

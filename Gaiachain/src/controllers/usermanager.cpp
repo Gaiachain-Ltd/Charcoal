@@ -111,14 +111,10 @@ void UserManager::readLoginData(const QString &login, const QJsonObject &userDat
         userData.type = Enums::UserType::SuperUser;
     }
 
-    userData.code = "AM123456D";
-    userData.contact = "123 456 789";
-    userData.job = "Lab rat";
-    userData.name = "Testing Tom";
-
-    qWarning() << RED("Dummy user data!") << userData.email << userData.type
-               << userData.code << userData.contact << userData.job
-               << userData.name;
+    userData.code = RequestsHelper::checkAndValue(userDataObj, Tags::code).toString();
+    userData.contact = RequestsHelper::checkAndValue(userDataObj, Tags::contact).toString();
+    userData.job = RequestsHelper::checkAndValue(userDataObj, Tags::function).toString();
+    userData.name = RequestsHelper::checkAndValue(userDataObj, Tags::fullName).toString();
 #endif
 
 
