@@ -23,6 +23,8 @@ Pages.SupplyChainPageBase {
     property int registeredTrucksCount: -1
     property int registeredTrucksTotal: -1
 
+    readonly property int defaultMargin: s(GStyle.middleMargin)
+
     title: Strings.summary
 
     Component.onCompleted: refreshData()
@@ -50,6 +52,10 @@ Pages.SupplyChainPageBase {
 
     Items.GText {
         Layout.fillWidth: true
+        Layout.topMargin: defaultMargin
+        Layout.leftMargin: defaultMargin
+        Layout.rightMargin: defaultMargin
+
         font.pixelSize: s(GStyle.bigPixelSize)
         font.capitalization: Font.AllUppercase
         font.bold: true
@@ -63,7 +69,7 @@ Pages.SupplyChainPageBase {
 
         id: yes
         text: Strings.yes
-        textLeftMargin: s(GStyle.middleMargin)
+        textLeftMargin: defaultMargin
         onClicked: {
             if (selected) {
                no.selected = false
@@ -76,7 +82,7 @@ Pages.SupplyChainPageBase {
 
         id: no
         text: Strings.no
-        textLeftMargin: s(GStyle.middleMargin)
+        textLeftMargin: defaultMargin
         selected: true
         onClicked: {
             if (selected) {
@@ -87,6 +93,9 @@ Pages.SupplyChainPageBase {
 
     Items.GText {
         Layout.fillWidth: true
+        Layout.topMargin: 2 * defaultMargin
+        Layout.leftMargin: defaultMargin
+        Layout.rightMargin: defaultMargin
 
         font.pixelSize: s(GStyle.titlePixelSize)
         font.capitalization: Font.AllUppercase
@@ -98,6 +107,9 @@ Pages.SupplyChainPageBase {
 
     Items.GText {
         Layout.fillWidth: true
+        Layout.leftMargin: defaultMargin
+        Layout.rightMargin: defaultMargin
+
         font.pixelSize: s(GStyle.titlePixelSize)
         horizontalAlignment: Text.AlignLeft
         text: Strings.numberOfBagsDetail.arg(scannedBagsCount).arg(scannedBagsTotal)
@@ -105,6 +117,9 @@ Pages.SupplyChainPageBase {
 
     Items.GText {
         Layout.fillWidth: true
+        Layout.topMargin: defaultMargin
+        Layout.leftMargin: defaultMargin
+        Layout.rightMargin: defaultMargin
 
         font.pixelSize: s(GStyle.titlePixelSize)
         font.capitalization: Font.AllUppercase
@@ -116,6 +131,9 @@ Pages.SupplyChainPageBase {
 
     Items.GText {
         Layout.fillWidth: true
+        Layout.leftMargin: defaultMargin
+        Layout.rightMargin: defaultMargin
+
         font.pixelSize: s(GStyle.titlePixelSize)
         horizontalAlignment: Text.AlignLeft
         text: Strings.numberOfBagsDetail.arg(registeredTrucksCount).arg(registeredTrucksTotal)
