@@ -93,6 +93,10 @@ void UserManager::readLoginData(const QString &login, const QJsonObject &userDat
     auto userData = UserData{};
     userData.email = RequestsHelper::checkAndValue(userDataObj, Tags::login).toString();
 
+    const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
+    const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
+    userData.type = RequestsHelper::userTypeFromString(role);
+
 #ifdef COCOA
     auto cooperativeObj = RequestsHelper::checkAndValue(userDataObj, Tags::company).toObject();
     userData.cooperativeId = static_cast<quint32>(
@@ -101,22 +105,12 @@ void UserManager::readLoginData(const QString &login, const QJsonObject &userDat
                                    cooperativeObj, Tags::pid).toString();
     userData.cooperativeName = RequestsHelper::checkAndValue(
                                    cooperativeObj, Tags::name).toString();
-    const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
-    const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
-    userData.type = RequestsHelper::userTypeFromString(role);
 #elif CHARCOAL
-    const auto roleObj = RequestsHelper::checkAndValue(userDataObj, Tags::role).toObject();
-    const auto role = RequestsHelper::checkAndValue(roleObj, Tags::name).toString();
-    if (role == "SUPER_USER") {
-        userData.type = Enums::UserType::SuperUser;
-    }
-
     userData.code = RequestsHelper::checkAndValue(userDataObj, Tags::code).toString();
     userData.contact = RequestsHelper::checkAndValue(userDataObj, Tags::contact).toString();
     userData.job = RequestsHelper::checkAndValue(userDataObj, Tags::function).toString();
     userData.name = RequestsHelper::checkAndValue(userDataObj, Tags::fullName).toString();
 #endif
-
 
     const auto token = RequestsHelper::checkAndValue(userDataObj, Tags::accessToken).toString();
 
