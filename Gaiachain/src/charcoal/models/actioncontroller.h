@@ -3,6 +3,7 @@
 #include "common/enums.h"
 
 #include <QObject>
+#include <QVariant>
 
 class QGeoCoordinate;
 
@@ -37,6 +38,7 @@ public:
     Q_INVOKABLE int registeredTrucksTotal(const QString &transportId) const;
 
     Q_INVOKABLE QString nextOvenNumber(const QString &plotId) const;
+    Q_INVOKABLE QVariantList defaultOvenDimensions(const QString &ovenType) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,

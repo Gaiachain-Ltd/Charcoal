@@ -303,6 +303,31 @@ QString ActionController::nextOvenNumber(const QString &plotId) const
     return "-1";
 }
 
+QVariantList ActionController::defaultOvenDimensions(const QString &ovenType) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QVariantList dimensions;
+    if (ovenType == "metallic") {
+        query.prepare("SELECT height, length, width FROM OvenTypes WHERE name=:ovenType");
+        query.bindValue(":ovenType", ovenType);
+
+        if (query.exec() == false) {
+            qWarning() << RED("Getting metallic oven dimensions has failed!")
+                       << query.lastError().text() << "for query:" << query.lastQuery();
+            return QVariantList{ 0, 0, 0 };
+        }
+
+        query.next();
+        dimensions.append(query.value("height").toString());
+        dimensions.append(query.value("length").toString());
+        dimensions.append(query.value("width").toString());
+    } else {
+        return QVariantList{ 0, 0, 0 };
+    }
+
+    return dimensions;
+}
+
 void ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QString &userId,
@@ -522,21 +547,8 @@ void ActionController::registerCarbonizationBeginning(
 
     // Get proper oven dimensions
     QVariantList dimensions;
-    const bool isMetallic = (ovenType == "metallic");
-    if (isMetallic) {
-        query.prepare("SELECT height, length, width FROM OvenTypes WHERE name=:ovenType");
-        query.bindValue(":ovenType", ovenType);
-
-        if (query.exec() == false) {
-            qWarning() << RED("Getting metallic oven dimensions has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
-            return;
-        }
-
-        query.next();
-        dimensions.append(query.value("height").toString());
-        dimensions.append(query.value("length").toString());
-        dimensions.append(query.value("width").toString());
+    if (ovenType == "metallic") {
+        dimensions = defaultOvenDimensions(ovenType);
     } else {
         dimensions = ovenDimensions;
     }
