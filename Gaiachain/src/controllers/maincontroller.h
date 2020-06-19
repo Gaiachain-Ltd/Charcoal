@@ -1,13 +1,20 @@
 #ifndef MAINCONTROLLER_H
 #define MAINCONTROLLER_H
 
+#include "abstractmanager.h"
 #include "databasemanager.h"
 #include "pagemanager.h"
 #include "usermanager.h"
-#include "data/datamanager.h"
 
-#include "session/sessionmanager.h"
-#include "../common/languagemanager.h"
+#include "common/languagemanager.h"
+
+#ifdef CHARCOAL
+#include "charcoal/picturesmanager.h"
+#include "charcoal/notificationmanager.h"
+#endif
+
+class RestSessionManager;
+class AbstractDataManager;
 
 class Application : public QObject
 {
@@ -86,8 +93,14 @@ private:
     UserManager m_userManager;
 
     DatabaseManager m_dbManager;
-    DataManager m_dataManager;
-    SessionManager m_sessionManager;
+
+    RestSessionManager *m_sessionManager = nullptr;
+    AbstractDataManager *m_dataManager = nullptr;
+
+#ifdef CHARCOAL
+    PicturesManager m_picturesManager;
+    NotificationManager m_notificationsManager;
+#endif
 
     void setupQZXing(QQmlApplicationEngine &engine);
 };

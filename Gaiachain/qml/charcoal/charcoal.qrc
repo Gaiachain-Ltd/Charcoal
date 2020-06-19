@@ -1,5 +1,34 @@
 <RCC>
-    <qresource prefix="/charcoal/">
+    <qresource prefix="/charcoal">
         <file>CharcoalStyle.qml</file>
+        <file>components/MenuButton.qml</file>
+        <file>components/ExpandableMenuButton.qml</file>
+        <file>components/DoubleMenuButton.qml</file>
+        <file>components/EventsListView.qml</file>
+        <file>components/InfoOverlay.qml</file>
+        <file>components/SelectableListDelegate.qml</file>
+        <file>headers/UserInfoHeader.qml</file>
+        <file>headers/CharcoalInputDateHeader.qml</file>
+        <file>headers/CharcoalComboBoxHeader.qml</file>
+        <file>headers/OvenSelectionComboBox.qml</file>
+        <file>headers/OvenTypeComboBox.qml</file>
+        <file>items/CharcoalTabButton.qml</file>
+        <file>items/CharcoalComboBox.qml</file>
+        <file>items/CharcoalRoundButton.qml</file>
+        <file>pages/MainMenuPage.qml</file>
+        <file>pages/UserInfoPage.qml</file>
+        <file>pages/PageReplantationPage.qml</file>
+        <file>pages/PageTrackingPage.qml</file>
+        <file>pages/SupplyChainCarbonizationBeginningPage.qml</file>
+        <file>pages/SupplyChainCarbonizationEndingPage.qml</file>
+        <file>pages/SupplyChainLoadingAndTransportPage.qml</file>
+        <file>pages/SupplyChainLoggingBeginningPage.qml</file>
+        <file>pages/SupplyChainLoggingEndingPage.qml</file>
+        <file>pages/SupplyChainReceptionPage.qml</file>
+        <file>pages/SupplyChainFinalizePage.qml</file>
+        <file>pages/QRScannerPage.qml</file>
+        <file>pages/TakeDocumentPicturesPage.qml</file>
+        <file>pages/PhotoGalleryPage.qml</file>
+        <file>popups/ColumnButtonsPopup.qml</file>
     </qresource>
 </RCC>

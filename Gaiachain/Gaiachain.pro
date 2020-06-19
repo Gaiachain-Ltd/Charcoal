@@ -1,6 +1,3 @@
-## Milo Solutions - project file TEMPLATE
-#
-#
 ## (c) Milo Solutions, 2016-2020
 
 QT += core gui qml quick svg sql location
@@ -26,15 +23,148 @@ cocoa:charcoal {
 }
 
 cocoa {
-  DEFINES += COCOA
-  RESOURCES += qml/cocoa/cocoa.qrc
-  TARGET = GaiachainCocoa
+    DEFINES += COCOA
+    RESOURCES += qml/cocoa/cocoa.qrc
+    TARGET = GaiachainCocoa
+
+    HEADERS += \
+        src/cocoa/cocoauserdata.h \
+        src/cocoa/cocoasessionmanager.h \
+        src/cocoa/cocoadatamanager.h \
+        src/cocoa/controllers/data/abstractdatamodelsmanager.h \
+        src/cocoa/controllers/data/datalocalmanager.h \
+        src/cocoa/controllers/data/datamodelsmanager.h \
+        src/cocoa/controllers/data/datarequestsmanager.h \
+        src/cocoa/controllers/data/dataviewmanager.h \
+        src/cocoa/models/abstractmodel.h \
+        src/cocoa/models/abstractreadmodel.h \
+        src/cocoa/models/companymodel.h \
+        src/cocoa/models/parcelmodel.h \
+        src/cocoa/models/modelchangedextension.h \
+        src/cocoa/models/sqltablemodel.h \
+        src/cocoa/models/existsquerymodel.h \
+        src/cocoa/models/namemodel.h \
+        src/cocoa/models/eventmodel.h \
+        src/cocoa/models/producermodel.h \
+        src/cocoa/models/relationmodel.h \
+        src/cocoa/models/unusedidsmodel.h \
+        src/cocoa/models/query/abstractsortfilterqueryextension.h \
+        src/cocoa/models/query/companytypequery.h \
+        src/cocoa/models/query/cooperativeidquery.h \
+        src/cocoa/models/query/daterangequery.h \
+        src/cocoa/models/query/idkeywordquery.h \
+        src/cocoa/models/query/isortfilterquery.h \
+        src/cocoa/models/query/localeventsquery.h \
+        src/cocoa/models/query/packagetypequery.h \
+        src/cocoa/models/query/produceridquery.h \
+        src/cocoa/models/query/sortfilterquery.h \
+        src/cocoa/models/query/sortnamequery.h \
+        src/cocoa/models/query/sorttimestampquery.h \
+        src/cocoa/models/query/sqlquerymodel.h \
+        src/cocoa/models/proxy/abstractidentityproxymodel.h \
+        src/cocoa/models/proxy/latestrangeeventsproxymodel.h \
+        src/cocoa/models/proxy/packagelastactionproxymodel.h \
+        src/cocoa/models/proxy/packagetypeeventsproxymodel.h \
+        src/cocoa/models/proxy/abstractsortfilterproxymodel.h \
+        src/cocoa/models/views/abstractmodelview.h \
+        src/cocoa/models/views/calendarviewmodel.h \
+        src/cocoa/models/views/cooperativeviewmodel.h \
+        src/cocoa/models/views/localviewmodel.h \
+        src/cocoa/models/views/packagerelationsviewmodel.h \
+        src/cocoa/models/views/packageviewmodel.h \
+        src/cocoa/models/views/parcelviewmodel.h \
+        src/cocoa/models/views/transactionsviewmodel.h \
+
+    SOURCES = \
+        src/cocoa/cocoamigrations.cpp \
+        src/cocoa/cocoasessionmanager.cpp \
+        src/cocoa/cocoadatamanager.cpp \
+        src/cocoa/controllers/data/abstractdatamodelsmanager.cpp \
+        src/cocoa/controllers/data/datalocalmanager.cpp \
+        src/cocoa/controllers/data/datamodelsmanager.cpp \
+        src/cocoa/controllers/data/datarequestsmanager.cpp \
+        src/cocoa/controllers/data/dataviewmanager.cpp \
+        src/cocoa/models/proxy/abstractidentityproxymodel.cpp \
+        src/cocoa/models/abstractmodel.cpp \
+        src/cocoa/models/abstractreadmodel.cpp \
+        src/cocoa/models/companymodel.cpp \
+        src/cocoa/models/parcelmodel.cpp \
+        src/cocoa/models/sqltablemodel.cpp \
+        src/cocoa/models/existsquerymodel.cpp \
+        src/cocoa/models/modelchangedextension.cpp \
+        src/cocoa/models/namemodel.cpp \
+        src/cocoa/models/eventmodel.cpp \
+        src/cocoa/models/producermodel.cpp \
+        src/cocoa/models/relationmodel.cpp \
+        src/cocoa/models/unusedidsmodel.cpp \
+        src/cocoa/models/query/sortfilterquery.cpp \
+        src/cocoa/models/query/sqlquerymodel.cpp \
+        src/cocoa/models/proxy/latestrangeeventsproxymodel.cpp \
+        src/cocoa/models/proxy/packagelastactionproxymodel.cpp \
+        src/cocoa/models/proxy/packagetypeeventsproxymodel.cpp \
+        src/cocoa/models/proxy/abstractsortfilterproxymodel.cpp \
+        src/cocoa/models/views/abstractmodelview.cpp \
+        src/cocoa/models/views/calendarviewmodel.cpp \
+        src/cocoa/models/views/cooperativeviewmodel.cpp \
+        src/cocoa/models/views/localviewmodel.cpp \
+        src/cocoa/models/views/packagerelationsviewmodel.cpp \
+        src/cocoa/models/views/packageviewmodel.cpp \
+        src/cocoa/models/views/parcelviewmodel.cpp \
+        src/cocoa/models/views/transactionsviewmodel.cpp \
+
 }
 
 charcoal {
-  DEFINES += CHARCOAL
-  RESOURCES += qml/charcoal/charcoal.qrc
-  TARGET = GaiachainCharcoal
+    DEFINES += CHARCOAL
+    RESOURCES += \
+        qml/charcoal/charcoal.qrc \
+        resources/resources-charcoal.qrc
+    TARGET = GaiachainCharcoal
+
+    HEADERS += \
+        src/charcoal/charcoaluserdata.h \
+        src/charcoal/picturesmanager.h \
+        src/charcoal/tickmarkiconprovider.h \
+        src/charcoal/notificationmanager.h \
+        src/charcoal/charcoalsessionmanager.h \
+        src/charcoal/charcoaldatamanager.h \
+        src/charcoal/models/actioncontroller.h \
+        src/charcoal/models/treespeciesmodel.h \
+        src/charcoal/models/parcelsmodel.h \
+        src/charcoal/models/villagesmodel.h \
+        src/charcoal/models/destinationsmodel.h \
+        src/charcoal/models/oventypesmodel.h \
+        src/charcoal/models/unusedplotidsmodel.h \
+        src/charcoal/models/unusedharvestidsmodel.h \
+        src/charcoal/models/unusedtransportidsmodel.h \
+        src/charcoal/models/querymodel.h \
+        src/charcoal/models/unusedplotidsforreplantationmodel.h \
+        src/charcoal/models/ovensmodel.h \
+        src/charcoal/models/trackingmodel.h \
+        src/charcoal/models/minimumdatemodel.h \
+
+    SOURCES += \
+        src/charcoal/picturesmanager.cpp \
+        src/charcoal/tickmarkiconprovider.cpp \
+        src/charcoal/notificationmanager.cpp \
+        src/charcoal/charcoalmigrations.cpp \
+        src/charcoal/charcoalsessionmanager.cpp \
+        src/charcoal/charcoaldatamanager.cpp \
+        src/charcoal/models/actioncontroller.cpp \
+        src/charcoal/models/treespeciesmodel.cpp \
+        src/charcoal/models/parcelsmodel.cpp \
+        src/charcoal/models/villagesmodel.cpp \
+        src/charcoal/models/destinationsmodel.cpp \
+        src/charcoal/models/oventypesmodel.cpp \
+        src/charcoal/models/unusedplotidsmodel.cpp \
+        src/charcoal/models/unusedharvestidsmodel.cpp \
+        src/charcoal/models/unusedtransportidsmodel.cpp \
+        src/charcoal/models/querymodel.cpp \
+        src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
+        src/charcoal/models/ovensmodel.cpp \
+        src/charcoal/models/trackingmodel.cpp \
+        src/charcoal/models/minimumdatemodel.cpp \
+
 }
 
 include(../version.pri)
@@ -43,7 +173,7 @@ include(3rdparty/OpenSSL/openssl.pri)
 # qzxing
 CONFIG += qzxing_qml
 CONFIG += qzxing_multimedia
-QZXING_PATH=$$PWD/3rdparty/qzxing
+QZXING_PATH=$$PWD/3rdparty/qzxing/src
 
 INCLUDEPATH += $$QZXING_PATH
 include($$QZXING_PATH/QZXing.pri)
@@ -77,21 +207,30 @@ msvc* {
 TEMPLATE = app
 CONFIG += c++17
 
+INCLUDEPATH += src
+
+### TODO!!! Move cocoa-only classes to cocoa/ folder
+
 HEADERS += \
     src/common/dataglobals.h \
     src/common/dummy/commondummydata.h \
     src/common/languagemanager.h \
     src/common/types.h \
-    src/common/userdata.h \
-    src/controllers/data/abstractdatamodelsmanager.h \
-    src/controllers/data/datalocalmanager.h \
-    src/controllers/data/datamanager.h \
-    src/controllers/data/datamodelsmanager.h \
-    src/controllers/data/datarequestsmanager.h \
-    src/controllers/data/dataviewmanager.h \
+    src/common/abstractuserdata.h \
+    src/common/enums.h \
+    src/common/globals.h \
+    src/common/packagedata.h \
+    src/common/tags.h \
+    src/common/logs.h \
+    src/controllers/data/abstractdatamanager.h \
     src/controllers/databasemanager.h \
     src/controllers/offlineusershandler.h \
     src/controllers/session/abstractsessionmanager.h \
+    src/controllers/session/restsessionmanager.h \
+    src/controllers/maincontroller.h \
+    src/controllers/pagemanager.h \
+    src/controllers/usermanager.h \
+    src/controllers/abstractmanager.h \
     src/database/dbhelpers.h \
     src/database/dbmigrationmanager.h \
     src/database/dbmigrations.h \
@@ -101,60 +240,12 @@ HEADERS += \
     src/helpers/packagedataproperties.h \
     src/helpers/requestshelper.h \
     src/helpers/typetraits.h \
-    src/models/proxy/abstractidentityproxymodel.h \
-    src/models/abstractmodel.h \
-    src/models/abstractreadmodel.h \
-    src/models/companymodel.h \
-    src/models/parcelmodel.h \
-    src/models/query/abstractsortfilterqueryextension.h \
-    src/models/query/companytypequery.h \
-    src/models/query/cooperativeidquery.h \
-    src/models/query/daterangequery.h \
-    src/models/query/idkeywordquery.h \
-    src/models/query/isortfilterquery.h \
-    src/models/query/localeventsquery.h \
-    src/models/query/packagetypequery.h \
-    src/models/query/produceridquery.h \
-    src/models/query/sortfilterquery.h \
-    src/models/query/sortnamequery.h \
-    src/models/query/sorttimestampquery.h \
-    src/models/query/sqlquerymodel.h \
-    src/models/sqltablemodel.h \
-    src/models/existsquerymodel.h \
-    src/models/proxy/latestrangeeventsproxymodel.h \
-    src/models/modelchangedextension.h \
-    src/models/namemodel.h \
-    src/models/proxy/packagelastactionproxymodel.h \
-    src/models/proxy/packagetypeeventsproxymodel.h \
-    src/models/eventmodel.h \
     src/helpers/utility.h \
-    src/controllers/maincontroller.h \
-    src/common/enums.h \
-    src/common/globals.h \
-    src/controllers/pagemanager.h \
-    src/models/producermodel.h \
-    src/models/relationmodel.h \
-    src/common/packagedata.h \
-    src/models/unusedidsmodel.h \
-    src/models/views/abstractmodelview.h \
-    src/models/views/calendarviewmodel.h \
-    src/models/views/cooperativeviewmodel.h \
-    src/models/views/localviewmodel.h \
-    src/models/views/packagerelationsviewmodel.h \
-    src/models/views/packageviewmodel.h \
-    src/models/views/parcelviewmodel.h \
-    src/models/views/transactionsviewmodel.h \
     src/rest/additionaldatarequest.h \
     src/rest/authrequest.h \
     src/rest/baserequest.h \
     src/rest/restapiclient.h \
-    src/controllers/session/sessionmanager.h \
-    src/controllers/usermanager.h \
-    src/controllers/abstractmanager.h \
-    src/models/proxy/abstractsortfilterproxymodel.h \
-    src/common/tags.h \
     src/rest/entityrequest.h \
-    src/common/logs.h
 
 SOURCES += src/main.cpp \
     src/common/dummy/commondummydata.cpp \
@@ -164,16 +255,16 @@ SOURCES += src/main.cpp \
     src/common/dataglobals.cpp \
     src/common/globals.cpp \
     src/common/types.cpp \
-    src/common/userdata.cpp \
-    src/controllers/data/abstractdatamodelsmanager.cpp \
-    src/controllers/data/datalocalmanager.cpp \
-    src/controllers/data/datamanager.cpp \
-    src/controllers/data/datamodelsmanager.cpp \
-    src/controllers/data/datarequestsmanager.cpp \
-    src/controllers/data/dataviewmanager.cpp \
+    src/common/abstractuserdata.cpp \
+    src/controllers/data/abstractdatamanager.cpp \
     src/controllers/databasemanager.cpp \
     src/controllers/offlineusershandler.cpp \
     src/controllers/session/abstractsessionmanager.cpp \
+    src/controllers/session/restsessionmanager.cpp \
+    src/controllers/maincontroller.cpp \
+    src/controllers/pagemanager.cpp \
+    src/controllers/usermanager.cpp \
+    src/controllers/abstractmanager.cpp \
     src/database/dbhelpers.cpp \
     src/database/dbmigrationmanager.cpp \
     src/database/dbmigrations.cpp \
@@ -182,44 +273,12 @@ SOURCES += src/main.cpp \
     src/helpers/modelhelper.cpp \
     src/helpers/packagedataproperties.cpp \
     src/helpers/requestshelper.cpp \
-    src/models/proxy/abstractidentityproxymodel.cpp \
-    src/models/abstractmodel.cpp \
-    src/models/abstractreadmodel.cpp \
-    src/models/companymodel.cpp \
-    src/models/parcelmodel.cpp \
-    src/models/query/sortfilterquery.cpp \
-    src/models/query/sqlquerymodel.cpp \
-    src/models/sqltablemodel.cpp \
-    src/models/existsquerymodel.cpp \
-    src/models/proxy/latestrangeeventsproxymodel.cpp \
-    src/models/modelchangedextension.cpp \
-    src/models/namemodel.cpp \
-    src/models/proxy/packagelastactionproxymodel.cpp \
-    src/models/proxy/packagetypeeventsproxymodel.cpp \
-    src/models/eventmodel.cpp \
     src/helpers/utility.cpp \
-    src/controllers/maincontroller.cpp \
-    src/controllers/pagemanager.cpp \
-    src/models/producermodel.cpp \
-    src/models/relationmodel.cpp \
-    src/models/unusedidsmodel.cpp \
-    src/models/views/abstractmodelview.cpp \
-    src/models/views/calendarviewmodel.cpp \
-    src/models/views/cooperativeviewmodel.cpp \
-    src/models/views/localviewmodel.cpp \
-    src/models/views/packagerelationsviewmodel.cpp \
-    src/models/views/packageviewmodel.cpp \
-    src/models/views/parcelviewmodel.cpp \
-    src/models/views/transactionsviewmodel.cpp \
     src/rest/additionaldatarequest.cpp \
     src/rest/authrequest.cpp \
     src/rest/baserequest.cpp \
     src/rest/restapiclient.cpp \
-    src/controllers/session/sessionmanager.cpp \
-    src/controllers/usermanager.cpp \
     src/rest/entityrequest.cpp \
-    src/controllers/abstractmanager.cpp \
-    src/models/proxy/abstractsortfilterproxymodel.cpp
 
 RESOURCES +=  \
     qml/common.qrc \
@@ -247,7 +306,6 @@ DESTDIR = $$BUILD_DIR/bin
 include(platforms/android/android.pri)
 include(platforms/linux/linux.pri)
 
-#CONFIG += no-openssl    # disable openssl for mcrypto until issue #82497
 ## Modules
 include(../milo/mconfig/mconfig.pri)
 include(../milo/mlog/mlog.pri)

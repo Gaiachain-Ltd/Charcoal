@@ -13,6 +13,7 @@ Items.GPanel
 {
     id: top
     property alias headerVisible: header.visible
+    property alias showCloseButton: header.showCloseButton
     property alias footerVisible: footer.visible
 
     property alias logoVisible: header.logoVisible
@@ -61,6 +62,24 @@ Items.GPanel
     function refreshData() {
         // possibly redefined in each page
         sessionManager.ping()
+    }
+
+    // TODO: use dedicated QtObject to hold these properties!
+    function createSummaryItem(header, value, inputIconSource = "", suffix = "",
+                               delegateType = SupplyChainPageBase.Standard,
+                               highlightColor = "", decorationColor = "",
+                               secondaryTextColor = "") {
+        return {
+            "headerValue": header,
+            "value": value,
+            "inputIconSource": inputIconSource.toString(),
+            "suffixValue": suffix,
+            "delegateType": delegateType,
+            "highlightColor": Utility.colorString(highlightColor),
+            "decorationColor": Utility.colorString(decorationColor),
+            "secondaryTextColor": Utility.colorString(secondaryTextColor),
+            "isHighlighted": (highlightColor !== "")
+        }
     }
 
     header: Components.NavigationHeader {

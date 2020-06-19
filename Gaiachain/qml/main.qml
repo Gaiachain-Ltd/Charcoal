@@ -7,7 +7,7 @@ import com.gaiachain.style 1.0
 import com.gaiachain.static 1.0
 import com.gaiachain.helpers 1.0
 
-import "./items" as Items
+import "items" as Items
 
 ApplicationWindow
 {

@@ -15,6 +15,7 @@ TextField
     property var iconEdge: Enums.Edge.LeftEdge
     property bool showIcon: true
 
+    property int borderWidth: sr(1)
     property color borderColor: GStyle.inputBorderColor
     property color backgroundColor: GStyle.backgroundColor
     property alias iconItem: icon
@@ -53,10 +54,11 @@ TextField
     Keys.onTabPressed: moveToNextInput()
 
     background: Rectangle {
+        id: backgroundRect
         color: enabled ? top.backgroundColor : GStyle.backgroundDisabledColor
         radius: s(GStyle.tinyMargin)
         border {
-            width: sr(1)
+            width: top.borderWidth
             color: top.borderColor
         }
     }
@@ -76,8 +78,8 @@ TextField
             topMargin: top.padding
             bottomMargin: top.padding
         }
-        width: height
 
+        width: height
         visible: status != Image.Null && showIcon
 
         MouseArea {

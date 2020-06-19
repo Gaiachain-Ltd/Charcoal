@@ -11,17 +11,28 @@
 #include "androidpermissionshandler.h"
 #endif
 
-#include "../common/enums.h"
-#include "../common/packagedata.h"
-#include "../common/dataglobals.h"
-#include "../helpers/utility.h"
-#include "../helpers/requestshelper.h"
-#include "../helpers/modelhelper.h"
-#include "../helpers/packagedataproperties.h"
-#include "../helpers/keywordfilterproxymodel.h"
+#include "common/globals.h"
+#include "common/enums.h"
+#include "common/packagedata.h"
+#include "common/dataglobals.h"
+#include "helpers/utility.h"
+#include "helpers/requestshelper.h"
+#include "helpers/modelhelper.h"
+#include "helpers/packagedataproperties.h"
+#include "helpers/keywordfilterproxymodel.h"
 
 #ifdef EASY_LOGIN
 #include "../common/dummy/commondummydata.h"
+#endif
+
+
+#ifdef COCOA
+#include "cocoa/cocoasessionmanager.h"
+#include "cocoa/cocoadatamanager.h"
+#elif CHARCOAL
+#include "charcoal/tickmarkiconprovider.h"
+#include "charcoal/charcoalsessionmanager.h"
+#include "charcoal/charcoaldatamanager.h"
 #endif
 
 template <typename Singleton>
@@ -34,7 +45,14 @@ QObject *registerCppOwnershipSingletonType(QQmlEngine *, QJSEngine *)
 MainController::MainController(QObject *parent)
     : AbstractManager(parent),
       m_application(new Application(this)),
-      m_languageManager(new LanguageManager(this))
+      m_languageManager(new LanguageManager(this)),
+#ifdef COCOA
+      m_sessionManager(new CocoaSessionManager(this)),
+      m_dataManager(new CocoaDataManager(this))
+#elif CHARCOAL
+      m_sessionManager(new CharcoalSessionManager(this)),
+      m_dataManager(new CharcoalDataManager(this))
+#endif
 {
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
@@ -46,63 +64,107 @@ MainController::MainController(QObject *parent)
 
 void MainController::setupConnections()
 {
-    connect(&m_dbManager, &DatabaseManager::databaseReady, &m_dataManager, &DataManager::setupDatabase);
-
     connect(&m_userManager, &UserManager::offlineModeChanged,
-            &m_sessionManager, [sessionManager = &m_sessionManager](bool offlineMode) { sessionManager->setEnabled(!offlineMode); });
-    connect(&m_userManager, &UserManager::tokenChanged, &m_sessionManager, &AbstractSessionManager::updateToken);
-    connect(&m_sessionManager, &AbstractSessionManager::loginAttempt, &m_userManager, &UserManager::handleLoginAttempt);
-    connect(&m_sessionManager, &AbstractSessionManager::loginFinished, &m_userManager, &UserManager::readLoginData);
+            m_sessionManager, [sessionManager = m_sessionManager](bool offlineMode) {
+                sessionManager->setEnabled(!offlineMode);
+            });
 
-    connect(&m_userManager, &UserManager::userDataChanged, &m_dataManager, &DataManager::updateUserData);
+    connect(&m_userManager, &UserManager::tokenChanged,
+            m_sessionManager, &AbstractSessionManager::updateToken);
+    connect(m_sessionManager, &AbstractSessionManager::loginAttempt,
+            &m_userManager, &UserManager::handleLoginAttempt);
+    connect(m_sessionManager, &AbstractSessionManager::loginFinished,
+            &m_userManager, &UserManager::readLoginData);
+
+    connect(&m_dbManager, &DatabaseManager::databaseReady,
+            m_dataManager, &AbstractDataManager::setupDatabase);
+    connect(&m_userManager, &UserManager::userDataChanged,
+            m_dataManager, &AbstractDataManager::updateUserData);
 
     setupDataConnections();
 }
 
 void MainController::setupDataConnections()
 {
-    connect(&m_dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
-            &m_sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
-    connect(&m_dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
-            &m_sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
-    connect(&m_dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&DataManager::addActionRequest),
-            &m_sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
-            const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&AbstractSessionManager::postNewEntity));
+    connect(m_sessionManager, &AbstractSessionManager::connectionStateChanged,
+            m_dataManager, [dataManager = m_dataManager,
+                            userManager = &m_userManager,
+                            pageManager = &m_pageManager]
+            (Enums::ConnectionState connectionState) {
+                if (connectionState == Enums::ConnectionState::ConnectionSuccessful &&
+                    !userManager->isOfflineMode() &&
+                    pageManager->topPage() != Enums::Page::Login &&
+                    pageManager->topPage() != Enums::Page::LoginLoading) {
+                    dataManager->sendOfflineActions();
+                }
+            });
 
-    connect(&m_sessionManager, &AbstractSessionManager::entitySaved,
-            &m_dataManager, &DataManager::onActionAdded);
-    connect(&m_sessionManager, &AbstractSessionManager::entitySaveError,
-            &m_dataManager, &DataManager::onActionAddError);
+#ifdef COCOA
+    const auto sessionManager = qobject_cast<CocoaSessionManager*>(m_sessionManager);
+    const auto dataManager = qobject_cast<CocoaDataManager*>(m_dataManager);
 
-    connect(&m_sessionManager, &AbstractSessionManager::connectionStateChanged,
-            &m_dataManager, [dataManager = &m_dataManager, userManager = &m_userManager, pageManager = &m_pageManager](Enums::ConnectionState connectionState) {
-        if (connectionState == Enums::ConnectionState::ConnectionSuccessful &&
-                !userManager->isOfflineMode() &&
-                pageManager->topPage() != Enums::Page::Login &&
-                pageManager->topPage() != Enums::Page::LoginLoading) {
-            dataManager->sendOfflineActions();
-        }
-    });
+    connect(dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaDataManager::addActionRequest),
+            sessionManager, qOverload<const QString &, const Enums::SupplyChainAction &,
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaSessionManager::postNewEntity));
+    connect(dataManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaDataManager::addActionRequest),
+            sessionManager, qOverload<const QString &, const QByteArray &, const Enums::SupplyChainAction &,
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaSessionManager::postNewEntity));
+    connect(dataManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
+                                      const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaDataManager::addActionRequest),
+            sessionManager, qOverload<const QByteArray &, const Enums::SupplyChainAction &,
+                                         const QGeoCoordinate &, const QDateTime &, const QVariantMap &>(&CocoaSessionManager::postNewEntity));
 
-    connect(&m_dataManager, qOverload<const QDateTime &, const QDateTime &>(&DataManager::eventsInfoNeeded),
-            &m_sessionManager, qOverload<const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
-    connect(&m_dataManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&DataManager::eventsInfoNeeded),
-            &m_sessionManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&AbstractSessionManager::getEntitiesInfo));
-    connect(&m_dataManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&DataManager::eventsInfoNeeded),
-            &m_sessionManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&AbstractSessionManager::getEntitiesInfo));
-    connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
-    connect(&m_dataManager, &DataManager::eventsNeeded, &m_sessionManager, &AbstractSessionManager::getEntities);
-    connect(&m_dataManager, &DataManager::lastActionEventsInfoNeeded, &m_sessionManager, &AbstractSessionManager::getLastActionEntitiesInfo);
+    connect(sessionManager, &CocoaSessionManager::entitySaved,
+            dataManager, &CocoaDataManager::onActionAdded);
+    connect(sessionManager, &CocoaSessionManager::entitySaveError,
+            dataManager, &CocoaDataManager::onActionAddError);
 
-    connect(&m_sessionManager, &AbstractSessionManager::entitiesInfoLoaded, &m_dataManager, &DataManager::onEntitiesInfoLoaded);
-    connect(&m_sessionManager, &AbstractSessionManager::entitiesLoaded, &m_dataManager, &DataManager::onEntitiesLoaded);
-    connect(&m_sessionManager, &AbstractSessionManager::additionalDataLoaded, &m_dataManager, &DataManager::onAdditionalDataLoaded);
-    connect(&m_sessionManager, &AbstractSessionManager::unusedLotIdsLoaded, &m_dataManager, &DataManager::onUnusedLotIdsLoaded);
+    connect(dataManager, qOverload<const QDateTime &, const QDateTime &>(&CocoaDataManager::eventsInfoNeeded),
+            sessionManager, qOverload<const QDateTime &, const QDateTime &>(&CocoaSessionManager::getEntitiesInfo));
+    connect(dataManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&CocoaDataManager::eventsInfoNeeded),
+            sessionManager, qOverload<int, int, const QDateTime &, const QDateTime &>(&CocoaSessionManager::getEntitiesInfo));
+    connect(dataManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&CocoaDataManager::eventsInfoNeeded),
+            sessionManager, qOverload<int, int, const QString &, const QSet<Enums::PackageType> &, int>(&CocoaSessionManager::getEntitiesInfo));
+    connect(dataManager, &CocoaDataManager::lastActionEventsInfoNeeded,
+            sessionManager, &CocoaSessionManager::getLastActionEntitiesInfo);
+    connect(dataManager, &CocoaDataManager::eventsNeeded,
+            sessionManager, &CocoaSessionManager::getEntities);
+    connect(dataManager, &CocoaDataManager::lastActionEventsInfoNeeded,
+            sessionManager, &CocoaSessionManager::getLastActionEntitiesInfo);
+
+    connect(sessionManager, &CocoaSessionManager::entitiesInfoLoaded,
+            dataManager, &CocoaDataManager::onEntitiesInfoLoaded);
+    connect(sessionManager, &CocoaSessionManager::entitiesLoaded,
+            dataManager, &CocoaDataManager::onEntitiesLoaded);
+    connect(sessionManager, &CocoaSessionManager::additionalDataLoaded,
+            dataManager, &CocoaDataManager::onAdditionalDataLoaded);
+
+    connect(sessionManager, &CocoaSessionManager::unusedLotIdsLoaded,
+            dataManager, &CocoaDataManager::onUnusedLotIdsLoaded);
+
+#elif CHARCOAL
+    // TODO: use a regular slot in PageManager
+    connect(&m_notificationsManager, &NotificationManager::notify,
+            &m_pageManager, [this](const Enums::Page page,
+                                   const QString &header,
+                                   const QString &text,
+                                   const QString &redirectText) {
+                qDebug() << "Please notify!" << page << header << text << redirectText;
+                m_pageManager.openPopup(Enums::Popup::NotificationWithLink,
+                                        {
+                                            { "headerText", header },
+                                            { "text", text },
+                                            { "redirectText", redirectText },
+                                            { "redirectPage", int(page) }
+                                        });
+            });
+
+    connect(&m_pageManager, &PageManager::stepComplete,
+            &m_notificationsManager, &NotificationManager::stepComplete,
+            Qt::QueuedConnection);
+#endif
 }
 
 void MainController::initialWork()
@@ -176,8 +238,17 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     m_pageManager.setupQmlContext(engine);
     m_userManager.setupQmlContext(engine);
     m_dbManager.setupQmlContext(engine);
-    m_dataManager.setupQmlContext(engine);
-    m_sessionManager.setupQmlContext(engine);
+    m_sessionManager->setupQmlContext(engine);
+    m_dataManager->setupQmlContext(engine);
+
+#ifdef CHARCOAL
+    m_picturesManager.setupQmlContext(engine);
+    m_notificationsManager.setupQmlContext(engine);
+
+    auto tickMarkProvider = new TickMarkIconProvider;
+    tickMarkProvider->setPicturesManager(&m_picturesManager);
+    engine.addImageProvider(TickMarkIconProvider::name(), tickMarkProvider);
+#endif
 
     setupQZXing(engine);
 }

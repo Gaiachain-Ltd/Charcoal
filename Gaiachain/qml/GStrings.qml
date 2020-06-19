@@ -10,6 +10,8 @@ QtObject {
     property string cancel: tr.empty + qsTr("Cancel")
     property string yes: tr.empty + qsTr("Yes")
     property string no: tr.empty + qsTr("No")
+    property string save: tr.empty + qsTr("Save")
+    property string clear: tr.empty + qsTr("Clear")
 
     property string empty: ""
 
@@ -176,7 +178,195 @@ QtObject {
     property string activities: tr.empty + qsTr("activities")
 
     // special
-    property string dateFormat: tr.empty + qsTr("MM/dd/yyyy")
+    property string dateFormat: tr.empty + ((mainController.flavor === "cocoa")?
+                                                qsTr("MM/dd/yyyy") : qsTr("dd/MM/yyyy"))
+    property string idDateFormat: tr.empty + qsTr("dd-MM-yyyy")
     property string checkMark: "\u2713"
     property string minus: "-"
+
+    // miscellaneous
+    property string height: tr.empty + qsTr("height")
+    property string length: tr.empty + qsTr("length")
+    property string width: tr.empty + qsTr("width")
+
+    // Help
+    property string helpTitle: tr.empty + qsTr("What is %1?")
+
+    // Charcoal
+    property string tracking: tr.empty + qsTr("Tracking")
+    property string replantation: tr.empty + qsTr("Replantation")
+    property string logging: tr.empty + qsTr("Logging")
+    property string loggingBeginning: tr.empty + qsTr("Logging beginning")
+    property string loggingEnding: tr.empty + qsTr("Logging ending")
+    property string carbonization: tr.empty + qsTr("Carbonization")
+    property string carbonizationBeginning: tr.empty + qsTr("Carbonization beginning")
+    property string carbonizationEnding: tr.empty + qsTr("Carbonization ending")
+    property string loadingAndTransport: tr.empty + qsTr("Loading and transport")
+    //property string reception: tr.empty + qsTr("Reception")
+
+    // Charcoal - user info
+    property string userInfoPageTitle: tr.empty + qsTr("Malebi rep's ID details")
+    property string userInfoName: tr.empty + qsTr("Name and surname")
+    property string userInfoJob: tr.empty + qsTr("Function")
+    property string userInfoContact: tr.empty + qsTr("Contact")
+    property string userInfoCode: tr.empty + qsTr("Code")
+
+    property string userInfoNameHelp: tr.empty + qsTr("Dummy text - user name help")
+    property string userInfoJobHelp: tr.empty + qsTr("Dummy text - user function help")
+    property string userInfoContactHelp: tr.empty + qsTr("Dummy text - user contact help")
+    property string userInfoCodeHelp: tr.empty + qsTr("Dummy text - user code help")
+
+    // Charcoal - logging beginning page
+    property string parcel: tr.empty + qsTr("Parcel")
+    property string malebiRepsId: tr.empty + qsTr("Malebi Rep's ID")
+    //property string village: tr.empty + qsTr("Village")
+    property string treeSpecies: tr.empty + qsTr("Tree species")
+    property string beginningDate: tr.empty + qsTr("Beginning date")
+    property string createPlotId: tr.empty + qsTr("Create plot ID")
+    property string plotId: tr.empty + qsTr("Plot ID")
+    property string selectParcel: tr.empty + qsTr("Select parcel")
+    property string selectVillage: tr.empty + qsTr("Select village")
+    property string selectTreeSpecies: tr.empty + qsTr("Select tree species")
+
+    property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")
+    property string loggingBeginningRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
+    property string loggingBeginningVillageHelp: tr.empty + qsTr("Dummy text - village help")
+    property string loggingBeginningTreeSpeciesHelp: tr.empty + qsTr("Dummy text - tree species help")
+    property string loggingBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
+    property string loggingBeginningGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
+
+    // Charcoal - logging ending page
+    property string endingDate: tr.empty + qsTr("Ending date")
+    property string numberOfTrees: tr.empty + qsTr("Number of trees")
+    property string updatePlotId: tr.empty + qsTr("Update Plot ID")
+
+    property string loggingEndingPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
+    property string loggingEndingRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
+    property string loggingEndingEndingDateHelp: tr.empty + qsTr("Dummy text - ending date help")
+    property string loggingEndingNumberOfTreesHelp: tr.empty + qsTr("Dummy text - number of trees help")
+    property string loggingEndingGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
+
+    // Charcoal - carbonization beginning page
+    property string ovenId: tr.empty + qsTr("Oven ID")
+    property string carbonizerId: tr.empty + qsTr("Carbonizer ID")
+    property string timberVolume: tr.empty + qsTr("Timber volume")
+    property string ovenType: tr.empty + qsTr("Oven type")
+    property string ovenDimensions: tr.empty + qsTr("Oven measurement (meters)")
+    property string selectPlotId: tr.empty + qsTr("Select plot ID")
+    property string selectOvenType: tr.empty + qsTr("Select oven type")
+
+    property string carbonizationBeginningPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
+    property string carbonizationBeginningOvenIdHelp: tr.empty + qsTr("Dummy text - oven id help")
+    property string carbonizationBeginningCarbonizerIdHelp: tr.empty + qsTr("Dummy text - carbonizer id help")
+    property string carbonizationBeginningBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
+    property string carbonizationBeginningOvenTypeHelp: tr.empty + qsTr("Dummy text - oven type help")
+    property string carbonizationBeginningOvenDimensionsHelp: tr.empty + qsTr("Dummy text - oven measurements help")
+    property string carbonizationBeginningGpsHelp: tr.empty + qsTr("Dummy text - GPS position help")
+
+    // Charcoal - carbonization ending page
+    property string carbonizationEndingDate: tr.empty + qsTr("Carbonization end date")
+    property string selectOvenId: tr.empty + qsTr("Select oven ID")
+    property string selectHarvestId: tr.empty + qsTr("Select harvest ID")
+
+    property string carbonizationEndingHarvestIdHelp: tr.empty + qsTr("Dummy text - harvest ID help")
+    property string carbonizationEndingOvenIdHelp: tr.empty + qsTr("Dummy text - oven ID help")
+    property string carbonizationEndingCarbonizerIdHelp: tr.empty + qsTr("Dummy text -  carbonizer ID help")
+    property string carbonizationEndingEndingDateHelp: tr.empty + qsTr("Dummy text - carbonization ending date help")
+    property string carbonizationEndingGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // Charcoal - loading and transport page
+    property string transportId: tr.empty + qsTr("Transport Id")
+    property string numberOfBags: tr.empty + qsTr("Number of bags")
+    property string plateNumber: tr.empty + qsTr("Plate number")
+    property string loadAndScanBags: tr.empty + qsTr("Load & scan bags")
+    property string loadingDate: tr.empty + qsTr("Loading date")
+    property string deliveryDestination: tr.empty + qsTr("Delivery destination")
+    property string selectDeliveryDestination: tr.empty + qsTr("Select delivery destination")
+
+    property string loadingAndTransportHarvestIdHelp: tr.empty + qsTr("Dummy text - harvest ID help")
+    property string loadingAndTransportPlateNumberHelp: tr.empty + qsTr("Dummy text - plate number help")
+    property string loadingAndTransportLoadingDateHelp: tr.empty + qsTr("Dummy text - loading date help")
+    property string loadingAndTransportDeliveryDestinationHelp: tr.empty + qsTr("Dummy text - delivery destination help")
+    property string loadingAndTransportGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // Charcoal - reception page
+    property string receiveDocumentsAndReceipt: tr.empty + qsTr("Receive documents and receipt")
+    property string scanAllBagsFromTruck: tr.empty + qsTr("Scan all bags from truck")
+    property string receptionDateCharcoal: tr.empty + qsTr("Time & Date stamp")
+
+    property string documents: tr.empty + qsTr("Documents")
+    property string receipt: tr.empty + qsTr("Receipt")
+    property string approved: tr.empty + qsTr("Approved")
+    property string noPhoto: tr.empty + qsTr("No photo")
+    property string numberOfBagsDetail: tr.empty + qsTr("%1 of %2")
+
+    property string receptionUnloadingDateHelp: tr.empty + qsTr("Dummy text - unloading timestamp help")
+    property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // Charcoal - supply chain finalization page
+    property string doYouWantToCompleteSupplyChain: tr.empty + qsTr("Do you want to complete the supply chain?")
+    property string totalNumberOfScannedBags: tr.empty + qsTr("total number of scanned bags")
+    property string totalNumberOfRegisteredTrucks: tr.empty + qsTr("total number of registered trucks")
+
+    // Charcoal - tracking page
+    property string allTab: tr.empty + qsTr("All")
+    property string plotTab: tr.empty + qsTr("Plot")
+    property string harvestTab: tr.empty + qsTr("Harvest")
+    property string transportTab: tr.empty + qsTr("Transport")
+
+    // Charcoal - replantation page
+    property string numberOfTreesPlanted: tr.empty + qsTr("Number of trees planted")
+    property string userId: tr.empty + qsTr("User Id")
+
+    property string replantationPlotIdHelp: tr.empty + qsTr("Dummy text - plot ID help")
+    property string replantationNumberOfTreesHelp: tr.empty + qsTr("Dummy text - number of trees planted help")
+    property string replantationTreeSpeciesHelp: tr.empty + qsTr("Dummy text - tree species help")
+    property string replantationUserIdHelp: tr.empty + qsTr("Dummy text - user id help")
+    property string replantationBeginningDateHelp: tr.empty + qsTr("Dummy text - beginning date help")
+    property string replantationEndingDateHelp: tr.empty + qsTr("Dummy text - ending date help")
+    property string replantationGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+
+    // QR
+    property string qrCodeAlreadyAssigned: tr.empty + qsTr("QR code already assigned!")
+    property string qrCodeScannedSuccessfully: tr.empty + qsTr("QR code scanned successfully")
+    property string doYouGoToTheNextOven: tr.empty + qsTr("Do you go to the next oven?")
+
+    property string fixQrCodeToEachBagInfoText: tr.empty + qsTr("Fix QR code to each bag, then scan the qr code in order to assign it to the bag")
+    property string scanAllBagsInfoText: tr.empty + qsTr("Scan all bags' QR codes that go to selected truck")
+    property string scanAllBagsToCheckInfoText: tr.empty + qsTr("Scan QR code from all bags on truck to check transport")
+
+    property string deleteAllScannedCodes: tr.empty + qsTr("Delete all scanned QR codes")
+    property string scannedBagsPopupText: tr.empty + qsTr("You have <font color=\"#65cb00\">%1</font> scanned bags in your local working copy")
+    property string scannedBagsSavePopupText: tr.empty + qsTr("You have <font color=\"#65cb00\">%1</font> scanned bags. Do you want to save them?")
+
+    property string clearAllScannedQrCodes: tr.empty + qsTr("Do you want to <font color=\"#E40000\">clear</font> all scanned QR codes?")
+
+    property string deleteText: tr.empty + qsTr("Delete")
+    property string restore: tr.empty + qsTr("Restore")
+
+    // Taking photos
+    property string takePhotoDocumentsInfoText: tr.empty + qsTr("Take a photo of the signature and stamp on the permit and the Carnet de Voyage by the authorities")
+    property string takePhotoReceiptInfoText: tr.empty + qsTr("Take a photo of the receipt")
+    property string skip: tr.empty + qsTr("Skip")
+    property string takeAPhoto: tr.empty + qsTr("Take a photo")
+    property string photoTaken: tr.empty + qsTr("Photo taken")
+    property string uploadThis: tr.empty + qsTr("Upload this?")
+    property string photoAdded: tr.empty + qsTr("Photo added")
+    property string addAnother: tr.empty + qsTr("Add another?")
+    property string cameraErrorString: tr.empty + qsTr("Camera error: %1")
+
+    // Charcoal misc
+    property string selectDate: tr.empty + qsTr("Select date")
+    property string cantSelectThisDay: tr.empty + qsTr("You can't select this day")
+
+    property string plotIdDetails: tr.empty + qsTr("Plot ID details")
+    property string harvestIdDetails: tr.empty + qsTr("Harvest ID details")
+    property string transportIdDetails: tr.empty + qsTr("Transport ID details")
+    property string transportReceptionDate: tr.empty + qsTr("Reception at the storage facility")
+    property string uploaded: tr.empty + qsTr("Uploaded")
+
+    property string select: tr.empty + qsTr("Select")
+
+    // Notifications
+    property string redirect: tr.empty + qsTr("Go to: %1")
 }

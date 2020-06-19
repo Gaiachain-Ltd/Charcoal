@@ -11,9 +11,17 @@ class AdditionalDataRequest : public BaseRequest
 public:
     enum class DataType {
         All = 0,
+#ifdef COCOA
         Producers,
         Companies,
-        Destinations
+#endif
+        Destinations,
+#ifdef CHARCOAL
+        OvenTypes,
+        Parcels,
+        TreeSpecies,
+        Villages
+#endif
     };
     Q_ENUM(DataType)
 

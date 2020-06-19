@@ -128,11 +128,33 @@ EntityRequest::EntityRequest(const QString &token, const QByteArray &codeData, c
     mRequestDocument.setObject(docObj);
 }
 
-EntityRequest::EntityRequest(const QString &token, const Enums::PackageType &packageType, bool create)
-    : EntityRequest(packageType == Enums::PackageType::Lot ? (create ? RequestType::PostUnusedLot
-                                                                     : RequestType::GetUnusedLots)
-                                                           : RequestType::Invalid, token)
-{}
+EntityRequest::EntityRequest(const QString &token,
+                             const Enums::PackageType &packageType,
+                             bool create)
+    : EntityRequest(getDefaultRequestType(packageType, create), token)
+{
+}
+
+EntityRequest::RequestType EntityRequest::getDefaultRequestType(
+    const Enums::PackageType &packageType, bool create)
+{
+#ifdef COCOA
+    if (packageType == Enums::PackageType::Lot) {
+        if (create) {
+            return RequestType::PostUnusedLot;
+        } else {
+            return RequestType::GetUnusedLots;
+        }
+    } else {
+        return RequestType::Invalid;
+    }
+#elif CHARCOAL
+    Q_UNUSED(packageType)
+    Q_UNUSED(create)
+    qWarning() << "Lacking implementation for" << Q_FUNC_INFO;
+    return RequestType::Invalid;
+#endif
+}
 
 bool EntityRequest::isTokenRequired() const
 {

@@ -4,7 +4,7 @@
 #include <QQmlContext>
 #include <QTimer>
 
-#include "../src/controllers/maincontroller.h"
+#include "src/controllers/maincontroller.h"
 #include "../milo/mlog/mlog.h"
 
 // Prepare logging categories. Modify these to your needs
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(AppName);
 
     qCInfo(coreMain) << "\nName:" << app.applicationName()
-                     << "\nApp domain:" << app.organizationDomain()
+                     << "\nApp domain:" << AppDomain
                      << "\nFlavor:"
 #ifdef COCOA
                      << "Cocoa"

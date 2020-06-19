@@ -24,20 +24,36 @@ namespace Enums {
         Login,
         LoginLoading,
         MainMenu,
-        QRScanner,              // TODO check if still needed
+        QRScanner,
         Transactions,
         WaitingTransactions,
-        Tracking,
         PackageData,
+        Help,
+        SupplyChainSummary,
+#ifdef COCOA
+        Tracking,
         SupplyChainHarvest,
         SupplyChainGrainProcessing,
         SupplyChainSectionReception,
-        SupplyChainBagging, 
+        SupplyChainBagging,
         SupplyChainAddHarvestId,
         SupplyChainLotCreation,
         SupplyChainWarehouseTransport,
         SupplyChainExportReception,
-        SupplyChainSummary,
+#elif CHARCOAL
+        SupplyChainLoggingBeginning,
+        SupplyChainLoggingEnding,
+        SupplyChainCarbonizationBeginning,
+        SupplyChainCarbonizationEnding,
+        SupplyChainLoadingAndTransport,
+        SupplyChainReception,
+        SupplyChainFinalize,
+        PageTracking,
+        PageReplantation,
+        UserInfo,
+        TakeDocumentPictures,
+        PhotoGallery,
+#endif
 
         PageCount
     };
@@ -54,6 +70,7 @@ namespace Enums {
         Comment,
         Text,
         About,
+        NotificationWithLink,
 
         PopupCount
     };
@@ -117,11 +134,18 @@ namespace Enums {
 
     enum class UserType {
         Annonymous = -1,
+#ifdef COCOA
         SuperUser,
         Inspector,
         PCA,
         Warehouseman,
         CooperativeRepresentative,
+#elif CHARCOAL
+        SuperUser,
+        Director = SuperUser,
+        Logger,
+        Carbonizer,
+#endif
 
         UserTypeCount
     };
@@ -141,9 +165,15 @@ namespace Enums {
 
     enum class PackageType {
         Unknown = -1,
+#ifdef COCOA
         Harvest,
         Sac,
         Lot,
+#elif CHARCOAL
+        Plot,
+        Harvest,
+        Transport,
+#endif
 
         PackageTypeCount
     };
@@ -152,6 +182,7 @@ namespace Enums {
 
     enum class SupplyChainAction {
         Unknown = -1,
+#ifdef COCOA
         Harvest,
         GrainProcessing,
         SectionReception,
@@ -159,6 +190,16 @@ namespace Enums {
         LotCreation,
         WarehouseTransport,
         ExportReception,
+#elif CHARCOAL
+        LoggingBeginning,
+        LoggingEnding,
+        CarbonizationBeginning,
+        CarbonizationEnding,
+        LoadingAndTransport,
+        Reception,
+        Tracking,
+        Replantation,
+#endif
 
         SupplyChainActionCount
     };

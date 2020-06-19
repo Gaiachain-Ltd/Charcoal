@@ -30,6 +30,8 @@ public:
     Q_INVOKABLE qreal clamp(qreal v, qreal min, qreal max) const;
 
     Q_INVOKABLE int parseInt(const QString &num) const;
+    Q_INVOKABLE QString constDigitsNumber(const int number, const int digits) const;
+
     Q_INVOKABLE QDate convertDateString(const QString &dateStr, const QString &dateFormat = QString()) const;
     Q_INVOKABLE QString defaultDateFormat() const;
 
@@ -38,9 +40,17 @@ public:
 
     Q_INVOKABLE int getScannedIdLength() const;
 
+    Q_INVOKABLE QVariantMap arrayToObject(const QVariantList &list) const;
+
+    // TODO: Consider creating QML-instantiatable, QObject-based date type
+    // with this functionality built-in
     Q_INVOKABLE bool isWeekend(const QDate &date) const;
+    Q_INVOKABLE QDate previousMonth(const QDate &date) const;
+    Q_INVOKABLE QDate nextMonth(const QDate &date) const;
 
     Q_INVOKABLE QString formatRawId(QString id) const;
+
+    Q_INVOKABLE QString colorString(const QColor &color) const;
 
     template <typename C, std::enable_if_t<is_qt_array_type<C>::value, int> = 0>
     static QVariantList toVariantList(const C &arrayType, QMetaType::Type converToType = QMetaType::Void)

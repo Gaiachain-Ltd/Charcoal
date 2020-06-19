@@ -3,15 +3,24 @@ import QtQuick.Layouts 1.11
 
 import com.gaiachain.enums 1.0
 import com.gaiachain.style 1.0
+import com.gaiachain.helpers 1.0
 
 import "../items" as Items
 
 GPage {
     id: top
 
+    enum DelegateType {
+        Standard,
+        Row,
+        Column,
+        ColumnStack
+    }
+
     default property alias pageContent: contentLayout.data
     property bool validPageData: true
 
+    property alias proceedButtonVisible: proceedButton.visible
     property alias proceedButtonEnabled: proceedButton.enabled
     property alias proceedButtonText: proceedButton.text
 
@@ -41,12 +50,8 @@ GPage {
     }
 
     ColumnLayout {
-        anchors {
-            fill: parent
-            margins: s(GStyle.hugeMargin)
-        }
-
-        spacing: s(GStyle.bigMargin)
+        anchors.fill: parent
+        spacing: s(GStyle.mediumMargin)
 
         Flickable {
             Layout.fillWidth: true
@@ -79,6 +84,9 @@ GPage {
         Items.GButton {
             id: proceedButton
 
+            Layout.leftMargin: s(GStyle.hugeMargin)
+            Layout.rightMargin: Layout.leftMargin
+            Layout.bottomMargin: Layout.leftMargin
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignBottom
 

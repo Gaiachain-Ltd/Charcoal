@@ -3,7 +3,11 @@
 
 #include <QSettings>
 
-#include "../common/userdata.h"
+#ifdef COCOA
+#include "cocoa/cocoauserdata.h"
+#elif CHARCOAL
+#include "charcoal/charcoaluserdata.h"
+#endif
 
 class OfflineUsersHandler final
 {

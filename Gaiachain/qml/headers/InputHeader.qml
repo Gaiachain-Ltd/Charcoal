@@ -10,7 +10,6 @@ import "../headers" as Headers
 Headers.GHeader {
     id: top
 
-    property alias color: input.color
     property url iconSource
     property alias placeholderText: input.placeholderText
     property alias validator: input.validator
@@ -23,9 +22,13 @@ Headers.GHeader {
 
     property bool optional: false
     readonly property bool isEmpty: (inputText === Strings.empty)
+    property alias borderWidth: input.borderWidth
 
     property alias showIcon: input.showIcon
     signal iconClicked
+
+    property bool forceBoldValue: false
+    property int valueFontSize: s(GStyle.inputPixelSize)
 
     function clear() {
         inputText = Strings.empty
@@ -35,6 +38,8 @@ Headers.GHeader {
         id: input
 
         Layout.fillWidth: true
+        Layout.leftMargin: top.margins
+        Layout.rightMargin: top.margins
 
         readonly property real iconItemSpacing: iconItem.visible ? iconItem.width + 2 * iconItem.horizontalMargins : GStyle.none
         readonly property real suffixItemSpacing: suffix.visible ? suffix.contentWidth + s(GStyle.hugeMargin) * 2 : GStyle.none
@@ -42,6 +47,12 @@ Headers.GHeader {
 
         focus: false
         rightPadding: (itemsSpacing === GStyle.none ? padding : itemsSpacing)
+
+        backgroundColor: top.backgroundColor
+        color: secondaryTextColor
+        font.bold: top.highlighted || forceBoldValue
+        font.pixelSize: valueFontSize
+        borderWidth: top.summaryMode? 0 : sr(1)
 
         iconEdge: Enums.Edge.RightEdge
 
@@ -67,6 +78,9 @@ Headers.GHeader {
             font: parent.font
             color: parent.color
             visible: (suffixText !== Strings.empty)
+            palette {
+                base: parent.backgroundColor
+            }
 
             text: suffixText
         }

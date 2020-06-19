@@ -18,6 +18,8 @@ Headers.GHeader {
         id: description
 
         Layout.fillWidth: true
+        Layout.leftMargin: top.margins
+        Layout.rightMargin: top.margins
         Layout.maximumHeight: s(GStyle.genericTextAreaHeight)
         Layout.minimumHeight: s(GStyle.genericTextAreaHeight)
     }

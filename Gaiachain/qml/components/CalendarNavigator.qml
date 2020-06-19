@@ -17,6 +17,9 @@ Item {
     property int currentYear
 
     property bool returnButton: true
+    property bool sparseLayout: false
+
+    property int fontCapitalization: Font.MixedCase
 
     signal next()
     signal previous()
@@ -33,6 +36,25 @@ Item {
 
         spacing: s(GStyle.smallMargin)
 
+        Items.ImageButton {
+            id: previousSparse
+
+            Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
+            Layout.preferredWidth: s(GStyle.buttonImageSmallHeight)
+
+            palette.button: GStyle.calendarArrowButtonColor
+            source: GStyle.leftBlackArrowImgUrl
+            padding: s(GStyle.tinyMargin)
+            visible: sparseLayout
+
+            onClicked: top.previous()
+        }
+
+        Items.LayoutSpacer {
+            Layout.fillWidth: true
+            visible: sparseLayout
+        }
+
         Items.GText {
             Layout.alignment: Qt.AlignVCenter
 
@@ -40,6 +62,7 @@ Item {
             text: Helper.getMonthName(currentMonth) + " " + currentYear
             font.weight: Font.DemiBold
             font.pixelSize: s(GStyle.subtitlePixelSize)
+            font.capitalization: top.fontCapitalization
 
             MouseArea {
                 anchors.fill: parent
@@ -63,12 +86,15 @@ Item {
         Items.LayoutSpacer { Layout.fillWidth: true }
 
         Items.ImageButton {
+            id: previousTight
+
             Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
             Layout.preferredWidth: s(GStyle.buttonImageSmallHeight)
 
             palette.button: GStyle.calendarArrowButtonColor
             source: GStyle.leftBlackArrowImgUrl
             padding: s(GStyle.tinyMargin)
+            visible: !sparseLayout
 
             onClicked: top.previous()
         }

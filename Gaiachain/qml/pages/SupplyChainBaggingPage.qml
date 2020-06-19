@@ -171,7 +171,7 @@ Pages.SupplyChainPage {
         Layout.fillWidth: true
 
         readOnly: true
-        color: GStyle.headerBackgroundColor
+        backgroundColor: GStyle.headerBackgroundColor
 
         headerText: Strings.nameCooperative
         inputText: userManager.userData.cooperativeName

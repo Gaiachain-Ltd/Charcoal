@@ -3,11 +3,23 @@
 #include "../helpers/utility.h"
 
 const QList<Enums::SupplyChainAction> DataGlobals::sc_supplyChainOfflineActions = {
+#ifdef COCOA
     Enums::SupplyChainAction::Harvest,
     Enums::SupplyChainAction::GrainProcessing
+#elif CHARCOAL
+    Enums::SupplyChainAction::LoggingBeginning,
+    Enums::SupplyChainAction::LoggingEnding,
+    Enums::SupplyChainAction::CarbonizationBeginning,
+    Enums::SupplyChainAction::CarbonizationEnding,
+    Enums::SupplyChainAction::LoadingAndTransport,
+    Enums::SupplyChainAction::Reception,
+    Enums::SupplyChainAction::Tracking,
+    Enums::SupplyChainAction::Replantation
+#endif
 };
 
 const QHash<Enums::SupplyChainAction, Enums::PackageType> DataGlobals::sc_supplyChainActionPackageType = {
+#ifdef COCOA
     { Enums::SupplyChainAction::Harvest, Enums::PackageType::Harvest },
     { Enums::SupplyChainAction::GrainProcessing, Enums::PackageType::Harvest },
     { Enums::SupplyChainAction::SectionReception, Enums::PackageType::Harvest },
@@ -15,32 +27,71 @@ const QHash<Enums::SupplyChainAction, Enums::PackageType> DataGlobals::sc_supply
     { Enums::SupplyChainAction::LotCreation, Enums::PackageType::Lot },
     { Enums::SupplyChainAction::WarehouseTransport, Enums::PackageType::Lot},
     { Enums::SupplyChainAction::ExportReception, Enums::PackageType::Lot }
+#elif CHARCOAL
+    // TODO: add package types, if needed
+#endif
 };
 
 const QHash<Enums::PackageType, Enums::SupplyChainAction> DataGlobals::sc_packageTypeCreationAction = {
+#ifdef COCOA
     { Enums::PackageType::Harvest, Enums::SupplyChainAction::Harvest},
     { Enums::PackageType::Sac, Enums::SupplyChainAction::Bagging },
     { Enums::PackageType::Lot, Enums::SupplyChainAction::LotCreation }
+#elif CHARCOAL
+#endif
 };
 
 const QHash<Enums::UserType, QList<Enums::SupplyChainAction>> DataGlobals::sc_supplyChainActionPerUser = {
-    { Enums::UserType::SuperUser, QList<Enums::SupplyChainAction>{ Enums::SupplyChainAction::Harvest,
-                                                                   Enums::SupplyChainAction::GrainProcessing,
-                                                                   Enums::SupplyChainAction::SectionReception,
-                                                                   Enums::SupplyChainAction::Bagging,
-                                                                   Enums::SupplyChainAction::LotCreation,
-                                                                   Enums::SupplyChainAction::WarehouseTransport,
-                                                                   Enums::SupplyChainAction::ExportReception, } },
-    { Enums::UserType::Inspector, QList<Enums::SupplyChainAction>{ Enums::SupplyChainAction::Harvest,
-                                                                   Enums::SupplyChainAction::GrainProcessing } },
-    { Enums::UserType::PCA, QList<Enums::SupplyChainAction>{ Enums::SupplyChainAction::SectionReception,
-                                                             Enums::SupplyChainAction::Bagging,
-                                                             Enums::SupplyChainAction::LotCreation } },
-    { Enums::UserType::Warehouseman, QList<Enums::SupplyChainAction>{ Enums::SupplyChainAction::SectionReception,
-                                                                      Enums::SupplyChainAction::Bagging,
-                                                                      Enums::SupplyChainAction::LotCreation,
-                                                                      Enums::SupplyChainAction::WarehouseTransport } },
-    { Enums::UserType::CooperativeRepresentative, QList<Enums::SupplyChainAction>{ Enums::SupplyChainAction::ExportReception } }
+#ifdef COCOA
+    { Enums::UserType::SuperUser,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::Harvest,
+         Enums::SupplyChainAction::GrainProcessing,
+         Enums::SupplyChainAction::SectionReception,
+         Enums::SupplyChainAction::Bagging,
+         Enums::SupplyChainAction::LotCreation,
+         Enums::SupplyChainAction::WarehouseTransport,
+         Enums::SupplyChainAction::ExportReception, } },
+    { Enums::UserType::Inspector,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::Harvest,
+         Enums::SupplyChainAction::GrainProcessing } },
+    { Enums::UserType::PCA,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::SectionReception,
+         Enums::SupplyChainAction::Bagging,
+         Enums::SupplyChainAction::LotCreation } },
+    { Enums::UserType::Warehouseman,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::SectionReception,
+         Enums::SupplyChainAction::Bagging,
+         Enums::SupplyChainAction::LotCreation,
+         Enums::SupplyChainAction::WarehouseTransport } },
+    { Enums::UserType::CooperativeRepresentative,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::ExportReception } }
+#elif CHARCOAL
+    { Enums::UserType::Director,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::LoggingBeginning,
+         Enums::SupplyChainAction::LoggingEnding,
+         Enums::SupplyChainAction::CarbonizationBeginning,
+         Enums::SupplyChainAction::CarbonizationEnding,
+         Enums::SupplyChainAction::LoadingAndTransport,
+         Enums::SupplyChainAction::Reception,
+         Enums::SupplyChainAction::Tracking,
+         Enums::SupplyChainAction::Replantation } },
+    { Enums::UserType::Logger,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::LoggingBeginning,
+         Enums::SupplyChainAction::LoggingEnding } },
+    { Enums::UserType::Carbonizer,
+     QList<Enums::SupplyChainAction>{
+         Enums::SupplyChainAction::LoggingBeginning,
+         Enums::SupplyChainAction::LoggingEnding,
+         Enums::SupplyChainAction::CarbonizationBeginning,
+         Enums::SupplyChainAction::CarbonizationEnding } }
+#endif
 };
 
 DataGlobals &DataGlobals::instance()

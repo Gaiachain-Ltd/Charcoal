@@ -13,6 +13,10 @@ Item {
     readonly property bool isOnHomePage: pageManager.isOnHomePage()
     readonly property bool isBackToHomePage: pageManager.isBackToHomePage()
 
+    property bool showCloseButton: true
+    property bool showBackButton: !(isOnHomePage || isBackToHomePage)
+    property bool enableBackButton: showBackButton
+
     function logout() {
         pageManager.backTo(Enums.Page.Login)
         userManager.logOut()
@@ -22,6 +26,13 @@ Item {
     property bool logoVisible: false
 
     implicitHeight: s(GStyle.headerHeight)
+
+    /*
+     * Reimplement in object for custom handling
+     */
+    function goBack() {
+        backHandler()
+    }
 
     Items.BlockMouseArea{}
 
@@ -44,11 +55,12 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
-            opacity: isOnHomePage || isBackToHomePage ? 0 : 1
-            enabled: !isOnHomePage && !isBackToHomePage
+            opacity: top.showBackButton
+            enabled: top.enableBackButton
+
             source: GStyle.backImgUrl
 
-            onClicked: backHandler()
+            onClicked: goBack()
         }
 
         Items.LayoutSpacer { visible: !logoVisible }
@@ -71,6 +83,7 @@ Item {
             text: title
             color: GStyle.textSecondaryColor
             font.pixelSize: s(GStyle.titlePixelSize)
+            font.capitalization: GStyle.headerCapitalization
             wrapMode: Text.WordWrap
 
             visible: !logoVisible
@@ -83,7 +96,7 @@ Item {
             Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
             source: GStyle.closeImgUrl
-            visible: !isOnHomePage
+            visible: !isOnHomePage && showCloseButton
 
             onClicked: backToHomeHandler()
         }

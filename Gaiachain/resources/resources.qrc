@@ -3,12 +3,12 @@
         <file alias="back">ui/icon-back.svg</file>
         <file alias="email">ui/icon-email.svg</file>
         <file alias="logout">ui/icon-exit.svg</file>
-        <file alias="logo-white">ui/gaiachain-logo-white.svg</file>
+        <file alias="logoWhite">ui/gaiachain-logo-white.svg</file>
         <file alias="password">ui/icon-password.svg</file>
         <file alias="ok">ui/ok-icon.svg</file>
         <file alias="spinner">ui/loader.svg</file>
         <file alias="refresh">ui/icon-refresh.svg</file>
-        <file alias="logo-icon">ui/gaiachain-logo-icon.svg</file>
+        <file alias="logoIcon">ui/gaiachain-logo-icon.svg</file>
         <file alias="user">ui/gaia-icon.svg</file>
         <file alias="loadingLogoOne">ui/loading-1.svg</file>
         <file alias="loadingLogoTwo">ui/loading-2.svg</file>
@@ -17,8 +17,8 @@
         <file alias="menuCalendar">ui/icon-calendar.svg</file>
         <file alias="menuTransactions">ui/icon-transactions.svg</file>
         <file alias="close">ui/close-icon.svg</file>
-        <file alias="close-black">ui/close-black-icon.svg</file>
-        <file alias="logo-black">ui/gaiachain-logo-black.svg</file>
+        <file alias="closeBlack">ui/close-black-icon.svg</file>
+        <file alias="logoBlack">ui/gaiachain-logo-black.svg</file>
         <file alias="submenuLotCreation">ui/icon-submenu-create-lot.svg</file>
         <file alias="submenuBagging">ui/icon-submenu-drying.svg</file>
         <file alias="submenuGrainProcessing">ui/icon-submenu-fermentation.svg</file>
@@ -50,6 +50,7 @@
         <file alias="gps">ui/GPS.svg</file>
         <file alias="gpsFailed">ui/GPS-FAILED.svg</file>
         <file alias="gpsOk">ui/GPS-OK.svg</file>
+        <file alias="helpButton">ui/help-button.svg</file>
         <file alias="en">ui/en.png</file>
         <file alias="fr">ui/fr.png</file>
     </qresource>

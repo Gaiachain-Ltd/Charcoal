@@ -11,10 +11,13 @@
 namespace {
 const QHash<Enums::UserType, QString> UserTypeStrings = {
     { Enums::UserType::SuperUser, StaticValues::userSuperUser },
+#ifdef COCOA
     { Enums::UserType::Inspector, StaticValues::userInspector },
     { Enums::UserType::PCA, StaticValues::userPca },
     { Enums::UserType::Warehouseman, StaticValues::userWarehouseman },
     { Enums::UserType::CooperativeRepresentative, StaticValues::userCooperativeRepresentative }
+#elif CHARCOAL
+#endif
 };
 const QHash<Enums::CompanyType, QString> CompanyTypeStrings = {
     { Enums::CompanyType::Cooperative, StaticValues::companyCooperative },
@@ -22,11 +25,18 @@ const QHash<Enums::CompanyType, QString> CompanyTypeStrings = {
     { Enums::CompanyType::Transporter, StaticValues::companyTransporter }
 };
 const QHash<Enums::PackageType, QString> PackageTypeStrings = {
+#ifdef COCOA
     { Enums::PackageType::Harvest, StaticValues::packageHarvest },
     { Enums::PackageType::Sac, StaticValues::packageSac },
     { Enums::PackageType::Lot, StaticValues::packageLot }
+#elif CHARCOAL
+//    { Enums::PackageType::Plot, StaticValues::packageHarvest },
+//    { Enums::PackageType::Harvest, StaticValues::packageSac },
+//    { Enums::PackageType::Transport, StaticValues::packageLot }
+#endif
 };
 const QHash<Enums::SupplyChainAction, QString> SupplyChainActionStrings = {
+#ifdef COCOA
     { Enums::SupplyChainAction::Harvest, StaticValues::actionHarvest },
     { Enums::SupplyChainAction::GrainProcessing, StaticValues::actionGrainProcessing },
     { Enums::SupplyChainAction::SectionReception, StaticValues::actionSectionReception },
@@ -34,6 +44,8 @@ const QHash<Enums::SupplyChainAction, QString> SupplyChainActionStrings = {
     { Enums::SupplyChainAction::LotCreation, StaticValues::actionLotCreation },
     { Enums::SupplyChainAction::WarehouseTransport, StaticValues::actionWarehouseTransport },
     { Enums::SupplyChainAction::ExportReception, StaticValues::actionExportReception }
+#elif CHARCOAL
+#endif
 };
 
 auto PropertiesLocalTypes = QMap<QString, QMetaType::Type>{
@@ -172,7 +184,15 @@ QString RequestsHelper::companyTypeToString(const Enums::CompanyType &companyTyp
 
 Enums::UserType RequestsHelper::userTypeFromString(const QString &text)
 {
+#ifdef COCOA
     return UserTypeStrings.key(text, Enums::UserType::Annonymous);
+#elif CHARCOAL
+    if (text == Tags::superUser) {
+        return Enums::UserType::SuperUser;
+    }
+
+    return Enums::UserType::Annonymous;
+#endif
 }
 
 QString RequestsHelper::userTypeToString(const Enums::UserType &userType)

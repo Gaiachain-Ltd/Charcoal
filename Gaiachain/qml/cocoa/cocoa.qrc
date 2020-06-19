@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/cocoa/">
         <file>CocoaStyle.qml</file>
-        <file>pages/LoginPage.qml</file>
     </qresource>
 </RCC>

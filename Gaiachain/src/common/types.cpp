@@ -29,7 +29,12 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
 
     { { QMetaType::QDate, QMetaType::LongLong },
       [](QVariant &value) {
-          auto dt = QDateTime(value.toDate());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+         const QDate d(value.toDate());
+         auto dt = d.startOfDay();
+#else
+         auto dt = QDateTime(value.toDate());
+#endif
           value.setValue(dt.toSecsSinceEpoch());
       } },
     { { QMetaType::LongLong, QMetaType::QDate },
@@ -40,7 +45,12 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
 
     { { QMetaType::QDate, QMetaType::Double },
       [](QVariant &value) {
-          auto dt = QDateTime(value.toDate());
+         #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+         const QDate d(value.toDate());
+         auto dt = d.startOfDay();
+#else
+         auto dt = QDateTime(value.toDate());
+#endif
           value.setValue(static_cast<double>(dt.toSecsSinceEpoch()));
       } },
     { { QMetaType::Double, QMetaType::QDate },
@@ -57,7 +67,12 @@ static const QHash<TypesPair, ConverterFunc> Converters = {
     { { QMetaType::QString, QMetaType::QStringList },
       [](QVariant &value) {
           auto s = value.toString();
-          value.setValue(s.split(StringListDelimeter, QString::SkipEmptyParts));
+          value.setValue(s.split(StringListDelimeter,
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+                                 Qt::SkipEmptyParts));
+#else
+                                 QString::SkipEmptyParts));
+#endif
       } },
 
     { { QMetaType::QVariantMap, QMetaType::QByteArray },

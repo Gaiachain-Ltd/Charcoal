@@ -31,6 +31,9 @@ Headers.GHeader {
         id: comboBox
 
         Layout.fillWidth: true
+        Layout.leftMargin: top.margins
+        Layout.rightMargin: top.margins
+
         enabled: top.enabled
 
         onActivated: top.activated(index)

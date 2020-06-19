@@ -2,6 +2,7 @@
 
 #include <QGuiApplication>
 #include <QScreen>
+#include <QColor>
 
 #include "../common/logs.h"
 #include "../common/globals.h"
@@ -69,15 +70,53 @@ QString Utility::formatRawId(QString id) const
     return id;
 }
 
+QString Utility::colorString(const QColor &color) const
+{
+    if (color.isValid() == false) {
+        return QString();
+    }
+
+    return color.name(QColor::HexArgb);
+}
+
 bool Utility::isWeekend(const QDate &date) const
 {
     const int day = date.dayOfWeek();
+    // TODO: Sat and Sun are not weekend days in all countries...
     return day == 6 || day == 7;
+}
+
+QDate Utility::previousMonth(const QDate &date) const
+{
+    return date.addMonths(-1);
+}
+
+QDate Utility::nextMonth(const QDate &date) const
+{
+    return date.addMonths(1);
 }
 
 int Utility::parseInt(const QString &num) const
 {
     return num.toInt();
+}
+
+/*!
+ * Returns a \a number with constant number of \a digits.
+ */
+QString Utility::constDigitsNumber(const int number, const int digits) const
+{
+    QString result(QString::number(number));
+
+    if (result.size() > digits) {
+        qWarning() << Q_FUNC_INFO << "Number is too big!" << number << digits;
+    }
+
+    while (result.size() < digits) {
+        result.prepend("0");
+    }
+
+    return result;
 }
 
 bool Utility::validateId(const QString &id) const
@@ -102,6 +141,44 @@ bool Utility::validateEmail(const QString &email) const
 int Utility::getScannedIdLength() const
 {
     return QR_CODE_LENGTH;
+}
+
+/*!
+ * Converts a \a list into a map which is then returned. JS will interpret the
+ * map as an object.
+ *
+ * \a list elements are inserted in pairs:
+ \code
+  let arr = [ "key", "value", "anotherKey", ["another", "values"]]
+  let obj = Utility.arrayToObject(arr)
+  // obj is:
+  // {
+  //    key: "value",
+  //    anotherKey: ["another", "values]
+  // }
+ \endcode
+ */
+QVariantMap Utility::arrayToObject(const QVariantList &list) const
+{
+    const int size = list.size();
+    QVariantMap result;
+    if ((size % 2) != 0) {
+        qWarning() << "Odd-sized list" << size
+                   <<"cannot be converted into an object!" << list;
+        return result;
+    }
+
+    QString key;
+    for (int i = 0; i < size; ++i) {
+        if (i % 2) {
+            result.insert(key, list.at(i));
+            key.clear();
+        } else {
+            key = list.at(i).toString();
+        }
+    }
+
+    return result;
 }
 
 QDate Utility::convertDateString(const QString &dateStr, const QString &dateFormat) const

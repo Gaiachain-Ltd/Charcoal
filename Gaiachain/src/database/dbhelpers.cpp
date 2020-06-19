@@ -3,8 +3,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QThread>
-
-#include "../common/logs.h"
+#include "common/logs.h"
 
 Q_LOGGING_CATEGORY(databaseQuery, "database.query")
 
@@ -24,7 +23,7 @@ bool db::Helpers::setupDatabaseConnection(const QString &dbPath, const QString &
     db.setDatabaseName(dbPath);
     if (!db.open()) {
         Q_ASSERT(db.isOpen());
-        qCritical(databaseQuery) << "Cannot open database connection. Cannot proceed.";
+        qCritical(databaseQuery) << RED("Cannot open database connection. Cannot proceed.");
     }
 
     return db.isOpen();
@@ -51,7 +50,8 @@ void db::Helpers::execQuery(QSqlQuery &query, bool critical)
     query.exec();
     if (hasError(query)) {
         qCLog(critical ? QtCriticalMsg : QtWarningMsg, databaseQuery())
-                << "Cannot apply query: (" << query.lastQuery() << " ) error:" << query.lastError().text();
+            << RED("Cannot apply query:") << "(" << query.lastQuery() << ")"
+            << RED("error:") << query.lastError().text();
     }
 }
 

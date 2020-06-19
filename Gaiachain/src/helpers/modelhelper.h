@@ -2,7 +2,10 @@
 #define MODELHELPER_H
 
 #include <QObject>
-#include "../models/abstractreadmodel.h"
+#include <QVariant>
+#include <QVariantList>
+
+class QAbstractItemModel;
 
 class ModelHelper : public QObject {
     Q_OBJECT

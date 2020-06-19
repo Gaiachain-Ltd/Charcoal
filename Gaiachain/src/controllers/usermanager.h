@@ -4,8 +4,13 @@
 #include "abstractmanager.h"
 
 #include "offlineusershandler.h"
-#include "../common/enums.h"
-#include "../common/userdata.h"
+#include "common/enums.h"
+
+#ifdef COCOA
+#include "cocoa/cocoauserdata.h"
+#elif CHARCOAL
+#include "charcoal/charcoaluserdata.h"
+#endif
 
 class UserManager : public AbstractManager
 {
