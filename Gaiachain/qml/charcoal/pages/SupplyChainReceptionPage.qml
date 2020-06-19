@@ -18,12 +18,7 @@ Pages.SupplyChainPageBase {
 
     property string transportId
 
-    property var scannedQrs: [
-        "2222-2222-2222",
-        "3333-3333-3333",
-        "LH4U-3YJT-LFND"
-    ]
-
+    property var scannedQrs: []
     property var documents: []
     property var receipts: []
 
