@@ -314,6 +314,8 @@ Pages.GPage {
 
                 CharcoalItems.CharcoalRoundButton {
                     icon.source: GStyle.iconKeyboardUrl
+                    icon.height: s(35)
+                    icon.width: s(50)
 
                     visible: (currentStatus === QRScannerPage.Scanning
                               || currentStatus === QRScannerPage.Error)

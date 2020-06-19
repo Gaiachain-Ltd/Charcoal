@@ -30,7 +30,9 @@ void MinimumDateModel::setPlotId(const QString &id)
     if (m_plotId.isEmpty()) {
         setDbQuery(QString());
     } else {
+        // !!!
         // TODO: reuse methods from ActionController here!
+        // !!!
         const QStringList parts(id.split("/"));
 
         if (parts.length() < 3) {

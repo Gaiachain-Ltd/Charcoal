@@ -164,6 +164,7 @@ Pages.GPage {
                 spacing: s(GStyle.bigMargin)
 
                 Items.GText {
+                    id: skipText
                     font {
                         pixelSize: s(GStyle.bigPixelSize)
                         capitalization: Font.AllUppercase
@@ -178,6 +179,9 @@ Pages.GPage {
                     id: name
 
                     source: GStyle.skipUrl
+
+                    height: skipText.contentHeight
+                    fillMode: Image.PreserveAspectFit
                 }
             }
 
