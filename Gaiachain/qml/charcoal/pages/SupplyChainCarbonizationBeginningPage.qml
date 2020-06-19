@@ -18,6 +18,11 @@ Pages.SupplyChainPageBase {
 
     title: Strings.carbonizationBeginning
 
+    proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
+                           && (ovenTypeComboBox.ovenName === "metallic"
+                           || (ovenTypeComboBox.ovenName === "traditional"
+                               && ovenDimensionsHeader.isEmpty === false)))
+
     Component.onCompleted: refreshData()
 
     function refreshData() {
@@ -136,6 +141,9 @@ Pages.SupplyChainPageBase {
     }
 
     Headers.RowHeader {
+        function isArgEmpty(value) { return (value.lenght === 0) }
+        property bool isEmpty: (values.every(isArgEmpty))
+
         id: ovenDimensionsHeader
         Layout.fillWidth: true
         headerText: Strings.ovenDimensions

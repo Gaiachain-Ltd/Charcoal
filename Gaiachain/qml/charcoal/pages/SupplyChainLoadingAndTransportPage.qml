@@ -20,7 +20,10 @@ Pages.SupplyChainPageBase {
 
     property var scannedQrs: []
 
-    onScannedQrsChanged: console.log("Scanned IDs:", prepareScannedIds)
+    proceedButtonEnabled: (scannedQrs.length > 0
+                           && harvestIdComboBox.currentText.length > 0
+                           && plateNumberHeader.inputText.length > 0
+                           && deliveryDestinationComboBox.currentText.length > 0)
 
     function prepareScannedIds() {
         let result = []

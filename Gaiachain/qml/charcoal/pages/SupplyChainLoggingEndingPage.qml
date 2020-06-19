@@ -17,6 +17,9 @@ Pages.SupplyChainPageBase {
 
     title: Strings.loggingEnding
 
+    proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
+                           && numberOfTreesHeader.inputText.length > 0)
+
     Component.onCompleted: refreshData()
 
     function refreshData() {

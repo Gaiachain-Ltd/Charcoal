@@ -18,6 +18,10 @@ Pages.SupplyChainPageBase {
 
     title: Strings.replantation
 
+    proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
+                           && numberOfTreesHeader.inputText.length > 0
+                           && treeSpeciesComboBox.currentText.length > 0)
+
     Component.onCompleted: refreshData()
 
     function refreshData() {

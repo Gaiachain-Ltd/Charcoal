@@ -17,6 +17,10 @@ Pages.SupplyChainPageBase {
 
     title: Strings.loggingBeginning
 
+    proceedButtonEnabled: (parcelComboBox.currentText.length > 0
+                           && villageComboBox.currentText.length > 0
+                           && treeSpeciesComboBox.currentText.length > 0)
+
     Component.onCompleted: refreshData()
 
     function refreshData() {
