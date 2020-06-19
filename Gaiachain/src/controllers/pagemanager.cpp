@@ -166,7 +166,8 @@ bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const b
 #ifdef CHARCOAL
         if (currentTop == Enums::Page::SupplyChainLoggingEnding
             || currentTop == Enums::Page::SupplyChainCarbonizationEnding
-            || currentTop == Enums::Page::SupplyChainLoadingAndTransport) {
+            || (currentTop == Enums::Page::SupplyChainLoadingAndTransport
+                && page != Enums::Page::SupplyChainLoadingAndTransport)) {
             stepPage = currentTop;
         }
 #endif
