@@ -6,10 +6,11 @@ import com.gaiachain.style 1.0
 RoundButton {
     id: control
 
-    height: 80
+    height: s(80)
     width: height
 
-    icon.width: 28
+    icon.height: s(40)
+    icon.width: s(40)
 
     display: AbstractButton.IconOnly
 

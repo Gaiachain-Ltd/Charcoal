@@ -68,7 +68,10 @@ Pages.SupplyChainPageBase {
                     createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
                     createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
-                                       ovenDimensionsHeader.values],
+                                       ovenTypeComboBox.ovenName === "metallic"?
+                                           dataManager.actionController.defaultOvenDimensions(
+                                               ovenTypeComboBox.ovenName)
+                                         : ovenDimensionsHeader.values],
                                       "", "",
                                       Pages.SupplyChainPageBase.Row),
                     createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
@@ -151,14 +154,12 @@ Pages.SupplyChainPageBase {
         onValueChanged: {
             let emptyCheck = false;
             for (let value of values) {
-                console.log("Value is", value, value.length)
                 if (value.length === 0) {
                     emptyCheck = true
                     break
                 }
             }
 
-            console.log("isEmpty?", emptyCheck)
             isEmpty = emptyCheck
         }
 
