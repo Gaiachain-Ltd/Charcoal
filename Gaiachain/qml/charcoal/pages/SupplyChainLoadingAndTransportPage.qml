@@ -42,6 +42,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
         dataManager.destinationsModel.refresh()
+        dataManager.minimumDateModel.plotId = ""
     }
 
     function proceed() {
@@ -115,6 +116,8 @@ Pages.SupplyChainPageBase {
         delegateTextColor: GStyle.fontHighlightColor2
 
         model: dataManager.unusedHarvestIdsModel
+
+        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentText
     }
 
     Headers.InputHeader {
@@ -153,6 +156,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.loadingDate
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportLoadingDateHelp
+        minimumDate: dataManager.minimumDateModel.date
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {

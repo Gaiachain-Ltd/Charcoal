@@ -35,6 +35,8 @@ void OvensModel::setPlotId(const QString &id)
                        "(SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
 
     refresh();
+
+    emit plotIdChanged(id);
 }
 
 QString OvensModel::plotId() const

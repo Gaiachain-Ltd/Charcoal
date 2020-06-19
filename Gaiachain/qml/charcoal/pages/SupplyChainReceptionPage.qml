@@ -19,6 +19,12 @@ Pages.SupplyChainPageBase {
     property string transportId
 
     property var scannedQrs: []
+
+    onScannedQrsChanged: {
+        transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
+        dataManager.minimumDateModel.plotId = transportId
+    }
+
     property var documents: []
     property var receipts: []
 
@@ -31,7 +37,7 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        // Nothing to do
+        dataManager.minimumDateModel.plotId = ""
     }
 
     function proceed() {
@@ -50,7 +56,6 @@ Pages.SupplyChainPageBase {
         let docsIcon = "image://tickmark/document-" + hasDocs
         let recsIcon = "image://tickmark/receipt-" + hasRecs
 
-        transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
         let bagCount = dataManager.actionController.bagCountInTransport(transportId)
         // TODO: check if all QRs are MATCHING!
         let allBags = scannedQrs.length === bagCount
@@ -171,8 +176,6 @@ Pages.SupplyChainPageBase {
                                          "infoText": Strings.scanAllBagsToCheckInfoText,
                                          "backToPage": Enums.Page.SupplyChainReception,
                                          "infoImages": [ GStyle.bagsReceptionUrl ],
-                                         // TODO: use proper harvest ID here!
-                                         "idBase": "AM003PM/0595112/04-03-2020/AM004NA",
                                          "scannedQrs": scannedQrs
                                      })
     }
@@ -183,6 +186,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.receptionDateCharcoal
         helpButtonVisible: true
         helpText: Strings.receptionUnloadingDateHelp
+        minimumDate: dataManager.minimumDateModel.date
     }
 
     Common.PositionSourceHandler {

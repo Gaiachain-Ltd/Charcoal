@@ -65,7 +65,6 @@ Pages.GPage {
 
     property bool showProceedPage: false
     property string truckId
-    property string idBase
     property var scannedQrs
 
     onScannedQrsChanged: console.log("Scanned IDs:", scannedQrs)
@@ -452,7 +451,7 @@ Pages.GPage {
 
         property string title: root.title + " (%1)".arg(entriesList.count)
 
-        readonly property string idBase: root.idBase
+        onOpened: entriesList.idBase = dataManager.actionController.getTransportIdFromBags(scannedQrs)
 
         anchors.centerIn: Overlay.overlay
         width: Overlay.overlay? Overlay.overlay.width : 100
@@ -483,6 +482,8 @@ Pages.GPage {
             }
 
             ListView {
+                property string idBase
+
                 id: entriesList
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -500,9 +501,8 @@ Pages.GPage {
                 }
 
                 delegate: Item {
-                    // TODO: make sure number has 3 digits!
-                    readonly property string bagId: idBase + "/B"
-                                                    + Utility.constDigitsNumber(index, 3)
+                    readonly property string bagId: entriesList.idBase + "/B"
+                                                    + Utility.constDigitsNumber(index + 1, 3)
                     readonly property string qrCode: modelData
 
                     id: delegateItem
@@ -524,6 +524,7 @@ Pages.GPage {
                                     horizontalAlignment: Text.AlignLeft
                                     font.bold: true
                                     font.pixelSize: s(GStyle.smallPixelSize)
+                                    wrapMode: Text.WrapAnywhere
                                 }
 
                                 Items.GText {
@@ -534,6 +535,7 @@ Pages.GPage {
                                     horizontalAlignment: Text.AlignLeft
                                     font.bold: false
                                     font.pixelSize: s(GStyle.tinyPixelSize)
+                                    font.capitalization: Font.AllUppercase
                                 }
                             }
 

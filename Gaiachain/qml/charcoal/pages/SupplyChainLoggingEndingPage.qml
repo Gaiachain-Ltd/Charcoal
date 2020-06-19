@@ -24,6 +24,7 @@ Pages.SupplyChainPageBase {
 
     function refreshData() {
         dataManager.unusedPlotIdsModel.refresh()
+        dataManager.minimumDateModel.plotId = ""
     }
 
     function proceed() {
@@ -76,6 +77,8 @@ Pages.SupplyChainPageBase {
         delegateTextColor: GStyle.fontHighlightColor
 
         model: dataManager.unusedPlotIdsModel
+
+        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentText
     }
 
     CharcoalHeaders.UserInfoHeader {
@@ -90,6 +93,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.endingDate
         helpButtonVisible: true
         helpText: Strings.loggingEndingEndingDateHelp
+        minimumDate: dataManager.minimumDateModel.date
     }
 
     Headers.InputHeader {

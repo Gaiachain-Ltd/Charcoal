@@ -25,6 +25,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
         dataManager.ovensModel.plotId = ""
+        dataManager.minimumDateModel.plotId = ""
     }
 
     function proceed() {
@@ -98,6 +99,7 @@ Pages.SupplyChainPageBase {
         onCurrentTextChanged: {
             // Refresh available ovens
             dataManager.ovensModel.plotId = dataManager.actionController.getPlotId(currentText)
+            dataManager.minimumDateModel.plotId = currentText
         }
     }
 
@@ -130,6 +132,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.carbonizationEndingDate
         helpButtonVisible: true
         helpText: Strings.carbonizationEndingEndingDateHelp
+        minimumDate: dataManager.minimumDateModel.date
     }
 
     Common.PositionSourceHandler {

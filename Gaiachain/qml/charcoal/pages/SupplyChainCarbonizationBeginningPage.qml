@@ -28,6 +28,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedPlotIdsModel.refresh()
         dataManager.ovenTypesModel.refresh()
+        dataManager.minimumDateModel.plotId = ""
     }
 
     function proceed() {
@@ -102,7 +103,10 @@ Pages.SupplyChainPageBase {
 
         model: dataManager.unusedPlotIdsModel
 
-        onCurrentTextChanged: ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentText)
+        onCurrentTextChanged: {
+            ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentText)
+            dataManager.minimumDateModel.plotId = currentText
+        }
     }
 
     Headers.InputHeader {
@@ -127,6 +131,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.beginningDate
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningBeginningDateHelp
+        minimumDate: dataManager.minimumDateModel.date
     }
 
     CharcoalHeaders.OvenTypeComboBox {

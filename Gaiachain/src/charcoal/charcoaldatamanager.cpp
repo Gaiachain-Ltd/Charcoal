@@ -3,8 +3,6 @@
 #include "database/dbhelpers.h"
 #include "common/logs.h"
 
-#include <QDate>
-
 #include <QDebug>
 
 CharcoalDataManager::CharcoalDataManager(QObject *parent)
@@ -20,7 +18,8 @@ CharcoalDataManager::CharcoalDataManager(QObject *parent)
       m_unusedTransportIdsModel(new UnusedTransportIdsModel(this)),
       m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
       m_ovensModel(new OvensModel(this)),
-      m_trackingModel(new TrackingModel(this))
+      m_trackingModel(new TrackingModel(this)),
+      m_minimumDateModel(new MinimumDateModel(this))
 {
 }
 
@@ -43,6 +42,7 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     m_unusedPlotIdsForReplantationModel->setDbConnection(m_dbConnectionName);
     m_ovensModel->setDbConnection(m_dbConnectionName);
     m_trackingModel->setDbConnection(m_dbConnectionName);
+    m_minimumDateModel->setDbConnection(m_dbConnectionName);
 
     if (checkModels() == false) {
         qWarning() << RED("Data models are initialized improperly!");
@@ -107,6 +107,11 @@ OvensModel *CharcoalDataManager::ovensModel() const
 TrackingModel *CharcoalDataManager::trackingModel() const
 {
     return m_trackingModel;
+}
+
+MinimumDateModel *CharcoalDataManager::minimumDateModel() const
+{
+    return m_minimumDateModel;
 }
 
 bool CharcoalDataManager::checkModels() const

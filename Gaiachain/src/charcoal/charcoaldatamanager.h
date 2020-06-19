@@ -1,6 +1,9 @@
 #pragma once
 
 #include "controllers/data/abstractdatamanager.h"
+
+#include <QObject>
+
 #include "charcoal/models/treespeciesmodel.h"
 #include "charcoal/models/villagesmodel.h"
 #include "charcoal/models/parcelsmodel.h"
@@ -13,8 +16,7 @@
 #include "charcoal/models/unusedplotidsforreplantationmodel.h"
 #include "charcoal/models/ovensmodel.h"
 #include "charcoal/models/trackingmodel.h"
-
-#include <QObject>
+#include "charcoal/models/minimumdatemodel.h"
 
 class CharcoalDataManager : public AbstractDataManager
 {
@@ -32,6 +34,7 @@ class CharcoalDataManager : public AbstractDataManager
     Q_PROPERTY(UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel READ unusedPlotIdsForReplantationModel CONSTANT)
     Q_PROPERTY(OvensModel* ovensModel READ ovensModel CONSTANT)
     Q_PROPERTY(TrackingModel* trackingModel READ trackingModel CONSTANT)
+    Q_PROPERTY(MinimumDateModel* minimumDateModel READ minimumDateModel CONSTANT)
 
 public:
     CharcoalDataManager(QObject *parent = nullptr);
@@ -50,6 +53,7 @@ public:
     UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel() const;
     OvensModel* ovensModel() const;
     TrackingModel* trackingModel() const;
+    MinimumDateModel* minimumDateModel() const;
 
 private:
     const QString m_dbConnectionName = staticMetaObject.className();
@@ -67,6 +71,7 @@ private:
     UnusedPlotIdsForReplantationModel* m_unusedPlotIdsForReplantationModel = nullptr;
     OvensModel* m_ovensModel = nullptr;
     TrackingModel* m_trackingModel = nullptr;
+    MinimumDateModel* m_minimumDateModel = nullptr;
 
     bool checkModels() const;
 };

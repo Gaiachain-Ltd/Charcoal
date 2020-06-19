@@ -123,12 +123,12 @@ charcoal {
 
     HEADERS += \
         src/charcoal/charcoaluserdata.h \
-        src/charcoal/models/actioncontroller.h \
         src/charcoal/picturesmanager.h \
         src/charcoal/tickmarkiconprovider.h \
         src/charcoal/notificationmanager.h \
         src/charcoal/charcoalsessionmanager.h \
         src/charcoal/charcoaldatamanager.h \
+        src/charcoal/models/actioncontroller.h \
         src/charcoal/models/treespeciesmodel.h \
         src/charcoal/models/parcelsmodel.h \
         src/charcoal/models/villagesmodel.h \
@@ -141,15 +141,16 @@ charcoal {
         src/charcoal/models/unusedplotidsforreplantationmodel.h \
         src/charcoal/models/ovensmodel.h \
         src/charcoal/models/trackingmodel.h \
+        src/charcoal/models/minimumdatemodel.h \
 
     SOURCES += \
-        src/charcoal/models/actioncontroller.cpp \
         src/charcoal/picturesmanager.cpp \
         src/charcoal/tickmarkiconprovider.cpp \
         src/charcoal/notificationmanager.cpp \
         src/charcoal/charcoalmigrations.cpp \
         src/charcoal/charcoalsessionmanager.cpp \
         src/charcoal/charcoaldatamanager.cpp \
+        src/charcoal/models/actioncontroller.cpp \
         src/charcoal/models/treespeciesmodel.cpp \
         src/charcoal/models/parcelsmodel.cpp \
         src/charcoal/models/villagesmodel.cpp \
@@ -162,6 +163,7 @@ charcoal {
         src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
         src/charcoal/models/ovensmodel.cpp \
         src/charcoal/models/trackingmodel.cpp \
+        src/charcoal/models/minimumdatemodel.cpp \
 
 }
 
