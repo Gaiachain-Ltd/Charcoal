@@ -77,6 +77,7 @@ Pages.SupplyChainPageBase {
         id: no
         text: Strings.no
         textLeftMargin: s(GStyle.middleMargin)
+        selected: true
         onClicked: {
             if (selected) {
                yes.selected = false
