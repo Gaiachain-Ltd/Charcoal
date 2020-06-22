@@ -56,9 +56,10 @@ QtObject {
 
     property string loading: tr.empty + qsTr("Loading")
     property string anonymousUser: tr.empty + qsTr("Anonymous")
-    property string searching: tr.empty + qsTr("Searching")
+    property string searching: tr.empty + qsTr("Searching...")
     property string online: tr.empty + qsTr("Online")
     property string offline: tr.empty + qsTr("Offline")
+    property string onlineUserInfo: "%1\n%2"
 
     property string serverConnectionError: tr.empty + qsTr("Server connection error.\nCheck your internet connection.")
     property string loginError: tr.empty + qsTr("Login failed. Try again.")

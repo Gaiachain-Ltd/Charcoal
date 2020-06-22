@@ -12,6 +12,8 @@ import "dummy" as DummyComponents
 Item {
     id: top
 
+    readonly property bool isCocoa: mainController.flavor === "cocoa"
+
     function colorForState(state) {
         if (userManager.offlineMode) {
             return GStyle.unknownColor
@@ -28,6 +30,7 @@ Item {
         }
         return GStyle.unknownColor
     }
+
     function textForState(state) {
         if (userManager.offlineMode) {
             return Strings.offline
@@ -35,9 +38,14 @@ Item {
 
         switch (state) {
         case Enums.ConnectionState.ConnectionSuccessful:
-            return Strings.online
+            if (isCocoa) {
+                return Strings.online
+            } else {
+                return Strings.onlineUserInfo.arg(userManager.userData.job)
+                                             .arg(userManager.userData.email)
+            }
         case Enums.ConnectionState.Connecting:
-            return Strings.searching + "..."
+            return Strings.searching
         case Enums.ConnectionState.ConnectionError:
             return Strings.offline
         default:
