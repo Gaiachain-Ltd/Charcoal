@@ -17,6 +17,7 @@
 #include "charcoal/models/ovensmodel.h"
 #include "charcoal/models/trackingmodel.h"
 #include "charcoal/models/minimumdatemodel.h"
+#include "charcoal/models/localeventsmodel.h"
 
 class CharcoalDataManager : public AbstractDataManager
 {
@@ -35,11 +36,13 @@ class CharcoalDataManager : public AbstractDataManager
     Q_PROPERTY(OvensModel* ovensModel READ ovensModel CONSTANT)
     Q_PROPERTY(TrackingModel* trackingModel READ trackingModel CONSTANT)
     Q_PROPERTY(MinimumDateModel* minimumDateModel READ minimumDateModel CONSTANT)
+    Q_PROPERTY(LocalEventsModel* localEventsModel READ localEventsModel CONSTANT)
 
 public:
     CharcoalDataManager(QObject *parent = nullptr);
 
     void setupDatabase(const QString &dbPath) override;
+    void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     TreeSpeciesModel* treeSpeciesModel() const;
     VillagesModel* villagesModel() const;
@@ -54,8 +57,11 @@ public:
     OvensModel* ovensModel() const;
     TrackingModel* trackingModel() const;
     MinimumDateModel* minimumDateModel() const;
+    LocalEventsModel* localEventsModel() const;
 
 private:
+    bool checkModels() const;
+
     const QString m_dbConnectionName = staticMetaObject.className();
 
     QString m_dbPath;
@@ -72,6 +78,5 @@ private:
     OvensModel* m_ovensModel = nullptr;
     TrackingModel* m_trackingModel = nullptr;
     MinimumDateModel* m_minimumDateModel = nullptr;
-
-    bool checkModels() const;
+    LocalEventsModel* m_localEventsModel = nullptr;
 };

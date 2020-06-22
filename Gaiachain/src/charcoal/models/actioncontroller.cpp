@@ -356,8 +356,8 @@ void ActionController::registerLoggingBeginning(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, isFinished, isCommitted, isReplanted) "
-                  "VALUES (:typeId, :plotId, 0, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, isFinished, isReplanted) "
+                  "VALUES (:typeId, :plotId, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":plotId", plotId);
 
@@ -379,9 +379,10 @@ void ActionController::registerLoggingBeginning(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties) "
+                  "date, locationLatitude, locationLongitude, properties, "
+                  "isCommitted) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
-                  ":locationLatitude, :locationLongitude, :properties)");
+                  ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
@@ -436,9 +437,10 @@ void ActionController::registerLoggingEnding(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties) "
+                  "date, locationLatitude, locationLongitude, properties "
+                  "isCommitted) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
-                  ":locationLatitude, :locationLongitude, :properties)");
+                  ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
@@ -503,8 +505,8 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     if (alreadyPresent == false) {
-        query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted, isReplanted) "
-                      "VALUES (:typeId, :harvestId, :parent, 0, 0, 0)");
+        query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isReplanted) "
+                      "VALUES (:typeId, :harvestId, :parent, 0, 0)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":harvestId", harvestId);
         query.bindValue(":parent", parentEntityId);
@@ -529,9 +531,9 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                  "date, locationLatitude, locationLongitude) "
+                  "date, locationLatitude, locationLongitude, isCommitted) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
-                  ":locationLatitude, :locationLongitude)");
+                  ":locationLatitude, :locationLongitude, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
@@ -610,9 +612,9 @@ void ActionController::registerCarbonizationEnding(
         const QString ovenId(idVar.toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
         query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                      "date, locationLatitude, locationLongitude) "
+                      "date, locationLatitude, locationLongitude, isCommitted) "
                       "VALUES (:entityId, :typeId, :userId, :date, "
-                      ":locationLatitude, :locationLongitude)");
+                      ":locationLatitude, :locationLongitude, 0)");
         query.bindValue(":entityId", entityId);
         query.bindValue(":typeId", eventTypeId);
         query.bindValue(":userId", userId);
@@ -672,8 +674,8 @@ void ActionController::registerTransportAndLoading(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isCommitted, isReplanted) "
-                  "VALUES (:typeId, :transportId, :parent, 0, 0, 0)");
+    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isReplanted) "
+                  "VALUES (:typeId, :transportId, :parent, 0, 0)");
     query.bindValue(":typeId", typeId);
     query.bindValue(":transportId", transportId);
     query.bindValue(":parent", parentEntityId);
@@ -696,9 +698,10 @@ void ActionController::registerTransportAndLoading(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties) "
+                  "date, locationLatitude, locationLongitude, properties, "
+                  "isCommitted) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
-                  ":locationLatitude, :locationLongitude, :properties)");
+                  ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
@@ -757,9 +760,10 @@ void ActionController::registerReception(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties) "
+                  "date, locationLatitude, locationLongitude, properties, "
+                  "isCommitted) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
-                  ":locationLatitude, :locationLongitude, :properties)");
+                  ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
@@ -826,11 +830,11 @@ void ActionController::registerReplantation(
     query.prepare("INSERT INTO Replantations (plotId, userId, "
                   "numberOfTrees, treeSpecies, "
                   "locationLatitude, locationLongitude, "
-                  "beginningDate, endingDate) "
+                  "beginningDate, endingDate, isCommitted) "
                   "VALUES (:plotId, :userId, "
                   ":numberOfTrees, :treeSpecies, "
                   ":locationLatitude, :locationLongitude, "
-                  ":beginningDate, :endingDate)");
+                  ":beginningDate, :endingDate, 0)");
     query.bindValue(":plotId", parentId);
     query.bindValue(":userId", userId);
     query.bindValue(":numberOfTrees", numberOfTrees);

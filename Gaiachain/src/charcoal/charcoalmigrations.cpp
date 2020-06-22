@@ -36,7 +36,6 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "(`id` INTEGER primary key AUTOINCREMENT, "
                 "`typeId` INTEGER NOT NULL, `name` TEXT NOT NULL, `parent` INTEGER, "
                 "`isFinished` BOOLEAN NOT NULL CHECK (isFinished IN (0,1)), "
-                "`isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)), "
                 "`isReplanted` BOOLEAN NOT NULL CHECK (isReplanted IN (0,1)), "
                 "FOREIGN KEY(typeId) REFERENCES EntityTypes(id), "
                 "FOREIGN KEY(parent) REFERENCES Entities(id))"),
@@ -46,6 +45,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`typeId` INTEGER NOT NULL, `userId` TEXT NOT NULL, `date` INTEGER NOT NULL, "
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "
                 "`properties` TEXT, "
+                "`isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)), "
                 "FOREIGN KEY(entityId) REFERENCES Entities(id), "
                 "FOREIGN KEY(typeId) REFERENCES EventTypes(id))"),
             QLatin1String("CREATE TABLE EventTypes (`id` INTEGER primary key AUTOINCREMENT, `actionName` TEXT NOT NULL)"),
@@ -54,6 +54,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`numberOfTrees` INTEGER NOT NULL, `treeSpecies` INTEGER NOT NULL, "
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "
                 "`beginningDate` INTEGER NOT NULL, `endingDate` INTEGER NOT NULL, "
+                "`isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)), "
                 "FOREIGN KEY(plotId) REFERENCES Entities(id), "
                 "FOREIGN KEY(treeSpecies) REFERENCES TreeSpecies(id))"),
             QLatin1String("CREATE TABLE Ovens (`id` INTEGER primary key AUTOINCREMENT, "

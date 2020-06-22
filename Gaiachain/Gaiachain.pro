@@ -142,6 +142,7 @@ charcoal {
         src/charcoal/models/ovensmodel.h \
         src/charcoal/models/trackingmodel.h \
         src/charcoal/models/minimumdatemodel.h \
+        src/charcoal/models/localeventsmodel.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -164,6 +165,7 @@ charcoal {
         src/charcoal/models/ovensmodel.cpp \
         src/charcoal/models/trackingmodel.cpp \
         src/charcoal/models/minimumdatemodel.cpp \
+        src/charcoal/models/localeventsmodel.cpp \
 
 }
 

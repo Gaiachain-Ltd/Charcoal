@@ -3,6 +3,9 @@
 #include "database/dbhelpers.h"
 #include "common/logs.h"
 
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+
 #include <QDebug>
 
 CharcoalDataManager::CharcoalDataManager(QObject *parent)
@@ -19,7 +22,8 @@ CharcoalDataManager::CharcoalDataManager(QObject *parent)
       m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
       m_ovensModel(new OvensModel(this)),
       m_trackingModel(new TrackingModel(this)),
-      m_minimumDateModel(new MinimumDateModel(this))
+      m_minimumDateModel(new MinimumDateModel(this)),
+      m_localEventsModel(new LocalEventsModel(this))
 {
 }
 
@@ -43,10 +47,17 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     m_ovensModel->setDbConnection(m_dbConnectionName);
     m_trackingModel->setDbConnection(m_dbConnectionName);
     m_minimumDateModel->setDbConnection(m_dbConnectionName);
+    m_localEventsModel->setDbConnection(m_dbConnectionName);
 
     if (checkModels() == false) {
         qWarning() << RED("Data models are initialized improperly!");
     }
+}
+
+void CharcoalDataManager::setupQmlContext(QQmlApplicationEngine &engine)
+{
+    AbstractDataManager::setupQmlContext(engine);
+    engine.rootContext()->setContextProperty(QStringLiteral("localEventsModel"), m_localEventsModel);
 }
 
 TreeSpeciesModel *CharcoalDataManager::treeSpeciesModel() const
@@ -112,6 +123,11 @@ TrackingModel *CharcoalDataManager::trackingModel() const
 MinimumDateModel *CharcoalDataManager::minimumDateModel() const
 {
     return m_minimumDateModel;
+}
+
+LocalEventsModel *CharcoalDataManager::localEventsModel() const
+{
+    return m_localEventsModel;
 }
 
 bool CharcoalDataManager::checkModels() const
