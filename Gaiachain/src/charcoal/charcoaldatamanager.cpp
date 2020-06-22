@@ -8,14 +8,18 @@
 
 #include <QDebug>
 
-CharcoalDataManager::CharcoalDataManager(QObject *parent)
+CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager> &sessionManager,
+                                         const QSharedPointer<UserManager> &userManager,
+                                         QObject *parent)
     : AbstractDataManager(parent),
+      m_sessionManager(sessionManager),
+      m_userManager(userManager),
+      m_actionController(new ActionController(this)),
       m_treeSpeciesModel(new TreeSpeciesModel(this)),
       m_villagesModel(new VillagesModel(this)),
       m_parcelsModel(new ParcelsModel(this)),
       m_destinationsModel(new DestinationsModel(this)),
       m_ovenTypesModel(new OvenTypesModel(this)),
-      m_actionController(new ActionController(this)),
       m_unusedPlotIdsModel(new UnusedPlotIdsModel(this)),
       m_unusedHarvestIdsModel(new UnusedHarvestIdsModel(this)),
       m_unusedTransportIdsModel(new UnusedTransportIdsModel(this)),
@@ -34,22 +38,23 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     qDebug() << "Setting DB connections in CDM" << dbPath;
 
     m_dbPath = dbPath;
-
     db::Helpers::setupDatabaseConnection(dbPath, m_dbConnectionName);
-    m_treeSpeciesModel->setDbConnection(m_dbConnectionName);
-    m_villagesModel->setDbConnection(m_dbConnectionName);
-    m_parcelsModel->setDbConnection(m_dbConnectionName);
-    m_destinationsModel->setDbConnection(m_dbConnectionName);
-    m_ovenTypesModel->setDbConnection(m_dbConnectionName);
+
     m_actionController->setDbConnection(m_dbConnectionName);
-    m_unusedPlotIdsModel->setDbConnection(m_dbConnectionName);
-    m_unusedHarvestIdsModel->setDbConnection(m_dbConnectionName);
-    m_unusedTransportIdsModel->setDbConnection(m_dbConnectionName);
-    m_unusedPlotIdsForReplantationModel->setDbConnection(m_dbConnectionName);
-    m_ovensModel->setDbConnection(m_dbConnectionName);
-    m_trackingModel->setDbConnection(m_dbConnectionName);
-    m_minimumDateModel->setDbConnection(m_dbConnectionName);
-    m_localEventsModel->setDbConnection(m_dbConnectionName);
+
+    setupModel(m_treeSpeciesModel);
+    setupModel(m_villagesModel);
+    setupModel(m_parcelsModel);
+    setupModel(m_destinationsModel);
+    setupModel(m_ovenTypesModel);
+    setupModel(m_unusedPlotIdsModel);
+    setupModel(m_unusedHarvestIdsModel);
+    setupModel(m_unusedTransportIdsModel);
+    setupModel(m_unusedPlotIdsForReplantationModel);
+    setupModel(m_ovensModel);
+    setupModel(m_trackingModel);
+    setupModel(m_minimumDateModel);
+    setupModel(m_localEventsModel);
 
     if (checkModels() == false) {
         qWarning() << RED("Data models are initialized improperly!");
@@ -60,6 +65,21 @@ void CharcoalDataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     AbstractDataManager::setupQmlContext(engine);
     engine.rootContext()->setContextProperty(QStringLiteral("localEventsModel"), m_localEventsModel);
+}
+
+void CharcoalDataManager::refreshQueuedWebRequests()
+{
+    const auto models = findChildren<QueryModel*>();
+
+    for (const auto model : models) {
+        if (model == nullptr) {
+            continue;
+        }
+
+        if (model->hasQueuedRequest()) {
+            model->sendQueuedRequest();
+        }
+    }
 }
 
 TreeSpeciesModel *CharcoalDataManager::treeSpeciesModel() const
@@ -148,4 +168,11 @@ bool CharcoalDataManager::checkModels() const
     }
 
     return true;
+}
+
+void CharcoalDataManager::setupModel(QueryModel *model) const
+{
+    model->setSessionManager(m_sessionManager);
+    model->setUserManager(m_userManager);
+    model->setDbConnection(m_dbConnectionName);
 }

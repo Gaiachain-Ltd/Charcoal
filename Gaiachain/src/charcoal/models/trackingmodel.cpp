@@ -12,11 +12,7 @@
 
 TrackingModel::TrackingModel(QObject *parent) : QueryModel(parent)
 {
-//    setDbQuery("SELECT Entities.id, Entities.name, Events.typeId, Events.date "
-//               "FROM Entities "
-//               "INNER JOIN Events"
-//               "ON Events.entityId=Entities.id");
-
+    setWebModelCanChange(true);
     setDbQuery("SELECT id, name, typeId FROM Entities");
 }
 

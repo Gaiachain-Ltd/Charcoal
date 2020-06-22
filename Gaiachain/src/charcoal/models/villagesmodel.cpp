@@ -4,5 +4,6 @@
 
 VillagesModel::VillagesModel(QObject *parent) : QueryModel(parent)
 {
+    setWebModelCanChange(false);
     setDbQuery("SELECT name FROM Villages");
 }

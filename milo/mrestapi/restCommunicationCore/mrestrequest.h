@@ -57,7 +57,8 @@ public:
 
 signals:
     void finished() const;
-    void replyError(const QString &msgs, const int errorCode = QNetworkReply::UnknownServerError) const;
+    void replyError(const QString &msgs,
+                    const QNetworkReply::NetworkError errorCode = QNetworkReply::UnknownServerError) const;
 
 protected:
     enum class Priority {Bottom, Low, Normal, High, Top};

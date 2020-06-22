@@ -10,6 +10,7 @@
 
 MinimumDateModel::MinimumDateModel(QObject *parent) : QueryModel(parent)
 {
+    setWebModelCanChange(false);
 }
 
 void MinimumDateModel::refresh()
@@ -18,6 +19,10 @@ void MinimumDateModel::refresh()
         qWarning() << RED("Cannot establish DB connection when connection name is empty!")
                    << m_query;
         return;
+    }
+
+    if (shouldRefreshWebData()) {
+        refreshWebData();
     }
 
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));

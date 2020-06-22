@@ -57,7 +57,11 @@ GPage {
             dataManager.sendOfflineActions()
         }
 
-        sessionManager.getAdditionalData()
+        if (mainController.flavor === "cocoa") {
+            sessionManager.getAdditionalData()
+        } else {
+            dataManager.refreshQueuedWebRequests()
+        }
     }
 
     Flickable {

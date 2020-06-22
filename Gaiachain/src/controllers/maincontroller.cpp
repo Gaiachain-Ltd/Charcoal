@@ -25,7 +25,6 @@
 #include "../common/dummy/commondummydata.h"
 #endif
 
-
 #ifdef COCOA
 #include "cocoa/cocoasessionmanager.h"
 #include "cocoa/cocoadatamanager.h"
@@ -46,12 +45,13 @@ MainController::MainController(QObject *parent)
     : AbstractManager(parent),
       m_application(new Application(this)),
       m_languageManager(new LanguageManager(this)),
+      m_userManager(QSharedPointer<UserManager>::create()),
 #ifdef COCOA
       m_sessionManager(new CocoaSessionManager(this)),
       m_dataManager(new CocoaDataManager(this))
 #elif CHARCOAL
       m_sessionManager(new CharcoalSessionManager(this)),
-      m_dataManager(new CharcoalDataManager(this))
+      m_dataManager(new CharcoalDataManager(m_sessionManager, m_userManager, this))
 #endif
 {
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
@@ -64,21 +64,21 @@ MainController::MainController(QObject *parent)
 
 void MainController::setupConnections()
 {
-    connect(&m_userManager, &UserManager::offlineModeChanged,
-            m_sessionManager, [sessionManager = m_sessionManager](bool offlineMode) {
+    connect(m_userManager.get(), &UserManager::offlineModeChanged,
+            m_sessionManager.get(), [sessionManager = m_sessionManager](bool offlineMode) {
                 sessionManager->setEnabled(!offlineMode);
             });
 
-    connect(&m_userManager, &UserManager::tokenChanged,
-            m_sessionManager, &AbstractSessionManager::updateToken);
-    connect(m_sessionManager, &AbstractSessionManager::loginAttempt,
-            &m_userManager, &UserManager::handleLoginAttempt);
-    connect(m_sessionManager, &AbstractSessionManager::loginFinished,
-            &m_userManager, &UserManager::readLoginData);
+    connect(m_userManager.get(), &UserManager::tokenChanged,
+            m_sessionManager.get(), &AbstractSessionManager::updateToken);
+    connect(m_sessionManager.get(), &AbstractSessionManager::loginAttempt,
+            m_userManager.get(), &UserManager::handleLoginAttempt);
+    connect(m_sessionManager.get(), &AbstractSessionManager::loginFinished,
+            m_userManager.get(), &UserManager::readLoginData);
 
     connect(&m_dbManager, &DatabaseManager::databaseReady,
             m_dataManager, &AbstractDataManager::setupDatabase);
-    connect(&m_userManager, &UserManager::userDataChanged,
+    connect(m_userManager.get(), &UserManager::userDataChanged,
             m_dataManager, &AbstractDataManager::updateUserData);
 
     setupDataConnections();
@@ -86,9 +86,9 @@ void MainController::setupConnections()
 
 void MainController::setupDataConnections()
 {
-    connect(m_sessionManager, &AbstractSessionManager::connectionStateChanged,
+    connect(m_sessionManager.get(), &AbstractSessionManager::connectionStateChanged,
             m_dataManager, [dataManager = m_dataManager,
-                            userManager = &m_userManager,
+                            userManager = m_userManager.get(),
                             pageManager = &m_pageManager]
             (Enums::ConnectionState connectionState) {
                 if (connectionState == Enums::ConnectionState::ConnectionSuccessful &&
@@ -100,7 +100,7 @@ void MainController::setupDataConnections()
             });
 
 #ifdef COCOA
-    const auto sessionManager = qobject_cast<CocoaSessionManager*>(m_sessionManager);
+    const auto sessionManager = qobject_cast<CocoaSessionManager*>(m_sessionManager.get());
     const auto dataManager = qobject_cast<CocoaDataManager*>(m_dataManager);
 
     connect(dataManager, qOverload<const QString &, const Enums::SupplyChainAction &,
@@ -236,7 +236,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     // setup other components
     m_languageManager->connectQmlEngine(&engine);
     m_pageManager.setupQmlContext(engine);
-    m_userManager.setupQmlContext(engine);
+    m_userManager->setupQmlContext(engine);
     m_dbManager.setupQmlContext(engine);
     m_sessionManager->setupQmlContext(engine);
     m_dataManager->setupQmlContext(engine);

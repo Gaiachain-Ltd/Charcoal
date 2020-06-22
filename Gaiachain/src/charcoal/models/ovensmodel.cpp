@@ -11,6 +11,7 @@
 
 OvensModel::OvensModel(QObject *parent) : QueryModel(parent)
 {
+    setWebModelCanChange(false);
 }
 
 void OvensModel::refresh()
@@ -19,6 +20,10 @@ void OvensModel::refresh()
         qWarning() << RED("Cannot establish DB connection when connection name is empty!")
                    << m_query;
         return;
+    }
+
+    if (shouldRefreshWebData()) {
+        refreshWebData();
     }
 
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));

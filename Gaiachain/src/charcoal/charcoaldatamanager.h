@@ -23,12 +23,12 @@ class CharcoalDataManager : public AbstractDataManager
 {
     Q_OBJECT
 
+    Q_PROPERTY(ActionController* actionController READ actionController CONSTANT)
     Q_PROPERTY(TreeSpeciesModel* treeSpeciesModel READ treeSpeciesModel CONSTANT)
     Q_PROPERTY(VillagesModel* villagesModel READ villagesModel CONSTANT)
     Q_PROPERTY(ParcelsModel* parcelsModel READ parcelsModel CONSTANT)
     Q_PROPERTY(DestinationsModel* destinationsModel READ destinationsModel CONSTANT)
     Q_PROPERTY(OvenTypesModel* ovenTypesModel READ ovenTypesModel CONSTANT)
-    Q_PROPERTY(ActionController* actionController READ actionController CONSTANT)
     Q_PROPERTY(UnusedPlotIdsModel* unusedPlotIdsModel READ unusedPlotIdsModel CONSTANT)
     Q_PROPERTY(UnusedHarvestIdsModel* unusedHarvestIdsModel READ unusedHarvestIdsModel CONSTANT)
     Q_PROPERTY(UnusedTransportIdsModel* unusedTransportIdsModel READ unusedTransportIdsModel CONSTANT)
@@ -39,17 +39,21 @@ class CharcoalDataManager : public AbstractDataManager
     Q_PROPERTY(LocalEventsModel* localEventsModel READ localEventsModel CONSTANT)
 
 public:
-    CharcoalDataManager(QObject *parent = nullptr);
+    CharcoalDataManager(const QSharedPointer<RestSessionManager> &sessionManager,
+                        const QSharedPointer<UserManager> &userManager,
+                        QObject *parent = nullptr);
 
     void setupDatabase(const QString &dbPath) override;
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
+    Q_INVOKABLE void refreshQueuedWebRequests();
+
+    ActionController* actionController() const;
     TreeSpeciesModel* treeSpeciesModel() const;
     VillagesModel* villagesModel() const;
     ParcelsModel* parcelsModel() const;
     DestinationsModel* destinationsModel() const;
     OvenTypesModel* ovenTypesModel() const;
-    ActionController* actionController() const;
     UnusedPlotIdsModel* unusedPlotIdsModel() const;
     UnusedHarvestIdsModel* unusedHarvestIdsModel() const;
     UnusedTransportIdsModel* unusedTransportIdsModel() const;
@@ -61,16 +65,22 @@ public:
 
 private:
     bool checkModels() const;
+    void setupModel(QueryModel *model) const;
 
     const QString m_dbConnectionName = staticMetaObject.className();
 
     QString m_dbPath;
+
+    QSharedPointer<RestSessionManager> m_sessionManager;
+    QSharedPointer<UserManager> m_userManager;
+
+    ActionController* m_actionController = nullptr;
+
     TreeSpeciesModel* m_treeSpeciesModel = nullptr;
     VillagesModel* m_villagesModel = nullptr;
     ParcelsModel* m_parcelsModel = nullptr;
     DestinationsModel* m_destinationsModel = nullptr;
     OvenTypesModel* m_ovenTypesModel = nullptr;
-    ActionController* m_actionController = nullptr;
     UnusedPlotIdsModel* m_unusedPlotIdsModel = nullptr;
     UnusedHarvestIdsModel* m_unusedHarvestIdsModel = nullptr;
     UnusedTransportIdsModel* m_unusedTransportIdsModel = nullptr;

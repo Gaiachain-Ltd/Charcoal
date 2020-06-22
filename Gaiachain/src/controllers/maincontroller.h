@@ -13,6 +13,8 @@
 #include "charcoal/notificationmanager.h"
 #endif
 
+#include <QSharedDataPointer>
+
 class RestSessionManager;
 class AbstractDataManager;
 
@@ -90,11 +92,11 @@ private:
     LanguageManager *m_languageManager = nullptr;
 
     PageManager m_pageManager;
-    UserManager m_userManager;
+    QSharedPointer<UserManager> m_userManager;
 
     DatabaseManager m_dbManager;
 
-    RestSessionManager *m_sessionManager = nullptr;
+    QSharedPointer<RestSessionManager> m_sessionManager;
     AbstractDataManager *m_dataManager = nullptr;
 
 #ifdef CHARCOAL

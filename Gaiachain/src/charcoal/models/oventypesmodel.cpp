@@ -5,6 +5,7 @@
 
 OvenTypesModel::OvenTypesModel(QObject *parent) : QueryModel(parent)
 {
+    setWebModelCanChange(false);
     setDbQuery("SELECT id, name FROM OvenTypes");
 }
 

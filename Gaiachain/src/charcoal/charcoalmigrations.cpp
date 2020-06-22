@@ -118,8 +118,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Two\")"),
             QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Three\")"),
 
-            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Cassia siamea\")"),
-            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Technona grandis\")"),
+//            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Cassia siamea\")"),
+//            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Technona grandis\")"),
 
             QLatin1String("INSERT INTO Parcels (name) VALUES (\"0595112\")"),
             QLatin1String("INSERT INTO Parcels (name) VALUES (\"1234567\")"),
