@@ -17,7 +17,9 @@ public:
     Q_INVOKABLE void ping() override;
     Q_INVOKABLE void login(const QString &login, const QString &password) override;
 
-    template <typename Object, typename PointerToErrorHandler, typename PointerToReplyHandler>
+    template <typename Object,
+              typename PointerToErrorHandler,
+              typename PointerToReplyHandler>
     void sendRequest(const QSharedPointer<BaseRequest> &request,
                      const Object *target,
                      PointerToErrorHandler errorHandler,

@@ -67,7 +67,7 @@ void CharcoalDataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("localEventsModel"), m_localEventsModel);
 }
 
-void CharcoalDataManager::refreshQueuedWebRequests()
+void CharcoalDataManager::sendQueuedWebRequests()
 {
     const auto models = findChildren<QueryModel*>();
 

@@ -24,6 +24,7 @@ public:
 
     bool enabled() const;
     Enums::ConnectionState connectionState() const;
+    QString token() const;
 
     Q_INVOKABLE virtual void ping() = 0;
 

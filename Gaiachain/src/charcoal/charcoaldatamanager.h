@@ -46,7 +46,7 @@ public:
     void setupDatabase(const QString &dbPath) override;
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
-    Q_INVOKABLE void refreshQueuedWebRequests();
+    Q_INVOKABLE void sendQueuedWebRequests();
 
     ActionController* actionController() const;
     TreeSpeciesModel* treeSpeciesModel() const;

@@ -66,10 +66,13 @@ bool QueryModel::hasQueuedRequest() const
 
 void QueryModel::sendQueuedRequest()
 {
-    m_sessionManager->sendRequest(m_queuedRequest,
-                                  this,
-                                  &QueryModel::webErrorHandler,
-                                  &QueryModel::webReplyHandler);
+    if (hasQueuedRequest()) {
+        m_queuedRequest->setToken(m_sessionManager->token());
+        m_sessionManager->sendRequest(m_queuedRequest,
+                                      this,
+                                      &QueryModel::webErrorHandler,
+                                      &QueryModel::webReplyHandler);
+    }
 }
 
 /*!

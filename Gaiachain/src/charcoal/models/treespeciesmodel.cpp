@@ -3,6 +3,7 @@
 #include "rest/additionaldatarequest.h"
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
+#include "common/logs.h"
 
 TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : QueryModel(parent)
 {
@@ -16,10 +17,12 @@ void TreeSpeciesModel::refreshWebData()
         AdditionalDataRequest::DataType::TreeSpecies);
 
     if (m_userManager->isLoggedIn()) {
+        request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &TreeSpeciesModel::webErrorHandler,
                                       &TreeSpeciesModel::webReplyHandler);
     } else {
+        qDebug() << "Enqueing request";
         m_queuedRequest = request;
     }
 }
@@ -27,10 +30,10 @@ void TreeSpeciesModel::refreshWebData()
 void TreeSpeciesModel::webErrorHandler(const QString &error,
                                        const QNetworkReply::NetworkError code)
 {
-    qDebug() << Q_FUNC_INFO << "Web ERROR handler" << error << code;
+    qDebug() << RED("Web ERROR handler") << error << code;
 }
 
 void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)
 {
-    qDebug() << Q_FUNC_INFO << "Web reply handler" << reply;
+    qDebug() << GREEN("Web reply handler") << reply;
 }

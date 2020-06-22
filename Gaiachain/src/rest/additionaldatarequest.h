@@ -26,6 +26,7 @@ public:
     Q_ENUM(DataType)
 
     AdditionalDataRequest(const DataType &dataType);
+    AdditionalDataRequest(const QString &token, const DataType &dataType);
 
 private:
     static const QString sc_basePath;

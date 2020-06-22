@@ -52,7 +52,6 @@ protected:
 
     QSharedPointer<RestSessionManager> m_sessionManager;
     QSharedPointer<UserManager> m_userManager;
-
     QSharedPointer<BaseRequest> m_queuedRequest;
 
     bool m_webModelCanChange = false;

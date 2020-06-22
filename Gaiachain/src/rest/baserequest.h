@@ -14,11 +14,13 @@ class BaseRequest : public MRestRequest
 public:
     BaseRequest(const QString &path, const Type &type, const QString &token = QString());
 
+    void setToken(const QString &token);
+
 signals:
     void requestFinished(const QJsonDocument &doc) const;
 
 protected:
-    const QString mToken;
+    QString mToken;
 
     QElapsedTimer mElapsedTimer;
 

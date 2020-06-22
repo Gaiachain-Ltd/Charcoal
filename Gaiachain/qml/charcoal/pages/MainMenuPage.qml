@@ -60,7 +60,7 @@ GPage {
         if (mainController.flavor === "cocoa") {
             sessionManager.getAdditionalData()
         } else {
-            dataManager.refreshQueuedWebRequests()
+            dataManager.sendQueuedWebRequests()
         }
     }
 

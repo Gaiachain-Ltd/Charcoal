@@ -28,3 +28,8 @@ const QMap<AdditionalDataRequest::DataType, QString> AdditionalDataRequest::sc_r
 AdditionalDataRequest::AdditionalDataRequest(const AdditionalDataRequest::DataType &dataType)
     : BaseRequest(sc_requestsPath.value(dataType), Type::Get)
 {}
+
+AdditionalDataRequest::AdditionalDataRequest(const QString &token,
+                                             const AdditionalDataRequest::DataType &dataType)
+: BaseRequest(sc_requestsPath.value(dataType), Type::Get, token)
+{}
