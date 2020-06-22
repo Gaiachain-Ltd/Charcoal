@@ -40,4 +40,6 @@ void QueryModel::refresh()
     }
 
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+
+    emit refreshed();
 }

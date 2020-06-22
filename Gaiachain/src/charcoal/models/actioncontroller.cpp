@@ -403,6 +403,8 @@ void ActionController::registerLoggingBeginning(
         return;
     }
 
+    emit refreshLocalEvents();
+
     // Lastly, send a request to server to add it, too.
 }
 
@@ -458,6 +460,8 @@ void ActionController::registerLoggingEnding(
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
+
+    emit refreshLocalEvents();
 }
 
 void ActionController::registerCarbonizationBeginning(
@@ -577,6 +581,8 @@ void ActionController::registerCarbonizationBeginning(
         return;
     }
 
+    emit refreshLocalEvents();
+
     // Lastly, send a request to server to add it, too.
 }
 
@@ -642,6 +648,8 @@ void ActionController::registerCarbonizationEnding(
             return;
         }
     }
+
+    emit refreshLocalEvents();
 
     // Lastly, send a request to server to add it, too.
 }
@@ -724,6 +732,8 @@ void ActionController::registerTransportAndLoading(
         return;
     }
 
+    emit refreshLocalEvents();
+
     // Lastly, send a request to server to add it, too.
 }
 
@@ -785,6 +795,8 @@ void ActionController::registerReception(
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
+
+    emit refreshLocalEvents();
 
     // Lastly, send a request to server to add it, too.
 }
@@ -862,6 +874,8 @@ void ActionController::registerReplantation(
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
+
+    emit refreshLocalEvents();
 
     // Lastly, send a request to server to add it, too.
 }

@@ -71,7 +71,13 @@ Item {
             disabledColorTint: GStyle.blank
             enabled: localEventsModel.size > 0
 
-            onClicked: pageManager.enter(Enums.Page.WaitingTransactions)
+            onClicked: {
+                if (isCocoa) {
+                    pageManager.enter(Enums.Page.WaitingTransactions)
+                }
+                // On Charcoal, nothing happens - there is no WaitingTransactions
+                // page
+            }
         }
 
         GText {

@@ -25,6 +25,8 @@ CharcoalDataManager::CharcoalDataManager(QObject *parent)
       m_minimumDateModel(new MinimumDateModel(this)),
       m_localEventsModel(new LocalEventsModel(this))
 {
+    connect(m_actionController, &ActionController::refreshLocalEvents,
+            m_localEventsModel, &LocalEventsModel::refresh);
 }
 
 void CharcoalDataManager::setupDatabase(const QString &dbPath)

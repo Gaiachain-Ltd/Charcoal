@@ -12,7 +12,11 @@ public:
     void setDbConnection(const QString &connectionName);
     bool isValid() const;
 
-    Q_INVOKABLE virtual void refresh();
+signals:
+    void refreshed() const;
+
+public slots:
+    virtual void refresh();
 
 protected:
     QString m_query;

@@ -21,6 +21,8 @@ void MinimumDateModel::refresh()
     }
 
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+
+    emit refreshed();
 }
 
 void MinimumDateModel::setPlotId(const QString &id)

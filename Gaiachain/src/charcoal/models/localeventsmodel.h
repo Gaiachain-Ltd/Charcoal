@@ -18,7 +18,10 @@ public:
 signals:
     void sizeChanged(const int size) const;
 
+private slots:
+    void updateSize();
+
 private:
-    int m_oldRowCount = 0;
+    int m_rowCount = 0;
 };
 

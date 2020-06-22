@@ -22,6 +22,8 @@ void OvensModel::refresh()
     }
 
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+
+    emit refreshed();
 }
 
 void OvensModel::setPlotId(const QString &id)

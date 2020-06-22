@@ -1,12 +1,14 @@
 #include "localeventsmodel.h"
 #include <QDebug>
+
 LocalEventsModel::LocalEventsModel(QObject *parent) : QueryModel(parent)
 {
     setDbQuery("SELECT id FROM Events WHERE isCommitted=0 "
                "UNION ALL "
                "SELECT id FROM Replantations WHERE isCommitted=0");
 
-    // TODO: emit sizeChanged when size changes ;-)
+    connect(this, &LocalEventsModel::refreshed,
+            this, &LocalEventsModel::updateSize);
 }
 
 int LocalEventsModel::size()
@@ -15,13 +17,15 @@ int LocalEventsModel::size()
         return 0;
     }
 
-    const int previous = m_oldRowCount;
-    refresh();
-    m_oldRowCount = rowCount();
-    qDebug() << "RC" << m_oldRowCount;
+    return m_rowCount;
+}
 
-    if (previous != m_oldRowCount) {
-        emit sizeChanged(m_oldRowCount);
+void LocalEventsModel::updateSize()
+{
+    const int previous = m_rowCount;
+    m_rowCount = rowCount();
+
+    if (previous != m_rowCount) {
+        emit sizeChanged(m_rowCount);
     }
-    return m_oldRowCount;
 }

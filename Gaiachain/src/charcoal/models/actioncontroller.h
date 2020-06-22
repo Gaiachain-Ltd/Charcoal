@@ -109,12 +109,10 @@ public:
         const QDateTime &beginningDate
         ) const;
 
+signals:
+    void refreshLocalEvents() const;
+
 private:
-    const QString sep = "/";
-    const QString dateFormat = "dd-MM-yyyy";
-
-    QString m_dbConnName;
-
     QString findEntityId(const QString &name) const;
     QString findEntityTypeId(const Enums::PackageType type) const;
     QString findEventTypeId(const Enums::SupplyChainAction action) const;
@@ -127,5 +125,10 @@ private:
 
     int scannedBagsForAction(const QString &transportId,
                              const Enums::SupplyChainAction action) const;
+
+    const QString sep = "/";
+    const QString dateFormat = "dd-MM-yyyy";
+
+    QString m_dbConnName;
 };
 
