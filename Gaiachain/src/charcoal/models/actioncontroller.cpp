@@ -437,7 +437,7 @@ void ActionController::registerLoggingEnding(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties "
+                  "date, locationLatitude, locationLongitude, properties, "
                   "isCommitted) "
                   "VALUES (:entityId, :typeId, :userId, :date, "
                   ":locationLatitude, :locationLongitude, :properties, 0)");
@@ -505,7 +505,8 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     if (alreadyPresent == false) {
-        query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isReplanted) "
+        query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, "
+                      "isReplanted) "
                       "VALUES (:typeId, :harvestId, :parent, 0, 0)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":harvestId", harvestId);
