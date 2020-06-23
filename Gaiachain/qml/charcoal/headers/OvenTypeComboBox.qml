@@ -18,6 +18,7 @@ Headers.GHeader {
     property alias currentText: comboBox.text
     property alias isTraditional: entriesList.isTraditional
     property alias ovenName: entriesList.ovenName
+    property alias ovenType: entriesList.ovenType
     property alias popupTitle: comboBox.popupTitle
 
     property alias checkIcon: comboBox.checkIcon
@@ -95,6 +96,7 @@ Headers.GHeader {
                 ListView {
                     property bool isTraditional: false
                     property string ovenName
+                    property string ovenType
 
                     id: entriesList
 
@@ -111,6 +113,7 @@ Headers.GHeader {
                         readonly property string text: translatedName
                         readonly property bool isTraditional: isTraditionalOven
                         readonly property string ovenName: name
+                        readonly property string ovenType: type
 
                         id: delegateItem
                         width: entriesList.width
@@ -162,6 +165,7 @@ Headers.GHeader {
                                     newSelection.push(text)
                                     entriesList.isTraditional = delegateItem.isTraditional
                                     entriesList.ovenName = delegateItem.ovenName
+                                    entriesList.ovenType = delegateItem.ovenType
                                 }
                                 newSelection.sort()
                                 comboBox.selection = newSelection

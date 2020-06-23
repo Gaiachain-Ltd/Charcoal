@@ -26,7 +26,9 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `code` TEXT NOT NULL UNIQUE) "),
             QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
-            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE, `oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2))"),
+            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, "
+                          "`name` TEXT NOT NULL UNIQUE, `type` INTEGER NOT NULL, "
+                          "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2))"),
 
             // SupplyChain
             // Entities are how Transactions are called on Web side

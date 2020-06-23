@@ -56,7 +56,7 @@ RecordsList ListUpdater::webList(const QStringList &fieldNames,
         Record record;
         const QJsonObject object(item.toObject());
         for (const QString &name : fieldNames) {
-            record.insert(name, object.value(name).toString());
+            record.insert(name, object.value(name).toVariant().toString());
         }
         result.append(record);
     }
@@ -94,8 +94,6 @@ bool ListUpdater::insertMissingItems(const RecordsList &webItems,
         }
     }
 
-    qDebug() << "Web" << webItems << "\nDB" << dbItems << "toInsert" << toInsert;
-
     const QString insert("INSERT INTO %1 (%2) VALUES (%3)");
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
@@ -103,6 +101,7 @@ bool ListUpdater::insertMissingItems(const RecordsList &webItems,
         query.prepare(insert.arg(m_tableName,
                                  item.keys().join(sep),
                                  wrapAndJoin(item.values())));
+
         if (query.exec() == false) {
             qWarning() << RED("Inserting") << m_tableName << ("has failed!")
                        << query.lastError().text()

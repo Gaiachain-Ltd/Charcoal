@@ -52,12 +52,12 @@ GPage {
     }
 
     Component.onCompleted: {
-        if (!userManager.offlineMode &&
-                localEventsModel.size) {
-            dataManager.sendOfflineActions()
-        }
-
         if (mainController.flavor === "cocoa") {
+            if (!userManager.offlineMode &&
+                    localEventsModel.size) {
+                dataManager.sendOfflineActions()
+            }
+
             sessionManager.getAdditionalData()
         } else {
             dataManager.sendQueuedWebRequests()

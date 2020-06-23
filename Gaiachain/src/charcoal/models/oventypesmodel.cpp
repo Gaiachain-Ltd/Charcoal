@@ -12,7 +12,7 @@
 OvenTypesModel::OvenTypesModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(false);
-    setDbQuery("SELECT id, name FROM OvenTypes");
+    setDbQuery("SELECT id, name, type FROM OvenTypes");
 }
 
 QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
@@ -38,6 +38,8 @@ QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
         return query().value("name").toString();
     case OvenTypesRole::IsTraditionalOven:
         return isTraditional();
+    case OvenTypesRole::Type:
+        return query().value("type").toInt();
     }
 
     return {};
@@ -67,7 +69,7 @@ void OvenTypesModel::refreshWebData()
 void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
 {
     ListUpdater updates("OvenTypes", m_connectionName);
-    if (updates.updateTable(reply, { "name", "oven_height", "oven_width", "oven_length" }))
+    if (updates.updateTable(reply, { "name", "type", "oven_height", "oven_width", "oven_length" }))
     {
         emit webDataRefreshed();
     } else {
@@ -77,10 +79,10 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
 
 bool OvenTypesModel::isTraditional() const
 {
-    const QString name(query().value("name").toString().toLower());
-    if (name == QStringLiteral("metal")) {
+    const QString type(query().value("type").toString());
+    if (type == QStringLiteral("1")) {
         return false;
-    } else if (name == QStringLiteral("traditional")) {
+    } else if (type == QStringLiteral("Traditional")) {
         return true;
     }
 

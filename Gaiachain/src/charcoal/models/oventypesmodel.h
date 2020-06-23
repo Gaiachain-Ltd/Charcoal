@@ -11,7 +11,8 @@ public:
         Id = Qt::UserRole + 1,
         Name,
         TranslatedName,
-        IsTraditionalOven
+        IsTraditionalOven,
+        Type
     };
     Q_ENUM(OvenTypesRole)
 
@@ -31,7 +32,8 @@ private:
         { OvenTypesRole::Id, "id" },
         { OvenTypesRole::Name, "name" },
         { OvenTypesRole::TranslatedName, "translatedName" },
-        { OvenTypesRole::IsTraditionalOven, "isTraditionalOven" }
+        { OvenTypesRole::IsTraditionalOven, "isTraditionalOven" },
+        { OvenTypesRole::Type, "type" }
     };
 
     bool isTraditional() const;

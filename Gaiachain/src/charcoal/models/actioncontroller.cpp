@@ -303,12 +303,12 @@ QString ActionController::nextOvenNumber(const QString &plotId) const
     return "-1";
 }
 
-QVariantList ActionController::defaultOvenDimensions(const QString &ovenType) const
+QVariantList ActionController::defaultOvenDimensions(const int ovenType) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     QVariantList dimensions;
-    if (ovenType == "metal") {
-        query.prepare("SELECT oven_height, oven_width, oven_length FROM OvenTypes WHERE name=:ovenType");
+    if (ovenType == 2) {
+        query.prepare("SELECT oven_height, oven_width, oven_length FROM OvenTypes WHERE type=:ovenType");
         query.bindValue(":ovenType", ovenType);
 
         if (query.exec() == false) {
@@ -554,8 +554,9 @@ void ActionController::registerCarbonizationBeginning(
 
     // Get proper oven dimensions
     QVariantList dimensions;
-    if (ovenType == "metal") {
-        dimensions = defaultOvenDimensions(ovenType);
+    const int ovenTypeInt = ovenType.toInt();
+    if (ovenTypeInt == 2) {
+        dimensions = defaultOvenDimensions(ovenTypeInt);
     } else {
         dimensions = ovenDimensions;
     }
@@ -571,9 +572,10 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
+    // Height, length, width is the order from GUI
     query.bindValue(":height", dimensions.at(0));
-    query.bindValue(":width", dimensions.at(1));
-    query.bindValue(":length", dimensions.at(2));
+    query.bindValue(":length", dimensions.at(1));
+    query.bindValue(":width", dimensions.at(2));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")
@@ -971,7 +973,7 @@ QString ActionController::findOvenTypeId(const QString &ovenType) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("SELECT id FROM OvenTypes WHERE name=:ovenType");
+    query.prepare("SELECT id FROM OvenTypes WHERE type=:ovenType");
     query.bindValue(":ovenType", ovenType);
 
     if (query.exec()) {

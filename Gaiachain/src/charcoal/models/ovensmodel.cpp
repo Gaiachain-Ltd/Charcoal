@@ -69,7 +69,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
     {
         const QString ovenTypeId(query().value("type").toString());
         QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-        q.prepare("SELECT name FROM OvenTypes WHERE id=:ovenTypeId");
+        q.prepare("SELECT type FROM OvenTypes WHERE id=:ovenTypeId");
         q.bindValue(":ovenTypeId", ovenTypeId);
 
         if (q.exec() == false) {
@@ -79,14 +79,14 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
         }
 
         q.next();
-        const QString type(q.value("name").toString());
-        const bool isMetallic = (type == "metal");
+        const int type(q.value("type").toInt());
+        const bool isMetallic = (type == 2);
 
         return tr("%1 - %2 x %3 x %4m")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))
-            .arg(query().value("height").toString())
-            .arg(query().value("width").toString())
-            .arg(query().value("length").toString());
+            .arg(query().value("oven_height").toString())
+            .arg(query().value("oven_width").toString())
+            .arg(query().value("oven_length").toString());
     }
     case OvenRole::SecondRow:
     {

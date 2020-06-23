@@ -18,9 +18,12 @@ Pages.SupplyChainPageBase {
 
     title: Strings.carbonizationBeginning
 
+    // 1 - Traditional oven
+    // 2 - Metallic oven
+    // These ids come from Web :shrug:
     proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
-                           && (ovenTypeComboBox.ovenName === "metal"
-                           || (ovenTypeComboBox.ovenName === "traditional"
+                           && (ovenTypeComboBox.ovenType === "2"
+                           || (ovenTypeComboBox.ovenType === "1"
                                && ovenDimensionsHeader.isEmpty === false)))
 
     Component.onCompleted: refreshData()
@@ -68,9 +71,9 @@ Pages.SupplyChainPageBase {
                     createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
                     createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
-                                       ovenTypeComboBox.ovenName === "metal"?
+                                       ovenTypeComboBox.ovenType === "2"?
                                            dataManager.actionController.defaultOvenDimensions(
-                                               ovenTypeComboBox.ovenName)
+                                               ovenTypeComboBox.ovenType)
                                          : ovenDimensionsHeader.values],
                                       "", "",
                                       Pages.SupplyChainPageBase.Row),
@@ -87,7 +90,7 @@ Pages.SupplyChainPageBase {
                     carbonizerIdInputHeader.inputText,
                     plotIdComboBox.currentText,
                     ovenIdHeader.inputText,
-                    ovenTypeComboBox.ovenName,
+                    ovenTypeComboBox.ovenType,
                     ovenDimensionsHeader.values)
 
         pageManager.enter(Enums.Page.MainMenu)
@@ -168,7 +171,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.ovenDimensions
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
-        titles: [ Strings.height, Strings.width, Strings.length ]
+        titles: [ Strings.height, Strings.length, Strings.width ]
         enabled: ovenTypeComboBox.isTraditional
     }
 

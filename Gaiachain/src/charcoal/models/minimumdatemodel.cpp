@@ -80,8 +80,9 @@ void MinimumDateModel::setPlotId(const QString &id)
 
     emit plotIdChanged(id);
 
-    query().seek(0);
-    setDate(query().value("date").toDateTime());
+    if (query().seek(0)) {
+        setDate(query().value("date").toDateTime());
+    }
 }
 
 QString MinimumDateModel::plotId() const
