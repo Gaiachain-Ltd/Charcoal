@@ -33,7 +33,9 @@ void ParcelsModel::refreshWebData()
 void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 {
     TableUpdater updates("Parcels", m_connectionName);
-    if (updates.updateTable("name", reply, query()) == false) {
+    if (updates.updateTable("name", reply)) {
+        emit webDataRefreshed();
+    } else {
         qWarning() << RED("Updating items has failed");
     }
 }

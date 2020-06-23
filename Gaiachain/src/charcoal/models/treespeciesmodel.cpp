@@ -39,7 +39,9 @@ void TreeSpeciesModel::webErrorHandler(const QString &error,
 void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)
 {
     TableUpdater updates("TreeSpecies", m_connectionName);
-    if (updates.updateTable("name", reply, query()) == false) {
+    if (updates.updateTable("name", reply)) {
+        emit webDataRefreshed();
+    } else {
         qWarning() << RED("Updating items has failed");
     }
 }

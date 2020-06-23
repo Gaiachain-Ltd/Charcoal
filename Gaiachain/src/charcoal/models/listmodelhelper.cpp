@@ -23,13 +23,12 @@ TableUpdater::TableUpdater(const QString &tableName, const QString &connectionNa
 }
 
 bool TableUpdater::updateTable(const QString &fieldName,
-                          const QJsonDocument &webData,
-                          QSqlQuery query)
+                               const QJsonDocument &webData)
 {
     const QStringList webItems = webList(fieldName, webData);
-    const QStringList dbItems = dbList(fieldName, query);
-    return (insertMissingItems(webItems, dbItems)
-            && removeObsoleteItems(webItems, dbItems));
+    const QStringList dbItems = dbList(fieldName);
+    return (insertMissingItems(fieldName, webItems, dbItems)
+            && removeObsoleteItems(fieldName, webItems, dbItems));
 }
 
 QStringList TableUpdater::webList(const QString &fieldName, const QJsonDocument &json)
@@ -46,11 +45,15 @@ QStringList TableUpdater::webList(const QString &fieldName, const QJsonDocument 
     return result;
 }
 
-QStringList TableUpdater::dbList(const QString &fieldName, QSqlQuery query)
+QStringList TableUpdater::dbList(const QString &fieldName)
 {
     QStringList result;
 
-    query.seek(-1);
+    const QString queryString("SELECT %1 FROM %2");
+    QSqlQuery query(queryString.arg(fieldName, m_tableName),
+                    db::Helpers::databaseConnection(m_connectionName));
+
+    query.exec();
     while(query.next()) {
         result.append(query.value(fieldName).toString());
     }
@@ -58,8 +61,9 @@ QStringList TableUpdater::dbList(const QString &fieldName, QSqlQuery query)
     return result;
 }
 
-bool TableUpdater::insertMissingItems(const QStringList &webItems,
-                                 const QStringList &dbItems) const
+bool TableUpdater::insertMissingItems(const QString &fieldName,
+                                      const QStringList &webItems,
+                                      const QStringList &dbItems) const
 {
     QStringList toInsert;
     for (const QString &webItem : qAsConst(webItems)) {
@@ -68,11 +72,13 @@ bool TableUpdater::insertMissingItems(const QStringList &webItems,
         }
     }
 
+    qDebug() << "Web" << webItems << "\nDB" << dbItems << "toInsert" << toInsert;
+
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    const QString insert("INSERT INTO %1 (name) VALUES (\"%2\")");
+    const QString insert("INSERT INTO %1 (%2) VALUES (\"%3\")");
     for (const QString &item : qAsConst(toInsert)) {
-        query.prepare(insert.arg(m_tableName, item));
+        query.prepare(insert.arg(m_tableName, fieldName, item));
         if (query.exec() == false) {
             qWarning() << RED("Inserting") << m_tableName << ("has failed!")
                        << query.lastError().text()
@@ -85,8 +91,9 @@ bool TableUpdater::insertMissingItems(const QStringList &webItems,
     return true;
 }
 
-bool TableUpdater::removeObsoleteItems(const QStringList &webItems,
-                                  const QStringList &dbItems) const
+bool TableUpdater::removeObsoleteItems(const QString &fieldName,
+                                       const QStringList &webItems,
+                                       const QStringList &dbItems) const
 {
     QStringList toRemove;
 
@@ -98,9 +105,9 @@ bool TableUpdater::removeObsoleteItems(const QStringList &webItems,
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    const QString remove("DELETE FROM %1 WHERE name=\"%2\"");
+    const QString remove("DELETE FROM %1 WHERE %2=\"%3\"");
     for (const QString &item : qAsConst(toRemove)) {
-        query.prepare(remove.arg(m_tableName, item));
+        query.prepare(remove.arg(m_tableName, fieldName, item));
         if (query.exec() == false) {
             qWarning() << RED("Removing") << m_tableName << ("has failed!")
                        << query.lastError().text()

@@ -119,13 +119,13 @@ void QueryModel::refresh()
  */
 void QueryModel::refreshWebData()
 {
-    m_isDirty = false;
     emit webDataRefreshed();
 }
 
 void QueryModel::onWebDataRefreshed()
 {
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+    m_isDirty = false;
     emit refreshed();
 }
 

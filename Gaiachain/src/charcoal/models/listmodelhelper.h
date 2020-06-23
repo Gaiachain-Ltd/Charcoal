@@ -10,15 +10,16 @@ class TableUpdater
 public:
     TableUpdater(const QString &tableName, const QString &connectionName);
 
-    bool updateTable(const QString &fieldName, const QJsonDocument &webData,
-                     QSqlQuery query);
+    bool updateTable(const QString &fieldName, const QJsonDocument &webData);
 
 private:
     QStringList webList(const QString &fieldName, const QJsonDocument &json);
-    QStringList dbList(const QString &fieldName, QSqlQuery query);
-    bool insertMissingItems(const QStringList &webItems,
+    QStringList dbList(const QString &fieldName);
+    bool insertMissingItems(const QString &fieldName,
+                            const QStringList &webItems,
                             const QStringList &dbItems) const;
-    bool removeObsoleteItems(const QStringList &webItems,
+    bool removeObsoleteItems(const QString &fieldName,
+                             const QStringList &webItems,
                              const QStringList &dbItems) const;
 
     bool isValid();
