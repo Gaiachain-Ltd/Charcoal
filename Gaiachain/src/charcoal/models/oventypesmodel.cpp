@@ -78,7 +78,7 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
 bool OvenTypesModel::isTraditional() const
 {
     const QString name(query().value("name").toString().toLower());
-    if (name == QStringLiteral("metallic")) {
+    if (name == QStringLiteral("metal")) {
         return false;
     } else if (name == QStringLiteral("traditional")) {
         return true;

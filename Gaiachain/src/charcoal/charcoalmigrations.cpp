@@ -108,20 +108,4 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("VACUUM")
         }, true)
     },
-    // This inserts some DUMMY const data!
-    // TODO: REMOVE - use web to get this info
-    {
-        { 0, 0, 4 },
-        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            // Additional data
-
-            //QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"traditional\")"),
-            //QLatin1String("INSERT INTO OvenTypes (name, oven_height, oven_width, oven_length) VALUES (\"metallic\", 4, 5, 6)"),
-            // Supply chain
-        }, true),
-        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            //QLatin1String("DELETE FROM OvenTypes"),
-            QLatin1String("VACUUM")
-        }, true)
-    },
 };
