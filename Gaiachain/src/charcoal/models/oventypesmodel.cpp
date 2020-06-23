@@ -79,11 +79,11 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
 
 bool OvenTypesModel::isTraditional() const
 {
-    const QString type(query().value("type").toString());
-    if (type == QStringLiteral("1")) {
-        return false;
-    } else if (type == QStringLiteral("Traditional")) {
+    const int type(query().value("type").toInt());
+    if (type == 1) {
         return true;
+    } else if (type == 2) {
+        return false;
     }
 
     return false;

@@ -35,7 +35,7 @@ void OvensModel::setPlotId(const QString &id)
 {
     m_plotId = id;
 
-    setDbQuery(QString("SELECT id, type, name, height, length, width, "
+    setDbQuery(QString("SELECT id, type, name, oven_height, oven_length, oven_width, "
                        "carbonizationBeginning "
                        "FROM Ovens WHERE carbonizationEnding IS NULL "
                        "AND plot IS "
