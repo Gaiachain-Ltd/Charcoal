@@ -32,8 +32,8 @@ void DestinationsModel::refreshWebData()
 
 void DestinationsModel::webReplyHandler(const QJsonDocument &reply)
 {
-    TableUpdater updates("Destinations", m_connectionName);
-    if (updates.updateTable("name", reply)) {
+    ListUpdater updates("Destinations", m_connectionName);
+    if (updates.updateTable(reply, "name")) {
         emit webDataRefreshed();
     } else {
         qWarning() << RED("Updating items has failed");

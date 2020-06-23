@@ -80,13 +80,13 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
 
         q.next();
         const QString type(q.value("name").toString());
-        const bool isMetallic = (type == "metallic");
+        const bool isMetallic = (type == "metal");
 
         return tr("%1 - %2 x %3 x %4m")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))
             .arg(query().value("height").toString())
-            .arg(query().value("length").toString())
-            .arg(query().value("width").toString());
+            .arg(query().value("width").toString())
+            .arg(query().value("length").toString());
     }
     case OvenRole::SecondRow:
     {

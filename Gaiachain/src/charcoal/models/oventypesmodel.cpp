@@ -1,5 +1,11 @@
 #include "oventypesmodel.h"
 
+#include "rest/additionaldatarequest.h"
+#include "controllers/session/restsessionmanager.h"
+#include "controllers/usermanager.h"
+#include "common/logs.h"
+#include "listmodelhelper.h"
+
 #include <QSqlQuery>
 #include <QDebug>
 
@@ -40,6 +46,33 @@ QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> OvenTypesModel::roleNames() const
 {
     return m_roleNames;
+}
+
+void OvenTypesModel::refreshWebData()
+{
+    const auto request = QSharedPointer<AdditionalDataRequest>::create(
+        AdditionalDataRequest::DataType::OvenTypes);
+
+    if (m_userManager->isLoggedIn()) {
+        request->setToken(m_sessionManager->token());
+        m_sessionManager->sendRequest(request, this,
+                                      &OvenTypesModel::webErrorHandler,
+                                      &OvenTypesModel::webReplyHandler);
+    } else {
+        qDebug() << "Enqueing request";
+        m_queuedRequest = request;
+    }
+}
+
+void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
+{
+    ListUpdater updates("OvenTypes", m_connectionName);
+    if (updates.updateTable(reply, { "name", "oven_height", "oven_width", "oven_length" }))
+    {
+        emit webDataRefreshed();
+    } else {
+        qWarning() << RED("Updating items has failed");
+    }
 }
 
 bool OvenTypesModel::isTraditional() const

@@ -19,7 +19,7 @@ Pages.SupplyChainPageBase {
     title: Strings.carbonizationBeginning
 
     proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
-                           && (ovenTypeComboBox.ovenName === "metallic"
+                           && (ovenTypeComboBox.ovenName === "metal"
                            || (ovenTypeComboBox.ovenName === "traditional"
                                && ovenDimensionsHeader.isEmpty === false)))
 
@@ -68,7 +68,7 @@ Pages.SupplyChainPageBase {
                     createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
                     createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
-                                       ovenTypeComboBox.ovenName === "metallic"?
+                                       ovenTypeComboBox.ovenName === "metal"?
                                            dataManager.actionController.defaultOvenDimensions(
                                                ovenTypeComboBox.ovenName)
                                          : ovenDimensionsHeader.values],
@@ -168,7 +168,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.ovenDimensions
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
-        titles: [ Strings.height, Strings.length, Strings.width ]
+        titles: [ Strings.height, Strings.width, Strings.length ]
         enabled: ovenTypeComboBox.isTraditional
     }
 

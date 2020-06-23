@@ -13,7 +13,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-TableUpdater::TableUpdater(const QString &tableName, const QString &connectionName)
+ListUpdater::ListUpdater(const QString &tableName, const QString &connectionName)
     : m_tableName(tableName), m_connectionName(connectionName)
 {
     if (isValid() == false) {
@@ -22,51 +22,73 @@ TableUpdater::TableUpdater(const QString &tableName, const QString &connectionNa
     }
 }
 
-bool TableUpdater::updateTable(const QString &fieldName,
-                               const QJsonDocument &webData)
+bool ListUpdater::updateTable(const QJsonDocument &webData,
+                              const QString &fieldName) const
 {
-    const QStringList webItems = webList(fieldName, webData);
-    const QStringList dbItems = dbList(fieldName);
-    return (insertMissingItems(fieldName, webItems, dbItems)
-            && removeObsoleteItems(fieldName, webItems, dbItems));
+    return updateTable(webData, QStringList(fieldName));
 }
 
-QStringList TableUpdater::webList(const QString &fieldName, const QJsonDocument &json)
+bool ListUpdater::updateTable(const QJsonDocument &webData,
+                              const QStringList &fieldNames) const
 {
-    QStringList result;
+    QStringList names;
+    if (fieldNames.contains(id)) {
+        names = fieldNames;
+    } else {
+        names.append(id);
+        names.append(fieldNames);
+    }
+
+    const auto webItems = webList(fieldNames, webData);
+    const auto dbItems = dbList(fieldNames);
+    return (insertMissingItems(webItems, dbItems)
+            && removeObsoleteItems(webItems, dbItems));
+}
+
+RecordsList ListUpdater::webList(const QStringList &fieldNames,
+                                 const QJsonDocument &json) const
+{
+    RecordsList result;
     const QJsonObject mainObject(json.object());
     const QJsonArray mainArray(mainObject.value("results").toArray());
 
     for (const QJsonValue &item : mainArray) {
+        Record record;
         const QJsonObject object(item.toObject());
-        result.append(object.value(fieldName).toString());
+        for (const QString &name : fieldNames) {
+            record.insert(name, object.value(name).toString());
+        }
+        result.append(record);
     }
 
     return result;
 }
 
-QStringList TableUpdater::dbList(const QString &fieldName)
+RecordsList ListUpdater::dbList(const QStringList &fieldNames) const
 {
-    QStringList result;
+    RecordsList result;
 
     const QString queryString("SELECT %1 FROM %2");
-    QSqlQuery query(queryString.arg(fieldName, m_tableName),
+    QSqlQuery query(queryString.arg(fieldNames.join(sep), m_tableName),
                     db::Helpers::databaseConnection(m_connectionName));
 
     query.exec();
     while(query.next()) {
-        result.append(query.value(fieldName).toString());
+        Record record;
+        for (const QString &name : fieldNames) {
+            record.insert(name, query.value(name).toString());
+        }
+        result.append(record);
     }
 
     return result;
 }
 
-bool TableUpdater::insertMissingItems(const QString &fieldName,
-                                      const QStringList &webItems,
-                                      const QStringList &dbItems) const
+bool ListUpdater::insertMissingItems(const RecordsList &webItems,
+                                     const RecordsList &dbItems) const
 {
-    QStringList toInsert;
-    for (const QString &webItem : qAsConst(webItems)) {
+    RecordsList toInsert;
+    for (const auto &webItem : qAsConst(webItems)) {
         if (dbItems.contains(webItem) == false) {
             toInsert.append(webItem);
         }
@@ -74,11 +96,13 @@ bool TableUpdater::insertMissingItems(const QString &fieldName,
 
     qDebug() << "Web" << webItems << "\nDB" << dbItems << "toInsert" << toInsert;
 
+    const QString insert("INSERT INTO %1 (%2) VALUES (%3)");
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    const QString insert("INSERT INTO %1 (%2) VALUES (\"%3\")");
-    for (const QString &item : qAsConst(toInsert)) {
-        query.prepare(insert.arg(m_tableName, fieldName, item));
+    for (const auto &item : qAsConst(toInsert)) {
+        query.prepare(insert.arg(m_tableName,
+                                 item.keys().join(sep),
+                                 wrapAndJoin(item.values())));
         if (query.exec() == false) {
             qWarning() << RED("Inserting") << m_tableName << ("has failed!")
                        << query.lastError().text()
@@ -91,13 +115,12 @@ bool TableUpdater::insertMissingItems(const QString &fieldName,
     return true;
 }
 
-bool TableUpdater::removeObsoleteItems(const QString &fieldName,
-                                       const QStringList &webItems,
-                                       const QStringList &dbItems) const
+bool ListUpdater::removeObsoleteItems(const RecordsList &webItems,
+                                      const RecordsList &dbItems) const
 {
-    QStringList toRemove;
+    RecordsList toRemove;
 
-    for (const QString &localItem : qAsConst(dbItems)) {
+    for (const auto &localItem : qAsConst(dbItems)) {
         if (webItems.contains(localItem) == false) {
             toRemove.append(localItem);
         }
@@ -105,9 +128,10 @@ bool TableUpdater::removeObsoleteItems(const QString &fieldName,
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    const QString remove("DELETE FROM %1 WHERE %2=\"%3\"");
-    for (const QString &item : qAsConst(toRemove)) {
-        query.prepare(remove.arg(m_tableName, fieldName, item));
+    const QString remove("DELETE FROM %1 WHERE %2=%3");
+
+    for (const auto &item : qAsConst(toRemove)) {
+        query.prepare(remove.arg(m_tableName, id, item.value(id)));
         if (query.exec() == false) {
             qWarning() << RED("Removing") << m_tableName << ("has failed!")
                        << query.lastError().text()
@@ -120,7 +144,22 @@ bool TableUpdater::removeObsoleteItems(const QString &fieldName,
     return true;
 }
 
-bool TableUpdater::isValid()
+bool ListUpdater::isValid() const
 {
     return (m_tableName.isEmpty() == false && m_connectionName.isEmpty() == false);
+}
+
+QString ListUpdater::wrapAndJoin(const QStringList &items) const
+{
+    QString result;
+
+    for (const QString &item : items) {
+        if (result.isEmpty() == false) {
+            result.append(sep);
+        }
+
+        result.append(wrap + item + wrap);
+    }
+
+    return result;
 }

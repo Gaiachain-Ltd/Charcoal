@@ -307,8 +307,8 @@ QVariantList ActionController::defaultOvenDimensions(const QString &ovenType) co
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     QVariantList dimensions;
-    if (ovenType == "metallic") {
-        query.prepare("SELECT height, length, width FROM OvenTypes WHERE name=:ovenType");
+    if (ovenType == "metal") {
+        query.prepare("SELECT oven_height, oven_width, oven_length FROM OvenTypes WHERE name=:ovenType");
         query.bindValue(":ovenType", ovenType);
 
         if (query.exec() == false) {
@@ -318,9 +318,9 @@ QVariantList ActionController::defaultOvenDimensions(const QString &ovenType) co
         }
 
         query.next();
-        dimensions.append(query.value("height").toString());
-        dimensions.append(query.value("length").toString());
-        dimensions.append(query.value("width").toString());
+        dimensions.append(query.value("oven_height").toString());
+        dimensions.append(query.value("oven_width").toString());
+        dimensions.append(query.value("oven_length").toString());
     } else {
         return QVariantList{ 0, 0, 0 };
     }
@@ -554,7 +554,7 @@ void ActionController::registerCarbonizationBeginning(
 
     // Get proper oven dimensions
     QVariantList dimensions;
-    if (ovenType == "metallic") {
+    if (ovenType == "metal") {
         dimensions = defaultOvenDimensions(ovenType);
     } else {
         dimensions = ovenDimensions;
@@ -565,15 +565,15 @@ void ActionController::registerCarbonizationBeginning(
     const QString ovenTypeId(findOvenTypeId(ovenType));
 
     query.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
-                  "height, length, width) "
-                  "VALUES (:type, :plot, :event, :name, :height, :length, :width)");
+                  "oven_height, oven_width, oven_length) "
+                  "VALUES (:type, :plot, :event, :name, :height, :width, :length)");
     query.bindValue(":type", ovenTypeId);
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
     query.bindValue(":height", dimensions.at(0));
-    query.bindValue(":length", dimensions.at(1));
-    query.bindValue(":width", dimensions.at(2));
+    query.bindValue(":width", dimensions.at(1));
+    query.bindValue(":length", dimensions.at(2));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")

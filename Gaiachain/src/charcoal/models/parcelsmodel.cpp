@@ -11,7 +11,7 @@
 ParcelsModel::ParcelsModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(false);
-    setDbQuery("SELECT name FROM Parcels");
+    setDbQuery("SELECT code FROM Parcels");
 }
 
 void ParcelsModel::refreshWebData()
@@ -32,8 +32,8 @@ void ParcelsModel::refreshWebData()
 
 void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 {
-    TableUpdater updates("Parcels", m_connectionName);
-    if (updates.updateTable("name", reply)) {
+    ListUpdater updates("Parcels", m_connectionName);
+    if (updates.updateTable(reply, "code")) {
         emit webDataRefreshed();
     } else {
         qWarning() << RED("Updating items has failed");

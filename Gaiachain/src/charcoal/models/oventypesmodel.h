@@ -20,6 +20,12 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+public slots:
+    void refreshWebData() override;
+
+protected slots:
+    void webReplyHandler(const QJsonDocument &reply) override;
+
 private:
     QHash<int, QByteArray> m_roleNames = {
         { OvenTypesRole::Id, "id" },

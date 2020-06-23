@@ -24,9 +24,9 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             // Additional data
             QLatin1String("CREATE TABLE Villages (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
-            QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE) "),
+            QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `code` TEXT NOT NULL UNIQUE) "),
             QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
-            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE, `height` DECIMAL(5,2), `length` DECIMAL(5,2), `width` DECIMAL(5,2))"),
+            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE, `oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2))"),
 
             // SupplyChain
             // Entities are how Transactions are called on Web side
@@ -61,7 +61,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, "
                 "`carbonizationBeginning` INTEGER NOT NULL, `carbonizationEnding` INTEGER, "
                 "`name` TEXT NOT NULL, "
-                "`height` DECIMAL(5,2), `length` DECIMAL(5,2), `width` DECIMAL(5,2), "
+                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2), "
                 "FOREIGN KEY(type) REFERENCES OvenTypes(id), "
                 "FOREIGN KEY(plot) REFERENCES Entities(id), "
                 "FOREIGN KEY(carbonizationBeginning) REFERENCES Events(id), "
@@ -115,12 +115,12 @@ const QVector<Migration> db::DB_MIGRATIONS = {
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
 
-            QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"traditional\")"),
-            QLatin1String("INSERT INTO OvenTypes (name, height, length, width) VALUES (\"metallic\", 4, 5, 6)"),
+            //QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"traditional\")"),
+            //QLatin1String("INSERT INTO OvenTypes (name, oven_height, oven_width, oven_length) VALUES (\"metallic\", 4, 5, 6)"),
             // Supply chain
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("DELETE FROM OvenTypes"),
+            //QLatin1String("DELETE FROM OvenTypes"),
             QLatin1String("VACUUM")
         }, true)
     },
