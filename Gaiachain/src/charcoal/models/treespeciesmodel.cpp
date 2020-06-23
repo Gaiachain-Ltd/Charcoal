@@ -4,6 +4,9 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
+#include "listmodelhelper.h"
+
+#include <QSqlQuery>
 
 TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : QueryModel(parent)
 {
@@ -30,10 +33,15 @@ void TreeSpeciesModel::refreshWebData()
 void TreeSpeciesModel::webErrorHandler(const QString &error,
                                        const QNetworkReply::NetworkError code)
 {
-    qDebug() << RED("Web ERROR handler") << error << code;
+    qWarning() << RED("Web ERROR handler") << error << code;
 }
 
 void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)
 {
-    qDebug() << GREEN("Web reply handler") << reply;
+    const QString field("name");
+
+    Updates updates("TreeSpecies", m_connectionName);
+    if (updates.updateTable("name", reply, query()) == false) {
+        qWarning() << RED("Updating items has failed");
+    }
 }

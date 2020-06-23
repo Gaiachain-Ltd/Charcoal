@@ -143,6 +143,7 @@ charcoal {
         src/charcoal/models/trackingmodel.h \
         src/charcoal/models/minimumdatemodel.h \
         src/charcoal/models/localeventsmodel.h \
+        src/charcoal/models/listmodelhelper.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -166,6 +167,7 @@ charcoal {
         src/charcoal/models/trackingmodel.cpp \
         src/charcoal/models/minimumdatemodel.cpp \
         src/charcoal/models/localeventsmodel.cpp \
+        src/charcoal/models/listmodelhelper.cpp \
 
 }
 
