@@ -27,10 +27,14 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
       m_ovensModel(new OvensModel(this)),
       m_trackingModel(new TrackingModel(this)),
       m_minimumDateModel(new MinimumDateModel(this)),
-      m_localEventsModel(new LocalEventsModel(this))
+      m_localEventsModel(new LocalEventsModel(this)),
+      m_replantationsSender(new ReplantationsSender(this))
 {
     connect(m_actionController, &ActionController::refreshLocalEvents,
             m_localEventsModel, &LocalEventsModel::refresh);
+
+    connect(m_actionController, &ActionController::refreshLocalEvents,
+            m_replantationsSender, &LocalEventsModel::refresh);
 }
 
 void CharcoalDataManager::setupDatabase(const QString &dbPath)
@@ -55,6 +59,8 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     setupModel(m_trackingModel);
     setupModel(m_minimumDateModel);
     setupModel(m_localEventsModel);
+
+    setupModel(m_replantationsSender);
 
     if (checkModels() == false) {
         qWarning() << RED("Data models are initialized improperly!");

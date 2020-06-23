@@ -144,6 +144,7 @@ charcoal {
         src/charcoal/models/minimumdatemodel.h \
         src/charcoal/models/localeventsmodel.h \
         src/charcoal/models/listmodelhelper.h \
+        src/charcoal/models/replantationssender.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -168,6 +169,7 @@ charcoal {
         src/charcoal/models/minimumdatemodel.cpp \
         src/charcoal/models/localeventsmodel.cpp \
         src/charcoal/models/listmodelhelper.cpp \
+        src/charcoal/models/replantationssender.cpp \
 
 }
 
@@ -212,8 +214,6 @@ TEMPLATE = app
 CONFIG += c++17
 
 INCLUDEPATH += src
-
-### TODO!!! Move cocoa-only classes to cocoa/ folder
 
 HEADERS += \
     src/common/dataglobals.h \

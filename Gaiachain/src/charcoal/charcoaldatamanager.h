@@ -18,6 +18,7 @@
 #include "charcoal/models/trackingmodel.h"
 #include "charcoal/models/minimumdatemodel.h"
 #include "charcoal/models/localeventsmodel.h"
+#include "charcoal/models/replantationssender.h"
 
 class CharcoalDataManager : public AbstractDataManager
 {
@@ -89,4 +90,8 @@ private:
     TrackingModel* m_trackingModel = nullptr;
     MinimumDateModel* m_minimumDateModel = nullptr;
     LocalEventsModel* m_localEventsModel = nullptr;
+
+    // "invisible" models - QML does not need to know about them, they work
+    // automatically, behind the scenes
+    ReplantationsSender *m_replantationsSender = nullptr;
 };

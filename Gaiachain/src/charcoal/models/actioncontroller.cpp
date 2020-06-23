@@ -404,8 +404,6 @@ void ActionController::registerLoggingBeginning(
     }
 
     emit refreshLocalEvents();
-
-    // Lastly, send a request to server to add it, too.
 }
 
 void ActionController::registerLoggingEnding(
@@ -584,8 +582,6 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     emit refreshLocalEvents();
-
-    // Lastly, send a request to server to add it, too.
 }
 
 void ActionController::registerCarbonizationEnding(
@@ -652,8 +648,6 @@ void ActionController::registerCarbonizationEnding(
     }
 
     emit refreshLocalEvents();
-
-    // Lastly, send a request to server to add it, too.
 }
 
 void ActionController::registerTransportAndLoading(
@@ -735,8 +729,6 @@ void ActionController::registerTransportAndLoading(
     }
 
     emit refreshLocalEvents();
-
-    // Lastly, send a request to server to add it, too.
 }
 
 void ActionController::registerReception(
@@ -878,8 +870,6 @@ void ActionController::registerReplantation(
     }
 
     emit refreshLocalEvents();
-
-    // Lastly, send a request to server to add it, too.
 }
 
 /*!
