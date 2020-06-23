@@ -13,7 +13,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-Updates::Updates(const QString &tableName, const QString &connectionName)
+TableUpdater::TableUpdater(const QString &tableName, const QString &connectionName)
     : m_tableName(tableName), m_connectionName(connectionName)
 {
     if (isValid() == false) {
@@ -22,7 +22,7 @@ Updates::Updates(const QString &tableName, const QString &connectionName)
     }
 }
 
-bool Updates::updateTable(const QString &fieldName,
+bool TableUpdater::updateTable(const QString &fieldName,
                           const QJsonDocument &webData,
                           QSqlQuery query)
 {
@@ -32,7 +32,7 @@ bool Updates::updateTable(const QString &fieldName,
             && removeObsoleteItems(webItems, dbItems));
 }
 
-QStringList Updates::webList(const QString &fieldName, const QJsonDocument &json)
+QStringList TableUpdater::webList(const QString &fieldName, const QJsonDocument &json)
 {
     QStringList result;
     const QJsonObject mainObject(json.object());
@@ -46,7 +46,7 @@ QStringList Updates::webList(const QString &fieldName, const QJsonDocument &json
     return result;
 }
 
-QStringList Updates::dbList(const QString &fieldName, QSqlQuery query)
+QStringList TableUpdater::dbList(const QString &fieldName, QSqlQuery query)
 {
     QStringList result;
 
@@ -58,7 +58,7 @@ QStringList Updates::dbList(const QString &fieldName, QSqlQuery query)
     return result;
 }
 
-bool Updates::insertMissingItems(const QStringList &webItems,
+bool TableUpdater::insertMissingItems(const QStringList &webItems,
                                  const QStringList &dbItems) const
 {
     QStringList toInsert;
@@ -70,11 +70,11 @@ bool Updates::insertMissingItems(const QStringList &webItems,
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    const QString insert("INSERT INTO TreeSpecies (name) VALUES (\"%1\")");
+    const QString insert("INSERT INTO %1 (name) VALUES (\"%2\")");
     for (const QString &item : qAsConst(toInsert)) {
-        query.prepare(insert.arg(item));
+        query.prepare(insert.arg(m_tableName, item));
         if (query.exec() == false) {
-            qWarning() << RED("Inserting TreeSpecies has failed!")
+            qWarning() << RED("Inserting") << m_tableName << ("has failed!")
                        << query.lastError().text()
                        << "for query:" << query.lastQuery()
                        << "DB:" << m_connectionName;
@@ -85,7 +85,7 @@ bool Updates::insertMissingItems(const QStringList &webItems,
     return true;
 }
 
-bool Updates::removeObsoleteItems(const QStringList &webItems,
+bool TableUpdater::removeObsoleteItems(const QStringList &webItems,
                                   const QStringList &dbItems) const
 {
     QStringList toRemove;
@@ -98,11 +98,11 @@ bool Updates::removeObsoleteItems(const QStringList &webItems,
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    const QString remove("DELETE FROM TreeSpecies WHERE name=\"%1\"");
+    const QString remove("DELETE FROM %1 WHERE name=\"%2\"");
     for (const QString &item : qAsConst(toRemove)) {
-        query.prepare(remove.arg(item));
+        query.prepare(remove.arg(m_tableName, item));
         if (query.exec() == false) {
-            qWarning() << RED("Removing TreeSpecies has failed!")
+            qWarning() << RED("Removing") << m_tableName << ("has failed!")
                        << query.lastError().text()
                        << "for query:" << query.lastQuery()
                        << "DB:" << m_connectionName;
@@ -113,7 +113,7 @@ bool Updates::removeObsoleteItems(const QStringList &webItems,
     return true;
 }
 
-bool Updates::isValid()
+bool TableUpdater::isValid()
 {
     return (m_tableName.isEmpty() == false && m_connectionName.isEmpty() == false);
 }

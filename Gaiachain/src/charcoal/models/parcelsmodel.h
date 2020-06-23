@@ -8,5 +8,11 @@ class ParcelsModel : public QueryModel
 
 public:
     explicit ParcelsModel(QObject *parent = nullptr);
+
+public slots:
+    void refreshWebData() override;
+
+protected slots:
+    void webReplyHandler(const QJsonDocument &reply) override;
 };
 

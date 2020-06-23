@@ -114,29 +114,29 @@ const QVector<Migration> db::DB_MIGRATIONS = {
         { 0, 0, 4 },
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
-            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village One\")"),
-            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Two\")"),
-            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Three\")"),
+//            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village One\")"),
+//            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Two\")"),
+//            QLatin1String("INSERT INTO Villages (name) VALUES (\"Village Three\")"),
 
 //            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Cassia siamea\")"),
 //            QLatin1String("INSERT INTO TreeSpecies (name) VALUES (\"Technona grandis\")"),
 
-            QLatin1String("INSERT INTO Parcels (name) VALUES (\"0595112\")"),
-            QLatin1String("INSERT INTO Parcels (name) VALUES (\"1234567\")"),
-            QLatin1String("INSERT INTO Parcels (name) VALUES (\"9955112\")"),
-            QLatin1String("INSERT INTO Parcels (name) VALUES (\"1100110\")"),
+//            QLatin1String("INSERT INTO Parcels (name) VALUES (\"0595112\")"),
+//            QLatin1String("INSERT INTO Parcels (name) VALUES (\"1234567\")"),
+//            QLatin1String("INSERT INTO Parcels (name) VALUES (\"9955112\")"),
+//            QLatin1String("INSERT INTO Parcels (name) VALUES (\"1100110\")"),
 
-            QLatin1String("INSERT INTO Destinations (name) VALUES (\"Abidjan\")"),
+//            QLatin1String("INSERT INTO Destinations (name) VALUES (\"Abidjan\")"),
 
             QLatin1String("INSERT INTO OvenTypes (name) VALUES (\"traditional\")"),
             QLatin1String("INSERT INTO OvenTypes (name, height, length, width) VALUES (\"metallic\", 4, 5, 6)"),
             // Supply chain
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("DELETE FROM Villages"),
-            QLatin1String("DELETE FROM TreeSpecies"),
-            QLatin1String("DELETE FROM Parcels"),
-            QLatin1String("DELETE FROM Destinations"),
+//            QLatin1String("DELETE FROM Villages"),
+//            QLatin1String("DELETE FROM TreeSpecies"),
+//            QLatin1String("DELETE FROM Parcels"),
+//            QLatin1String("DELETE FROM Destinations"),
             QLatin1String("DELETE FROM OvenTypes"),
             QLatin1String("VACUUM")
         }, true)

@@ -5,10 +5,10 @@
 class QJsonDocument;
 class QSqlQuery;
 
-class Updates
+class TableUpdater
 {
 public:
-    Updates(const QString &tableName, const QString &connectionName);
+    TableUpdater(const QString &tableName, const QString &connectionName);
 
     bool updateTable(const QString &fieldName, const QJsonDocument &webData,
                      QSqlQuery query);
