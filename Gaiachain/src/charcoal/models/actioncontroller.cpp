@@ -330,7 +330,8 @@ QVariantList ActionController::defaultOvenDimensions(const int ovenType) const
 
 void ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QString &userId,
+    const QDateTime &timestamp, const QDateTime &eventDate,
+    const QString &userId,
     const QString &parcel, const QString &village,
     const QString &treeSpecies) const
 {
@@ -379,14 +380,15 @@ void ActionController::registerLoggingBeginning(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties, "
+                  "date, eventDate, locationLatitude, locationLongitude, properties, "
                   "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
                   ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
+    query.bindValue(":eventDate", eventDate);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
@@ -395,7 +397,7 @@ void ActionController::registerLoggingBeginning(
                         { "parcel", findParcelId(parcel) },
                         { "village", findVillageId(village) },
                         { "tree_specie", findTreeSpeciesId(treeSpecies) },
-                        { "beginning_date", timestamp.toSecsSinceEpoch() },
+                        { "beginning_date", eventDate.toSecsSinceEpoch() },
                     }));
 
     if (query.exec() == false) {
@@ -408,7 +410,8 @@ void ActionController::registerLoggingBeginning(
 }
 
 void ActionController::registerLoggingEnding(
-    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &plotId,
     const int numberOfTrees) const
 {
@@ -438,21 +441,22 @@ void ActionController::registerLoggingEnding(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties, "
+                  "date, eventDate, locationLatitude, locationLongitude, properties, "
                   "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
                   ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
+    query.bindValue(":eventDate", eventDate);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
                         { "number_of_trees", numberOfTrees },
-                        { "ending_date", timestamp.toSecsSinceEpoch() }
+                        { "ending_date", eventDate.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -465,7 +469,8 @@ void ActionController::registerLoggingEnding(
 }
 
 void ActionController::registerCarbonizationBeginning(
-    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &plotId, const QString &ovenId,
     const QString &ovenType, const QVariantList &ovenDimensions) const
 {
@@ -536,20 +541,21 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                  "date, locationLatitude, locationLongitude, isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  "date, eventDate, locationLatitude, locationLongitude, isCommitted) "
+                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
                   ":locationLatitude, :locationLongitude, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
+    query.bindValue(":eventDate", eventDate);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
                         { "oven_type", ovenType },
-                        { "beginning_date", timestamp.toSecsSinceEpoch() },
+                        { "beginning_date", eventDate.toSecsSinceEpoch() },
                         { "plot_id", 2 }, // TODO: what ID?? plotId??
                         { "oven_id", ovenId }
                     }));
@@ -595,7 +601,8 @@ void ActionController::registerCarbonizationBeginning(
 }
 
 void ActionController::registerCarbonizationEnding(
-    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &harvestId, const QString &plotId,
     const QVariantList &ovenIds) const
 {
@@ -627,20 +634,21 @@ void ActionController::registerCarbonizationEnding(
         const QString ovenId(idVar.toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
         query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                      "date, locationLatitude, locationLongitude, isCommitted) "
-                      "VALUES (:entityId, :typeId, :userId, :date, "
+                      "date, eventDate, locationLatitude, locationLongitude, isCommitted) "
+                      "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
                       ":locationLatitude, :locationLongitude, 0)");
         query.bindValue(":entityId", entityId);
         query.bindValue(":typeId", eventTypeId);
         query.bindValue(":userId", userId);
         query.bindValue(":date", timestamp);
+        query.bindValue(":eventDate", eventDate);
         query.bindValue(":locationLatitude", coordinate.latitude());
         query.bindValue(":locationLongitude", coordinate.longitude());
         // TODO: use Tags to denote the properties more reliably!
         query.bindValue(":properties",
                         propertiesToString(QVariantMap {
-                            { "oven_ids", "[2,3]" },
-                            { "end_date", timestamp.toSecsSinceEpoch() }
+                            { "oven_ids", "[2,3]" }, // TODO!
+                            { "end_date", eventDate.toSecsSinceEpoch() }
                         }));
 
         if (query.exec() == false) {
@@ -666,8 +674,9 @@ void ActionController::registerCarbonizationEnding(
     emit refreshLocalEvents();
 }
 
-void ActionController::registerTransportAndLoading(
-    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+void ActionController::registerLoadingAndTransport(
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &transportId, const QString &harvestId,
     const QString &plateNumber, const QString &destination,
     const QVariantList &scannedQrs) const
@@ -719,14 +728,15 @@ void ActionController::registerTransportAndLoading(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties, "
+                  "date, eventDate, locationLatitude, locationLongitude, properties, "
                   "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
                   ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
+    query.bindValue(":eventDate", eventDate);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
 
@@ -740,7 +750,7 @@ void ActionController::registerTransportAndLoading(
                         { "plate_number", plateNumber },
                         { "destination", destination },
                         { "bags_qr_codes", scannedQrs },
-                        { "loading_date", timestamp.toSecsSinceEpoch() }
+                        { "loading_date", eventDate.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -753,7 +763,8 @@ void ActionController::registerTransportAndLoading(
 }
 
 void ActionController::registerReception(
-    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &transportId,
     const QVariantList &documents, const QVariantList &receipts,
     const QVariantList &scannedQrs) const
@@ -786,14 +797,15 @@ void ActionController::registerReception(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, locationLatitude, locationLongitude, properties, "
+                  "date, eventDate, locationLatitude, locationLongitude, properties, "
                   "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, "
+                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
                   ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp);
+    query.bindValue(":eventDate", eventDate);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
 
@@ -809,7 +821,8 @@ void ActionController::registerReception(
                         { "transportId", transportId },
                         { "documents", documents },
                         { "receipts", receipts },
-                        { "bags_qr_codes", scannedQrs }
+                        { "bags_qr_codes", scannedQrs },
+                        { "reception_date", eventDate.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -841,10 +854,11 @@ void ActionController::finalizeSupplyChain(const QString &plotId) const
 }
 
 void ActionController::registerReplantation(
-    const QGeoCoordinate &coordinate, const QDateTime &timestamp,
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp,
     const QString &userId, const QString &plotId,
     const int numberOfTrees, const QString &treeSpecies,
-    const QDateTime &beginningDate) const
+    const QDateTime &beginningDate, const QDateTime &endingDate) const
 {
     /*
      * Algorithm is:
@@ -863,21 +877,24 @@ void ActionController::registerReplantation(
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
     query.prepare("INSERT INTO Replantations (plotId, userId, "
+                  "date, "
                   "numberOfTrees, treeSpecies, "
                   "locationLatitude, locationLongitude, "
                   "beginningDate, endingDate, isCommitted) "
                   "VALUES (:plotId, :userId, "
+                  ":date, "
                   ":numberOfTrees, :treeSpecies, "
                   ":locationLatitude, :locationLongitude, "
                   ":beginningDate, :endingDate, 0)");
     query.bindValue(":plotId", parentId);
     query.bindValue(":userId", userId);
+    query.bindValue(":date", timestamp);
     query.bindValue(":numberOfTrees", numberOfTrees);
     query.bindValue(":treeSpecies", treeSpeciesId);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     query.bindValue(":beginningDate", beginningDate);
-    query.bindValue(":endingDate", timestamp);
+    query.bindValue(":endingDate", endingDate);
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Replantation has failed!")

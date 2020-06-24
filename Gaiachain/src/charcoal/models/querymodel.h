@@ -35,6 +35,7 @@ public:
 signals:
     void refreshed() const;
     void webDataRefreshed() const;
+    void error(const QString &text) const;
 
 public slots:
     virtual void refresh();
@@ -42,7 +43,7 @@ public slots:
 
 protected slots:
     void onWebDataRefreshed();
-    virtual void webErrorHandler(const QString &error,
+    virtual void webErrorHandler(const QString &errorString,
                                  const QNetworkReply::NetworkError code);
     virtual void webReplyHandler(const QJsonDocument &reply);
 

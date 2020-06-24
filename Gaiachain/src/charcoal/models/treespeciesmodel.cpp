@@ -30,10 +30,10 @@ void TreeSpeciesModel::refreshWebData()
     }
 }
 
-void TreeSpeciesModel::webErrorHandler(const QString &error,
+void TreeSpeciesModel::webErrorHandler(const QString &errorString,
                                        const QNetworkReply::NetworkError code)
 {
-    qWarning() << RED("Web ERROR handler") << error << code;
+    qWarning() << RED("Web ERROR handler") << errorString << code;
 }
 
 void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)

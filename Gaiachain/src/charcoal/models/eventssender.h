@@ -12,7 +12,7 @@ public slots:
     void sendEvents();
 
 protected slots:
-    void webErrorHandler(const QString &error,
+    void webErrorHandler(const QString &errorStringString,
                          const QNetworkReply::NetworkError code) override;
     void webReplyHandler(const QJsonDocument &reply) override;
 

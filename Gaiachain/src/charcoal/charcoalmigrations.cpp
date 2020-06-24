@@ -46,7 +46,9 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`name` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE Events "
                 "(`id` INTEGER primary key AUTOINCREMENT, `entityId` INTEGER NOT NULL, "
-                "`typeId` INTEGER NOT NULL, `userId` TEXT NOT NULL, `date` INTEGER NOT NULL, "
+                "`typeId` INTEGER NOT NULL, `userId` TEXT NOT NULL, "
+                // Date is the timestamp. eventDate is the event date chosen by user
+                "`date` INTEGER NOT NULL, `eventDate` INTEGER NOT NULL, "
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "
                 "`properties` TEXT, "
                 "`isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)), "
@@ -56,6 +58,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`actionName` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE Replantations (`id` INTEGER primary key AUTOINCREMENT, "
                 "`plotId` INTEGER NOT NULL, `userId` TEXT NOT NULL, "
+                "`date` INTEGER NOT NULL, "
                 "`numberOfTrees` INTEGER NOT NULL, `treeSpecies` INTEGER NOT NULL, "
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "
                 "`beginningDate` INTEGER NOT NULL, `endingDate` INTEGER NOT NULL, "

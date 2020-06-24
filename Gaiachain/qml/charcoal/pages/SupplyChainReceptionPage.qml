@@ -125,6 +125,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerReception(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     unloadingDateHeader.selectedDate,
                     userManager.userData.code,
                     transportId,

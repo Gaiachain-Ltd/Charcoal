@@ -186,4 +186,7 @@ void CharcoalDataManager::setupModel(QueryModel *model) const
     model->setSessionManager(m_sessionManager);
     model->setUserManager(m_userManager);
     model->setDbConnection(m_dbConnectionName);
+
+    connect(model, &QueryModel::error,
+            this, &CharcoalDataManager::error);
 }

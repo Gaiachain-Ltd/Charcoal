@@ -66,6 +66,9 @@ public:
     MinimumDateModel* minimumDateModel() const;
     LocalEventsModel* localEventsModel() const;
 
+signals:
+    void error(const QString &text) const;
+
 private:
     bool checkModels() const;
     void setupModel(QueryModel *model) const;

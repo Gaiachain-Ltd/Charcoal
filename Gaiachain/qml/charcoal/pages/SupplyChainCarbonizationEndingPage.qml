@@ -73,6 +73,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerCarbonizationEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     endingDateHeader.selectedDate,
                     carbonizerIdInputHeader.inputText,
                     harvestIdComboBox.currentText,

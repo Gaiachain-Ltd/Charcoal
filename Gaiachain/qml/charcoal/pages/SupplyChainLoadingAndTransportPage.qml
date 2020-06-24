@@ -89,9 +89,10 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.actionController.registerTransportAndLoading(
+        dataManager.actionController.registerLoadingAndTransport(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     loadingDateHeader.selectedDate,
                     userManager.userData.code,
                     transportId,

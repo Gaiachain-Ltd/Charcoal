@@ -43,6 +43,7 @@ public:
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QDateTime &eventDate,
         const QString &userId,
         const QString &parcel,
         const QString &village,
@@ -52,6 +53,7 @@ public:
     Q_INVOKABLE void registerLoggingEnding(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QDateTime &eventDate,
         const QString &userId,
         const QString &plotId,
         const int numberOfTrees
@@ -60,6 +62,7 @@ public:
     Q_INVOKABLE void registerCarbonizationBeginning(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QDateTime &eventDate,
         const QString &userId,
         const QString &plotId,
         const QString &ovenId,
@@ -70,15 +73,17 @@ public:
     Q_INVOKABLE void registerCarbonizationEnding(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QDateTime &eventDate,
         const QString &userId,
         const QString &harvestId,
         const QString &plotId,
         const QVariantList &ovenIds
         ) const;
 
-    Q_INVOKABLE void registerTransportAndLoading(
+    Q_INVOKABLE void registerLoadingAndTransport(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QDateTime &eventDate,
         const QString &userId,
         const QString &transportId,
         const QString &harvestId,
@@ -90,6 +95,7 @@ public:
     Q_INVOKABLE void registerReception(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
+        const QDateTime &eventDate,
         const QString &userId,
         const QString &transportId,
         const QVariantList &documents,
@@ -106,7 +112,8 @@ public:
         const QString &plotId,
         const int numberOfTrees,
         const QString &treeSpecies,
-        const QDateTime &beginningDate
+        const QDateTime &beginningDate,
+        const QDateTime &endingDate
         ) const;
 
 signals:

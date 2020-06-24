@@ -80,11 +80,11 @@ void EventsSender::sendEvents()
     }
 }
 
-void EventsSender::webErrorHandler(const QString &error,
+void EventsSender::webErrorHandler(const QString &errorString,
                                    const QNetworkReply::NetworkError code)
 {
-    qDebug() << "Request error!" << error << code;
-    // TODO: retry!
+    qDebug() << "Request error!" << errorString << code;
+    emit error(errorString);
 }
 
 void EventsSender::webReplyHandler(const QJsonDocument &reply)
@@ -92,8 +92,11 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     qDebug() << "Request success!" << reply;
 
     const QString id(reply.object().value(Tags::pid).toString());
+    const QString eventId(reply.object().value(Tags::eventId).toString());
+    const QString timestamp(reply.object().value(Tags::eventTimestamp).toString());
+
     const QString queryString(QString("UPDATE Events SET isCommitted=1 "
-                                      "WHERE id=%1").arg(id));
+                                      "WHERE date=%1").arg(timestamp));
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
     if (query.exec()) {

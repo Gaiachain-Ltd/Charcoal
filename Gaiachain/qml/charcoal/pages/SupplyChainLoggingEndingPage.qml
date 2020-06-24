@@ -57,6 +57,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerLoggingEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     endingDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
                     plotIdComboBox.currentText,

@@ -54,6 +54,9 @@ namespace Tags {
     const QLatin1String fullName = QLatin1String("full_name");
     // Charcoal user roles
     const QLatin1String superUser = QLatin1String("SUPER_USER");
+    // Charcoal Event reply fields
+    const QLatin1String eventTimestamp = QLatin1String("timestamp");
+    const QLatin1String eventId = QLatin1String("id");
 };
 
 namespace StaticValues {

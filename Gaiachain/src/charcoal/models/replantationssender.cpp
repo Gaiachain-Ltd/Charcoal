@@ -78,10 +78,10 @@ void ReplantationsSender::sendEvents()
     }
 }
 
-void ReplantationsSender::webErrorHandler(const QString &error,
+void ReplantationsSender::webErrorHandler(const QString &errorString,
                                           const QNetworkReply::NetworkError code)
 {
-    qDebug() << "Request error!" << error << code;
+    qDebug() << "Request error!" << errorString << code;
     // TODO: retry!
 }
 

@@ -134,10 +134,10 @@ void QueryModel::onWebDataRefreshed()
     emit refreshed();
 }
 
-void QueryModel::webErrorHandler(const QString &error,
+void QueryModel::webErrorHandler(const QString &errorString,
                                  const QNetworkReply::NetworkError code)
 {
-    qDebug() << "Request error!" << error << code;
+    qDebug() << "Request error!" << errorString << code;
 }
 
 void QueryModel::webReplyHandler(const QJsonDocument &reply)

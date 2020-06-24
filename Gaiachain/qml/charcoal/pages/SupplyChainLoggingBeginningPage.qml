@@ -66,6 +66,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerLoggingBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     beginningDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
                     parcelComboBox.currentText,

@@ -86,6 +86,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerCarbonizationBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     beginningDateHeader.selectedDate,
                     carbonizerIdInputHeader.inputText,
                     plotIdComboBox.currentText,

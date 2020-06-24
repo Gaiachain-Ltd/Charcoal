@@ -67,12 +67,13 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerReplantation(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    endingDateHeader.selectedDate,
+                    new Date,
                     userManager.userData.code,
                     plotIdComboBox.currentText,
                     numberOfTreesHeader.inputText,
                     treeSpeciesComboBox.currentText,
-                    beginningDateHeader.selectedDate
+                    beginningDateHeader.selectedDate,
+                    endingDateHeader.selectedDate
                     )
 
         pageManager.enter(Enums.Page.MainMenu)
