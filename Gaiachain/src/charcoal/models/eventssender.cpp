@@ -1,4 +1,4 @@
-#include "replantationssender.h"
+#include "eventssender.h"
 
 #include "common/tags.h"
 #include "common/logs.h"
@@ -13,18 +13,18 @@
 
 #include <QJsonObject>
 
-ReplantationsSender::ReplantationsSender(QObject *parent) : QueryModel(parent)
+EventsSender::EventsSender(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(false);
-    setDbQuery("SELECT id, plotId, userId, numberOfTrees, locationLatitude, "
-               "locationLongitude, beginningDate "
-               "FROM Replantations WHERE isCommitted=0");
+    setDbQuery("SELECT id, entityId, typeId, userId, date, "
+               "locationLatitude, locationLongitude, properties "
+               "FROM Events WHERE isCommitted=0");
 
-    connect(this, &ReplantationsSender::refreshed,
-            this, &ReplantationsSender::sendEvents);
+    connect(this, &EventsSender::refreshed,
+            this, &EventsSender::sendEvents);
 }
 
-void ReplantationsSender::sendEvents()
+void EventsSender::sendEvents()
 {
     const int count = rowCount();
     if (count == 0) {
@@ -39,10 +39,10 @@ void ReplantationsSender::sendEvents()
         }
 
         const auto record = query().record();
-        qDebug() << "Offline replantation is:" << record;
+        qDebug() << "Offline event is:" << record;
 
         const auto request = QSharedPointer<BaseRequest>::create(
-            "/entities/replantation/",
+            "/entities/new/",
             BaseRequest::Type::Post
             );
 
@@ -51,16 +51,17 @@ void ReplantationsSender::sendEvents()
             { "longitude", query().value("locationLongitude").toDouble() }
         });
 
+        const QString id(query().value("id").toString());
+        const QString action(getEventType(query().value("typeId").toString()));
+
         const QJsonDocument doc(
             {
-                { "trees_planted", query().value("numberOfTrees").toString() },
-                { "beginning_date",
-                 query().value("beginningDate").toDateTime().toSecsSinceEpoch() },
-                { "ending_date",
-                 query().value("endingDate").toDateTime().toSecsSinceEpoch()},
+                { "pid", id },
+                { "action", action },
+                { "timestamp",
+                 query().value("date").toDateTime().toSecsSinceEpoch() },
                 { "location", location },
-                { "plot", query().value("plotId").toInt() },
-                { "tree_specie", query().value("treeSpecies").toInt() }
+                { "properties", query().value("properties").toJsonObject() }
             });
 
         request->setDocument(doc);
@@ -76,19 +77,19 @@ void ReplantationsSender::sendEvents()
     }
 }
 
-void ReplantationsSender::webErrorHandler(const QString &error,
-                                          const QNetworkReply::NetworkError code)
+void EventsSender::webErrorHandler(const QString &error,
+                                   const QNetworkReply::NetworkError code)
 {
     qDebug() << "Request error!" << error << code;
     // TODO: retry!
 }
 
-void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
+void EventsSender::webReplyHandler(const QJsonDocument &reply)
 {
     qDebug() << "Request success!" << reply;
 
     const QString id(reply.object().value(Tags::pid).toString());
-    const QString queryString(QString("UPDATE Replantations SET isCommitted=1 "
+    const QString queryString(QString("UPDATE Events SET isCommitted=1 "
                                       "WHERE id=%1").arg(id));
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
@@ -99,4 +100,20 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
         qWarning() << RED("Query to update the Replantations has failed to execute")
                    << query.lastError() << "For query:" << query.lastQuery();
     }
+}
+
+QString EventsSender::getEventType(const QString &id) const
+{
+    QString result;
+    const QString queryString(QString("SELECT actionName FROM EventTypes "
+                                      "WHERE id=%1").arg(id));
+    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    if (query.exec() && query.next()) {
+        result = query.value("actionName").toString();
+    } else {
+        qWarning() << RED("Unable to fetch event type (action)")
+                   << query.lastError() << "For query:" << query.lastQuery();
+    }
+
+    return result;
 }

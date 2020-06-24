@@ -29,8 +29,8 @@ public:
 
     bool webModelCanChange() const;
 
-    bool hasQueuedRequest() const;
-    void sendQueuedRequest();
+    bool hasQueuedRequests() const;
+    void sendQueuedRequests();
 
 signals:
     void refreshed() const;
@@ -52,7 +52,7 @@ protected:
 
     QSharedPointer<RestSessionManager> m_sessionManager;
     QSharedPointer<UserManager> m_userManager;
-    QSharedPointer<BaseRequest> m_queuedRequest;
+    QVector<QSharedPointer<BaseRequest>> m_queuedRequests;
 
     bool m_webModelCanChange = false;
     bool m_isDirty = true;

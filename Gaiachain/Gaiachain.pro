@@ -145,6 +145,7 @@ charcoal {
         src/charcoal/models/localeventsmodel.h \
         src/charcoal/models/listmodelhelper.h \
         src/charcoal/models/replantationssender.h \
+        src/charcoal/models/eventssender.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -170,6 +171,7 @@ charcoal {
         src/charcoal/models/localeventsmodel.cpp \
         src/charcoal/models/listmodelhelper.cpp \
         src/charcoal/models/replantationssender.cpp \
+        src/charcoal/models/eventssender.cpp \
 
 }
 

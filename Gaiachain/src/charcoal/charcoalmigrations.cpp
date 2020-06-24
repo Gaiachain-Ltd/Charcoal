@@ -12,7 +12,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
     {
         { 0, 0, 1 },
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("CREATE TABLE Migrations (`id` INTEGER primary key AUTOINCREMENT, `timestamp` INTEGER NOT NULL, `version` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE Migrations (`id` INTEGER primary key AUTOINCREMENT, "
+                "`timestamp` INTEGER NOT NULL, `version` TEXT NOT NULL)"),
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             QLatin1String("DROP TABLE Migrations"),
@@ -27,8 +28,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `code` TEXT NOT NULL UNIQUE) "),
             QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, "
-                          "`name` TEXT NOT NULL UNIQUE, `type` INTEGER NOT NULL, "
-                          "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2))"),
+                "`name` TEXT NOT NULL UNIQUE, `type` INTEGER NOT NULL, "
+                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2))"),
 
             // SupplyChain
             // Entities are how Transactions are called on Web side
@@ -41,7 +42,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`isReplanted` BOOLEAN NOT NULL CHECK (isReplanted IN (0,1)), "
                 "FOREIGN KEY(typeId) REFERENCES EntityTypes(id), "
                 "FOREIGN KEY(parent) REFERENCES Entities(id))"),
-            QLatin1String("CREATE TABLE EntityTypes (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
+            QLatin1String("CREATE TABLE EntityTypes (`id` INTEGER primary key AUTOINCREMENT, "
+                "`name` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE Events "
                 "(`id` INTEGER primary key AUTOINCREMENT, `entityId` INTEGER NOT NULL, "
                 "`typeId` INTEGER NOT NULL, `userId` TEXT NOT NULL, `date` INTEGER NOT NULL, "
@@ -50,7 +52,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)), "
                 "FOREIGN KEY(entityId) REFERENCES Entities(id), "
                 "FOREIGN KEY(typeId) REFERENCES EventTypes(id))"),
-            QLatin1String("CREATE TABLE EventTypes (`id` INTEGER primary key AUTOINCREMENT, `actionName` TEXT NOT NULL UNIQUE)"),
+            QLatin1String("CREATE TABLE EventTypes (`id` INTEGER primary key AUTOINCREMENT, "
+                "`actionName` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE Replantations (`id` INTEGER primary key AUTOINCREMENT, "
                 "`plotId` INTEGER NOT NULL, `userId` TEXT NOT NULL, "
                 "`numberOfTrees` INTEGER NOT NULL, `treeSpecies` INTEGER NOT NULL, "

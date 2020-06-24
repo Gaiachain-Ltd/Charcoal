@@ -50,10 +50,12 @@ public:
     QUrl address() const;
     QString lastError() const;
     QJsonDocument document() const;
+    void setDocument(const QJsonDocument &document);
     QByteArray rawData() const;
 
     void setRetryLimit(const uint retryLimit);
     uint retryCount() const;
+
 
 signals:
     void finished() const;

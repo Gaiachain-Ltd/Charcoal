@@ -172,6 +172,11 @@ uint MRestRequest::retryCount() const
     return mRequestRetryCounter;
 }
 
+void MRestRequest::setDocument(const QJsonDocument &document)
+{
+    mRequestDocument = document;
+}
+
 /*!
  * \brief sends request using method specified in mType (Pup, Post, Get, Delete).
  *

@@ -28,13 +28,17 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
       m_trackingModel(new TrackingModel(this)),
       m_minimumDateModel(new MinimumDateModel(this)),
       m_localEventsModel(new LocalEventsModel(this)),
-      m_replantationsSender(new ReplantationsSender(this))
+      m_replantationsSender(new ReplantationsSender(this)),
+      m_eventsSender(new EventsSender(this))
 {
     connect(m_actionController, &ActionController::refreshLocalEvents,
             m_localEventsModel, &LocalEventsModel::refresh);
 
     connect(m_actionController, &ActionController::refreshLocalEvents,
             m_replantationsSender, &LocalEventsModel::refresh);
+
+    connect(m_actionController, &ActionController::refreshLocalEvents,
+            m_eventsSender, &LocalEventsModel::refresh);
 }
 
 void CharcoalDataManager::setupDatabase(const QString &dbPath)
@@ -61,6 +65,7 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     setupModel(m_localEventsModel);
 
     setupModel(m_replantationsSender);
+    setupModel(m_eventsSender);
 
     if (checkModels() == false) {
         qWarning() << RED("Data models are initialized improperly!");
@@ -82,8 +87,8 @@ void CharcoalDataManager::sendQueuedWebRequests()
             continue;
         }
 
-        if (model->hasQueuedRequest()) {
-            model->sendQueuedRequest();
+        if (model->hasQueuedRequests()) {
+            model->sendQueuedRequests();
         }
     }
 }

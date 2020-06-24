@@ -26,7 +26,7 @@ void VillagesModel::refreshWebData()
                                       &VillagesModel::webReplyHandler);
     } else {
         qDebug() << "Enqueing request";
-        m_queuedRequest = request;
+        m_queuedRequests.append(request);
     }
 }
 

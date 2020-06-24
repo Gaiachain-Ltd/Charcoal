@@ -2,12 +2,11 @@
 
 #include "querymodel.h"
 
-class ReplantationsSender : public QueryModel
+class EventsSender : public QueryModel
 {
     Q_OBJECT
-
 public:
-    explicit ReplantationsSender(QObject *parent = nullptr);
+    explicit EventsSender(QObject *parent = nullptr);
 
 public slots:
     void sendEvents();
@@ -16,5 +15,8 @@ protected slots:
     void webErrorHandler(const QString &error,
                          const QNetworkReply::NetworkError code) override;
     void webReplyHandler(const QJsonDocument &reply) override;
+
+private:
+    QString getEventType(const QString &id) const;
 };
 

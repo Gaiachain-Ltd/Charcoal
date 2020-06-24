@@ -59,19 +59,24 @@ bool QueryModel::webModelCanChange() const
     return m_webModelCanChange;
 }
 
-bool QueryModel::hasQueuedRequest() const
+bool QueryModel::hasQueuedRequests() const
 {
-    return m_queuedRequest.isNull() == false;
+    return m_queuedRequests.isEmpty() == false;
 }
 
-void QueryModel::sendQueuedRequest()
+void QueryModel::sendQueuedRequests()
 {
-    if (hasQueuedRequest()) {
-        m_queuedRequest->setToken(m_sessionManager->token());
-        m_sessionManager->sendRequest(m_queuedRequest,
-                                      this,
-                                      &QueryModel::webErrorHandler,
-                                      &QueryModel::webReplyHandler);
+    if (hasQueuedRequests()) {
+        const QString token(m_sessionManager->token());
+        for (const auto &request : qAsConst(m_queuedRequests)) {
+            request->setToken(token);
+            m_sessionManager->sendRequest(request,
+                                          this,
+                                          &QueryModel::webErrorHandler,
+                                          &QueryModel::webReplyHandler);
+        }
+
+        m_queuedRequests.clear();
     }
 }
 

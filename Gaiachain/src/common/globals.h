@@ -15,7 +15,7 @@
     #ifdef RELEASE_SERVER
         #define SERVER_ADDRESS QStringLiteral("https://charcoal-live.gaiachain.io")
     #else
-        #define SERVER_ADDRESS QStringLiteral("https://charcoal-dev.gaiachain.io")
+        #define SERVER_ADDRESS QStringLiteral("https://charcoal-dev.gaiachain.io/api/v1")
     #endif
 #endif
 

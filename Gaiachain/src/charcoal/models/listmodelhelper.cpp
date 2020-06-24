@@ -39,8 +39,8 @@ bool ListUpdater::updateTable(const QJsonDocument &webData,
         names.append(fieldNames);
     }
 
-    const auto webItems = webList(fieldNames, webData);
-    const auto dbItems = dbList(fieldNames);
+    const auto webItems = webList(names, webData);
+    const auto dbItems = dbList(names);
     return (insertMissingItems(webItems, dbItems)
             && removeObsoleteItems(webItems, dbItems));
 }
