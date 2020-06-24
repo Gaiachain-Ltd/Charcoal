@@ -60,7 +60,7 @@ void EventsSender::sendEvents()
                 { "pid", pid },
                 { "action", action },
                 { "timestamp",
-                 query().value("date").toDateTime().toSecsSinceEpoch() },
+                 static_cast<qint64>(query().value("date").toLongLong()) },
                 { "location", location },
                 { "properties", dbMapToWebObject(query().value("properties").toString()) }
             });
@@ -93,20 +93,25 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     const QString id(reply.object().value(Tags::pid).toString());
     const QString eventId(reply.object().value(Tags::eventId).toString());
-    const QString timestamp(reply.object().value(Tags::eventTimestamp).toString());
+    // Will become incorrect after year 2038!
+    const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toInt());
 
     const QString queryString(QString("UPDATE Events SET isCommitted=1 "
-                                      "WHERE date=:date"));
+                                      "WHERE date=%1").arg(timestamp));
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    query.bindValue(":date", timestamp);
+    //query.prepare(queryString);
+    //query.bindValue(":date", timestamp);
 
     if (query.exec()) {
+        query.next();
+        qDebug() << "Updated?" << query.lastQuery() << query.value(0) << timestamp;
         // Not necessary?
         //emit webDataRefreshed();
     } else {
         qWarning() << RED("Query to update the Event has failed to execute")
-                   << query.lastError() << "For query:" << query.lastQuery();
+                   << query.lastError() << "For query:" << query.lastQuery()
+                   << timestamp;
     }
 }
 
@@ -149,9 +154,5 @@ QString EventsSender::getEntityName(const QString &id) const
 QJsonObject EventsSender::dbMapToWebObject(const QString &properties) const
 {
     const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toLatin1()));
-    const QJsonObject result(propertiesDoc.object());
-
-    qDebug().noquote() << "Transformed object is:" << result;
-
-    return result;
+    return propertiesDoc.object();
 }
