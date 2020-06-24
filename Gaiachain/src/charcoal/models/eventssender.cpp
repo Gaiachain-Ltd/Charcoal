@@ -96,9 +96,11 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     const QString timestamp(reply.object().value(Tags::eventTimestamp).toString());
 
     const QString queryString(QString("UPDATE Events SET isCommitted=1 "
-                                      "WHERE date=%1").arg(timestamp));
+                                      "WHERE date=:date"));
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    query.bindValue(":date", timestamp);
+
     if (query.exec()) {
         // Not necessary?
         //emit webDataRefreshed();

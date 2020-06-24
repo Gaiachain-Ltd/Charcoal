@@ -387,8 +387,8 @@ void ActionController::registerLoggingBeginning(
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp);
-    query.bindValue(":eventDate", eventDate);
+    query.bindValue(":date", timestamp.toSecsSinceEpoch());
+    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
@@ -448,8 +448,8 @@ void ActionController::registerLoggingEnding(
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp);
-    query.bindValue(":eventDate", eventDate);
+    query.bindValue(":date", timestamp.toSecsSinceEpoch());
+    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
@@ -547,8 +547,8 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp);
-    query.bindValue(":eventDate", eventDate);
+    query.bindValue(":date", timestamp.toSecsSinceEpoch());
+    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     // TODO: use Tags to denote the properties more reliably!
@@ -640,8 +640,8 @@ void ActionController::registerCarbonizationEnding(
         query.bindValue(":entityId", entityId);
         query.bindValue(":typeId", eventTypeId);
         query.bindValue(":userId", userId);
-        query.bindValue(":date", timestamp);
-        query.bindValue(":eventDate", eventDate);
+        query.bindValue(":date", timestamp.toSecsSinceEpoch());
+        query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
         query.bindValue(":locationLatitude", coordinate.latitude());
         query.bindValue(":locationLongitude", coordinate.longitude());
         // TODO: use Tags to denote the properties more reliably!
@@ -735,8 +735,8 @@ void ActionController::registerLoadingAndTransport(
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp);
-    query.bindValue(":eventDate", eventDate);
+    query.bindValue(":date", timestamp.toSecsSinceEpoch());
+    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
 
@@ -804,8 +804,8 @@ void ActionController::registerReception(
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp);
-    query.bindValue(":eventDate", eventDate);
+    query.bindValue(":date", timestamp.toSecsSinceEpoch());
+    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
 
@@ -888,13 +888,13 @@ void ActionController::registerReplantation(
                   ":beginningDate, :endingDate, 0)");
     query.bindValue(":plotId", parentId);
     query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp);
+    query.bindValue(":date", timestamp.toSecsSinceEpoch());
     query.bindValue(":numberOfTrees", numberOfTrees);
     query.bindValue(":treeSpecies", treeSpeciesId);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-    query.bindValue(":beginningDate", beginningDate);
-    query.bindValue(":endingDate", endingDate);
+    query.bindValue(":beginningDate", beginningDate.toSecsSinceEpoch());
+    query.bindValue(":endingDate", endingDate.toSecsSinceEpoch());
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Replantation has failed!")
