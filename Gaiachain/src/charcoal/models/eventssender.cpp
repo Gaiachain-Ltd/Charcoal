@@ -51,27 +51,30 @@ void EventsSender::sendEvents()
             { "longitude", query().value("locationLongitude").toDouble() }
         });
 
-        const QString id(query().value("id").toString());
+        const QString entityId(query().value("entityId").toString());
+        const QString pid(getEntityName(entityId));
         const QString action(getEventType(query().value("typeId").toString()));
 
         const QJsonDocument doc(
             {
-                { "pid", id },
+                { "pid", pid },
                 { "action", action },
                 { "timestamp",
                  query().value("date").toDateTime().toSecsSinceEpoch() },
                 { "location", location },
-                { "properties", query().value("properties").toJsonObject() }
+                { "properties", dbMapToWebObject(query().value("properties").toString()) }
             });
 
         request->setDocument(doc);
 
         if (isLoggedIn) {
-            qDebug() << "Sending replantation event!" << doc;
+            qDebug().noquote() << "Sending event!" << doc;
             request->setToken(m_sessionManager->token());
-            m_sessionManager->sendRequest(request);
+            m_sessionManager->sendRequest(request, this,
+                                          &EventsSender::webErrorHandler,
+                                          &EventsSender::webReplyHandler);
         } else {
-            qDebug() << "Enqueuing replantation event!";
+            qDebug().noquote() << "Enqueuing event!" << doc;
             m_queuedRequests.append(request);
         }
     }
@@ -97,7 +100,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
         // Not necessary?
         //emit webDataRefreshed();
     } else {
-        qWarning() << RED("Query to update the Replantations has failed to execute")
+        qWarning() << RED("Query to update the Event has failed to execute")
                    << query.lastError() << "For query:" << query.lastQuery();
     }
 }
@@ -114,6 +117,36 @@ QString EventsSender::getEventType(const QString &id) const
         qWarning() << RED("Unable to fetch event type (action)")
                    << query.lastError() << "For query:" << query.lastQuery();
     }
+
+    return result;
+}
+
+QString EventsSender::getEntityName(const QString &id) const
+{
+    QString result;
+    const QString queryString(QString("SELECT name FROM Entities "
+                                      "WHERE id=%1").arg(id));
+    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    if (query.exec() && query.next()) {
+        result = query.value("name").toString();
+    } else {
+        qWarning() << RED("Unable to fetch entity name (plot ID, harvest ID or transport ID")
+                   << query.lastError() << "For query:" << query.lastQuery();
+    }
+
+    return result;
+}
+
+/*!
+ * This method takes \a properties from Events database and transformes
+ * them into a JSON object understood by Web.
+ */
+QJsonObject EventsSender::dbMapToWebObject(const QString &properties) const
+{
+    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toLatin1()));
+    const QJsonObject result(propertiesDoc.object());
+
+    qDebug().noquote() << "Transformed object is:" << result;
 
     return result;
 }

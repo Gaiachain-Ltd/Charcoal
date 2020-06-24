@@ -18,5 +18,7 @@ protected slots:
 
 private:
     QString getEventType(const QString &id) const;
+    QString getEntityName(const QString &id) const;
+    QJsonObject dbMapToWebObject(const QString &properties) const;
 };
 

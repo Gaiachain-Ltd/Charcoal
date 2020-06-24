@@ -49,7 +49,7 @@ public:
     void setupDatabase(const QString &dbPath) override;
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
-    Q_INVOKABLE void sendQueuedWebRequests();
+    Q_INVOKABLE void sendOfflineActions() override;
 
     ActionController* actionController() const;
     TreeSpeciesModel* treeSpeciesModel() const;
@@ -97,4 +97,7 @@ private:
     // automatically, behind the scenes
     ReplantationsSender* m_replantationsSender = nullptr;
     EventsSender* m_eventsSender = nullptr;
+
+    // AbstractDataManager interface
+public:
 };

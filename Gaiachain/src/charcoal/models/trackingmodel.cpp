@@ -121,7 +121,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                 const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
                 const QVariantMap properties(propertiersJson.toVariant().toMap());
                 name = tr("Bags have been loaded on truck %1")
-                           .arg(properties.value("plateNumber").toString());
+                           .arg(properties.value("plate_number").toString());
             }
                 break;
             case Enums::SupplyChainAction::Reception:

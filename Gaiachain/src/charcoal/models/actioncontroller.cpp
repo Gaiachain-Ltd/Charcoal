@@ -392,9 +392,10 @@ void ActionController::registerLoggingBeginning(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "parcel", parcel },
-                        { "village", village },
-                        { "treeSpecies", treeSpecies }
+                        { "parcel", findParcelId(parcel) },
+                        { "village", findVillageId(village) },
+                        { "tree_specie", findTreeSpeciesId(treeSpecies) },
+                        { "beginning_date", timestamp.toSecsSinceEpoch() },
                     }));
 
     if (query.exec() == false) {
@@ -450,7 +451,8 @@ void ActionController::registerLoggingEnding(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "numberOfTrees", numberOfTrees }
+                        { "number_of_trees", numberOfTrees },
+                        { "ending_date", timestamp.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -507,9 +509,9 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     if (alreadyPresent == false) {
-        query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, "
-                      "isReplanted) "
-                      "VALUES (:typeId, :harvestId, :parent, 0, 0)");
+        query.prepare("INSERT INTO Entities (typeId, name, parent, :properties, "
+                      "isFinished, isReplanted) "
+                      "VALUES (:typeId, :harvestId, :parent, :properties, 0, 0)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":harvestId", harvestId);
         query.bindValue(":parent", parentEntityId);
@@ -543,6 +545,14 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
+    // TODO: use Tags to denote the properties more reliably!
+    query.bindValue(":properties",
+                    propertiesToString(QVariantMap {
+                        { "oven_type", ovenType },
+                        { "beginning_date", timestamp.toSecsSinceEpoch() },
+                        { "plot_id", 2 }, // TODO: what ID?? plotId??
+                        { "oven_id", ovenId }
+                    }));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
@@ -626,6 +636,12 @@ void ActionController::registerCarbonizationEnding(
         query.bindValue(":date", timestamp);
         query.bindValue(":locationLatitude", coordinate.latitude());
         query.bindValue(":locationLongitude", coordinate.longitude());
+        // TODO: use Tags to denote the properties more reliably!
+        query.bindValue(":properties",
+                        propertiesToString(QVariantMap {
+                            { "oven_ids", "[2,3]" },
+                            { "end_date", timestamp.toSecsSinceEpoch() }
+                        }));
 
         if (query.exec() == false) {
             qWarning() << RED("Inserting Logging Ending event has failed!")
@@ -713,13 +729,18 @@ void ActionController::registerTransportAndLoading(
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
+
+    //"bags_qr_codes": ["123-321","321-123"], "loading_date": 12, "harvest_id": 5,
+    //"destination": 1, "plate_number": "12345AB67"
+
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "harvestId", harvestId },
-                        { "plateNumber", plateNumber },
+                        { "harvest_id", harvestId },
+                        { "plate_number", plateNumber },
                         { "destination", destination },
-                        { "scannedQrs", scannedQrs }
+                        { "bags_qr_codes", scannedQrs },
+                        { "loading_date", timestamp.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -775,13 +796,20 @@ void ActionController::registerReception(
     query.bindValue(":date", timestamp);
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
+
+    // properties={\"bags_qr_codes\": [\"999-111\"]}"
+    // -F "documents_photos=@/Users/sergeybondar/Downloads/Cat03.jpg"
+    // -F "documents_photos=@/Users/sergeybondar/Downloads/Cat02.jpg"
+    // -F "receipt_photos=@/Users/sergeybondar/Downloads/Cat03.jpg"
+    // -F "location={\"latitude\": 53.9327432, \"longitude\": 27.6132602}
+
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
                         { "transportId", transportId },
                         { "documents", documents },
                         { "receipts", receipts },
-                        { "scannedQrs", scannedQrs }
+                        { "bags_qr_codes", scannedQrs }
                     }));
 
     if (query.exec() == false) {
@@ -952,6 +980,46 @@ QString ActionController::findTreeSpeciesId(const QString &species) const
     }
 
     qWarning() << RED("Getting TreeSpecies has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return QString();
+}
+
+QString ActionController::findParcelId(const QString &parcel) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM Parcels WHERE code=:parcel");
+    query.bindValue(":parcel", parcel);
+
+    if (query.exec()) {
+        query.next();
+        return query.value("id").toString();
+    }
+
+    qWarning() << RED("Getting Parcels has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << m_dbConnName;
+
+    return QString();
+}
+
+QString ActionController::findVillageId(const QString &village) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    query.prepare("SELECT id FROM Villages WHERE name=:village");
+    query.bindValue(":village", village);
+
+    if (query.exec()) {
+        query.next();
+        return query.value("id").toString();
+    }
+
+    qWarning() << RED("Getting Villages has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
                << "DB:" << m_dbConnName;

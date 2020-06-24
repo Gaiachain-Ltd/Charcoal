@@ -68,7 +68,9 @@ void ReplantationsSender::sendEvents()
         if (isLoggedIn) {
             qDebug() << "Sending replantation event!" << doc;
             request->setToken(m_sessionManager->token());
-            m_sessionManager->sendRequest(request);
+            m_sessionManager->sendRequest(request, this,
+                                          &ReplantationsSender::webErrorHandler,
+                                          &ReplantationsSender::webReplyHandler);
         } else {
             qDebug() << "Enqueuing replantation event!";
             m_queuedRequests.append(request);
@@ -96,7 +98,7 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
         // Not necessary?
         //emit webDataRefreshed();
     } else {
-        qWarning() << RED("Query to update the Replantations has failed to execute")
+        qWarning() << RED("Query to update the Replantation has failed to execute")
                    << query.lastError() << "For query:" << query.lastQuery();
     }
 }

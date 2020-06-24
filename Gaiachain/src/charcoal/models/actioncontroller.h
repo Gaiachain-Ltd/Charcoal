@@ -117,6 +117,8 @@ private:
     QString findEntityTypeId(const Enums::PackageType type) const;
     QString findEventTypeId(const Enums::SupplyChainAction action) const;
     QString findTreeSpeciesId(const QString &species) const;
+    QString findParcelId(const QString &parcel) const;
+    QString findVillageId(const QString &village) const;
     QString findOvenTypeId(const QString &ovenType) const;
 
     QString actionAbbreviation(const Enums::SupplyChainAction action) const;
