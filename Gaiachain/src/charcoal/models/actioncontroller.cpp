@@ -514,9 +514,9 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     if (alreadyPresent == false) {
-        query.prepare("INSERT INTO Entities (typeId, name, parent, :properties, "
+        query.prepare("INSERT INTO Entities (typeId, name, parent, "
                       "isFinished, isReplanted) "
-                      "VALUES (:typeId, :harvestId, :parent, :properties, 0, 0)");
+                      "VALUES (:typeId, :harvestId, :parent, 0, 0)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":harvestId", harvestId);
         query.bindValue(":parent", parentEntityId);
@@ -541,9 +541,10 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                  "date, eventDate, locationLatitude, locationLongitude, isCommitted) "
+                  "date, eventDate, locationLatitude, locationLongitude, "
+                  "properties, isCommitted) "
                   "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, 0)");
+                  ":locationLatitude, :locationLongitude, :properties, 0)");
     query.bindValue(":entityId", entityId);
     query.bindValue(":typeId", eventTypeId);
     query.bindValue(":userId", userId);
@@ -634,9 +635,10 @@ void ActionController::registerCarbonizationEnding(
         const QString ovenId(idVar.toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
         query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                      "date, eventDate, locationLatitude, locationLongitude, isCommitted) "
+                      "date, eventDate, locationLatitude, locationLongitude, "
+                      "properties, isCommitted) "
                       "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                      ":locationLatitude, :locationLongitude, 0)");
+                      ":locationLatitude, :locationLongitude, :properties, 0)");
         query.bindValue(":entityId", entityId);
         query.bindValue(":typeId", eventTypeId);
         query.bindValue(":userId", userId);
@@ -740,9 +742,6 @@ void ActionController::registerLoadingAndTransport(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
 
-    //"bags_qr_codes": ["123-321","321-123"], "loading_date": 12, "harvest_id": 5,
-    //"destination": 1, "plate_number": "12345AB67"
-
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
@@ -808,12 +807,6 @@ void ActionController::registerReception(
     query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-
-    // properties={\"bags_qr_codes\": [\"999-111\"]}"
-    // -F "documents_photos=@/Users/sergeybondar/Downloads/Cat03.jpg"
-    // -F "documents_photos=@/Users/sergeybondar/Downloads/Cat02.jpg"
-    // -F "receipt_photos=@/Users/sergeybondar/Downloads/Cat03.jpg"
-    // -F "location={\"latitude\": 53.9327432, \"longitude\": 27.6132602}
 
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",

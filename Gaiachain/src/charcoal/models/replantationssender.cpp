@@ -55,9 +55,9 @@ void ReplantationsSender::sendEvents()
             {
                 { "trees_planted", query().value("numberOfTrees").toString() },
                 { "beginning_date",
-                 query().value("beginningDate").toDateTime().toSecsSinceEpoch() },
+                 static_cast<qint64>(query().value("beginningDate").toLongLong()) },
                 { "ending_date",
-                 query().value("endingDate").toDateTime().toSecsSinceEpoch()},
+                 static_cast<qint64>(query().value("endingDate").toLongLong()) },
                 { "location", location },
                 { "plot", query().value("plotId").toInt() },
                 { "tree_specie", query().value("treeSpecies").toInt() }
