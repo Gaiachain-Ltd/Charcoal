@@ -862,7 +862,7 @@ void ActionController::registerReplantation(
 
     qDebug() << "Registering replantation" << coordinate << timestamp
              << userId << plotId << numberOfTrees << treeSpecies
-             << beginningDate;
+             << beginningDate << endingDate;
 
     const QString parentId(findEntityId(plotId));
     const QString treeSpeciesId(findTreeSpeciesId(treeSpecies));

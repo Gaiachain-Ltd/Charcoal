@@ -16,8 +16,8 @@
 ReplantationsSender::ReplantationsSender(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(false);
-    setDbQuery("SELECT id, plotId, userId, numberOfTrees, locationLatitude, "
-               "locationLongitude, beginningDate "
+    setDbQuery("SELECT id, plotId, userId, numberOfTrees, treeSpecies, "
+               "locationLatitude, locationLongitude, beginningDate, endingDate "
                "FROM Replantations WHERE isCommitted=0");
 
     connect(this, &ReplantationsSender::refreshed,
@@ -51,16 +51,23 @@ void ReplantationsSender::sendEvents()
             { "longitude", query().value("locationLongitude").toDouble() }
         });
 
+        // We have to read all data first, and only then we can call
+        // getWebPackageId() because it invalidates current query()
+        const auto numberOfTrees(query().value("numberOfTrees").toString());
+        const qint64 beginning = static_cast<qint64>(
+            query().value("beginningDate").toLongLong());
+        const qint64 ending = static_cast<qint64>(
+            query().value("endingDate").toLongLong());
+        const int treeSpecies = query().value("treeSpecies").toInt();
+
         const QJsonDocument doc(
             {
-                { "trees_planted", query().value("numberOfTrees").toString() },
-                { "beginning_date",
-                 static_cast<qint64>(query().value("beginningDate").toLongLong()) },
-                { "ending_date",
-                 static_cast<qint64>(query().value("endingDate").toLongLong()) },
+                { "trees_planted", numberOfTrees },
+                { "beginning_date", beginning },
+                { "ending_date", ending },
                 { "location", location },
-                { "plot", query().value("plotId").toInt() },
-                { "tree_specie", query().value("treeSpecies").toInt() }
+                { "plot", getWebPackageId(query().value("plotId").toString()) },
+                { "tree_specie", treeSpecies }
             });
 
         request->setDocument(doc);
@@ -72,7 +79,7 @@ void ReplantationsSender::sendEvents()
                                           &ReplantationsSender::webErrorHandler,
                                           &ReplantationsSender::webReplyHandler);
         } else {
-            qDebug() << "Enqueuing replantation event!";
+            qDebug() << "Enqueuing replantation event!" << doc;
             m_queuedRequests.append(request);
         }
     }
@@ -89,16 +96,33 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
 {
     qDebug() << "Request success!" << reply;
 
-    const QString id(reply.object().value(Tags::pid).toString());
-    const QString queryString(QString("UPDATE Replantations SET isCommitted=1 "
-                                      "WHERE id=%1").arg(id));
+    const qint64 begin(reply.object().value(Tags::beginningDate).toInt());
+    const qint64 end(reply.object().value(Tags::endingDate).toInt());
+    const QString queryString(
+        QString("UPDATE Replantations SET isCommitted=1 "
+                "WHERE beginningDate=%1 AND endingDate=%2").arg(begin).arg(end));
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    if (query.exec()) {
-        // Not necessary?
-        //emit webDataRefreshed();
-    } else {
+    if (query.exec() == false) {
         qWarning() << RED("Query to update the Replantation has failed to execute")
+                   << query.lastError() << "For query:" << query.lastQuery()
+                   << reply;
+    }
+}
+
+int ReplantationsSender::getWebPackageId(const QString &plotEntityId) const
+{
+    int result = -1;
+    const QString queryString(QString("SELECT webId FROM Entities "
+                                      "WHERE id=%1").arg(plotEntityId));
+
+    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    if (query.exec() && query.next()) {
+        result = query.value("webId").toInt();
+    } else {
+        qWarning() << RED("Unable to fetch package ID (Web)")
                    << query.lastError() << "For query:" << query.lastQuery();
     }
+
+    return result;
 }

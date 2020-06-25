@@ -57,6 +57,9 @@ namespace Tags {
     // Charcoal Event reply fields
     const QLatin1String eventTimestamp = QLatin1String("timestamp");
     const QLatin1String eventId = QLatin1String("package_id");
+    // Charcoal Replantation reply fields
+    const QLatin1String beginningDate = QLatin1String("beginning_date");
+    const QLatin1String endingDate = QLatin1String("ending_date");
 };
 
 namespace StaticValues {

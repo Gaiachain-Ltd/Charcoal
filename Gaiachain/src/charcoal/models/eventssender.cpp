@@ -91,27 +91,25 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 {
     qDebug() << "Request success!" << reply;
 
-    const QString id(reply.object().value(Tags::pid).toString());
-    const QString eventId(reply.object().value(Tags::eventId).toString());
+    const QString pid(reply.object().value(Tags::pid).toString());
+    const qint64 eventWebId(reply.object().value(Tags::eventId).toInt());
     // Will become incorrect after year 2038!
     const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toInt());
+    const QString eventId(findEventByTimestamp(timestamp));
 
     const QString queryString(QString("UPDATE Events SET isCommitted=1 "
-                                      "WHERE date=%1").arg(timestamp));
+                                      "WHERE id=%1").arg(eventId));
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    //query.prepare(queryString);
-    //query.bindValue(":date", timestamp);
 
     if (query.exec()) {
-        query.next();
-        qDebug() << "Updated?" << query.lastQuery() << query.value(0) << timestamp;
-        // Not necessary?
-        //emit webDataRefreshed();
+        qDebug() << "Updated?" << query.lastQuery()
+                 << timestamp << "pid" << pid << "eid" << eventWebId;
+        updateEntityWebId(eventWebId, eventId);
     } else {
         qWarning() << RED("Query to update the Event has failed to execute")
                    << query.lastError() << "For query:" << query.lastQuery()
-                   << timestamp;
+                   << timestamp << "pid" << pid << "eid" << eventWebId;
     }
 }
 
@@ -131,11 +129,47 @@ QString EventsSender::getEventType(const QString &id) const
     return result;
 }
 
+QString EventsSender::findEventByTimestamp(const qint64 timestamp) const
+{
+    QString result;
+    const QString queryString(QString("SELECT id FROM Events "
+                                      "WHERE date=%1").arg(timestamp));
+
+    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    if (query.exec() && query.next()) {
+        result = query.value("id").toString();
+    } else {
+        qWarning() << RED("Unable to find event ID by timestamp")
+                   << query.lastError() << "For query:" << query.lastQuery();
+    }
+
+    return result;
+}
+
+bool EventsSender::updateEntityWebId(const qint64 webId, const QString &eventId) const
+{
+    QString result;
+    const QString queryString(QString("UPDATE Entities SET webId=%1 "
+                                      "WHERE id IN (SELECT entityId FROM Events WHERE id=%2)")
+                                  .arg(webId).arg(eventId));
+
+    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    if (query.exec()) {
+        return true;
+    } else {
+        qWarning() << RED("Unable to update web ID")
+                   << query.lastError() << "For query:" << query.lastQuery();
+    }
+
+    return false;
+}
+
 QString EventsSender::getEntityName(const QString &id) const
 {
     QString result;
     const QString queryString(QString("SELECT name FROM Entities "
                                       "WHERE id=%1").arg(id));
+
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
     if (query.exec() && query.next()) {
         result = query.value("name").toString();

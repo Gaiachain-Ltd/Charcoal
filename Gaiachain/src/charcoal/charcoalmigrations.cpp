@@ -38,6 +38,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("CREATE TABLE Entities "
                 "(`id` INTEGER primary key AUTOINCREMENT, "
                 "`typeId` INTEGER NOT NULL, `name` TEXT NOT NULL, `parent` INTEGER, "
+                // This is the package_id we get returned from Web server
+                "`webId` INTEGER, "
                 "`isFinished` BOOLEAN NOT NULL CHECK (isFinished IN (0,1)), "
                 "`isReplanted` BOOLEAN NOT NULL CHECK (isReplanted IN (0,1)), "
                 "FOREIGN KEY(typeId) REFERENCES EntityTypes(id), "
