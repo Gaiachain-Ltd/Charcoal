@@ -51,18 +51,26 @@ void EventsSender::sendEvents()
             { "longitude", query().value("locationLongitude").toDouble() }
         });
 
+        // First, get query data. Subsequent calls to any QSqlQuery instances
+        // might break the main query!
+        const qint64 timestamp =
+            static_cast<qint64>(query().value("date").toLongLong());
+        const QString properties(query().value("properties").toString());
+
         const QString entityId(query().value("entityId").toString());
+        const QString typeId(query().value("typeId").toString());
+
+        // Now generate stuff using additional QSqlQueries
         const QString pid(getEntityName(entityId));
-        const QString action(getEventType(query().value("typeId").toString()));
+        const QString action(getEventType(typeId));
 
         const QJsonDocument doc(
             {
                 { "pid", pid },
                 { "action", action },
-                { "timestamp",
-                 static_cast<qint64>(query().value("date").toLongLong()) },
+                { "timestamp", timestamp },
                 { "location", location },
-                { "properties", dbMapToWebObject(query().value("properties").toString()) }
+                { "properties", dbMapToWebObject(properties) }
             });
 
         request->setDocument(doc);
