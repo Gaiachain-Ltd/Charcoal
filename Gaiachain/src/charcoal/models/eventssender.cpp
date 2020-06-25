@@ -103,13 +103,19 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
 
     if (query.exec()) {
-        qDebug() << "Updated?" << query.lastQuery()
-                 << timestamp << "pid" << pid << "eid" << eventWebId;
-        updateEntityWebId(eventWebId, eventId);
+        if (updateEntityWebId(eventWebId, eventId) == false) {
+            const QLatin1String errorString = QLatin1String("Failed to update local DB");
+            qWarning() << RED(errorString)
+                       << query.lastError() << "For query:" << query.lastQuery()
+                       << reply;
+            emit error(errorString);
+        }
     } else {
-        qWarning() << RED("Query to update the Event has failed to execute")
+        const QLatin1String errorString = QLatin1String("Query to update the Event has failed to execute");
+        qWarning() << RED(errorString)
                    << query.lastError() << "For query:" << query.lastQuery()
                    << timestamp << "pid" << pid << "eid" << eventWebId;
+        emit error(errorString);
     }
 }
 

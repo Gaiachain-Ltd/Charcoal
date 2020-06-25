@@ -89,7 +89,7 @@ void ReplantationsSender::webErrorHandler(const QString &errorString,
                                           const QNetworkReply::NetworkError code)
 {
     qDebug() << "Request error!" << errorString << code;
-    // TODO: retry!
+    emit error(errorString);
 }
 
 void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
@@ -104,9 +104,11 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
     if (query.exec() == false) {
-        qWarning() << RED("Query to update the Replantation has failed to execute")
+        const QLatin1String errorString = QLatin1String("Query to update the Replantation has failed to execute");
+        qWarning() << RED(errorString)
                    << query.lastError() << "For query:" << query.lastQuery()
                    << reply;
+        emit error(errorString);
     }
 }
 
