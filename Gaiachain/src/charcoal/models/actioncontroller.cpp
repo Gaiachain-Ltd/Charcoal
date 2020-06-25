@@ -1,7 +1,9 @@
 #include "actioncontroller.h"
 
 #include "database/dbhelpers.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 
 #include <QGeoCoordinate>
 
@@ -373,6 +375,8 @@ void ActionController::registerLoggingBeginning(
     // Then, insert a new Event under that Entity
     const QString entityId(query.lastInsertId().toString());
     const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoggingBeginning));
+    const int villageId(CharcoalDbHelpers::getVillageId(m_dbConnName, village));
+    const int parcelId(CharcoalDbHelpers::getParcelId(m_dbConnName, parcel));
 
     if (eventTypeId.isEmpty()) {
         qWarning() << RED("Event Type ID not found!");
@@ -394,10 +398,10 @@ void ActionController::registerLoggingBeginning(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "parcel", findParcelId(parcel) },
-                        { "village", findVillageId(village) },
-                        { "tree_specie", findTreeSpeciesId(treeSpecies) },
-                        { "beginning_date", eventDate.toSecsSinceEpoch() },
+                        { "parcel", parcelId },
+                        { "village", villageId },
+                        { Tags::webTreeSpecies, findTreeSpeciesId(treeSpecies) },
+                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
                     }));
 
     if (query.exec() == false) {
@@ -455,8 +459,8 @@ void ActionController::registerLoggingEnding(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "number_of_trees", numberOfTrees },
-                        { "ending_date", eventDate.toSecsSinceEpoch() }
+                        { Tags::webNumberOfTrees, numberOfTrees },
+                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -534,12 +538,13 @@ void ActionController::registerCarbonizationBeginning(
     const QString entityId(alreadyPresent? query.value("id").toString()
                                           : query.lastInsertId().toString());
     const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::CarbonizationBeginning));
+    const int webPlotId(
+        CharcoalDbHelpers::getWebPackageId(m_dbConnName, parentEntityId));
 
     if (eventTypeId.isEmpty()) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
-
     query.prepare("INSERT INTO Events (entityId, typeId, userId, "
                   "date, eventDate, locationLatitude, locationLongitude, "
                   "properties, isCommitted) "
@@ -555,10 +560,10 @@ void ActionController::registerCarbonizationBeginning(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "oven_type", ovenType },
-                        { "beginning_date", eventDate.toSecsSinceEpoch() },
-                        { "plot_id", 2 }, // TODO: what ID?? plotId??
-                        { "oven_id", ovenId }
+                        { Tags::webOvenType, ovenType },
+                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
+                        { Tags::webPlotId, webPlotId },
+                        { Tags::webOvenId, ovenId }
                     }));
 
     if (query.exec() == false) {
@@ -633,6 +638,8 @@ void ActionController::registerCarbonizationEnding(
 
     for (const QVariant &idVar : ovenIds) {
         const QString ovenId(idVar.toString());
+        const QString ovenLetter(CharcoalDbHelpers::getOvenLetter(m_dbConnName, ovenId));
+
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
         query.prepare("INSERT INTO Events (entityId, typeId, userId, "
                       "date, eventDate, locationLatitude, locationLongitude, "
@@ -649,8 +656,8 @@ void ActionController::registerCarbonizationEnding(
         // TODO: use Tags to denote the properties more reliably!
         query.bindValue(":properties",
                         propertiesToString(QVariantMap {
-                            { "oven_ids", "[2,3]" }, // TODO!
-                            { "end_date", eventDate.toSecsSinceEpoch() }
+                            { Tags::webOvenId, ovenLetter },
+                            { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                         }));
 
         if (query.exec() == false) {
@@ -698,6 +705,9 @@ void ActionController::registerLoadingAndTransport(
     // First, insert a new Entity into table
     const QString typeId(findEntityTypeId(Enums::PackageType::Transport));
     const QString parentEntityId(findEntityId(getPlotId(transportId)));
+    const QString harvestEntity(findEntityId(harvestId));
+    const int webHarvestId(
+        CharcoalDbHelpers::getWebPackageId(m_dbConnName, harvestEntity));
 
     if (typeId.isEmpty()) {
         qWarning() << RED("Transport ID type not found!");
@@ -723,6 +733,7 @@ void ActionController::registerLoadingAndTransport(
     // Then, insert a new Event under that Entity
     const QString entityId(query.lastInsertId().toString());
     const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoadingAndTransport));
+    const int destinationId(CharcoalDbHelpers::getDestinationId(m_dbConnName, destination));
 
     if (eventTypeId.isEmpty()) {
         qWarning() << RED("Event Type ID not found!");
@@ -745,11 +756,11 @@ void ActionController::registerLoadingAndTransport(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "harvest_id", harvestId },
+                        { Tags::webHarvestId, webHarvestId },
                         { "plate_number", plateNumber },
-                        { "destination", destination },
+                        { "destination", destinationId },
                         { "bags_qr_codes", scannedQrs },
-                        { "loading_date", eventDate.toSecsSinceEpoch() }
+                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -815,7 +826,7 @@ void ActionController::registerReception(
                         { "documents", documents },
                         { "receipts", receipts },
                         { "bags_qr_codes", scannedQrs },
-                        { "reception_date", eventDate.toSecsSinceEpoch() }
+                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -990,46 +1001,6 @@ QString ActionController::findTreeSpeciesId(const QString &species) const
     }
 
     qWarning() << RED("Getting TreeSpecies has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return QString();
-}
-
-QString ActionController::findParcelId(const QString &parcel) const
-{
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    query.prepare("SELECT id FROM Parcels WHERE code=:parcel");
-    query.bindValue(":parcel", parcel);
-
-    if (query.exec()) {
-        query.next();
-        return query.value("id").toString();
-    }
-
-    qWarning() << RED("Getting Parcels has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return QString();
-}
-
-QString ActionController::findVillageId(const QString &village) const
-{
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    query.prepare("SELECT id FROM Villages WHERE name=:village");
-    query.bindValue(":village", village);
-
-    if (query.exec()) {
-        query.next();
-        return query.value("id").toString();
-    }
-
-    qWarning() << RED("Getting Villages has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
                << "DB:" << m_dbConnName;

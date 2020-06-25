@@ -6,6 +6,7 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "database/dbhelpers.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -59,15 +60,17 @@ void ReplantationsSender::sendEvents()
         const qint64 ending = static_cast<qint64>(
             query().value("endingDate").toLongLong());
         const int treeSpecies = query().value("treeSpecies").toInt();
+        const QString parentId(query().value("plotId").toString());
+        const int webPlotId(CharcoalDbHelpers::getWebPackageId(m_connectionName, parentId));
 
         const QJsonDocument doc(
             {
                 { "trees_planted", numberOfTrees },
-                { "beginning_date", beginning },
-                { "ending_date", ending },
+                { Tags::webBeginningDate, beginning },
+                { Tags::webEndingDate, ending },
                 { "location", location },
-                { "plot", getWebPackageId(query().value("plotId").toString()) },
-                { "tree_specie", treeSpecies }
+                { "plot", webPlotId },
+                { Tags::webTreeSpecies, treeSpecies }
             });
 
         request->setDocument(doc);
@@ -96,8 +99,8 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
 {
     qDebug() << "Request success!" << reply;
 
-    const qint64 begin(reply.object().value(Tags::beginningDate).toInt());
-    const qint64 end(reply.object().value(Tags::endingDate).toInt());
+    const qint64 begin(reply.object().value(Tags::webBeginningDate).toInt());
+    const qint64 end(reply.object().value(Tags::webEndingDate).toInt());
     const QString queryString(
         QString("UPDATE Replantations SET isCommitted=1 "
                 "WHERE beginningDate=%1 AND endingDate=%2").arg(begin).arg(end));
@@ -110,21 +113,4 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
                    << reply;
         emit error(errorString);
     }
-}
-
-int ReplantationsSender::getWebPackageId(const QString &plotEntityId) const
-{
-    int result = -1;
-    const QString queryString(QString("SELECT webId FROM Entities "
-                                      "WHERE id=%1").arg(plotEntityId));
-
-    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    if (query.exec() && query.next()) {
-        result = query.value("webId").toInt();
-    } else {
-        qWarning() << RED("Unable to fetch package ID (Web)")
-                   << query.lastError() << "For query:" << query.lastQuery();
-    }
-
-    return result;
 }

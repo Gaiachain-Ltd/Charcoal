@@ -128,6 +128,7 @@ charcoal {
         src/charcoal/notificationmanager.h \
         src/charcoal/charcoalsessionmanager.h \
         src/charcoal/charcoaldatamanager.h \
+        src/charcoal/database/charcoaldbhelpers.h \
         src/charcoal/models/actioncontroller.h \
         src/charcoal/models/treespeciesmodel.h \
         src/charcoal/models/parcelsmodel.h \
@@ -154,6 +155,7 @@ charcoal {
         src/charcoal/charcoalmigrations.cpp \
         src/charcoal/charcoalsessionmanager.cpp \
         src/charcoal/charcoaldatamanager.cpp \
+        src/charcoal/database/charcoaldbhelpers.cpp \
         src/charcoal/models/actioncontroller.cpp \
         src/charcoal/models/treespeciesmodel.cpp \
         src/charcoal/models/parcelsmodel.cpp \

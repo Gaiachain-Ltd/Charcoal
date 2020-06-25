@@ -6,6 +6,7 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "database/dbhelpers.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -70,7 +71,7 @@ void EventsSender::sendEvents()
                 { "action", action },
                 { "timestamp", timestamp },
                 { "location", location },
-                { "properties", dbMapToWebObject(properties) }
+                { "properties", dbMapToWebObject(properties, entityId) }
             });
 
         request->setDocument(doc);
@@ -100,7 +101,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     qDebug() << "Request success!" << reply;
 
     const QString pid(reply.object().value(Tags::pid).toString());
-    const qint64 eventWebId(reply.object().value(Tags::eventId).toInt());
+    const qint64 eventWebId(reply.object().value(Tags::webEventId).toInt());
     // Will become incorrect after year 2038!
     const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toInt());
     const QString eventId(findEventByTimestamp(timestamp));
@@ -199,8 +200,25 @@ QString EventsSender::getEntityName(const QString &id) const
  * This method takes \a properties from Events database and transformes
  * them into a JSON object understood by Web.
  */
-QJsonObject EventsSender::dbMapToWebObject(const QString &properties) const
+QJsonObject EventsSender::dbMapToWebObject(const QString &properties,
+                                           const QString &entityId) const
 {
     const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toLatin1()));
-    return propertiesDoc.object();
+    QJsonObject object(propertiesDoc.object());
+
+    if (object.value(Tags::webPlotId).isNull()) {
+        // Plot ID from web was unknown when DB entry was created.
+        // We need to correct it
+        const int webPlotId(CharcoalDbHelpers::getWebPackageId(
+            m_connectionName, entityId));
+        if (webPlotId == -1) {
+            const QLatin1String errorString = QLatin1String("Failed to find Plot ID (Web) for plot");
+            qDebug() << errorString << object;
+            emit error(errorString);
+        } else {
+            object.insert(Tags::webPlotId, webPlotId);
+        }
+    }
+
+    return object;
 }

@@ -54,12 +54,18 @@ namespace Tags {
     const QLatin1String fullName = QLatin1String("full_name");
     // Charcoal user roles
     const QLatin1String superUser = QLatin1String("SUPER_USER");
-    // Charcoal Event reply fields
+    // Charcoal Event reply fields and charcoal Replantation reply fields
     const QLatin1String eventTimestamp = QLatin1String("timestamp");
-    const QLatin1String eventId = QLatin1String("package_id");
-    // Charcoal Replantation reply fields
-    const QLatin1String beginningDate = QLatin1String("beginning_date");
-    const QLatin1String endingDate = QLatin1String("ending_date");
+    const QLatin1String webEventId = QLatin1String("package_id");
+    const QLatin1String webPlotId = QLatin1String("plot_id");
+    const QLatin1String webHarvestId = QLatin1String("harvest_id");
+    const QLatin1String webNumberOfTrees = QLatin1String("number_of_trees");
+    const QLatin1String webTreeSpecies = QLatin1String("tree_specie");
+    const QLatin1String webOvenId = QLatin1String("oven_id");
+    const QLatin1String webOvenType = QLatin1String("oven_type");
+    const QLatin1String webBeginningDate = QLatin1String("beginning_date");
+    const QLatin1String webEndingDate = QLatin1String("ending_date");
+    const QLatin1String webEventDate = QLatin1String("event_date");
 };
 
 namespace StaticValues {
