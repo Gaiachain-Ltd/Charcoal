@@ -25,7 +25,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             // Additional data
             QLatin1String("CREATE TABLE Villages (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
-            QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `code` TEXT NOT NULL UNIQUE) "),
+            QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `code` TEXT NOT NULL UNIQUE, "
+                "`isUsed` BOOLEAN NOT NULL DEFAULT(0) CHECK (isUsed IN (0,1))) "),
             QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
             QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, "
                 "`name` TEXT NOT NULL UNIQUE, `type` INTEGER NOT NULL, "

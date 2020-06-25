@@ -11,7 +11,7 @@
 ParcelsModel::ParcelsModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(false);
-    setDbQuery("SELECT code FROM Parcels");
+    setDbQuery("SELECT code FROM Parcels WHERE isUsed=0");
 }
 
 void ParcelsModel::refreshWebData()

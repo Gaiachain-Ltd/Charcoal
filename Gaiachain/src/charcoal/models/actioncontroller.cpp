@@ -410,6 +410,17 @@ void ActionController::registerLoggingBeginning(
         return;
     }
 
+    // Update Parcels entry
+    query.prepare("UPDATE Parcels SET isUsed=1 WHERE id=:parcelId");
+    query.bindValue(":parcelId", parcelId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Updating Parcel status has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery()
+                   << parcelId;
+        return;
+    }
+
     emit refreshLocalEvents();
 }
 
