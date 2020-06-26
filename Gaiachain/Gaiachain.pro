@@ -144,7 +144,8 @@ charcoal {
         src/charcoal/models/trackingmodel.h \
         src/charcoal/models/minimumdatemodel.h \
         src/charcoal/models/localeventsmodel.h \
-        src/charcoal/models/listmodelhelper.h \
+        src/charcoal/models/listupdater.h \
+        src/charcoal/models/trackingupdater.h \
         src/charcoal/models/replantationssender.h \
         src/charcoal/models/eventssender.h \
         src/charcoal/rest/multipartrequest.h \
@@ -172,7 +173,8 @@ charcoal {
         src/charcoal/models/trackingmodel.cpp \
         src/charcoal/models/minimumdatemodel.cpp \
         src/charcoal/models/localeventsmodel.cpp \
-        src/charcoal/models/listmodelhelper.cpp \
+        src/charcoal/models/listupdater.cpp \
+        src/charcoal/models/trackingupdater.cpp \
         src/charcoal/models/replantationssender.cpp \
         src/charcoal/models/eventssender.cpp \
         src/charcoal/rest/multipartrequest.cpp \

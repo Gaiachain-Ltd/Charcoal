@@ -1,4 +1,4 @@
-#include "listmodelhelper.h"
+#include "listupdater.h"
 
 #include "database/dbhelpers.h"
 #include "common/logs.h"

@@ -4,7 +4,7 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
-#include "listmodelhelper.h"
+#include "listupdater.h"
 
 #include <QSqlQuery>
 #include <QDebug>

@@ -124,8 +124,6 @@ signals:
 
 private:
     // TODO: move to CharcoalDbHelpers!
-    QString findEntityId(const QString &name) const;
-    QString findEntityTypeId(const Enums::PackageType type) const;
     QString findEventTypeId(const Enums::SupplyChainAction action) const;
     QString findTreeSpeciesId(const QString &species) const;
     QString findOvenTypeId(const QString &ovenType) const;

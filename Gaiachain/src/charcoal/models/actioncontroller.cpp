@@ -130,8 +130,8 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
 int ActionController::nextTransportNumber(const QString &harvestId) const
 {
     const QString plotId(getPlotId(harvestId));
-    const QString parentEntityId(findEntityId(plotId));
-    const QString transportTypeId(findEntityTypeId(Enums::PackageType::Transport));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
+    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -160,7 +160,7 @@ int ActionController::nextTransportNumber(const QString &harvestId) const
 
 int ActionController::bagCountInTransport(const QString &transportId) const
 {
-    const QString transportEntityId(findEntityId(transportId));
+    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -187,7 +187,7 @@ int ActionController::bagCountInTransport(const QString &transportId) const
 
 QString ActionController::plateNumberInTransport(const QString &transportId) const
 {
-    const QString transportEntityId(findEntityId(transportId));
+    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -228,7 +228,7 @@ int ActionController::registeredTrucksCount(const QString &transportId) const
 {
     qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
     const QString plotId(getPlotId(transportId));
-    const QString transportTypeId(findEntityTypeId(Enums::PackageType::Transport));
+    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
     const QString receptionTypeId(findEventTypeId(Enums::SupplyChainAction::Reception));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
@@ -257,8 +257,8 @@ int ActionController::registeredTrucksCount(const QString &transportId) const
 int ActionController::registeredTrucksTotal(const QString &transportId) const
 {
     const QString plotId(getPlotId(transportId));
-    const QString parentEntityId(findEntityId(plotId));
-    const QString transportTypeId(findEntityTypeId(Enums::PackageType::Transport));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
+    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -281,7 +281,7 @@ int ActionController::registeredTrucksTotal(const QString &transportId) const
 
 QString ActionController::nextOvenNumber(const QString &plotId) const
 {
-    const QString parentEntityId(findEntityId(plotId));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -356,9 +356,9 @@ void ActionController::registerLoggingBeginning(
 
     // First, insert a new Entity into table
     const QString plotId(generatePlotId(userId, parcel, timestamp.date()));
-    const QString typeId(findEntityTypeId(Enums::PackageType::Plot));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Plot));
 
-    if (typeId.isEmpty()) {
+    if (typeId == -1) {
         qWarning() << RED("Plot ID type not found!");
         return;
     }
@@ -446,9 +446,9 @@ void ActionController::registerLoggingEnding(
     qDebug() << "Registering logging ending" << coordinate << timestamp
              << plotId << userId << numberOfTrees;
 
-    const QString entityId(findEntityId(plotId));
+    const int entityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
 
-    if (entityId.isEmpty()) {
+    if (entityId == -1) {
         qWarning() << RED("Entity ID not found!");
         return;
     }
@@ -526,10 +526,10 @@ void ActionController::registerCarbonizationBeginning(
     const bool alreadyPresent = query.next();
 
     // Insert a new Entity into table, if needed
-    const QString typeId(findEntityTypeId(Enums::PackageType::Harvest));
-    const QString parentEntityId(findEntityId(plotId));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Harvest));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
 
-    if (typeId.isEmpty()) {
+    if (typeId == -1) {
         qWarning() << RED("Harvest ID type not found!");
         return;
     }
@@ -639,9 +639,9 @@ void ActionController::registerCarbonizationEnding(
     qDebug() << "Registering carbonization ending" << coordinate << timestamp
              << harvestId << plotId << ovenIds << userId;
 
-    const QString entityId(findEntityId(harvestId));
+    const int entityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, harvestId));
 
-    if (entityId.isEmpty()) {
+    if (entityId == -1) {
         qWarning() << RED("Entity ID not found!");
         return;
     }
@@ -654,7 +654,7 @@ void ActionController::registerCarbonizationEnding(
     }
 
     for (const QVariant &idVar : ovenIds) {
-        const QString ovenId(idVar.toString());
+        const int ovenId(idVar.toInt());
         const QString ovenLetter(CharcoalDbHelpers::getOvenLetter(m_dbConnName, ovenId));
 
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
@@ -720,13 +720,13 @@ void ActionController::registerLoadingAndTransport(
              << destination << scannedQrs.size();
 
     // First, insert a new Entity into table
-    const QString typeId(findEntityTypeId(Enums::PackageType::Transport));
-    const QString parentEntityId(findEntityId(getPlotId(transportId)));
-    const QString harvestEntity(findEntityId(harvestId));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, getPlotId(transportId)));
+    const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, harvestId));
     const int webHarvestId(
         CharcoalDbHelpers::getWebPackageId(m_dbConnName, harvestEntity));
 
-    if (typeId.isEmpty()) {
+    if (typeId == -1) {
         qWarning() << RED("Transport ID type not found!");
         return;
     }
@@ -807,9 +807,9 @@ void ActionController::registerReception(
              << userId << transportId << documents << receipts
              << scannedQrs.size();
 
-    const QString entityId(findEntityId(transportId));
+    const int entityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
 
-    if (entityId.isEmpty()) {
+    if (entityId == -1) {
         qWarning() << RED("Entity ID not found!");
         return;
     }
@@ -858,7 +858,7 @@ void ActionController::registerReception(
 
 void ActionController::finalizeSupplyChain(const QString &plotId) const
 {
-    const QString parentId(findEntityId(plotId));
+    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId OR parent=:parentId");
     query.bindValue(":plotId", plotId);
@@ -891,7 +891,7 @@ void ActionController::registerReplantation(
              << userId << plotId << numberOfTrees << treeSpecies
              << beginningDate << endingDate;
 
-    const QString parentId(findEntityId(plotId));
+    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
     const QString treeSpeciesId(findTreeSpeciesId(treeSpecies));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
@@ -935,52 +935,6 @@ void ActionController::registerReplantation(
     }
 
     emit refreshLocalEvents();
-}
-
-/*!
- * Returns Entity entry ID (from DB) for package of given \a name, where \a name
- * is PlotId, HarvestId or TransportId.
- */
-QString ActionController::findEntityId(const QString &name) const
-{
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    query.prepare("SELECT id FROM Entities WHERE name=:nameString");
-    query.bindValue(":nameString", name);
-
-    if (query.exec()) {
-        query.next();
-        return query.value("id").toString();
-    }
-
-    qWarning() << RED("Getting Entity ID has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return QString();
-}
-
-QString ActionController::findEntityTypeId(const Enums::PackageType type) const
-{
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    const QString typeString(QMetaEnum::fromType<Enums::PackageType>()
-                                 .valueToKey(int(type)));
-
-    query.prepare("SELECT id FROM EntityTypes WHERE name=:typeString");
-    query.bindValue(":typeString", typeString);
-
-    if (query.exec()) {
-        query.next();
-        return query.value("id").toString();
-    }
-
-    qWarning() << RED("Getting EntityType has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return QString();
 }
 
 QString ActionController::findEventTypeId(const Enums::SupplyChainAction action) const
@@ -1074,7 +1028,7 @@ int ActionController::scannedBagsForAction(const QString &transportId,
                                            const Enums::SupplyChainAction action) const
 {
     const QString plotId(getPlotId(transportId));
-    const QString entityTypeId(findEntityTypeId(Enums::PackageType::Transport));
+    const int entityTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
     const QString eventTypeId(findEventTypeId(action));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));

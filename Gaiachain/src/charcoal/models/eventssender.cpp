@@ -50,8 +50,8 @@ void EventsSender::sendEvents()
             static_cast<qint64>(query().value("date").toLongLong());
         const QString properties(query().value("properties").toString());
 
-        const QString entityId(query().value("entityId").toString());
-        const QString typeId(query().value("typeId").toString());
+        const int entityId(query().value("entityId").toInt());
+        const int typeId(query().value("typeId").toInt());
 
         const QJsonObject location({
             { "latitude", query().value("locationLatitude").toDouble() },
@@ -80,8 +80,8 @@ void EventsSender::sendEvents()
         }
 
         // Now generate stuff using additional QSqlQueries
-        const QString pid(getEntityName(entityId));
-        const QString action(getEventType(typeId));
+        const QString pid(CharcoalDbHelpers::getEntityName(m_connectionName, entityId));
+        const QString action(CharcoalDbHelpers::getEventType(m_connectionName, typeId));
 
         const QJsonDocument doc(
             {
@@ -234,23 +234,6 @@ bool EventsSender::updateEntityWebId(const qint64 webId, const QString &eventId)
     return false;
 }
 
-QString EventsSender::getEntityName(const QString &id) const
-{
-    QString result;
-    const QString queryString(QString("SELECT name FROM Entities "
-                                      "WHERE id=%1").arg(id));
-
-    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    if (query.exec() && query.next()) {
-        result = query.value("name").toString();
-    } else {
-        qWarning() << RED("Unable to fetch entity name (plot ID, harvest ID or transport ID")
-                   << query.lastError() << "For query:" << query.lastQuery();
-    }
-
-    return result;
-}
-
 QJsonObject EventsSender::dbStringToPropertiesObject(const QString &properties) const
 {
     const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toLatin1()));
@@ -262,7 +245,7 @@ QJsonObject EventsSender::dbStringToPropertiesObject(const QString &properties) 
  * them into a JSON object understood by Web.
  */
 QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
-                                           const QString &entityId) const
+                                           const int entityId) const
 {
     if (object.value(Tags::webPlotId).isNull()) {
         // Plot ID from web was unknown when DB entry was created.

@@ -1,8 +1,13 @@
 #include "trackingmodel.h"
 
 #include "database/dbhelpers.h"
+#include "rest/baserequest.h"
+#include "controllers/session/restsessionmanager.h"
+#include "controllers/usermanager.h"
 #include "common/logs.h"
 #include "common/tags.h"
+#include "trackingupdater.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -151,20 +156,39 @@ QHash<int, QByteArray> TrackingModel::roleNames() const
     return m_roleNames;
 }
 
+void TrackingModel::refreshWebData()
+{
+    // TODO: limit amount of data with canFetchMore() etc.
+    const auto request = QSharedPointer<BaseRequest>::create(
+        "/entities/packages/",
+        BaseRequest::Type::Get);
+
+    if (m_userManager->isLoggedIn()) {
+        request->setToken(m_sessionManager->token());
+        m_sessionManager->sendRequest(request, this,
+                                      &TrackingModel::webErrorHandler,
+                                      &TrackingModel::webReplyHandler);
+    } else {
+        qDebug() << "Enqueing request";
+        m_queuedRequests.append(request);
+    }
+}
+
+void TrackingModel::webReplyHandler(const QJsonDocument &reply)
+{
+    qDebug() << "Data is:" << reply;
+    TrackingUpdater updater(m_connectionName);
+    if (updater.updateTable(reply)) {
+        emit webDataRefreshed();
+    } else {
+        emit error(tr("Error updating tracking information"));
+    }
+}
+
+// TODO: cache results for performance!
 Enums::SupplyChainAction TrackingModel::eventType(const QString &id) const
 {
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-    query.prepare("SELECT actionName FROM EventTypes WHERE id=:id");
-    query.bindValue(":id", id);
-
-    if (query.exec() == false) {
-        qWarning() << RED("Getting event type has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
-        return {};
-    }
-
-    query.next();
-    const QString name(query.value("actionName").toString());
+    const QString name(CharcoalDbHelpers::getEventType(m_connectionName, id.toInt()));
 
     if (name == "LB") {
         return Enums::SupplyChainAction::LoggingBeginning;
