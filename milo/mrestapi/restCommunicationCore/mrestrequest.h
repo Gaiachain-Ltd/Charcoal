@@ -69,6 +69,9 @@ protected:
     void send();
     virtual void retry();
     virtual void customizeRequest(QNetworkRequest &request);
+    virtual bool isMultiPart() const;
+    virtual QByteArray requestData() const;
+    virtual QHttpMultiPart* requestMultiPart() const;
     virtual void parse() = 0;
 
     Priority mPriority = Priority::Normal;

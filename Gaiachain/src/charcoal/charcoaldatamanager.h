@@ -22,6 +22,8 @@
 #include "charcoal/models/replantationssender.h"
 #include "charcoal/models/eventssender.h"
 
+class PicturesManager;
+
 class CharcoalDataManager : public AbstractDataManager
 {
     Q_OBJECT
@@ -48,6 +50,8 @@ public:
 
     void setupDatabase(const QString &dbPath) override;
     void setupQmlContext(QQmlApplicationEngine &engine) override;
+
+    void setPicturesManager(PicturesManager *manager);
 
     Q_INVOKABLE void sendOfflineActions() override;
 
@@ -100,7 +104,4 @@ private:
     // automatically, behind the scenes
     ReplantationsSender* m_replantationsSender = nullptr;
     EventsSender* m_eventsSender = nullptr;
-
-    // AbstractDataManager interface
-public:
 };

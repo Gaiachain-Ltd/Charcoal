@@ -78,6 +78,13 @@ void CharcoalDataManager::setupQmlContext(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty(QStringLiteral("localEventsModel"), m_localEventsModel);
 }
 
+void CharcoalDataManager::setPicturesManager(PicturesManager *manager)
+{
+    if (m_actionController) {
+        m_actionController->setPicturesManager(manager);
+    }
+}
+
 void CharcoalDataManager::sendOfflineActions()
 {
     const auto models = findChildren<QueryModel*>();

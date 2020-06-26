@@ -4,6 +4,7 @@
 #include "controllers/abstractmanager.h"
 
 #include <QObject>
+#include <QVariantList>
 
 #include <QStandardPaths>
 
@@ -34,6 +35,9 @@ public:
     Q_INVOKABLE QStringList documents() const;
     Q_INVOKABLE QStringList receipts() const;
 
+    QStringList moveToCache(const QVariantList &photos) const;
+    QStringList moveToCache(const QStringList &photos) const;
+
     static QString pictureTypeString(const PictureType type);
 
 private:
@@ -43,11 +47,12 @@ private:
     QStringList photosOfType(const PicturesManager::PictureType type) const;
 
     const QString m_base = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    const QString m_document_keyword = "document";
-    const QString m_receipt_keyword = "receipt";
-    const QString m_savedDir = "saved";
+    const QString m_saveDir = "saved";
+    const QString m_cacheDir = "cache";
     const QString m_picturesDir = "pictures";
     const QString m_path = m_base + "/" + m_picturesDir;
+    const QString m_savePath = m_path + "/" + m_saveDir;
+    const QString m_cachePath = m_path + "/" + m_cacheDir;
 };
 
 #endif // PICTURESMANAGER_H

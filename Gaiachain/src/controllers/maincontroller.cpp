@@ -253,6 +253,8 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     m_dataManager->setupQmlContext(engine);
 
 #ifdef CHARCOAL
+    auto dataManager = qobject_cast<CharcoalDataManager *>(m_dataManager);
+    dataManager->setPicturesManager(&m_picturesManager);
     m_picturesManager.setupQmlContext(engine);
     m_notificationsManager.setupQmlContext(engine);
 

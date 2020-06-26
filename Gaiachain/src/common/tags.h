@@ -66,6 +66,14 @@ namespace Tags {
     const QLatin1String webBeginningDate = QLatin1String("beginning_date");
     const QLatin1String webEndingDate = QLatin1String("ending_date");
     const QLatin1String webEventDate = QLatin1String("event_date");
+    const QLatin1String webQrCodes = QLatin1String("bags_qr_codes");
+    const QLatin1String webPlateNumber = QLatin1String("plate_number");
+    const QLatin1String webDocuments = QLatin1String("documents_photos");
+    const QLatin1String webReceipts = QLatin1String("receipt_photos");
+    const QLatin1String documents = QLatin1String("documents");
+    const QLatin1String receipts = QLatin1String("receipts");
+    const QLatin1String document = QLatin1String("document");
+    const QLatin1String receipt = QLatin1String("receipt");
 };
 
 namespace StaticValues {

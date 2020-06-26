@@ -3,9 +3,11 @@
 #include "common/enums.h"
 
 #include <QObject>
+#include <QPointer>
 #include <QVariant>
 
 class QGeoCoordinate;
+class PicturesManager;
 
 class ActionController : public QObject
 {
@@ -15,6 +17,7 @@ public:
     explicit ActionController(QObject *parent = nullptr);
 
     void setDbConnection(const QString &connectionName);
+    void setPicturesManager(PicturesManager *manager);
 
     Q_INVOKABLE QString generatePlotId(const QString &userId,
                                        const QString &parcelCode,
@@ -138,5 +141,6 @@ private:
     const QString dateFormat = "dd-MM-yyyy";
 
     QString m_dbConnName;
+    QPointer<PicturesManager> m_picturesManager;
 };
 

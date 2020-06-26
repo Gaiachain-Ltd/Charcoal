@@ -7,12 +7,14 @@
 #include "controllers/usermanager.h"
 #include "database/dbhelpers.h"
 #include "charcoal/database/charcoaldbhelpers.h"
+#include "charcoal/rest/multipartrequest.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
 
 #include <QJsonObject>
+#include <QJsonArray>
 
 EventsSender::EventsSender(QObject *parent) : QueryModel(parent)
 {
@@ -42,16 +44,6 @@ void EventsSender::sendEvents()
         const auto record = query().record();
         qDebug() << "Offline event is:" << record;
 
-        const auto request = QSharedPointer<BaseRequest>::create(
-            "/entities/new/",
-            BaseRequest::Type::Post
-            );
-
-        const QJsonObject location({
-            { "latitude", query().value("locationLatitude").toDouble() },
-            { "longitude", query().value("locationLongitude").toDouble() }
-        });
-
         // First, get query data. Subsequent calls to any QSqlQuery instances
         // might break the main query!
         const qint64 timestamp =
@@ -60,6 +52,32 @@ void EventsSender::sendEvents()
 
         const QString entityId(query().value("entityId").toString());
         const QString typeId(query().value("typeId").toString());
+
+        const QJsonObject location({
+            { "latitude", query().value("locationLatitude").toDouble() },
+            { "longitude", query().value("locationLongitude").toDouble() }
+        });
+
+        const QJsonObject propertiesObject(dbStringToPropertiesObject(properties));
+        QStringList toUpload;
+
+        if (propertiesObject.contains(Tags::documents)) {
+            const auto array = propertiesObject.value(Tags::documents).toArray();
+            for (const auto &item : array) {
+                toUpload.append(item.toString());
+            }
+        }
+
+        if (propertiesObject.contains(Tags::receipts)) {
+            const auto array = propertiesObject.value(Tags::receipts).toArray();
+            for (const auto &item : array) {
+                toUpload.append(item.toString());
+            }
+        }
+
+        if (toUpload.isEmpty() == false) {
+            qDebug() << "Files to be uploaded:" << toUpload;
+        }
 
         // Now generate stuff using additional QSqlQueries
         const QString pid(getEntityName(entityId));
@@ -71,10 +89,41 @@ void EventsSender::sendEvents()
                 { "action", action },
                 { "timestamp", timestamp },
                 { "location", location },
-                { "properties", dbMapToWebObject(properties, entityId) }
+                { "properties", dbMapToWebObject(propertiesObject, entityId) }
             });
 
-        request->setDocument(doc);
+        QSharedPointer<BaseRequest> request;
+
+        if (toUpload.isEmpty()) {
+            request = QSharedPointer<BaseRequest>::create(
+                "/entities/new/",
+                BaseRequest::Type::Post
+                );
+
+            request->setDocument(doc);
+        } else {
+            auto multi = QSharedPointer<MultiPartRequest>::create(
+                "/entities/new/",
+                MultiPartRequest::Type::Post
+                );
+
+            const auto docObject = doc.object();
+            for (const QString &key : docObject.keys()) {
+                // TODO: toString() can misbehave! Use QJsonDoc::toJson()
+                multi->addPart(key, docObject.value(key).toString());
+            }
+
+            for (const QString &path : qAsConst(toUpload)) {
+                const QFileInfo info(path);
+                if (info.fileName().startsWith(Tags::document)) {
+                    multi->addPart(Tags::webDocuments, info);
+                } else  {
+                    multi->addPart(Tags::webReceipts, info);
+                }
+            }
+
+            request = multi;
+        }
 
         if (isLoggedIn) {
             qDebug().noquote() << "Sending event!" << doc;
@@ -196,16 +245,19 @@ QString EventsSender::getEntityName(const QString &id) const
     return result;
 }
 
+QJsonObject EventsSender::dbStringToPropertiesObject(const QString &properties) const
+{
+    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toLatin1()));
+    return propertiesDoc.object();
+}
+
 /*!
  * This method takes \a properties from Events database and transformes
  * them into a JSON object understood by Web.
  */
-QJsonObject EventsSender::dbMapToWebObject(const QString &properties,
+QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
                                            const QString &entityId) const
 {
-    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toLatin1()));
-    QJsonObject object(propertiesDoc.object());
-
     if (object.value(Tags::webPlotId).isNull()) {
         // Plot ID from web was unknown when DB entry was created.
         // We need to correct it
@@ -218,6 +270,12 @@ QJsonObject EventsSender::dbMapToWebObject(const QString &properties,
         } else {
             object.insert(Tags::webPlotId, webPlotId);
         }
+    } else if (object.value(Tags::documents).isNull() == false) {
+        // We don't need to pass documents in properties, we send them separately
+        object.remove(Tags::documents);
+    } else if (object.value(Tags::receipts).isNull() == false) {
+        // We don't need to pass receipts in properties, we send them separately
+        object.remove(Tags::receipts);
     }
 
     return object;

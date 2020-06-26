@@ -2,6 +2,7 @@
 
 #include "database/dbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -121,7 +122,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                 const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
                 const QVariantMap properties(propertiersJson.toVariant().toMap());
                 name = tr("Bags have been loaded on truck %1")
-                           .arg(properties.value("plate_number").toString());
+                           .arg(properties.value(Tags::webPlateNumber).toString());
             }
                 break;
             case Enums::SupplyChainAction::Reception:

@@ -2,6 +2,7 @@
 
 #include "database/dbhelpers.h"
 #include "charcoal/database/charcoaldbhelpers.h"
+#include "charcoal/picturesmanager.h"
 #include "common/logs.h"
 #include "common/tags.h"
 
@@ -26,6 +27,11 @@ ActionController::ActionController(QObject *parent) : QObject(parent)
 void ActionController::setDbConnection(const QString &connectionName)
 {
     m_dbConnName = connectionName;
+}
+
+void ActionController::setPicturesManager(PicturesManager *manager)
+{
+    m_picturesManager = manager;
 }
 
 QString ActionController::generatePlotId(const QString &userId,
@@ -764,13 +770,12 @@ void ActionController::registerLoadingAndTransport(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
 
-    // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
                         { Tags::webHarvestId, webHarvestId },
-                        { "plate_number", plateNumber },
+                        { Tags::webPlateNumber, plateNumber },
                         { "destination", destinationId },
-                        { "bags_qr_codes", scannedQrs },
+                        { Tags::webQrCodes, scannedQrs },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
 
@@ -816,6 +821,9 @@ void ActionController::registerReception(
         return;
     }
 
+    const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
+    const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));
+
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
     query.prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, eventDate, locationLatitude, locationLongitude, properties, "
@@ -830,13 +838,12 @@ void ActionController::registerReception(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
 
-    // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "transportId", transportId },
-                        { "documents", documents },
-                        { "receipts", receipts },
-                        { "bags_qr_codes", scannedQrs },
+                        //{ "transportId", transportId },
+                        { Tags::documents, cachedDocs },
+                        { Tags::receipts, cachedRecs },
+                        { Tags::webQrCodes, scannedQrs },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
 
@@ -847,8 +854,6 @@ void ActionController::registerReception(
     }
 
     emit refreshLocalEvents();
-
-    // Lastly, send a request to server to add it, too.
 }
 
 void ActionController::finalizeSupplyChain(const QString &plotId) const

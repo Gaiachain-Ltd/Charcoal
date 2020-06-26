@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "mrestrequest.h"
 #include <QTimer>
+#include <QHttpMultiPart>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -198,15 +199,29 @@ void MRestRequest::send()
         emit finished();
         return;
     case Type::Put:
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->put(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
+        if (isMultiPart()) {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "form-data");
+            auto device = requestMultiPart();
+            mActiveReply = mNetworkManager->put(request, device);
+            device->setParent(mActiveReply);
+        } else {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            mActiveReply = mNetworkManager->put(request, requestData());
+        }
         break;
     case Type::Get:
         mActiveReply = mNetworkManager->get(request);
         break;
     case Type::Post:
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->post(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
+        if (isMultiPart()) {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "form-data");
+            auto device = requestMultiPart();
+            mActiveReply = mNetworkManager->post(request, device);
+            device->setParent(mActiveReply);
+        } else {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            mActiveReply = mNetworkManager->post(request, requestData());
+        }
         break;
     case Type::Delete:
         mActiveReply = mNetworkManager->deleteResource(request);
@@ -234,6 +249,22 @@ void MRestRequest::send()
 void MRestRequest::customizeRequest(QNetworkRequest &request)
 {
     Q_UNUSED(request)
+}
+
+bool MRestRequest::isMultiPart() const
+{
+    return false;
+}
+
+QByteArray MRestRequest::requestData() const
+{
+    return mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact);
+}
+
+QHttpMultiPart *MRestRequest::requestMultiPart() const
+{
+    qDebug() << "Reimplement me!";
+    return nullptr;
 }
 
 /*!
