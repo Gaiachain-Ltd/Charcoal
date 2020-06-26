@@ -207,22 +207,20 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
 
 int ActionController::scannedBagsCount(const QString &transportId) const
 {
-    qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
     return scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
 }
 
 int ActionController::scannedBagsTotal(const QString &transportId) const
 {
-    qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
     return scannedBagsForAction(transportId, Enums::SupplyChainAction::LoadingAndTransport);
 }
 
 int ActionController::registeredTrucksCount(const QString &transportId) const
 {
-    qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
-    const QString plotId(CharcoalDbHelpers::getPlotId(transportId));
+    const int plotId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
     const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
-    const QString receptionTypeId(findEventTypeId(Enums::SupplyChainAction::Reception));
+    const int receptionTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_dbConnName, Enums::SupplyChainAction::Reception));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -373,11 +371,12 @@ void ActionController::registerLoggingBeginning(
 
     // Then, insert a new Event under that Entity
     const QString entityId(query.lastInsertId().toString());
-    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoggingBeginning));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_dbConnName, Enums::SupplyChainAction::LoggingBeginning));
     const int villageId(CharcoalDbHelpers::getVillageId(m_dbConnName, village));
     const int parcelId(CharcoalDbHelpers::getParcelId(m_dbConnName, parcel));
 
-    if (eventTypeId.isEmpty()) {
+    if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
@@ -446,9 +445,10 @@ void ActionController::registerLoggingEnding(
         return;
     }
 
-    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoggingEnding));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_dbConnName, Enums::SupplyChainAction::LoggingEnding));
 
-    if (eventTypeId.isEmpty()) {
+    if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
@@ -547,11 +547,12 @@ void ActionController::registerCarbonizationBeginning(
     // Then, insert a new Event under that Entity
     const QString entityId(alreadyPresent? query.value("id").toString()
                                           : query.lastInsertId().toString());
-    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::CarbonizationBeginning));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_dbConnName, Enums::SupplyChainAction::CarbonizationBeginning));
     const int webPlotId(
         CharcoalDbHelpers::getWebPackageId(m_dbConnName, parentEntityId));
 
-    if (eventTypeId.isEmpty()) {
+    if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
@@ -639,9 +640,9 @@ void ActionController::registerCarbonizationEnding(
         return;
     }
 
-    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::CarbonizationEnding));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::CarbonizationEnding));
 
-    if (eventTypeId.isEmpty()) {
+    if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
@@ -743,10 +744,10 @@ void ActionController::registerLoadingAndTransport(
 
     // Then, insert a new Event under that Entity
     const QString entityId(query.lastInsertId().toString());
-    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::LoadingAndTransport));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
     const int destinationId(CharcoalDbHelpers::getDestinationId(m_dbConnName, destination));
 
-    if (eventTypeId.isEmpty()) {
+    if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
@@ -808,9 +809,9 @@ void ActionController::registerReception(
         return;
     }
 
-    const QString eventTypeId(findEventTypeId(Enums::SupplyChainAction::Reception));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::Reception));
 
-    if (eventTypeId.isEmpty()) {
+    if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
@@ -931,27 +932,6 @@ void ActionController::registerReplantation(
     emit refreshLocalEvents();
 }
 
-QString ActionController::findEventTypeId(const Enums::SupplyChainAction action) const
-{
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    const QString typeString(actionAbbreviation(action));
-
-    query.prepare("SELECT id FROM EventTypes WHERE actionName=:typeString");
-    query.bindValue(":typeString", typeString);
-
-    if (query.exec()) {
-        query.next();
-        return query.value("id").toString();
-    }
-
-    qWarning() << RED("Getting EventType has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return QString();
-}
-
 QString ActionController::findTreeSpeciesId(const QString &species) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
@@ -992,27 +972,6 @@ QString ActionController::findOvenTypeId(const QString &ovenType) const
     return QString();
 }
 
-QString ActionController::actionAbbreviation(const Enums::SupplyChainAction action) const
-{
-    switch (action) {
-    case Enums::SupplyChainAction::LoggingBeginning:
-        return QStringLiteral("LB");
-    case Enums::SupplyChainAction::LoggingEnding:
-        return QStringLiteral("LE");
-    case Enums::SupplyChainAction::CarbonizationBeginning:
-        return QStringLiteral("CB");
-    case Enums::SupplyChainAction::CarbonizationEnding:
-        return QStringLiteral("CE");
-    case Enums::SupplyChainAction::LoadingAndTransport:
-        return QStringLiteral("TR");
-    case Enums::SupplyChainAction::Reception:
-        return QStringLiteral("RE");
-    default: return QString();
-    }
-
-    return QString();
-}
-
 QString ActionController::propertiesToString(const QVariantMap &properties) const
 {
     return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);
@@ -1021,9 +980,9 @@ QString ActionController::propertiesToString(const QVariantMap &properties) cons
 int ActionController::scannedBagsForAction(const QString &transportId,
                                            const Enums::SupplyChainAction action) const
 {
-    const QString plotId(CharcoalDbHelpers::getPlotId(transportId));
+    const int plotId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
     const int entityTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
-    const QString eventTypeId(findEventTypeId(action));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, action));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 

@@ -124,11 +124,8 @@ signals:
 
 private:
     // TODO: move to CharcoalDbHelpers!
-    QString findEventTypeId(const Enums::SupplyChainAction action) const;
     QString findTreeSpeciesId(const QString &species) const;
     QString findOvenTypeId(const QString &ovenType) const;
-
-    QString actionAbbreviation(const Enums::SupplyChainAction action) const;
 
     QString propertiesToString(const QVariantMap &properties) const;
 

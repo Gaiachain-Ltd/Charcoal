@@ -3,6 +3,7 @@
 #include "charcoal/database/charcoaldbhelpers.h"
 #include "database/dbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 
 #include <QVariant>
 
@@ -46,7 +47,7 @@ bool TrackingUpdater::isValid() const
 bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 {
     const int webId(object.value("id").toInt(-1));
-    const QString pid(object.value("pid").toString());
+    const QString pid(object.value(Tags::pid).toString());
     const QString webType(object.value("type").toString());
     const auto type = packageType(webType);
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_connectionName, type));
@@ -76,12 +77,16 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         }
     }
 
-    /*
     for (int i = events.size() - 1; i >= 0; --i) {
         const QJsonObject event(events.at(i).toObject());
         // Warning: will become invalid in the year 2038!
-        const qint64 timestamp = event.value("timestamp").toInt();
+        const qint64 timestamp = event.value(Tags::timestamp).toInt();
+        // Warning: will become invalid in the year 2038!
+        const qint64 eventDate = event.value(Tags::webEventDate).toInt();
         const QJsonArray location = event.value("location_display").toArray();
+        const int eventTypeId = CharcoalDbHelpers::getEventTypeId(
+            m_connectionName, event.value("action").toString());
+        const QString userId(event.value("user_code").toString());
 
         // TODO: check if event exists!
 
@@ -92,13 +97,10 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                       "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
                       ":locationLatitude, :locationLongitude, :properties, 0)");
         query.bindValue(":entityId", entityId);
-        // WEB: lacking info!
-        //query.bindValue(":typeId", eventTypeId);
-        // WEB: lacking info!
-        //query.bindValue(":userId", userId);
-        // WEB: lacking info!
+        query.bindValue(":typeId", eventTypeId);
+        query.bindValue(":userId", userId);
         query.bindValue(":date", timestamp);
-        query.bindValue(":eventDate", timestamp);
+        query.bindValue(":eventDate", eventDate);
         query.bindValue(":locationLatitude", location.at(0));
         query.bindValue(":locationLongitude", location.at(1));
         // WEB: lacking info!
@@ -116,7 +118,6 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             return false;
         }
     }
-    */
 
     return true;
 }

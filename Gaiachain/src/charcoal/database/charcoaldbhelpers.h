@@ -8,6 +8,7 @@ class CharcoalDbHelpers
 {
 public:
     static QString getPlotId(const QString &packageId);
+    static QString actionAbbreviation(const Enums::SupplyChainAction action);
 
     static int getWebPackageId(const QString &connectionName, const int entityId);
     static int getVillageId(const QString &connectionName, const QString &name);
@@ -20,6 +21,11 @@ public:
                                    const bool verbose = true);
 
     static int getEntityTypeId(const QString &connectionName, const Enums::PackageType type);
+
+    static int getEventTypeId(const QString &connectionName,
+                              const Enums::SupplyChainAction action);
+
+    static int getEventTypeId(const QString &connectionName, const QString &action);
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,
                                 const QString &matchColumn, const QVariant &matchValue,

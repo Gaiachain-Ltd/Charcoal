@@ -23,6 +23,27 @@ QString CharcoalDbHelpers::getPlotId(const QString &packageId)
     return plot.join(sep);
 }
 
+QString CharcoalDbHelpers::actionAbbreviation(const Enums::SupplyChainAction action)
+{
+    switch (action) {
+    case Enums::SupplyChainAction::LoggingBeginning:
+        return QStringLiteral("LB");
+    case Enums::SupplyChainAction::LoggingEnding:
+        return QStringLiteral("LE");
+    case Enums::SupplyChainAction::CarbonizationBeginning:
+        return QStringLiteral("CB");
+    case Enums::SupplyChainAction::CarbonizationEnding:
+        return QStringLiteral("CE");
+    case Enums::SupplyChainAction::LoadingAndTransport:
+        return QStringLiteral("TR");
+    case Enums::SupplyChainAction::Reception:
+        return QStringLiteral("RE");
+    default: return QString();
+    }
+
+    return QString();
+}
+
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)
 {
     return getSimpleInteger(connectionName, "Entities", "id", entityId, "webId");
@@ -61,6 +82,18 @@ int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName, const Enum
                                  .valueToKey(int(type)));
 
     return getSimpleInteger(connectionName, "EntityTypes", "name", typeString, "id");
+}
+
+int CharcoalDbHelpers::getEventTypeId(const QString &connectionName,
+                                      const Enums::SupplyChainAction action)
+{
+    const QString typeString(actionAbbreviation(action));
+    return getSimpleInteger(connectionName, "EventTypes", "actionName", typeString, "id");
+}
+
+int CharcoalDbHelpers::getEventTypeId(const QString &connectionName, const QString &action)
+{
+    return getSimpleInteger(connectionName, "EventTypes", "actionName", action, "id");
 }
 
 int CharcoalDbHelpers::getSimpleInteger(const QString &connectionName,
