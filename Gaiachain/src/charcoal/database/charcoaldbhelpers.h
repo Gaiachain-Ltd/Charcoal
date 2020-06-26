@@ -14,6 +14,7 @@ public:
     static int getVillageId(const QString &connectionName, const QString &name);
     static int getDestinationId(const QString &connectionName, const QString &name);
     static int getParcelId(const QString &connectionName, const QString &parcel);
+    static int getTreeSpeciesId(const QString &connectionName, const QString &species);
 
     static int getEntityIdFromWebId(const QString &connectionName, const int webId,
                                     const bool verbose = true);

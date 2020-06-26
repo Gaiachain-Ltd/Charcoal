@@ -64,6 +64,11 @@ int CharcoalDbHelpers::getParcelId(const QString &connectionName, const QString 
     return getSimpleInteger(connectionName, "Parcels", "code", parcel, "id");
 }
 
+int CharcoalDbHelpers::getTreeSpeciesId(const QString &connectionName, const QString &species)
+{
+    return  getSimpleInteger(connectionName, "TreeSpecies", "name", species, "id");
+}
+
 int CharcoalDbHelpers::getEntityIdFromWebId(const QString &connectionName, const int webId,
                                             const bool verbose)
 {

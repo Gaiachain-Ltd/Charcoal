@@ -375,6 +375,7 @@ void ActionController::registerLoggingBeginning(
         m_dbConnName, Enums::SupplyChainAction::LoggingBeginning));
     const int villageId(CharcoalDbHelpers::getVillageId(m_dbConnName, village));
     const int parcelId(CharcoalDbHelpers::getParcelId(m_dbConnName, parcel));
+    const int treeSpeciesId(CharcoalDbHelpers::getTreeSpeciesId(m_dbConnName, treeSpecies));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -398,7 +399,7 @@ void ActionController::registerLoggingBeginning(
                     propertiesToString(QVariantMap {
                         { "parcel", parcelId },
                         { "village", villageId },
-                        { Tags::webTreeSpecies, findTreeSpeciesId(treeSpecies) },
+                        { Tags::webTreeSpecies, treeSpeciesId },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
                     }));
 
@@ -887,7 +888,7 @@ void ActionController::registerReplantation(
              << beginningDate << endingDate;
 
     const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
-    const QString treeSpeciesId(findTreeSpeciesId(treeSpecies));
+    const int treeSpeciesId(CharcoalDbHelpers::getTreeSpeciesId(m_dbConnName, treeSpecies));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
@@ -930,26 +931,6 @@ void ActionController::registerReplantation(
     }
 
     emit refreshLocalEvents();
-}
-
-QString ActionController::findTreeSpeciesId(const QString &species) const
-{
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    query.prepare("SELECT id FROM TreeSpecies WHERE name=:species");
-    query.bindValue(":species", species);
-
-    if (query.exec()) {
-        query.next();
-        return query.value("id").toString();
-    }
-
-    qWarning() << RED("Getting TreeSpecies has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return QString();
 }
 
 QString ActionController::findOvenTypeId(const QString &ovenType) const

@@ -307,8 +307,8 @@ void MRestRequest::onReplyError(QNetworkReply::NetworkError code)
         const QString requestName(metaObject()->className());
         const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
                              .toString());
-        qCWarning(crequest) << requestName << status << "Error:" << mLastError
-                            << rawData();
+        qCWarning(crequest) << requestName << status << "Error:" << mLastError;
+        qCWarning(crequest).noquote() << rawData();
 
         if (code == QNetworkReply::TimeoutError) {
             retry();
