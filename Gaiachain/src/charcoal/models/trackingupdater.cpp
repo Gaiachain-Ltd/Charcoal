@@ -55,6 +55,8 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 
     const int entityId = CharcoalDbHelpers::getEntityIdFromWebId(
         m_connectionName, webId, false);
+    const int parentEntityId = CharcoalDbHelpers::getEntityIdFromName(
+        m_connectionName, pid, false);
 
     if (entityId == -1) {
         // Entity does not exist in our DB - add it!
@@ -64,8 +66,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                       "VALUES (:typeId, :name, :parent, 0, 0)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":name", pid);
-        // Unknown, at this point!
-        //query.bindValue(":parent", -1);
+        query.bindValue(":parent", parentEntityId);
 
         if (query.exec() == false) {
             qWarning() << RED("Inserting Entity has failed!")
@@ -75,6 +76,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         }
     }
 
+    /*
     for (int i = events.size() - 1; i >= 0; --i) {
         const QJsonObject event(events.at(i).toObject());
         // Warning: will become invalid in the year 2038!
@@ -114,6 +116,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             return false;
         }
     }
+    */
 
     return true;
 }

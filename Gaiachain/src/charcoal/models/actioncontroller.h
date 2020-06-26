@@ -29,8 +29,6 @@ public:
                                             const int transportNumber,
                                             const QDate &date) const;
 
-    Q_INVOKABLE QString getPlotId(const QString &id) const;
-
     Q_INVOKABLE QString getTransportIdFromBags(const QVariantList &scannedQrs) const;
     Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
     Q_INVOKABLE int bagCountInTransport(const QString &transportId) const;
@@ -134,8 +132,6 @@ private:
 
     int scannedBagsForAction(const QString &transportId,
                              const Enums::SupplyChainAction action) const;
-
-    const QString sep = "/";
     const QString dateFormat = "dd-MM-yyyy";
 
     QString m_dbConnName;

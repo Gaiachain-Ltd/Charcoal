@@ -35,39 +35,27 @@ void ActionController::setPicturesManager(PicturesManager *manager)
 }
 
 QString ActionController::generatePlotId(const QString &userId,
-                                      const QString &parcelCode,
-                                      const QDate &date) const
+                                         const QString &parcelCode,
+                                         const QDate &date) const
 {
-    return userId + sep + parcelCode + sep + date.toString(dateFormat);
+    return userId + CharcoalDbHelpers::sep + parcelCode + CharcoalDbHelpers::sep
+        + date.toString(dateFormat);
 }
 
 QString ActionController::generateHarvestId(const QString &plotId,
-                                         const QString &userId) const
+                                            const QString &userId) const
 {
-    return plotId + sep + userId;
+    return plotId + CharcoalDbHelpers::sep + userId;
 }
 
 QString ActionController::generateTransportId(const QString &harvestId,
-                                           const QString &licensePlate,
-                                           const int transportNumber,
-                                           const QDate &date) const
+                                              const QString &licensePlate,
+                                              const int transportNumber,
+                                              const QDate &date) const
 {
-    return harvestId + sep + licensePlate
-        + sep + "T" + QString::number(transportNumber)
-            + sep + date.toString(dateFormat);
-}
-
-QString ActionController::getPlotId(const QString &id) const
-{
-    const QStringList parts(id.split(sep));
-
-    if (parts.length() < 3) {
-        qWarning() << RED("Invalid ID passed to getPlotId") << id;
-        return QString();
-    }
-
-    const QStringList plot(parts.mid(0, 3));
-    return plot.join(sep);
+    return harvestId + CharcoalDbHelpers::sep + licensePlate
+        + CharcoalDbHelpers::sep + "T" + QString::number(transportNumber)
+        + CharcoalDbHelpers::sep + date.toString(dateFormat);
 }
 
 QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
@@ -129,7 +117,7 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
 
 int ActionController::nextTransportNumber(const QString &harvestId) const
 {
-    const QString plotId(getPlotId(harvestId));
+    const QString plotId(CharcoalDbHelpers::getPlotId(harvestId));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
     const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
 
@@ -227,7 +215,7 @@ int ActionController::scannedBagsTotal(const QString &transportId) const
 int ActionController::registeredTrucksCount(const QString &transportId) const
 {
     qDebug() << RED("TODO: fix") << Q_FUNC_INFO;
-    const QString plotId(getPlotId(transportId));
+    const QString plotId(CharcoalDbHelpers::getPlotId(transportId));
     const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
     const QString receptionTypeId(findEventTypeId(Enums::SupplyChainAction::Reception));
 
@@ -256,7 +244,7 @@ int ActionController::registeredTrucksCount(const QString &transportId) const
 
 int ActionController::registeredTrucksTotal(const QString &transportId) const
 {
-    const QString plotId(getPlotId(transportId));
+    const QString plotId(CharcoalDbHelpers::getPlotId(transportId));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
     const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
 
@@ -721,7 +709,8 @@ void ActionController::registerLoadingAndTransport(
 
     // First, insert a new Entity into table
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, getPlotId(transportId)));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
+        m_dbConnName, CharcoalDbHelpers::getPlotId(transportId)));
     const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, harvestId));
     const int webHarvestId(
         CharcoalDbHelpers::getWebPackageId(m_dbConnName, harvestEntity));
@@ -1027,7 +1016,7 @@ QString ActionController::propertiesToString(const QVariantMap &properties) cons
 int ActionController::scannedBagsForAction(const QString &transportId,
                                            const Enums::SupplyChainAction action) const
 {
-    const QString plotId(getPlotId(transportId));
+    const QString plotId(CharcoalDbHelpers::getPlotId(transportId));
     const int entityTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
     const QString eventTypeId(findEventTypeId(action));
 

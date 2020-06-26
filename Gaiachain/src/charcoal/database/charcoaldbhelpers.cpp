@@ -10,6 +10,19 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
+QString CharcoalDbHelpers::getPlotId(const QString &packageId)
+{
+        const QStringList parts(packageId.split(sep));
+
+    if (parts.length() < 3) {
+        qWarning() << RED("Invalid ID passed to getPlotId") << packageId;
+        return QString();
+    }
+
+    const QStringList plot(parts.mid(0, 3));
+    return plot.join(sep);
+}
+
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)
 {
     return getSimpleInteger(connectionName, "Entities", "id", QString::number(entityId), "webId");
@@ -36,9 +49,10 @@ int CharcoalDbHelpers::getEntityIdFromWebId(const QString &connectionName, const
     return getSimpleInteger(connectionName, "Entities", "webId", QString::number(webId), "id", verbose);
 }
 
-int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName, const QString &name)
+int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName, const QString &name,
+                                           const bool verbose)
 {
-    return getSimpleInteger(connectionName, "Entities", "name", name, "id");
+    return getSimpleInteger(connectionName, "Entities", "name", name, "id", verbose);
 }
 
 int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName, const Enums::PackageType type)

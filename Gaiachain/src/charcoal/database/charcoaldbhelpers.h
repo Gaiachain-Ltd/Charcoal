@@ -7,9 +7,8 @@ class QString;
 class CharcoalDbHelpers
 {
 public:
-    // TODO: unify these methods, do not do such massive copy-paste
-    // TODO: transfer more generic methods away from ActionController and other
-    // model classes
+    static QString getPlotId(const QString &packageId);
+
     static int getWebPackageId(const QString &connectionName, const int entityId);
     static int getVillageId(const QString &connectionName, const QString &name);
     static int getDestinationId(const QString &connectionName, const QString &name);
@@ -17,7 +16,8 @@ public:
 
     static int getEntityIdFromWebId(const QString &connectionName, const int webId,
                                     const bool verbose = true);
-    static int getEntityIdFromName(const QString &connectionName, const QString &name);
+    static int getEntityIdFromName(const QString &connectionName, const QString &name,
+                                   const bool verbose = true);
 
     static int getEntityTypeId(const QString &connectionName, const Enums::PackageType type);
 
@@ -32,5 +32,7 @@ public:
     static QString getSimpleString(const QString &connectionName, const QString &table,
                                    const QString &matchColumn, const QString &matchValue,
                                    const QString &returnColumn, const bool verbose = true);
+
+    static constexpr char sep = '/';
 };
 
