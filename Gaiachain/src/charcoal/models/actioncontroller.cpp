@@ -83,7 +83,7 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
             const QByteArray propertiesString(query.value("properties").toByteArray());
             const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
             const QVariantMap properties(propertiersJson.toVariant().toMap());
-            const QVariantList qrs(properties.value("scannedQrs").toList());
+            const QVariantList qrs(properties.value(Tags::webQrCodes).toList());
 
             for (const QVariant &qr : scannedQrs) {
                 if (qrs.contains(qr)) {
@@ -174,7 +174,7 @@ int ActionController::bagCountInTransport(const QString &transportId) const
         const QVariantMap properties(propertiersJson.toVariant().toMap());
         //qDebug() << "Plate number?" << properties;
         // TODO: use Tags!
-        return properties.value("scannedQrs").toList().size();
+        return properties.value(Tags::webQrCodes).toList().size();
     }
 
     qWarning() << RED("Getting bag count has failed!")
@@ -201,7 +201,7 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
         const QVariantMap properties(propertiersJson.toVariant().toMap());
         //qDebug() << "Plate number?" << properties;
         // TODO: use Tags!
-        return properties.value("plateNumber").toString();
+        return properties.value(Tags::webPlateNumber).toString();
     }
 
     qWarning() << RED("Getting plate number has failed!")
@@ -1099,7 +1099,7 @@ int ActionController::scannedBagsForAction(const QString &transportId,
         const QByteArray propertiesString(query.value("properties").toByteArray());
         const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
         const QVariantMap properties(propertiersJson.toVariant().toMap());
-        total += properties.value("scannedQrs").toList().size();
+        total += properties.value(Tags::webQrCodes).toList().size();
     }
 
     return total;

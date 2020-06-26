@@ -200,7 +200,6 @@ void MRestRequest::send()
         return;
     case Type::Put:
         if (isMultiPart()) {
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "form-data");
             auto device = requestMultiPart();
             mActiveReply = mNetworkManager->put(request, device);
             device->setParent(mActiveReply);
@@ -214,7 +213,6 @@ void MRestRequest::send()
         break;
     case Type::Post:
         if (isMultiPart()) {
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "form-data");
             auto device = requestMultiPart();
             mActiveReply = mNetworkManager->post(request, device);
             device->setParent(mActiveReply);
@@ -309,7 +307,8 @@ void MRestRequest::onReplyError(QNetworkReply::NetworkError code)
         const QString requestName(metaObject()->className());
         const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
                              .toString());
-        qCWarning(crequest) << requestName << status << "Error:" << mLastError;
+        qCWarning(crequest) << requestName << status << "Error:" << mLastError
+                            << rawData();
 
         if (code == QNetworkReply::TimeoutError) {
             retry();

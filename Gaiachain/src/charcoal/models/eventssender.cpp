@@ -110,7 +110,13 @@ void EventsSender::sendEvents()
             const auto docObject = doc.object();
             for (const QString &key : docObject.keys()) {
                 // TODO: toString() can misbehave! Use QJsonDoc::toJson()
-                multi->addPart(key, docObject.value(key).toString());
+                const QJsonValue value(docObject.value(key));
+                if (value.isObject()) {
+                    multi->addPart(key, QJsonDocument(value.toObject()).toJson(
+                                            QJsonDocument::JsonFormat::Compact));
+                } else {
+                    multi->addPart(key, value.toVariant().toString());
+                }
             }
 
             for (const QString &path : qAsConst(toUpload)) {
@@ -270,10 +276,14 @@ QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
         } else {
             object.insert(Tags::webPlotId, webPlotId);
         }
-    } else if (object.value(Tags::documents).isNull() == false) {
+    }
+
+    if (object.value(Tags::documents).isNull() == false) {
         // We don't need to pass documents in properties, we send them separately
         object.remove(Tags::documents);
-    } else if (object.value(Tags::receipts).isNull() == false) {
+    }
+
+    if (object.value(Tags::receipts).isNull() == false) {
         // We don't need to pass receipts in properties, we send them separately
         object.remove(Tags::receipts);
     }
