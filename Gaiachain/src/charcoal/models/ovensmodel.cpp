@@ -43,6 +43,8 @@ void OvensModel::setPlotId(const QString &id)
 
     refresh();
 
+    qDebug() << "OVEN MODELS:" << rowCount();
+
     emit plotIdChanged(id);
 }
 

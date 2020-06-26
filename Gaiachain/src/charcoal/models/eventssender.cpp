@@ -109,7 +109,6 @@ void EventsSender::sendEvents()
 
             const auto docObject = doc.object();
             for (const QString &key : docObject.keys()) {
-                // TODO: toString() can misbehave! Use QJsonDoc::toJson()
                 const QJsonValue value(docObject.value(key));
                 if (value.isObject()) {
                     multi->addPart(key, QJsonDocument(value.toObject()).toJson(

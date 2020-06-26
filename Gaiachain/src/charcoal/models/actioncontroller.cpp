@@ -55,7 +55,12 @@ QString ActionController::generateTransportId(const QString &harvestId,
 {
     return harvestId + CharcoalDbHelpers::sep + licensePlate
         + CharcoalDbHelpers::sep + "T" + QString::number(transportNumber)
-        + CharcoalDbHelpers::sep + date.toString(dateFormat);
+            + CharcoalDbHelpers::sep + date.toString(dateFormat);
+}
+
+QString ActionController::getPlotId(const QString &packageId)
+{
+    return CharcoalDbHelpers::getPlotId(packageId)   ;
 }
 
 QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const

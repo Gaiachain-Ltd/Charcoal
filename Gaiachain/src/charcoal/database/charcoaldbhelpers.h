@@ -22,7 +22,7 @@ public:
     static int getEntityTypeId(const QString &connectionName, const Enums::PackageType type);
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,
-                                const QString &matchColumn, const QString &matchValue,
+                                const QString &matchColumn, const QVariant &matchValue,
                                 const QString &returnColumn, const bool verbose = true);
 
     static QString getOvenLetter(const QString &connectionName, const int ovenId);
@@ -30,7 +30,7 @@ public:
     static QString getEntityName(const QString &connectionName, const int entityId);
 
     static QString getSimpleString(const QString &connectionName, const QString &table,
-                                   const QString &matchColumn, const QString &matchValue,
+                                   const QString &matchColumn, const QVariant &matchValue,
                                    const QString &returnColumn, const bool verbose = true);
 
     static constexpr char sep = '/';

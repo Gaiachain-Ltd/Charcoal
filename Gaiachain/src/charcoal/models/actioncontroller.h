@@ -29,6 +29,8 @@ public:
                                             const int transportNumber,
                                             const QDate &date) const;
 
+    Q_INVOKABLE QString getPlotId(const QString &packageId);
+
     Q_INVOKABLE QString getTransportIdFromBags(const QVariantList &scannedQrs) const;
     Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
     Q_INVOKABLE int bagCountInTransport(const QString &transportId) const;
