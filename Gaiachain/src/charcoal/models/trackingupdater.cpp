@@ -67,7 +67,11 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                       "VALUES (:typeId, :name, :parent, 0, 0)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":name", pid);
-        query.bindValue(":parent", parentEntityId);
+        if (parentEntityId != -1) {
+            query.bindValue(":parent", parentEntityId);
+        } else {
+            query.bindValue(":parent", 0);
+        }
 
         if (query.exec() == false) {
             qWarning() << RED("Inserting Entity has failed!")
@@ -124,6 +128,9 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             }
         }
     }
+
+    // TODO: update Entities and Events if they already exist!
+    // TODO: schedule loading of "properties" for Events
 
     return true;
 }
