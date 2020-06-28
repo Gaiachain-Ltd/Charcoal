@@ -34,7 +34,5 @@ private:
         { TrackingRole::Type, "type" },
         { TrackingRole::Events, "events" }
     };
-
-    Enums::SupplyChainAction eventType(const int id) const;
 };
 

@@ -44,6 +44,27 @@ QString CharcoalDbHelpers::actionAbbreviation(const Enums::SupplyChainAction act
     return QString();
 }
 
+Enums::SupplyChainAction CharcoalDbHelpers::actionById(const QString &connectionName, const int id)
+{
+    const QString name(getEventType(connectionName, id));
+
+    if (name == QStringLiteral("LB")) {
+        return Enums::SupplyChainAction::LoggingBeginning;
+    } else if (name == QStringLiteral("LE")) {
+        return Enums::SupplyChainAction::LoggingEnding;
+    } else if (name == QStringLiteral("CB")) {
+        return Enums::SupplyChainAction::CarbonizationBeginning;
+    } else if (name == QStringLiteral("CE")) {
+        return Enums::SupplyChainAction::CarbonizationEnding;
+    } else if (name == QStringLiteral("TR")) {
+        return Enums::SupplyChainAction::LoadingAndTransport;
+    } else if (name == QStringLiteral("RE")) {
+        return Enums::SupplyChainAction::Reception;
+    }
+
+    return Enums::SupplyChainAction::Unknown;
+}
+
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)
 {
     return getSimpleInteger(connectionName, "Entities", "id", entityId, "webId");

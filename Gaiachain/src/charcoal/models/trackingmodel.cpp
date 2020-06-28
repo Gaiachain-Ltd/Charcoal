@@ -78,7 +78,8 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         QVariantList events;
         while (query.next()) {
             const QDate date(query.value("date").toDate());
-            Enums::SupplyChainAction action = eventType(query.value("typeId").toInt());
+            Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
+                m_connectionName, query.value("typeId").toInt());
 
             QString name;
             switch (action) {
@@ -183,26 +184,4 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
     } else {
         emit error(tr("Error updating tracking information"));
     }
-}
-
-// TODO: cache results for performance!
-Enums::SupplyChainAction TrackingModel::eventType(const int id) const
-{
-    const QString name(CharcoalDbHelpers::getEventType(m_connectionName, id));
-
-    if (name == "LB") {
-        return Enums::SupplyChainAction::LoggingBeginning;
-    } else if (name == "LE") {
-        return Enums::SupplyChainAction::LoggingEnding;
-    } else if (name == "CB") {
-        return Enums::SupplyChainAction::CarbonizationBeginning;
-    } else if (name == "CE") {
-        return Enums::SupplyChainAction::CarbonizationEnding;
-    } else if (name == "TR") {
-        return Enums::SupplyChainAction::LoadingAndTransport;
-    } else if (name == "RE") {
-        return Enums::SupplyChainAction::Reception;
-    }
-
-    return Enums::SupplyChainAction::Unknown;
 }
