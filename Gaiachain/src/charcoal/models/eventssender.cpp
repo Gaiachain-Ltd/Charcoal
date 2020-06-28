@@ -156,8 +156,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     const QString pid(reply.object().value(Tags::pid).toString());
     const qint64 eventWebId(reply.object().value(Tags::webEventId).toInt());
-    // Will become incorrect after year 2038!
-    const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toInt());
+    const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toString().toLongLong());
     const QString eventId(findEventByTimestamp(timestamp));
 
     const QString queryString(QString("UPDATE Events SET isCommitted=1 "

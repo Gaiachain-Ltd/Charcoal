@@ -79,10 +79,8 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 
     for (int i = events.size() - 1; i >= 0; --i) {
         const QJsonObject event(events.at(i).toObject());
-        // Warning: will become invalid in the year 2038!
-        const qint64 timestamp = event.value(Tags::timestamp).toInt();
-        // Warning: will become invalid in the year 2038!
-        const qint64 eventDate = event.value(Tags::webEventDate).toInt();
+        const qint64 timestamp = event.value(Tags::timestamp).toString().toLongLong();
+        const qint64 eventDate = event.value(Tags::webEventDate).toString().toLongLong();
         const QJsonArray location = event.value("location_display").toArray();
         const int eventTypeId = CharcoalDbHelpers::getEventTypeId(
             m_connectionName, event.value("action").toString());

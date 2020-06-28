@@ -78,7 +78,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         QVariantList events;
         while (query.next()) {
             const QDate date(query.value("date").toDate());
-            Enums::SupplyChainAction action = eventType(query.value("typeId").toString());
+            Enums::SupplyChainAction action = eventType(query.value("typeId").toInt());
 
             QString name;
             switch (action) {
@@ -186,9 +186,9 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
 }
 
 // TODO: cache results for performance!
-Enums::SupplyChainAction TrackingModel::eventType(const QString &id) const
+Enums::SupplyChainAction TrackingModel::eventType(const int id) const
 {
-    const QString name(CharcoalDbHelpers::getEventType(m_connectionName, id.toInt()));
+    const QString name(CharcoalDbHelpers::getEventType(m_connectionName, id));
 
     if (name == "LB") {
         return Enums::SupplyChainAction::LoggingBeginning;
