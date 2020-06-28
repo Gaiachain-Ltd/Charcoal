@@ -54,7 +54,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
     // Not parsed and not needed: "type_display" property
     const QJsonArray events(object.value("entities").toArray());
 
-    const int entityId = CharcoalDbHelpers::getEntityIdFromWebId(
+    int entityId = CharcoalDbHelpers::getEntityIdFromWebId(
         m_connectionName, webId, false);
     const int parentEntityId = CharcoalDbHelpers::getEntityIdFromName(
         m_connectionName, pid, false);
@@ -75,6 +75,8 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                        << "for query:" << query.lastQuery();
             return false;
         }
+
+        entityId = query.lastInsertId().toInt();
     }
 
     for (int i = events.size() - 1; i >= 0; --i) {
