@@ -27,6 +27,8 @@ public:
     static int getEventTypeId(const QString &connectionName,
                               const Enums::SupplyChainAction action);
 
+    static int getEventIdFromWebId(const QString &connectionName, const int webId,
+                                   const bool verbose = true);
     static int getEventTypeId(const QString &connectionName, const QString &action);
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,

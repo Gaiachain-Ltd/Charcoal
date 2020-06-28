@@ -79,6 +79,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 
     for (int i = events.size() - 1; i >= 0; --i) {
         const QJsonObject event(events.at(i).toObject());
+        const int eventWebId(object.value("id").toInt(-1));
         const qint64 timestamp = event.value(Tags::timestamp).toString().toLongLong();
         const qint64 eventDate = event.value(Tags::webEventDate).toString().toLongLong();
         const QJsonArray location = event.value("location_display").toArray();
@@ -86,34 +87,39 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             m_connectionName, event.value("action").toString());
         const QString userId(event.value("user_code").toString());
 
-        // TODO: check if event exists!
+        const int eventId = CharcoalDbHelpers::getEventIdFromWebId(
+            m_connectionName, eventWebId, false);
 
-        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                      "date, eventDate, locationLatitude, locationLongitude, "
-                      "properties, isCommitted) "
-                      "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                      ":locationLatitude, :locationLongitude, :properties, 0)");
-        query.bindValue(":entityId", entityId);
-        query.bindValue(":typeId", eventTypeId);
-        query.bindValue(":userId", userId);
-        query.bindValue(":date", timestamp);
-        query.bindValue(":eventDate", eventDate);
-        query.bindValue(":locationLatitude", location.at(0));
-        query.bindValue(":locationLongitude", location.at(1));
-        // WEB: lacking info!
-//        query.bindValue(":properties",
-//                        propertiesToString(QVariantMap {
-//                            { Tags::webOvenType, ovenType },
-//                            { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
-//                            { Tags::webPlotId, webPlotId },
-//                            { Tags::webOvenId, ovenId }
-//                        }));
+        if (eventId == -1) {
+            QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+            query.prepare("INSERT INTO Events (entityId, typeId, userId, webId, "
+                          "date, eventDate, locationLatitude, locationLongitude, "
+                          "properties, isCommitted) "
+                          "VALUES (:entityId, :typeId, :userId, :eventWebId, "
+                          ":date, :eventDate, :locationLatitude, :locationLongitude, "
+                          ":properties, 0)");
+            query.bindValue(":entityId", entityId);
+            query.bindValue(":typeId", eventTypeId);
+            query.bindValue(":userId", userId);
+            query.bindValue(":eventWebId", eventWebId);
+            query.bindValue(":date", timestamp);
+            query.bindValue(":eventDate", eventDate);
+            query.bindValue(":locationLatitude", location.at(0));
+            query.bindValue(":locationLongitude", location.at(1));
+            // WEB: lacking info!
+            //        query.bindValue(":properties",
+            //                        propertiesToString(QVariantMap {
+            //                            { Tags::webOvenType, ovenType },
+            //                            { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
+            //                            { Tags::webPlotId, webPlotId },
+            //                            { Tags::webOvenId, ovenId }
+            //                        }));
 
-        if (query.exec() == false) {
-            qWarning() << RED("Inserting event has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
-            return false;
+            if (query.exec() == false) {
+                qWarning() << RED("Inserting event has failed!")
+                           << query.lastError().text() << "for query:" << query.lastQuery();
+                return false;
+            }
         }
     }
 

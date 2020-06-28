@@ -117,6 +117,11 @@ int CharcoalDbHelpers::getEventTypeId(const QString &connectionName,
     return getSimpleInteger(connectionName, "EventTypes", "actionName", typeString, "id");
 }
 
+int CharcoalDbHelpers::getEventIdFromWebId(const QString &connectionName, const int webId, const bool verbose)
+{
+    return getSimpleInteger(connectionName, "Events", "webId", webId, "id", verbose);
+}
+
 int CharcoalDbHelpers::getEventTypeId(const QString &connectionName, const QString &action)
 {
     return getSimpleInteger(connectionName, "EventTypes", "actionName", action, "id");

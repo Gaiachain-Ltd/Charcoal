@@ -159,10 +159,13 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toString().toLongLong());
     const QString eventId(findEventByTimestamp(timestamp));
 
-    const QString queryString(QString("UPDATE Events SET isCommitted=1 "
-                                      "WHERE id=%1").arg(eventId));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    query.prepare("UPDATE Events "
+                  "SET isCommitted=1, webId=:eventWebId "
+                  "WHERE id=:eventId");
+    query.bindValue(":eventWebId", eventWebId);
+    query.bindValue(":eventId", eventId);
 
     if (query.exec()) {
         if (updateEntityWebId(eventWebId, eventId) == false) {
