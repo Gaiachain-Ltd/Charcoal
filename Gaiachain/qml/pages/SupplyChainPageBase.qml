@@ -10,13 +10,6 @@ import "../items" as Items
 GPage {
     id: top
 
-    enum DelegateType {
-        Standard,
-        Row,
-        Column,
-        ColumnStack
-    }
-
     default property alias pageContent: contentLayout.data
     property bool validPageData: true
 

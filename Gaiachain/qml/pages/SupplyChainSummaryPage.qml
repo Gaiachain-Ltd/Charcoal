@@ -11,7 +11,6 @@ import "../headers" as Headers
 import "../components" as Components
 import "../pages" as Pages
 
-
 Pages.SupplyChainPageBase {
     id: top
 
@@ -43,19 +42,19 @@ Pages.SupplyChainPageBase {
                 readonly property string headerValue: summary[index].headerValue
                 readonly property string inputIconSource: summary[index].inputIconSource
                 readonly property string suffixValue: summary[index].suffixValue
-                readonly property string highlightColor: summary[index].highlightColor
-                readonly property string decorationColor: summary[index].decorationColor
-                readonly property string secondaryFontColor: summary[index].secondaryTextColor
+                readonly property color highlightColor: summary[index].highlightColor
+                readonly property color decorationColor: summary[index].decorationColor
+                readonly property color secondaryFontColor: summary[index].secondaryTextColor
                 readonly property bool isHighlighted: summary[index].isHighlighted
 
                 sourceComponent: {
-                    if (delegateType === Pages.SupplyChainPageBase.Column) {
+                    if (delegateType === Enums.DelegateType.Column) {
                         return columnComponent
-                    } else if (delegateType === Pages.SupplyChainPageBase.ColumnStack) {
+                    } else if (delegateType === Enums.DelegateType.ColumnStack) {
                         return columnStackComponent
-                    } else if (delegateType === Pages.SupplyChainPageBase.Row) {
+                    } else if (delegateType === Enums.DelegateType.Row) {
                         return rowComponent
-                    } else if (delegateType === Pages.SupplyChainPageBase.Standard) {
+                    } else if (delegateType === Enums.DelegateType.Standard) {
                         return standardComponent
                     }
 

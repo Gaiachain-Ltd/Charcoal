@@ -34,10 +34,10 @@ Pages.SupplyChainPage {
 
     function summary() {
        return [
-            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
-            createSummaryItem(Strings.lotIdForThePackage, lotIdComboBox.currentText),
-            createSummaryItem(Strings.registerQrCodeToLotId, qrCodeInputHeader.inputText),
-            createSummaryItem(Strings.description, descriptionHeader.inputText)
+            dataManager.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
+            dataManager.createSummaryItem(Strings.lotIdForThePackage, lotIdComboBox.currentText),
+            dataManager.createSummaryItem(Strings.registerQrCodeToLotId, qrCodeInputHeader.inputText),
+            dataManager.createSummaryItem(Strings.description, descriptionHeader.inputText)
        ]
     }
 

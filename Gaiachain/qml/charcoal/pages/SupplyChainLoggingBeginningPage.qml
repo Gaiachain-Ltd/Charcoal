@@ -39,24 +39,25 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId,
+                    dataManager.createSummaryItem(Strings.plotId,
                                       dataManager.actionController.generatePlotId(
                                           repsIdInputHeader.inputText,
                                           parcelComboBox.currentText,
                                           beginningDateHeader.selectedDate
                                           ),
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.parcel, parcelComboBox.currentText),
-                    createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
-                    createSummaryItem(Strings.village, villageComboBox.currentText),
-                    createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
-                    createSummaryItem(Strings.beginningDate,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem(Strings.parcel, parcelComboBox.currentText),
+                    dataManager.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
+                    dataManager.createSummaryItem(Strings.village, villageComboBox.currentText),
+                    dataManager.createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
+                    dataManager.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
 
         return summary

@@ -36,11 +36,11 @@ Pages.SupplyChainPage {
 
     function summary() {
         return [
-            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
-            createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText),
-            createSummaryItem(Strings.organicCocoaTransporter, transporterComboBox.currentText),
-            createSummaryItem(Strings.destination, destinationComboBox.currentText),
-            createSummaryItem(Strings.transportDate, inputDateHeader.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat))
+            dataManager.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
+            dataManager.createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText),
+            dataManager.createSummaryItem(Strings.organicCocoaTransporter, transporterComboBox.currentText),
+            dataManager.createSummaryItem(Strings.destination, destinationComboBox.currentText),
+            dataManager.createSummaryItem(Strings.transportDate, inputDateHeader.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat))
         ]
     }
 

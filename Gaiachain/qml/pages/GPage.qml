@@ -64,24 +64,6 @@ Items.GPanel
         sessionManager.ping()
     }
 
-    // TODO: use dedicated QtObject to hold these properties!
-    function createSummaryItem(header, value, inputIconSource = "", suffix = "",
-                               delegateType = SupplyChainPageBase.Standard,
-                               highlightColor = "", decorationColor = "",
-                               secondaryTextColor = "") {
-        return {
-            "headerValue": header,
-            "value": value,
-            "inputIconSource": inputIconSource.toString(),
-            "suffixValue": suffix,
-            "delegateType": delegateType,
-            "highlightColor": Utility.colorString(highlightColor),
-            "decorationColor": Utility.colorString(decorationColor),
-            "secondaryTextColor": Utility.colorString(secondaryTextColor),
-            "isHighlighted": (highlightColor !== "")
-        }
-    }
-
     header: Components.NavigationHeader {
         id: header
         Layout.fillWidth: true

@@ -61,13 +61,14 @@ Pages.SupplyChainPageBase {
         let allBags = scannedQrs.length === bagCount
 
         var summary = [
-                    createSummaryItem(Strings.transportId,
+                    dataManager.createSummaryItem(Strings.transportId,
                                       transportId,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor4,
-                                      GStyle.fontHighlightColor4),
-                    createSummaryItem("",
+                                      GStyle.fontHighlightColor4,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem("",
                                       [
                                           [
                                               Strings.numberOfBags,
@@ -107,16 +108,16 @@ Pages.SupplyChainPageBase {
                                           ]
                                       ],
                                       "", "",
-                                      Pages.SupplyChainPageBase.ColumnStack,
                                       GStyle.delegateHighlightColor4,
                                       GStyle.fontHighlightColor4,
-                                      GStyle.textPrimaryColor),
-                    createSummaryItem(Strings.plateNumber,
+                                      GStyle.textPrimaryColor,
+                                      Enums.DelegateType.ColumnStack),
+                    dataManager.createSummaryItem(Strings.plateNumber,
                                       dataManager.actionController.plateNumberInTransport(transportId)),
-                    createSummaryItem(Strings.receptionDateCharcoal,
+                    dataManager.createSummaryItem(Strings.receptionDateCharcoal,
                                       unloadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }

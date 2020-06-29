@@ -206,6 +206,14 @@ namespace Enums {
     Q_ENUM_NS(SupplyChainAction)
     inline uint qHash(SupplyChainAction key, uint seed) { return qH<SupplyChainAction>(key, seed);}
 
+    enum class DelegateType {
+        Standard,
+        Row,
+        Column,
+        ColumnStack
+    };
+    Q_ENUM_NS(DelegateType)
+
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 

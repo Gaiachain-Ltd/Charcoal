@@ -46,15 +46,15 @@ Pages.SupplyChainPage {
 
     function summary() {
         var summary = [
-            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
-            createSummaryItem(Strings.lotIdTheSackBelongsTo, lotIdComboBox.currentText),
-            createSummaryItem(Strings.nameCooperative, nameCooperativeInputHeader.inputText),
-            createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText)
+            dataManager.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
+            dataManager.createSummaryItem(Strings.lotIdTheSackBelongsTo, lotIdComboBox.currentText),
+            dataManager.createSummaryItem(Strings.nameCooperative, nameCooperativeInputHeader.inputText),
+            dataManager.createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText)
         ]
 
         for (var i=0; i<harvestPidsRepeater.count; ++i) {
             var repeaterItem = harvestPidsRepeater.itemAt(i)
-            summary.push(createSummaryItem(i === 0 ? Strings.harvestId
+            summary.push(dataManager.createSummaryItem(i === 0 ? Strings.harvestId
                                                    : Strings.empty,
                                            repeaterItem.inputText, "", repeaterItem.suffixText))
         }

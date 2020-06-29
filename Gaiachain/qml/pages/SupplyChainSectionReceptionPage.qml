@@ -34,11 +34,11 @@ Pages.SupplyChainPage {
 
     function summary() {
         return [
-            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
-            createSummaryItem(Strings.harvestId, harvestIdComboBox.currentText),
-            createSummaryItem(Strings.receptionDate, receptionInputDateHeader.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
-            createSummaryItem(Strings.transportDate + " (" + Strings.notRequired + ")", Helper.minusIfNotDate(transportInputDateHeader.selectedDate)),
-            createSummaryItem(Strings.buyer + " (" + Strings.notRequired + ")", Helper.minusIfNotDefined(buyerComboBox.currentText))
+            dataManager.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
+            dataManager.createSummaryItem(Strings.harvestId, harvestIdComboBox.currentText),
+            dataManager.createSummaryItem(Strings.receptionDate, receptionInputDateHeader.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
+            dataManager.createSummaryItem(Strings.transportDate + " (" + Strings.notRequired + ")", Helper.minusIfNotDate(transportInputDateHeader.selectedDate)),
+            dataManager.createSummaryItem(Strings.buyer + " (" + Strings.notRequired + ")", Helper.minusIfNotDefined(buyerComboBox.currentText))
         ]
     }
 

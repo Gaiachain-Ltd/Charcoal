@@ -38,33 +38,36 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.harvestId,
+                    dataManager.createSummaryItem(Strings.harvestId,
                                       harvestIdComboBox.currentText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor2,
-                                      GStyle.fontHighlightColor2),
-                    createSummaryItem(Strings.plotId,
+                                      GStyle.fontHighlightColor2,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem(Strings.plotId,
                                       dataManager.actionController.getPlotId(harvestIdComboBox.currentText),
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.ovenId,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem(Strings.ovenId,
                                       [
                                           ovenIdComboBox.letters,
                                           ovenIdComboBox.descriptions
                                       ],
                                       "", "",
-                                      Pages.SupplyChainPageBase.Column,
                                       GStyle.delegateHighlightColor3,
-                                      GStyle.fontHighlightColor3),
-                    createSummaryItem(Strings.carbonizerId,
+                                      GStyle.fontHighlightColor3,
+                                      "",
+                                      Enums.DelegateType.Column),
+                    dataManager.createSummaryItem(Strings.carbonizerId,
                                       carbonizerIdInputHeader.inputText),
-                    createSummaryItem(Strings.carbonizationEndingDate,
+                    dataManager.createSummaryItem(Strings.carbonizationEndingDate,
                                       endingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }

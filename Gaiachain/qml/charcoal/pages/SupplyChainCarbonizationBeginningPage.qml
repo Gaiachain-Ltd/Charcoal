@@ -44,40 +44,44 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.harvestId,
+                    dataManager.createSummaryItem(Strings.harvestId,
                                       dataManager.actionController.generateHarvestId(
                                           plotIdComboBox.currentText,
                                           carbonizerIdInputHeader.inputText
                                           ),
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor2,
-                                      GStyle.fontHighlightColor2),
-                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                                      GStyle.fontHighlightColor2,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor3,
-                                      GStyle.fontHighlightColor3),
-                    createSummaryItem(Strings.carbonizerId,
+                                      GStyle.fontHighlightColor3,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem(Strings.carbonizerId,
                                       carbonizerIdInputHeader.inputText),
-                    createSummaryItem(Strings.beginningDate,
+                    dataManager.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
-                    createSummaryItem(Strings.ovenDimensions,
+                    dataManager.createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
+                    dataManager.createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
                                        ovenTypeComboBox.ovenType === "2"?
                                            dataManager.actionController.defaultOvenDimensions(
                                                ovenTypeComboBox.ovenType)
                                          : ovenDimensionsHeader.values],
                                       "", "",
-                                      Pages.SupplyChainPageBase.Row),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                                      "", "", "",
+                                      Enums.DelegateType.Row),
+                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }

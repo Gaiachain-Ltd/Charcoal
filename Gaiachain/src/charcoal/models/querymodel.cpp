@@ -116,6 +116,9 @@ void QueryModel::refresh()
     } else {
         onWebDataRefreshed();
     }
+
+    // Displays the data already present in DB.
+    setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
 }
 
 /*!

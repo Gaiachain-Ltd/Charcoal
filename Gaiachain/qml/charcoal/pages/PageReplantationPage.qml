@@ -39,24 +39,25 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                    dataManager.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.numberOfTreesPlanted,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    dataManager.createSummaryItem(Strings.numberOfTreesPlanted,
                                       numberOfTreesHeader.inputText),
-                    createSummaryItem(Strings.treeSpecies,
+                    dataManager.createSummaryItem(Strings.treeSpecies,
                                       treeSpeciesComboBox.currentText),
-                    createSummaryItem(Strings.userId,
+                    dataManager.createSummaryItem(Strings.userId,
                                       userIdInputHeader.inputText),
-                    createSummaryItem(Strings.beginningDate,
+                    dataManager.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.endingDate,
+                    dataManager.createSummaryItem(Strings.endingDate,
                                       endingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates,
+                    dataManager.createSummaryItem(Strings.gpsCoordinates,
                                       gpsSource.coordinate.toString())
                 ]
 
