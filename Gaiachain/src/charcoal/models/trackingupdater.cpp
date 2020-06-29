@@ -103,7 +103,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                           "properties, isCommitted) "
                           "VALUES (:entityId, :typeId, :userId, :eventWebId, "
                           ":date, :eventDate, :locationLatitude, :locationLongitude, "
-                          ":properties, 0)");
+                          ":properties, 1)");
             query.bindValue(":entityId", entityId);
             query.bindValue(":typeId", eventTypeId);
             query.bindValue(":userId", userId);

@@ -89,7 +89,7 @@ QVariantMap Utility::createSummaryItem(
     const QColor &secondaryTextColor,
     const Enums::DelegateType delegateType) const
 {
-    qDebug() << "Data is:" << headerText << value << inputIconSource << suffix << highlightColor << decorationColor << secondaryTextColor << delegateType;
+    //qDebug() << "Data is:" << headerText << value << inputIconSource << suffix << highlightColor << decorationColor << secondaryTextColor << delegateType;
 
     return {
         { "headerValue", headerText },
