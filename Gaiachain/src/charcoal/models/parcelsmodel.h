@@ -11,8 +11,10 @@ public:
 
 public slots:
     void refreshWebData() override;
+    void getUnusedParcels();
 
 protected slots:
     void webReplyHandler(const QJsonDocument &reply) override;
+    void webUnusedParcelsReplyHandler(const QJsonDocument &reply);
 };
 
