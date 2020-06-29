@@ -15,7 +15,18 @@
 class Utility : public QObject
 {
     Q_OBJECT
+
 public:
+    struct SummaryValue {
+        QStringList titles;
+        QStringList values;
+        QStringList icons;
+        QList<Enums::Page> linkDestinationPages;
+        QVariantList linkDatas;
+
+        QVariantList toList() const;
+    };
+
     static Utility &instance();
 
     template<typename QEnum>
@@ -58,6 +69,17 @@ public:
     Q_INVOKABLE QVariantMap createSummaryItem(
         const QString &headerText,
         const QVariant &value,
+        const QString &inputIconSource = QString(),
+        const QString &suffix = QString(),
+        const QColor &highlightColor = QColor(),
+        const QColor &decorationColor = QColor(),
+        const QColor &secondaryTextColor = QColor(),
+        const Enums::DelegateType delegateType = Enums::DelegateType::Standard
+        ) const;
+
+    Q_INVOKABLE QVariantMap createSummaryItem(
+        const QString &headerText,
+        const SummaryValue &value,
         const QString &inputIconSource = QString(),
         const QString &suffix = QString(),
         const QColor &highlightColor = QColor(),

@@ -8,6 +8,7 @@
 #include "database/dbhelpers.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 #include "charcoal/rest/multipartrequest.h"
+#include "charcoal/picturesmanager.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -25,6 +26,11 @@ EventsSender::EventsSender(QObject *parent) : QueryModel(parent)
 
     connect(this, &EventsSender::refreshed,
             this, &EventsSender::sendEvents);
+}
+
+void EventsSender::setPicturesManager(PicturesManager *manager)
+{
+    m_picturesManager = manager;
 }
 
 void EventsSender::sendEvents()
@@ -119,7 +125,7 @@ void EventsSender::sendEvents()
             }
 
             for (const QString &path : qAsConst(toUpload)) {
-                const QFileInfo info(path);
+                const QFileInfo info(m_picturesManager->cachePath() + "/" + path);
                 if (info.fileName().startsWith(Tags::document)) {
                     multi->addPart(Tags::webDocuments, info);
                 } else  {

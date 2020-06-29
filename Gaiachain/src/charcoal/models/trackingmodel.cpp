@@ -9,12 +9,14 @@
 #include "helpers/utility.h"
 #include "trackingupdater.h"
 #include "charcoal/database/charcoaldbhelpers.h"
+#include "charcoal/picturesmanager.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 
 #include <QDate>
 
@@ -22,6 +24,11 @@ TrackingModel::TrackingModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(true);
     setDbQuery("SELECT id, typeId, name, parent, webId FROM Entities");
+}
+
+void TrackingModel::setPicturesManager(PicturesManager *manager)
+{
+    m_picturesManager = manager;
 }
 
 QVariant TrackingModel::data(const QModelIndex &index, int role) const
@@ -204,8 +211,8 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
             }
 
             result.append(Utility::instance().createSummaryItem(
-                tr("Plot ID"), entityName, "", "",
-                m_plotHighlightColor, m_plotTextColor, "",
+                tr("Plot ID"), entityName, QString(), QString(),
+                m_plotHighlightColor, m_plotTextColor, QString(),
                 Enums::DelegateType::Standard));
             result.append(Utility::instance().createSummaryItem(
                 tr("Malebi Rep's ID"), userId));
@@ -222,7 +229,114 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
             break;
         }
         case Enums::PackageType::Harvest:
+        {
+            result.append(Utility::instance().createSummaryItem(
+                tr("Harvest ID"), entityName, QString(), QString(),
+                m_harvestHighlightColor, m_harvestTextColor, QString(),
+                Enums::DelegateType::Standard));
+            break;
+        }
         case Enums::PackageType::Transport:
+        {
+            qint64 beginningTimestamp = -1;
+            qint64 endingTimestamp = -1;
+            QString plateNumber;
+            QVariantList receptionData;
+
+            if (properties.isEmpty() == false) {
+                const auto &first = properties.at(0);
+                plateNumber = first.value(Tags::webPlateNumber).toString();
+                beginningTimestamp = first.value(Tags::webEventDate).toVariant().toLongLong();
+
+                if (properties.length() > 1) {
+                    const auto &second = properties.at(1);
+                    endingTimestamp = second.value(Tags::webEventDate)
+                                          .toVariant().toLongLong();
+
+                    // TODO: create a helper struct and use it in Utility
+                    // overload for createSummaryItem!!
+                    QStringList docs;
+                    QStringList recs;
+
+                    const QString cache(m_picturesManager->cachePath());
+
+                    const QJsonArray docsArray(second.value(Tags::documents).toArray());
+                    for (const auto &value : docsArray) {
+                        docs.append(cache + "/" + value.toString());
+                    }
+
+                    const QJsonArray recsArray(second.value(Tags::receipts).toArray());
+                    for (const auto &value : recsArray) {
+                        recs.append(cache + "/" + value.toString());
+                    }
+
+                    const bool hasDocs = (docs.isEmpty() == false);
+                    const bool hasRecs = (recs.isEmpty() == false);
+
+                    m_picturesManager->setCurrentDocuments(docs);
+                    m_picturesManager->setCurrentReceipts(recs);
+
+                    const QString uploaded(tr("Uploaded"));
+                    const QString noPhoto(tr("No photo"));
+
+                    const QString bagNumberString(QString::number(
+                        CharcoalDbHelpers::bagCountInTransport(m_connectionName, entityId)));
+
+                    Utility::SummaryValue value;
+                    value.titles = QStringList {
+                        bagNumberString,
+                        dateString(beginningTimestamp),
+                        QString(hasDocs? uploaded : noPhoto),
+                        QString(hasRecs? uploaded : noPhoto)
+                    };
+
+                    value.values = QStringList {
+                        tr("Number of bags"),
+                        tr("Loading date"),
+                        tr("Documents"),
+                        tr("Receipts")
+                    };
+
+                    value.icons = QStringList {
+                        QString(),
+                        QString(),
+                        "image://tickmark/document-" + QString(hasDocs? "true" : "false"),
+                        "image://tickmark/receipt-" + QString(hasRecs? "true" : "false")
+                    };
+
+                    value.linkDestinationPages = QList<Enums::Page>{
+                        Enums::Page::InvalidPage,
+                        Enums::Page::InvalidPage,
+                        (hasDocs? Enums::Page::PhotoGallery : Enums::Page::InvalidPage),
+                        (hasRecs? Enums::Page::PhotoGallery : Enums::Page::InvalidPage)
+                    };
+
+                    value.linkDatas = QVariantList {
+                        QVariant(),
+                        QVariant(),
+                        QVariantMap{ {"urls", docs} },
+                        QVariantMap{ {"urls", recs} }
+                    };
+
+                    receptionData = value.toList();
+                }
+            }
+
+            result.append(Utility::instance().createSummaryItem(
+                tr("Transport ID"), entityName, QString(), QString(),
+                m_transportHighlightColor, m_transportTextColor, QString(),
+                Enums::DelegateType::Standard));
+            result.append(Utility::instance().createSummaryItem(
+                QString(), receptionData,
+                QString(), QString(),
+                m_harvestHighlightColor, m_harvestTextColor, QColor("000000"),
+                Enums::DelegateType::ColumnStack));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Plate number"), plateNumber));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Reception at the storage facility"), dateString(endingTimestamp)));
+            break;
+        }
         default:
             result.append(Utility::instance().createSummaryItem(
                 "default", "error"));

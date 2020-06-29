@@ -83,6 +83,14 @@ void CharcoalDataManager::setPicturesManager(PicturesManager *manager)
     if (m_actionController) {
         m_actionController->setPicturesManager(manager);
     }
+
+    if (m_eventsSender) {
+        m_eventsSender->setPicturesManager(manager);
+    }
+
+    if (m_trackingModel) {
+        m_trackingModel->setPicturesManager(manager);
+    }
 }
 
 void CharcoalDataManager::sendOfflineActions()

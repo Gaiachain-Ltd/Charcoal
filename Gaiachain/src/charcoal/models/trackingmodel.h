@@ -4,6 +4,9 @@
 #include "common/enums.h"
 
 #include <QColor>
+#include <QPointer>
+
+class PicturesManager;
 
 class TrackingModel : public QueryModel
 {
@@ -20,6 +23,8 @@ public:
     Q_ENUM(TrackingRole)
 
     explicit TrackingModel(QObject *parent = nullptr);
+
+    void setPicturesManager(PicturesManager *manager);
 
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -48,5 +53,7 @@ private:
     const QColor m_plotHighlightColor = QColor("#EEF9FE");
     const QColor m_harvestHighlightColor = QColor("#EBF1E6");
     const QColor m_transportHighlightColor = QColor("#FFE8FD");
+
+    QPointer<PicturesManager> m_picturesManager;
 };
 

@@ -113,9 +113,6 @@ Pages.GPage {
 
             model: dataManager.trackingModel
 
-//                if (type === Enums.PackageType.Plot) {
-//                    summaryTitle = Strings.plotIdDetails
-//                    summary = plotSummary
 //                } else if (type === Enums.PackageType.Harvest) {
 //                    summaryTitle = Strings.harvestIdDetails
 //                    summary = [
@@ -170,77 +167,7 @@ Pages.GPage {
 //                                          "12 m3"),
 
 //                    ]
-//                } else if (type === Enums.PackageType.Transport) {
-//                    let docs = picturesManager.documents()
-//                    let recs = picturesManager.receipts()
-//                    let hasDocs = docs.length > 0
-//                    let hasRecs = recs.length > 0
-//                    let docsIcon = "image://tickmark/document-" + hasDocs
-//                    let recsIcon = "image://tickmark/receipt-" + hasRecs
 
-//                    summaryTitle = Strings.transportIdDetails
-//                    summary = [
-//                        Utility.createSummaryItem(Strings.transportId,
-//                                          item.title,
-//                                          "", "",
-//                                          GStyle.delegateHighlightColor4,
-//                                          GStyle.fontHighlightColor4,
-//                                          "",
-//                                          Enums.DelegateType.Standard),
-//                        Utility.createSummaryItem("",
-//                                          [
-//                                              [
-//                                                  "150",
-//                                                  item.from,
-//                                                  hasDocs? Strings.uploaded : Strings.noPhoto,
-//                                                  hasRecs? Strings.uploaded : Strings.noPhoto
-//                                              ],
-//                                              [
-//                                                  Strings.numberOfBags,
-//                                                  Strings.loadingDate,
-//                                                  Strings.documents,
-//                                                  Strings.receipt
-//                                              ],
-//                                              [
-//                                                  "",
-//                                                  "",
-//                                                  docsIcon,
-//                                                  recsIcon
-//                                              ],
-//                                              [
-//                                                  "",
-//                                                  "",
-//                                                  [
-//                                                      hasDocs?
-//                                                          Enums.Page.PhotoGallery
-//                                                        : Enums.Page.InvalidPage,
-//                                                      [
-//                                                          "urls", docs
-//                                                      ]
-//                                                  ],
-//                                                  [
-//                                                      hasRecs?
-//                                                          Enums.Page.PhotoGallery
-//                                                        : Enums.Page.InvalidPage,
-//                                                      [
-//                                                          "urls", recs
-//                                                      ]
-//                                                  ]
-//                                              ]
-//                                          ],
-//                                          "", "",
-//                                          GStyle.delegateHighlightColor4,
-//                                          GStyle.fontHighlightColor4,
-//                                          GStyle.textPrimaryColor,
-//                                          Enums.DelegateType.ColumnStack),
-//                        Utility.createSummaryItem(Strings.plateNumber,
-//                                          "1234AB56"),
-//                        Utility.createSummaryItem(Strings.transportReceptionDate,
-//                                          item.to)
-
-//                    ]
-
-//                }
 
         }
     }

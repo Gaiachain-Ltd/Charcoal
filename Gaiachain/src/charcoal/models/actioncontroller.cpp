@@ -151,31 +151,10 @@ int ActionController::nextTransportNumber(const QString &harvestId) const
     return -1;
 }
 
-int ActionController::bagCountInTransport(const QString &transportId) const
+int ActionController::bagCountInTransport(const QString &transportName) const
 {
-    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
-
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    query.prepare("SELECT properties FROM Events WHERE entityId=:transportEntityId");
-    query.bindValue(":transportEntityId", transportEntityId);
-
-    if (query.exec()) {
-        query.next();
-        const QByteArray propertiesString(query.value("properties").toByteArray());
-        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-        const QVariantMap properties(propertiersJson.toVariant().toMap());
-        //qDebug() << "Plate number?" << properties;
-        // TODO: use Tags!
-        return properties.value(Tags::webQrCodes).toList().size();
-    }
-
-    qWarning() << RED("Getting bag count has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return -1;
+    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportName));
+    return CharcoalDbHelpers::bagCountInTransport(m_dbConnName, transportEntityId);
 }
 
 QString ActionController::plateNumberInTransport(const QString &transportId) const
@@ -394,7 +373,6 @@ void ActionController::registerLoggingBeginning(
     query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-    // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
                         { Tags::webParcel, parcelId },
@@ -467,7 +445,6 @@ void ActionController::registerLoggingEnding(
     query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-    // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
                         { Tags::webNumberOfTrees, numberOfTrees },
@@ -569,7 +546,6 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-    // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
                         { Tags::webOvenType, ovenType },
@@ -665,7 +641,6 @@ void ActionController::registerCarbonizationEnding(
         query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
         query.bindValue(":locationLatitude", coordinate.latitude());
         query.bindValue(":locationLongitude", coordinate.longitude());
-        // TODO: use Tags to denote the properties more reliably!
         query.bindValue(":properties",
                         propertiesToString(QVariantMap {
                             { Tags::webOvenId, ovenLetter },
@@ -836,7 +811,6 @@ void ActionController::registerReception(
 
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        //{ "transportId", transportId },
                         { Tags::documents, cachedDocs },
                         { Tags::receipts, cachedRecs },
                         { Tags::webQrCodes, scannedQrs },

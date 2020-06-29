@@ -33,6 +33,11 @@ QString PicturesManager::pictureStoragePath() const
     return m_path;
 }
 
+QString PicturesManager::cachePath() const
+{
+    return m_cachePath;
+}
+
 void PicturesManager::saveDocumentPhoto(const QString &path) const
 {
     savePhoto(path, PicturesManager::PictureType::Document);
@@ -63,6 +68,12 @@ QStringList PicturesManager::receipts() const
     return photosOfType(PicturesManager::PictureType::Receipt);
 }
 
+void PicturesManager::resetCurrentPictures()
+{
+    m_currentDocuments.clear();
+    m_currentReceipts.clear();
+}
+
 QStringList PicturesManager::moveToCache(const QVariantList &photos) const
 {
     QStringList list;
@@ -78,10 +89,11 @@ QStringList PicturesManager::moveToCache(const QStringList &photos) const
     QStringList result;
     for (const QString &photo : photos) {
         const QFileInfo info(photo);
-        const QString destination(m_cachePath + "/" + info.fileName());
+        const QString fileName(info.fileName());
+        const QString destination(m_cachePath + "/" + fileName);
 
         if (QFile::rename(photo, destination)) {
-            result.append(destination);
+            result.append(fileName);
         } else {
             qWarning() << "Moving to cache has failed!" << photo << destination;
         }
@@ -151,6 +163,7 @@ void PicturesManager::savePhoto(const QString &path,
 
 void PicturesManager::cleanUp() const
 {
+    // TODO: remove only files from m_path, not subdirs!
     QDir(m_path).removeRecursively();
 }
 
@@ -173,4 +186,24 @@ QStringList PicturesManager::photosOfType(const PicturesManager::PictureType typ
     }
 
     return result;
+}
+
+QStringList PicturesManager::currentReceipts() const
+{
+    return m_currentReceipts;
+}
+
+void PicturesManager::setCurrentReceipts(const QStringList &currentReceipts)
+{
+    m_currentReceipts = currentReceipts;
+}
+
+QStringList PicturesManager::currentDocuments() const
+{
+    return m_currentDocuments;
+}
+
+void PicturesManager::setCurrentDocuments(const QStringList &currentDocuments)
+{
+    m_currentDocuments = currentDocuments;
 }

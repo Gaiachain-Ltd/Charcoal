@@ -1,10 +1,14 @@
 #include "charcoaldbhelpers.h"
 
 #include "common/logs.h"
+#include "common/tags.h"
 #include "database/dbhelpers.h"
 
 #include <QMetaEnum>
 #include <QString>
+
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -63,6 +67,29 @@ Enums::SupplyChainAction CharcoalDbHelpers::actionById(const QString &connection
     }
 
     return Enums::SupplyChainAction::Unknown;
+}
+
+int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const int id)
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+
+    query.prepare("SELECT properties FROM Events WHERE entityId=:transportEntityId");
+    query.bindValue(":transportEntityId", id);
+
+    if (query.exec()) {
+        query.next();
+        const QByteArray propertiesString(query.value("properties").toByteArray());
+        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+        const QVariantMap properties(propertiersJson.toVariant().toMap());
+        return properties.value(Tags::webQrCodes).toList().size();
+    }
+
+    qWarning() << RED("Getting bag count has failed!")
+               << query.lastError().text()
+               << "for query:" << query.lastQuery()
+               << "DB:" << connectionName;
+
+    return -1;
 }
 
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)

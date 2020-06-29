@@ -104,6 +104,21 @@ QVariantMap Utility::createSummaryItem(
     };
 }
 
+QVariantMap Utility::createSummaryItem(
+    const QString &headerText,
+    const SummaryValue &value,
+    const QString &inputIconSource,
+    const QString &suffix,
+    const QColor &highlightColor,
+    const QColor &decorationColor,
+    const QColor &secondaryTextColor,
+    const Enums::DelegateType delegateType) const
+{
+    return createSummaryItem(headerText, value.toList(), inputIconSource,
+                             suffix, highlightColor, decorationColor,
+                             secondaryTextColor, delegateType);
+}
+
 bool Utility::isWeekend(const QDate &date) const
 {
     const int day = date.dayOfWeek();
@@ -221,4 +236,32 @@ QDate Utility::convertDateString(const QString &dateStr, const QString &dateForm
 QString Utility::defaultDateFormat() const
 {
     return m_dateFormat;
+}
+
+QVariantList Utility::SummaryValue::toList() const
+{
+    const int length = titles.length();
+    if (length != values.length() || length != icons.length()) {
+        qWarning() << RED("Incorrect value lengths in SummaryValue!")
+                   << length << values.length() << icons.length()
+                   << linkDatas.length();
+    }
+
+    if (linkDestinationPages.length() != linkDatas.length()) {
+        qWarning() << RED("Link destinations and contents do not match")
+                   << linkDestinationPages.length() << linkDatas.length();
+    }
+
+    QStringList destinations;
+    for (const auto &page : qAsConst(linkDestinationPages)) {
+        destinations.append(QString::number(int(page)));
+    }
+
+    return {
+        titles,
+        values,
+        icons,
+        destinations,
+        linkDatas
+    };
 }

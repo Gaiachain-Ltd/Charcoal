@@ -102,6 +102,7 @@ Pages.SupplyChainPageBase {
             values: composite[1]
             icons: composite[2]
             links: composite[3]
+            linkDatas: composite[4]
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted

@@ -27,6 +27,7 @@ public:
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
     QString pictureStoragePath() const;
+    QString cachePath() const;
 
     Q_INVOKABLE void saveDocumentPhoto(const QString &path) const;
     Q_INVOKABLE void saveReceiptPhoto(const QString &path) const;
@@ -35,10 +36,18 @@ public:
     Q_INVOKABLE QStringList documents() const;
     Q_INVOKABLE QStringList receipts() const;
 
+    Q_INVOKABLE void resetCurrentPictures();
+
     QStringList moveToCache(const QVariantList &photos) const;
     QStringList moveToCache(const QStringList &photos) const;
 
     static QString pictureTypeString(const PictureType type);
+
+    QStringList currentDocuments() const;
+    void setCurrentDocuments(const QStringList &currentDocuments);
+
+    QStringList currentReceipts() const;
+    void setCurrentReceipts(const QStringList &currentReceipts);
 
 private:
     void prepareDirectories() const;
@@ -53,6 +62,9 @@ private:
     const QString m_path = m_base + "/" + m_picturesDir;
     const QString m_savePath = m_path + "/" + m_saveDir;
     const QString m_cachePath = m_path + "/" + m_cacheDir;
+
+    QStringList m_currentDocuments;
+    QStringList m_currentReceipts;
 };
 
 #endif // PICTURESMANAGER_H

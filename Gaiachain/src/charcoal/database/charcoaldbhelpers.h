@@ -10,6 +10,7 @@ public:
     static QString getPlotId(const QString &packageId);
     static QString actionAbbreviation(const Enums::SupplyChainAction action);
     static Enums::SupplyChainAction actionById(const QString &connectionName, const int id);
+    static int bagCountInTransport(const QString &connectionName, const int id);
 
     static int getWebPackageId(const QString &connectionName, const int entityId);
     static int getVillageId(const QString &connectionName, const QString &name);

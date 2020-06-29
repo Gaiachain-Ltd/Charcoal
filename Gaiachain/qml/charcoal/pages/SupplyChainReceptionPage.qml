@@ -49,6 +49,7 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
+        picturesManager.resetCurrentPictures()
         let docs = picturesManager.documents()
         let recs = picturesManager.receipts()
         let hasDocs = docs.length > 0
@@ -88,23 +89,18 @@ Pages.SupplyChainPageBase {
                                               recsIcon
                                           ],
                                           [
+                                              Enums.Page.InvalidPage,
+                                              Enums.Page.InvalidPage,
+                                              hasDocs? Enums.Page.PhotoGallery
+                                                     : Enums.Page.InvalidPage,
+                                              hasRecs? Enums.Page.PhotoGallery
+                                                     : Enums.Page.InvalidPage
+                                          ],
+                                          [
                                               "",
-                                              [
-                                                  hasDocs?
-                                                      Enums.Page.PhotoGallery
-                                                    : Enums.Page.InvalidPage,
-                                                  [
-                                                      "urls", docs
-                                                  ]
-                                              ],
-                                              [
-                                                  hasRecs?
-                                                      Enums.Page.PhotoGallery
-                                                    : Enums.Page.InvalidPage,
-                                                  [
-                                                      "urls", recs
-                                                  ]
-                                              ]
+                                              "",
+                                              Utility.arrayToObject([ "urls", docs ]),
+                                              Utility.arrayToObject([ "urls", recs ])
                                           ]
                                       ],
                                       "", "",

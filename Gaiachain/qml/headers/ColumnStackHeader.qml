@@ -72,13 +72,13 @@ Headers.AbstractListHeader {
                     verticalAlignment: Image.AlignVCenter
 
                     MouseArea {
-                        property bool hasLink: links[index][0] !== Enums.Page.InvalidPage
+                        property bool hasLink: links[index] !== Enums.Page.InvalidPage
 
                         enabled: hasLink
                         anchors.fill: parent
                         onClicked: {
-                            pageManager.enter(links[index][0],
-                                              Utility.arrayToObject(links[index][1]))
+                            console.log("Data:", links[index], linkDatas[index])
+                            pageManager.enter(links[index], linkDatas[index])
                         }
                     }
                 }
