@@ -213,6 +213,7 @@ namespace Enums {
         ColumnStack
     };
     Q_ENUM_NS(DelegateType)
+    inline uint qHash(DelegateType key, uint seed) { return qH<DelegateType>(key, seed);}
 
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }

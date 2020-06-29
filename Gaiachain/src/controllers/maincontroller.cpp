@@ -202,6 +202,7 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Enums::UserType>("Enums::UserType");
     qRegisterMetaType<Enums::PackageType>("Enums::PackageType");
     qRegisterMetaType<Enums::SupplyChainAction>("Enums::SupplyChainAction");
+    qRegisterMetaType<Enums::DelegateType>("Enums::DelegateType");
     qRegisterMetaType<Gaia::ModelData>("Gaia::ModelData");
     qRegisterMetaType<Gaia::ModelEntry>("Gaia::ModelEntry");
 
