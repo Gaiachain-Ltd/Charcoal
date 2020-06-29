@@ -99,8 +99,8 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
 {
     qDebug() << "Request success!" << reply;
 
-    const qint64 begin(reply.object().value(Tags::webBeginningDate).toString().toLongLong());
-    const qint64 end(reply.object().value(Tags::webEndingDate).toString().toLongLong());
+    const qint64 begin(reply.object().value(Tags::webBeginningDate).toVariant().toLongLong());
+    const qint64 end(reply.object().value(Tags::webEndingDate).toVariant().toLongLong());
     const QString queryString(
         QString("UPDATE Replantations SET isCommitted=1 "
                 "WHERE beginningDate=%1 AND endingDate=%2").arg(begin).arg(end));

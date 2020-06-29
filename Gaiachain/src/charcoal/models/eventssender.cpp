@@ -156,7 +156,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     const QString pid(reply.object().value(Tags::pid).toString());
     const qint64 eventWebId(reply.object().value(Tags::webEventId).toInt());
-    const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toString().toLongLong());
+    const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toVariant().toLongLong());
     const QString eventId(findEventByTimestamp(timestamp));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));

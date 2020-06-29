@@ -21,8 +21,6 @@ PicturesManager::PicturesManager(QObject *parent) : AbstractManager(parent)
 
 PicturesManager::~PicturesManager()
 {
-    qWarning() << RED("TODO: clean up photos! By this point, they should be in the DB already");
-    //cleanUp();
 }
 
 void PicturesManager::setupQmlContext(QQmlApplicationEngine &engine)
