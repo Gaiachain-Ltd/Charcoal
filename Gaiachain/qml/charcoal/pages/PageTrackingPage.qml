@@ -127,24 +127,24 @@ Pages.GPage {
                 let summaryTitle
 
                 let plotSummary = [
-                        dataManager.createSummaryItem(Strings.plotId,
+                        Utility.createSummaryItem(Strings.plotId,
                                           item.title,
                                           "", "",
                                           GStyle.delegateHighlightColor,
                                           GStyle.fontHighlightColor,
                                           "",
                                           Enums.DelegateType.Standard),
-                        dataManager.createSummaryItem(Strings.malebiRepsId,
+                        Utility.createSummaryItem(Strings.malebiRepsId,
                                           "AM003PM"),
-                        dataManager.createSummaryItem(Strings.parcel,
+                        Utility.createSummaryItem(Strings.parcel,
                                           "0595112"),
-                        dataManager.createSummaryItem(Strings.village,
+                        Utility.createSummaryItem(Strings.village,
                                           "Wąchock"),
-                        dataManager.createSummaryItem(Strings.beginningDate,
+                        Utility.createSummaryItem(Strings.beginningDate,
                                           item.from),
-                        dataManager.createSummaryItem(Strings.endingDate,
+                        Utility.createSummaryItem(Strings.endingDate,
                                           item.to),
-                        dataManager.createSummaryItem(Strings.treeSpecies,
+                        Utility.createSummaryItem(Strings.treeSpecies,
                                           "Cassia siamea"),
 
                     ]
@@ -155,14 +155,14 @@ Pages.GPage {
                 } else if (item.type === Enums.PackageType.Harvest) {
                     summaryTitle = Strings.harvestIdDetails
                     summary = [
-                        dataManager.createSummaryItem(Strings.harvestId,
+                        Utility.createSummaryItem(Strings.harvestId,
                                           item.title,
                                           "", "",
                                           GStyle.delegateHighlightColor2,
                                           GStyle.fontHighlightColor2,
                                           "",
                                           Enums.DelegateType.Standard),
-                        dataManager.createSummaryItem("",
+                        Utility.createSummaryItem("",
                                           [
                                               [ Strings.plotId ],
                                               [ "AM003PM/0595112/04-03-2020" ],
@@ -184,13 +184,13 @@ Pages.GPage {
                                           "",
                                           Enums.DelegateType.ColumnStack),
                         // TODO: Collapsible delegate... ugh!
-                        dataManager.createSummaryItem(Strings.beginningDate,
+                        Utility.createSummaryItem(Strings.beginningDate,
                                           item.from),
-                        dataManager.createSummaryItem(Strings.endingDate,
+                        Utility.createSummaryItem(Strings.endingDate,
                                           item.to),
-                        dataManager.createSummaryItem(Strings.carbonizerId,
+                        Utility.createSummaryItem(Strings.carbonizerId,
                                           "AM004NA"),
-                        dataManager.createSummaryItem(Strings.ovenDimensions,
+                        Utility.createSummaryItem(Strings.ovenDimensions,
                                           [
                                               [
                                                   Strings.height,
@@ -202,7 +202,7 @@ Pages.GPage {
                                           "", "",
                                           "", "", "",
                                           Enums.DelegateType.Row),
-                        dataManager.createSummaryItem(Strings.timberVolume,
+                        Utility.createSummaryItem(Strings.timberVolume,
                                           "12 m3"),
 
                     ]
@@ -216,14 +216,14 @@ Pages.GPage {
 
                     summaryTitle = Strings.transportIdDetails
                     summary = [
-                        dataManager.createSummaryItem(Strings.transportId,
+                        Utility.createSummaryItem(Strings.transportId,
                                           item.title,
                                           "", "",
                                           GStyle.delegateHighlightColor4,
                                           GStyle.fontHighlightColor4,
                                           "",
                                           Enums.DelegateType.Standard),
-                        dataManager.createSummaryItem("",
+                        Utility.createSummaryItem("",
                                           [
                                               [
                                                   "150",
@@ -269,9 +269,9 @@ Pages.GPage {
                                           GStyle.fontHighlightColor4,
                                           GStyle.textPrimaryColor,
                                           Enums.DelegateType.ColumnStack),
-                        dataManager.createSummaryItem(Strings.plateNumber,
+                        Utility.createSummaryItem(Strings.plateNumber,
                                           "1234AB56"),
-                        dataManager.createSummaryItem(Strings.transportReceptionDate,
+                        Utility.createSummaryItem(Strings.transportReceptionDate,
                                           item.to)
 
                     ]

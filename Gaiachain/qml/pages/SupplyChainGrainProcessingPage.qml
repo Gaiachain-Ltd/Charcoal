@@ -32,11 +32,11 @@ Pages.SupplyChainPage {
 
     function summary() {
         return [
-            dataManager.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
-            dataManager.createSummaryItem(Strings.harvestId, harvestIdComboBox.currentText),
-            dataManager.createSummaryItem(Strings.breakingDate, breakingDateInputDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
-            dataManager.createSummaryItem(Strings.endFermentationDate, endFermentationDateInputDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
-            dataManager.createSummaryItem(Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")", Strings.kg.arg(Helper.minusIfNotDefined(estimatedBeansVolumeInputHeader.inputText)))
+            Utility.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
+            Utility.createSummaryItem(Strings.harvestId, harvestIdComboBox.currentText),
+            Utility.createSummaryItem(Strings.breakingDate, breakingDateInputDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
+            Utility.createSummaryItem(Strings.endFermentationDate, endFermentationDateInputDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat)),
+            Utility.createSummaryItem(Strings.estimatedBeansVolume + " (" + Strings.notRequired + ")", Strings.kg.arg(Helper.minusIfNotDefined(estimatedBeansVolumeInputHeader.inputText)))
         ]
     }
 

@@ -61,14 +61,14 @@ Pages.SupplyChainPageBase {
         let allBags = scannedQrs.length === bagCount
 
         var summary = [
-                    dataManager.createSummaryItem(Strings.transportId,
+                    Utility.createSummaryItem(Strings.transportId,
                                       transportId,
                                       "", "",
                                       GStyle.delegateHighlightColor4,
                                       GStyle.fontHighlightColor4,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem("",
+                    Utility.createSummaryItem("",
                                       [
                                           [
                                               Strings.numberOfBags,
@@ -112,12 +112,12 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor4,
                                       GStyle.textPrimaryColor,
                                       Enums.DelegateType.ColumnStack),
-                    dataManager.createSummaryItem(Strings.plateNumber,
+                    Utility.createSummaryItem(Strings.plateNumber,
                                       dataManager.actionController.plateNumberInTransport(transportId)),
-                    dataManager.createSummaryItem(Strings.receptionDateCharcoal,
+                    Utility.createSummaryItem(Strings.receptionDateCharcoal,
                                       unloadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }

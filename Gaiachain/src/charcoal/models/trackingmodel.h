@@ -12,7 +12,8 @@ public:
         Id = Qt::ItemDataRole::UserRole + 1,
         Name,
         Type,
-        Events
+        Events,
+        EventSummary
     };
     Q_ENUM(TrackingRole)
 
@@ -32,7 +33,8 @@ private:
         { TrackingRole::Id, "eventId" },
         { TrackingRole::Name, "name" },
         { TrackingRole::Type, "type" },
-        { TrackingRole::Events, "events" }
+        { TrackingRole::Events, "events" },
+        { TrackingRole::EventSummary, "eventSummary" }
     };
 };
 

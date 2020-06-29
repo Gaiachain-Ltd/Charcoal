@@ -33,9 +33,9 @@ Pages.SupplyChainPage {
 
     function summary() {
         return [
-            dataManager.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
-            dataManager.createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText),
-            dataManager.createSummaryItem(Strings.kg.arg(Strings.lotWeight), Strings.kg.arg(lotWeightInputHeader.inputText))
+            Utility.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
+            Utility.createSummaryItem(Strings.qrCode, qrCodeInputHeader.inputText),
+            Utility.createSummaryItem(Strings.kg.arg(Strings.lotWeight), Strings.kg.arg(lotWeightInputHeader.inputText))
         ]
     }
 

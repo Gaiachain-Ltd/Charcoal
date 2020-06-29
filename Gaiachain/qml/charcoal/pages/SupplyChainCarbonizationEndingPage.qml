@@ -38,21 +38,21 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    dataManager.createSummaryItem(Strings.harvestId,
+                    Utility.createSummaryItem(Strings.harvestId,
                                       harvestIdComboBox.currentText,
                                       "", "",
                                       GStyle.delegateHighlightColor2,
                                       GStyle.fontHighlightColor2,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.plotId,
+                    Utility.createSummaryItem(Strings.plotId,
                                       dataManager.actionController.getPlotId(harvestIdComboBox.currentText),
                                       "", "",
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.ovenId,
+                    Utility.createSummaryItem(Strings.ovenId,
                                       [
                                           ovenIdComboBox.letters,
                                           ovenIdComboBox.descriptions
@@ -62,12 +62,12 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor3,
                                       "",
                                       Enums.DelegateType.Column),
-                    dataManager.createSummaryItem(Strings.carbonizerId,
+                    Utility.createSummaryItem(Strings.carbonizerId,
                                       carbonizerIdInputHeader.inputText),
-                    dataManager.createSummaryItem(Strings.carbonizationEndingDate,
+                    Utility.createSummaryItem(Strings.carbonizationEndingDate,
                                       endingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }

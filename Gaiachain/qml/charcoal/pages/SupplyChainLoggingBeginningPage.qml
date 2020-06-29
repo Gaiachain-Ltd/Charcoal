@@ -39,7 +39,7 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    dataManager.createSummaryItem(Strings.plotId,
+                    Utility.createSummaryItem(Strings.plotId,
                                       dataManager.actionController.generatePlotId(
                                           repsIdInputHeader.inputText,
                                           parcelComboBox.currentText,
@@ -50,14 +50,14 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.parcel, parcelComboBox.currentText),
-                    dataManager.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
-                    dataManager.createSummaryItem(Strings.village, villageComboBox.currentText),
-                    dataManager.createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
-                    dataManager.createSummaryItem(Strings.beginningDate,
+                    Utility.createSummaryItem(Strings.parcel, parcelComboBox.currentText),
+                    Utility.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
+                    Utility.createSummaryItem(Strings.village, villageComboBox.currentText),
+                    Utility.createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
+                    Utility.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
 
         return summary

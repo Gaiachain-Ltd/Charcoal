@@ -44,7 +44,7 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    dataManager.createSummaryItem(Strings.harvestId,
+                    Utility.createSummaryItem(Strings.harvestId,
                                       dataManager.actionController.generateHarvestId(
                                           plotIdComboBox.currentText,
                                           carbonizerIdInputHeader.inputText
@@ -54,25 +54,25 @@ Pages.SupplyChainPageBase {
                                       GStyle.fontHighlightColor2,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
+                    Utility.createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
                                       "", "",
                                       GStyle.delegateHighlightColor3,
                                       GStyle.fontHighlightColor3,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.carbonizerId,
+                    Utility.createSummaryItem(Strings.carbonizerId,
                                       carbonizerIdInputHeader.inputText),
-                    dataManager.createSummaryItem(Strings.beginningDate,
+                    Utility.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
-                    dataManager.createSummaryItem(Strings.ovenDimensions,
+                    Utility.createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
+                    Utility.createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
                                        ovenTypeComboBox.ovenType === "2"?
                                            dataManager.actionController.defaultOvenDimensions(
@@ -81,7 +81,7 @@ Pages.SupplyChainPageBase {
                                       "", "",
                                       "", "", "",
                                       Enums.DelegateType.Row),
-                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }

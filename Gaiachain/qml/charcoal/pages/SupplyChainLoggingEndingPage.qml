@@ -37,18 +37,18 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    dataManager.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
-                    dataManager.createSummaryItem(Strings.endingDate,
+                    Utility.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
+                    Utility.createSummaryItem(Strings.endingDate,
                                       endingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.numberOfTrees, numberOfTreesHeader.inputText),
-                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.numberOfTrees, numberOfTreesHeader.inputText),
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
 
         return summary

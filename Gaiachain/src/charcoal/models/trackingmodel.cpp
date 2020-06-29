@@ -147,6 +147,10 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 
         return events;
     }
+    case TrackingRole::EventSummary:
+    {
+
+    }
     }
 
     return {};

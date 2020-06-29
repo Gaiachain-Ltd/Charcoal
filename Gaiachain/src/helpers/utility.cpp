@@ -79,6 +79,31 @@ QString Utility::colorString(const QColor &color) const
     return color.name(QColor::HexArgb);
 }
 
+QVariantMap Utility::createSummaryItem(
+    const QString &headerText,
+    const QVariant &value,
+    const QString &inputIconSource,
+    const QString &suffix,
+    const QColor &highlightColor,
+    const QColor &decorationColor,
+    const QColor &secondaryTextColor,
+    const Enums::DelegateType delegateType) const
+{
+    qDebug() << "Data is:" << headerText << value << inputIconSource << suffix << highlightColor << decorationColor << secondaryTextColor << delegateType;
+
+    return {
+        { "headerValue", headerText },
+        { "value", value },
+        { "inputIconSource", inputIconSource },
+        { "suffixValue", suffix },
+        { "delegateType", int(delegateType) },
+        { "highlightColor", highlightColor },
+        { "decorationColor", decorationColor },
+        { "secondaryTextColor", secondaryTextColor },
+        { "isHighlighted", (highlightColor.isValid() == true) }
+    };
+}
+
 bool Utility::isWeekend(const QDate &date) const
 {
     const int day = date.dayOfWeek();

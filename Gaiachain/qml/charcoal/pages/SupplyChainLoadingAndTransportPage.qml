@@ -62,30 +62,30 @@ Pages.SupplyChainPageBase {
                         loadingDateHeader.selectedDate
                     )
         var summary = [
-                    dataManager.createSummaryItem(Strings.transportId,
+                    Utility.createSummaryItem(Strings.transportId,
                                       transportId,
                                       "", "",
                                       GStyle.delegateHighlightColor4,
                                       GStyle.fontHighlightColor4,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.numberOfBags,
+                    Utility.createSummaryItem(Strings.numberOfBags,
                                       scannedQrs.length),
-                    dataManager.createSummaryItem(Strings.harvestId,
+                    Utility.createSummaryItem(Strings.harvestId,
                                       harvestIdComboBox.currentText,
                                       "", "",
                                       GStyle.delegateHighlightColor2,
                                       GStyle.fontHighlightColor2,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.plateNumber,
+                    Utility.createSummaryItem(Strings.plateNumber,
                                       plateNumberHeader.inputText),
-                    dataManager.createSummaryItem(Strings.loadingDate,
+                    Utility.createSummaryItem(Strings.loadingDate,
                                       loadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.deliveryDestination,
+                    Utility.createSummaryItem(Strings.deliveryDestination,
                                       deliveryDestinationComboBox.currentText),
-                    dataManager.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }

@@ -39,25 +39,25 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    dataManager.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
                                       GStyle.delegateHighlightColor,
                                       GStyle.fontHighlightColor,
                                       "",
                                       Enums.DelegateType.Standard),
-                    dataManager.createSummaryItem(Strings.numberOfTreesPlanted,
+                    Utility.createSummaryItem(Strings.numberOfTreesPlanted,
                                       numberOfTreesHeader.inputText),
-                    dataManager.createSummaryItem(Strings.treeSpecies,
+                    Utility.createSummaryItem(Strings.treeSpecies,
                                       treeSpeciesComboBox.currentText),
-                    dataManager.createSummaryItem(Strings.userId,
+                    Utility.createSummaryItem(Strings.userId,
                                       userIdInputHeader.inputText),
-                    dataManager.createSummaryItem(Strings.beginningDate,
+                    Utility.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.endingDate,
+                    Utility.createSummaryItem(Strings.endingDate,
                                       endingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    dataManager.createSummaryItem(Strings.gpsCoordinates,
+                    Utility.createSummaryItem(Strings.gpsCoordinates,
                                       gpsSource.coordinate.toString())
                 ]
 
