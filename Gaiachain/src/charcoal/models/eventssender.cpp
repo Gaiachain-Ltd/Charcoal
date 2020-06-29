@@ -237,7 +237,7 @@ bool EventsSender::updateEntityWebId(const qint64 webId, const QString &eventId)
 
 QJsonObject EventsSender::dbStringToPropertiesObject(const QString &properties) const
 {
-    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toLatin1()));
+    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toUtf8()));
     return propertiesDoc.object();
 }
 

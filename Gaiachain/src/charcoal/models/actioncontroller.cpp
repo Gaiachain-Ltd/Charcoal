@@ -397,8 +397,8 @@ void ActionController::registerLoggingBeginning(
     // TODO: use Tags to denote the properties more reliably!
     query.bindValue(":properties",
                     propertiesToString(QVariantMap {
-                        { "parcel", parcelId },
-                        { "village", villageId },
+                        { Tags::webParcel, parcelId },
+                        { Tags::webVillage, villageId },
                         { Tags::webTreeSpecies, treeSpeciesId },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
                     }));

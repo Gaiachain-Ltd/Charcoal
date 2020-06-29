@@ -28,7 +28,7 @@ protected slots:
     void webReplyHandler(const QJsonDocument &reply) override;
 
 private:
-    QHash<int, QByteArray> m_roleNames = {
+    const QHash<int, QByteArray> m_roleNames = {
         { OvenTypesRole::Id, "id" },
         { OvenTypesRole::Name, "name" },
         { OvenTypesRole::TranslatedName, "translatedName" },

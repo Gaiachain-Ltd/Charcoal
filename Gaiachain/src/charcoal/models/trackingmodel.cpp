@@ -6,6 +6,7 @@
 #include "controllers/usermanager.h"
 #include "common/logs.h"
 #include "common/tags.h"
+#include "helpers/utility.h"
 #include "trackingupdater.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 
@@ -13,13 +14,14 @@
 #include <QSqlError>
 
 #include <QJsonDocument>
+#include <QJsonObject>
 
 #include <QDate>
 
 TrackingModel::TrackingModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, name, typeId FROM Entities");
+    setDbQuery("SELECT id, typeId, name, parent, webId FROM Entities");
 }
 
 QVariant TrackingModel::data(const QModelIndex &index, int role) const
@@ -38,35 +40,14 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         return query().value("name").toString();
     case TrackingRole::Type:
     {
-        const QString id(query().value("typeId").toString());
-        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("SELECT name FROM EntityTypes WHERE id=:id");
-        query.bindValue(":id", id);
-
-        if (query.exec() == false) {
-            qWarning() << RED("Getting event type has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
-            return {};
-        }
-
-        query.next();
-        const QString type(query.value("name").toString().toLower());
-
-        if (type == "plot") {
-            return int(Enums::PackageType::Plot);
-        } else if (type == "harvest") {
-            return int(Enums::PackageType::Harvest);
-        } else if (type == "transport") {
-            return int(Enums::PackageType::Transport);
-        }
-
-        return int(Enums::PackageType::Unknown);
+        const int id(query().value("typeId").toInt());
+        return int(CharcoalDbHelpers::getEntityType(m_connectionName, id));
     }
     case TrackingRole::Events:
     {
         const QString id(query().value("id").toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("SELECT id, date, typeId, properties FROM Events WHERE entityId=:id");
+        query.prepare("SELECT id, typeId, userId, date, properties FROM Events WHERE entityId=:id");
         query.bindValue(":id", id);
 
         if (query.exec() == false) {
@@ -149,7 +130,104 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
     }
     case TrackingRole::EventSummary:
     {
+        /*
+         * Algorithm:
+         * -
+         * - pack all data into Utility::createSummaryItem() and return
+         */
 
+        const int entityId = query().value("id").toInt();
+        const QString entityName(query().value("name").toString());
+        const int entityTypeId(query().value("typeId").toInt());
+        const Enums::PackageType entityType = CharcoalDbHelpers::getEntityType(
+            m_connectionName, entityTypeId);
+
+        QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+        q.prepare("SELECT id, typeId, userId, date, properties FROM Events WHERE entityId=:id");
+        q.bindValue(":id", entityId);
+
+        if (q.exec() == false) {
+            qWarning() << RED("Getting event details has failed!")
+                       << q.lastError().text() << "for query:" << q.lastQuery();
+            return {};
+        }
+
+        int eventCount = 0;
+        QString userId;
+        QVector<QJsonObject> properties;
+        while (q.next()) {
+            eventCount++;
+            if (userId.isEmpty()) {
+                userId = q.value("userId").toString();
+            }
+
+            properties.append(QJsonDocument::fromJson(q.value("properties").toString().toUtf8())
+                                  .object());
+        }
+
+        QVariantList result;
+        switch (entityType) {
+        case Enums::PackageType::Plot:
+        {
+            int parcelId = -1;
+            int villageId = -1;
+            int treeSpeciesId = -1;
+            qint64 beginningTimestamp = -1;
+            qint64 endingTimestamp = -1;
+
+            if (properties.isEmpty() == false) {
+                const auto &first = properties.at(0);
+                parcelId = first.value(Tags::webParcel).toInt(-1);
+                villageId = first.value(Tags::webVillage).toInt(-1);
+                treeSpeciesId = first.value(Tags::webTreeSpecies).toInt(-1);
+                beginningTimestamp = first.value(Tags::webEventDate).toVariant().toLongLong();
+
+                if (properties.length() > 1) {
+                    endingTimestamp = properties.at(1).value(Tags::webEventDate)
+                                          .toVariant().toLongLong();
+                }
+            }
+
+            QString parcel;
+            if (parcelId != -1) {
+                parcel = CharcoalDbHelpers::getParcelCode(m_connectionName, parcelId);
+            }
+
+            QString village;
+            if (villageId != -1) {
+                village = CharcoalDbHelpers::getVillageName(m_connectionName, villageId);
+            }
+
+            QString treeSpecies;
+            if (treeSpeciesId != -1) {
+                treeSpecies = CharcoalDbHelpers::getTreeSpeciesName(m_connectionName, treeSpeciesId);
+            }
+
+            result.append(Utility::instance().createSummaryItem(
+                tr("Plot ID"), entityName, "", "",
+                m_plotHighlightColor, m_plotTextColor, "",
+                Enums::DelegateType::Standard));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Malebi Rep's ID"), userId));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Parcel"), parcel));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Village"), village));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Beginning date"), dateString(beginningTimestamp)));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Ending date"), dateString(endingTimestamp)));
+            result.append(Utility::instance().createSummaryItem(
+                tr("Tree species"), treeSpecies));
+            break;
+        }
+        case Enums::PackageType::Harvest:
+        case Enums::PackageType::Transport:
+        default:
+            result.append(Utility::instance().createSummaryItem(
+                "default", "error"));
+        }
+        return result;
     }
     }
 
@@ -188,4 +266,9 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
     } else {
         emit error(tr("Error updating tracking information"));
     }
+}
+
+QString TrackingModel::dateString(const qint64 timestamp) const
+{
+    return QDateTime::fromSecsSinceEpoch(timestamp).toString(QStringLiteral("dd/MM/yyyy"));
 }

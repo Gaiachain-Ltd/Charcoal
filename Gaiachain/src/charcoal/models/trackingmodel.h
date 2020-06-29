@@ -3,6 +3,8 @@
 #include "querymodel.h"
 #include "common/enums.h"
 
+#include <QColor>
+
 class TrackingModel : public QueryModel
 {
     Q_OBJECT
@@ -29,12 +31,22 @@ protected slots:
     void webReplyHandler(const QJsonDocument &reply) override;
 
 private:
-    QHash<int, QByteArray> m_roleNames = {
+    QString dateString(const qint64 timestamp) const;
+
+    const QHash<int, QByteArray> m_roleNames = {
         { TrackingRole::Id, "eventId" },
         { TrackingRole::Name, "name" },
         { TrackingRole::Type, "type" },
         { TrackingRole::Events, "events" },
         { TrackingRole::EventSummary, "eventSummary" }
     };
+
+    const QColor m_plotTextColor = QColor("#2581EB");
+    const QColor m_harvestTextColor = QColor("#65CB00");
+    const QColor m_transportTextColor = QColor("#FF70F1");
+
+    const QColor m_plotHighlightColor = QColor("#EEF9FE");
+    const QColor m_harvestHighlightColor = QColor("#EBF1E6");
+    const QColor m_transportHighlightColor = QColor("#FFE8FD");
 };
 

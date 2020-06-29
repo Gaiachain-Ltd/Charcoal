@@ -155,6 +155,21 @@ int CharcoalDbHelpers::getSimpleInteger(const QString &connectionName,
     return result;
 }
 
+QString CharcoalDbHelpers::getParcelCode(const QString &connectionName, const int id)
+{
+    return getSimpleString(connectionName, "Parcels", "id", id, "code", true);
+}
+
+QString CharcoalDbHelpers::getVillageName(const QString &connectionName, const int id)
+{
+    return getSimpleString(connectionName, "Villages", "id", id, "name", true);
+}
+
+QString CharcoalDbHelpers::getTreeSpeciesName(const QString &connectionName, const int id)
+{
+    return getSimpleString(connectionName, "TreeSpecies", "id", id, "name", true);
+}
+
 QString CharcoalDbHelpers::getOvenLetter(const QString &connectionName, const int ovenId)
 {
     return getSimpleString(connectionName, "Ovens", "id", ovenId, "name");
@@ -168,6 +183,22 @@ QString CharcoalDbHelpers::getEventType(const QString &connectionName, const int
 QString CharcoalDbHelpers::getEntityName(const QString &connectionName, const int entityId)
 {
     return getSimpleString(connectionName, "Entities", "id", entityId, "name");
+}
+
+Enums::PackageType CharcoalDbHelpers::getEntityType(const QString &connectionName,
+                                                    const int typeId)
+{
+    const QString type(getSimpleString(connectionName, "EntityTypes",
+                                       "id", typeId, "name", true).toLower());
+    if (type == QStringLiteral("plot")) {
+        return Enums::PackageType::Plot;
+    } else if (type == QStringLiteral("harvest")) {
+        return Enums::PackageType::Harvest;
+    } else if (type == QStringLiteral("transport")) {
+        return Enums::PackageType::Transport;
+    }
+
+    return Enums::PackageType::Unknown;
 }
 
 QString CharcoalDbHelpers::getSimpleString(const QString &connectionName,

@@ -70,6 +70,8 @@ namespace Tags {
     const QLatin1String webPlateNumber = QLatin1String("plate_number");
     const QLatin1String webDocuments = QLatin1String("documents_photos");
     const QLatin1String webReceipts = QLatin1String("receipt_photos");
+    const QLatin1String webParcel = QLatin1String("parcel");
+    const QLatin1String webVillage = QLatin1String("village");
     const QLatin1String documents = QLatin1String("documents");
     const QLatin1String receipts = QLatin1String("receipts");
     const QLatin1String document = QLatin1String("document");
