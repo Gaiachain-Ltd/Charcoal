@@ -52,25 +52,18 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
     }
     case TrackingRole::Events:
     {
-        // TODO: rewrite to use Entity, Event, Oven structs!
+        Entity entity;
+        entity.id = query().value("id").toInt();
+        entity.parent = query().value("parent").toInt();
+        entity.typeId = query().value("typeId").toInt();
+        entity.name = query().value("name").toString();
+        const QVector<Event> events = entity.loadEvents(m_connectionName);
 
-        const QString id(query().value("id").toString());
-        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("SELECT id, typeId, userId, eventDate, properties FROM Events WHERE entityId=:id");
-        query.bindValue(":id", id);
+        QVariantList result;
 
-        if (query.exec() == false) {
-            qWarning() << RED("Getting event details has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
-            return {};
-        }
-
-        QVariantList events;
-        while (query.next()) {
-            const QDate date(query.value("eventDate").toDate());
-            Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
-                m_connectionName, query.value("typeId").toInt());
-
+        for (const Event &event : events) {
+            const auto action = CharcoalDbHelpers::actionById(m_connectionName,
+                                                              event.typeId);
             QString name;
             switch (action) {
             case Enums::SupplyChainAction::LoggingBeginning:
@@ -80,62 +73,38 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                 name = tr("Logging has ended");
                 break;
             case Enums::SupplyChainAction::CarbonizationBeginning:
+            {
+                const Oven oven = event.loadOven(m_connectionName);
+                name = tr("Oven %1 - carbonization has begun").arg(oven.name);
+            }
+            break;
             case Enums::SupplyChainAction::CarbonizationEnding:
             {
-                const bool isBeginning = action == Enums::SupplyChainAction::CarbonizationBeginning;
-                const QString begin(tr("Oven %1 - carbonization has begun"));
-                const QString end(tr("Oven %1 - carbonization has ended"));
-                const QString eventId(query.value("id").toString());
-                const QString ovenQuery("SELECT name FROM Ovens WHERE %1=:eventId");
-
-                QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-                if (isBeginning) {
-                    q.prepare(ovenQuery.arg("carbonizationBeginning"));
-                } else {
-                    q.prepare(ovenQuery.arg("carbonizationEnding"));
-
-                }
-                q.bindValue(":eventId", eventId);
-
-                if (q.exec() == false) {
-                    qWarning() << RED("Getting oven name has failed!")
-                               << q.lastError().text() << "for query:" << q.lastQuery();
-                    return {};
-                }
-
-                q.next();
-                const QString ovenName(q.value("name").toString());
-                if (isBeginning) {
-                    name = begin.arg(ovenName);
-                } else {
-                    name = end.arg(ovenName);
-                }
+                const Oven oven = event.loadOven(m_connectionName);
+                name = tr("Oven %1 - carbonization has ended").arg(oven.name);
             }
-                break;
+            break;
             case Enums::SupplyChainAction::LoadingAndTransport:
             {
-                const QByteArray propertiesString(query.value("properties").toByteArray());
-                const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-                const QVariantMap properties(propertiersJson.toVariant().toMap());
                 name = tr("Bags have been loaded on truck %1")
-                           .arg(properties.value(Tags::webPlateNumber).toString());
+                           .arg(event.properties.value(Tags::webPlateNumber).toString());
             }
-                break;
+            break;
             case Enums::SupplyChainAction::Reception:
                 name = tr("Reception at storage facility");
                 break;
             default: name = QString();
             }
 
-            const QVariantMap event {
+            const QVariantMap row {
                 { "eventName", name },
-                { "date", date.toString("dd/MM/yyyy") }
+                { "date", event.date }
             };
 
-            events.append(event);
+            result.append(row);
         }
 
-        return events;
+        return result;
     }
     case TrackingRole::EventSummary:
     {
@@ -505,7 +474,7 @@ QVector<TrackingModel::Event> TrackingModel::Entity::loadEvents(
     const QString &connectionName) const
 {
     QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
-    q.prepare("SELECT id, typeId, userId, eventDate, properties FROM Events "
+    q.prepare("SELECT id, typeId, userId, eventDate, date, properties FROM Events "
               "WHERE entityId=:id");
     q.bindValue(":id", id);
 
@@ -522,6 +491,7 @@ QVector<TrackingModel::Event> TrackingModel::Entity::loadEvents(
         event.typeId = q.value("typeId").toInt();
         event.userId = q.value("userId").toString();
         event.date = q.value("eventDate").toLongLong();
+        event.timestamp = q.value("date").toLongLong();
         event.properties = QJsonDocument::fromJson(
                                q.value("properties").toString().toLatin1())
                                .object();

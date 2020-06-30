@@ -50,7 +50,8 @@ public:
         int id = -1;
         int typeId = -1;
         QString userId;
-        qint64 date;
+        qint64 timestamp = -1;
+        qint64 date = -1;
         QJsonObject properties;
 
         Oven loadOven(const QString &connectionName) const;
