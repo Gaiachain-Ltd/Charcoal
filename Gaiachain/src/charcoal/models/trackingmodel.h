@@ -5,8 +5,11 @@
 
 #include <QColor>
 #include <QPointer>
+#include <QVariantList>
+#include <QJsonObject>
 
 class PicturesManager;
+class TrackingModel;
 
 class TrackingModel : public QueryModel
 {
@@ -22,12 +25,57 @@ public:
     };
     Q_ENUM(TrackingRole)
 
+    struct Event;
+    struct Oven {
+        int id = -1;
+        int typeId = -1;
+        int plotId = -1;
+        int carbonizationBeginningId = -1;
+        int carbonizationEndingId = -1;
+        qint64 carbonizationBeginning = -1;
+        qint64 carbonizationEnding = -1;
+        QString name;
+        float height = -1.0;
+        float width = -1.0;
+        float length = -1.0;
+
+        QString carbonizerId;
+
+        float volume() const { return height * width * length; }
+
+        void updateDates(const Oven &other, const Event &otherEvent);
+    };
+
+    struct Event {
+        int id = -1;
+        int typeId = -1;
+        QString userId;
+        qint64 date;
+        QJsonObject properties;
+
+        Oven loadOven(const QString &connectionName) const;
+    };
+
+    struct Entity {
+        int id = -1;
+        int parent = -1;
+        int typeId = -1;
+        QString name;
+
+        bool loadFromDb(const QString &connectionName, const int id);
+        QVector<Event> loadEvents(const QString &connectionName) const;
+    };
+
     explicit TrackingModel(QObject *parent = nullptr);
 
     void setPicturesManager(PicturesManager *manager);
 
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
+
+    QVariantList summaryForPlot(const Entity entity, const QVector<Event> &events) const;
+    QVariantList summaryForHarvest(const Entity entity, const QVector<Event> &events) const;
+    QVariantList summaryForTransport(const Entity entity, const QVector<Event> &events) const;
 
 public slots:
     void refreshWebData() override;

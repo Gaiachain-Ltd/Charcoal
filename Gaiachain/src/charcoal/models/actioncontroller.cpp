@@ -60,7 +60,7 @@ QString ActionController::generateTransportId(const QString &harvestId,
 
 QString ActionController::getPlotId(const QString &packageId)
 {
-    return CharcoalDbHelpers::getPlotId(packageId);
+    return CharcoalDbHelpers::getPlotName(packageId);
 }
 
 QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
@@ -122,7 +122,7 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
 
 int ActionController::nextTransportNumber(const QString &harvestId) const
 {
-    const QString plotId(CharcoalDbHelpers::getPlotId(harvestId));
+    const QString plotId(CharcoalDbHelpers::getPlotName(harvestId));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
     const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
 
@@ -224,7 +224,7 @@ int ActionController::registeredTrucksCount(const QString &transportId) const
 
 int ActionController::registeredTrucksTotal(const QString &transportId) const
 {
-    const QString plotId(CharcoalDbHelpers::getPlotId(transportId));
+    const QString plotId(CharcoalDbHelpers::getPlotName(transportId));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
     const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
 
@@ -690,7 +690,7 @@ void ActionController::registerLoadingAndTransport(
     // First, insert a new Entity into table
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
-        m_dbConnName, CharcoalDbHelpers::getPlotId(transportId)));
+        m_dbConnName, CharcoalDbHelpers::getPlotName(transportId)));
     const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, harvestId));
     const int webHarvestId(
         CharcoalDbHelpers::getWebPackageId(m_dbConnName, harvestEntity));

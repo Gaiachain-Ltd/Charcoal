@@ -14,12 +14,12 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-QString CharcoalDbHelpers::getPlotId(const QString &packageId)
+QString CharcoalDbHelpers::getPlotName(const QString &packageName)
 {
-        const QStringList parts(packageId.split(sep));
+    const QStringList parts(packageName.split(sep));
 
     if (parts.length() < 3) {
-        qWarning() << RED("Invalid ID passed to getPlotId") << packageId;
+        qWarning() << RED("Invalid ID passed to getPlotId") << packageName;
         return QString();
     }
 

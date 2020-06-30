@@ -38,7 +38,7 @@ void MinimumDateModel::setPlotId(const QString &id)
     if (m_plotId.isEmpty()) {
         setDbQuery(QString());
     } else {
-        const QString plotName(CharcoalDbHelpers::getPlotId(id));
+        const QString plotName(CharcoalDbHelpers::getPlotName(id));
         const QString parentId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotName));
 
         setDbQuery(QString("SELECT date "
