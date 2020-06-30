@@ -37,6 +37,7 @@ public:
     Q_INVOKABLE QStringList receipts() const;
 
     Q_INVOKABLE void resetCurrentPictures();
+    Q_INVOKABLE void cleanUpWaitingPictures() const;
 
     QStringList moveToCache(const QVariantList &photos) const;
     QStringList moveToCache(const QStringList &photos) const;
@@ -52,7 +53,6 @@ public:
 private:
     void prepareDirectories() const;
     void savePhoto(const QString &path, const PicturesManager::PictureType type) const;
-    void cleanUp() const;
     QStringList photosOfType(const PicturesManager::PictureType type) const;
 
     const QString m_base = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);

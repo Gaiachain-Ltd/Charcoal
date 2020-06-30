@@ -68,6 +68,9 @@ QStringList PicturesManager::receipts() const
     return photosOfType(PicturesManager::PictureType::Receipt);
 }
 
+/*!
+ * Resets current "selection" of pictures - used by TickMarkIconProvider.
+ */
 void PicturesManager::resetCurrentPictures()
 {
     m_currentDocuments.clear();
@@ -161,7 +164,7 @@ void PicturesManager::savePhoto(const QString &path,
     }
 }
 
-void PicturesManager::cleanUp() const
+void PicturesManager::cleanUpWaitingPictures() const
 {
     // TODO: remove only files from m_path, not subdirs!
     QDir(m_path).removeRecursively();

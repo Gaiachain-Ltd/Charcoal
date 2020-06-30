@@ -34,7 +34,10 @@ Pages.SupplyChainPageBase {
                            /*&& documents.length > 0
                            && receipts.length > 0*/)
 
-    Component.onCompleted: refreshData()
+    Component.onCompleted: {
+        picturesManager.cleanUpWaitingPictures()
+        refreshData()
+    }
 
     function refreshData() {
         dataManager.minimumDateModel.plotId = ""
