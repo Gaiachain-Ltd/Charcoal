@@ -167,11 +167,12 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
+    // TODO: event web ID is different than entity web ID!!! FIX IT!
     query.prepare("UPDATE Events "
                   "SET isCommitted=1, webId=:eventWebId "
-                  "WHERE id=:eventId AND isComitted=0");
+                  "WHERE date=:timestamp");
     query.bindValue(":eventWebId", eventWebId);
-    query.bindValue(":eventId", eventId);
+    query.bindValue(":timestamp", timestamp);
 
     if (query.exec()) {
         if (updateEntityWebId(eventWebId, eventId) == false) {
@@ -227,7 +228,8 @@ bool EventsSender::updateEntityWebId(const qint64 webId, const QString &eventId)
 {
     QString result;
     const QString queryString(QString("UPDATE Entities SET webId=%1 "
-                                      "WHERE id IN (SELECT entityId FROM Events WHERE id=%2)")
+                                      "WHERE id IN (SELECT entityId FROM Events "
+                                      "WHERE id=%2)")
                                   .arg(webId).arg(eventId));
 
     QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
