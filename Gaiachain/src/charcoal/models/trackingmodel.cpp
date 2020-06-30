@@ -249,8 +249,6 @@ QVariantList TrackingModel::summaryForHarvest(
     const TrackingModel::Entity entity,
     const QVector<TrackingModel::Event> &events) const
 {
-    Q_UNUSED(events)
-
     const auto &utility = Utility::instance();
 
     QVariantList result;
@@ -283,8 +281,8 @@ QVariantList TrackingModel::summaryForHarvest(
         QString(),
         plotValue.toList(),
         QString(), QString(),
-        m_plotHighlightColor, m_plotTextColor, QString()
-        ));
+        m_plotHighlightColor, m_plotTextColor, QString(),
+        Enums::DelegateType::ColumnStack));
 
     // TODO: collapsible oven summary!
 
