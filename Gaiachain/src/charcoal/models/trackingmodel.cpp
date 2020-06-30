@@ -539,9 +539,8 @@ TrackingModel::Oven TrackingModel::Event::loadOven(const QString &connectionName
               "name, "
               "oven_height, oven_width, oven_length "
               "FROM Ovens "
-              "WHERE carbonizationBeginning=:idB OR carbonizationEnding=:idE");
-    q.bindValue(":idB", id);
-    q.bindValue(":idE", id);
+              "WHERE carbonizationBeginning=:id OR carbonizationEnding=:id");
+    q.bindValue(":id", id);
 
     if (q.exec() == false || q.next() == false) {
         qWarning() << RED("Getting oven details has failed!")
