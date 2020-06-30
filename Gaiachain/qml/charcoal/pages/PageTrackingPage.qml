@@ -112,63 +112,6 @@ Pages.GPage {
             Layout.fillHeight: true
 
             model: dataManager.trackingModel
-
-//                } else if (type === Enums.PackageType.Harvest) {
-//                    summaryTitle = Strings.harvestIdDetails
-//                    summary = [
-//                        Utility.createSummaryItem(Strings.harvestId,
-//                                          item.title,
-//                                          "", "",
-//                                          GStyle.delegateHighlightColor2,
-//                                          GStyle.fontHighlightColor2,
-//                                          "",
-//                                          Enums.DelegateType.Standard),
-//                        Utility.createSummaryItem("",
-//                                          [
-//                                              [ Strings.plotId ],
-//                                              [ "AM003PM/0595112/04-03-2020" ],
-//                                              [ GStyle.loupeUrl ],
-//                                              [
-//                                                  [
-//                                                      Enums.Page.SupplyChainSummary,
-//                                                      [
-//                                                          "title", Strings.plotIdDetails,
-//                                                          "proceedButtonVisible", false,
-//                                                          "summary", plotSummary
-//                                                      ]
-//                                                  ]
-//                                              ]
-//                                          ],
-//                                          "", "",
-//                                          GStyle.delegateHighlightColor,
-//                                          GStyle.fontHighlightColor,
-//                                          "",
-//                                          Enums.DelegateType.ColumnStack),
-//                        // TODO: Collapsible delegate... ugh!
-//                        Utility.createSummaryItem(Strings.beginningDate,
-//                                          item.from),
-//                        Utility.createSummaryItem(Strings.endingDate,
-//                                          item.to),
-//                        Utility.createSummaryItem(Strings.carbonizerId,
-//                                          "AM004NA"),
-//                        Utility.createSummaryItem(Strings.ovenDimensions,
-//                                          [
-//                                              [
-//                                                  Strings.height,
-//                                                  Strings.length,
-//                                                  Strings.width
-//                                              ],
-//                                              [ 0.2, 12.0, 4.0 ]
-//                                          ],
-//                                          "", "",
-//                                          "", "", "",
-//                                          Enums.DelegateType.Row),
-//                        Utility.createSummaryItem(Strings.timberVolume,
-//                                          "12 m3"),
-
-//                    ]
-
-
         }
     }
 }

@@ -52,9 +52,11 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
     }
     case TrackingRole::Events:
     {
+        // TODO: rewrite to use Entity, Event, Oven structs!
+
         const QString id(query().value("id").toString());
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("SELECT id, typeId, userId, date, properties FROM Events WHERE entityId=:id");
+        query.prepare("SELECT id, typeId, userId, eventDate, properties FROM Events WHERE entityId=:id");
         query.bindValue(":id", id);
 
         if (query.exec() == false) {
@@ -65,7 +67,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 
         QVariantList events;
         while (query.next()) {
-            const QDate date(query.value("date").toDate());
+            const QDate date(query.value("eventDate").toDate());
             Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
                 m_connectionName, query.value("typeId").toInt());
 
@@ -153,8 +155,6 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 
         const QVector<Event> events = entity.loadEvents(m_connectionName);
 
-        const auto &utility = Utility::instance();
-
         QVariantList result;
         switch (entityType) {
         case Enums::PackageType::Plot:
@@ -167,7 +167,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
             result = summaryForTransport(entity, events);
             break;
         default:
-            result.append(utility.createSummaryItem(
+            result.append(Utility::instance().createSummaryItem(
                 "default", "error"));
         }
         return result;
@@ -331,7 +331,7 @@ QVariantList TrackingModel::summaryForHarvest(
             QString(), QString(), QString(), QString(), QString(),
             Enums::DelegateType::Row));
         result.append(utility.createSummaryItem(
-            tr("Timber volume"), QString("%1 \uC2B3").arg(oven.volume())
+            tr("Timber volume"), QString("%1 m³").arg(oven.volume())
             ));
     }
 
@@ -448,6 +448,7 @@ QVariantList TrackingModel::summaryForTransport(
 void TrackingModel::refreshWebData()
 {
     // TODO: limit amount of data with canFetchMore() etc.
+    // TODO: populate more data periodically (package details!)
     const auto request = QSharedPointer<BaseRequest>::create(
         "/entities/packages/",
         BaseRequest::Type::Get);
@@ -481,21 +482,21 @@ QString TrackingModel::dateString(const qint64 timestamp) const
 
 bool TrackingModel::Entity::loadFromDb(const QString &connectionName, const int id)
 {
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
-    query.prepare("SELECT id, typeId, name, parent, webId FROM Entities "
+    QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
+    q.prepare("SELECT id, typeId, name, parent, webId FROM Entities "
                   "WHERE id=:id");
-    query.bindValue(":id", id);
+    q.bindValue(":id", id);
 
-    if (query.exec() && query.next()) {
-        this->id = query.value("id").toInt();
-        parent = query.value("parent").toInt();
-        typeId = query.value("typeId").toInt();
-        name = query.value("name").toString();
+    if (q.exec() && q.next()) {
+        this->id = q.value("id").toInt();
+        parent = q.value("parent").toInt();
+        typeId = q.value("typeId").toInt();
+        name = q.value("name").toString();
         return true;
     } else {
         qWarning() << "Could not load Entity from DB"
-                   << "SQL error:" << query.lastError()
-                   << "For query:" << query.lastQuery()
+                   << "SQL error:" << q.lastError()
+                   << "For query:" << q.lastQuery()
                    << id;
     }
 
@@ -505,26 +506,28 @@ bool TrackingModel::Entity::loadFromDb(const QString &connectionName, const int 
 QVector<TrackingModel::Event> TrackingModel::Entity::loadEvents(
     const QString &connectionName) const
 {
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
-    query.prepare("SELECT id, typeId, userId, date, properties FROM Events WHERE entityId=:id");
-    query.bindValue(":id", id);
+    QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
+    q.prepare("SELECT id, typeId, userId, eventDate, properties FROM Events "
+              "WHERE entityId=:id");
+    q.bindValue(":id", id);
 
-    if (query.exec() == false) {
+    if (q.exec() == false) {
         qWarning() << RED("Getting event details has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+                   << q.lastError().text() << "for query:" << q.lastQuery();
         return {};
     }
 
     QVector<Event> events;
-    while (query.next()) {
+    while (q.next()) {
         Event event;
-        event.id = query.value("id").toInt();
-        event.typeId = query.value("typeId").toInt();
-        event.userId = query.value("userId").toString();
-        event.date = query.value("date").toLongLong();
+        event.id = q.value("id").toInt();
+        event.typeId = q.value("typeId").toInt();
+        event.userId = q.value("userId").toString();
+        event.date = q.value("eventDate").toLongLong();
         event.properties = QJsonDocument::fromJson(
-                               query.value("properties").toString().toUtf8())
+                               q.value("properties").toString().toLatin1())
                                .object();
+        events.append(event);
     }
 
     return events;
@@ -532,37 +535,39 @@ QVector<TrackingModel::Event> TrackingModel::Entity::loadEvents(
 
 TrackingModel::Oven TrackingModel::Event::loadOven(const QString &connectionName) const
 {
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
-    query.prepare("SELECT id, type, plot, "
-                  "carbonizationBeginning, carbonizationEnding, "
-                  "name, "
-                  "oven_height, oven_width, oven_length "
-                  "FROM Ovens "
-                  "WHERE carbonizationBeginning=:id OR carbonizationEnding=:id");
-    query.bindValue(":id", id);
+    QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
+    q.prepare("SELECT id, type, plot, "
+              "carbonizationBeginning, carbonizationEnding, "
+              "name, "
+              "oven_height, oven_width, oven_length "
+              "FROM Ovens "
+              "WHERE carbonizationBeginning=:idB OR carbonizationEnding=:idE");
+    q.bindValue(":idB", id);
+    q.bindValue(":idE", id);
 
-    if (query.exec() == false || query.next()) {
+    if (q.exec() == false || q.next() == false) {
         qWarning() << RED("Getting oven details has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+                   << q.lastError().text() << "for query:" << q.lastQuery() << id;
         return {};
     }
 
     Oven oven;
-    oven.id = query.value("id").toInt();
-    oven.typeId = query.value("typeId").toInt();
-    oven.plotId = query.value("plotId").toInt();
-    oven.name = query.value("name").toString();
-    oven.height = query.value("oven_height").toReal();
-    oven.width = query.value("oven_width").toReal();
-    oven.length = query.value("oven_length").toReal();
+    oven.id = q.value("id").toInt();
+    oven.typeId = q.value("type").toInt();
+    oven.plotId = q.value("plot").toInt();
+    oven.name = q.value("name").toString();
+    oven.height = q.value("oven_height").toReal();
+    oven.width = q.value("oven_width").toReal();
+    oven.length = q.value("oven_length").toReal();
+    oven.carbonizerId = userId;
 
-    const QVariant beginningEvent(query.value("carbonizationBeginning"));
+    const QVariant beginningEvent(q.value("carbonizationBeginning"));
     if (beginningEvent.isValid() && beginningEvent.toInt() == id) {
         oven.carbonizationBeginningId = id;
         oven.carbonizationBeginning = date;
     }
 
-    const QVariant endingEvent(query.value("carbonizationEnding"));
+    const QVariant endingEvent(q.value("carbonizationEnding"));
     if (endingEvent.isValid() && endingEvent.toInt() == id) {
         oven.carbonizationEndingId = id;
         oven.carbonizationEnding = date;
