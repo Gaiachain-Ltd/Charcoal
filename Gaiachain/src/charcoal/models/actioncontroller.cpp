@@ -60,7 +60,7 @@ QString ActionController::generateTransportId(const QString &harvestId,
 
 QString ActionController::getPlotId(const QString &packageId)
 {
-    return CharcoalDbHelpers::getPlotId(packageId)   ;
+    return CharcoalDbHelpers::getPlotId(packageId);
 }
 
 QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
@@ -196,8 +196,8 @@ int ActionController::scannedBagsTotal(const QString &transportId) const
 
 int ActionController::registeredTrucksCount(const QString &transportId) const
 {
-    const int plotId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
-    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
+    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(
+        m_dbConnName, transportId));
     const int receptionTypeId(CharcoalDbHelpers::getEventTypeId(
         m_dbConnName, Enums::SupplyChainAction::Reception));
 
@@ -206,11 +206,9 @@ int ActionController::registeredTrucksCount(const QString &transportId) const
     // It's a bit "hacky" we count only Reception events, that gives us number
     // of events where transport has left but not arrived yet.
     query.prepare("SELECT COUNT(id) FROM Events WHERE typeId=:receptionTypeId "
-                  "AND entityId IN (SELECT id FROM Entities WHERE parent=:plotId "
-                  "AND typeId=:transportTypeId)");
+                  "AND entityId=:transportEntityId");
     query.bindValue(":receptionTypeId", receptionTypeId);
-    query.bindValue(":plotId", plotId);
-    query.bindValue(":transportTypeId", transportTypeId);
+    query.bindValue(":transportEntityId", transportEntityId);
 
     if (query.exec() == false) {
         qWarning() << RED("Getting number of received trucks has failed!")
@@ -935,18 +933,16 @@ QString ActionController::propertiesToString(const QVariantMap &properties) cons
 int ActionController::scannedBagsForAction(const QString &transportId,
                                            const Enums::SupplyChainAction action) const
 {
-    const int plotId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
-    const int entityTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
+    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(
+        m_dbConnName, transportId));
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, action));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
     query.prepare("SELECT properties FROM Events WHERE typeId=:eventTypeId "
-                  "AND entityId IN (SELECT id FROM Entities WHERE parent=:plotId "
-                  "AND typeId=:entityTypeId)");
+                  "AND entityId=:transportEntityId");
     query.bindValue(":eventTypeId", eventTypeId);
-    query.bindValue(":plotId", plotId);
-    query.bindValue(":entityTypeId", entityTypeId);
+    query.bindValue(":transportEntityId", transportEntityId);
 
     if (query.exec() == false) {
         qWarning() << RED("Getting total number of bags has failed!")

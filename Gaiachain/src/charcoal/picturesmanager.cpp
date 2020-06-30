@@ -166,8 +166,11 @@ void PicturesManager::savePhoto(const QString &path,
 
 void PicturesManager::cleanUpWaitingPictures() const
 {
-    // TODO: remove only files from m_path, not subdirs!
-    QDir(m_path).removeRecursively();
+    const QDir picturesDir(m_path);
+    const QStringList files(picturesDir.entryList(QDir::Files | QDir::NoDotAndDotDot));
+    for (const QString &file : files) {
+        QFile::remove(file);
+    }
 }
 
 QStringList PicturesManager::photosOfType(const PicturesManager::PictureType type) const
