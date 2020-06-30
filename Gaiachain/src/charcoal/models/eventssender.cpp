@@ -169,7 +169,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     query.prepare("UPDATE Events "
                   "SET isCommitted=1, webId=:eventWebId "
-                  "WHERE id=:eventId");
+                  "WHERE id=:eventId AND isComitted=0");
     query.bindValue(":eventWebId", eventWebId);
     query.bindValue(":eventId", eventId);
 
