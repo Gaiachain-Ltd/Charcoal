@@ -550,6 +550,8 @@ void ActionController::registerCarbonizationBeginning(
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
                         { Tags::webPlotId, webPlotId },
                         { Tags::webOvenId, ovenId }
+                        // TODO: ADD DIMS!
+//"properties": {"oven_type": 1, "beginning_date": 14, "plot_id": 2, "oven_id": "A", "oven_height": 1, "oven_width": 1, "oven_length": 1},
                     }));
 
     if (query.exec() == false) {

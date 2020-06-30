@@ -512,9 +512,13 @@ TrackingModel::Oven TrackingModel::Event::loadOven(const QString &connectionName
               "WHERE carbonizationBeginning=:id OR carbonizationEnding=:id");
     q.bindValue(":id", id);
 
-    if (q.exec() == false || q.next() == false) {
+    if (q.exec() == false) {
         qWarning() << RED("Getting oven details has failed!")
                    << q.lastError().text() << "for query:" << q.lastQuery() << id;
+        return {};
+    }
+
+    if (q.next() == false) {
         return {};
     }
 
