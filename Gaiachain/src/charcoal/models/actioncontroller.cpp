@@ -532,6 +532,29 @@ void ActionController::registerCarbonizationBeginning(
         qWarning() << RED("Event Type ID not found!");
         return;
     }
+
+    // Get proper oven dimensions
+    QVariantList dimensions;
+    const int ovenTypeInt = ovenType.toInt();
+    if (ovenTypeInt == 2) {
+        dimensions = defaultOvenDimensions(ovenTypeInt);
+    } else {
+        dimensions = ovenDimensions;
+    }
+
+    QVariantMap properties {
+        { Tags::webOvenType, ovenType },
+        { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
+        { Tags::webPlotId, webPlotId },
+        { Tags::webOvenId, ovenId }
+    };
+
+    if (ovenTypeInt != 2) {
+        properties.insert(Tags::webOvenHeight, dimensions.at(0));
+        properties.insert(Tags::webOvenLength, dimensions.at(1));
+        properties.insert(Tags::webOvenWidth, dimensions.at(2));
+    }
+
     query.prepare("INSERT INTO Events (entityId, typeId, userId, "
                   "date, eventDate, locationLatitude, locationLongitude, "
                   "properties, isCommitted) "
@@ -544,29 +567,12 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-    query.bindValue(":properties",
-                    propertiesToString(QVariantMap {
-                        { Tags::webOvenType, ovenType },
-                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
-                        { Tags::webPlotId, webPlotId },
-                        { Tags::webOvenId, ovenId }
-                        // TODO: ADD DIMS!
-//"properties": {"oven_type": 1, "beginning_date": 14, "plot_id": 2, "oven_id": "A", "oven_height": 1, "oven_width": 1, "oven_length": 1},
-                    }));
+    query.bindValue(":properties", propertiesToString(properties));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
-    }
-
-    // Get proper oven dimensions
-    QVariantList dimensions;
-    const int ovenTypeInt = ovenType.toInt();
-    if (ovenTypeInt == 2) {
-        dimensions = defaultOvenDimensions(ovenTypeInt);
-    } else {
-        dimensions = ovenDimensions;
     }
 
     // Insert new oven into Ovens table
