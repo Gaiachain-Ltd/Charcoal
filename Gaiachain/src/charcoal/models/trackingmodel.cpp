@@ -27,7 +27,8 @@ TrackingModel::TrackingModel(QObject *parent) : QueryModel(parent)
     m_updateTimer.setSingleShot(false);
 
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, typeId, name, parent, webId FROM Entities");
+    setDbQuery("SELECT id, typeId, name, parent, webId FROM Entities "
+               "ORDER BY id DESC");
 }
 
 void TrackingModel::setPicturesManager(PicturesManager *manager)
@@ -102,7 +103,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 
             const QVariantMap row {
                 { "eventName", name },
-                { "date", event.date }
+                { "date", dateString(event.date) }
             };
 
             result.append(row);
@@ -469,12 +470,12 @@ QString TrackingModel::dateString(const qint64 timestamp) const
 void TrackingModel::startPackageDetailsUpdate()
 {
     QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-    q.prepare("SELECT DISTINCT webId FROM Events "
+    q.prepare("SELECT DISTINCT parentWebId FROM Events "
               "WHERE properties IS NULL");
 
     if (q.exec()) {
         while (q.next()) {
-            const int webId = q.value("webId").toInt();
+            const int webId = q.value("parentWebId").toInt();
             const QString url(QString("/entities/packages/%1/get_package_details/")
                                   .arg(webId));
 

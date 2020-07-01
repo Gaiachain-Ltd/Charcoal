@@ -52,6 +52,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`typeId` INTEGER NOT NULL, `userId` TEXT NOT NULL, "
                 // This is the package_id we get returned from Web server
                 "`webId` INTEGER, "
+                "`parentWebId` INTEGER, "
                 // Date is the timestamp. eventDate is the event date chosen by user
                 "`date` INTEGER NOT NULL, `eventDate` INTEGER NOT NULL, "
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "

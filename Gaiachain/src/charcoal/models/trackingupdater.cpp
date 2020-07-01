@@ -49,31 +49,31 @@ bool TrackingUpdater::updateTable(const QJsonDocument &json) const
 bool TrackingUpdater::updateDetails(const QJsonDocument &json) const
 {
     const QJsonObject package(json.object());
-    const int webId(package.value("id").toInt(-1));
+    //const int webId(package.value("id").toInt(-1));
     const QString pid(package.value(Tags::pid).toString());
     const QJsonObject properties(package.value(Tags::properties).toObject());
 
     bool result = true;
     for (const QString &key : properties.keys()) {
         if (key == "logging_beginning") {
-            if (processDetailsLoggingBeginning(webId, properties.value(key).toObject()) == false) {
+            if (processDetailsLoggingBeginning(properties.value(key).toObject()) == false) {
                 result = false;
             }
         } else if (key == "logging_ending") {
-            if (processDetailsLoggingEnding(webId, properties.value(key).toObject()) == false) {
+            if (processDetailsLoggingEnding(properties.value(key).toObject()) == false) {
                 result = false;
             }
         } else if (key == "ovens") {
-            if (processDetailsOvens(webId, properties.value(key).toArray()) == false) {
+            if (processDetailsOvens(properties.value(key).toArray()) == false) {
                 result = false;
             }
         } else if (key == "loading_transport") {
             if (processDetailsLoadingAndTransport(
-                    webId, pid, properties.value(key).toObject()) == false) {
+                    pid, properties.value(key).toObject()) == false) {
                 result = false;
             }
         } else if (key == "reception") {
-            if (processDetailsReception(webId, properties.value(key).toObject()) == false) {
+            if (processDetailsReception(properties.value(key).toObject()) == false) {
                 result = false;
             }
         }
@@ -92,7 +92,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
     const int webId(object.value("id").toInt(-1));
     const QString pid(object.value(Tags::pid).toString());
     const QString webType(object.value("type").toString());
-    const auto type = packageType(webType);
+    const Enums::PackageType type = packageType(webType);
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_connectionName, type));
     const bool isReplanted(object.value("plot_has_replantation").toBool(false));
 
@@ -101,15 +101,27 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 
     int entityId = CharcoalDbHelpers::getEntityIdFromWebId(
         m_connectionName, webId, false);
-    const int parentEntityId = CharcoalDbHelpers::getEntityIdFromName(
-        m_connectionName, pid, false);
+
+    // Set proper parent
+    int parentEntityId = -1;
+    if (type == Enums::PackageType::Plot) {
+        parentEntityId = 0;
+    } else if (type == Enums::PackageType::Harvest) {
+        const QString ppid(CharcoalDbHelpers::getPlotName(pid));
+        parentEntityId = CharcoalDbHelpers::getEntityIdFromName(
+            m_connectionName, ppid, false);
+    } else if (type == Enums::PackageType::Transport) {
+        const QString ppid(CharcoalDbHelpers::getHarvestName(pid));
+        parentEntityId = CharcoalDbHelpers::getEntityIdFromName(
+            m_connectionName, ppid, false);
+    }
 
     if (entityId == -1) {
         // Entity does not exist in our DB - add it!
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("INSERT INTO Entities (typeId, name, parent, "
+        query.prepare("INSERT INTO Entities (typeId, name, parent, webId, "
                       "isFinished, isReplanted) "
-                      "VALUES (:typeId, :name, :parent, 0, :isReplanted)");
+                      "VALUES (:typeId, :name, :parent, :webId, 0, :isReplanted)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":name", pid);
         if (parentEntityId != -1) {
@@ -117,6 +129,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         } else {
             query.bindValue(":parent", 0);
         }
+        query.bindValue(":webId", webId);
         query.bindValue(":isReplanted", int(isReplanted));
 
         if (query.exec() == false) {
@@ -131,7 +144,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 
     for (int i = events.size() - 1; i >= 0; --i) {
         const QJsonObject event(events.at(i).toObject());
-        const int eventWebId(object.value("id").toInt(-1));
+        const int eventWebId(event.value("id").toInt(-1));
         const qint64 timestamp = event.value(Tags::timestamp).toVariant().toLongLong();
         const qint64 eventDate = event.value(Tags::webEventDate).toVariant().toLongLong();
         const QJsonArray location = event.value("location_display").toArray();
@@ -144,20 +157,23 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 
         if (eventId == -1) {
             QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-            query.prepare("INSERT INTO Events (entityId, typeId, userId, webId, "
+            query.prepare("INSERT INTO Events (entityId, typeId, userId, "
+                          "webId, parentWebId, "
                           "date, eventDate, locationLatitude, locationLongitude, "
                           "properties, isCommitted) "
-                          "VALUES (:entityId, :typeId, :userId, :eventWebId, "
+                          "VALUES (:entityId, :typeId, :userId, "
+                          ":eventWebId, :parentWebId, "
                           ":date, :eventDate, :locationLatitude, :locationLongitude, "
                           ":properties, 1)");
             query.bindValue(":entityId", entityId);
             query.bindValue(":typeId", eventTypeId);
             query.bindValue(":userId", userId);
             query.bindValue(":eventWebId", eventWebId);
+            query.bindValue(":parentWebId", webId);
             query.bindValue(":date", timestamp);
             query.bindValue(":eventDate", eventDate);
-            query.bindValue(":locationLatitude", location.at(0));
-            query.bindValue(":locationLongitude", location.at(1));
+            query.bindValue(":locationLatitude", location.at(0).toDouble());
+            query.bindValue(":locationLongitude", location.at(1).toDouble());
 
             if (query.exec() == false) {
                 qWarning() << RED("Inserting event has failed!")
@@ -170,12 +186,9 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
     return true;
 }
 
-bool TrackingUpdater::processDetailsLoggingBeginning(
-    const int webId, const QJsonObject &object) const
+bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) const
 {
-    const int typeId = CharcoalDbHelpers::getEventTypeId(
-        m_connectionName, Enums::SupplyChainAction::LoggingBeginning);
-
+    const int webId = object.value("id").toInt();
     const qint64 eventDate = object.value("beginning_date").toVariant().toLongLong();
     const int parcelId = object.value("parcel_id").toInt();
     const QString village(object.value("village").toString());
@@ -184,7 +197,7 @@ bool TrackingUpdater::processDetailsLoggingBeginning(
     const int treeSpeciesId = CharcoalDbHelpers::getTreeSpeciesId(
         m_connectionName, treeSpecies);
 
-    return updateEventDetails(webId, typeId,
+    return updateEventDetails(webId,
                               {
                                   { Tags::webParcel, parcelId },
                                   { Tags::webVillage, villageId },
@@ -193,49 +206,42 @@ bool TrackingUpdater::processDetailsLoggingBeginning(
                               });
 }
 
-bool TrackingUpdater::processDetailsLoggingEnding(
-    const int webId, const QJsonObject &object) const
+bool TrackingUpdater::processDetailsLoggingEnding(const QJsonObject &object) const
 {
-    const int typeId = CharcoalDbHelpers::getEventTypeId(
-        m_connectionName, Enums::SupplyChainAction::LoggingEnding);
-
+    const int webId = object.value("id").toInt();
     const qint64 eventDate = object.value("ending_date").toVariant().toLongLong();
     const int numberOfTrees = object.value("number_of_trees").toInt();
 
-    return updateEventDetails(webId, typeId,
+    return updateEventDetails(webId,
                               {
                                   { Tags::webNumberOfTrees, numberOfTrees },
                                   { Tags::webEventDate, eventDate }
                               });
 }
 
-bool TrackingUpdater::processDetailsOvens(
-    const int webId, const QJsonArray &array) const
+bool TrackingUpdater::processDetailsOvens(const QJsonArray &array) const
 {
-    Q_UNUSED(webId)
     Q_UNUSED(array)
 
     return true;
 }
 
-bool TrackingUpdater::processDetailsLoadingAndTransport(
-    const int webId, const QString &packageName, const QJsonObject &object) const
+bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageName,
+                                                        const QJsonObject &object) const
 {
-    const int typeId = CharcoalDbHelpers::getEventTypeId(
-        m_connectionName, Enums::SupplyChainAction::LoggingEnding);
-
     const QString harvestName(CharcoalDbHelpers::getHarvestName(packageName));
     const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(
         m_connectionName, harvestName));
     const int webHarvestId(
         CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
 
+    const int webId = object.value("id").toInt();
     const qint64 eventDate = object.value("loading_date").toVariant().toLongLong();
     const QString plateNumber = object.value("plate_number").toString();
     const int destinationId = object.value("destination_id").toInt();
     const QStringList scannedQrs(getQrCodes(object.value("bags").toArray()));
 
-    return updateEventDetails(webId, typeId,
+    return updateEventDetails(webId,
                               {
                                   { Tags::webHarvestId, webHarvestId },
                                   { Tags::webPlateNumber, plateNumber },
@@ -245,19 +251,16 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(
                               });
 }
 
-bool TrackingUpdater::processDetailsReception(
-    const int webId, const QJsonObject &object) const
+bool TrackingUpdater::processDetailsReception(const QJsonObject &object) const
 {
-    const int typeId = CharcoalDbHelpers::getEventTypeId(
-        m_connectionName, Enums::SupplyChainAction::LoggingEnding);
-
+    const int webId = object.value("id").toInt();
     const qint64 eventDate = object.value("reception_date").toVariant().toLongLong();
 
     const QStringList scannedQrs(getQrCodes(object.value("bags").toArray()));
     const QStringList docs(getImages(object.value("documents_photos").toArray()));
     const QStringList recs(getImages(object.value("receipt_photos").toArray()));
 
-    return updateEventDetails(webId, typeId,
+    return updateEventDetails(webId,
                               {
                                   { Tags::documents, docs },
                                   { Tags::receipts, recs },
@@ -266,15 +269,14 @@ bool TrackingUpdater::processDetailsReception(
                               });
 }
 
-bool TrackingUpdater::updateEventDetails(const int webId, const int typeId,
+bool TrackingUpdater::updateEventDetails(const int webId,
                                          const QVariantMap &properties) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
     query.prepare("UPDATE Events SET properties=:properties "
-                  "WHERE webId=:webId AND typeId=:typeId");
+                  "WHERE webId=:webId");
     query.bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
     query.bindValue(":webId", webId);
-    query.bindValue(":typeId", typeId);
 
     if (query.exec() == false) {
         qDebug() << RED("Updating details has failed")
@@ -283,7 +285,7 @@ bool TrackingUpdater::updateEventDetails(const int webId, const int typeId,
         return false;
     }
 
-    qDebug() << "Updating event" << webId << typeId << properties;
+    qDebug() << "Updating event" << webId << properties;
     return true;
 }
 

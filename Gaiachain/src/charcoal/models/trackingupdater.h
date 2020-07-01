@@ -24,16 +24,14 @@ private:
 
     bool processTrackingItem(const QJsonObject &object) const;
 
-    bool processDetailsLoggingBeginning(const int webId, const QJsonObject &object) const;
-    bool processDetailsLoggingEnding(const int webId, const QJsonObject &object) const;
-    bool processDetailsOvens(const int webId, const QJsonArray &array) const;
-    bool processDetailsLoadingAndTransport(const int webId,
-                                           const QString &packageName,
+    bool processDetailsLoggingBeginning(const QJsonObject &object) const;
+    bool processDetailsLoggingEnding(const QJsonObject &object) const;
+    bool processDetailsOvens(const QJsonArray &array) const;
+    bool processDetailsLoadingAndTransport(const QString &packageName,
                                            const QJsonObject &object) const;
-    bool processDetailsReception(const int webId, const QJsonObject &object) const;
+    bool processDetailsReception(const QJsonObject &object) const;
 
-    bool updateEventDetails(const int webId, const int typeId,
-                            const QVariantMap &properties) const;
+    bool updateEventDetails(const int webId, const QVariantMap &properties) const;
 
     QStringList getQrCodes(const QJsonArray &codes) const;
     QStringList getImages(const QJsonArray &images) const;
