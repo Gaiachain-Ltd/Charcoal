@@ -105,15 +105,16 @@ QStringList PicturesManager::moveToCache(const QStringList &photos) const
     return result;
 }
 
-void PicturesManager::checkFileIsCached(const QString &fileName)
+void PicturesManager::checkFileIsCached(const QString &path)
 {
     QDir cache(cachePath());
+    const QString fileName(QFileInfo(path).fileName());
     QStringList images = cache.entryList({ fileName },
         QDir::Files | QDir::NoDotAndDotDot);
 
     if (images.isEmpty()) {
-        qDebug() << "Image" << fileName << "is missing from cache. Fetching...";
-        emit fetchPhoto(fileName);
+        qDebug() << "Image" << path << "is missing from cache. Fetching...";
+        emit fetchPhoto(path);
     }
 }
 

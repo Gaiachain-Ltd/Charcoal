@@ -42,7 +42,7 @@ public:
     QStringList moveToCache(const QVariantList &photos) const;
     QStringList moveToCache(const QStringList &photos) const;
 
-    void checkFileIsCached(const QString &fileName);
+    void checkFileIsCached(const QString &path);
 
     static QString pictureTypeString(const PictureType type);
 

@@ -309,7 +309,7 @@ QStringList TrackingUpdater::getImages(const QJsonArray &images) const
         const QString fileName(QFileInfo(path).fileName());
 
         if (m_picturesManager) {
-            m_picturesManager->checkFileIsCached(fileName);
+            m_picturesManager->checkFileIsCached(path);
         }
 
         result.append(fileName);

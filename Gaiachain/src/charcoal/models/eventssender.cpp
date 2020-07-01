@@ -196,11 +196,11 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     }
 }
 
-void EventsSender::onFetchPhoto(const QString &fileName)
+void EventsSender::onFetchPhoto(const QString &path)
 {
-    qDebug() << "Fetch photo:" << fileName;
+    qDebug() << "Fetch photo:" << path;
     const auto request = QSharedPointer<ImageRequest>::create(
-        fileName, m_picturesManager->cachePath());
+        path, m_picturesManager->cachePath());
 
     if (m_userManager->isLoggedIn()) {
         m_sessionManager->sendRequest(request);

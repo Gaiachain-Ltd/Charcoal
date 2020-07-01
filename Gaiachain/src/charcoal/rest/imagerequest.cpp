@@ -3,34 +3,30 @@
 #include "common/globals.h"
 #include "common/logs.h"
 
-#include <QDateTime>
 #include <QFile>
+#include <QFileInfo>
 
-ImageRequest::ImageRequest(const QString &fileName, const QString &cachePath)
-    : BaseRequest("/media/photos", BaseRequest::Type::Get, QString()),
-      mFileName(fileName),
+ImageRequest::ImageRequest(const QString &filePath, const QString &cachePath)
+    : BaseRequest(filePath, BaseRequest::Type::Get, QString()),
       mCachePath(cachePath)
 {
-    setPath(mPath);
+    setPath(filePath);
 }
 
 void ImageRequest::setPath(const QString &path)
 {
     Q_ASSERT_X(!path.isEmpty(), __PRETTY_FUNCTION__, "Path address not provided!");
 
-    if (mFileName.isEmpty()) {
-        mPath = path;
-    } else {
-        QString justDateTime(mFileName);
-        justDateTime = justDateTime.mid(mFileName.indexOf('-', 0) + 1);
-        justDateTime.truncate(justDateTime.lastIndexOf('.'));
+    //QString justDateTime(mFileName);
+    //justDateTime = justDateTime.mid(mFileName.indexOf('-', 0) + 1);
+    //justDateTime.truncate(justDateTime.lastIndexOf('.'));
+    //
+    //const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
+    //
+    //mPath = QString("%1/%2/%3").arg(path, timestamp.toString("yyyy/MM/dd"), mFileName);
 
-        const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
-
-        mPath = QString("%1/%2/%3").arg(path, timestamp.toString("yyyy/MM/dd"),
-                                        mFileName);
-        mUrl.setUrl(SERVER_ADDRESS + mPath);
-    }
+    mPath = path;
+    mUrl.setUrl(SERVER_ADDRESS + mPath);
 }
 
 bool ImageRequest::isTokenRequired() const
@@ -49,7 +45,7 @@ void ImageRequest::parse()
 
 void ImageRequest::readReplyData(const QString &requestName, const QString &status)
 {
-    QFile file(mCachePath + "/" + mFileName);
+    QFile file(mCachePath + "/" + QFileInfo(mPath).fileName());
     if (file.open(QFile::WriteOnly) == false) {
         qDebug() << RED("Could not open file for writing") << file.fileName()
                  << requestName << status;
@@ -57,6 +53,6 @@ void ImageRequest::readReplyData(const QString &requestName, const QString &stat
     }
 
     qDebug() << "Writing file" << file.fileName()
-             << mPath << mFileName;
+             << mPath;
     file.write(mReplyData);
 }

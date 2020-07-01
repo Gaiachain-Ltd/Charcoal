@@ -22,7 +22,7 @@ protected slots:
                          const QNetworkReply::NetworkError code) override;
     void webReplyHandler(const QJsonDocument &reply) override;
 
-    void onFetchPhoto(const QString &fileName);
+    void onFetchPhoto(const QString &path);
 
 private:
     QString getEventType(const QString &id) const;

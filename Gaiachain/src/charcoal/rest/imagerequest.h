@@ -5,7 +5,7 @@
 class ImageRequest : public BaseRequest
 {
 public:
-    ImageRequest(const QString &fileName, const QString &cachePath);
+    ImageRequest(const QString &filePath, const QString &cachePath);
 
 protected:
     void setPath(const QString &path) override;
@@ -14,7 +14,6 @@ protected:
     void readReplyData(const QString &requestName, const QString &status) override;
 
 private:
-    QString mFileName;
     QString mCachePath;
 };
 
