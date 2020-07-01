@@ -56,5 +56,7 @@ void ImageRequest::readReplyData(const QString &requestName, const QString &stat
         return;
     }
 
+    qDebug() << "Writing file" << file.fileName()
+             << mPath << mFileName;
     file.write(mReplyData);
 }

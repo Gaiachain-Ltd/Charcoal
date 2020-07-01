@@ -287,6 +287,7 @@ bool TrackingUpdater::updateEventDetails(const int webId, const int typeId,
         return false;
     }
 
+    qDebug() << "Updating event" << webId << typeId << properties;
     return true;
 }
 
