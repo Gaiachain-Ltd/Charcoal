@@ -8,6 +8,7 @@
 #include "database/dbhelpers.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 #include "charcoal/rest/multipartrequest.h"
+#include "charcoal/rest/imagerequest.h"
 #include "charcoal/picturesmanager.h"
 
 #include <QSqlQuery>
@@ -31,6 +32,10 @@ EventsSender::EventsSender(QObject *parent) : QueryModel(parent)
 void EventsSender::setPicturesManager(PicturesManager *manager)
 {
     m_picturesManager = manager;
+    if (m_picturesManager) {
+        connect(manager, &PicturesManager::fetchPhoto,
+                this, &EventsSender::onFetchPhoto);
+    }
 }
 
 void EventsSender::sendEvents()
@@ -188,6 +193,19 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
                    << query.lastError() << "For query:" << query.lastQuery()
                    << timestamp << "pid" << pid << "eid" << eventWebId;
         emit error(errorString);
+    }
+}
+
+void EventsSender::onFetchPhoto(const QString &fileName)
+{
+    const auto request = QSharedPointer<ImageRequest>::create(
+        fileName, m_picturesManager->cachePath());
+
+    if (m_userManager->isLoggedIn()) {
+        m_sessionManager->sendRequest(request);
+    } else {
+        qDebug() << "Enqueing request";
+        m_queuedRequests.append(request);
     }
 }
 

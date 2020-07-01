@@ -14,6 +14,11 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
+QString CharcoalDbHelpers::propertiesToString(const QVariantMap &properties)
+{
+    return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);
+}
+
 QString CharcoalDbHelpers::getPlotName(const QString &packageName)
 {
     const QStringList parts(packageName.split(sep));
@@ -24,6 +29,19 @@ QString CharcoalDbHelpers::getPlotName(const QString &packageName)
     }
 
     const QStringList plot(parts.mid(0, 3));
+    return plot.join(sep);
+}
+
+QString CharcoalDbHelpers::getHarvestName(const QString &packageName)
+{
+    const QStringList parts(packageName.split(sep));
+
+    if (parts.length() < 4) {
+        qWarning() << RED("Invalid ID passed to getHarvestId") << packageName;
+        return QString();
+    }
+
+    const QStringList plot(parts.mid(0, 4));
     return plot.join(sep);
 }
 

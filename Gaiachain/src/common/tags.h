@@ -71,6 +71,7 @@ namespace Tags {
     const QLatin1String webEventDate = QLatin1String("event_date");
     const QLatin1String webQrCodes = QLatin1String("bags_qr_codes");
     const QLatin1String webPlateNumber = QLatin1String("plate_number");
+    const QLatin1String webDestination = QLatin1String("destination");
     const QLatin1String webDocuments = QLatin1String("documents_photos");
     const QLatin1String webReceipts = QLatin1String("receipt_photos");
     const QLatin1String webParcel = QLatin1String("parcel");

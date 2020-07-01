@@ -372,11 +372,11 @@ void ActionController::registerLoggingBeginning(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     query.bindValue(":properties",
-                    propertiesToString(QVariantMap {
+                    CharcoalDbHelpers::propertiesToString(QVariantMap {
                         { Tags::webParcel, parcelId },
                         { Tags::webVillage, villageId },
                         { Tags::webTreeSpecies, treeSpeciesId },
-                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
+                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
 
     if (query.exec() == false) {
@@ -444,7 +444,7 @@ void ActionController::registerLoggingEnding(
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
     query.bindValue(":properties",
-                    propertiesToString(QVariantMap {
+                    CharcoalDbHelpers::propertiesToString(QVariantMap {
                         { Tags::webNumberOfTrees, numberOfTrees },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
@@ -567,7 +567,7 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
     query.bindValue(":locationLatitude", coordinate.latitude());
     query.bindValue(":locationLongitude", coordinate.longitude());
-    query.bindValue(":properties", propertiesToString(properties));
+    query.bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting Carbonization Beginning event has failed!")
@@ -648,7 +648,7 @@ void ActionController::registerCarbonizationEnding(
         query.bindValue(":locationLatitude", coordinate.latitude());
         query.bindValue(":locationLongitude", coordinate.longitude());
         query.bindValue(":properties",
-                        propertiesToString(QVariantMap {
+                        CharcoalDbHelpers::propertiesToString(QVariantMap {
                             { Tags::webOvenId, ovenLetter },
                             { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                         }));
@@ -748,10 +748,10 @@ void ActionController::registerLoadingAndTransport(
     query.bindValue(":locationLongitude", coordinate.longitude());
 
     query.bindValue(":properties",
-                    propertiesToString(QVariantMap {
+                    CharcoalDbHelpers::propertiesToString(QVariantMap {
                         { Tags::webHarvestId, webHarvestId },
                         { Tags::webPlateNumber, plateNumber },
-                        { "destination", destinationId },
+                        { Tags::webDestination, destinationId },
                         { Tags::webQrCodes, scannedQrs },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
@@ -816,7 +816,7 @@ void ActionController::registerReception(
     query.bindValue(":locationLongitude", coordinate.longitude());
 
     query.bindValue(":properties",
-                    propertiesToString(QVariantMap {
+                    CharcoalDbHelpers::propertiesToString(QVariantMap {
                         { Tags::documents, cachedDocs },
                         { Tags::receipts, cachedRecs },
                         { Tags::webQrCodes, scannedQrs },
@@ -931,11 +931,6 @@ QString ActionController::findOvenTypeId(const QString &ovenType) const
                << "DB:" << m_dbConnName;
 
     return QString();
-}
-
-QString ActionController::propertiesToString(const QVariantMap &properties) const
-{
-    return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);
 }
 
 int ActionController::scannedBagsForAction(const QString &transportId,

@@ -173,6 +173,11 @@ uint MRestRequest::retryCount() const
     return mRequestRetryCounter;
 }
 
+MRestRequest::Type MRestRequest::type() const
+{
+    return mType;
+}
+
 void MRestRequest::setDocument(const QJsonDocument &document)
 {
     mRequestDocument = document;
@@ -265,6 +270,20 @@ QHttpMultiPart *MRestRequest::requestMultiPart() const
     return nullptr;
 }
 
+void MRestRequest::readReplyData(const QString &requestName, const QString &status)
+{
+    QJsonParseError parseError;
+    // rawData can still be parsed in another formats
+    mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qCDebug(crequest) << requestName << status
+                          << "Error while parsing json document:"
+                          << parseError.errorString();
+    } else {
+        qCDebug(crequest) << requestName << status << "Request reply is a valid JSON";
+    }
+}
+
 /*!
  * \brief resend request if time limit has passed
  */
@@ -346,21 +365,11 @@ void MRestRequest::onReplyFinished()
     reply->deleteLater();
 
     const QString requestName(metaObject()->className());
-    QJsonParseError parseError;
-
     const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
                          .toString());
 
     if (!mReplyData.isEmpty()) {
-        // rawData can still be parsed in another formats
-        mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
-        if (parseError.error != QJsonParseError::NoError) {
-            qCDebug(crequest) << requestName << status
-                                << "Error while parsing json document:"
-                                << parseError.errorString();
-        } else {
-            qCDebug(crequest) << requestName << status << "Request reply is a valid JSON";
-        }
+        readReplyData(requestName, status);
     } else {
         qCDebug(crequest) << requestName << status << "Request reply is empty";
     }

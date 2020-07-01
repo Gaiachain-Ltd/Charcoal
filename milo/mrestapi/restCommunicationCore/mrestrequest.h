@@ -56,6 +56,7 @@ public:
     void setRetryLimit(const uint retryLimit);
     uint retryCount() const;
 
+    Type type() const;
 
 signals:
     void finished() const;
@@ -73,6 +74,8 @@ protected:
     virtual QByteArray requestData() const;
     virtual QHttpMultiPart* requestMultiPart() const;
     virtual void parse() = 0;
+    virtual void readReplyData(const QString &requestName,
+                               const QString &status);
 
     Priority mPriority = Priority::Normal;
     Type mType = Type::Get;

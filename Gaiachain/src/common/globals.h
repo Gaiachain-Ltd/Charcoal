@@ -8,14 +8,18 @@
 #ifdef COCOA
     #ifdef RELEASE_SERVER
         #define SERVER_ADDRESS QStringLiteral("https://live.gaiachain.io")
+        #define API_PATH QStringLiteral("")
     #else
         #define SERVER_ADDRESS QStringLiteral("https://live-beta.gaiachain.io")
+        #define API_PATH QStringLiteral("")
     #endif
 #elif CHARCOAL
     #ifdef RELEASE_SERVER
         #define SERVER_ADDRESS QStringLiteral("https://charcoal-live.gaiachain.io")
+        #define API_PATH QStringLiteral("/api/v1")
     #else
-        #define SERVER_ADDRESS QStringLiteral("https://charcoal-dev.gaiachain.io/api/v1")
+        #define SERVER_ADDRESS QStringLiteral("https://charcoal-dev.gaiachain.io")
+        #define API_PATH QStringLiteral("/api/v1")
     #endif
 #endif
 

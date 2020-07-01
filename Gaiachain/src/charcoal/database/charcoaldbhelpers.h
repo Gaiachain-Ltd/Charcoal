@@ -7,7 +7,9 @@ class QString;
 class CharcoalDbHelpers
 {
 public:
+    static QString propertiesToString(const QVariantMap &properties);
     static QString getPlotName(const QString &packageName);
+    static QString getHarvestName(const QString &packageName);
     static QString actionAbbreviation(const Enums::SupplyChainAction action);
     static Enums::SupplyChainAction actionById(const QString &connectionName, const int id);
     static int bagCountInTransport(const QString &connectionName, const int id);

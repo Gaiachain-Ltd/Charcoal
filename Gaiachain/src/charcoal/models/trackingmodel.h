@@ -3,6 +3,7 @@
 #include "querymodel.h"
 #include "common/enums.h"
 
+#include <QTimer>
 #include <QColor>
 #include <QPointer>
 #include <QVariantList>
@@ -83,9 +84,12 @@ public slots:
 
 protected slots:
     void webReplyHandler(const QJsonDocument &reply) override;
+    void detailsReplyHandler(const QJsonDocument &reply);
 
 private:
     QString dateString(const qint64 timestamp) const;
+
+    void startPackageDetailsUpdate();
 
     const QHash<int, QByteArray> m_roleNames = {
         { TrackingRole::Id, "eventId" },
@@ -104,5 +108,7 @@ private:
     const QColor m_transportHighlightColor = QColor("#FFE8FD");
 
     QPointer<PicturesManager> m_picturesManager;
+
+    QTimer m_updateTimer;
 };
 

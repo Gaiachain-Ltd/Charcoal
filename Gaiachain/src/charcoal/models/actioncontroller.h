@@ -126,8 +126,6 @@ private:
     // TODO: move to CharcoalDbHelpers!
     QString findOvenTypeId(const QString &ovenType) const;
 
-    QString propertiesToString(const QVariantMap &properties) const;
-
     int scannedBagsForAction(const QString &transportId,
                              const Enums::SupplyChainAction action) const;
     const QString dateFormat = "dd-MM-yyyy";

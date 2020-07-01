@@ -22,6 +22,8 @@ protected slots:
                          const QNetworkReply::NetworkError code) override;
     void webReplyHandler(const QJsonDocument &reply) override;
 
+    void onFetchPhoto(const QString &fileName);
+
 private:
     QString getEventType(const QString &id) const;
     QString findEventByTimestamp(const qint64 timestamp) const;

@@ -149,6 +149,7 @@ charcoal {
         src/charcoal/models/replantationssender.h \
         src/charcoal/models/eventssender.h \
         src/charcoal/rest/multipartrequest.h \
+        src/charcoal/rest/imagerequest.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -178,6 +179,7 @@ charcoal {
         src/charcoal/models/replantationssender.cpp \
         src/charcoal/models/eventssender.cpp \
         src/charcoal/rest/multipartrequest.cpp \
+        src/charcoal/rest/imagerequest.cpp \
 
 }
 

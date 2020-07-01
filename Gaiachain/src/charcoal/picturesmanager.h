@@ -42,6 +42,8 @@ public:
     QStringList moveToCache(const QVariantList &photos) const;
     QStringList moveToCache(const QStringList &photos) const;
 
+    void checkFileIsCached(const QString &fileName);
+
     static QString pictureTypeString(const PictureType type);
 
     QStringList currentDocuments() const;
@@ -49,6 +51,9 @@ public:
 
     QStringList currentReceipts() const;
     void setCurrentReceipts(const QStringList &currentReceipts);
+
+signals:
+    void fetchPhoto(const QString &fileName) const;
 
 private:
     void prepareDirectories() const;

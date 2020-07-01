@@ -105,6 +105,18 @@ QStringList PicturesManager::moveToCache(const QStringList &photos) const
     return result;
 }
 
+void PicturesManager::checkFileIsCached(const QString &fileName)
+{
+    QDir cache(cachePath());
+    QStringList images = cache.entryList({ fileName },
+        QDir::Files | QDir::NoDotAndDotDot);
+
+    if (images.isEmpty()) {
+        qDebug() << "Image" << fileName << "is missing from cache. Fetching...";
+        emit fetchPhoto(fileName);
+    }
+}
+
 QString PicturesManager::pictureTypeString(const PicturesManager::PictureType type)
 {
     const auto se = QMetaEnum::fromType<PicturesManager::PictureType>();
@@ -152,7 +164,7 @@ void PicturesManager::savePhoto(const QString &path,
         const QString dir(m_savePath);
         const QString fileName(typeString + "-"
                                + QDateTime::currentDateTime()
-                                     .toString(Qt::DateFormat::ISODate));
+                                     .toString("yyyy-MM-ddTHHmmss"));
         const QString destination(dir + "/" + fileName + "." + QFileInfo(path).suffix());
         qDebug() << "Saving photo:" << destination;
 

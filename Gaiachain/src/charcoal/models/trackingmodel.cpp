@@ -22,6 +22,10 @@
 
 TrackingModel::TrackingModel(QObject *parent) : QueryModel(parent)
 {
+    m_updateTimer.setInterval(200);
+    m_updateTimer.setTimerType(Qt::TimerType::CoarseTimer);
+    m_updateTimer.setSingleShot(false);
+
     setWebModelCanChange(true);
     setDbQuery("SELECT id, typeId, name, parent, webId FROM Entities");
 }
@@ -415,7 +419,6 @@ QVariantList TrackingModel::summaryForTransport(
 void TrackingModel::refreshWebData()
 {
     // TODO: limit amount of data with canFetchMore() etc.
-    // TODO: populate more data periodically (package details!)
     const auto request = QSharedPointer<BaseRequest>::create(
         "/entities/packages/",
         BaseRequest::Type::Get);
@@ -433,18 +436,77 @@ void TrackingModel::refreshWebData()
 
 void TrackingModel::webReplyHandler(const QJsonDocument &reply)
 {
-    qDebug() << "Data is:" << reply;
+    //qDebug() << "Data is:" << reply;
     TrackingUpdater updater(m_connectionName);
     if (updater.updateTable(reply)) {
         emit webDataRefreshed();
+        startPackageDetailsUpdate();
     } else {
         emit error(tr("Error updating tracking information"));
+    }
+}
+
+void TrackingModel::detailsReplyHandler(const QJsonDocument &reply)
+{
+    //qDebug() << "Update data is:" << reply;
+    TrackingUpdater updater(m_connectionName);
+    updater.setPicturesManager(m_picturesManager);
+    if (updater.updateDetails(reply)) {
+        emit webDataRefreshed();
+    } else {
+        emit error(tr("Error updating detailed information"));
     }
 }
 
 QString TrackingModel::dateString(const qint64 timestamp) const
 {
     return QDateTime::fromSecsSinceEpoch(timestamp).toString(QStringLiteral("dd/MM/yyyy"));
+}
+
+/*!
+ * Begins updating information about all packages handled by TrackingModel.
+ */
+void TrackingModel::startPackageDetailsUpdate()
+{
+    QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+    q.prepare("SELECT DISTINCT webId FROM Events "
+              "WHERE properties IS NULL");
+
+    if (q.exec()) {
+        while (q.next()) {
+            const int webId = q.value("webId").toInt();
+            const QString url(QString("/entities/packages/%1/get_package_details/")
+                                  .arg(webId));
+
+            // Check if such request was already queued
+            for (const auto request : qAsConst(m_queuedRequests)) {
+                if (request->type() != BaseRequest::Type::Get) {
+                    continue;
+                }
+
+                if (url == request->path()) {
+                    continue;
+                }
+            }
+
+            // TODO: delay!
+
+            const auto request = QSharedPointer<BaseRequest>::create(
+                url, BaseRequest::Type::Get);
+
+            if (m_userManager->isLoggedIn()) {
+                request->setToken(m_sessionManager->token());
+                m_sessionManager->sendRequest(request, this,
+                                              &TrackingModel::webErrorHandler,
+                                              &TrackingModel::detailsReplyHandler);
+            } else {
+                qDebug() << "Enqueing request";
+                m_queuedRequests.append(request);
+            }
+        }
+    } else {
+        qDebug() << "No event requires updating details";
+    }
 }
 
 bool TrackingModel::Entity::loadFromDb(const QString &connectionName, const int id)

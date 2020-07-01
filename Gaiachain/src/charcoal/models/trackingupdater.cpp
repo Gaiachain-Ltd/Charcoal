@@ -1,11 +1,13 @@
 #include "trackingupdater.h"
 
 #include "charcoal/database/charcoaldbhelpers.h"
+#include "charcoal/picturesmanager.h"
 #include "database/dbhelpers.h"
 #include "common/logs.h"
 #include "common/tags.h"
 
 #include <QVariant>
+#include <QFileInfo>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -24,6 +26,11 @@ TrackingUpdater::TrackingUpdater(const QString &connectionName)
     }
 }
 
+void TrackingUpdater::setPicturesManager(PicturesManager *manager)
+{
+    m_picturesManager = manager;
+}
+
 bool TrackingUpdater::updateTable(const QJsonDocument &json) const
 {
     const QJsonObject mainObject(json.object());
@@ -37,6 +44,42 @@ bool TrackingUpdater::updateTable(const QJsonDocument &json) const
     }
 
     return true;
+}
+
+bool TrackingUpdater::updateDetails(const QJsonDocument &json) const
+{
+    const QJsonObject package(json.object());
+    const int webId(package.value("id").toInt(-1));
+    const QString pid(package.value(Tags::pid).toString());
+    const QJsonObject properties(package.value(Tags::properties).toObject());
+
+    bool result = true;
+    for (const QString &key : properties.keys()) {
+        if (key == "logging_beginning") {
+            if (processDetailsLoggingBeginning(webId, properties.value(key).toObject()) == false) {
+                result = false;
+            }
+        } else if (key == "logging_ending") {
+            if (processDetailsLoggingEnding(webId, properties.value(key).toObject()) == false) {
+                result = false;
+            }
+        } else if (key == "ovens") {
+            if (processDetailsOvens(webId, properties.value(key).toArray()) == false) {
+                result = false;
+            }
+        } else if (key == "loading_transport") {
+            if (processDetailsLoadingAndTransport(
+                    webId, pid, properties.value(key).toObject()) == false) {
+                result = false;
+            }
+        } else if (key == "reception") {
+            if (processDetailsReception(webId, properties.value(key).toObject()) == false) {
+                result = false;
+            }
+        }
+    }
+
+    return result;
 }
 
 bool TrackingUpdater::isValid() const
@@ -115,14 +158,6 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             query.bindValue(":eventDate", eventDate);
             query.bindValue(":locationLatitude", location.at(0));
             query.bindValue(":locationLongitude", location.at(1));
-            // WEB: lacking info!
-            //        query.bindValue(":properties",
-            //                        propertiesToString(QVariantMap {
-            //                            { Tags::webOvenType, ovenType },
-            //                            { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
-            //                            { Tags::webPlotId, webPlotId },
-            //                            { Tags::webOvenId, ovenId }
-            //                        }));
 
             if (query.exec() == false) {
                 qWarning() << RED("Inserting event has failed!")
@@ -132,10 +167,158 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         }
     }
 
-    // TODO: update Entities and Events if they already exist!
-    // TODO: schedule loading of "properties" for Events
+    return true;
+}
+
+bool TrackingUpdater::processDetailsLoggingBeginning(
+    const int webId, const QJsonObject &object) const
+{
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::LoggingBeginning);
+    const QJsonObject entity = object.value("entity").toObject();
+
+    const qint64 eventDate = entity.value("beginning_date").toVariant().toLongLong();
+    const int parcelId = entity.value("parcel_id").toInt();
+    const QString village(entity.value("village").toString());
+    const QString treeSpecies(entity.value("tree_specie").toString());
+    const int villageId = CharcoalDbHelpers::getVillageId(m_connectionName, village);
+    const int treeSpeciesId = CharcoalDbHelpers::getTreeSpeciesId(
+        m_connectionName, treeSpecies);
+
+    return updateEventDetails(webId, typeId,
+                              {
+                                  { Tags::webParcel, parcelId },
+                                  { Tags::webVillage, villageId },
+                                  { Tags::webTreeSpecies, treeSpeciesId },
+                                  { Tags::webEventDate, eventDate }
+                              });
+}
+
+bool TrackingUpdater::processDetailsLoggingEnding(
+    const int webId, const QJsonObject &object) const
+{
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::LoggingEnding);
+    const QJsonObject entity = object.value("entity").toObject();
+
+    const qint64 eventDate = entity.value("ending_date").toVariant().toLongLong();
+    const int numberOfTrees = entity.value("number_of_trees").toInt();
+
+    return updateEventDetails(webId, typeId,
+                              {
+                                  { Tags::webNumberOfTrees, numberOfTrees },
+                                  { Tags::webEventDate, eventDate }
+                              });
+}
+
+bool TrackingUpdater::processDetailsOvens(
+    const int webId, const QJsonArray &array) const
+{
+    Q_UNUSED(webId)
+    Q_UNUSED(array)
 
     return true;
+}
+
+bool TrackingUpdater::processDetailsLoadingAndTransport(
+    const int webId, const QString &packageName, const QJsonObject &object) const
+{
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::LoggingEnding);
+    const QJsonObject entity = object.value("entity").toObject();
+
+    const QString harvestName(CharcoalDbHelpers::getHarvestName(packageName));
+    const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(
+        m_connectionName, harvestName));
+    const int webHarvestId(
+        CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
+
+    const qint64 eventDate = entity.value("loading_date").toVariant().toLongLong();
+    const QString plateNumber = entity.value("plate_number").toString();
+    const int destinationId = entity.value("destination_id").toInt();
+    const QStringList scannedQrs(getQrCodes(entity.value("bags").toArray()));
+
+    return updateEventDetails(webId, typeId,
+                              {
+                                  { Tags::webHarvestId, webHarvestId },
+                                  { Tags::webPlateNumber, plateNumber },
+                                  { Tags::webDestination, destinationId },
+                                  { Tags::webQrCodes, scannedQrs },
+                                  { Tags::webEventDate, eventDate }
+                              });
+}
+
+bool TrackingUpdater::processDetailsReception(
+    const int webId, const QJsonObject &object) const
+{
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::LoggingEnding);
+    const QJsonObject entity = object.value("entity").toObject();
+
+    const qint64 eventDate = entity.value("reception_date").toVariant().toLongLong();
+
+    const QStringList scannedQrs(getQrCodes(entity.value("bags").toArray()));
+    const QStringList docs(getImages(entity.value("documents_photos").toArray()));
+    const QStringList recs(getImages(entity.value("receipt_photos").toArray()));
+
+    return updateEventDetails(webId, typeId,
+                              {
+                                  { Tags::documents, docs },
+                                  { Tags::receipts, recs },
+                                  { Tags::webQrCodes, scannedQrs },
+                                  { Tags::webEventDate, eventDate }
+                              });
+}
+
+bool TrackingUpdater::updateEventDetails(const int webId, const int typeId,
+                                         const QVariantMap &properties) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+    query.prepare("UPDATE Events SET properties=:properties "
+                  "WHERE webId=:webId AND typeId=:typeId");
+    query.bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
+    query.bindValue(":webId", webId);
+    query.bindValue(":typeId", typeId);
+
+    if (query.exec() == false) {
+        qDebug() << RED("Updating details has failed")
+                 << query.lastError().text()
+                 << "for query:" << query.lastQuery();
+        return false;
+    }
+
+    return true;
+}
+
+QStringList TrackingUpdater::getQrCodes(const QJsonArray &codes) const
+{
+    QStringList result;
+
+    for (const auto &value : codes) {
+        const QJsonObject bag(value.toObject());
+        result.append(bag.value("qr_code").toString());
+    }
+
+    return result;
+}
+
+QStringList TrackingUpdater::getImages(const QJsonArray &images) const
+{
+    QStringList result;
+
+    for (const auto &value : images) {
+        const QJsonObject img(value.toObject());
+        const QString path(img.value("image").toString());
+        const QString fileName(QFileInfo(path).fileName());
+
+        if (m_picturesManager) {
+            m_picturesManager->checkFileIsCached(fileName);
+        }
+
+        result.append(fileName);
+    }
+
+    return result;
 }
 
 Enums::PackageType TrackingUpdater::packageType(const QString &webType) const
