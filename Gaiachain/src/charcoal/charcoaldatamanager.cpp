@@ -35,10 +35,10 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
             m_localEventsModel, &LocalEventsModel::refresh);
 
     connect(m_actionController, &ActionController::refreshLocalEvents,
-            m_replantationsSender, &LocalEventsModel::refresh);
+            m_replantationsSender, &ReplantationsSender::refresh);
 
     connect(m_actionController, &ActionController::refreshLocalEvents,
-            m_eventsSender, &LocalEventsModel::refresh);
+            m_eventsSender, &EventsSender::refresh);
 }
 
 void CharcoalDataManager::setupDatabase(const QString &dbPath)

@@ -175,12 +175,11 @@ bool TrackingUpdater::processDetailsLoggingBeginning(
 {
     const int typeId = CharcoalDbHelpers::getEventTypeId(
         m_connectionName, Enums::SupplyChainAction::LoggingBeginning);
-    const QJsonObject entity = object.value("entity").toObject();
 
-    const qint64 eventDate = entity.value("beginning_date").toVariant().toLongLong();
-    const int parcelId = entity.value("parcel_id").toInt();
-    const QString village(entity.value("village").toString());
-    const QString treeSpecies(entity.value("tree_specie").toString());
+    const qint64 eventDate = object.value("beginning_date").toVariant().toLongLong();
+    const int parcelId = object.value("parcel_id").toInt();
+    const QString village(object.value("village").toString());
+    const QString treeSpecies(object.value("tree_specie").toString());
     const int villageId = CharcoalDbHelpers::getVillageId(m_connectionName, village);
     const int treeSpeciesId = CharcoalDbHelpers::getTreeSpeciesId(
         m_connectionName, treeSpecies);
@@ -199,10 +198,9 @@ bool TrackingUpdater::processDetailsLoggingEnding(
 {
     const int typeId = CharcoalDbHelpers::getEventTypeId(
         m_connectionName, Enums::SupplyChainAction::LoggingEnding);
-    const QJsonObject entity = object.value("entity").toObject();
 
-    const qint64 eventDate = entity.value("ending_date").toVariant().toLongLong();
-    const int numberOfTrees = entity.value("number_of_trees").toInt();
+    const qint64 eventDate = object.value("ending_date").toVariant().toLongLong();
+    const int numberOfTrees = object.value("number_of_trees").toInt();
 
     return updateEventDetails(webId, typeId,
                               {
@@ -225,7 +223,6 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(
 {
     const int typeId = CharcoalDbHelpers::getEventTypeId(
         m_connectionName, Enums::SupplyChainAction::LoggingEnding);
-    const QJsonObject entity = object.value("entity").toObject();
 
     const QString harvestName(CharcoalDbHelpers::getHarvestName(packageName));
     const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(
@@ -233,10 +230,10 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(
     const int webHarvestId(
         CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
 
-    const qint64 eventDate = entity.value("loading_date").toVariant().toLongLong();
-    const QString plateNumber = entity.value("plate_number").toString();
-    const int destinationId = entity.value("destination_id").toInt();
-    const QStringList scannedQrs(getQrCodes(entity.value("bags").toArray()));
+    const qint64 eventDate = object.value("loading_date").toVariant().toLongLong();
+    const QString plateNumber = object.value("plate_number").toString();
+    const int destinationId = object.value("destination_id").toInt();
+    const QStringList scannedQrs(getQrCodes(object.value("bags").toArray()));
 
     return updateEventDetails(webId, typeId,
                               {
@@ -253,13 +250,12 @@ bool TrackingUpdater::processDetailsReception(
 {
     const int typeId = CharcoalDbHelpers::getEventTypeId(
         m_connectionName, Enums::SupplyChainAction::LoggingEnding);
-    const QJsonObject entity = object.value("entity").toObject();
 
-    const qint64 eventDate = entity.value("reception_date").toVariant().toLongLong();
+    const qint64 eventDate = object.value("reception_date").toVariant().toLongLong();
 
-    const QStringList scannedQrs(getQrCodes(entity.value("bags").toArray()));
-    const QStringList docs(getImages(entity.value("documents_photos").toArray()));
-    const QStringList recs(getImages(entity.value("receipt_photos").toArray()));
+    const QStringList scannedQrs(getQrCodes(object.value("bags").toArray()));
+    const QStringList docs(getImages(object.value("documents_photos").toArray()));
+    const QStringList recs(getImages(object.value("receipt_photos").toArray()));
 
     return updateEventDetails(webId, typeId,
                               {
