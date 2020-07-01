@@ -440,7 +440,6 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
     //qDebug() << "Data is:" << reply;
     TrackingUpdater updater(m_connectionName);
     if (updater.updateTable(reply)) {
-        emit webDataRefreshed();
         startPackageDetailsUpdate();
     } else {
         emit error(tr("Error updating tracking information"));
@@ -474,8 +473,14 @@ void TrackingModel::startPackageDetailsUpdate()
               "WHERE properties IS NULL");
 
     if (q.exec()) {
+        // Populate list first, then send events: to prevent situation where
+        // running query is interrupted byt incoming replies from server
+        QVector<int> webIds;
         while (q.next()) {
-            const int webId = q.value("parentWebId").toInt();
+            webIds.append(q.value("parentWebId").toInt());
+        }
+
+        for (const int webId : qAsConst(webIds)) {
             const QString url(QString("/entities/packages/%1/get_package_details/")
                                   .arg(webId));
 
@@ -507,6 +512,7 @@ void TrackingModel::startPackageDetailsUpdate()
         }
     } else {
         qDebug() << "No event requires updating details";
+        emit webDataRefreshed();
     }
 }
 
