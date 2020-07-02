@@ -49,9 +49,11 @@ bool TrackingUpdater::updateTable(const QJsonDocument &json) const
 bool TrackingUpdater::updateDetails(const QJsonDocument &json) const
 {
     const QJsonObject package(json.object());
-    //const int webId(package.value("id").toInt(-1));
+    const int webId(package.value("id").toInt(-1));
     const QString pid(package.value(Tags::pid).toString());
     const QJsonObject properties(package.value(Tags::properties).toObject());
+
+    qDebug() << "Updating Package number" << webId << pid;
 
     bool result = true;
     for (const QString &key : properties.keys()) {
@@ -188,7 +190,8 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 
 bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) const
 {
-    const int webId = object.value("id").toInt();
+    const QJsonObject webEntity(object.value("entity").toObject());
+    const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("beginning_date").toVariant().toLongLong();
     const int parcelId = object.value("parcel_id").toInt();
     const QString village(object.value("village").toString());
@@ -208,7 +211,8 @@ bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) 
 
 bool TrackingUpdater::processDetailsLoggingEnding(const QJsonObject &object) const
 {
-    const int webId = object.value("id").toInt();
+    const QJsonObject webEntity(object.value("entity").toObject());
+    const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("ending_date").toVariant().toLongLong();
     const int numberOfTrees = object.value("number_of_trees").toInt();
 
@@ -235,7 +239,8 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
     const int webHarvestId(
         CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
 
-    const int webId = object.value("id").toInt();
+    const QJsonObject webEntity(object.value("entity").toObject());
+    const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("loading_date").toVariant().toLongLong();
     const QString plateNumber = object.value("plate_number").toString();
     const int destinationId = object.value("destination_id").toInt();
@@ -253,7 +258,8 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
 
 bool TrackingUpdater::processDetailsReception(const QJsonObject &object) const
 {
-    const int webId = object.value("id").toInt();
+    const QJsonObject webEntity(object.value("entity").toObject());
+    const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("reception_date").toVariant().toLongLong();
 
     const QStringList scannedQrs(getQrCodes(object.value("bags").toArray()));
@@ -285,7 +291,6 @@ bool TrackingUpdater::updateEventDetails(const int webId,
         return false;
     }
 
-    qDebug() << "Updating event" << webId << properties;
     return true;
 }
 

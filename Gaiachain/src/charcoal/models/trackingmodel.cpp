@@ -28,7 +28,7 @@ TrackingModel::TrackingModel(QObject *parent) : QueryModel(parent)
 
     setWebModelCanChange(true);
     setDbQuery("SELECT id, typeId, name, parent, webId FROM Entities "
-               "ORDER BY id DESC");
+               "ORDER BY webId DESC");
 }
 
 void TrackingModel::setPicturesManager(PicturesManager *manager)
@@ -124,6 +124,8 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         entity.typeId = query().value("typeId").toInt();
         entity.name = query().value("name").toString();
 
+        qDebug() << "SUMMARY FOR" << entity.id << entity.name << query().value("webId").toInt();
+
         const Enums::PackageType entityType = CharcoalDbHelpers::getEntityType(
             m_connectionName, entity.typeId);
 
@@ -170,16 +172,18 @@ QVariantList TrackingModel::summaryForPlot(
     qint64 beginningTimestamp = -1;
     qint64 endingTimestamp = -1;
 
+    qDebug() << "PROPS ARE" << events.at(0).id << events.at(0).properties
+             << "AND" << events.at(1).id << events.at(1).properties;
+
     if (events.isEmpty() == false) {
         const auto &first = events.at(0).properties;
         parcelId = first.value(Tags::webParcel).toInt(-1);
         villageId = first.value(Tags::webVillage).toInt(-1);
         treeSpeciesId = first.value(Tags::webTreeSpecies).toInt(-1);
-        beginningTimestamp = first.value(Tags::webEventDate).toVariant().toLongLong();
+        beginningTimestamp = events.at(0).date;
 
         if (events.length() > 1) {
-            endingTimestamp = events.at(1).properties.value(Tags::webEventDate)
-                                  .toVariant().toLongLong();
+            endingTimestamp = events.at(1).date;
         }
     }
 
@@ -326,12 +330,11 @@ QVariantList TrackingModel::summaryForTransport(
     if (events.isEmpty() == false) {
         const auto &first = events.at(0).properties;
         plateNumber = first.value(Tags::webPlateNumber).toString();
-        beginningTimestamp = first.value(Tags::webEventDate).toVariant().toLongLong();
+        beginningTimestamp = events.at(0).date;
 
         if (events.length() > 1) {
             const auto &second = events.at(1).properties;
-            endingTimestamp = second.value(Tags::webEventDate)
-                                  .toVariant().toLongLong();
+            endingTimestamp = events.at(1).date;
 
             QStringList docs;
             QStringList recs;
@@ -479,6 +482,8 @@ void TrackingModel::startPackageDetailsUpdate()
         while (q.next()) {
             webIds.append(q.value("parentWebId").toInt());
         }
+
+        qDebug() << GREEN("WEB IDS ARE") << webIds;
 
         for (const int webId : qAsConst(webIds)) {
             const QString url(QString("/entities/packages/%1/get_package_details/")

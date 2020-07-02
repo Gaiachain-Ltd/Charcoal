@@ -166,7 +166,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     qDebug() << "Request success!" << reply;
 
     const QString pid(reply.object().value(Tags::pid).toString());
-    const qint64 eventWebId(reply.object().value(Tags::webEventId).toInt());
+    const qint64 entityWebId(reply.object().value(Tags::webEventId).toInt());
     const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toVariant().toLongLong());
     const QString eventId(findEventByTimestamp(timestamp));
 
@@ -174,13 +174,13 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     // TODO: event web ID is different than entity web ID!!! FIX IT!
     query.prepare("UPDATE Events "
-                  "SET isCommitted=1, webId=:eventWebId "
+                  "SET isCommitted=1, parentWebId=:entityWebId "
                   "WHERE date=:timestamp");
-    query.bindValue(":eventWebId", eventWebId);
+    query.bindValue(":entityWebId", entityWebId);
     query.bindValue(":timestamp", timestamp);
 
     if (query.exec()) {
-        if (updateEntityWebId(eventWebId, eventId) == false) {
+        if (updateEntityWebId(entityWebId, eventId) == false) {
             const QLatin1String errorString = QLatin1String("Failed to update local DB");
             qWarning() << RED(errorString)
                        << query.lastError() << "For query:" << query.lastQuery()
@@ -191,7 +191,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
         const QLatin1String errorString = QLatin1String("Query to update the Event has failed to execute");
         qWarning() << RED(errorString)
                    << query.lastError() << "For query:" << query.lastQuery()
-                   << timestamp << "pid" << pid << "eid" << eventWebId;
+                   << timestamp << "pid" << pid << "eid" << entityWebId;
         emit error(errorString);
     }
 }
