@@ -5,6 +5,7 @@
 #include "controllers/usermanager.h"
 #include "common/logs.h"
 #include "listupdater.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
 #include <QDebug>
@@ -82,7 +83,7 @@ bool OvenTypesModel::isTraditional() const
     const int type(query().value("type").toInt());
     if (type == 1) {
         return true;
-    } else if (type == 2) {
+    } else if (type == CharcoalDbHelpers::metalOvenType) {
         return false;
     }
 

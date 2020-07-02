@@ -13,12 +13,16 @@ public:
     static QString actionAbbreviation(const Enums::SupplyChainAction action);
     static Enums::SupplyChainAction actionById(const QString &connectionName, const int id);
     static int bagCountInTransport(const QString &connectionName, const int id);
+    static QVariantList defaultOvenDimensions(const QString &connectionName,
+                                              const int ovenType);
 
     static int getWebPackageId(const QString &connectionName, const int entityId);
     static int getVillageId(const QString &connectionName, const QString &name);
     static int getDestinationId(const QString &connectionName, const QString &name);
     static int getParcelId(const QString &connectionName, const QString &parcel);
     static int getTreeSpeciesId(const QString &connectionName, const QString &species);
+    static int getOvenId(const QString &connectionName, const int plotId,
+                         const QString &ovenName, const bool verbose = true);
     static int getOvenTypeId(const QString &connectionName, const QString &ovenType);
     static int getOvenTypeIdFromName(const QString &connectionName, const QString &name);
 
@@ -40,6 +44,10 @@ public:
                                 const QString &matchColumn, const QVariant &matchValue,
                                 const QString &returnColumn, const bool verbose = true);
 
+    static int getInteger(const QString &connectionName, const QString &table,
+                          const QStringList &matchColumns, const QVariantList &matchValues,
+                          const QString &returnColumn, const bool verbose = true);
+
     static QString getParcelCode(const QString &connectionName, const int id);
     static QString getVillageName(const QString &connectionName, const int id);
     static QString getTreeSpeciesName(const QString &connectionName, const int id);
@@ -54,5 +62,6 @@ public:
                                    const QString &returnColumn, const bool verbose = true);
 
     static constexpr char sep = '/';
+    static constexpr int metalOvenType = 2;
 };
 

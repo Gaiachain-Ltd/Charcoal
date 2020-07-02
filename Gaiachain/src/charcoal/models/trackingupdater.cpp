@@ -233,6 +233,9 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
         const QJsonObject object(value.toObject());
         const int ovenWebId(object.value("id").toInt());
         const QString ovenName(object.value("oven_id").toString());
+        const QString plotId(CharcoalDbHelpers::getPlotName(packageId));
+        const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
+            m_connectionName, plotId));
 
         if (const QJsonObject cb(object.value("carbonization_beginning").toObject());
             cb.isEmpty() == false)
@@ -254,9 +257,6 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
             const int ovenType = CharcoalDbHelpers::getOvenTypeIdFromName(
                 m_connectionName, ovenTypeName);
 
-            const QString plotId(CharcoalDbHelpers::getPlotName(packageId));
-            const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
-                m_connectionName, plotId));
             const int webPlotId(CharcoalDbHelpers::getWebPackageId(
                 m_connectionName, parentEntityId));
 
@@ -267,7 +267,12 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
                 { Tags::webOvenId, ovenWebId }
             };
 
-            if (ovenType != 2) {
+            const bool isDefault = ovenType == CharcoalDbHelpers::metalOvenType;
+            QVariantList defaultDims;
+            if (isDefault) {
+                defaultDims = CharcoalDbHelpers::defaultOvenDimensions(
+                    m_connectionName, ovenType);
+            } else {
                 properties.insert(Tags::webOvenHeight, height);
                 properties.insert(Tags::webOvenLength, length);
                 properties.insert(Tags::webOvenWidth, width);
@@ -289,10 +294,10 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
             q.bindValue(":plot", parentEntityId);
             q.bindValue(":event", eventId);
             q.bindValue(":name", ovenName);
-            if (ovenType == 2) {
-                q.bindValue(":height", 0);
-                q.bindValue(":length", 0);
-                q.bindValue(":width", 0);
+            if (isDefault) {
+                q.bindValue(":height", defaultDims.at(0));
+                q.bindValue(":length", defaultDims.at(1));
+                q.bindValue(":width", defaultDims.at(2));
             } else {
                 q.bindValue(":height", height);
                 q.bindValue(":length", length);
@@ -318,11 +323,31 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
             const int webId = webEntity.value("id").toInt();
             const qint64 eventDate = ce.value("end_date").toVariant().toLongLong();
 
-            const bool r = updateEventDetails(webId, timestamp,
-                                              {
-                                                  { Tags::webOvenId, ovenName },
-                                                  { Tags::webEventDate, eventDate }
-                                              } );
+            bool r = true;
+
+            r = updateEventDetails(webId, timestamp,
+                                   {
+                                       { Tags::webOvenId, ovenName },
+                                       { Tags::webEventDate, eventDate }
+                                   } );
+
+            const int eventId = CharcoalDbHelpers::getEventIdFromWebId(
+                m_connectionName, webId);
+            const int ovenId = CharcoalDbHelpers::getOvenId(
+                m_connectionName, parentEntityId, ovenName);
+
+            QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+            q.prepare("UPDATE Ovens SET carbonizationEnding=:carbonizationEndingId "
+                          "WHERE id=:ovenId");
+            q.bindValue(":carbonizationEndingId", eventId);
+            q.bindValue(":ovenId", ovenId);
+
+            if (q.exec() == false) {
+                qWarning() << RED("Updating oven has failed!")
+                           << q.lastError().text() << "for query:" << q.lastQuery();
+                r = false;
+            }
+
             if (r == false) {
                 result = false;
             }

@@ -1,6 +1,7 @@
 #include "ovensmodel.h"
 
 #include "database/dbhelpers.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 #include "common/logs.h"
 
 #include <QSqlQuery>
@@ -82,7 +83,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
 
         q.next();
         const int type(q.value("type").toInt());
-        const bool isMetallic = (type == 2);
+        const bool isMetallic = (type == CharcoalDbHelpers::metalOvenType);
 
         return tr("%1 - %2 x %3 x %4m")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))

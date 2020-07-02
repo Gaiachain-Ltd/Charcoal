@@ -110,6 +110,33 @@ int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const 
     return -1;
 }
 
+QVariantList CharcoalDbHelpers::defaultOvenDimensions(const QString &connectionName,
+                                                      const int ovenType)
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+    QVariantList dimensions;
+    if (ovenType == CharcoalDbHelpers::metalOvenType) {
+        query.prepare("SELECT oven_height, oven_width, oven_length "
+                      "FROM OvenTypes WHERE type=:ovenType");
+        query.bindValue(":ovenType", ovenType);
+
+        if (query.exec() == false) {
+            qWarning() << RED("Getting metallic oven dimensions has failed!")
+                       << query.lastError().text() << "for query:" << query.lastQuery();
+            return QVariantList{ 0, 0, 0 };
+        }
+
+        query.next();
+        dimensions.append(query.value("oven_height").toDouble());
+        dimensions.append(query.value("oven_width").toDouble());
+        dimensions.append(query.value("oven_length").toDouble());
+    } else {
+        return QVariantList{ 0, 0, 0 };
+    }
+
+    return dimensions;
+}
+
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)
 {
     return getSimpleInteger(connectionName, "Entities", "id", entityId, "webId");
@@ -133,6 +160,13 @@ int CharcoalDbHelpers::getParcelId(const QString &connectionName, const QString 
 int CharcoalDbHelpers::getTreeSpeciesId(const QString &connectionName, const QString &species)
 {
     return  getSimpleInteger(connectionName, "TreeSpecies", "name", species, "id");
+}
+
+int CharcoalDbHelpers::getOvenId(const QString &connectionName, const int plotId,
+                                 const QString &ovenName, const bool verbose)
+{
+    return getInteger(connectionName, "Ovens", { "plot", "name" },
+                      { plotId, ovenName }, "id", verbose);
 }
 
 int CharcoalDbHelpers::getOvenTypeId(const QString &connectionName, const QString &ovenType)
@@ -203,6 +237,46 @@ int CharcoalDbHelpers::getSimpleInteger(const QString &connectionName,
     } else if (verbose) {
         qWarning() << RED("Unable to fetch")
                    << connectionName << table << matchColumn << matchValue
+                   << returnColumn
+                   << "SQL error:" << query.lastError().text()
+                   << "For query:" << query.lastQuery();
+    }
+
+    return result;
+}
+
+int CharcoalDbHelpers::getInteger(const QString &connectionName,
+                                  const QString &table,
+                                  const QStringList &matchColumns,
+                                  const QVariantList &matchValues,
+                                  const QString &returnColumn,
+                                  const bool verbose)
+{
+    int result = -1;
+
+    QString matchString;
+    for (const QString &column : matchColumns) {
+        if (matchString.isEmpty() == false) {
+            matchString.append(" AND ");
+        }
+
+        matchString.append(column + "=:" + column);
+    }
+
+    const QString queryString(QString("SELECT %1 FROM %2 WHERE %3").arg(
+        returnColumn, table, matchString));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+    query.prepare(queryString);
+    for (const QString &column : matchColumns) {
+        query.bindValue(":" + column, matchValues.at(matchColumns.indexOf(column)));
+    }
+
+    if (query.exec() && query.next()) {
+        result = query.value(returnColumn).toInt();
+    } else if (verbose) {
+        qWarning() << RED("Unable to fetch")
+                   << connectionName << table << matchColumns << matchValues
                    << returnColumn
                    << "SQL error:" << query.lastError().text()
                    << "For query:" << query.lastQuery();

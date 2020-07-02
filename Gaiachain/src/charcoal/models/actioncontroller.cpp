@@ -281,27 +281,7 @@ QString ActionController::nextOvenNumber(const QString &plotId) const
 
 QVariantList ActionController::defaultOvenDimensions(const int ovenType) const
 {
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    QVariantList dimensions;
-    if (ovenType == 2) {
-        query.prepare("SELECT oven_height, oven_width, oven_length FROM OvenTypes WHERE type=:ovenType");
-        query.bindValue(":ovenType", ovenType);
-
-        if (query.exec() == false) {
-            qWarning() << RED("Getting metallic oven dimensions has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
-            return QVariantList{ 0, 0, 0 };
-        }
-
-        query.next();
-        dimensions.append(query.value("oven_height").toString());
-        dimensions.append(query.value("oven_width").toString());
-        dimensions.append(query.value("oven_length").toString());
-    } else {
-        return QVariantList{ 0, 0, 0 };
-    }
-
-    return dimensions;
+    return CharcoalDbHelpers::defaultOvenDimensions(m_dbConnName, ovenType);
 }
 
 void ActionController::registerLoggingBeginning(
@@ -535,7 +515,7 @@ void ActionController::registerCarbonizationBeginning(
 
     // Get proper oven dimensions
     QVariantList dimensions;
-    if (ovenType == 2) {
+    if (ovenType == CharcoalDbHelpers::metalOvenType) {
         dimensions = defaultOvenDimensions(ovenType);
     } else {
         dimensions = ovenDimensions;
