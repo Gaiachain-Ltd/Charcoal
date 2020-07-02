@@ -51,7 +51,8 @@ public:
 
     static int getInteger(const QString &connectionName, const QString &table,
                           const QStringList &matchColumns, const QVariantList &matchValues,
-                          const QString &returnColumn, const bool verbose = true);
+                          const QString &returnColumn, const QString &extra = QString(),
+                          const bool verbose = true);
 
     static QString getParcelCode(const QString &connectionName, const int id);
     static QString getVillageName(const QString &connectionName, const int id);

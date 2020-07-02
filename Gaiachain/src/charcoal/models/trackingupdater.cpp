@@ -144,8 +144,8 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         entityId = query.lastInsertId().toInt();
     }
 
-    for (int i = events.size() - 1; i >= 0; --i) {
-        const QJsonObject event(events.at(i).toObject());
+    for (const QJsonValue &value : events) {
+        const QJsonObject event(value.toObject());
         const int eventWebId(event.value("id").toInt(-1));
         const qint64 timestamp = event.value(Tags::timestamp).toVariant().toLongLong();
         const qint64 eventDate = event.value(Tags::webEventDate).toVariant().toLongLong();
@@ -157,10 +157,12 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         int eventId = CharcoalDbHelpers::getEventIdFromWebId(
             m_connectionName, eventWebId, false);
 
-//        if (eventId == -1) {
-//            eventId = CharcoalDbHelpers::getEventId(m_connectionName, entityId,
-//                                                    eventTypeId, timestamp, false);
-//        }
+        if (eventId == -1) {
+            // THIS FAILS FOR NEW EVENTS! (CB, CE) because it matches multiple
+            // carbonization events, which share the same data!
+            eventId = CharcoalDbHelpers::getEventId(m_connectionName, entityId,
+                                                    eventTypeId, timestamp, false);
+        }
 
         QString queryString;
         if (eventId == -1) {
@@ -173,15 +175,14 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                           ":date, :eventDate, :locationLatitude, :locationLongitude, "
                           " 1)";
         } else {
-//            queryString = "UPDATE Events SET "
-//                          "entityId=:entityId, typeId=:typeId, userId=:userId, "
-//                          "webId=:eventWebId, parentWebId=:parentWebId, "
-//                          "date=:date, eventDate=:eventDate, "
-//                          "locationLatitude=:locationLatitude, "
-//                          "locationLongitude=:locationLongitude, "
-//                          "isCommitted=1 "
-//                          "WHERE id=:eventId";
-            continue;
+            queryString = "UPDATE Events SET "
+                          "entityId=:entityId, typeId=:typeId, userId=:userId, "
+                          "webId=:eventWebId, parentWebId=:parentWebId, "
+                          "date=:date, eventDate=:eventDate, "
+                          "locationLatitude=:locationLatitude, "
+                          "locationLongitude=:locationLongitude, "
+                          "isCommitted=1 "
+                          "WHERE id=:eventId";
         }
 
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
@@ -197,7 +198,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         query.bindValue(":locationLongitude", location.at(1).toDouble());
 
         if (eventId != -1) {
-//            query.bindValue(":eventId", eventId);
+            query.bindValue(":eventId", eventId);
         }
 
         if (query.exec() == false) {

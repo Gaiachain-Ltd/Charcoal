@@ -166,7 +166,7 @@ int CharcoalDbHelpers::getOvenId(const QString &connectionName, const int plotId
                                  const QString &ovenName, const bool verbose)
 {
     return getInteger(connectionName, "Ovens", { "plot", "name" },
-                      { plotId, ovenName }, "id", verbose);
+                      { plotId, ovenName }, "id", QString(), verbose);
 }
 
 int CharcoalDbHelpers::getOvenTypeId(const QString &connectionName, const QString &ovenType)
@@ -222,7 +222,7 @@ int CharcoalDbHelpers::getEventId(const QString &connectionName,
     return getInteger(connectionName, "Events",
                       { "entityId", "typeId", "date" },
                       { entityId, eventTypeId, timestamp },
-                      "id", verbose);
+                      "id", "AND properties IS NOT NULL", verbose);
 }
 
 int CharcoalDbHelpers::getEventTypeId(const QString &connectionName, const QString &action)
@@ -263,6 +263,7 @@ int CharcoalDbHelpers::getInteger(const QString &connectionName,
                                   const QStringList &matchColumns,
                                   const QVariantList &matchValues,
                                   const QString &returnColumn,
+                                  const QString &extra,
                                   const bool verbose)
 {
     int result = -1;
@@ -276,8 +277,8 @@ int CharcoalDbHelpers::getInteger(const QString &connectionName,
         matchString.append(column + "=:" + column);
     }
 
-    const QString queryString(QString("SELECT %1 FROM %2 WHERE %3").arg(
-        returnColumn, table, matchString));
+    const QString queryString(QString("SELECT %1 FROM %2 WHERE %3 %4").arg(
+        returnColumn, table, matchString, extra));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
     query.prepare(queryString);
