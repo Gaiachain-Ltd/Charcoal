@@ -329,7 +329,7 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
                                    {
                                        { Tags::webOvenId, ovenName },
                                        { Tags::webEventDate, eventDate }
-                                   } );
+                                   });
 
             const int eventId = CharcoalDbHelpers::getEventIdFromWebId(
                 m_connectionName, webId);
@@ -408,18 +408,36 @@ bool TrackingUpdater::updateEventDetails(const int webId,
                                          const qint64 timestamp,
                                          const QVariantMap &properties) const
 {
+    const QString propString(CharcoalDbHelpers::propertiesToString(properties));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-    query.prepare("UPDATE Events SET properties=:properties, webId=:webId "
-                  "WHERE webId=:webId OR date=:timestamp");
-    query.bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
+
+    query.prepare("UPDATE Events SET properties=:properties "
+                  "WHERE webId=:webId");
+    query.bindValue(":properties", propString);
     query.bindValue(":webId", webId);
-    query.bindValue(":timestamp", timestamp);
 
     if (query.exec() == false) {
         qDebug() << RED("Updating details has failed")
                  << query.lastError().text()
                  << "for query:" << query.lastQuery();
         return false;
+    }
+
+    // Some events are missing their webId, we update it here.
+    const int updatedRows = query.numRowsAffected();
+    if (updatedRows <= 0) {
+        query.prepare("UPDATE Events SET properties=:properties, webId=:webId "
+                      "WHERE date=:timestamp");
+        query.bindValue(":properties", propString);
+        query.bindValue(":webId", webId);
+        query.bindValue(":timestamp", timestamp);
+
+        if (query.exec() == false) {
+            qDebug() << RED("Updating details has failed")
+                     << query.lastError().text()
+                     << "for query:" << query.lastQuery();
+            return false;
+        }
     }
 
     return true;
