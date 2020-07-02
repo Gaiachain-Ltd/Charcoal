@@ -38,6 +38,11 @@ public:
 
     static int getEventIdFromWebId(const QString &connectionName, const int webId,
                                    const bool verbose = true);
+
+    static int getEventId(const QString &connectionName, const int entityId,
+                          const int eventTypeId, qint64 timestamp,
+                          const bool verbose = true);
+
     static int getEventTypeId(const QString &connectionName, const QString &action);
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,

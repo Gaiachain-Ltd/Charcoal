@@ -154,34 +154,56 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             m_connectionName, event.value("action").toString());
         const QString userId(event.value("user_code").toString());
 
-        const int eventId = CharcoalDbHelpers::getEventIdFromWebId(
+        int eventId = CharcoalDbHelpers::getEventIdFromWebId(
             m_connectionName, eventWebId, false);
 
+//        if (eventId == -1) {
+//            eventId = CharcoalDbHelpers::getEventId(m_connectionName, entityId,
+//                                                    eventTypeId, timestamp, false);
+//        }
+
+        QString queryString;
         if (eventId == -1) {
-            QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-            query.prepare("INSERT INTO Events (entityId, typeId, userId, "
+            queryString = "INSERT INTO Events (entityId, typeId, userId, "
                           "webId, parentWebId, "
                           "date, eventDate, locationLatitude, locationLongitude, "
-                          "properties, isCommitted) "
+                          "isCommitted) "
                           "VALUES (:entityId, :typeId, :userId, "
                           ":eventWebId, :parentWebId, "
                           ":date, :eventDate, :locationLatitude, :locationLongitude, "
-                          ":properties, 1)");
-            query.bindValue(":entityId", entityId);
-            query.bindValue(":typeId", eventTypeId);
-            query.bindValue(":userId", userId);
-            query.bindValue(":eventWebId", eventWebId);
-            query.bindValue(":parentWebId", webId);
-            query.bindValue(":date", timestamp);
-            query.bindValue(":eventDate", eventDate);
-            query.bindValue(":locationLatitude", location.at(0).toDouble());
-            query.bindValue(":locationLongitude", location.at(1).toDouble());
+                          " 1)";
+        } else {
+//            queryString = "UPDATE Events SET "
+//                          "entityId=:entityId, typeId=:typeId, userId=:userId, "
+//                          "webId=:eventWebId, parentWebId=:parentWebId, "
+//                          "date=:date, eventDate=:eventDate, "
+//                          "locationLatitude=:locationLatitude, "
+//                          "locationLongitude=:locationLongitude, "
+//                          "isCommitted=1 "
+//                          "WHERE id=:eventId";
+            continue;
+        }
 
-            if (query.exec() == false) {
-                qWarning() << RED("Inserting event has failed!")
-                           << query.lastError().text() << "for query:" << query.lastQuery();
-                return false;
-            }
+        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+        query.prepare(queryString);
+        query.bindValue(":entityId", entityId);
+        query.bindValue(":typeId", eventTypeId);
+        query.bindValue(":userId", userId);
+        query.bindValue(":eventWebId", eventWebId);
+        query.bindValue(":parentWebId", webId);
+        query.bindValue(":date", timestamp);
+        query.bindValue(":eventDate", eventDate);
+        query.bindValue(":locationLatitude", location.at(0).toDouble());
+        query.bindValue(":locationLongitude", location.at(1).toDouble());
+
+        if (eventId != -1) {
+//            query.bindValue(":eventId", eventId);
+        }
+
+        if (query.exec() == false) {
+            qWarning() << RED("Inserting or updating event has failed!")
+                       << query.lastError().text() << "for query:" << query.lastQuery();
+            return false;
         }
     }
 
@@ -408,6 +430,8 @@ bool TrackingUpdater::updateEventDetails(const int webId,
                                          const qint64 timestamp,
                                          const QVariantMap &properties) const
 {
+    Q_UNUSED(timestamp)
+
     const QString propString(CharcoalDbHelpers::propertiesToString(properties));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 

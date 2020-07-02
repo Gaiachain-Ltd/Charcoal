@@ -480,7 +480,7 @@ void TrackingModel::startPackageDetailsUpdate()
             webIds.append(q.value("parentWebId").toInt());
         }
 
-        qDebug() << GREEN("WEB IDS ARE") << webIds;
+        qDebug() << "Parent Web IDs are" << webIds;
 
         for (const int webId : qAsConst(webIds)) {
             const QString url(QString("/entities/packages/%1/get_package_details/")
