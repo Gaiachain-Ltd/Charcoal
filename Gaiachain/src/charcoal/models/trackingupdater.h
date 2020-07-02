@@ -31,7 +31,8 @@ private:
                                            const QJsonObject &object) const;
     bool processDetailsReception(const QJsonObject &object) const;
 
-    bool updateEventDetails(const int webId, const QVariantMap &properties) const;
+    bool updateEventDetails(const int webId, const qint64 timestamp,
+                            const QVariantMap &properties) const;
 
     QStringList getQrCodes(const QJsonArray &codes) const;
     QStringList getImages(const QJsonArray &images) const;

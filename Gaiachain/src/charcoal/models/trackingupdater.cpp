@@ -191,6 +191,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
 bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) const
 {
     const QJsonObject webEntity(object.value("entity").toObject());
+    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("beginning_date").toVariant().toLongLong();
     const int parcelId = object.value("parcel_id").toInt();
@@ -200,7 +201,7 @@ bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) 
     const int treeSpeciesId = CharcoalDbHelpers::getTreeSpeciesId(
         m_connectionName, treeSpecies);
 
-    return updateEventDetails(webId,
+    return updateEventDetails(webId, timestamp,
                               {
                                   { Tags::webParcel, parcelId },
                                   { Tags::webVillage, villageId },
@@ -212,11 +213,12 @@ bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) 
 bool TrackingUpdater::processDetailsLoggingEnding(const QJsonObject &object) const
 {
     const QJsonObject webEntity(object.value("entity").toObject());
+    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("ending_date").toVariant().toLongLong();
     const int numberOfTrees = object.value("number_of_trees").toInt();
 
-    return updateEventDetails(webId,
+    return updateEventDetails(webId, timestamp,
                               {
                                   { Tags::webNumberOfTrees, numberOfTrees },
                                   { Tags::webEventDate, eventDate }
@@ -225,7 +227,10 @@ bool TrackingUpdater::processDetailsLoggingEnding(const QJsonObject &object) con
 
 bool TrackingUpdater::processDetailsOvens(const QJsonArray &array) const
 {
-    Q_UNUSED(array)
+    for (const auto &value : array) {
+        const QJsonObject object(value.toObject());
+
+    }
 
     return true;
 }
@@ -240,13 +245,14 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
         CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
 
     const QJsonObject webEntity(object.value("entity").toObject());
+    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("loading_date").toVariant().toLongLong();
     const QString plateNumber = object.value("plate_number").toString();
     const int destinationId = object.value("destination_id").toInt();
     const QStringList scannedQrs(getQrCodes(object.value("bags").toArray()));
 
-    return updateEventDetails(webId,
+    return updateEventDetails(webId, timestamp,
                               {
                                   { Tags::webHarvestId, webHarvestId },
                                   { Tags::webPlateNumber, plateNumber },
@@ -259,6 +265,7 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
 bool TrackingUpdater::processDetailsReception(const QJsonObject &object) const
 {
     const QJsonObject webEntity(object.value("entity").toObject());
+    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("reception_date").toVariant().toLongLong();
 
@@ -266,7 +273,7 @@ bool TrackingUpdater::processDetailsReception(const QJsonObject &object) const
     const QStringList docs(getImages(object.value("documents_photos").toArray()));
     const QStringList recs(getImages(object.value("receipt_photos").toArray()));
 
-    return updateEventDetails(webId,
+    return updateEventDetails(webId, timestamp,
                               {
                                   { Tags::documents, docs },
                                   { Tags::receipts, recs },
@@ -276,13 +283,16 @@ bool TrackingUpdater::processDetailsReception(const QJsonObject &object) const
 }
 
 bool TrackingUpdater::updateEventDetails(const int webId,
+                                         const qint64 timestamp,
                                          const QVariantMap &properties) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-    query.prepare("UPDATE Events SET properties=:properties "
-                  "WHERE webId=:webId");
+    // TODO: webId might be missing in an existing event! Need to update it then!
+    query.prepare("UPDATE Events SET properties=:properties, webId=:webId "
+                  "WHERE webId=:webId OR date=:timestamp");
     query.bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
     query.bindValue(":webId", webId);
+    query.bindValue(":timestamp", timestamp);
 
     if (query.exec() == false) {
         qDebug() << RED("Updating details has failed")

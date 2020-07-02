@@ -172,9 +172,6 @@ QVariantList TrackingModel::summaryForPlot(
     qint64 beginningTimestamp = -1;
     qint64 endingTimestamp = -1;
 
-    qDebug() << "PROPS ARE" << events.at(0).id << events.at(0).properties
-             << "AND" << events.at(1).id << events.at(1).properties;
-
     if (events.isEmpty() == false) {
         const auto &first = events.at(0).properties;
         parcelId = first.value(Tags::webParcel).toInt(-1);
