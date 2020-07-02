@@ -69,7 +69,7 @@ public:
         const QString &userId,
         const QString &plotId,
         const QString &ovenId,
-        const QString &ovenType,
+        const int ovenType,
         const QVariantList &ovenDimensions
         ) const;
 
@@ -123,9 +123,6 @@ signals:
     void refreshLocalEvents() const;
 
 private:
-    // TODO: move to CharcoalDbHelpers!
-    QString findOvenTypeId(const QString &ovenType) const;
-
     int scannedBagsForAction(const QString &transportId,
                              const Enums::SupplyChainAction action) const;
     const QString dateFormat = "dd-MM-yyyy";

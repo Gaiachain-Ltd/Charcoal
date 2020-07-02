@@ -66,7 +66,7 @@ bool TrackingUpdater::updateDetails(const QJsonDocument &json) const
                 result = false;
             }
         } else if (key == "ovens") {
-            if (processDetailsOvens(properties.value(key).toArray()) == false) {
+            if (processDetailsOvens(pid, properties.value(key).toArray()) == false) {
                 result = false;
             }
         } else if (key == "loading_transport") {
@@ -225,14 +225,111 @@ bool TrackingUpdater::processDetailsLoggingEnding(const QJsonObject &object) con
                               });
 }
 
-bool TrackingUpdater::processDetailsOvens(const QJsonArray &array) const
+bool TrackingUpdater::processDetailsOvens(const QString &packageId,
+                                          const QJsonArray &array) const
 {
+    bool result = true;
     for (const auto &value : array) {
         const QJsonObject object(value.toObject());
+        const int ovenWebId(object.value("id").toInt());
+        const QString ovenName(object.value("oven_id").toString());
 
+        if (const QJsonObject cb(object.value("carbonization_beginning").toObject());
+            cb.isEmpty() == false)
+        {
+            const QJsonObject webEntity(cb.value("entity").toObject());
+            const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+            const int webId = webEntity.value("id").toInt();
+
+            const QString ovenTypeName(cb.value("oven_type_display").toString());
+            const qint64 eventDate = cb.value("beginning_date")
+                                         .toVariant().toLongLong();
+
+            const QJsonObject ovenMeasurements(cb.value("oven_measurements")
+                                                   .toObject());
+            const double height = ovenMeasurements.value("oven_height").toDouble();
+            const double width = ovenMeasurements.value("oven_width").toDouble();
+            const double length = ovenMeasurements.value("oven_length").toDouble();
+
+            const int ovenType = CharcoalDbHelpers::getOvenTypeIdFromName(
+                m_connectionName, ovenTypeName);
+
+            const QString plotId(CharcoalDbHelpers::getPlotName(packageId));
+            const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
+                m_connectionName, plotId));
+            const int webPlotId(CharcoalDbHelpers::getWebPackageId(
+                m_connectionName, parentEntityId));
+
+            QVariantMap properties {
+                { Tags::webOvenType, ovenType },
+                { Tags::webEventDate, eventDate },
+                { Tags::webPlotId, webPlotId },
+                { Tags::webOvenId, ovenWebId }
+            };
+
+            if (ovenType != 2) {
+                properties.insert(Tags::webOvenHeight, height);
+                properties.insert(Tags::webOvenLength, length);
+                properties.insert(Tags::webOvenWidth, width);
+            }
+
+            bool r = true;
+            if (updateEventDetails(webId, timestamp, properties) == false) {
+                r = false;
+            }
+
+            const int eventId = CharcoalDbHelpers::getEventIdFromWebId(
+                m_connectionName, webId);
+
+            QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+            q.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
+                          "oven_height, oven_width, oven_length) "
+                          "VALUES (:type, :plot, :event, :name, :height, :width, :length)");
+            q.bindValue(":type", ovenType);
+            q.bindValue(":plot", parentEntityId);
+            q.bindValue(":event", eventId);
+            q.bindValue(":name", ovenName);
+            if (ovenType == 2) {
+                q.bindValue(":height", 0);
+                q.bindValue(":length", 0);
+                q.bindValue(":width", 0);
+            } else {
+                q.bindValue(":height", height);
+                q.bindValue(":length", length);
+                q.bindValue(":width", width);
+            }
+
+            if (q.exec() == false) {
+                qWarning() << RED("Inserting new oven has failed!")
+                           << q.lastError().text() << "for query:" << q.lastQuery();
+                r = false;
+            }
+
+            if (r == false) {
+                result = false;
+            }
+        }
+
+        if (const QJsonObject ce(object.value("carbonization_ending").toObject());
+            ce.isEmpty() == false)
+        {
+            const QJsonObject webEntity(ce.value("entity").toObject());
+            const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+            const int webId = webEntity.value("id").toInt();
+            const qint64 eventDate = ce.value("end_date").toVariant().toLongLong();
+
+            const bool r = updateEventDetails(webId, timestamp,
+                                              {
+                                                  { Tags::webOvenId, ovenName },
+                                                  { Tags::webEventDate, eventDate }
+                                              } );
+            if (r == false) {
+                result = false;
+            }
+        }
     }
 
-    return true;
+    return result;
 }
 
 bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageName,
@@ -287,7 +384,6 @@ bool TrackingUpdater::updateEventDetails(const int webId,
                                          const QVariantMap &properties) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-    // TODO: webId might be missing in an existing event! Need to update it then!
     query.prepare("UPDATE Events SET properties=:properties, webId=:webId "
                   "WHERE webId=:webId OR date=:timestamp");
     query.bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));

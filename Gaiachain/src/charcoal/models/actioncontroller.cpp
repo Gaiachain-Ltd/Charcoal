@@ -462,7 +462,7 @@ void ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &plotId, const QString &ovenId,
-    const QString &ovenType, const QVariantList &ovenDimensions) const
+    const int ovenType, const QVariantList &ovenDimensions) const
 {
     /*
      * Algorithm is:
@@ -535,9 +535,8 @@ void ActionController::registerCarbonizationBeginning(
 
     // Get proper oven dimensions
     QVariantList dimensions;
-    const int ovenTypeInt = ovenType.toInt();
-    if (ovenTypeInt == 2) {
-        dimensions = defaultOvenDimensions(ovenTypeInt);
+    if (ovenType == 2) {
+        dimensions = defaultOvenDimensions(ovenType);
     } else {
         dimensions = ovenDimensions;
     }
@@ -549,7 +548,7 @@ void ActionController::registerCarbonizationBeginning(
         { Tags::webOvenId, ovenId }
     };
 
-    if (ovenTypeInt != 2) {
+    if (ovenType != 2) {
         properties.insert(Tags::webOvenHeight, dimensions.at(0));
         properties.insert(Tags::webOvenLength, dimensions.at(1));
         properties.insert(Tags::webOvenWidth, dimensions.at(2));
@@ -577,12 +576,11 @@ void ActionController::registerCarbonizationBeginning(
 
     // Insert new oven into Ovens table
     const QString eventId(query.lastInsertId().toString());
-    const QString ovenTypeId(findOvenTypeId(ovenType));
 
     query.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
                   "oven_height, oven_width, oven_length) "
                   "VALUES (:type, :plot, :event, :name, :height, :width, :length)");
-    query.bindValue(":type", ovenTypeId);
+    query.bindValue(":type", ovenType);
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
@@ -911,26 +909,6 @@ void ActionController::registerReplantation(
     }
 
     emit refreshLocalEvents();
-}
-
-QString ActionController::findOvenTypeId(const QString &ovenType) const
-{
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    query.prepare("SELECT id FROM OvenTypes WHERE type=:ovenType");
-    query.bindValue(":ovenType", ovenType);
-
-    if (query.exec()) {
-        query.next();
-        return query.value("id").toString();
-    }
-
-    qWarning() << RED("Getting OvenTypeId has failed!")
-               << query.lastError().text()
-               << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
-
-    return QString();
 }
 
 int ActionController::scannedBagsForAction(const QString &transportId,

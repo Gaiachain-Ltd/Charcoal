@@ -172,7 +172,6 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    // TODO: event web ID is different than entity web ID!!! FIX IT!
     query.prepare("UPDATE Events "
                   "SET isCommitted=1, parentWebId=:entityWebId "
                   "WHERE date=:timestamp");

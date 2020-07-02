@@ -135,6 +135,17 @@ int CharcoalDbHelpers::getTreeSpeciesId(const QString &connectionName, const QSt
     return  getSimpleInteger(connectionName, "TreeSpecies", "name", species, "id");
 }
 
+int CharcoalDbHelpers::getOvenTypeId(const QString &connectionName, const QString &ovenType)
+{
+    return getSimpleInteger(connectionName, "OvenTypes", "type", ovenType, "id", true);
+}
+
+int CharcoalDbHelpers::getOvenTypeIdFromName(const QString &connectionName,
+                                             const QString &name)
+{
+    return getSimpleInteger(connectionName, "OvenTypes", "name", name, "id", true);
+}
+
 int CharcoalDbHelpers::getEntityIdFromWebId(const QString &connectionName, const int webId,
                                             const bool verbose)
 {
@@ -193,7 +204,7 @@ int CharcoalDbHelpers::getSimpleInteger(const QString &connectionName,
         qWarning() << RED("Unable to fetch")
                    << connectionName << table << matchColumn << matchValue
                    << returnColumn
-                   << "SQL error:" << query.lastError()
+                   << "SQL error:" << query.lastError().text()
                    << "For query:" << query.lastQuery();
     }
 
@@ -267,7 +278,7 @@ QString CharcoalDbHelpers::getSimpleString(const QString &connectionName,
         qWarning() << RED("Unable to fetch")
                    << connectionName << table << matchColumn << matchValue
                    << returnColumn
-                   << "SQL error:" << query.lastError()
+                   << "SQL error:" << query.lastError().text()
                    << "For query:" << query.lastQuery();
     }
 
