@@ -124,12 +124,14 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         entity.typeId = query().value("typeId").toInt();
         entity.name = query().value("name").toString();
 
-        qDebug() << "SUMMARY FOR" << entity.id << entity.name << query().value("webId").toInt();
-
         const Enums::PackageType entityType = CharcoalDbHelpers::getEntityType(
             m_connectionName, entity.typeId);
 
         const QVector<Event> events = entity.loadEvents(m_connectionName);
+
+        for (const auto &event : events) {
+            qDebug() << event.properties;
+        }
 
         QVariantList result;
         switch (entityType) {
@@ -172,15 +174,21 @@ QVariantList TrackingModel::summaryForPlot(
     qint64 beginningTimestamp = -1;
     qint64 endingTimestamp = -1;
 
-    if (events.isEmpty() == false) {
-        const auto &first = events.at(0).properties;
-        parcelId = first.value(Tags::webParcel).toInt(-1);
-        villageId = first.value(Tags::webVillage).toInt(-1);
-        treeSpeciesId = first.value(Tags::webTreeSpecies).toInt(-1);
-        beginningTimestamp = events.at(0).date;
+    for (const Event &event : events) {
+        const Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
+            m_connectionName, event.typeId);
 
-        if (events.length() > 1) {
-            endingTimestamp = events.at(1).date;
+        if (action == Enums::SupplyChainAction::LoggingBeginning
+            && parcelId == -1) {
+            parcelId = event.properties.value(Tags::webParcel).toInt(-1);
+            villageId = event.properties.value(Tags::webVillage).toInt(-1);
+            treeSpeciesId = event.properties.value(Tags::webTreeSpecies).toInt(-1);
+            beginningTimestamp = event.date;
+        }
+
+        if (action == Enums::SupplyChainAction::LoggingEnding
+            && endingTimestamp == -1) {
+            endingTimestamp = event.date;
         }
     }
 
@@ -324,26 +332,31 @@ QVariantList TrackingModel::summaryForTransport(
     QString plateNumber;
     QVariantList receptionData;
 
-    if (events.isEmpty() == false) {
-        const auto &first = events.at(0).properties;
-        plateNumber = first.value(Tags::webPlateNumber).toString();
-        beginningTimestamp = events.at(0).date;
+    for (const Event &event : events) {
+        const Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
+            m_connectionName, event.typeId);
 
-        if (events.length() > 1) {
-            const auto &second = events.at(1).properties;
-            endingTimestamp = events.at(1).date;
+        if (action == Enums::SupplyChainAction::LoadingAndTransport
+            && beginningTimestamp == -1) {
+            plateNumber = event.properties.value(Tags::webPlateNumber).toString();
+            beginningTimestamp = event.date;
+        }
+
+        if (action == Enums::SupplyChainAction::Reception
+            && endingTimestamp == -1) {
+            endingTimestamp = event.date;
 
             QStringList docs;
             QStringList recs;
 
             const QString cache(m_picturesManager->cachePath());
 
-            const QJsonArray docsArray(second.value(Tags::documents).toArray());
+            const QJsonArray docsArray(event.properties.value(Tags::documents).toArray());
             for (const auto &value : docsArray) {
                 docs.append(cache + "/" + value.toString());
             }
 
-            const QJsonArray recsArray(second.value(Tags::receipts).toArray());
+            const QJsonArray recsArray(event.properties.value(Tags::receipts).toArray());
             for (const auto &value : recsArray) {
                 recs.append(cache + "/" + value.toString());
             }

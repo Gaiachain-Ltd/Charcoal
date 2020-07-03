@@ -14,6 +14,19 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
+// Const static
+const QHash<Enums::SupplyChainAction, QString> CharcoalDbHelpers::m_supplyActionMap = {
+    { Enums::SupplyChainAction::LoggingBeginning, QStringLiteral("LB") },
+    { Enums::SupplyChainAction::LoggingEnding, QStringLiteral("LE") },
+    { Enums::SupplyChainAction::CarbonizationBeginning, QStringLiteral("CB") },
+    { Enums::SupplyChainAction::CarbonizationEnding, QStringLiteral("CE") },
+    { Enums::SupplyChainAction::LoadingAndTransport, QStringLiteral("TR") },
+    { Enums::SupplyChainAction::Reception, QStringLiteral("RE") }
+};
+
+// Static
+QHash<int, Enums::SupplyChainAction> CharcoalDbHelpers::m_supplyActionDbMap;
+
 QString CharcoalDbHelpers::propertiesToString(const QVariantMap &properties)
 {
     return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);
@@ -47,44 +60,28 @@ QString CharcoalDbHelpers::getHarvestName(const QString &packageName)
 
 QString CharcoalDbHelpers::actionAbbreviation(const Enums::SupplyChainAction action)
 {
-    switch (action) {
-    case Enums::SupplyChainAction::LoggingBeginning:
-        return QStringLiteral("LB");
-    case Enums::SupplyChainAction::LoggingEnding:
-        return QStringLiteral("LE");
-    case Enums::SupplyChainAction::CarbonizationBeginning:
-        return QStringLiteral("CB");
-    case Enums::SupplyChainAction::CarbonizationEnding:
-        return QStringLiteral("CE");
-    case Enums::SupplyChainAction::LoadingAndTransport:
-        return QStringLiteral("TR");
-    case Enums::SupplyChainAction::Reception:
-        return QStringLiteral("RE");
-    default: return QString();
-    }
-
-    return QString();
+    return m_supplyActionMap.value(action);
 }
 
 Enums::SupplyChainAction CharcoalDbHelpers::actionById(const QString &connectionName, const int id)
 {
-    const QString name(getEventType(connectionName, id));
+    // Results are cached so that calling this method is cheap!
+    const Enums::SupplyChainAction cached = m_supplyActionDbMap.value(id, Enums::SupplyChainAction::Unknown);
+    if (cached == Enums::SupplyChainAction::Unknown) {
+        const QString name(getEventType(connectionName, id));
+        const Enums::SupplyChainAction mapped = m_supplyActionMap.key(name, Enums::SupplyChainAction::Unknown);
 
-    if (name == QStringLiteral("LB")) {
-        return Enums::SupplyChainAction::LoggingBeginning;
-    } else if (name == QStringLiteral("LE")) {
-        return Enums::SupplyChainAction::LoggingEnding;
-    } else if (name == QStringLiteral("CB")) {
-        return Enums::SupplyChainAction::CarbonizationBeginning;
-    } else if (name == QStringLiteral("CE")) {
-        return Enums::SupplyChainAction::CarbonizationEnding;
-    } else if (name == QStringLiteral("TR")) {
-        return Enums::SupplyChainAction::LoadingAndTransport;
-    } else if (name == QStringLiteral("RE")) {
-        return Enums::SupplyChainAction::Reception;
+        if (mapped == Enums::SupplyChainAction::Unknown) {
+            qWarning() << RED("Invalid action ID!") << id << mapped << cached;
+            return Enums::SupplyChainAction::Unknown;
+        }
+
+        m_supplyActionDbMap.insert(id, mapped);
+
+        return mapped;
     }
 
-    return Enums::SupplyChainAction::Unknown;
+    return cached;
 }
 
 int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const int id)

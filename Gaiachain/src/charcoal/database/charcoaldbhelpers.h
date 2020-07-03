@@ -2,7 +2,8 @@
 
 #include "common/enums.h"
 
-class QString;
+#include <QHash>
+#include <QString>
 
 class CharcoalDbHelpers
 {
@@ -69,5 +70,9 @@ public:
 
     static constexpr char sep = '/';
     static constexpr int metalOvenType = 2;
+
+private:
+    static const QHash<Enums::SupplyChainAction, QString> m_supplyActionMap;
+    static QHash<int, Enums::SupplyChainAction> m_supplyActionDbMap;
 };
 

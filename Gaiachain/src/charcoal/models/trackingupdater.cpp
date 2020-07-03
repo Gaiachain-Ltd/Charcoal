@@ -158,8 +158,6 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             m_connectionName, eventWebId, false);
 
         if (eventId == -1) {
-            // THIS FAILS FOR NEW EVENTS! (CB, CE) because it matches multiple
-            // carbonization events, which share the same data!
             eventId = CharcoalDbHelpers::getEventId(m_connectionName, entityId,
                                                     eventTypeId, timestamp, false);
         }
