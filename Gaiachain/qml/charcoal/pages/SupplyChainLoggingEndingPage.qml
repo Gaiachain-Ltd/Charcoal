@@ -106,6 +106,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loggingEndingNumberOfTreesHelp
         validator: IntValidator {
             bottom: 0
+            top: 32767
         }
     }
 

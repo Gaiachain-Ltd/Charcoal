@@ -102,6 +102,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.replantationNumberOfTreesHelp
         validator: IntValidator {
             bottom: 0
+            top: 32767
         }
     }
 
