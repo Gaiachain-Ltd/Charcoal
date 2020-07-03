@@ -142,6 +142,7 @@ charcoal {
         src/charcoal/models/unusedplotidsforreplantationmodel.h \
         src/charcoal/models/ovensmodel.h \
         src/charcoal/models/trackingmodel.h \
+        src/charcoal/models/trackingfilterproxymodel.h \
         src/charcoal/models/minimumdatemodel.h \
         src/charcoal/models/localeventsmodel.h \
         src/charcoal/models/listupdater.h \
@@ -172,6 +173,7 @@ charcoal {
         src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
         src/charcoal/models/ovensmodel.cpp \
         src/charcoal/models/trackingmodel.cpp \
+        src/charcoal/models/trackingfilterproxymodel.cpp \
         src/charcoal/models/minimumdatemodel.cpp \
         src/charcoal/models/localeventsmodel.cpp \
         src/charcoal/models/listupdater.cpp \

@@ -18,6 +18,10 @@ Pages.GPage {
 
     title: Strings.recentTransactions
 
+    property int packageTypes: bar.currentItem.packageTypes
+
+    onPackageTypesChanged: dataManager.trackingFilterProxyModel.packageTypes = packageTypes
+
     Component.onCompleted: refreshData()
 
     function refreshData() {
@@ -25,8 +29,7 @@ Pages.GPage {
     }
 
     function updateSearch() {
-        //transactionsModel.setKeyword(searchInput.text)
-        //latestRangeTransactionsModel.clearRowCount()
+        dataManager.trackingFilterProxyModel.searchString = searchInput.text
     }
 
     Component.onDestruction: {
@@ -111,7 +114,7 @@ Pages.GPage {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            model: dataManager.trackingModel
+            model: dataManager.trackingFilterProxyModel
         }
     }
 }

@@ -16,6 +16,7 @@
 #include "charcoal/models/unusedplotidsforreplantationmodel.h"
 #include "charcoal/models/ovensmodel.h"
 #include "charcoal/models/trackingmodel.h"
+#include "charcoal/models/trackingfilterproxymodel.h"
 #include "charcoal/models/minimumdatemodel.h"
 #include "charcoal/models/localeventsmodel.h"
 
@@ -40,6 +41,7 @@ class CharcoalDataManager : public AbstractDataManager
     Q_PROPERTY(UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel READ unusedPlotIdsForReplantationModel CONSTANT)
     Q_PROPERTY(OvensModel* ovensModel READ ovensModel CONSTANT)
     Q_PROPERTY(TrackingModel* trackingModel READ trackingModel CONSTANT)
+    Q_PROPERTY(TrackingFilterProxyModel* trackingFilterProxyModel READ trackingFilterProxyModel CONSTANT)
     Q_PROPERTY(MinimumDateModel* minimumDateModel READ minimumDateModel CONSTANT)
     Q_PROPERTY(LocalEventsModel* localEventsModel READ localEventsModel CONSTANT)
 
@@ -67,6 +69,7 @@ public:
     UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel() const;
     OvensModel* ovensModel() const;
     TrackingModel* trackingModel() const;
+    TrackingFilterProxyModel* trackingFilterProxyModel() const;
     MinimumDateModel* minimumDateModel() const;
     LocalEventsModel* localEventsModel() const;
 
@@ -97,6 +100,7 @@ private:
     UnusedPlotIdsForReplantationModel* m_unusedPlotIdsForReplantationModel = nullptr;
     OvensModel* m_ovensModel = nullptr;
     TrackingModel* m_trackingModel = nullptr;
+    TrackingFilterProxyModel* m_trackingFilterProxyModel = nullptr;
     MinimumDateModel* m_minimumDateModel = nullptr;
     LocalEventsModel* m_localEventsModel = nullptr;
 

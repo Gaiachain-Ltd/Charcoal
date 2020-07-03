@@ -26,11 +26,14 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
       m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
       m_ovensModel(new OvensModel(this)),
       m_trackingModel(new TrackingModel(this)),
+      m_trackingFilterProxyModel(new TrackingFilterProxyModel(this)),
       m_minimumDateModel(new MinimumDateModel(this)),
       m_localEventsModel(new LocalEventsModel(this)),
       m_replantationsSender(new ReplantationsSender(this)),
       m_eventsSender(new EventsSender(this))
 {
+    m_trackingFilterProxyModel->setSourceModel(m_trackingModel);
+
     connect(m_actionController, &ActionController::refreshLocalEvents,
             m_localEventsModel, &LocalEventsModel::refresh);
 
@@ -166,6 +169,11 @@ OvensModel *CharcoalDataManager::ovensModel() const
 TrackingModel *CharcoalDataManager::trackingModel() const
 {
     return m_trackingModel;
+}
+
+TrackingFilterProxyModel *CharcoalDataManager::trackingFilterProxyModel() const
+{
+    return m_trackingFilterProxyModel;
 }
 
 MinimumDateModel *CharcoalDataManager::minimumDateModel() const
