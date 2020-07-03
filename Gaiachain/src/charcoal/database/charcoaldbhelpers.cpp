@@ -388,7 +388,8 @@ QString CharcoalDbHelpers::getSimpleString(const QString &connectionName,
 Enums::SupplyChainAction CharcoalDbHelpers::cacheSupplyAction(
     const QString &connectionName, const int actionId)
 {
-    const QString name(getEventType(connectionName, actionId));
+    const QString name(getSimpleString(connectionName, "EventTypes",
+                                      "id", actionId, "actionName", true));
     const Enums::SupplyChainAction mapped = m_supplyActionMap.key(
         name, Enums::SupplyChainAction::Unknown);
 
@@ -423,7 +424,7 @@ Enums::PackageType CharcoalDbHelpers::cachePackageType(const QString &connection
                                                        const int typeId)
 {
     const QString name(getSimpleString(connectionName, "EntityTypes",
-                                       "id", typeId, "name", true).toLower());
+                                       "id", typeId, "name", true));
     const Enums::PackageType mapped = m_packageTypeMap.key(
         name, Enums::PackageType::Unknown);
 
