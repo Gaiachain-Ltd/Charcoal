@@ -68,7 +68,9 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
     query.prepare("SELECT properties, entityId FROM Events "
-                  "WHERE entityId IN (SELECT id FROM Entities WHERE isFinished=0)");
+                  "WHERE entityId IN (SELECT id FROM Entities WHERE isFinished=0) "
+                  "AND typeId IN (SELECT id FROM EventTypes WHERE actionName=\"TR\") "
+                  "ORDER BY entityId DESC");
 
     QString transportEntityId;
     if (query.exec()) {
@@ -769,7 +771,8 @@ void ActionController::registerReception(
         return;
     }
 
-    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::Reception));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_dbConnName, Enums::SupplyChainAction::Reception));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
