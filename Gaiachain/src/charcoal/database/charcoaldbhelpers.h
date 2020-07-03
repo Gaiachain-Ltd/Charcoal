@@ -72,7 +72,20 @@ public:
     static constexpr int metalOvenType = 2;
 
 private:
+    static Enums::SupplyChainAction cacheSupplyAction(const QString &connectionName,
+                                                      const int actionId);
+    static Enums::SupplyChainAction cacheSupplyAction(const QString &connectionName,
+                                                      const Enums::SupplyChainAction action);
+
+    static Enums::PackageType cachePackageType(const QString &connectionName,
+                                               const int typeId);
+    static Enums::PackageType cachePackageType(const QString &connectionName,
+                                               const Enums::PackageType type);
+
     static const QHash<Enums::SupplyChainAction, QString> m_supplyActionMap;
     static QHash<int, Enums::SupplyChainAction> m_supplyActionDbMap;
+
+    static const QHash<Enums::PackageType, QString> m_packageTypeMap;
+    static QHash<int, Enums::PackageType> m_packageTypeDbMap;
 };
 

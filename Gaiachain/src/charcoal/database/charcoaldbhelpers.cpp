@@ -24,8 +24,15 @@ const QHash<Enums::SupplyChainAction, QString> CharcoalDbHelpers::m_supplyAction
     { Enums::SupplyChainAction::Reception, QStringLiteral("RE") }
 };
 
+const QHash<Enums::PackageType, QString> CharcoalDbHelpers::m_packageTypeMap = {
+    { Enums::PackageType::Plot, QStringLiteral("Plot") },
+    { Enums::PackageType::Harvest, QStringLiteral("Harvest") },
+    { Enums::PackageType::Transport, QStringLiteral("Transport") }
+};
+
 // Static
 QHash<int, Enums::SupplyChainAction> CharcoalDbHelpers::m_supplyActionDbMap;
+QHash<int, Enums::PackageType> CharcoalDbHelpers::m_packageTypeDbMap;
 
 QString CharcoalDbHelpers::propertiesToString(const QVariantMap &properties)
 {
@@ -63,22 +70,14 @@ QString CharcoalDbHelpers::actionAbbreviation(const Enums::SupplyChainAction act
     return m_supplyActionMap.value(action);
 }
 
-Enums::SupplyChainAction CharcoalDbHelpers::actionById(const QString &connectionName, const int id)
+Enums::SupplyChainAction CharcoalDbHelpers::actionById(const QString &connectionName,
+                                                       const int id)
 {
-    // Results are cached so that calling this method is cheap!
-    const Enums::SupplyChainAction cached = m_supplyActionDbMap.value(id, Enums::SupplyChainAction::Unknown);
+    const Enums::SupplyChainAction cached = m_supplyActionDbMap.value(
+        id, Enums::SupplyChainAction::Unknown);
+
     if (cached == Enums::SupplyChainAction::Unknown) {
-        const QString name(getEventType(connectionName, id));
-        const Enums::SupplyChainAction mapped = m_supplyActionMap.key(name, Enums::SupplyChainAction::Unknown);
-
-        if (mapped == Enums::SupplyChainAction::Unknown) {
-            qWarning() << RED("Invalid action ID!") << id << mapped << cached;
-            return Enums::SupplyChainAction::Unknown;
-        }
-
-        m_supplyActionDbMap.insert(id, mapped);
-
-        return mapped;
+        return cacheSupplyAction(connectionName, id);
     }
 
     return cached;
@@ -189,19 +188,36 @@ int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName, const 
     return getSimpleInteger(connectionName, "Entities", "name", name, "id", verbose);
 }
 
-int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName, const Enums::PackageType type)
+int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName,
+                                       const Enums::PackageType type)
 {
-    const QString typeString(QMetaEnum::fromType<Enums::PackageType>()
-                                 .valueToKey(int(type)));
+    const int cached = m_packageTypeDbMap.key(type, -1);
 
-    return getSimpleInteger(connectionName, "EntityTypes", "name", typeString, "id");
+    if (cached == -1) {
+        if (cachePackageType(connectionName, type) == Enums::PackageType::Unknown) {
+            return -1;
+        }
+
+        return m_packageTypeDbMap.key(type, -1);
+    }
+
+    return cached;
 }
 
 int CharcoalDbHelpers::getEventTypeId(const QString &connectionName,
                                       const Enums::SupplyChainAction action)
 {
-    const QString typeString(actionAbbreviation(action));
-    return getSimpleInteger(connectionName, "EventTypes", "actionName", typeString, "id");
+    const int cached = m_supplyActionDbMap.key(action, -1);
+
+    if (cached == -1) {
+        if (cacheSupplyAction(connectionName, action) == Enums::SupplyChainAction::Unknown) {
+            return -1;
+        }
+
+        return m_supplyActionDbMap.key(action, -1);
+    }
+
+    return cached;
 }
 
 int CharcoalDbHelpers::getEventIdFromWebId(const QString &connectionName,
@@ -224,7 +240,8 @@ int CharcoalDbHelpers::getEventId(const QString &connectionName,
 
 int CharcoalDbHelpers::getEventTypeId(const QString &connectionName, const QString &action)
 {
-    return getSimpleInteger(connectionName, "EventTypes", "actionName", action, "id");
+    const Enums::SupplyChainAction chainAction = m_supplyActionMap.key(action);
+    return getEventTypeId(connectionName, chainAction);
 }
 
 int CharcoalDbHelpers::getSimpleInteger(const QString &connectionName,
@@ -318,7 +335,8 @@ QString CharcoalDbHelpers::getOvenLetter(const QString &connectionName, const in
 
 QString CharcoalDbHelpers::getEventType(const QString &connectionName, const int typeId)
 {
-    return getSimpleString(connectionName, "EventTypes", "id", typeId, "actionName");
+    const Enums::SupplyChainAction action = actionById(connectionName, typeId);
+    return m_supplyActionMap.value(action);
 }
 
 QString CharcoalDbHelpers::getEntityName(const QString &connectionName, const int entityId)
@@ -329,17 +347,14 @@ QString CharcoalDbHelpers::getEntityName(const QString &connectionName, const in
 Enums::PackageType CharcoalDbHelpers::getEntityType(const QString &connectionName,
                                                     const int typeId)
 {
-    const QString type(getSimpleString(connectionName, "EntityTypes",
-                                       "id", typeId, "name", true).toLower());
-    if (type == QStringLiteral("plot")) {
-        return Enums::PackageType::Plot;
-    } else if (type == QStringLiteral("harvest")) {
-        return Enums::PackageType::Harvest;
-    } else if (type == QStringLiteral("transport")) {
-        return Enums::PackageType::Transport;
+    const Enums::PackageType cached = m_packageTypeDbMap.value(
+        typeId, Enums::PackageType::Unknown);
+
+    if (cached == Enums::PackageType::Unknown) {
+        return cachePackageType(connectionName, typeId);
     }
 
-    return Enums::PackageType::Unknown;
+    return cached;
 }
 
 QString CharcoalDbHelpers::getSimpleString(const QString &connectionName,
@@ -368,4 +383,73 @@ QString CharcoalDbHelpers::getSimpleString(const QString &connectionName,
     }
 
     return result;
+}
+
+Enums::SupplyChainAction CharcoalDbHelpers::cacheSupplyAction(
+    const QString &connectionName, const int actionId)
+{
+    const QString name(getEventType(connectionName, actionId));
+    const Enums::SupplyChainAction mapped = m_supplyActionMap.key(
+        name, Enums::SupplyChainAction::Unknown);
+
+    if (mapped == Enums::SupplyChainAction::Unknown) {
+        qWarning() << RED("Invalid action ID!") << actionId << mapped;
+        return Enums::SupplyChainAction::Unknown;
+    }
+
+    m_supplyActionDbMap.insert(actionId, mapped);
+
+    return mapped;
+}
+
+Enums::SupplyChainAction CharcoalDbHelpers::cacheSupplyAction(
+    const QString &connectionName, const Enums::SupplyChainAction action)
+{
+    const int actionId(getSimpleInteger(connectionName, "EventTypes",
+                                      "actionName", m_supplyActionMap.value(action),
+                                      "id", true));
+
+    if (action == Enums::SupplyChainAction::Unknown || actionId == -1) {
+        qWarning() << RED("Invalid type ID!") << actionId << action;
+        return Enums::SupplyChainAction::Unknown;
+    }
+
+    m_supplyActionDbMap.insert(actionId, action);
+
+    return action;
+}
+
+Enums::PackageType CharcoalDbHelpers::cachePackageType(const QString &connectionName,
+                                                       const int typeId)
+{
+    const QString name(getSimpleString(connectionName, "EntityTypes",
+                                       "id", typeId, "name", true).toLower());
+    const Enums::PackageType mapped = m_packageTypeMap.key(
+        name, Enums::PackageType::Unknown);
+
+    if (mapped == Enums::PackageType::Unknown) {
+        qWarning() << RED("Invalid type ID!") << typeId << mapped;
+        return Enums::PackageType::Unknown;
+    }
+
+    m_packageTypeDbMap.insert(typeId, mapped);
+
+    return mapped;
+}
+
+Enums::PackageType CharcoalDbHelpers::cachePackageType(const QString &connectionName,
+                                                       const Enums::PackageType type)
+{
+    const int typeId(getSimpleInteger(connectionName, "EntityTypes",
+                                      "name", m_packageTypeMap.value(type),
+                                      "id", true));
+
+    if (type == Enums::PackageType::Unknown || typeId == -1) {
+        qWarning() << RED("Invalid type ID!") << typeId << type;
+        return Enums::PackageType::Unknown;
+    }
+
+    m_packageTypeDbMap.insert(typeId, type);
+
+    return type;
 }
