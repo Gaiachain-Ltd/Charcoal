@@ -779,6 +779,24 @@ void ActionController::registerReception(
         return;
     }
 
+    // Special case: if this replantation ALREADY EXISTS, we skip inserting it
+    // into DB.
+    // This can only happen for debug server where we have some dummy, unfinished
+    // events
+    const int existing = CharcoalDbHelpers::getInteger(
+        m_dbConnName, "Events",
+        { "entityId", "typeId" },
+        { entityId, eventTypeId },
+        "id",
+        QString(), false
+        );
+
+    if (existing != -1) {
+        qDebug() << RED("Reception already exists - special case!")
+                 << entityId << eventTypeId << existing;
+        return;
+    }
+
     const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
     const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));
 
