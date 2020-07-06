@@ -27,6 +27,11 @@ Enums::ConnectionState AbstractSessionManager::connectionState() const
     return m_connectionState;
 }
 
+QString AbstractSessionManager::token() const
+{
+    return m_token;
+}
+
 void AbstractSessionManager::setEnabled(bool enabled)
 {
     if (m_enabled == enabled) {

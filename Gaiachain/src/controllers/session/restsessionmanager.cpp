@@ -24,7 +24,8 @@ void RestSessionManager::login(const QString &login, const QString &password)
 {
     emit loginAttempt(login, password);
 
-    const auto errorHandler = [this, login](const QString &, const QNetworkReply::NetworkError &code) {
+    const auto errorHandler = [this, login](const QString &,
+                                            const QNetworkReply::NetworkError &code) {
         emit loginError(login, code);
     };
     const auto replyHandler = [this, login](const QJsonDocument &reply) {

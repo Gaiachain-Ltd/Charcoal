@@ -20,10 +20,21 @@ BaseRequest::BaseRequest(const QString &path, const Type &type, const QString &t
     setPriority(Priority::Normal);
 }
 
+void BaseRequest::setToken(const QString &token)
+{
+    mToken = token;
+}
+
+QString BaseRequest::path() const
+{
+    return mPath;
+}
+
 void BaseRequest::setPath(const QString &path)
 {
     Q_ASSERT_X(!path.isEmpty(), __PRETTY_FUNCTION__, "Path address not provided!");
-    mUrl.setUrl(SERVER_ADDRESS + path);
+    mPath = path;
+    mUrl.setUrl(SERVER_ADDRESS + API_PATH + path);
 }
 
 void BaseRequest::setQuery(const QUrlQuery &query)

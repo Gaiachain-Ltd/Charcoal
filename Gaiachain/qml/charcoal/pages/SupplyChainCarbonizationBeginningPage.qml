@@ -18,9 +18,12 @@ Pages.SupplyChainPageBase {
 
     title: Strings.carbonizationBeginning
 
+    // 1 - Traditional oven
+    // 2 - Metallic oven
+    // These ids come from Web :shrug:
     proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
-                           && (ovenTypeComboBox.ovenName === "metallic"
-                           || (ovenTypeComboBox.ovenName === "traditional"
+                           && (ovenTypeComboBox.ovenType === "2"
+                           || (ovenTypeComboBox.ovenType === "1"
                                && ovenDimensionsHeader.isEmpty === false)))
 
     Component.onCompleted: refreshData()
@@ -41,40 +44,44 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.harvestId,
+                    Utility.createSummaryItem(Strings.harvestId,
                                       dataManager.actionController.generateHarvestId(
                                           plotIdComboBox.currentText,
                                           carbonizerIdInputHeader.inputText
                                           ),
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor2,
-                                      GStyle.fontHighlightColor2),
-                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                                      GStyle.fontHighlightColor2,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.ovenId, ovenIdHeader.inputText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor3,
-                                      GStyle.fontHighlightColor3),
-                    createSummaryItem(Strings.carbonizerId,
+                                      GStyle.fontHighlightColor3,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.carbonizerId,
                                       carbonizerIdInputHeader.inputText),
-                    createSummaryItem(Strings.beginningDate,
+                    Utility.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
-                    createSummaryItem(Strings.ovenDimensions,
+                    Utility.createSummaryItem(Strings.ovenType, ovenTypeComboBox.currentText),
+                    Utility.createSummaryItem(Strings.ovenDimensions,
                                       [ovenDimensionsHeader.titles,
-                                       ovenTypeComboBox.ovenName === "metallic"?
+                                       ovenTypeComboBox.ovenType === "2"?
                                            dataManager.actionController.defaultOvenDimensions(
-                                               ovenTypeComboBox.ovenName)
+                                               ovenTypeComboBox.ovenType)
                                          : ovenDimensionsHeader.values],
                                       "", "",
-                                      Pages.SupplyChainPageBase.Row),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                                      "", "", "",
+                                      Enums.DelegateType.Row),
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }
@@ -83,11 +90,12 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerCarbonizationBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     beginningDateHeader.selectedDate,
                     carbonizerIdInputHeader.inputText,
                     plotIdComboBox.currentText,
                     ovenIdHeader.inputText,
-                    ovenTypeComboBox.ovenName,
+                    ovenTypeComboBox.ovenType,
                     ovenDimensionsHeader.values)
 
         pageManager.enter(Enums.Page.MainMenu)

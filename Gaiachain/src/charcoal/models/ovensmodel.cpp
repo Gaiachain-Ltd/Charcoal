@@ -1,6 +1,7 @@
 #include "ovensmodel.h"
 
 #include "database/dbhelpers.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 #include "common/logs.h"
 
 #include <QSqlQuery>
@@ -11,6 +12,7 @@
 
 OvensModel::OvensModel(QObject *parent) : QueryModel(parent)
 {
+    setWebModelCanChange(false);
 }
 
 void OvensModel::refresh()
@@ -21,20 +23,28 @@ void OvensModel::refresh()
         return;
     }
 
+    if (shouldRefreshWebData()) {
+        refreshWebData();
+    }
+
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+
+    emit refreshed();
 }
 
 void OvensModel::setPlotId(const QString &id)
 {
     m_plotId = id;
 
-    setDbQuery(QString("SELECT id, type, name, height, length, width, "
+    setDbQuery(QString("SELECT id, type, name, oven_height, oven_length, oven_width, "
                        "carbonizationBeginning "
                        "FROM Ovens WHERE carbonizationEnding IS NULL "
                        "AND plot IS "
                        "(SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
 
     refresh();
+
+    qDebug() << "OVEN MODELS:" << rowCount();
 
     emit plotIdChanged(id);
 }
@@ -62,7 +72,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
     {
         const QString ovenTypeId(query().value("type").toString());
         QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-        q.prepare("SELECT name FROM OvenTypes WHERE id=:ovenTypeId");
+        q.prepare("SELECT type FROM OvenTypes WHERE id=:ovenTypeId");
         q.bindValue(":ovenTypeId", ovenTypeId);
 
         if (q.exec() == false) {
@@ -72,14 +82,14 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
         }
 
         q.next();
-        const QString type(q.value("name").toString());
-        const bool isMetallic = (type == "metallic");
+        const int type(q.value("type").toInt());
+        const bool isMetallic = (type == CharcoalDbHelpers::metalOvenType);
 
         return tr("%1 - %2 x %3 x %4m")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))
-            .arg(query().value("height").toString())
-            .arg(query().value("length").toString())
-            .arg(query().value("width").toString());
+            .arg(query().value("oven_height").toString())
+            .arg(query().value("oven_width").toString())
+            .arg(query().value("oven_length").toString());
     }
     case OvenRole::SecondRow:
     {

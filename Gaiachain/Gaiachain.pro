@@ -128,6 +128,7 @@ charcoal {
         src/charcoal/notificationmanager.h \
         src/charcoal/charcoalsessionmanager.h \
         src/charcoal/charcoaldatamanager.h \
+        src/charcoal/database/charcoaldbhelpers.h \
         src/charcoal/models/actioncontroller.h \
         src/charcoal/models/treespeciesmodel.h \
         src/charcoal/models/parcelsmodel.h \
@@ -141,7 +142,15 @@ charcoal {
         src/charcoal/models/unusedplotidsforreplantationmodel.h \
         src/charcoal/models/ovensmodel.h \
         src/charcoal/models/trackingmodel.h \
+        src/charcoal/models/trackingfilterproxymodel.h \
         src/charcoal/models/minimumdatemodel.h \
+        src/charcoal/models/localeventsmodel.h \
+        src/charcoal/models/listupdater.h \
+        src/charcoal/models/trackingupdater.h \
+        src/charcoal/models/replantationssender.h \
+        src/charcoal/models/eventssender.h \
+        src/charcoal/rest/multipartrequest.h \
+        src/charcoal/rest/imagerequest.h \
 
     SOURCES += \
         src/charcoal/picturesmanager.cpp \
@@ -150,6 +159,7 @@ charcoal {
         src/charcoal/charcoalmigrations.cpp \
         src/charcoal/charcoalsessionmanager.cpp \
         src/charcoal/charcoaldatamanager.cpp \
+        src/charcoal/database/charcoaldbhelpers.cpp \
         src/charcoal/models/actioncontroller.cpp \
         src/charcoal/models/treespeciesmodel.cpp \
         src/charcoal/models/parcelsmodel.cpp \
@@ -163,7 +173,15 @@ charcoal {
         src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
         src/charcoal/models/ovensmodel.cpp \
         src/charcoal/models/trackingmodel.cpp \
+        src/charcoal/models/trackingfilterproxymodel.cpp \
         src/charcoal/models/minimumdatemodel.cpp \
+        src/charcoal/models/localeventsmodel.cpp \
+        src/charcoal/models/listupdater.cpp \
+        src/charcoal/models/trackingupdater.cpp \
+        src/charcoal/models/replantationssender.cpp \
+        src/charcoal/models/eventssender.cpp \
+        src/charcoal/rest/multipartrequest.cpp \
+        src/charcoal/rest/imagerequest.cpp \
 
 }
 
@@ -208,8 +226,6 @@ TEMPLATE = app
 CONFIG += c++17
 
 INCLUDEPATH += src
-
-### TODO!!! Move cocoa-only classes to cocoa/ folder
 
 HEADERS += \
     src/common/dataglobals.h \

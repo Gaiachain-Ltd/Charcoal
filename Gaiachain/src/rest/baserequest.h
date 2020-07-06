@@ -14,15 +14,19 @@ class BaseRequest : public MRestRequest
 public:
     BaseRequest(const QString &path, const Type &type, const QString &token = QString());
 
+    void setToken(const QString &token);
+    QString path() const;
+
 signals:
     void requestFinished(const QJsonDocument &doc) const;
 
 protected:
-    const QString mToken;
+    QString mToken;
+    QString mPath;
 
     QElapsedTimer mElapsedTimer;
 
-    void setPath(const QString &path);
+    virtual void setPath(const QString &path);
     void setQuery(const QUrlQuery &query);
 
     virtual bool isTokenRequired() const;

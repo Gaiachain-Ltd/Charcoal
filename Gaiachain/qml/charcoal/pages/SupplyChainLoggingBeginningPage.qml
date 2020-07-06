@@ -39,24 +39,25 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId,
+                    Utility.createSummaryItem(Strings.plotId,
                                       dataManager.actionController.generatePlotId(
                                           repsIdInputHeader.inputText,
                                           parcelComboBox.currentText,
                                           beginningDateHeader.selectedDate
                                           ),
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.parcel, parcelComboBox.currentText),
-                    createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
-                    createSummaryItem(Strings.village, villageComboBox.currentText),
-                    createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
-                    createSummaryItem(Strings.beginningDate,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.parcel, parcelComboBox.currentText),
+                    Utility.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
+                    Utility.createSummaryItem(Strings.village, villageComboBox.currentText),
+                    Utility.createSummaryItem(Strings.treeSpecies, treeSpeciesComboBox.currentText),
+                    Utility.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
 
         return summary
@@ -66,6 +67,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerLoggingBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     beginningDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
                     parcelComboBox.currentText,

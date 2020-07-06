@@ -62,36 +62,39 @@ Pages.SupplyChainPageBase {
                         loadingDateHeader.selectedDate
                     )
         var summary = [
-                    createSummaryItem(Strings.transportId,
+                    Utility.createSummaryItem(Strings.transportId,
                                       transportId,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor4,
-                                      GStyle.fontHighlightColor4),
-                    createSummaryItem(Strings.numberOfBags,
+                                      GStyle.fontHighlightColor4,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.numberOfBags,
                                       scannedQrs.length),
-                    createSummaryItem(Strings.harvestId,
+                    Utility.createSummaryItem(Strings.harvestId,
                                       harvestIdComboBox.currentText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor2,
-                                      GStyle.fontHighlightColor2),
-                    createSummaryItem(Strings.plateNumber,
+                                      GStyle.fontHighlightColor2,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.plateNumber,
                                       plateNumberHeader.inputText),
-                    createSummaryItem(Strings.loadingDate,
+                    Utility.createSummaryItem(Strings.loadingDate,
                                       loadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.deliveryDestination,
+                    Utility.createSummaryItem(Strings.deliveryDestination,
                                       deliveryDestinationComboBox.currentText),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }
 
     function addAction() {
-        dataManager.actionController.registerTransportAndLoading(
+        dataManager.actionController.registerLoadingAndTransport(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     loadingDateHeader.selectedDate,
                     userManager.userData.code,
                     transportId,

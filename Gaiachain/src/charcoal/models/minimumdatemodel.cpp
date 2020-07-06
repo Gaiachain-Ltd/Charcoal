@@ -2,6 +2,7 @@
 
 #include "database/dbhelpers.h"
 #include "common/logs.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -10,6 +11,7 @@
 
 MinimumDateModel::MinimumDateModel(QObject *parent) : QueryModel(parent)
 {
+    setWebModelCanChange(false);
 }
 
 void MinimumDateModel::refresh()
@@ -20,7 +22,13 @@ void MinimumDateModel::refresh()
         return;
     }
 
+    if (shouldRefreshWebData()) {
+        refreshWebData();
+    }
+
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+
+    emit refreshed();
 }
 
 void MinimumDateModel::setPlotId(const QString &id)
@@ -30,40 +38,12 @@ void MinimumDateModel::setPlotId(const QString &id)
     if (m_plotId.isEmpty()) {
         setDbQuery(QString());
     } else {
-        // !!!
-        // TODO: reuse methods from ActionController here!
-        // !!!
-        const QStringList parts(id.split("/"));
-
-        if (parts.length() < 3) {
-            qWarning() << RED("Invalid ID passed to getPlotId") << id;
-            return;
-        }
-
-        const QStringList plot(parts.mid(0, 3));
-        const QString plotName(plot.join("/"));
-
-        QString parentId;
-
-        QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-
-        q.prepare("SELECT id FROM Entities WHERE name=:nameString");
-        q.bindValue(":nameString", plotName);
-
-        if (q.exec()) {
-            q.next();
-            parentId = q.value("id").toString();
-        } else {
-            qWarning() << RED("Getting Entity ID has failed!")
-                       << q.lastError().text()
-                       << "for query:" << q.lastQuery()
-                       << "DB:" << m_connectionName;
-            return;
-        }
+        const QString plotName(CharcoalDbHelpers::getPlotName(id));
+        const QString parentId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotName));
 
         setDbQuery(QString("SELECT date "
                            "FROM Events "
-                           "WHERE entityId IS "
+                           "WHERE entityId IN "
                            "(SELECT id FROM Entities WHERE id=\"%1\" "
                            "OR parent=\"%1\") "
                            "ORDER BY date DESC LIMIT 1").arg(parentId));
@@ -73,8 +53,9 @@ void MinimumDateModel::setPlotId(const QString &id)
 
     emit plotIdChanged(id);
 
-    query().seek(0);
-    setDate(query().value("date").toDateTime());
+    if (query().seek(0)) {
+        setDate(query().value("date").toDateTime());
+    }
 }
 
 QString MinimumDateModel::plotId() const

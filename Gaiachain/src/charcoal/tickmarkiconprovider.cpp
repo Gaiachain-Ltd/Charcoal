@@ -51,9 +51,17 @@ QPixmap TickMarkIconProvider::requestPixmap(const QString &id, QSize *size,
 
     QString firstImagePath;
     if (data.at(0) == PicturesManager::pictureTypeString(PicturesManager::PictureType::Document).toLower()) {
-        firstImagePath = m_picturesManager->documents().at(0);
+        if (m_picturesManager->currentDocuments().isEmpty()) {
+            firstImagePath = m_picturesManager->documents().at(0);
+        } else {
+            firstImagePath = m_picturesManager->currentDocuments().at(0);
+        }
     } else if (data.at(0) == PicturesManager::pictureTypeString(PicturesManager::PictureType::Receipt).toLower()) {
-        firstImagePath = m_picturesManager->receipts().at(0);
+        if (m_picturesManager->currentReceipts().isEmpty()) {
+            firstImagePath = m_picturesManager->receipts().at(0);
+        } else {
+            firstImagePath = m_picturesManager->currentReceipts().at(0);
+        }
     }
 
     const QImage firstImage(firstImagePath);

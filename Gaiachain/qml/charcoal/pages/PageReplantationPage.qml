@@ -39,24 +39,25 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.numberOfTreesPlanted,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.numberOfTreesPlanted,
                                       numberOfTreesHeader.inputText),
-                    createSummaryItem(Strings.treeSpecies,
+                    Utility.createSummaryItem(Strings.treeSpecies,
                                       treeSpeciesComboBox.currentText),
-                    createSummaryItem(Strings.userId,
+                    Utility.createSummaryItem(Strings.userId,
                                       userIdInputHeader.inputText),
-                    createSummaryItem(Strings.beginningDate,
+                    Utility.createSummaryItem(Strings.beginningDate,
                                       beginningDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.endingDate,
+                    Utility.createSummaryItem(Strings.endingDate,
                                       endingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates,
+                    Utility.createSummaryItem(Strings.gpsCoordinates,
                                       gpsSource.coordinate.toString())
                 ]
 
@@ -67,12 +68,13 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerReplantation(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    endingDateHeader.selectedDate,
+                    new Date,
                     userManager.userData.code,
                     plotIdComboBox.currentText,
                     numberOfTreesHeader.inputText,
                     treeSpeciesComboBox.currentText,
-                    beginningDateHeader.selectedDate
+                    beginningDateHeader.selectedDate,
+                    endingDateHeader.selectedDate
                     )
 
         pageManager.enter(Enums.Page.MainMenu)
@@ -100,6 +102,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.replantationNumberOfTreesHelp
         validator: IntValidator {
             bottom: 0
+            top: 32767
         }
     }
 

@@ -11,7 +11,8 @@ public:
         Id = Qt::UserRole + 1,
         Name,
         TranslatedName,
-        IsTraditionalOven
+        IsTraditionalOven,
+        Type
     };
     Q_ENUM(OvenTypesRole)
 
@@ -20,12 +21,19 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+public slots:
+    void refreshWebData() override;
+
+protected slots:
+    void webReplyHandler(const QJsonDocument &reply) override;
+
 private:
-    QHash<int, QByteArray> m_roleNames = {
+    const QHash<int, QByteArray> m_roleNames = {
         { OvenTypesRole::Id, "id" },
         { OvenTypesRole::Name, "name" },
         { OvenTypesRole::TranslatedName, "translatedName" },
-        { OvenTypesRole::IsTraditionalOven, "isTraditionalOven" }
+        { OvenTypesRole::IsTraditionalOven, "isTraditionalOven" },
+        { OvenTypesRole::Type, "type" }
     };
 
     bool isTraditional() const;

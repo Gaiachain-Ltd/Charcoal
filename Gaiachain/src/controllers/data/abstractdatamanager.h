@@ -2,6 +2,7 @@
 #define DATAMANAGER_H
 
 #include "controllers/abstractmanager.h"
+#include "common/enums.h"
 
 #include <QThread>
 

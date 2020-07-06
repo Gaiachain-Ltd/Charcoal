@@ -17,14 +17,35 @@ public:
     Q_INVOKABLE void ping() override;
     Q_INVOKABLE void login(const QString &login, const QString &password) override;
 
-protected:
-    RestAPIClient m_client;
+    template <typename Object,
+              typename PointerToErrorHandler,
+              typename PointerToReplyHandler>
+    void sendRequest(const QSharedPointer<BaseRequest> &request,
+                     const Object *target,
+                     PointerToErrorHandler errorHandler,
+                     PointerToReplyHandler replyHandler,
+                     bool force = false)
+    {
+        if (!enabled() && !force) {
+            return;
+        }
+
+        connect(request.data(), &BaseRequest::replyError,
+                target, errorHandler);
+        connect(request.data(), &BaseRequest::requestFinished,
+                target, replyHandler);
+
+        sendRequest(request);
+    }
 
     void sendRequest(const QSharedPointer<BaseRequest> &request,
                      const std::function<void(const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
                      const std::function<void(const QJsonDocument &)> &replyHandler,
                      bool force = false);
     void sendRequest(const QSharedPointer<BaseRequest> &request);
+
+protected:
+    RestAPIClient m_client;
 };
 
 #endif // SESSIONMANAGER_H

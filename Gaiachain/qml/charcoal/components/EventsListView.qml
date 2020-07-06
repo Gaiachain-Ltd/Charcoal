@@ -27,8 +27,25 @@ ListView {
 
         MouseArea {
             anchors.fill: parent
-            // use model because action resolves it wrongly
-            onClicked: delegateClicked(model.name, model.type)
+            // use "model." because action resolves it wrongly
+            onClicked: {
+                let summaryTitle
+                if (model.type === Enums.PackageType.Plot) {
+                    summaryTitle = Strings.plotIdDetails
+                } else if (model.type === Enums.PackageType.Harvest) {
+                    summaryTitle = Strings.harvestIdDetails
+                } else if (model.type === Enums.PackageType.Transport) {
+                    summaryTitle = Strings.transportIdDetails
+                }
+
+                //console.log("Opening:", type, eventSummary)
+                pageManager.enter(Enums.Page.SupplyChainSummary,
+                                  {
+                                      "title": summaryTitle,
+                                      "proceedButtonVisible": false,
+                                      "summary": model.eventSummary
+                                  })
+            }
         }
 
         Column {

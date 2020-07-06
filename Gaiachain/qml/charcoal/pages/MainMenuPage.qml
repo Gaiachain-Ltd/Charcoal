@@ -52,16 +52,19 @@ GPage {
     }
 
     Component.onCompleted: {
-        if (!userManager.offlineMode &&
-                localEventsModel.size) {
+        if (!userManager.offlineMode && localEventsModel.size) {
             dataManager.sendOfflineActions()
         }
 
-        sessionManager.getAdditionalData()
+        if (mainController.flavor === "cocoa") {
+            sessionManager.getAdditionalData()
+        } else {
+            dataManager.sendOfflineActions()
+        }
     }
 
-    Flickable {
-        anchors.fill: parent
+        Flickable {
+            anchors.fill: parent
 
         contentHeight: menuColumn.implicitHeight + 2 * menuColumn.margins
         boundsBehavior: Flickable.StopAtBounds

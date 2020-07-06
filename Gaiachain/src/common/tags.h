@@ -44,8 +44,8 @@ namespace Tags {
     const QLatin1String parcels = QLatin1String("parcels");
     const QLatin1String parcel = QLatin1String("parcel");
     // Charcoal
-    const QLatin1String ovenTypes = QLatin1String("oven_types");
-    const QLatin1String treeSpecies = QLatin1String("tree_species");
+    const QLatin1String ovenTypes = QLatin1String("oven-types");
+    const QLatin1String treeSpecies = QLatin1String("tree-species");
     const QLatin1String villages = QLatin1String("villages");
     // Charcoal user data
     const QLatin1String code = QLatin1String("code");
@@ -54,6 +54,32 @@ namespace Tags {
     const QLatin1String fullName = QLatin1String("full_name");
     // Charcoal user roles
     const QLatin1String superUser = QLatin1String("SUPER_USER");
+    // Charcoal Event reply fields and charcoal Replantation reply fields
+    const QLatin1String eventTimestamp = QLatin1String("timestamp");
+    const QLatin1String webEventId = QLatin1String("package_id");
+    const QLatin1String webPlotId = QLatin1String("plot_id");
+    const QLatin1String webHarvestId = QLatin1String("harvest_id");
+    const QLatin1String webNumberOfTrees = QLatin1String("number_of_trees");
+    const QLatin1String webTreeSpecies = QLatin1String("tree_specie");
+    const QLatin1String webOvenId = QLatin1String("oven_id");
+    const QLatin1String webOvenType = QLatin1String("oven_type");
+    const QLatin1String webOvenHeight = QLatin1String("oven_height");
+    const QLatin1String webOvenWidth = QLatin1String("oven_width");
+    const QLatin1String webOvenLength = QLatin1String("oven_length");
+    const QLatin1String webBeginningDate = QLatin1String("beginning_date");
+    const QLatin1String webEndingDate = QLatin1String("ending_date");
+    const QLatin1String webEventDate = QLatin1String("event_date");
+    const QLatin1String webQrCodes = QLatin1String("bags_qr_codes");
+    const QLatin1String webPlateNumber = QLatin1String("plate_number");
+    const QLatin1String webDestination = QLatin1String("destination");
+    const QLatin1String webDocuments = QLatin1String("documents_photos");
+    const QLatin1String webReceipts = QLatin1String("receipt_photos");
+    const QLatin1String webParcel = QLatin1String("parcel");
+    const QLatin1String webVillage = QLatin1String("village");
+    const QLatin1String documents = QLatin1String("documents");
+    const QLatin1String receipts = QLatin1String("receipts");
+    const QLatin1String document = QLatin1String("document");
+    const QLatin1String receipt = QLatin1String("receipt");
 };
 
 namespace StaticValues {

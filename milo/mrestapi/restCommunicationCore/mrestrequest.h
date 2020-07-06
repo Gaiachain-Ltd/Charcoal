@@ -50,14 +50,18 @@ public:
     QUrl address() const;
     QString lastError() const;
     QJsonDocument document() const;
+    void setDocument(const QJsonDocument &document);
     QByteArray rawData() const;
 
     void setRetryLimit(const uint retryLimit);
     uint retryCount() const;
 
+    Type type() const;
+
 signals:
     void finished() const;
-    void replyError(const QString &msgs, const int errorCode = QNetworkReply::UnknownServerError) const;
+    void replyError(const QString &msgs,
+                    const QNetworkReply::NetworkError errorCode = QNetworkReply::UnknownServerError) const;
 
 protected:
     enum class Priority {Bottom, Low, Normal, High, Top};
@@ -66,7 +70,12 @@ protected:
     void send();
     virtual void retry();
     virtual void customizeRequest(QNetworkRequest &request);
+    virtual bool isMultiPart() const;
+    virtual QByteArray requestData() const;
+    virtual QHttpMultiPart* requestMultiPart() const;
     virtual void parse() = 0;
+    virtual void readReplyData(const QString &requestName,
+                               const QString &status);
 
     Priority mPriority = Priority::Normal;
     Type mType = Type::Get;

@@ -37,17 +37,18 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
+                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor),
-                    createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
-                    createSummaryItem(Strings.endingDate,
+                                      GStyle.fontHighlightColor,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
+                    Utility.createSummaryItem(Strings.endingDate,
                                       endingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.numberOfTrees, numberOfTreesHeader.inputText),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.numberOfTrees, numberOfTreesHeader.inputText),
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
 
         return summary
@@ -57,6 +58,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerLoggingEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     endingDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
                     plotIdComboBox.currentText,
@@ -104,6 +106,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loggingEndingNumberOfTreesHelp
         validator: IntValidator {
             bottom: 0
+            top: 32767
         }
     }
 

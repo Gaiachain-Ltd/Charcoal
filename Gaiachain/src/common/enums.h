@@ -170,13 +170,15 @@ namespace Enums {
         Sac,
         Lot,
 #elif CHARCOAL
-        Plot,
-        Harvest,
-        Transport,
+        Plot = 0x01,
+        Harvest = 0x02,
+        Transport = 0x04,
 #endif
 
         PackageTypeCount
     };
+    Q_DECLARE_FLAGS(PackageTypes, PackageType)
+    Q_FLAG_NS(PackageTypes)
     Q_ENUM_NS(PackageType)
     inline uint qHash(PackageType key, uint seed) { return qH<PackageType>(key, seed);}
 
@@ -206,8 +208,18 @@ namespace Enums {
     Q_ENUM_NS(SupplyChainAction)
     inline uint qHash(SupplyChainAction key, uint seed) { return qH<SupplyChainAction>(key, seed);}
 
+    enum class DelegateType {
+        Standard,
+        Row,
+        Column,
+        ColumnStack
+    };
+    Q_ENUM_NS(DelegateType)
+    inline uint qHash(DelegateType key, uint seed) { return qH<DelegateType>(key, seed);}
+
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 
+Q_DECLARE_OPERATORS_FOR_FLAGS(Enums::PackageTypes)
 
 #endif // ENUMS_H

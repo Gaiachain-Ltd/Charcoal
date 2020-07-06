@@ -31,7 +31,7 @@ signals:
     void plotIdChanged(const QString &plotId) const;
 
 private:
-    QHash<int, QByteArray> m_roleNames = {
+    const QHash<int, QByteArray> m_roleNames = {
         { OvenRole::Id, "ovenId" },
         { OvenRole::LetterId, "letterId" },
         { OvenRole::FirstRow, "firstRow" },

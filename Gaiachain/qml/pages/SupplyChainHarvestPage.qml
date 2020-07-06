@@ -35,12 +35,12 @@ Pages.SupplyChainPage {
 
     function summary() {
         return [
-            createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
-            createSummaryItem(Strings.nameOfProducer, producerNameComboBox.currentText),
-            createSummaryItem(Strings.producerIdNumber, producerCodeComboBox.currentText),
-            createSummaryItem(Strings.village, villageInputHeader.inputText),
-            createSummaryItem(Strings.parcelCode, parcelCodesComboBox.currentText),
-            createSummaryItem(Strings.harvestDate, inputHarvestDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat))
+            Utility.createSummaryItem(Strings.gpsCoordinates, gpsCoordinates, GStyle.gpsImgUrl),
+            Utility.createSummaryItem(Strings.nameOfProducer, producerNameComboBox.currentText),
+            Utility.createSummaryItem(Strings.producerIdNumber, producerCodeComboBox.currentText),
+            Utility.createSummaryItem(Strings.village, villageInputHeader.inputText),
+            Utility.createSummaryItem(Strings.parcelCode, parcelCodesComboBox.currentText),
+            Utility.createSummaryItem(Strings.harvestDate, inputHarvestDate.selectedDate.toLocaleDateString(Qt.locale(), Strings.dateFormat))
         ]
     }
 

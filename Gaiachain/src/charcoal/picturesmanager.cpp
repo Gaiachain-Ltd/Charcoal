@@ -1,5 +1,6 @@
 ﻿#include "picturesmanager.h"
 #include "common/logs.h"
+#include "common/tags.h"
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -20,8 +21,6 @@ PicturesManager::PicturesManager(QObject *parent) : AbstractManager(parent)
 
 PicturesManager::~PicturesManager()
 {
-    qWarning() << RED("TODO: clean up photos! By this point, they should be in the DB already");
-    //cleanUp();
 }
 
 void PicturesManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -32,6 +31,11 @@ void PicturesManager::setupQmlContext(QQmlApplicationEngine &engine)
 QString PicturesManager::pictureStoragePath() const
 {
     return m_path;
+}
+
+QString PicturesManager::cachePath() const
+{
+    return m_cachePath;
 }
 
 void PicturesManager::saveDocumentPhoto(const QString &path) const
@@ -64,6 +68,56 @@ QStringList PicturesManager::receipts() const
     return photosOfType(PicturesManager::PictureType::Receipt);
 }
 
+/*!
+ * Resets current "selection" of pictures - used by TickMarkIconProvider.
+ */
+void PicturesManager::resetCurrentPictures()
+{
+    m_currentDocuments.clear();
+    m_currentReceipts.clear();
+}
+
+QStringList PicturesManager::moveToCache(const QVariantList &photos) const
+{
+    QStringList list;
+    for (const QVariant &photo : photos) {
+        list.append(photo.toString());
+    }
+
+    return moveToCache(list);
+}
+
+QStringList PicturesManager::moveToCache(const QStringList &photos) const
+{
+    QStringList result;
+    for (const QString &photo : photos) {
+        const QFileInfo info(photo);
+        const QString fileName(info.fileName());
+        const QString destination(m_cachePath + "/" + fileName);
+
+        if (QFile::rename(photo, destination)) {
+            result.append(fileName);
+        } else {
+            qWarning() << "Moving to cache has failed!" << photo << destination;
+        }
+    }
+
+    return result;
+}
+
+void PicturesManager::checkFileIsCached(const QString &path)
+{
+    QDir cache(cachePath());
+    const QString fileName(QFileInfo(path).fileName());
+    QStringList images = cache.entryList({ fileName },
+        QDir::Files | QDir::NoDotAndDotDot);
+
+    if (images.isEmpty()) {
+        qDebug() << "Image" << path << "is missing from cache. Fetching...";
+        emit fetchPhoto(path);
+    }
+}
+
 QString PicturesManager::pictureTypeString(const PicturesManager::PictureType type)
 {
     const auto se = QMetaEnum::fromType<PicturesManager::PictureType>();
@@ -79,10 +133,18 @@ void PicturesManager::prepareDirectories() const
         }
     }
 
-    const QString dir(m_path + "/" + m_savedDir);
+    const QString dir(m_savePath);
     if (QDir(dir).exists() == false) {
-        if (QDir(m_path).mkdir(m_savedDir) == false) {
+        if (QDir(m_path).mkdir(m_saveDir) == false) {
             qWarning() << "Could not create the path for pictures!" << dir;
+            return;
+        }
+    }
+
+    const QString dirCache(m_cachePath);
+    if (QDir(dirCache).exists() == false) {
+        if (QDir(m_path).mkdir(m_cacheDir) == false) {
+            qWarning() << "Could not create the cache path for pictures!" << dir;
             return;
         }
     }
@@ -95,15 +157,15 @@ void PicturesManager::savePhoto(const QString &path,
     if (QFile::exists(path)) {
         QString typeString;
         if (type == PicturesManager::PictureType::Document) {
-            typeString = m_document_keyword;
+            typeString = Tags::document;
         } else if (type == PicturesManager::PictureType::Receipt) {
-            typeString = m_receipt_keyword;
+            typeString = Tags::receipt;
         }
 
-        const QString dir(m_path + "/" + m_savedDir);
+        const QString dir(m_savePath);
         const QString fileName(typeString + "-"
                                + QDateTime::currentDateTime()
-                                     .toString(Qt::DateFormat::ISODate));
+                                     .toString("yyyy-MM-ddTHHmmss"));
         const QString destination(dir + "/" + fileName + "." + QFileInfo(path).suffix());
         qDebug() << "Saving photo:" << destination;
 
@@ -115,19 +177,23 @@ void PicturesManager::savePhoto(const QString &path,
     }
 }
 
-void PicturesManager::cleanUp() const
+void PicturesManager::cleanUpWaitingPictures() const
 {
-    QDir(m_path).removeRecursively();
+    const QDir picturesDir(m_path);
+    const QStringList files(picturesDir.entryList(QDir::Files | QDir::NoDotAndDotDot));
+    for (const QString &file : files) {
+        QFile::remove(file);
+    }
 }
 
 QStringList PicturesManager::photosOfType(const PicturesManager::PictureType type) const
 {
-    const QString dir(m_path + "/" + m_savedDir);
+    const QString dir(m_savePath);
     QString filter;
     if (type == PicturesManager::PictureType::Document) {
-        filter = m_document_keyword;
+        filter = Tags::document;
     } else if (type == PicturesManager::PictureType::Receipt) {
-        filter = m_receipt_keyword;
+        filter = Tags::receipt;
     }
 
     filter += "*";
@@ -139,4 +205,24 @@ QStringList PicturesManager::photosOfType(const PicturesManager::PictureType typ
     }
 
     return result;
+}
+
+QStringList PicturesManager::currentReceipts() const
+{
+    return m_currentReceipts;
+}
+
+void PicturesManager::setCurrentReceipts(const QStringList &currentReceipts)
+{
+    m_currentReceipts = currentReceipts;
+}
+
+QStringList PicturesManager::currentDocuments() const
+{
+    return m_currentDocuments;
+}
+
+void PicturesManager::setCurrentDocuments(const QStringList &currentDocuments)
+{
+    m_currentDocuments = currentDocuments;
 }

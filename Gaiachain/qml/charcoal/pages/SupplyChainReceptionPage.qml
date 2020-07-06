@@ -34,7 +34,10 @@ Pages.SupplyChainPageBase {
                            /*&& documents.length > 0
                            && receipts.length > 0*/)
 
-    Component.onCompleted: refreshData()
+    Component.onCompleted: {
+        picturesManager.cleanUpWaitingPictures()
+        refreshData()
+    }
 
     function refreshData() {
         dataManager.minimumDateModel.plotId = ""
@@ -49,6 +52,7 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
+        picturesManager.resetCurrentPictures()
         let docs = picturesManager.documents()
         let recs = picturesManager.receipts()
         let hasDocs = docs.length > 0
@@ -61,13 +65,14 @@ Pages.SupplyChainPageBase {
         let allBags = scannedQrs.length === bagCount
 
         var summary = [
-                    createSummaryItem(Strings.transportId,
+                    Utility.createSummaryItem(Strings.transportId,
                                       transportId,
                                       "", "",
-                                      Pages.SupplyChainPageBase.Standard,
                                       GStyle.delegateHighlightColor4,
-                                      GStyle.fontHighlightColor4),
-                    createSummaryItem("",
+                                      GStyle.fontHighlightColor4,
+                                      "",
+                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem("",
                                       [
                                           [
                                               Strings.numberOfBags,
@@ -87,36 +92,31 @@ Pages.SupplyChainPageBase {
                                               recsIcon
                                           ],
                                           [
+                                              Enums.Page.InvalidPage,
+                                              Enums.Page.InvalidPage,
+                                              hasDocs? Enums.Page.PhotoGallery
+                                                     : Enums.Page.InvalidPage,
+                                              hasRecs? Enums.Page.PhotoGallery
+                                                     : Enums.Page.InvalidPage
+                                          ],
+                                          [
                                               "",
-                                              [
-                                                  hasDocs?
-                                                      Enums.Page.PhotoGallery
-                                                    : Enums.Page.InvalidPage,
-                                                  [
-                                                      "urls", docs
-                                                  ]
-                                              ],
-                                              [
-                                                  hasRecs?
-                                                      Enums.Page.PhotoGallery
-                                                    : Enums.Page.InvalidPage,
-                                                  [
-                                                      "urls", recs
-                                                  ]
-                                              ]
+                                              "",
+                                              Utility.arrayToObject([ "urls", docs ]),
+                                              Utility.arrayToObject([ "urls", recs ])
                                           ]
                                       ],
                                       "", "",
-                                      Pages.SupplyChainPageBase.ColumnStack,
                                       GStyle.delegateHighlightColor4,
                                       GStyle.fontHighlightColor4,
-                                      GStyle.textPrimaryColor),
-                    createSummaryItem(Strings.plateNumber,
+                                      GStyle.textPrimaryColor,
+                                      Enums.DelegateType.ColumnStack),
+                    Utility.createSummaryItem(Strings.plateNumber,
                                       dataManager.actionController.plateNumberInTransport(transportId)),
-                    createSummaryItem(Strings.receptionDateCharcoal,
+                    Utility.createSummaryItem(Strings.receptionDateCharcoal,
                                       unloadingDateHeader.selectedDate.toLocaleDateString(
                                           Qt.locale(), Strings.dateFormat)),
-                    createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
                 ]
         return summary
     }
@@ -125,6 +125,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerReception(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
+                    new Date,
                     unloadingDateHeader.selectedDate,
                     userManager.userData.code,
                     transportId,

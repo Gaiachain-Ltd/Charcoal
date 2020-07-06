@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "mrestrequest.h"
 #include <QTimer>
+#include <QHttpMultiPart>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -172,6 +173,16 @@ uint MRestRequest::retryCount() const
     return mRequestRetryCounter;
 }
 
+MRestRequest::Type MRestRequest::type() const
+{
+    return mType;
+}
+
+void MRestRequest::setDocument(const QJsonDocument &document)
+{
+    mRequestDocument = document;
+}
+
 /*!
  * \brief sends request using method specified in mType (Pup, Post, Get, Delete).
  *
@@ -193,15 +204,27 @@ void MRestRequest::send()
         emit finished();
         return;
     case Type::Put:
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->put(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
+        if (isMultiPart()) {
+            auto device = requestMultiPart();
+            mActiveReply = mNetworkManager->put(request, device);
+            device->setParent(mActiveReply);
+        } else {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            mActiveReply = mNetworkManager->put(request, requestData());
+        }
         break;
     case Type::Get:
         mActiveReply = mNetworkManager->get(request);
         break;
     case Type::Post:
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-        mActiveReply = mNetworkManager->post(request, mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact));
+        if (isMultiPart()) {
+            auto device = requestMultiPart();
+            mActiveReply = mNetworkManager->post(request, device);
+            device->setParent(mActiveReply);
+        } else {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            mActiveReply = mNetworkManager->post(request, requestData());
+        }
         break;
     case Type::Delete:
         mActiveReply = mNetworkManager->deleteResource(request);
@@ -229,6 +252,36 @@ void MRestRequest::send()
 void MRestRequest::customizeRequest(QNetworkRequest &request)
 {
     Q_UNUSED(request)
+}
+
+bool MRestRequest::isMultiPart() const
+{
+    return false;
+}
+
+QByteArray MRestRequest::requestData() const
+{
+    return mRequestDocument.toJson(QJsonDocument::JsonFormat::Compact);
+}
+
+QHttpMultiPart *MRestRequest::requestMultiPart() const
+{
+    qDebug() << "Reimplement me!";
+    return nullptr;
+}
+
+void MRestRequest::readReplyData(const QString &requestName, const QString &status)
+{
+    QJsonParseError parseError;
+    // rawData can still be parsed in another formats
+    mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qCDebug(crequest) << requestName << status
+                          << "Error while parsing json document:"
+                          << parseError.errorString();
+    } else {
+        qCDebug(crequest) << requestName << status << "Request reply is a valid JSON";
+    }
 }
 
 /*!
@@ -274,6 +327,7 @@ void MRestRequest::onReplyError(QNetworkReply::NetworkError code)
         const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
                              .toString());
         qCWarning(crequest) << requestName << status << "Error:" << mLastError;
+        qCWarning(crequest).noquote() << rawData();
 
         if (code == QNetworkReply::TimeoutError) {
             retry();
@@ -311,21 +365,11 @@ void MRestRequest::onReplyFinished()
     reply->deleteLater();
 
     const QString requestName(metaObject()->className());
-    QJsonParseError parseError;
-
     const QString status(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute)
                          .toString());
 
     if (!mReplyData.isEmpty()) {
-        // rawData can still be parsed in another formats
-        mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
-        if (parseError.error != QJsonParseError::NoError) {
-            qCDebug(crequest) << requestName << status
-                                << "Error while parsing json document:"
-                                << parseError.errorString();
-        } else {
-            qCDebug(crequest) << requestName << status << "Request reply is a valid JSON";
-        }
+        readReplyData(requestName, status);
     } else {
         qCDebug(crequest) << requestName << status << "Request reply is empty";
     }
