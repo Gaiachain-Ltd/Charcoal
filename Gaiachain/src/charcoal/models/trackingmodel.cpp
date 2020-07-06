@@ -287,11 +287,26 @@ QVariantList TrackingModel::summaryForHarvest(
         result.append(utility.createSummaryItem(
             tr("Oven %1").arg(oven.name), QString()
             ));
+//        result.append(utility.createSummaryItem(
+//            tr("Beginning date"), dateString(oven.carbonizationBeginning)
+//            ));
+//        result.append(utility.createSummaryItem(
+//            tr("Ending date"), dateString(oven.carbonizationEnding)
+//            ));
         result.append(utility.createSummaryItem(
-            tr("Beginning date"), dateString(oven.carbonizationBeginning)
-            ));
-        result.append(utility.createSummaryItem(
-            tr("Ending date"), dateString(oven.carbonizationEnding)
+            QString(),
+            QVariantList {
+                QVariantList {
+                    tr("Beginning date"),
+                    tr("Ending date")
+                },
+                QVariantList {
+                    dateString(oven.carbonizationBeginning),
+                    dateString(oven.carbonizationEnding)
+                }
+            },
+            QString(), QString(), QString(), QString(), QString(),
+            Enums::DelegateType::BeginEndRow
             ));
         result.append(utility.createSummaryItem(
             tr("Carbonizer ID"), oven.carbonizerId));

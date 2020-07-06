@@ -54,6 +54,8 @@ Pages.SupplyChainPageBase {
                         return columnStackComponent
                     } else if (delegateType === Enums.DelegateType.Row) {
                         return rowComponent
+                    } else if (delegateType === Enums.DelegateType.BeginEndRow) {
+                        return beginEndRowComponent
                     } else if (delegateType === Enums.DelegateType.Standard) {
                         return standardComponent
                     }
@@ -125,6 +127,25 @@ Pages.SupplyChainPageBase {
             values: composite[1]
             icons: composite[2]
             readOnly: true
+            summaryMode: isSummaryMode
+            highlighted: isHighlighted
+        }
+    }
+
+    Component {
+        id: beginEndRowComponent
+
+        Headers.BeginEndRowHeader {
+            readonly property var composite: value
+            Layout.fillWidth: true
+
+            secondaryColor: isHighlighted? decorationColor
+                                         : GStyle.separatorColor
+            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
+                                                                 : GStyle.textReadonlyColor
+            backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
+            headerTexts: composite[0]
+            inputTexts: composite[1]
             summaryMode: isSummaryMode
             highlighted: isHighlighted
         }
