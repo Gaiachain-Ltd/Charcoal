@@ -27,7 +27,7 @@ Item {
         id: row
 
         Headers.InputHeader {
-implicitWidth: top.width * .5
+            implicitWidth: top.width * .5
             secondaryColor: top.highlighted? top.secondaryColor
                                            : GStyle.separatorColor
             secondaryTextColor: (top.secondaryTextColor.length === 0)? top.secondaryColor
