@@ -220,9 +220,20 @@ QVariantList TrackingModel::summaryForPlot(
     result.append(utility.createSummaryItem(
         tr("Village"), village));
     result.append(utility.createSummaryItem(
-        tr("Beginning date"), dateString(beginningTimestamp)));
-    result.append(utility.createSummaryItem(
-        tr("Ending date"), dateString(endingTimestamp)));
+        QString(),
+        QVariantList {
+            QVariantList {
+                tr("Beginning date"),
+                tr("Ending date")
+            },
+            QVariantList {
+                dateString(beginningTimestamp),
+                dateString(endingTimestamp)
+            }
+        },
+        QString(), QString(), QString(), QString(), QString(),
+        Enums::DelegateType::BeginEndRow
+        ));
     result.append(utility.createSummaryItem(
         tr("Tree species"), treeSpecies));
     return result;
@@ -287,12 +298,6 @@ QVariantList TrackingModel::summaryForHarvest(
         result.append(utility.createSummaryItem(
             tr("Oven %1").arg(oven.name), QString()
             ));
-//        result.append(utility.createSummaryItem(
-//            tr("Beginning date"), dateString(oven.carbonizationBeginning)
-//            ));
-//        result.append(utility.createSummaryItem(
-//            tr("Ending date"), dateString(oven.carbonizationEnding)
-//            ));
         result.append(utility.createSummaryItem(
             QString(),
             QVariantList {
