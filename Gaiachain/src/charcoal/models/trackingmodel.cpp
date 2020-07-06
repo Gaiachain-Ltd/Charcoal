@@ -293,8 +293,8 @@ QVariantList TrackingModel::summaryForHarvest(
 
     for (const auto &ovenName : ovens.keys()) {
         const Oven oven = ovens.value(ovenName);
-
         QVariantList ovenSummary;
+
         ovenSummary.append(utility.createSummaryItem(
             QString(),
             QVariantList {

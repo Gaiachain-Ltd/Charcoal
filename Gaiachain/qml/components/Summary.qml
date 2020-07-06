@@ -116,26 +116,26 @@ ColumnLayout {
         }
     }
 
-//    Component {
-//        id: collapsibleComponent
+    Component {
+        id: collapsibleComponent
 
-//        Headers.CollapsibleHeader {
-//            Layout.fillWidth: true
+        Headers.CollapsibleHeader {
+            Layout.fillWidth: true
 
-//            headerText: headerValue
-//            summary: value
+            headerText: headerValue
+            summary: value
 
-//            //secondaryColor: isHighlighted? decorationColor
-//            //                             : GStyle.separatorColor
-//            //secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-//            //                                                     : GStyle.textReadonlyColor
-//            //backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
-//            //headerTexts: composite[0]
-//            //inputTexts: composite[1]
-//            //summaryMode: isSummaryMode
-//            //highlighted: isHighlighted
-//        }
-//    }
+            //secondaryColor: isHighlighted? decorationColor
+            //                             : GStyle.separatorColor
+            //secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
+            //                                                     : GStyle.textReadonlyColor
+            //backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
+            //headerTexts: composite[0]
+            //inputTexts: composite[1]
+            //summaryMode: isSummaryMode
+            //highlighted: isHighlighted
+        }
+    }
 
     Component {
         id: beginEndRowComponent

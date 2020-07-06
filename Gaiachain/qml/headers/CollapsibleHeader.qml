@@ -14,18 +14,19 @@ Item {
 
     property bool expanded: true
     property alias headerText: headerTextComponent.text
-    property alias summary: summaryComponent.summary
+    property var summary
 
-    height: mainColumn.height
+    height: mainColumn.implicitHeight
 
     ColumnLayout {
         id: mainColumn
-        Layout.fillWidth: true
+
+        width: parent.width
 
         MouseArea {
             id: headerRow
             Layout.fillWidth: true
-            height: headerTextComponent.height
+            height: headerTextComponent.height * 1.5
 
             onClicked: root.expanded = !root.expanded
 
@@ -34,6 +35,7 @@ Item {
                     top: parent.top
                     left: parent.left
                     right: parent.right
+                    topMargin: s(GStyle.bigMargin)
                 }
 
                 height: headerTextComponent.height
@@ -41,10 +43,17 @@ Item {
                 Items.GText {
                     id: headerTextComponent
                     Layout.fillWidth: true
+                    Layout.leftMargin: s(GStyle.bigMargin)
+
+                    font.pixelSize: s(GStyle.titlePixelSize)
+                    font.bold: true
+                    horizontalAlignment: Text.AlignLeft
                 }
 
                 Image {
                     id: arrowImage
+                    Layout.rightMargin: s(GStyle.bigMargin)
+
                     source: GStyle.rightBlackArrowImgUrl
                     rotation: root.expanded? 90 : 270
                     width: 30
@@ -54,12 +63,18 @@ Item {
             }
         }
 
-        Components.Summary {
-            id: summaryComponent
+        Loader {
+            id: summaryLoader
             Layout.fillWidth: true
 
-            isSummaryMode: true
             visible: root.expanded
+
+            source: root.expanded? "qrc:/components/Summary.qml" : ""
+
+            onLoaded: {
+                item.isSummaryMode = true
+                item.summary = root.summary
+            }
         }
     }
 }
