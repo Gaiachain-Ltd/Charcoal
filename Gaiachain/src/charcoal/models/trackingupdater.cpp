@@ -97,6 +97,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
     const Enums::PackageType type = packageType(webType);
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_connectionName, type));
     const bool isReplanted(object.value("plot_has_replantation").toBool(false));
+    const bool isFinished(object.value("is_finished").toBool(false));
 
     // Not parsed and not needed: "type_display" property
     const QJsonArray events(object.value("entities").toArray());
@@ -123,7 +124,8 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
         query.prepare("INSERT INTO Entities (typeId, name, parent, webId, "
                       "isFinished, isReplanted) "
-                      "VALUES (:typeId, :name, :parent, :webId, 0, :isReplanted)");
+                      "VALUES (:typeId, :name, :parent, :webId, "
+                      ":isFinished, :isReplanted)");
         query.bindValue(":typeId", typeId);
         query.bindValue(":name", pid);
         if (parentEntityId != -1) {
@@ -132,6 +134,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             query.bindValue(":parent", 0);
         }
         query.bindValue(":webId", webId);
+        query.bindValue(":isFinished", int(isFinished));
         query.bindValue(":isReplanted", int(isReplanted));
 
         if (query.exec() == false) {
