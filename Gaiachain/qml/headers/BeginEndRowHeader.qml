@@ -8,8 +8,8 @@ import com.gaiachain.helpers 1.0
 import "../items" as Items
 import "../headers" as Headers
 
-Item {
-    id: top
+RowLayout {
+    id: root
 
     Layout.fillWidth: true
 
@@ -21,40 +21,34 @@ Item {
     property bool summaryMode: true
     property bool highlighted: false
 
-    height: row.height
+    Headers.InputHeader {
+        implicitWidth: root.width * .5
+        secondaryColor: root.highlighted? root.secondaryColor
+                                        : GStyle.separatorColor
+        secondaryTextColor: (root.secondaryTextColor.length === 0)? root.secondaryColor
+                                                                  : GStyle.textReadonlyColor
+        backgroundColor: root.highlighted? root.backgroundColor : GStyle.backgroundColor
+        headerText: headerTexts[0]
+        inputText: inputTexts[0]
+        readOnly: true
+        iconSource: ""
+        summaryMode: root.summaryMode
+        highlighted: root.highlighted
+    }
 
-    RowLayout {
-        id: row
+    Headers.InputHeader {
+        implicitWidth: root.width * .5
 
-        Headers.InputHeader {
-            implicitWidth: top.width * .5
-            secondaryColor: top.highlighted? top.secondaryColor
-                                           : GStyle.separatorColor
-            secondaryTextColor: (top.secondaryTextColor.length === 0)? top.secondaryColor
-                                                                     : GStyle.textReadonlyColor
-            backgroundColor: top.highlighted? top.backgroundColor : GStyle.backgroundColor
-            headerText: headerTexts[0]
-            inputText: inputTexts[0]
-            readOnly: true
-            iconSource: ""
-            summaryMode: top.summaryMode
-            highlighted: top.highlighted
-        }
-
-        Headers.InputHeader {
-            implicitWidth: top.width * .5
-
-            secondaryColor: top.highlighted? top.secondaryColor
-                                           : GStyle.separatorColor
-            secondaryTextColor: (top.secondaryTextColor.length === 0)? top.secondaryColor
-                                                                     : GStyle.textReadonlyColor
-            backgroundColor: top.highlighted? top.backgroundColor : GStyle.backgroundColor
-            headerText: headerTexts[1]
-            inputText: inputTexts[1]
-            readOnly: true
-            iconSource: ""
-            summaryMode: top.summaryMode
-            highlighted: top.highlighted
-        }
+        secondaryColor: root.highlighted? root.secondaryColor
+                                        : GStyle.separatorColor
+        secondaryTextColor: (root.secondaryTextColor.length === 0)? root.secondaryColor
+                                                                  : GStyle.textReadonlyColor
+        backgroundColor: root.highlighted? root.backgroundColor : GStyle.backgroundColor
+        headerText: headerTexts[1]
+        inputText: inputTexts[1]
+        readOnly: true
+        iconSource: ""
+        summaryMode: root.summaryMode
+        highlighted: root.highlighted
     }
 }

@@ -9,73 +9,64 @@ import "../items" as Items
 import "../headers" as Headers
 import "../components" as Components
 
-Item {
+ColumnLayout {
     id: root
-
     Layout.fillWidth: true
 
     property bool expanded: true
     property alias headerText: headerTextComponent.text
     property var summary
 
-    height: mainColumn.height
+    MouseArea {
+        id: headerRow
+        Layout.fillWidth: true
+        height: headerTextComponent.height * 1.5
 
-    ColumnLayout {
-        id: mainColumn
+        onClicked: root.expanded = !root.expanded
 
-        width: parent.width
+        RowLayout {
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                topMargin: s(GStyle.bigMargin)
+            }
 
-        MouseArea {
-            id: headerRow
-            Layout.fillWidth: true
-            height: headerTextComponent.height * 1.5
+            height: headerTextComponent.height
 
-            onClicked: root.expanded = !root.expanded
+            Items.GText {
+                id: headerTextComponent
+                Layout.fillWidth: true
+                Layout.leftMargin: s(GStyle.bigMargin)
 
-            RowLayout {
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    topMargin: s(GStyle.bigMargin)
-                }
+                font.pixelSize: s(GStyle.titlePixelSize)
+                font.bold: true
+                horizontalAlignment: Text.AlignLeft
+            }
 
-                height: headerTextComponent.height
+            Image {
+                id: arrowImage
+                Layout.rightMargin: s(GStyle.bigMargin)
 
-                Items.GText {
-                    id: headerTextComponent
-                    Layout.fillWidth: true
-                    Layout.leftMargin: s(GStyle.bigMargin)
-
-                    font.pixelSize: s(GStyle.titlePixelSize)
-                    font.bold: true
-                    horizontalAlignment: Text.AlignLeft
-                }
-
-                Image {
-                    id: arrowImage
-                    Layout.rightMargin: s(GStyle.bigMargin)
-
-                    source: GStyle.rightBlackArrowImgUrl
-                    rotation: root.expanded? 90 : 270
-                    width: 30
-                    height: 30
-                    fillMode: Image.PreserveAspectFit
-                }
+                source: GStyle.rightBlackArrowImgUrl
+                rotation: root.expanded? 90 : 270
+                width: 30
+                height: 30
+                fillMode: Image.PreserveAspectFit
             }
         }
+    }
 
-        Loader {
-            id: summaryLoader
-            Layout.fillWidth: true
+    Loader {
+        id: summaryLoader
+        Layout.fillWidth: true
 
-            visible: root.expanded
-            source: root.expanded? "qrc:/components/Summary.qml" : ""
+        visible: root.expanded
+        source: root.expanded? "qrc:/components/Summary.qml" : ""
 
-            onLoaded: {
-                item.isSummaryMode = true
-                item.summary = root.summary
-            }
+        onLoaded: {
+            item.isSummaryMode = true
+            item.summary = root.summary
         }
     }
 }
