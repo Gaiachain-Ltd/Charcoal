@@ -12,11 +12,13 @@ import "../components" as Components
 Item {
     id: root
 
+    Layout.fillWidth: true
+
     property bool expanded: true
     property alias headerText: headerTextComponent.text
     property var summary
 
-    height: mainColumn.implicitHeight
+    height: mainColumn.height
 
     ColumnLayout {
         id: mainColumn
@@ -68,7 +70,6 @@ Item {
             Layout.fillWidth: true
 
             visible: root.expanded
-
             source: root.expanded? "qrc:/components/Summary.qml" : ""
 
             onLoaded: {
