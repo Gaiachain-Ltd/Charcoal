@@ -15,7 +15,7 @@ QtObject
     }
 
     property var sessionManagerConnections: Connections {
-        target: sessionManager
+        target: (mainController.flavor === "cocoa")? sessionManager : null
         enabled: (Number(pageManager.topPage) === page)
 
         // handle notification for package sent error (here for offline added actions)
@@ -42,7 +42,7 @@ QtObject
     }
 
     property var dataManagerConnections: Connections {
-        target: dataManager
+        target: (mainController.flavor === "cocoa")? dataManager : null
         enabled: (Number(pageManager.topPage) === page)
 
         onLocalActionDataError: {
