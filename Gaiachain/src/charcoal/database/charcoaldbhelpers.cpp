@@ -138,6 +138,40 @@ int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int 
     return getSimpleInteger(connectionName, "Entities", "id", entityId, "webId");
 }
 
+/*!
+ * Returns all webIds for packages where name of the plot is \a plotName
+ * or has \a parentId, using SQL connection \a connectionName.
+ */
+QVector<int> CharcoalDbHelpers::getWebPackageIds(const QString &connectionName,
+                                                 const QString &plotName,
+                                                 const int parentId)
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+    query.prepare("SELECT webId FROM Entities WHERE name=:plotId "
+                  "OR parent=:parentId");
+    query.bindValue(":plotId", plotName);
+    query.bindValue(":parentId", parentId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Getting list of web IDs has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "with params:" << plotName << parentId;
+        return {};
+    }
+
+    QVector<int> result;
+    bool ok = false;
+    while (query.next()) {
+        const int id = query.value("webId").toInt(&ok);
+        if (ok) {
+            result.append(id);
+        }
+    }
+
+    return result;
+}
+
 int CharcoalDbHelpers::getVillageId(const QString &connectionName, const QString &name)
 {
     return getSimpleInteger(connectionName, "Villages", "name", name, "id");
