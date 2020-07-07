@@ -133,7 +133,7 @@ Pages.SupplyChainPageBase {
     Component {
         id: standardComponent
 
-        Headers.InputHeader {
+        Headers.TextHeader {
             Layout.fillWidth: true
 
             secondaryColor: isHighlighted? decorationColor
@@ -142,9 +142,8 @@ Pages.SupplyChainPageBase {
                                                                  : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
-            inputText: value
+            text: value
             suffixText: suffixValue
-            readOnly: true
             iconSource: inputIconSource ? inputIconSource : ""
             summaryMode: isSummaryMode
             highlighted: isHighlighted
