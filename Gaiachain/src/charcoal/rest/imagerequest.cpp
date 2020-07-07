@@ -33,6 +33,8 @@ void ImageRequest::parse()
                                 << ") finished. Elapsed time:"
                                 << mElapsedTimer.elapsed();
     }
+
+    emit requestFinished(mReplyDocument);
 }
 
 void ImageRequest::readReplyData(const QString &requestName, const QString &status)
