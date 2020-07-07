@@ -46,7 +46,11 @@ Item {
 
             font.pixelSize: s(GStyle.titlePixelSize)
 
-            text: "www.malebi.gaiachain.io"
+            text: "<a href=\"http://www.malebi.gaiachain.io\">www.malebi.gaiachain.io</a>"
+
+            linkColor: "#000000"
+
+            onLinkActivated: Qt.openUrlExternally(link)
         }
 
         Items.GText {
@@ -54,7 +58,11 @@ Item {
 
             font.pixelSize: s(GStyle.titlePixelSize)
 
-            text: userManager.userData.email
+            text: "<a href=\"god@gaiachain.io\">god@gaiachain.io</a>"
+
+            linkColor: "#000000"
+
+            onLinkActivated: Qt.openUrlExternally(link)
         }
 
         Items.LayoutSeparator {
