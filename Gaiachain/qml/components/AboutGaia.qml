@@ -16,13 +16,13 @@ Item {
         id: mainLayout
 
         anchors.fill: parent
-        spacing: s(GStyle.tinyMargin)
+        spacing: s(GStyle.middleMargin)
 
         Items.GText {
             Layout.fillWidth: true
 
             font {
-                pixelSize: s(GStyle.titlePixelSize)
+                pixelSize: s(GStyle.bigPixelSize)
                 bold: true
             }
 
@@ -32,18 +32,39 @@ Item {
         Items.GText {
             Layout.fillWidth: true
 
-            font.pixelSize: s(GStyle.subtitlePixelSize)
+            font.pixelSize: s(GStyle.titlePixelSize)
 
             text: "v%1:%2".arg(mainController.application.version)
                           .arg(mainController.application.commit)
         }
 
         Items.LayoutSeparator {
+        }
 
+        Items.GText {
+            Layout.fillWidth: true
+
+            font.pixelSize: s(GStyle.titlePixelSize)
+
+            text: "www.malebi.gaiachain.io"
+        }
+
+        Items.GText {
+            Layout.fillWidth: true
+
+            font.pixelSize: s(GStyle.titlePixelSize)
+
+            text: userManager.userData.email
+        }
+
+        Items.LayoutSeparator {
         }
 
         AboutGaiaDependency {
             Layout.fillWidth: true
+        }
+
+        Items.LayoutSeparator {
         }
 
         MouseArea {
