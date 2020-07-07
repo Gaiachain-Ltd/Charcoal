@@ -28,7 +28,6 @@ private:
     QString getEventType(const QString &id) const;
     QString findEventByTimestamp(const qint64 timestamp) const;
     bool updateEntityWebId(const qint64 webId, const QString &eventId) const;
-    QJsonObject dbStringToPropertiesObject(const QString &properties) const;
     QJsonObject dbMapToWebObject(QJsonObject object, const int entityId) const;
 
     QPointer<PicturesManager> m_picturesManager;

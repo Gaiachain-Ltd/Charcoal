@@ -17,14 +17,6 @@ void ImageRequest::setPath(const QString &path)
 {
     Q_ASSERT_X(!path.isEmpty(), __PRETTY_FUNCTION__, "Path address not provided!");
 
-    //QString justDateTime(mFileName);
-    //justDateTime = justDateTime.mid(mFileName.indexOf('-', 0) + 1);
-    //justDateTime.truncate(justDateTime.lastIndexOf('.'));
-    //
-    //const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
-    //
-    //mPath = QString("%1/%2/%3").arg(path, timestamp.toString("yyyy/MM/dd"), mFileName);
-
     mPath = path;
     mUrl.setUrl(SERVER_ADDRESS + mPath);
 }

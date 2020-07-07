@@ -59,7 +59,7 @@ void EventsSender::sendEvents()
         // might break the main query!
         const qint64 timestamp =
             static_cast<qint64>(query().value("date").toLongLong());
-        const QString properties(query().value("properties").toString());
+        const QString properties(query().value(Tags::properties).toString());
 
         const int entityId(query().value("entityId").toInt());
         const int typeId(query().value("typeId").toInt());
@@ -69,18 +69,19 @@ void EventsSender::sendEvents()
             { "longitude", query().value("locationLongitude").toDouble() }
         });
 
-        const QJsonObject propertiesObject(dbStringToPropertiesObject(properties));
+        const QJsonObject propertiesObject(
+            CharcoalDbHelpers::dbPropertiesToJson(properties));
         QStringList toUpload;
 
-        if (propertiesObject.contains(Tags::documents)) {
-            const auto array = propertiesObject.value(Tags::documents).toArray();
+        if (propertiesObject.contains(Tags::webDocuments)) {
+            const auto array = propertiesObject.value(Tags::webDocuments).toArray();
             for (const auto &item : array) {
                 toUpload.append(item.toString());
             }
         }
 
-        if (propertiesObject.contains(Tags::receipts)) {
-            const auto array = propertiesObject.value(Tags::receipts).toArray();
+        if (propertiesObject.contains(Tags::webReceipts)) {
+            const auto array = propertiesObject.value(Tags::webReceipts).toArray();
             for (const auto &item : array) {
                 toUpload.append(item.toString());
             }
@@ -100,7 +101,7 @@ void EventsSender::sendEvents()
                 { "action", action },
                 { "timestamp", timestamp },
                 { "location", location },
-                { "properties", dbMapToWebObject(propertiesObject, entityId) }
+                { Tags::properties, dbMapToWebObject(propertiesObject, entityId) }
             });
 
         QSharedPointer<BaseRequest> request;
@@ -197,9 +198,27 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
 void EventsSender::onFetchPhoto(const QString &path)
 {
-    qDebug() << "Fetch photo:" << path;
+    QString adjusted;
+    const QString prefix("/media/photos/");
+
+    if (path.contains(prefix)) {
+        adjusted = path;
+    } else {
+        adjusted.append(prefix);
+
+        QString justDateTime(path);
+        justDateTime = justDateTime.mid(path.indexOf('-', 0) + 1);
+        justDateTime.truncate(justDateTime.lastIndexOf('.'));
+        const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
+        //path = QString("%1/%2/%3").arg(path, timestamp.toString("yyyy/MM/dd"), path);
+        adjusted.append(timestamp.toString("yyyy/MM/dd"));
+        adjusted.append("/");
+        adjusted.append(path);
+    }
+
+    qDebug() << "Fetch photo:" << adjusted;
     const auto request = QSharedPointer<ImageRequest>::create(
-        path, m_picturesManager->cachePath());
+        adjusted, m_picturesManager->cachePath());
 
     if (m_userManager->isLoggedIn()) {
         m_sessionManager->sendRequest(request);
@@ -261,12 +280,6 @@ bool EventsSender::updateEntityWebId(const qint64 webId, const QString &eventId)
     return false;
 }
 
-QJsonObject EventsSender::dbStringToPropertiesObject(const QString &properties) const
-{
-    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toUtf8()));
-    return propertiesDoc.object();
-}
-
 /*!
  * This method takes \a properties from Events database and transformes
  * them into a JSON object understood by Web.
@@ -288,14 +301,14 @@ QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
         }
     }
 
-    if (object.value(Tags::documents).isNull() == false) {
+    if (object.value(Tags::webDocuments).isNull() == false) {
         // We don't need to pass documents in properties, we send them separately
-        object.remove(Tags::documents);
+        object.remove(Tags::webDocuments);
     }
 
-    if (object.value(Tags::receipts).isNull() == false) {
+    if (object.value(Tags::webReceipts).isNull() == false) {
         // We don't need to pass receipts in properties, we send them separately
-        object.remove(Tags::receipts);
+        object.remove(Tags::webReceipts);
     }
 
     return object;
