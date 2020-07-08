@@ -16,13 +16,13 @@ Item {
         id: mainLayout
 
         anchors.fill: parent
-        spacing: s(GStyle.tinyMargin)
+        spacing: s(GStyle.middleMargin)
 
         Items.GText {
             Layout.fillWidth: true
 
             font {
-                pixelSize: s(GStyle.titlePixelSize)
+                pixelSize: s(GStyle.bigPixelSize)
                 bold: true
             }
 
@@ -32,18 +32,47 @@ Item {
         Items.GText {
             Layout.fillWidth: true
 
-            font.pixelSize: s(GStyle.subtitlePixelSize)
+            font.pixelSize: s(GStyle.titlePixelSize)
 
             text: "v%1:%2".arg(mainController.application.version)
                           .arg(mainController.application.commit)
         }
 
         Items.LayoutSeparator {
+        }
 
+        Items.GText {
+            Layout.fillWidth: true
+
+            font.pixelSize: s(GStyle.titlePixelSize)
+
+            text: "<a href=\"http://www.malebi.gaiachain.io\">www.malebi.gaiachain.io</a>"
+
+            linkColor: "#000000"
+
+            onLinkActivated: Qt.openUrlExternally(link)
+        }
+
+        Items.GText {
+            Layout.fillWidth: true
+
+            font.pixelSize: s(GStyle.titlePixelSize)
+
+            text: "<a href=\"god@gaiachain.io\">god@gaiachain.io</a>"
+
+            linkColor: "#000000"
+
+            onLinkActivated: Qt.openUrlExternally(link)
+        }
+
+        Items.LayoutSeparator {
         }
 
         AboutGaiaDependency {
             Layout.fillWidth: true
+        }
+
+        Items.LayoutSeparator {
         }
 
         MouseArea {

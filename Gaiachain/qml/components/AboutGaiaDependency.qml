@@ -50,16 +50,26 @@ Item {
 
             Layout.fillWidth: true
 
+            currentIndex: swipeView.currentIndex
+
             Repeater {
                 model: dependencies
 
                 Items.GTabButton {
                     text: name
+
+                    selectedColor: GStyle.headerBackgroundColor
+                    deselectedColor: GStyle.backgroundColor
+
+                    selectedFontColor: GStyle.backgroundColor
+                    deselectedFontColor: GStyle.textTabColor
                 }
             }
         }
 
         SwipeView {
+            id: swipeView
+
             Layout.fillWidth: true
 
             currentIndex: tabBar.currentIndex
