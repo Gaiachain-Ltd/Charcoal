@@ -17,10 +17,14 @@ public:
 public slots:
     void sendEvents();
 
+    void onFinalizePackage(const int webId);
+    void onFinalizePackages(const QVector<int> &webIds);
+
 protected slots:
     void webErrorHandler(const QString &errorStringString,
                          const QNetworkReply::NetworkError code) override;
     void webReplyHandler(const QJsonDocument &reply) override;
+    void finalizationReplyHandler(const QJsonDocument &reply);
 
     void onFetchPhoto(const QString &path);
 
@@ -28,7 +32,6 @@ private:
     QString getEventType(const QString &id) const;
     QString findEventByTimestamp(const qint64 timestamp) const;
     bool updateEntityWebId(const qint64 webId, const QString &eventId) const;
-    QJsonObject dbStringToPropertiesObject(const QString &properties) const;
     QJsonObject dbMapToWebObject(QJsonObject object, const int entityId) const;
 
     QPointer<PicturesManager> m_picturesManager;

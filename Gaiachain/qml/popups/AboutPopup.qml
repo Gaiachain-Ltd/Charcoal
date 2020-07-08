@@ -26,10 +26,10 @@ ButtonPopup {
                 topMargin: s(GStyle.smallMargin)
             }
 
-            source: GStyle.clearImgUrl
+            source: GStyle.closeBlackImgUrl
 
-            width: 64
-            height: 64
+            width: s(40)
+            height: width
 
             onClicked: pageManager.closePopup()
         }

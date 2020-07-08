@@ -75,10 +75,10 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
     QString transportEntityId;
     if (query.exec()) {
         while (query.next()) {
-            const QByteArray propertiesString(query.value("properties").toByteArray());
-            const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-            const QVariantMap properties(propertiersJson.toVariant().toMap());
-            const QVariantList qrs(properties.value(Tags::webQrCodes).toList());
+            const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+            const QJsonObject properties(
+                CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+            const QVariantList qrs(properties.value(Tags::webQrCodes).toArray().toVariantList());
 
             for (const QVariant &qr : scannedQrs) {
                 if (qrs.contains(qr)) {
@@ -170,11 +170,9 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
 
     if (query.exec()) {
         query.next();
-        const QByteArray propertiesString(query.value("properties").toByteArray());
-        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-        const QVariantMap properties(propertiersJson.toVariant().toMap());
-        //qDebug() << "Plate number?" << properties;
-        // TODO: use Tags!
+        const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+        const QJsonObject properties(
+            CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
         return properties.value(Tags::webPlateNumber).toString();
     }
 
@@ -779,6 +777,24 @@ void ActionController::registerReception(
         return;
     }
 
+    // Special case: if this replantation ALREADY EXISTS, we skip inserting it
+    // into DB.
+    // This can only happen for debug server where we have some dummy, unfinished
+    // events
+    const int existing = CharcoalDbHelpers::getInteger(
+        m_dbConnName, "Events",
+        { "entityId", "typeId" },
+        { entityId, eventTypeId },
+        "id",
+        QString(), false
+        );
+
+    if (existing != -1) {
+        qDebug() << RED("Reception already exists - special case!")
+                 << entityId << eventTypeId << existing;
+        return;
+    }
+
     const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
     const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));
 
@@ -798,8 +814,8 @@ void ActionController::registerReception(
 
     query.bindValue(":properties",
                     CharcoalDbHelpers::propertiesToString(QVariantMap {
-                        { Tags::documents, cachedDocs },
-                        { Tags::receipts, cachedRecs },
+                        { Tags::webDocuments, cachedDocs },
+                        { Tags::webReceipts, cachedRecs },
                         { Tags::webQrCodes, scannedQrs },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
@@ -813,20 +829,29 @@ void ActionController::registerReception(
     emit refreshLocalEvents();
 }
 
-void ActionController::finalizeSupplyChain(const QString &plotId) const
+void ActionController::finalizeSupplyChain(const QString &plotName) const
 {
-    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
+    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotName));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId OR parent=:parentId");
-    query.bindValue(":plotId", plotId);
+    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId "
+                  "OR parent=:parentId");
+    query.bindValue(":plotId", plotName);
     query.bindValue(":parentId", parentId);
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing a supply chain has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "with params:" << plotId << parentId;
+                   << "with params:" << plotName << parentId;
         return;
+    }
+
+    // In online mode - send finalization call.
+    // In offline mode - do nothing. Finalization will be handled by TrackingModel
+    const auto webIds = CharcoalDbHelpers::getWebPackageIds(
+        m_dbConnName, plotName, parentId);
+    if (webIds.isEmpty() == false) {
+        emit finalizePackages(webIds);
     }
 }
 
@@ -918,10 +943,10 @@ int ActionController::scannedBagsForAction(const QString &transportId,
 
     int total = 0;
     while(query.next()) {
-        const QByteArray propertiesString(query.value("properties").toByteArray());
-        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-        const QVariantMap properties(propertiersJson.toVariant().toMap());
-        total += properties.value(Tags::webQrCodes).toList().size();
+        const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+        const QJsonObject properties(
+            CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+        total += properties.value(Tags::webQrCodes).toArray().size();
     }
 
     return total;

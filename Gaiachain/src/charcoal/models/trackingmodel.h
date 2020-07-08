@@ -79,6 +79,9 @@ public:
     QVariantList summaryForHarvest(const Entity entity, const QVector<Event> &events) const;
     QVariantList summaryForTransport(const Entity entity, const QVector<Event> &events) const;
 
+signals:
+    void finalizePackages(const QVector<int> &webIds) const;
+
 public slots:
     void refreshWebData() override;
 
@@ -90,6 +93,7 @@ private:
     QString dateString(const qint64 timestamp) const;
 
     void startPackageDetailsUpdate();
+    void getMissingPictures();
 
     const QHash<int, QByteArray> m_roleNames = {
         { TrackingRole::Id, "eventId" },

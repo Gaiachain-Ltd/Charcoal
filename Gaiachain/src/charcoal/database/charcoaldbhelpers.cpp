@@ -92,7 +92,7 @@ int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const 
 
     if (query.exec()) {
         query.next();
-        const QByteArray propertiesString(query.value("properties").toByteArray());
+        const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
         const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
         const QVariantMap properties(propertiersJson.toVariant().toMap());
         return properties.value(Tags::webQrCodes).toList().size();
@@ -133,9 +133,49 @@ QVariantList CharcoalDbHelpers::defaultOvenDimensions(const QString &connectionN
     return dimensions;
 }
 
+QJsonObject CharcoalDbHelpers::dbPropertiesToJson(const QString &properties)
+{
+    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toUtf8()));
+    return propertiesDoc.object();
+}
+
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)
 {
     return getSimpleInteger(connectionName, "Entities", "id", entityId, "webId");
+}
+
+/*!
+ * Returns all webIds for packages where name of the plot is \a plotName
+ * or has \a parentId, using SQL connection \a connectionName.
+ */
+QVector<int> CharcoalDbHelpers::getWebPackageIds(const QString &connectionName,
+                                                 const QString &plotName,
+                                                 const int parentId)
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+    query.prepare("SELECT webId FROM Entities WHERE name=:plotId "
+                  "OR parent=:parentId");
+    query.bindValue(":plotId", plotName);
+    query.bindValue(":parentId", parentId);
+
+    if (query.exec() == false) {
+        qWarning() << RED("Getting list of web IDs has failed!")
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery()
+                   << "with params:" << plotName << parentId;
+        return {};
+    }
+
+    QVector<int> result;
+    bool ok = false;
+    while (query.next()) {
+        const int id = query.value("webId").toInt(&ok);
+        if (ok) {
+            result.append(id);
+        }
+    }
+
+    return result;
 }
 
 int CharcoalDbHelpers::getVillageId(const QString &connectionName, const QString &name)
