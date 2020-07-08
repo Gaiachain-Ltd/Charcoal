@@ -220,9 +220,20 @@ QVariantList TrackingModel::summaryForPlot(
     result.append(utility.createSummaryItem(
         tr("Village"), village));
     result.append(utility.createSummaryItem(
-        tr("Beginning date"), dateString(beginningTimestamp)));
-    result.append(utility.createSummaryItem(
-        tr("Ending date"), dateString(endingTimestamp)));
+        QString(),
+        QVariantList {
+            QVariantList {
+                tr("Beginning date"),
+                tr("Ending date")
+            },
+            QVariantList {
+                dateString(beginningTimestamp),
+                dateString(endingTimestamp)
+            }
+        },
+        QString(), QString(), QString(), QString(), QString(),
+        Enums::DelegateType::BeginEndRow
+        ));
     result.append(utility.createSummaryItem(
         tr("Tree species"), treeSpecies));
     return result;
@@ -267,8 +278,6 @@ QVariantList TrackingModel::summaryForHarvest(
         m_plotHighlightColor, m_plotTextColor, QString(),
         Enums::DelegateType::ColumnStack));
 
-    // TODO: collapsible oven summary!
-
     // QMap because we want it to be *sorted*
     QMap<QString, Oven> ovens;
     for (const auto &event : events) {
@@ -284,18 +293,26 @@ QVariantList TrackingModel::summaryForHarvest(
 
     for (const auto &ovenName : ovens.keys()) {
         const Oven oven = ovens.value(ovenName);
-        result.append(utility.createSummaryItem(
-            tr("Oven %1").arg(oven.name), QString()
+        QVariantList ovenSummary;
+
+        ovenSummary.append(utility.createSummaryItem(
+            QString(),
+            QVariantList {
+                QVariantList {
+                    tr("Beginning date"),
+                    tr("Ending date")
+                },
+                QVariantList {
+                    dateString(oven.carbonizationBeginning),
+                    dateString(oven.carbonizationEnding)
+                }
+            },
+            QString(), QString(), QString(), QString(), QString(),
+            Enums::DelegateType::BeginEndRow
             ));
-        result.append(utility.createSummaryItem(
-            tr("Beginning date"), dateString(oven.carbonizationBeginning)
-            ));
-        result.append(utility.createSummaryItem(
-            tr("Ending date"), dateString(oven.carbonizationEnding)
-            ));
-        result.append(utility.createSummaryItem(
+        ovenSummary.append(utility.createSummaryItem(
             tr("Carbonizer ID"), oven.carbonizerId));
-        result.append(utility.createSummaryItem(
+        ovenSummary.append(utility.createSummaryItem(
             tr("Oven measurement (meters)"),
             QVariantList {
                 QVariantList {
@@ -311,8 +328,14 @@ QVariantList TrackingModel::summaryForHarvest(
             },
             QString(), QString(), QString(), QString(), QString(),
             Enums::DelegateType::Row));
-        result.append(utility.createSummaryItem(
+        ovenSummary.append(utility.createSummaryItem(
             tr("Timber volume"), QString("%1 m³").arg(oven.volume())
+            ));
+
+        result.append(utility.createSummaryItem(
+            tr("Oven %1").arg(oven.name), ovenSummary,
+            QString(), QString(), QColor(), QColor(), QColor(),
+            Enums::DelegateType::Collapsible
             ));
     }
 
@@ -452,8 +475,14 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
 {
     //qDebug() << "Data is:" << reply;
     TrackingUpdater updater(m_connectionName);
-    if (updater.updateTable(reply)) {
+    const auto result = updater.updateTable(reply);
+    if (result.success) {
         getMissingPictures();
+        
+        if (result.toFinish.isEmpty() == false) {
+            emit finalizePackages(result.toFinish);
+        }
+        
         startPackageDetailsUpdate();
     } else {
         emit error(tr("Error updating tracking information"));

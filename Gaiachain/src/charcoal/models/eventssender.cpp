@@ -155,6 +155,30 @@ void EventsSender::sendEvents()
     }
 }
 
+void EventsSender::onFinalizePackage(const int webId)
+{
+    const auto request = QSharedPointer<BaseRequest>::create(
+        QString("/entities/packages/%1/finalize_supply_chain/").arg(webId),
+        BaseRequest::Type::Post);
+
+    if (m_userManager->isLoggedIn()) {
+        request->setToken(m_sessionManager->token());
+        m_sessionManager->sendRequest(request, this,
+                                      &EventsSender::webErrorHandler,
+                                      &EventsSender::finalizationReplyHandler);
+    } else {
+        qDebug() << "Enqueing request";
+        m_queuedRequests.append(request);
+    }
+}
+
+void EventsSender::onFinalizePackages(const QVector<int> &webIds)
+{
+    for (const int webId : webIds) {
+        onFinalizePackage(webId);
+    }
+}
+
 void EventsSender::webErrorHandler(const QString &errorString,
                                    const QNetworkReply::NetworkError code)
 {
@@ -194,6 +218,11 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
                    << timestamp << "pid" << pid << "eid" << entityWebId;
         emit error(errorString);
     }
+}
+
+void EventsSender::finalizationReplyHandler(const QJsonDocument &reply)
+{
+    qDebug() << "Finalization successful" << reply;
 }
 
 void EventsSender::onFetchPhoto(const QString &path)

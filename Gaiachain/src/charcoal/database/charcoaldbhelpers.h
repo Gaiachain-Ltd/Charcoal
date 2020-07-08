@@ -21,6 +21,9 @@ public:
     static QJsonObject dbPropertiesToJson(const QString &properties);
 
     static int getWebPackageId(const QString &connectionName, const int entityId);
+    static QVector<int> getWebPackageIds(const QString &connectionName,
+                                         const QString &plotName,
+                                         const int parentId);
     static int getVillageId(const QString &connectionName, const QString &name);
     static int getDestinationId(const QString &connectionName, const QString &name);
     static int getParcelId(const QString &connectionName, const QString &parcel);

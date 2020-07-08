@@ -113,5 +113,8 @@
         <file>popups/WaitOverlayPopup.qml</file>
         <file>popups/ConfirmPopup.qml</file>
         <file>popups/NotificationWithLinkPopup.qml</file>
+        <file>headers/CollapsibleHeader.qml</file>
+        <file>headers/BeginEndRowHeader.qml</file>
+        <file>components/Summary.qml</file>
     </qresource>
 </RCC>

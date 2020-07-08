@@ -31,19 +31,22 @@ void TrackingUpdater::setPicturesManager(PicturesManager *manager)
     m_picturesManager = manager;
 }
 
-bool TrackingUpdater::updateTable(const QJsonDocument &json) const
+UpdateResult TrackingUpdater::updateTable(const QJsonDocument &json) const
 {
     const QJsonObject mainObject(json.object());
     const QJsonArray mainArray(mainObject.value("results").toArray());
+    UpdateResult result;
 
     // We go back-to-front, in order to register oldest events first
     for (int i = mainArray.size() - 1; i >= 0; --i) {
-        if (processTrackingItem(mainArray.at(i).toObject()) == false) {
-            return false;
+        result = processTrackingItem(mainArray.at(i).toObject(), result);
+        if (result.success == false) {
+            return result;
         }
     }
 
-    return true;
+    result.success = true;
+    return result;
 }
 
 bool TrackingUpdater::updateDetails(const QJsonDocument &json) const
@@ -89,7 +92,8 @@ bool TrackingUpdater::isValid() const
     return m_connectionName.isEmpty() == false;
 }
 
-bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
+UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
+                                                  UpdateResult result) const
 {
     const int webId(object.value("id").toInt(-1));
     const QString pid(object.value(Tags::pid).toString());
@@ -97,6 +101,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
     const Enums::PackageType type = packageType(webType);
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_connectionName, type));
     const bool isReplanted(object.value("plot_has_replantation").toBool(false));
+    const bool isFinished(object.value("is_finished").toBool(false));
 
     // Not parsed and not needed: "type_display" property
     const QJsonArray events(object.value("entities").toArray());
@@ -118,12 +123,54 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             m_connectionName, ppid, false);
     }
 
-    if (entityId == -1) {
-        // Entity does not exist in our DB - add it!
+    {
+        QString entityString;
+        if (entityId == -1) {
+            // Entity does not exist in our DB - add it!
+            entityString = "INSERT INTO Entities (typeId, name, parent, webId, "
+                           "isFinished, isReplanted) "
+                           "VALUES (:typeId, :name, :parent, :webId, "
+                           ":isFinished, :isReplanted)";
+        } else {
+            QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+            query.prepare("SELECT isReplanted, isFinished FROM Entities "
+                          "WHERE id=:entityId");
+            query.bindValue(":entityId", entityId);
+
+            if (query.exec() == false || query.next() == false) {
+                qWarning() << RED("Checking existing entity has failed!")
+                           << query.lastError().text()
+                           << "for query:" << query.lastQuery();
+                result.success = false;
+                return result;
+            }
+
+            //const bool localReplanted = bool(query.value("isReplanted").toInt());
+            const bool localFinished = bool(query.value("isFinished").toInt());
+
+            //if (localReplanted && !isReplanted) {
+            //    qDebug() << "R Local state:" << localReplanted
+            //             << "remote:" << isReplanted;
+            //    // Web has to be informed that package has been replanted!
+            //    result.toReplant.append(webId);
+            //}
+
+            if (localFinished && !isFinished) {
+                qDebug() << "F Local state:" << localFinished
+                         << "remote:" << isFinished;
+                // Web has to be informed that package has been finished!
+                result.toFinish.append(webId);
+            }
+
+            // update Entity if it exists!
+            entityString = "UPDATE Entities SET typeId=:typeId, name=:name, "
+                           "parent=:parent, webId=:webId, "
+                           "isFinished=:isFinished, isReplanted=:isReplanted "
+                           "WHERE id=:entityId";
+        }
+
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("INSERT INTO Entities (typeId, name, parent, webId, "
-                      "isFinished, isReplanted) "
-                      "VALUES (:typeId, :name, :parent, :webId, 0, :isReplanted)");
+        query.prepare(entityString);
         query.bindValue(":typeId", typeId);
         query.bindValue(":name", pid);
         if (parentEntityId != -1) {
@@ -132,16 +179,24 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
             query.bindValue(":parent", 0);
         }
         query.bindValue(":webId", webId);
+        query.bindValue(":isFinished", int(isFinished));
         query.bindValue(":isReplanted", int(isReplanted));
-
-        if (query.exec() == false) {
-            qWarning() << RED("Inserting Entity has failed!")
-                       << query.lastError().text()
-                       << "for query:" << query.lastQuery();
-            return false;
+        if (entityId != -1) {
+            query.bindValue(":entityId", entityId);
         }
 
-        entityId = query.lastInsertId().toInt();
+        if (query.exec() == false) {
+            qWarning() << RED("Inserting or updating Entity has failed!")
+                       << query.lastError().text()
+                       << "for query:" << query.lastQuery()
+                       << entityId;
+            result.success = false;
+            return result;
+        }
+
+        if (entityId == -1) {
+            entityId = query.lastInsertId().toInt();
+        }
     }
 
     for (const QJsonValue &value : events) {
@@ -162,9 +217,9 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                                                     eventTypeId, timestamp, false);
         }
 
-        QString queryString;
+        QString eventString;
         if (eventId == -1) {
-            queryString = "INSERT INTO Events (entityId, typeId, userId, "
+            eventString = "INSERT INTO Events (entityId, typeId, userId, "
                           "webId, parentWebId, "
                           "date, eventDate, locationLatitude, locationLongitude, "
                           "isCommitted) "
@@ -173,7 +228,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
                           ":date, :eventDate, :locationLatitude, :locationLongitude, "
                           " 1)";
         } else {
-            queryString = "UPDATE Events SET "
+            eventString = "UPDATE Events SET "
                           "entityId=:entityId, typeId=:typeId, userId=:userId, "
                           "webId=:eventWebId, parentWebId=:parentWebId, "
                           "date=:date, eventDate=:eventDate, "
@@ -184,7 +239,7 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         }
 
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare(queryString);
+        query.prepare(eventString);
         query.bindValue(":entityId", entityId);
         query.bindValue(":typeId", eventTypeId);
         query.bindValue(":userId", userId);
@@ -202,11 +257,13 @@ bool TrackingUpdater::processTrackingItem(const QJsonObject &object) const
         if (query.exec() == false) {
             qWarning() << RED("Inserting or updating event has failed!")
                        << query.lastError().text() << "for query:" << query.lastQuery();
-            return false;
+            result.success = false;
+            return result;
         }
     }
 
-    return true;
+    result.success = true;
+    return result;
 }
 
 bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) const
