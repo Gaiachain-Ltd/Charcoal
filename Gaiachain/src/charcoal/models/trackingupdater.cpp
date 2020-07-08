@@ -470,13 +470,13 @@ bool TrackingUpdater::processDetailsReception(const QJsonObject &object) const
     const qint64 eventDate = object.value("reception_date").toVariant().toLongLong();
 
     const QStringList scannedQrs(getQrCodes(object.value("bags").toArray()));
-    const QStringList docs(getImages(object.value("documents_photos").toArray()));
-    const QStringList recs(getImages(object.value("receipt_photos").toArray()));
+    const QStringList docs(getImages(object.value(Tags::webDocuments).toArray()));
+    const QStringList recs(getImages(object.value(Tags::webReceipts).toArray()));
 
     return updateEventDetails(webId, timestamp,
                               {
-                                  { Tags::documents, docs },
-                                  { Tags::receipts, recs },
+                                  { Tags::webDocuments, docs },
+                                  { Tags::webReceipts, recs },
                                   { Tags::webQrCodes, scannedQrs },
                                   { Tags::webEventDate, eventDate }
                               });

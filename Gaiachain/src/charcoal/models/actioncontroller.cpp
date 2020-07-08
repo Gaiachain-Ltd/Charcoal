@@ -75,10 +75,10 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
     QString transportEntityId;
     if (query.exec()) {
         while (query.next()) {
-            const QByteArray propertiesString(query.value("properties").toByteArray());
-            const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-            const QVariantMap properties(propertiersJson.toVariant().toMap());
-            const QVariantList qrs(properties.value(Tags::webQrCodes).toList());
+            const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+            const QJsonObject properties(
+                CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+            const QVariantList qrs(properties.value(Tags::webQrCodes).toArray().toVariantList());
 
             for (const QVariant &qr : scannedQrs) {
                 if (qrs.contains(qr)) {
@@ -170,11 +170,9 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
 
     if (query.exec()) {
         query.next();
-        const QByteArray propertiesString(query.value("properties").toByteArray());
-        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-        const QVariantMap properties(propertiersJson.toVariant().toMap());
-        //qDebug() << "Plate number?" << properties;
-        // TODO: use Tags!
+        const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+        const QJsonObject properties(
+            CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
         return properties.value(Tags::webPlateNumber).toString();
     }
 
@@ -816,8 +814,8 @@ void ActionController::registerReception(
 
     query.bindValue(":properties",
                     CharcoalDbHelpers::propertiesToString(QVariantMap {
-                        { Tags::documents, cachedDocs },
-                        { Tags::receipts, cachedRecs },
+                        { Tags::webDocuments, cachedDocs },
+                        { Tags::webReceipts, cachedRecs },
                         { Tags::webQrCodes, scannedQrs },
                         { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                     }));
@@ -945,10 +943,10 @@ int ActionController::scannedBagsForAction(const QString &transportId,
 
     int total = 0;
     while(query.next()) {
-        const QByteArray propertiesString(query.value("properties").toByteArray());
-        const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
-        const QVariantMap properties(propertiersJson.toVariant().toMap());
-        total += properties.value(Tags::webQrCodes).toList().size();
+        const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+        const QJsonObject properties(
+            CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+        total += properties.value(Tags::webQrCodes).toArray().size();
     }
 
     return total;

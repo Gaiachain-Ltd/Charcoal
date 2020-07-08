@@ -93,6 +93,7 @@ private:
     QString dateString(const qint64 timestamp) const;
 
     void startPackageDetailsUpdate();
+    void getMissingPictures();
 
     const QHash<int, QByteArray> m_roleNames = {
         { TrackingRole::Id, "eventId" },

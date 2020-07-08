@@ -374,12 +374,12 @@ QVariantList TrackingModel::summaryForTransport(
 
             const QString cache(m_picturesManager->cachePath());
 
-            const QJsonArray docsArray(event.properties.value(Tags::documents).toArray());
+            const QJsonArray docsArray(event.properties.value(Tags::webDocuments).toArray());
             for (const auto &value : docsArray) {
                 docs.append(cache + "/" + value.toString());
             }
 
-            const QJsonArray recsArray(event.properties.value(Tags::receipts).toArray());
+            const QJsonArray recsArray(event.properties.value(Tags::webReceipts).toArray());
             for (const auto &value : recsArray) {
                 recs.append(cache + "/" + value.toString());
             }
@@ -477,10 +477,12 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
     TrackingUpdater updater(m_connectionName);
     const auto result = updater.updateTable(reply);
     if (result.success) {
+        getMissingPictures();
+        
         if (result.toFinish.isEmpty() == false) {
             emit finalizePackages(result.toFinish);
         }
-
+        
         startPackageDetailsUpdate();
     } else {
         emit error(tr("Error updating tracking information"));
@@ -559,6 +561,44 @@ void TrackingModel::startPackageDetailsUpdate()
     }
 }
 
+void TrackingModel::getMissingPictures()
+{
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::Reception);
+
+    QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+    q.prepare("SELECT properties FROM Events "
+              "WHERE typeId=:typeId");
+    q.bindValue(":typeId", typeId);
+
+    if (q.exec() == false) {
+        qWarning() << RED("Could not load event properties from DB")
+                   << "SQL error:" << q.lastError()
+                   << "For query:" << q.lastQuery()
+                   << typeId;
+    }
+
+    qDebug() << "Scanning properties for missing images" << typeId;
+
+    while (q.next()) {
+        const QByteArray propertiesString(q.value(Tags::properties).toByteArray());
+        const QJsonObject properties(
+            CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+        const auto docs(properties.value(Tags::webDocuments).toArray());
+        const auto recs(properties.value(Tags::webReceipts).toArray());
+
+        qDebug() << properties << docs << recs;
+
+        for (const auto &doc : docs) {
+            m_picturesManager->checkFileIsCached(doc.toString());
+        }
+
+        for (const auto &rec : recs) {
+            m_picturesManager->checkFileIsCached(rec.toString());
+        }
+    }
+}
+
 bool TrackingModel::Entity::loadFromDb(const QString &connectionName, const int id)
 {
     QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
@@ -573,7 +613,7 @@ bool TrackingModel::Entity::loadFromDb(const QString &connectionName, const int 
         name = q.value("name").toString();
         return true;
     } else {
-        qWarning() << "Could not load Entity from DB"
+        qWarning() << RED("Could not load Entity from DB")
                    << "SQL error:" << q.lastError()
                    << "For query:" << q.lastQuery()
                    << id;
@@ -605,8 +645,7 @@ QVector<TrackingModel::Event> TrackingModel::Entity::loadEvents(
         event.date = q.value("eventDate").toLongLong();
         event.timestamp = q.value("date").toLongLong();
         event.properties = QJsonDocument::fromJson(
-                               q.value("properties").toString().toLatin1())
-                               .object();
+                               q.value(Tags::properties).toByteArray()).object();
         events.append(event);
     }
 

@@ -92,7 +92,7 @@ int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const 
 
     if (query.exec()) {
         query.next();
-        const QByteArray propertiesString(query.value("properties").toByteArray());
+        const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
         const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
         const QVariantMap properties(propertiersJson.toVariant().toMap());
         return properties.value(Tags::webQrCodes).toList().size();
@@ -131,6 +131,12 @@ QVariantList CharcoalDbHelpers::defaultOvenDimensions(const QString &connectionN
     }
 
     return dimensions;
+}
+
+QJsonObject CharcoalDbHelpers::dbPropertiesToJson(const QString &properties)
+{
+    const QJsonDocument propertiesDoc(QJsonDocument::fromJson(properties.toUtf8()));
+    return propertiesDoc.object();
 }
 
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)
