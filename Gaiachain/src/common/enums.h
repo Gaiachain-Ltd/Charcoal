@@ -212,7 +212,9 @@ namespace Enums {
         Standard,
         Row,
         Column,
-        ColumnStack
+        ColumnStack,
+        Collapsible,
+        BeginEndRow
     };
     Q_ENUM_NS(DelegateType)
     inline uint qHash(DelegateType key, uint seed) { return qH<DelegateType>(key, seed);}
