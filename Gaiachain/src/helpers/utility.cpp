@@ -87,7 +87,8 @@ QVariantMap Utility::createSummaryItem(
     const QColor &highlightColor,
     const QColor &decorationColor,
     const QColor &secondaryTextColor,
-    const Enums::DelegateType delegateType) const
+    const Enums::DelegateType delegateType,
+    const bool hasUnderline) const
 {
     //qDebug() << "Data is:" << headerText << value << inputIconSource << suffix << highlightColor << decorationColor << secondaryTextColor << delegateType;
 
@@ -100,7 +101,9 @@ QVariantMap Utility::createSummaryItem(
         { "highlightColor", highlightColor },
         { "decorationColor", decorationColor },
         { "secondaryTextColor", secondaryTextColor },
-        { "isHighlighted", (highlightColor.isValid() == true) }
+        { "isHighlighted", (highlightColor.isValid() == true) },
+        { "hasSecondaryTextColor", secondaryTextColor.isValid() },
+        { "hasUnderline", hasUnderline }
     };
 }
 
@@ -112,11 +115,13 @@ QVariantMap Utility::createSummaryItem(
     const QColor &highlightColor,
     const QColor &decorationColor,
     const QColor &secondaryTextColor,
-    const Enums::DelegateType delegateType) const
+    const Enums::DelegateType delegateType,
+    const bool hasUnderline) const
 {
     return createSummaryItem(headerText, value.toList(), inputIconSource,
                              suffix, highlightColor, decorationColor,
-                             secondaryTextColor, delegateType);
+                             secondaryTextColor, delegateType,
+                             hasUnderline);
 }
 
 bool Utility::isWeekend(const QDate &date) const

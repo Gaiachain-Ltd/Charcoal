@@ -37,18 +37,24 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
-                                      "", "",
-                                      GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor,
-                                      "",
-                                      Enums.DelegateType.Standard),
-                    Utility.createSummaryItem(Strings.malebiRepsId, repsIdInputHeader.inputText),
-                    Utility.createSummaryItem(Strings.endingDate,
-                                      endingDateHeader.selectedDate.toLocaleDateString(
-                                          Qt.locale(), Strings.dateFormat)),
-                    Utility.createSummaryItem(Strings.numberOfTrees, numberOfTreesHeader.inputText),
-                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(
+                        Strings.plotId, plotIdComboBox.currentText,
+                        "", "",
+                        GStyle.delegateHighlightColor,
+                        GStyle.fontHighlightColor,
+                        GStyle.fontHighlightColor,
+                        Enums.DelegateType.Standard,
+                        true),
+                    Utility.createSummaryItem(Strings.malebiRepsId,
+                                              repsIdInputHeader.inputText),
+                    Utility.createSummaryItem(
+                        Strings.endingDate,
+                        endingDateHeader.selectedDate.toLocaleDateString(
+                            Qt.locale(), Strings.dateFormat)),
+                    Utility.createSummaryItem(Strings.numberOfTrees,
+                                              numberOfTreesHeader.inputText),
+                    Utility.createSummaryItem(Strings.gpsCoordinates,
+                                              gpsSource.coordinate.toString())
                 ]
 
         return summary

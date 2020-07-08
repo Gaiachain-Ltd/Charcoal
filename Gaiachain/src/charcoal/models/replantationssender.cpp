@@ -55,10 +55,8 @@ void ReplantationsSender::sendEvents()
         // We have to read all data first, and only then we can call
         // getWebPackageId() because it invalidates current query()
         const auto numberOfTrees(query().value("numberOfTrees").toString());
-        const qint64 beginning = static_cast<qint64>(
-            query().value("beginningDate").toLongLong());
-        const qint64 ending = static_cast<qint64>(
-            query().value("endingDate").toLongLong());
+        const qint64 beginning = query().value("beginningDate").toLongLong();
+        const qint64 ending = query().value("endingDate").toLongLong();
         const int treeSpecies = query().value("treeSpecies").toInt();
         const int parentId(query().value("plotId").toInt());
         const int webPlotId(CharcoalDbHelpers::getWebPackageId(m_connectionName, parentId));

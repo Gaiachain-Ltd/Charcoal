@@ -39,26 +39,30 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         var summary = [
-                    Utility.createSummaryItem(Strings.plotId, plotIdComboBox.currentText,
-                                      "", "",
-                                      GStyle.delegateHighlightColor,
-                                      GStyle.fontHighlightColor,
-                                      "",
-                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(
+                        Strings.plotId, plotIdComboBox.currentText,
+                        "", "",
+                        GStyle.delegateHighlightColor,
+                        GStyle.fontHighlightColor,
+                        GStyle.fontHighlightColor,
+                        Enums.DelegateType.Standard,
+                        true),
                     Utility.createSummaryItem(Strings.numberOfTreesPlanted,
-                                      numberOfTreesHeader.inputText),
+                                              numberOfTreesHeader.inputText),
                     Utility.createSummaryItem(Strings.treeSpecies,
-                                      treeSpeciesComboBox.currentText),
+                                              treeSpeciesComboBox.currentText),
                     Utility.createSummaryItem(Strings.userId,
-                                      userIdInputHeader.inputText),
-                    Utility.createSummaryItem(Strings.beginningDate,
-                                      beginningDateHeader.selectedDate.toLocaleDateString(
-                                          Qt.locale(), Strings.dateFormat)),
-                    Utility.createSummaryItem(Strings.endingDate,
-                                      endingDateHeader.selectedDate.toLocaleDateString(
-                                          Qt.locale(), Strings.dateFormat)),
+                                              userIdInputHeader.inputText),
+                    Utility.createSummaryItem(
+                        Strings.beginningDate,
+                        beginningDateHeader.selectedDate.toLocaleDateString(
+                            Qt.locale(), Strings.dateFormat)),
+                    Utility.createSummaryItem(
+                        Strings.endingDate,
+                        endingDateHeader.selectedDate.toLocaleDateString(
+                            Qt.locale(), Strings.dateFormat)),
                     Utility.createSummaryItem(Strings.gpsCoordinates,
-                                      gpsSource.coordinate.toString())
+                                              gpsSource.coordinate.toString())
                 ]
 
         return summary

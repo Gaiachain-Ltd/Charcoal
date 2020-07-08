@@ -8,7 +8,7 @@ import com.gaiachain.helpers 1.0
 import "../items" as Items
 import "../headers" as Headers
 
-RowLayout {
+Row {
     id: root
 
     Layout.fillWidth: true
@@ -36,7 +36,7 @@ RowLayout {
         highlighted: root.highlighted
     }
 
-    Headers.InputHeader {
+     Headers.InputHeader {
         implicitWidth: root.width * .5
 
         secondaryColor: root.highlighted? root.secondaryColor

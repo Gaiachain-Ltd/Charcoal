@@ -21,6 +21,7 @@ Item {
     property color secondaryColor: GStyle.textPrimaryColor
     property color secondaryTextColor: secondaryColor
     property bool highlighted: false
+    property bool underlineVisible: false
 
     property alias widget: mainLayout.data
 
@@ -106,7 +107,7 @@ Item {
         Layout.fillWidth: true
         height: sr(1)
         color: top.secondaryColor
-        visible: top.highlighted
+        visible: top.underlineVisible
 
         anchors {
             bottom: parent.bottom

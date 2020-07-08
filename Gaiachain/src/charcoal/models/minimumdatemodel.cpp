@@ -54,7 +54,8 @@ void MinimumDateModel::setPlotId(const QString &id)
     emit plotIdChanged(id);
 
     if (query().seek(0)) {
-        setDate(query().value("date").toDateTime());
+        const qint64 timestamp = query().value("date").toLongLong();
+        setDate(QDateTime::fromSecsSinceEpoch(timestamp));
     }
 }
 

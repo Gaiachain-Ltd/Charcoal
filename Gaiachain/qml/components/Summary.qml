@@ -29,6 +29,8 @@ ColumnLayout {
             readonly property color decorationColor: summary[index].decorationColor
             readonly property color secondaryFontColor: summary[index].secondaryTextColor
             readonly property bool isHighlighted: summary[index].isHighlighted
+            readonly property bool hasSecondaryTextColor: summary[index].hasSecondaryTextColor
+            readonly property bool hasUnderline: summary[index].hasUnderline
 
             sourceComponent: {
                 if (delegateType === Enums.DelegateType.Column) {
@@ -59,8 +61,8 @@ ColumnLayout {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                     : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -69,6 +71,7 @@ ColumnLayout {
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
         }
     }
 
@@ -80,8 +83,8 @@ ColumnLayout {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                     : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -92,6 +95,7 @@ ColumnLayout {
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
         }
     }
 
@@ -103,8 +107,8 @@ ColumnLayout {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                     : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -113,6 +117,7 @@ ColumnLayout {
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
         }
     }
 
@@ -136,8 +141,8 @@ ColumnLayout {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                     : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerTexts: composite[0]
             inputTexts: composite[1]
@@ -149,21 +154,25 @@ ColumnLayout {
     Component {
         id: standardComponent
 
-        Headers.InputHeader {
+        Headers.TextHeader {
             Layout.fillWidth: true
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                       : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
-            inputText: value
-            suffixText: suffixValue
-            readOnly: true
-            iconSource: inputIconSource ? inputIconSource : ""
+            text: value
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
+
+            Component.onCompleted: {
+                if(suffixValue.lenght > 0) {
+                    console.log("TXT:", headerText, "#", suffixValue)
+                }
+            }
         }
     }
 }
