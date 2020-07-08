@@ -47,10 +47,10 @@ MainController::MainController(QObject *parent)
       m_languageManager(new LanguageManager(this)),
       m_userManager(QSharedPointer<UserManager>::create()),
 #ifdef COCOA
-      m_sessionManager(new CocoaSessionManager(this)),
+      m_sessionManager(new CocoaSessionManager()),
       m_dataManager(new CocoaDataManager(this))
 #elif CHARCOAL
-      m_sessionManager(new CharcoalSessionManager(this)),
+      m_sessionManager(new CharcoalSessionManager()),
       m_dataManager(new CharcoalDataManager(m_sessionManager, m_userManager, this))
 #endif
 {
