@@ -42,7 +42,7 @@ Pages.SupplyChainPageBase {
                         "", "",
                         GStyle.delegateHighlightColor,
                         GStyle.fontHighlightColor,
-                        "",
+                        GStyle.fontHighlightColor,
                         Enums.DelegateType.Standard,
                         true),
                     Utility.createSummaryItem(Strings.malebiRepsId,

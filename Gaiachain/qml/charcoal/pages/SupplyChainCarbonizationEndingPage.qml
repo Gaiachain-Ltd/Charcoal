@@ -39,33 +39,36 @@ Pages.SupplyChainPageBase {
     function summary() {
         var summary = [
                     Utility.createSummaryItem(
+                        Strings.ovenId,
+                        [
+                            ovenIdComboBox.letters,
+                            ovenIdComboBox.descriptions
+                        ],
+                        "", "",
+                        GStyle.delegateHighlightColor3,
+                        GStyle.fontHighlightColor3,
+                        GStyle.fontHighlightColor3,
+                        Enums.DelegateType.Column,
+                        true),
+                    Utility.createSummaryItem(
                         Strings.harvestId,
                         harvestIdComboBox.currentText,
                         "", "",
                         GStyle.delegateHighlightColor2,
                         GStyle.fontHighlightColor2,
-                        "",
+                        GStyle.fontHighlightColor2,
                         Enums.DelegateType.Standard,
                         true),
                     Utility.createSummaryItem(
                         Strings.plotId,
-                        dataManager.actionController.getPlotId(harvestIdComboBox.currentText),
+                        dataManager.actionController.getPlotId(
+                            harvestIdComboBox.currentText),
                         "", "",
                         GStyle.delegateHighlightColor,
                         GStyle.fontHighlightColor,
-                        "",
+                        GStyle.fontHighlightColor,
                         Enums.DelegateType.Standard,
                         true),
-                    Utility.createSummaryItem(Strings.ovenId,
-                                      [
-                                          ovenIdComboBox.letters,
-                                          ovenIdComboBox.descriptions
-                                      ],
-                                      "", "",
-                                      GStyle.delegateHighlightColor3,
-                                      GStyle.fontHighlightColor3,
-                                      "",
-                                      Enums.DelegateType.Column),
                     Utility.createSummaryItem(Strings.carbonizerId,
                                       carbonizerIdInputHeader.inputText),
                     Utility.createSummaryItem(

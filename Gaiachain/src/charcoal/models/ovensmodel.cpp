@@ -44,7 +44,7 @@ void OvensModel::setPlotId(const QString &id)
 
     refresh();
 
-    qDebug() << "OVEN MODELS:" << rowCount();
+    //qDebug() << "OVEN MODELS:" << rowCount();
 
     emit plotIdChanged(id);
 }
@@ -93,19 +93,20 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
     }
     case OvenRole::SecondRow:
     {
-        const QString carbId(query().value("carbonizationBeginning").toString());
-        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-        query.prepare("SELECT date FROM Events WHERE id=:carbonizationBeginning");
-        query.bindValue(":carbonizationBeginning", carbId);
+        const int carbId(query().value("carbonizationBeginning").toInt());
+        QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
+        q.prepare("SELECT date FROM Events WHERE id=:carbonizationBeginning");
+        q.bindValue(":carbonizationBeginning", carbId);
 
-        if (query.exec() == false) {
+        if (q.exec() == false) {
             qWarning() << RED("Getting carbonization beginning date has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
+                       << q.lastError().text() << "for query:" << q.lastQuery();
             return {};
         }
 
-        query.next();
-        const QDate date(query.value("date").toDate());
+        q.next();
+        const qint64 timestamp = q.value("date").toLongLong();
+        const QDateTime date = QDateTime::fromSecsSinceEpoch(timestamp);
         return tr("Carbonization beginning: %1").arg(date.toString("dd/MM/yyyy"));
     }
     }

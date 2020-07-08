@@ -43,7 +43,26 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
+        let dims = ovenTypeComboBox.ovenType === "2"?
+                dataManager.actionController.defaultOvenDimensions(ovenTypeComboBox.ovenType)
+              : ovenDimensionsHeader.values
+
         var summary = [
+                    Utility.createSummaryItem(
+                        Strings.ovenId,
+                        [
+                            [ ovenIdHeader.inputText ],
+                            [ ovenTypeComboBox.currentText + " - "
+                             + dims[0] + " x "
+                             + dims[1] + " x "
+                             + dims[2] + "m" ]
+                        ],
+                        "", "",
+                        GStyle.delegateHighlightColor3,
+                        GStyle.fontHighlightColor3,
+                        GStyle.fontHighlightColor3,
+                        Enums.DelegateType.Column,
+                        true),
                     Utility.createSummaryItem(
                         Strings.harvestId,
                         dataManager.actionController.generateHarvestId(
@@ -53,7 +72,7 @@ Pages.SupplyChainPageBase {
                         "", "",
                         GStyle.delegateHighlightColor2,
                         GStyle.fontHighlightColor2,
-                        "",
+                        GStyle.fontHighlightColor2,
                         Enums.DelegateType.Standard,
                         true),
                     Utility.createSummaryItem(
@@ -62,16 +81,9 @@ Pages.SupplyChainPageBase {
                         "", "",
                         GStyle.delegateHighlightColor,
                         GStyle.fontHighlightColor,
-                        "",
+                        GStyle.fontHighlightColor,
                         Enums.DelegateType.Standard,
                         true),
-                    Utility.createSummaryItem(
-                        Strings.ovenId, ovenIdHeader.inputText,
-                        "", "",
-                        GStyle.delegateHighlightColor3,
-                        GStyle.fontHighlightColor3,
-                        "",
-                        Enums.DelegateType.Standard),
                     Utility.createSummaryItem(Strings.carbonizerId,
                                               carbonizerIdInputHeader.inputText),
                     Utility.createSummaryItem(
@@ -82,11 +94,10 @@ Pages.SupplyChainPageBase {
                                               ovenTypeComboBox.currentText),
                     Utility.createSummaryItem(
                         Strings.ovenDimensions,
-                        [ovenDimensionsHeader.titles,
-                         ovenTypeComboBox.ovenType === "2"?
-                             dataManager.actionController.defaultOvenDimensions(
-                                 ovenTypeComboBox.ovenType)
-                           : ovenDimensionsHeader.values],
+                        [
+                            ovenDimensionsHeader.titles,
+                            dims
+                        ],
                         "", "",
                         "", "", "",
                         Enums.DelegateType.Row),

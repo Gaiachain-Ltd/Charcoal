@@ -71,9 +71,9 @@ Pages.SupplyChainPageBase {
                         "", "",
                         GStyle.delegateHighlightColor4,
                         GStyle.fontHighlightColor4,
-                        "",
+                        GStyle.fontHighlightColor4,
                         Enums.DelegateType.Standard,
-                        true),
+                        false),
                     Utility.createSummaryItem(
                         "",
                         [
@@ -113,10 +113,13 @@ Pages.SupplyChainPageBase {
                         GStyle.delegateHighlightColor4,
                         GStyle.fontHighlightColor4,
                         GStyle.textPrimaryColor,
-                        Enums.DelegateType.ColumnStack),
+                        Enums.DelegateType.ColumnStack,
+                        true),
                     Utility.createSummaryItem(
                         Strings.plateNumber,
-                        dataManager.actionController.plateNumberInTransport(transportId)),
+                        dataManager.actionController.plateNumberInTransport(
+                            transportId)
+                        ),
                     Utility.createSummaryItem(
                         Strings.receptionDateCharcoal,
                         unloadingDateHeader.selectedDate.toLocaleDateString(
