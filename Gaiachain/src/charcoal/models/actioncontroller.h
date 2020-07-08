@@ -106,7 +106,7 @@ public:
         const QVariantList &scannedQrs
         ) const;
 
-    Q_INVOKABLE void finalizeSupplyChain(const QString &plotId) const;
+    Q_INVOKABLE void finalizeSupplyChain(const QString &plotName) const;
 
     Q_INVOKABLE void registerReplantation(
         const QGeoCoordinate &coordinate,
@@ -121,6 +121,8 @@ public:
 
 signals:
     void refreshLocalEvents() const;
+
+    void finalizePackages(const QVector<int> &webIds) const;
 
 private:
     int scannedBagsForAction(const QString &transportId,

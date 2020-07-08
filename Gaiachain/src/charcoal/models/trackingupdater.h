@@ -2,12 +2,19 @@
 
 #include "common/enums.h"
 
+#include <QVector>
 #include <QString>
 #include <QPointer>
 
 class QJsonDocument;
 class QJsonObject;
 class PicturesManager;
+
+struct UpdateResult {
+    bool success = false;
+    QVector<int> toReplant;
+    QVector<int> toFinish;
+};
 
 class TrackingUpdater
 {
@@ -16,13 +23,13 @@ public:
 
     void setPicturesManager(PicturesManager *manager);
 
-    bool updateTable(const QJsonDocument &json) const;
+    UpdateResult updateTable(const QJsonDocument &json) const;
     bool updateDetails(const QJsonDocument &json) const;
 
 private:
     bool isValid() const;
 
-    bool processTrackingItem(const QJsonObject &object) const;
+    UpdateResult processTrackingItem(const QJsonObject &object, UpdateResult result) const;
 
     bool processDetailsLoggingBeginning(const QJsonObject &object) const;
     bool processDetailsLoggingEnding(const QJsonObject &object) const;

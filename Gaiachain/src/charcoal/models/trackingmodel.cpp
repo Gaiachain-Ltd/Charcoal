@@ -452,7 +452,12 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
 {
     //qDebug() << "Data is:" << reply;
     TrackingUpdater updater(m_connectionName);
-    if (updater.updateTable(reply)) {
+    const auto result = updater.updateTable(reply);
+    if (result.success) {
+        if (result.toFinish.isEmpty() == false) {
+            emit finalizePackages(result.toFinish);
+        }
+
         startPackageDetailsUpdate();
     } else {
         emit error(tr("Error updating tracking information"));

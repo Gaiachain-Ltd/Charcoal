@@ -42,6 +42,12 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
 
     connect(m_actionController, &ActionController::refreshLocalEvents,
             m_eventsSender, &EventsSender::refresh);
+
+    connect(m_trackingModel, &TrackingModel::finalizePackages,
+            m_eventsSender, &EventsSender::onFinalizePackages);
+
+    connect(m_actionController, &ActionController::finalizePackages,
+            m_eventsSender, &EventsSender::onFinalizePackages);
 }
 
 void CharcoalDataManager::setupDatabase(const QString &dbPath)

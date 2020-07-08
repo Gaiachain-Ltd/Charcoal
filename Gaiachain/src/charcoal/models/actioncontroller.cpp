@@ -779,6 +779,24 @@ void ActionController::registerReception(
         return;
     }
 
+    // Special case: if this replantation ALREADY EXISTS, we skip inserting it
+    // into DB.
+    // This can only happen for debug server where we have some dummy, unfinished
+    // events
+    const int existing = CharcoalDbHelpers::getInteger(
+        m_dbConnName, "Events",
+        { "entityId", "typeId" },
+        { entityId, eventTypeId },
+        "id",
+        QString(), false
+        );
+
+    if (existing != -1) {
+        qDebug() << RED("Reception already exists - special case!")
+                 << entityId << eventTypeId << existing;
+        return;
+    }
+
     const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
     const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));
 
@@ -813,20 +831,29 @@ void ActionController::registerReception(
     emit refreshLocalEvents();
 }
 
-void ActionController::finalizeSupplyChain(const QString &plotId) const
+void ActionController::finalizeSupplyChain(const QString &plotName) const
 {
-    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
+    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotName));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId OR parent=:parentId");
-    query.bindValue(":plotId", plotId);
+    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId "
+                  "OR parent=:parentId");
+    query.bindValue(":plotId", plotName);
     query.bindValue(":parentId", parentId);
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing a supply chain has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "with params:" << plotId << parentId;
+                   << "with params:" << plotName << parentId;
         return;
+    }
+
+    // In online mode - send finalization call.
+    // In offline mode - do nothing. Finalization will be handled by TrackingModel
+    const auto webIds = CharcoalDbHelpers::getWebPackageIds(
+        m_dbConnName, plotName, parentId);
+    if (webIds.isEmpty() == false) {
+        emit finalizePackages(webIds);
     }
 }
 
