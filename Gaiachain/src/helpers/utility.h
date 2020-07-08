@@ -74,7 +74,8 @@ public:
         const QColor &highlightColor = QColor(),
         const QColor &decorationColor = QColor(),
         const QColor &secondaryTextColor = QColor(),
-        const Enums::DelegateType delegateType = Enums::DelegateType::Standard
+        const Enums::DelegateType delegateType = Enums::DelegateType::Standard,
+        const bool hasUnderline = false
         ) const;
 
     Q_INVOKABLE QVariantMap createSummaryItem(
@@ -85,7 +86,8 @@ public:
         const QColor &highlightColor = QColor(),
         const QColor &decorationColor = QColor(),
         const QColor &secondaryTextColor = QColor(),
-        const Enums::DelegateType delegateType = Enums::DelegateType::Standard
+        const Enums::DelegateType delegateType = Enums::DelegateType::Standard,
+        const bool hasUnderline = true
         ) const;
 
     template <typename C, std::enable_if_t<is_qt_array_type<C>::value, int> = 0>

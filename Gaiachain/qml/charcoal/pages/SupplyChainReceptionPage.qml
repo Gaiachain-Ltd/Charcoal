@@ -65,58 +65,64 @@ Pages.SupplyChainPageBase {
         let allBags = scannedQrs.length === bagCount
 
         var summary = [
-                    Utility.createSummaryItem(Strings.transportId,
-                                      transportId,
-                                      "", "",
-                                      GStyle.delegateHighlightColor4,
-                                      GStyle.fontHighlightColor4,
-                                      "",
-                                      Enums.DelegateType.Standard),
-                    Utility.createSummaryItem("",
-                                      [
-                                          [
-                                              Strings.numberOfBags,
-                                              Strings.documents,
-                                              Strings.receipt
-                                          ],
-                                          [
-                                              Strings.numberOfBagsDetail
-                                                .arg(scannedQrs.length)
-                                                .arg(bagCount),
-                                              hasDocs? Strings.approved : Strings.noPhoto,
-                                              hasRecs? Strings.approved : Strings.noPhoto
-                                          ],
-                                          [
-                                              allBags? GStyle.checkGreenUrl : GStyle.warningUrl,
-                                              docsIcon,
-                                              recsIcon
-                                          ],
-                                          [
-                                              Enums.Page.InvalidPage,
-                                              Enums.Page.InvalidPage,
-                                              hasDocs? Enums.Page.PhotoGallery
-                                                     : Enums.Page.InvalidPage,
-                                              hasRecs? Enums.Page.PhotoGallery
-                                                     : Enums.Page.InvalidPage
-                                          ],
-                                          [
-                                              "",
-                                              "",
-                                              Utility.arrayToObject([ "urls", docs ]),
-                                              Utility.arrayToObject([ "urls", recs ])
-                                          ]
-                                      ],
-                                      "", "",
-                                      GStyle.delegateHighlightColor4,
-                                      GStyle.fontHighlightColor4,
-                                      GStyle.textPrimaryColor,
-                                      Enums.DelegateType.ColumnStack),
-                    Utility.createSummaryItem(Strings.plateNumber,
-                                      dataManager.actionController.plateNumberInTransport(transportId)),
-                    Utility.createSummaryItem(Strings.receptionDateCharcoal,
-                                      unloadingDateHeader.selectedDate.toLocaleDateString(
-                                          Qt.locale(), Strings.dateFormat)),
-                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(
+                        Strings.transportId,
+                        transportId,
+                        "", "",
+                        GStyle.delegateHighlightColor4,
+                        GStyle.fontHighlightColor4,
+                        "",
+                        Enums.DelegateType.Standard,
+                        true),
+                    Utility.createSummaryItem(
+                        "",
+                        [
+                            [
+                                Strings.numberOfBags,
+                                Strings.documents,
+                                Strings.receipt
+                            ],
+                            [
+                                Strings.numberOfBagsDetail
+                                .arg(scannedQrs.length)
+                                .arg(bagCount),
+                                hasDocs? Strings.approved : Strings.noPhoto,
+                                hasRecs? Strings.approved : Strings.noPhoto
+                            ],
+                            [
+                                allBags? GStyle.checkGreenUrl : GStyle.warningUrl,
+                                docsIcon,
+                                recsIcon
+                            ],
+                            [
+                                Enums.Page.InvalidPage,
+                                Enums.Page.InvalidPage,
+                                hasDocs? Enums.Page.PhotoGallery
+                                       : Enums.Page.InvalidPage,
+                                hasRecs? Enums.Page.PhotoGallery
+                                       : Enums.Page.InvalidPage
+                            ],
+                            [
+                                "",
+                                "",
+                                Utility.arrayToObject([ "urls", docs ]),
+                                Utility.arrayToObject([ "urls", recs ])
+                            ]
+                        ],
+                        "", "",
+                        GStyle.delegateHighlightColor4,
+                        GStyle.fontHighlightColor4,
+                        GStyle.textPrimaryColor,
+                        Enums.DelegateType.ColumnStack),
+                    Utility.createSummaryItem(
+                        Strings.plateNumber,
+                        dataManager.actionController.plateNumberInTransport(transportId)),
+                    Utility.createSummaryItem(
+                        Strings.receptionDateCharcoal,
+                        unloadingDateHeader.selectedDate.toLocaleDateString(
+                            Qt.locale(), Strings.dateFormat)),
+                    Utility.createSummaryItem(Strings.gpsCoordinates,
+                                              gpsSource.coordinate.toString())
                 ]
         return summary
     }

@@ -62,30 +62,36 @@ Pages.SupplyChainPageBase {
                         loadingDateHeader.selectedDate
                     )
         var summary = [
-                    Utility.createSummaryItem(Strings.transportId,
-                                      transportId,
-                                      "", "",
-                                      GStyle.delegateHighlightColor4,
-                                      GStyle.fontHighlightColor4,
-                                      "",
-                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(
+                        Strings.transportId,
+                        transportId,
+                        "", "",
+                        GStyle.delegateHighlightColor4,
+                        GStyle.fontHighlightColor4,
+                        "",
+                        Enums.DelegateType.Standard,
+                        true),
                     Utility.createSummaryItem(Strings.numberOfBags,
                                       scannedQrs.length),
-                    Utility.createSummaryItem(Strings.harvestId,
-                                      harvestIdComboBox.currentText,
-                                      "", "",
-                                      GStyle.delegateHighlightColor2,
-                                      GStyle.fontHighlightColor2,
-                                      "",
-                                      Enums.DelegateType.Standard),
+                    Utility.createSummaryItem(
+                        Strings.harvestId,
+                        harvestIdComboBox.currentText,
+                        "", "",
+                        GStyle.delegateHighlightColor2,
+                        GStyle.fontHighlightColor2,
+                        "",
+                        Enums.DelegateType.Standard,
+                        true),
                     Utility.createSummaryItem(Strings.plateNumber,
-                                      plateNumberHeader.inputText),
-                    Utility.createSummaryItem(Strings.loadingDate,
-                                      loadingDateHeader.selectedDate.toLocaleDateString(
-                                          Qt.locale(), Strings.dateFormat)),
+                                              plateNumberHeader.inputText),
+                    Utility.createSummaryItem(
+                        Strings.loadingDate,
+                        loadingDateHeader.selectedDate.toLocaleDateString(
+                            Qt.locale(), Strings.dateFormat)),
                     Utility.createSummaryItem(Strings.deliveryDestination,
                                       deliveryDestinationComboBox.currentText),
-                    Utility.createSummaryItem(Strings.gpsCoordinates, gpsSource.coordinate.toString())
+                    Utility.createSummaryItem(Strings.gpsCoordinates,
+                                              gpsSource.coordinate.toString())
                 ]
         return summary
     }

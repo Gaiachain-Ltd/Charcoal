@@ -209,8 +209,9 @@ QVariantList TrackingModel::summaryForPlot(
 
     result.append(utility.createSummaryItem(
         tr("Plot ID"), entity.name, QString(), QString(),
-        m_plotHighlightColor, m_plotTextColor, QString(),
-        Enums::DelegateType::Standard));
+        m_plotHighlightColor, m_plotTextColor, m_plotTextColor,
+        Enums::DelegateType::Standard,
+        true));
     if (events.isEmpty() == false) {
         result.append(utility.createSummaryItem(
             tr("Malebi Rep's ID"), events.at(0).userId));
@@ -258,14 +259,16 @@ QVariantList TrackingModel::summaryForHarvest(
 
     result.append(utility.createSummaryItem(
         tr("Harvest ID"), entity.name, QString(), QString(),
-        m_harvestHighlightColor, m_harvestTextColor, QString(),
-        Enums::DelegateType::Standard));
+        m_harvestHighlightColor, m_harvestTextColor, m_harvestTextColor,
+        Enums::DelegateType::Standard,
+        true));
     result.append(utility.createSummaryItem(
         QString(),
         plotValue.toList(),
         QString(), QString(),
-        m_plotHighlightColor, m_plotTextColor, QString(),
-        Enums::DelegateType::ColumnStack));
+        m_harvestHighlightColor, m_harvestTextColor, m_plotTextColor,
+        Enums::DelegateType::ColumnStack,
+        true));
 
     // TODO: collapsible oven summary!
 
@@ -415,13 +418,15 @@ QVariantList TrackingModel::summaryForTransport(
 
     result.append(utility.createSummaryItem(
         tr("Transport ID"), entity.name, QString(), QString(),
-        m_transportHighlightColor, m_transportTextColor, QString(),
-        Enums::DelegateType::Standard));
+        m_transportHighlightColor, m_transportTextColor, m_transportTextColor,
+        Enums::DelegateType::Standard,
+        false));
     result.append(utility.createSummaryItem(
         QString(), receptionData,
         QString(), QString(),
-        m_harvestHighlightColor, m_harvestTextColor, QColor("000000"),
-        Enums::DelegateType::ColumnStack));
+        m_transportHighlightColor, m_transportTextColor, QColor("#000000"),
+        Enums::DelegateType::ColumnStack,
+        true));
     result.append(utility.createSummaryItem(
         tr("Plate number"), plateNumber));
     result.append(utility.createSummaryItem(

@@ -46,6 +46,8 @@ Pages.SupplyChainPageBase {
                 readonly property color decorationColor: summary[index].decorationColor
                 readonly property color secondaryFontColor: summary[index].secondaryTextColor
                 readonly property bool isHighlighted: summary[index].isHighlighted
+                readonly property bool hasSecondaryTextColor: summary[index].hasSecondaryTextColor
+                readonly property bool hasUnderline: summary[index].hasUnderline
 
                 sourceComponent: {
                     if (delegateType === Enums.DelegateType.Column) {
@@ -73,8 +75,8 @@ Pages.SupplyChainPageBase {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                       : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -83,6 +85,7 @@ Pages.SupplyChainPageBase {
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
         }
     }
 
@@ -94,8 +97,8 @@ Pages.SupplyChainPageBase {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                       : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -106,6 +109,7 @@ Pages.SupplyChainPageBase {
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
         }
     }
 
@@ -117,8 +121,8 @@ Pages.SupplyChainPageBase {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                       : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             titles: composite[0]
@@ -127,6 +131,7 @@ Pages.SupplyChainPageBase {
             readOnly: true
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
         }
     }
 
@@ -138,15 +143,20 @@ Pages.SupplyChainPageBase {
 
             secondaryColor: isHighlighted? decorationColor
                                          : GStyle.separatorColor
-            secondaryTextColor: (secondaryFontColor.length === 0)? secondaryColor
-                                                                 : GStyle.textReadonlyColor
+            secondaryTextColor: hasSecondaryTextColor? secondaryFontColor
+                                                       : GStyle.textReadonlyColor
             backgroundColor: isHighlighted? highlightColor : GStyle.backgroundColor
             headerText: headerValue
             text: value
-            suffixText: suffixValue
-            iconSource: inputIconSource ? inputIconSource : ""
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            underlineVisible: hasUnderline
+
+            Component.onCompleted: {
+                if(suffixValue.lenght > 0) {
+                    console.log("TXT:", headerText, "#", suffixValue)
+                }
+            }
         }
     }
 }
