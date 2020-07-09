@@ -60,7 +60,7 @@ GPopup {
                 color: textColor
                 elide: Text.ElideNone
                 wrapMode: Text.WordWrap
-                font.pixelSize: s(GStyle.titlePixelSize)
+                font.pixelSize: s(GStyle.pixelSize)
                 horizontalAlignment: Text.AlignLeft
             }
 
@@ -86,7 +86,7 @@ GPopup {
             color: textColor
             elide: Text.ElideNone
             wrapMode: Text.WordWrap
-            font.pixelSize: s(GStyle.titlePixelSize)
+            font.pixelSize: s(GStyle.pixelSize)
             horizontalAlignment: Text.AlignLeft
         }
 
@@ -95,7 +95,7 @@ GPopup {
             color: "transparent"
             radius: 5
 
-            height: redirectItem.contentHeight + (2 * s(GStyle.middleMargin))
+            height: redirectItem.contentHeight + s(GStyle.middleMargin)
 
             border {
                 width: 2
@@ -122,7 +122,7 @@ GPopup {
 
                 color: textColor
                 text: Strings.redirect.arg(redirectText)
-                font.pixelSize: s(GStyle.pixelSize)
+                font.pixelSize: s(GStyle.smallPixelSize)
                 horizontalAlignment: Text.AlignLeft
             }
 

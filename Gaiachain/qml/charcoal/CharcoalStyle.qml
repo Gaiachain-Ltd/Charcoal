@@ -100,7 +100,5 @@ AbstractStyle {
 
     menuButtonHeight: 340
 
-    inputPixelSize: pixelSize
-
     headerCapitalization: Font.AllUppercase
 }

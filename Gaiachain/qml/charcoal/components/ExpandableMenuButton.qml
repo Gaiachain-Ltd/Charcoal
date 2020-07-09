@@ -23,7 +23,7 @@ MenuButton {
         horizontalAlignment: Image.AlignHCenter
         verticalAlignment: Image.AlignVCenter
 
-        source: GStyle.downArrowImgUrl
+        source: GStyle.arrowImgUrl
         rotation: top.expanded? 0 : 180
     }
 }
