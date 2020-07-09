@@ -11,7 +11,8 @@
 #include "mcrypto.h"
 
 namespace {
-const QByteArray p12a34s56w67r89d = QSettings::staticMetaObject.className() + QByteArray("16") + QIODevice::staticMetaObject.className();
+const QByteArray p12a34s56w67r89d = QSettings::staticMetaObject.className()
+    + QByteArray("16") + QIODevice::staticMetaObject.className();
 }
 
 const QLatin1String CryptoHelper::EncryptedSettingsExt = QLatin1String("esdat");
@@ -32,7 +33,9 @@ QByteArray CryptoHelper::passwordHash(const QByteArray &password, const QByteArr
     const int keySize = 64;
     const int iterations = 4096;
 
-    return QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha512, password + pepper, salt, iterations, keySize).toHex();
+    return QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha512,
+                                              password + pepper, salt, iterations,
+                                              keySize).toHex();
 }
 
 QSettings::Format CryptoHelper::encryptedSettingsFormat()
@@ -46,11 +49,20 @@ QSettings::Format CryptoHelper::encryptedSettingsFormat()
 
 bool CryptoHelper::loadEncryptedSettings(QIODevice &device, QSettings::SettingsMap &map)
 {
-    auto encryptedData = device.readAll();
-    auto jsonData = MCrypto().decrypt(encryptedData, p12a34s56w67r89d);
+    const auto encryptedData = device.readAll();
+    auto jsonData = MCrypto().decrypt(encryptedData, QByteArray(APP_STORAGE_PASSWORD));
+    if (jsonData.isEmpty()) {
+        qDebug() << "Decryption failed, trying with obsolete password";
+        jsonData = MCrypto().decrypt(encryptedData, p12a34s56w67r89d);
+
+        if (jsonData.isEmpty()) {
+            qWarning() << "Could not decrypt, even with old password!";
+            return false;
+        }
+    }
 
     auto error = QJsonParseError{};
-    auto jsonDoc = QJsonDocument::fromJson(jsonData, &error);
+    const auto jsonDoc = QJsonDocument::fromJson(jsonData, &error);
     if (error.error != QJsonParseError::NoError || !jsonDoc.isObject()) {
         return false;
     }
@@ -59,10 +71,11 @@ bool CryptoHelper::loadEncryptedSettings(QIODevice &device, QSettings::SettingsM
     return true;
 }
 
-bool CryptoHelper::storeEncryptedSettings(QIODevice &device, const QSettings::SettingsMap &map)
+bool CryptoHelper::storeEncryptedSettings(QIODevice &device,
+                                          const QSettings::SettingsMap &map)
 {
-    auto jsonData = QJsonDocument(QJsonObject::fromVariantMap(map)).toJson();
-    auto encryptedData = MCrypto().encrypt(jsonData, p12a34s56w67r89d);
+    const auto jsonData = QJsonDocument(QJsonObject::fromVariantMap(map)).toJson();
+    const auto encryptedData = MCrypto().encrypt(jsonData, QByteArray(APP_STORAGE_PASSWORD));
 
     return device.write(encryptedData);
 }
