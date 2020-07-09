@@ -30,6 +30,7 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(GStyle.buttonImageHeight)
             Layout.fillWidth: true
+            Layout.fillHeight: true
 
             connectionState: sessionManager.connectionState
         }

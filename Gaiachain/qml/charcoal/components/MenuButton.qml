@@ -10,6 +10,10 @@ Rectangle {
     property alias text: textItem.text
     property alias icon: image.source
     property alias fontColor: textItem.color
+    property alias fontSize: textItem.font.pixelSize
+    property alias fontBold: textItem.font.bold
+    property alias textHorizontalAlignment: textItem.horizontalAlignment
+    property alias textVerticalAlignment: textItem.verticalAlignment
 
     signal clicked()
 
@@ -22,21 +26,23 @@ Rectangle {
 
         anchors.fill: parent
         horizontalAlignment: Qt.AlignRight
+        verticalAlignment: Qt.AlignBottom
         fillMode: Image.PreserveAspectFit
     }
 
     Items.GText {
         id: textItem
         anchors.fill: parent
+        anchors.margins: s(GStyle.bigMargin)
 
         color: GStyle.textSecondaryColor
         wrapMode: Text.WordWrap
         textFormat: Text.PlainText
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
-        font.letterSpacing: -0.7
+        font.letterSpacing: -0.5
         font.capitalization: Font.AllUppercase
-        font.pixelSize: s(GStyle.bigPixelSize)
+        font.pixelSize: s(GStyle.titlePixelSize)
         font.bold: true
     }
 

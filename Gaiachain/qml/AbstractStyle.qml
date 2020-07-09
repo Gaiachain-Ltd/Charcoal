@@ -163,6 +163,7 @@ QtObject {
     property url upArrowImgUrl: "qrc:/ui/arrowUp"
     property url downArrowImgUrl: "qrc:/ui/arrowDown"
     property url rightArrowImgUrl: "qrc:/ui/arrowRight"
+    property url arrowImgUrl: "qrc:/ui/arrow"
 
     property url expandUpImgUrl: "qrc:/ui/expandUp"
     property url expandDownImgUrl: "qrc:/ui/expandDown"

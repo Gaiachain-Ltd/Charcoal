@@ -34,6 +34,8 @@ Item {
 
     property int margins: s(GStyle.hugeMargin)
 
+    readonly property bool isCocoa: mainController.flavor === "cocoa"
+
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
 
@@ -60,6 +62,7 @@ Item {
             Layout.topMargin: top.isFirstItem? top.margins : 0
             Layout.leftMargin: top.margins
             Layout.rightMargin: top.margins
+            Layout.bottomMargin: isCocoa? 0 : s(GStyle.middleSmallMargin)
 
             Items.GText {
                 id: header
@@ -67,6 +70,7 @@ Item {
                 Layout.fillWidth: true
 
                 font.bold: true
+                font.pixelSize: isCocoa? s(GStyle.pixelSize) : s(GStyle.titlePixelSize)
                 color: top.mainColor
                 font.capitalization: top.highlighted? Font.AllUppercase : Font.MixedCase
                 horizontalAlignment: Text.AlignLeft

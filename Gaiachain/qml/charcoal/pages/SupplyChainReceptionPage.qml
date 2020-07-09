@@ -158,28 +158,26 @@ Pages.SupplyChainPageBase {
                           })
     }
 
-    Headers.ButtonInputHeader {
+    CharcoalHeaders.CharcoalButtonHeader {
         id: receiveDocsHeader
 
         Layout.fillWidth: true
-        readOnly: true
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
-        inputText: Strings.receiveDocumentsAndReceipt
+        text: Strings.receiveDocumentsAndReceipt
         onClicked: pageManager.enter(Enums.Page.TakeDocumentPictures,
                                      {
                                          "backToPage": Enums.Page.SupplyChainReception
                                      })
     }
 
-    Headers.ButtonInputHeader {
+    CharcoalHeaders.CharcoalButtonHeader {
         id: scanAllBagsHeader
 
         Layout.fillWidth: true
-        readOnly: true
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
-        inputText: Strings.scanAllBagsFromTruck
+        text: Strings.scanAllBagsFromTruck
         onClicked: pageManager.enter(Enums.Page.QRScanner,
                                      {
                                          "title": top.title,

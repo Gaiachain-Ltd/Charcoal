@@ -52,7 +52,7 @@ ListView {
             id: item
             width: parent.width
 
-            spacing: s(GStyle.tinyMargin)
+            spacing: s(GStyle.middleSmallMargin)
 
             Items.GText {
                 horizontalAlignment: Text.AlignLeft
@@ -60,6 +60,7 @@ ListView {
                 height: contentHeight
 
                 font.bold: true
+                font.pixelSize: s(GStyle.tinyPixelSize)
                 wrapMode: TextInput.WrapAnywhere
                 elide: Text.ElideNone
                 maximumLineCount: 5
@@ -82,7 +83,7 @@ ListView {
 
                 ColumnLayout {
                     width: parent.width
-                    spacing: 0
+                    spacing: s(GStyle.smallMargin)
 
                     RowLayout {
                         Items.GText {
@@ -90,12 +91,14 @@ ListView {
 
                             horizontalAlignment: Text.AlignLeft
                             font.bold: true
+                            font.pixelSize: s(GStyle.smallPixelSize)
 
                             text: modelData.eventName
                         }
 
                         Items.GText {
                             horizontalAlignment: Text.AlignRight
+                            font.pixelSize: s(GStyle.smallPixelSize)
 
                             text: modelData.date
                         }

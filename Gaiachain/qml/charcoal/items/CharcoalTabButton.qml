@@ -18,8 +18,10 @@ Items.GTabButton {
     borderColor: GStyle.inputBorderColor
     borderWidth: sr(1)
 
-    radius: s(5)
+    radius: s(10)
+    implicitHeight: 50
 
     font.capitalization: Font.AllUppercase
     font.bold: true
+    font.pixelSize: s(GStyle.smallPixelSize)
 }

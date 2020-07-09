@@ -148,14 +148,13 @@ Pages.SupplyChainPageBase {
         helpText: Strings.loadingAndTransportPlateNumberHelp
     }
 
-    Headers.ButtonInputHeader {
+    CharcoalHeaders.CharcoalButtonHeader {
         id: loadAndScanBagsHeader
 
         Layout.fillWidth: true
-        readOnly: true
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
-        inputText: Strings.loadAndScanBags
+        text: Strings.loadAndScanBags
         onClicked: pageManager.enter(Enums.Page.QRScanner,
                                      {
                                          "title": top.title,
