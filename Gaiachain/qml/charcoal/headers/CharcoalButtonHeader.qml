@@ -4,8 +4,8 @@ import QtQuick.Layouts 1.12
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 
-import "../items" as Items
-import "../headers" as Headers
+import "../../items" as Items
+import "../../headers" as Headers
 
 Headers.GHeader {
     id: root
@@ -18,6 +18,8 @@ Headers.GHeader {
     property bool forceBoldValue: false
     property int valueFontSize: s(GStyle.inputPixelSize)
 
+    signal clicked()
+
     function clear() {
         text = Strings.empty
     }
@@ -26,14 +28,32 @@ Headers.GHeader {
         id: textWidget
 
         Layout.fillWidth: true
-        Layout.margins: root.margins
+        Layout.leftMargin: root.margins
+        Layout.rightMargin: root.margins
 
         focus: false
         color: secondaryTextColor
         font.bold: root.highlighted || forceBoldValue
         font.pixelSize: valueFontSize
 
-        wrapMode: Text.WrapAnywhere
+        wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignLeft
+
+        bottomInset: 0
+        topInset: 0
+
+        padding: root.margins
+
+        background: Rectangle {
+            color: GStyle.blank
+            radius: s(GStyle.tinyMargin)
+            border.color: GStyle.inputBorderColor
+            border.width: sr(1)
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.clicked()
+        }
     }
 }

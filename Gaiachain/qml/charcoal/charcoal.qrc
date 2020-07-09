@@ -30,5 +30,6 @@
         <file>pages/TakeDocumentPicturesPage.qml</file>
         <file>pages/PhotoGalleryPage.qml</file>
         <file>popups/ColumnButtonsPopup.qml</file>
+        <file>headers/CharcoalButtonHeader.qml</file>
     </qresource>
 </RCC>
