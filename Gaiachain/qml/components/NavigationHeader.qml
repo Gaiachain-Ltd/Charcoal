@@ -82,7 +82,8 @@ Item {
             Layout.fillWidth: true
             text: title
             color: GStyle.textSecondaryColor
-            font.pixelSize: s(GStyle.titlePixelSize)
+            font.pixelSize: (mainController.flavor === "cocoa")? s(GStyle.titlePixelSize)
+                                                               : s(GStyle.subtitlePixelSize)
             font.capitalization: GStyle.headerCapitalization
             wrapMode: Text.WordWrap
 

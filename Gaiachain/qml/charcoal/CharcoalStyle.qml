@@ -80,7 +80,6 @@ AbstractStyle {
 
     logoImgUrl: logoWhiteImgUrl
     loginBackgroundUrl: "qrc:/ui/loginBackground"
-    downArrowImgUrl: "qrc:/ui/arrow"
 
     primaryColor: "#000000"
     buttonSecondaryColor: "#888888"
@@ -100,6 +99,8 @@ AbstractStyle {
     calendarDayMinHeight: calendarNumberPixelSize + (2 * picoMargin)
 
     menuButtonHeight: 340
+
+    inputPixelSize: pixelSize
 
     headerCapitalization: Font.AllUppercase
 }
