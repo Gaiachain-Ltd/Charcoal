@@ -76,24 +76,28 @@ Pages.GPage {
 
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.allTab
+                    width: implicitWidth
                 }
 
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.plotTab
                     selectedColor: GStyle.fontHighlightColor
                     packageTypes: Enums.PackageType.Plot
+                    width: implicitWidth
                 }
 
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.harvestTab
                     selectedColor: GStyle.fontHighlightColor2
                     packageTypes: Enums.PackageType.Harvest
+                    width: implicitWidth
                 }
 
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.transportTab
                     selectedColor: GStyle.fontHighlightColor4
                     packageTypes: Enums.PackageType.Transport
+                    width: implicitWidth
                 }
 
             }

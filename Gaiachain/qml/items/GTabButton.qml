@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.11
 
 import com.gaiachain.style 1.0
 
@@ -29,7 +30,7 @@ TabButton {
     background: Rectangle {
         id: backgroundRect
 
-        implicitWidth: 100
+        implicitWidth: textWidth + s(GStyle.hugeMargin)
         implicitHeight: 40
 
         color: top.deselectedColor
@@ -37,6 +38,39 @@ TabButton {
 
         border.width: top.borderWidth
         border.color: top.borderColor
+
+        // "Mask" bottom radius so that item looks rectangular on the bottom
+        // TODO: create custom QQuickItem instead!
+        RowLayout {
+            spacing: 0
+            height: top.radius
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+            }
+
+            // Left "border"
+            Rectangle {
+                color: top.borderColor
+                height: top.radius
+                width: top.borderWidth
+            }
+
+            // Empty middle
+            Rectangle {
+                Layout.fillWidth: true
+                color: backgroundRect.color
+                height: top.radius
+            }
+
+            // Right "border"
+            Rectangle {
+                color: top.borderColor
+                height: top.radius
+                width: top.borderWidth
+            }
+        }
     }
 
     states: State {
