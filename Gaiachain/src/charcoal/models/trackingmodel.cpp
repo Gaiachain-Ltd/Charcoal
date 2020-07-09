@@ -483,11 +483,11 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
     const auto result = updater.updateTable(reply);
     if (result.success) {
         getMissingPictures();
-        
+
         if (result.toFinish.isEmpty() == false) {
             emit finalizePackages(result.toFinish);
         }
-        
+
         startPackageDetailsUpdate();
     } else {
         emit error(tr("Error updating tracking information"));
@@ -583,16 +583,12 @@ void TrackingModel::getMissingPictures()
                    << typeId;
     }
 
-    qDebug() << "Scanning properties for missing images" << typeId;
-
     while (q.next()) {
         const QByteArray propertiesString(q.value(Tags::properties).toByteArray());
         const QJsonObject properties(
             CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
         const auto docs(properties.value(Tags::webDocuments).toArray());
         const auto recs(properties.value(Tags::webReceipts).toArray());
-
-        qDebug() << properties << docs << recs;
 
         for (const auto &doc : docs) {
             m_picturesManager->checkFileIsCached(doc.toString());
