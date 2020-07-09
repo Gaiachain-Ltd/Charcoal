@@ -18,6 +18,8 @@ MenuButton {
     property alias leftColor: left.color
     property alias rightColor: right.color
 
+    implicitHeight: s(GStyle.menuButtonHeight) * 1.2
+
     signal leftClicked()
     signal rightClicked()
 
@@ -42,6 +44,10 @@ MenuButton {
             height: top.height
             width: row.half
             fontColor: GStyle.textPrimaryColor
+            fontSize: s(GStyle.pixelSize)
+            fontBold: false
+            textHorizontalAlignment: Qt.AlignLeft
+            textVerticalAlignment: Qt.AlignTop
             onClicked: leftClicked()
         }
 
@@ -50,6 +56,10 @@ MenuButton {
             height: top.height
             width: row.half
             fontColor: GStyle.textPrimaryColor
+            fontSize: s(GStyle.pixelSize)
+            fontBold: false
+            textHorizontalAlignment: Qt.AlignLeft
+            textVerticalAlignment: Qt.AlignTop
             onClicked: rightClicked()
         }
     }
