@@ -34,7 +34,7 @@ SOFTWARE.
 
 #include "qaesencryption.h"
 
-        class MCrypto
+class MCrypto
 {
     Q_GADGET
  public:

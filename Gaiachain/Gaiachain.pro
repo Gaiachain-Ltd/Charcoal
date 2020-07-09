@@ -22,6 +22,13 @@ cocoa:charcoal {
     error("Can't compile BOTH cocoa and charcoal flavors! Pick one")
 }
 
+defined(app_storage_password) {
+    error(You have to provide app-specific password! Do it like this: qmake app_storage_password=\"ABCDEF\")
+} else {
+    DEFINES += APP_STORAGE_PASSWORD='"\\\"$$app_storage_password\\\""'
+    #message(App password is: $$app_storage_password)
+}
+
 cocoa {
     DEFINES += COCOA
     RESOURCES += qml/cocoa/cocoa.qrc

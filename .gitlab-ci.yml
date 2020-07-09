@@ -51,7 +51,7 @@ variables:
   - cd $CI_PROJECT_DIR
   - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
   #  CONFIG+=lto
-  - $QT_PATH_DESKTOP/bin/qmake CONFIG+=$FLAVOR QMAKE_CC=gcc-9 QMAKE_CXX=g++-9
+  - $QT_PATH_DESKTOP/bin/qmake CONFIG+=$FLAVOR QMAKE_CC=gcc-9 QMAKE_CXX=g++-9 app_storage_password="$SECRET"
   - make -j3
   - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
@@ -62,7 +62,7 @@ variables:
   script:
     - cd $CI_PROJECT_DIR
     - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
-    - $QT_PATH_ANDROID/bin/qmake CONFIG+=$FLAVOR $QMAKE_CONFIG ANDROID_ABIS=$ABIS
+    - $QT_PATH_ANDROID/bin/qmake CONFIG+=$FLAVOR $QMAKE_CONFIG ANDROID_ABIS=$ABIS app_storage_password="$SECRET"
     - cat Makefile
     - make -j3
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
@@ -84,6 +84,7 @@ linux-cocoa:
   variables:
     QMAKE_CONFIG: ""
     FLAVOR: "cocoa"
+    SECRET: $SECRET_COCOA
 
 linux-charcoal:
   <<: *common
@@ -95,6 +96,7 @@ linux-charcoal:
   variables:
     QMAKE_CONFIG: ""
     FLAVOR: "charcoal"
+    SECRET: $SECRET_CHARCOAL
 
 # Android Cocoa
 android-release-cocoa:
@@ -109,6 +111,7 @@ android-release-cocoa:
     QMAKE_CONFIG: "CONFIG+=release_server"
     FLAVOR: "cocoa"
     PROJECT_NAME: "GaiachainCocoa"
+    SECRET: $SECRET_COCOA
 
 android-dev-cocoa-easy-login:
   <<: *common
@@ -120,6 +123,7 @@ android-dev-cocoa-easy-login:
     QMAKE_CONFIG: "CONFIG+=easy_login"
     FLAVOR: "cocoa"
     PROJECT_NAME: "GaiachainCocoa"
+    SECRET: $SECRET_COCOA
 
 android-dev-cocoa:
   <<: *common
@@ -133,6 +137,7 @@ android-dev-cocoa:
     QMAKE_CONFIG: ""
     FLAVOR: "cocoa"
     PROJECT_NAME: "GaiachainCocoa"
+    SECRET: $SECRET_COCOA
 
 # Android Charcoal
 android-release-charcoal:
@@ -147,6 +152,7 @@ android-release-charcoal:
     QMAKE_CONFIG: "CONFIG+=release_server"
     FLAVOR: "charcoal"
     PROJECT_NAME: "GaiachainCharcoal"
+    SECRET: $SECRET_CHARCOAL
 
 android-dev-charcoal-easy-login:
   <<: *common
@@ -158,6 +164,7 @@ android-dev-charcoal-easy-login:
     QMAKE_CONFIG: "CCONFIG+=easy_login"
     FLAVOR: "charcoal"
     PROJECT_NAME: "GaiachainCharcoal"
+    SECRET: $SECRET_CHARCOAL
 
 android-dev-charcoal:
   <<: *common
@@ -171,6 +178,7 @@ android-dev-charcoal:
     QMAKE_CONFIG: ""
     FLAVOR: "charcoal"
     PROJECT_NAME: "GaiachainCharcoal"
+    SECRET: $SECRET_CHARCOAL
 
 upload_job:
   <<: *common
