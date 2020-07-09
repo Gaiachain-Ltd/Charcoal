@@ -13,7 +13,21 @@ There is still lots of old code for previous version in the project. Slowly, wit
 
 ## Configuration
 
-Recommended Qt version for the project is the newest LTS version (currently **Qt 5.12.5**).
+Recommended Qt version for the project is **Qt 5.14.2**.
+
+### Build
+
+In order to build Gaiachain Cocoa, run these commands:
+```
+qmake CONFIG+=cocoa app_storage_password="ABCDEF"
+```
+
+And Charcoal:
+```
+qmake CONFIG+=charcoal app_storage_password="ABCDEF"
+```
+
+Make sure to supply a strong and preferrably long password.
 
 ### 3rd party libraries 
 
