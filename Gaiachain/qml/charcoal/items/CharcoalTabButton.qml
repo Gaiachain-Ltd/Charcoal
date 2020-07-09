@@ -19,7 +19,10 @@ Items.GTabButton {
     borderWidth: sr(1)
 
     radius: s(5)
+    implicitHeight: 50
+    width: textWidth + s(GStyle.middleBigMarginMargin)
 
     font.capitalization: Font.AllUppercase
     font.bold: true
+    font.pixelSize: s(GStyle.smallPixelSize)
 }

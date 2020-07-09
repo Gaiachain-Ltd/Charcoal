@@ -12,6 +12,8 @@ TabButton {
     property color selectedFontColor: GStyle.primaryTextColor
     property color deselectedFontColor: GStyle.primaryTextColor
 
+    readonly property alias textWidth: contentItemRect.contentWidth
+
     property color borderColor: "#ffffff"
     property int borderWidth: 0
 

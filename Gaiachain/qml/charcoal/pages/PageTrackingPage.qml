@@ -32,15 +32,11 @@ Pages.GPage {
         dataManager.trackingFilterProxyModel.searchString = searchInput.text
     }
 
-    Component.onDestruction: {
-        //transactionsModel.clear()
-        //latestRangeTransactionsModel.clearRowCount()
-    }
-
     ColumnLayout {
         id: mainLayout
 
-        spacing: s(GStyle.smallMargin)
+        spacing: s(GStyle.bigMargin)
+
         anchors {
             fill: parent
             leftMargin: s(GStyle.bigMargin)
@@ -76,6 +72,7 @@ Pages.GPage {
             TabBar {
                 id: bar
                 Layout.fillWidth: true
+                spacing: s(GStyle.smallMargin)
 
                 CharcoalItems.CharcoalTabButton {
                     text: Strings.allTab
