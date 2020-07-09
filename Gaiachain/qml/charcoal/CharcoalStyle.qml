@@ -99,9 +99,7 @@ AbstractStyle {
     calendarNumberPixelSize: tinyPixelSize
     calendarDayMinHeight: calendarNumberPixelSize + (2 * picoMargin)
 
-    menuButtonHeight: 300
-
-    pixelSize: 29
+    menuButtonHeight: 340
 
     headerCapitalization: Font.AllUppercase
 }

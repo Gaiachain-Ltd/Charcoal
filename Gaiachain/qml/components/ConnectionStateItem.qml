@@ -87,7 +87,6 @@ Item {
             text: top.textForState(top.connectionState)
             color: top.currentColor
 
-            font.bold: true
             horizontalAlignment: Qt.AlignLeft
 
             DummyComponents.ServerStateChanger {}

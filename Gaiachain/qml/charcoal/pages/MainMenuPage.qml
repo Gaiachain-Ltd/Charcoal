@@ -63,8 +63,8 @@ GPage {
         }
     }
 
-        Flickable {
-            anchors.fill: parent
+    Flickable {
+        anchors.fill: parent
 
         contentHeight: menuColumn.implicitHeight + 2 * menuColumn.margins
         boundsBehavior: Flickable.StopAtBounds
@@ -80,86 +80,86 @@ GPage {
 
             spacing: 0
 
-                Components.ExpandableMenuButton {
+            Components.ExpandableMenuButton {
+                Layout.fillWidth: true
+
+                text: Strings.supplyChain
+                icon: GStyle.menuSupplyChainUrl
+                color: GStyle.menuSupplyChainColor
+
+                onClicked: supplyChainSubmenu.visible = !supplyChainSubmenu.visible
+            }
+
+            ColumnLayout {
+                id: supplyChainSubmenu
+                spacing: 0
+                visible: false
+
+                Components.DoubleMenuButton {
                     Layout.fillWidth: true
 
-                    text: Strings.supplyChain
-                    icon: GStyle.menuSupplyChainUrl
-                    color: GStyle.menuSupplyChainColor
+                    text: Strings.logging
+                    color: GStyle.submenuLoggingColor
+                    icon: GStyle.submenuLoggingUrl
+                    fontColor: GStyle.textPrimaryColor
 
-                    onClicked: supplyChainSubmenu.visible = !supplyChainSubmenu.visible
+                    leftText: Strings.loggingBeginning
+                    leftColor: GStyle.submenuLoggingBeginningColor
+                    leftIcon:  GStyle.submenuLoggingBeginningUrl
+                    onLeftClicked: pageManager.enter(
+                                       Enums.Page.SupplyChainLoggingBeginning)
+
+                    rightText: Strings.loggingEnding
+                    rightColor: GStyle.submenuLoggingEndingColor
+                    rightIcon:  GStyle.submenuLoggingEndingUrl
+                    onRightClicked: pageManager.enter(
+                                        Enums.Page.SupplyChainLoggingEnding)
                 }
 
-                ColumnLayout {
-                    id: supplyChainSubmenu
-                    spacing: 0
-                    visible: false
+                Components.DoubleMenuButton {
+                    Layout.fillWidth: true
 
-                    Components.DoubleMenuButton {
-                        Layout.fillWidth: true
+                    text: Strings.carbonization
+                    color: GStyle.submenuCarbonizationColor
+                    icon: GStyle.submenuCarbonizationUrl
+                    fontColor: GStyle.textPrimaryColor
 
-                        text: Strings.logging
-                        color: GStyle.submenuLoggingColor
-                        icon: GStyle.submenuLoggingUrl
-                        fontColor: GStyle.textPrimaryColor
+                    leftText: Strings.carbonizationBeginning
+                    leftColor: GStyle.submenuCarbonizationBeginningColor
+                    leftIcon:  GStyle.submenuCarbonizationBeginningUrl
+                    onLeftClicked: pageManager.enter(
+                                       Enums.Page.SupplyChainCarbonizationBeginning)
 
-                        leftText: Strings.loggingBeginning
-                        leftColor: GStyle.submenuLoggingBeginningColor
-                        leftIcon:  GStyle.submenuLoggingBeginningUrl
-                        onLeftClicked: pageManager.enter(
-                                           Enums.Page.SupplyChainLoggingBeginning)
-
-                        rightText: Strings.loggingEnding
-                        rightColor: GStyle.submenuLoggingEndingColor
-                        rightIcon:  GStyle.submenuLoggingEndingUrl
-                        onRightClicked: pageManager.enter(
-                                            Enums.Page.SupplyChainLoggingEnding)
-                    }
-
-                    Components.DoubleMenuButton {
-                        Layout.fillWidth: true
-
-                        text: Strings.carbonization
-                        color: GStyle.submenuCarbonizationColor
-                        icon: GStyle.submenuCarbonizationUrl
-                        fontColor: GStyle.textPrimaryColor
-
-                        leftText: Strings.carbonizationBeginning
-                        leftColor: GStyle.submenuCarbonizationBeginningColor
-                        leftIcon:  GStyle.submenuCarbonizationBeginningUrl
-                        onLeftClicked: pageManager.enter(
-                                           Enums.Page.SupplyChainCarbonizationBeginning)
-
-                        rightText: Strings.carbonizationEnding
-                        rightColor: GStyle.submenuCarbonizationEndingColor
-                        rightIcon:  GStyle.submenuCarbonizationEndingUrl
-                        onRightClicked: pageManager.enter(
-                                            Enums.Page.SupplyChainCarbonizationEnding)
-                    }
-
-                    Components.MenuButton {
-                        Layout.fillWidth: true
-
-                        text: Strings.loadingAndTransport
-                        icon: GStyle.submenuLoadingAndTransportUrl
-                        color: GStyle.submenuLoadingAndTransportColor
-                        fontColor: GStyle.textPrimaryColor
-
-                        onClicked: pageManager.enter(
-                                       Enums.Page.SupplyChainLoadingAndTransport)
-                    }
-
-                    Components.MenuButton {
-                        Layout.fillWidth: true
-
-                        text: Strings.reception
-                        icon: GStyle.submenuReceptionUrl
-                        color: GStyle.submenuReceptionColor
-                        fontColor: GStyle.textPrimaryColor
-
-                        onClicked: pageManager.enter(Enums.Page.SupplyChainReception)
-                    }
+                    rightText: Strings.carbonizationEnding
+                    rightColor: GStyle.submenuCarbonizationEndingColor
+                    rightIcon:  GStyle.submenuCarbonizationEndingUrl
+                    onRightClicked: pageManager.enter(
+                                        Enums.Page.SupplyChainCarbonizationEnding)
                 }
+
+                Components.MenuButton {
+                    Layout.fillWidth: true
+
+                    text: Strings.loadingAndTransport
+                    icon: GStyle.submenuLoadingAndTransportUrl
+                    color: GStyle.submenuLoadingAndTransportColor
+                    fontColor: GStyle.textPrimaryColor
+
+                    onClicked: pageManager.enter(
+                                   Enums.Page.SupplyChainLoadingAndTransport)
+                }
+
+                Components.MenuButton {
+                    Layout.fillWidth: true
+
+                    text: Strings.reception
+                    icon: GStyle.submenuReceptionUrl
+                    color: GStyle.submenuReceptionColor
+                    fontColor: GStyle.textPrimaryColor
+
+                    onClicked: pageManager.enter(Enums.Page.SupplyChainReception)
+                }
+            }
 
             Components.MenuButton {
                 Layout.fillWidth: true

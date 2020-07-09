@@ -34,9 +34,9 @@ Rectangle {
         textFormat: Text.PlainText
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
-        font.letterSpacing: -0.7
+        font.letterSpacing: -0.5
         font.capitalization: Font.AllUppercase
-        font.pixelSize: s(GStyle.bigPixelSize)
+        font.pixelSize: s(GStyle.titlePixelSize)
         font.bold: true
     }
 
