@@ -54,6 +54,7 @@ namespace Tags {
     const QLatin1String fullName = QLatin1String("full_name");
     // Charcoal user roles
     const QLatin1String superUser = QLatin1String("SUPER_USER");
+    const QLatin1String director = QLatin1String("DIRECTOR");
     const QLatin1String carbonizer = QLatin1String("CARBONIZER");
     const QLatin1String logger = QLatin1String("LOGGER");
     // Charcoal Event reply fields and charcoal Replantation reply fields
