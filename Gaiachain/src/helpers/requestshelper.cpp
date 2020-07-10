@@ -189,6 +189,10 @@ Enums::UserType RequestsHelper::userTypeFromString(const QString &text)
 #elif CHARCOAL
     if (text == Tags::superUser) {
         return Enums::UserType::SuperUser;
+    } else if (text == Tags::carbonizer) {
+        return Enums::UserType::Carbonizer;
+    } else if (text == Tags::logger) {
+        return Enums::UserType::Logger;
     }
 
     return Enums::UserType::Annonymous;
