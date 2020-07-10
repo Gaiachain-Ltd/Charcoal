@@ -57,6 +57,11 @@ MainController::MainController(QObject *parent)
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
+#ifdef CHARCOAL
+    m_notificationsManager.setSessionManager(m_sessionManager);
+    m_notificationsManager.setUserManager(m_userManager);
+#endif
+
     setupConnections();
 
     m_languageManager->load();
@@ -147,10 +152,6 @@ void MainController::setupDataConnections()
 #elif CHARCOAL
     connect(&m_notificationsManager, &NotificationManager::notify,
             &m_pageManager, &PageManager::showNotificationWithLink);
-
-    connect(&m_pageManager, &PageManager::stepComplete,
-            &m_notificationsManager, &NotificationManager::stepComplete,
-            Qt::QueuedConnection);
 
     auto dataManager = qobject_cast<CharcoalDataManager *>(m_dataManager);
     connect(dataManager, &CharcoalDataManager::error,

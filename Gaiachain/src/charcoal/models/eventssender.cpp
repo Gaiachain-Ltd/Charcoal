@@ -97,10 +97,10 @@ void EventsSender::sendEvents()
 
         const QJsonDocument doc(
             {
-                { "pid", pid },
-                { "action", action },
-                { "timestamp", timestamp },
-                { "location", location },
+                { Tags::pid, pid },
+                { Tags::action, action },
+                { Tags::timestamp, timestamp },
+                { Tags::location, location },
                 { Tags::properties, dbMapToWebObject(propertiesObject, entityId) }
             });
 
@@ -215,7 +215,7 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
         const QLatin1String errorString = QLatin1String("Query to update the Event has failed to execute");
         qWarning() << RED(errorString)
                    << query.lastError() << "For query:" << query.lastQuery()
-                   << timestamp << "pid" << pid << "eid" << entityWebId;
+                   << timestamp << Tags::pid << pid << "eid" << entityWebId;
         emit error(errorString);
     }
 }
