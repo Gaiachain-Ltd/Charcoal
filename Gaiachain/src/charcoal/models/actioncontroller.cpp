@@ -313,16 +313,7 @@ void ActionController::registerLoggingBeginning(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, isFinished, isReplanted) "
-                  "VALUES (:typeId, :plotId, 0, 0)");
-    query.bindValue(":typeId", typeId);
-    query.bindValue(":plotId", plotId);
-
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Plot entity has failed!")
-                   << query.lastError().text()
-                   << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
+    if (insertEntity(&query, typeId, plotId, -1) == false) {
         return;
     }
 
@@ -484,18 +475,7 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     if (alreadyPresent == false) {
-        query.prepare("INSERT INTO Entities (typeId, name, parent, "
-                      "isFinished, isReplanted) "
-                      "VALUES (:typeId, :harvestId, :parent, 0, 0)");
-        query.bindValue(":typeId", typeId);
-        query.bindValue(":harvestId", harvestId);
-        query.bindValue(":parent", parentEntityId);
-
-        if (query.exec() == false) {
-            qWarning() << RED("Inserting Carbonization entity has failed!")
-                       << query.lastError().text()
-                       << "for query:" << query.lastQuery()
-                       << "DB:" << m_dbConnName;
+        if (insertEntity(&query, typeId, harvestId, parentEntityId) == false) {
             return;
         }
     }
@@ -688,17 +668,7 @@ void ActionController::registerLoadingAndTransport(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
 
-    query.prepare("INSERT INTO Entities (typeId, name, parent, isFinished, isReplanted) "
-                  "VALUES (:typeId, :transportId, :parent, 0, 0)");
-    query.bindValue(":typeId", typeId);
-    query.bindValue(":transportId", transportId);
-    query.bindValue(":parent", parentEntityId);
-
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Loading and Transport entity has failed!")
-                   << query.lastError().text()
-                   << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
+    if (insertEntity(&query, typeId, transportId, parentEntityId) == false) {
         return;
     }
 
@@ -950,4 +920,28 @@ int ActionController::scannedBagsForAction(const QString &transportId,
     }
 
     return total;
+}
+
+bool ActionController::insertEntity(QSqlQuery *query,
+                                    const int typeId,
+                                    const QString &packageId,
+                                    const int parentId) const
+{
+    query->prepare("INSERT INTO Entities (typeId, name, parent, "
+                  "isFinished, isReplanted) "
+                  "VALUES (:typeId, :harvestId, :parent, 0, 0)");
+    query->bindValue(":typeId", typeId);
+    query->bindValue(":harvestId", packageId);
+    query->bindValue(":parent", parentId == -1? QVariant(QVariant::Int) : parentId);
+
+    if (query->exec() == false) {
+        qWarning() << RED("Inserting new entity has failed!")
+                   << query->lastError().text()
+                   << "for query:" << query->lastQuery()
+                   << "DB:" << m_dbConnName
+                   << typeId << packageId << parentId;
+        return false;
+    }
+
+    return true;
 }
