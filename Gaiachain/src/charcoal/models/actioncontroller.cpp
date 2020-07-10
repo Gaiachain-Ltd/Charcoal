@@ -318,7 +318,7 @@ void ActionController::registerLoggingBeginning(
     }
 
     // Then, insert a new Event under that Entity
-    const QString entityId(query.lastInsertId().toString());
+    const int entityId(query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_dbConnName, Enums::SupplyChainAction::LoggingBeginning));
     const int villageId(CharcoalDbHelpers::getVillageId(m_dbConnName, village));
@@ -330,29 +330,15 @@ void ActionController::registerLoggingBeginning(
         return;
     }
 
-    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, 0)");
-    query.bindValue(":entityId", entityId);
-    query.bindValue(":typeId", eventTypeId);
-    query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp.toSecsSinceEpoch());
-    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
-    query.bindValue(":locationLatitude", coordinate.latitude());
-    query.bindValue(":locationLongitude", coordinate.longitude());
-    query.bindValue(":properties",
-                    CharcoalDbHelpers::propertiesToString(QVariantMap {
-                        { Tags::webParcel, parcelId },
-                        { Tags::webVillage, villageId },
-                        { Tags::webTreeSpecies, treeSpeciesId },
-                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                    }));
-
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Logging Beginning event has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                             eventDate, coordinate,
+                             {
+                                 { Tags::webParcel, parcelId },
+                                 { Tags::webVillage, villageId },
+                                 { Tags::webTreeSpecies, treeSpeciesId },
+                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+                             }))
+    {
         return;
     }
 
@@ -402,27 +388,14 @@ void ActionController::registerLoggingEnding(
     }
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, 0)");
-    query.bindValue(":entityId", entityId);
-    query.bindValue(":typeId", eventTypeId);
-    query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp.toSecsSinceEpoch());
-    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
-    query.bindValue(":locationLatitude", coordinate.latitude());
-    query.bindValue(":locationLongitude", coordinate.longitude());
-    query.bindValue(":properties",
-                    CharcoalDbHelpers::propertiesToString(QVariantMap {
-                        { Tags::webNumberOfTrees, numberOfTrees },
-                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                    }));
 
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Logging Ending event has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                             eventDate, coordinate,
+                             {
+                                 { Tags::webNumberOfTrees, numberOfTrees },
+                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+                             }))
+    {
         return;
     }
 
@@ -481,8 +454,8 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     // Then, insert a new Event under that Entity
-    const QString entityId(alreadyPresent? query.value("id").toString()
-                                          : query.lastInsertId().toString());
+    const int entityId(alreadyPresent? query.value("id").toInt()
+                                      : query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_dbConnName, Enums::SupplyChainAction::CarbonizationBeginning));
     const int webPlotId(
@@ -514,23 +487,9 @@ void ActionController::registerCarbonizationBeginning(
         properties.insert(Tags::webOvenWidth, dimensions.at(2));
     }
 
-    query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                  "date, eventDate, locationLatitude, locationLongitude, "
-                  "properties, isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, 0)");
-    query.bindValue(":entityId", entityId);
-    query.bindValue(":typeId", eventTypeId);
-    query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp.toSecsSinceEpoch());
-    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
-    query.bindValue(":locationLatitude", coordinate.latitude());
-    query.bindValue(":locationLongitude", coordinate.longitude());
-    query.bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
-
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Carbonization Beginning event has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                             eventDate, coordinate, properties))
+    {
         return;
     }
 
@@ -593,27 +552,14 @@ void ActionController::registerCarbonizationEnding(
         const QString ovenLetter(CharcoalDbHelpers::getOvenLetter(m_dbConnName, ovenId));
 
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-        query.prepare("INSERT INTO Events (entityId, typeId, userId, "
-                      "date, eventDate, locationLatitude, locationLongitude, "
-                      "properties, isCommitted) "
-                      "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                      ":locationLatitude, :locationLongitude, :properties, 0)");
-        query.bindValue(":entityId", entityId);
-        query.bindValue(":typeId", eventTypeId);
-        query.bindValue(":userId", userId);
-        query.bindValue(":date", timestamp.toSecsSinceEpoch());
-        query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
-        query.bindValue(":locationLatitude", coordinate.latitude());
-        query.bindValue(":locationLongitude", coordinate.longitude());
-        query.bindValue(":properties",
-                        CharcoalDbHelpers::propertiesToString(QVariantMap {
-                            { Tags::webOvenId, ovenLetter },
-                            { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                        }));
 
-        if (query.exec() == false) {
-            qWarning() << RED("Inserting Logging Ending event has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
+        if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                                 eventDate, coordinate,
+                                 {
+                                     { Tags::webOvenId, ovenLetter },
+                                     { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+                                 }))
+        {
             return;
         }
 
@@ -673,7 +619,7 @@ void ActionController::registerLoadingAndTransport(
     }
 
     // Then, insert a new Event under that Entity
-    const QString entityId(query.lastInsertId().toString());
+    const int entityId(query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
     const int destinationId(CharcoalDbHelpers::getDestinationId(m_dbConnName, destination));
 
@@ -682,31 +628,16 @@ void ActionController::registerLoadingAndTransport(
         return;
     }
 
-    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, 0)");
-    query.bindValue(":entityId", entityId);
-    query.bindValue(":typeId", eventTypeId);
-    query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp.toSecsSinceEpoch());
-    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
-    query.bindValue(":locationLatitude", coordinate.latitude());
-    query.bindValue(":locationLongitude", coordinate.longitude());
-
-    query.bindValue(":properties",
-                    CharcoalDbHelpers::propertiesToString(QVariantMap {
-                        { Tags::webHarvestId, webHarvestId },
-                        { Tags::webPlateNumber, plateNumber },
-                        { Tags::webDestination, destinationId },
-                        { Tags::webQrCodes, scannedQrs },
-                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                    }));
-
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting Carbonization Beginning event has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                             eventDate, coordinate,
+                             {
+                                 { Tags::webHarvestId, webHarvestId },
+                                 { Tags::webPlateNumber, plateNumber },
+                                 { Tags::webDestination, destinationId },
+                                 { Tags::webQrCodes, scannedQrs },
+                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+                             }))
+    {
         return;
     }
 
@@ -769,30 +700,16 @@ void ActionController::registerReception(
     const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted) "
-                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, 0)");
-    query.bindValue(":entityId", entityId);
-    query.bindValue(":typeId", eventTypeId);
-    query.bindValue(":userId", userId);
-    query.bindValue(":date", timestamp.toSecsSinceEpoch());
-    query.bindValue(":eventDate", eventDate.toSecsSinceEpoch());
-    query.bindValue(":locationLatitude", coordinate.latitude());
-    query.bindValue(":locationLongitude", coordinate.longitude());
 
-    query.bindValue(":properties",
-                    CharcoalDbHelpers::propertiesToString(QVariantMap {
-                        { Tags::webDocuments, cachedDocs },
-                        { Tags::webReceipts, cachedRecs },
-                        { Tags::webQrCodes, scannedQrs },
-                        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                    }));
-
-    if (query.exec() == false) {
-        qWarning() << RED("Inserting reception event has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                             eventDate, coordinate,
+                             {
+                                 { Tags::webDocuments, cachedDocs },
+                                 { Tags::webReceipts, cachedRecs },
+                                 { Tags::webQrCodes, scannedQrs },
+                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+                             }))
+    {
         return;
     }
 
@@ -940,6 +857,42 @@ bool ActionController::insertEntity(QSqlQuery *query,
                    << "for query:" << query->lastQuery()
                    << "DB:" << m_dbConnName
                    << typeId << packageId << parentId;
+        return false;
+    }
+
+    return true;
+}
+
+bool ActionController::insertEvent(
+    QSqlQuery *query,
+    const int entityId,
+    const int eventTypeId,
+    const QString &userId,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QGeoCoordinate &coordinate,
+    const QVariantMap &properties) const
+{
+    query->prepare("INSERT INTO Events (entityId, typeId, userId,"
+                  "date, eventDate, locationLatitude, locationLongitude, properties, "
+                  "isCommitted) "
+                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
+                  ":locationLatitude, :locationLongitude, :properties, 0)");
+    query->bindValue(":entityId", entityId);
+    query->bindValue(":typeId", eventTypeId);
+    query->bindValue(":userId", userId);
+    query->bindValue(":date", timestamp.toSecsSinceEpoch());
+    query->bindValue(":eventDate", eventDate.toSecsSinceEpoch());
+    query->bindValue(":locationLatitude", coordinate.latitude());
+    query->bindValue(":locationLongitude", coordinate.longitude());
+    query->bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
+
+    if (query->exec() == false) {
+        qWarning() << RED("Inserting event has failed!")
+                   << query->lastError().text()
+                   << "for query:" << query->lastQuery()
+                   << entityId << eventTypeId << userId << timestamp << eventDate
+                   << coordinate << properties;
         return false;
     }
 
