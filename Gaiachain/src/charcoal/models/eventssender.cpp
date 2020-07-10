@@ -192,8 +192,9 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
 
     const QString pid(reply.object().value(Tags::pid).toString());
     const qint64 entityWebId(reply.object().value(Tags::webEventId).toInt());
-    const qint64 timestamp(reply.object().value(Tags::eventTimestamp).toVariant().toLongLong());
-    const QString eventId(findEventByTimestamp(timestamp));
+    const qint64 timestamp(reply.object().value(Tags::eventTimestamp)
+                               .toVariant().toLongLong());
+    const int eventId(CharcoalDbHelpers::getEventId(m_connectionName, timestamp));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
@@ -238,8 +239,8 @@ void EventsSender::onFetchPhoto(const QString &path)
         QString justDateTime(path);
         justDateTime = justDateTime.mid(path.indexOf('-', 0) + 1);
         justDateTime.truncate(justDateTime.lastIndexOf('.'));
+
         const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
-        //path = QString("%1/%2/%3").arg(path, timestamp.toString("yyyy/MM/dd"), path);
         adjusted.append(timestamp.toString("yyyy/MM/dd"));
         adjusted.append("/");
         adjusted.append(path);
@@ -257,40 +258,7 @@ void EventsSender::onFetchPhoto(const QString &path)
     }
 }
 
-QString EventsSender::getEventType(const QString &id) const
-{
-    QString result;
-    const QString queryString(QString("SELECT actionName FROM EventTypes "
-                                      "WHERE id=%1").arg(id));
-    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    if (query.exec() && query.next()) {
-        result = query.value("actionName").toString();
-    } else {
-        qWarning() << RED("Unable to fetch event type (action)")
-                   << query.lastError() << "For query:" << query.lastQuery();
-    }
-
-    return result;
-}
-
-QString EventsSender::findEventByTimestamp(const qint64 timestamp) const
-{
-    QString result;
-    const QString queryString(QString("SELECT id FROM Events "
-                                      "WHERE date=%1").arg(timestamp));
-
-    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    if (query.exec() && query.next()) {
-        result = query.value("id").toString();
-    } else {
-        qWarning() << RED("Unable to find event ID by timestamp")
-                   << query.lastError() << "For query:" << query.lastQuery();
-    }
-
-    return result;
-}
-
-bool EventsSender::updateEntityWebId(const qint64 webId, const QString &eventId) const
+bool EventsSender::updateEntityWebId(const qint64 webId, const int eventId) const
 {
     QString result;
     const QString queryString(QString("UPDATE Entities SET webId=%1 "

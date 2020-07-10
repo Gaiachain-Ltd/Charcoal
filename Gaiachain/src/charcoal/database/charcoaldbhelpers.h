@@ -52,6 +52,9 @@ public:
                           const int eventTypeId, qint64 timestamp,
                           const bool verbose = true);
 
+    static int getEventId(const QString &connectionName, qint64 timestamp,
+                          const bool verbose = true);
+
     static int getEventTypeId(const QString &connectionName, const QString &action);
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,

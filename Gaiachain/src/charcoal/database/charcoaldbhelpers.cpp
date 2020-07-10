@@ -283,6 +283,14 @@ int CharcoalDbHelpers::getEventId(const QString &connectionName,
                       "id", "AND properties IS NOT NULL", verbose);
 }
 
+int CharcoalDbHelpers::getEventId(const QString &connectionName,
+                                  qint64 timestamp,
+                                  const bool verbose)
+{
+    return getSimpleInteger(connectionName, "Events", "date", timestamp, "id",
+                            verbose);
+}
+
 int CharcoalDbHelpers::getEventTypeId(const QString &connectionName, const QString &action)
 {
     const Enums::SupplyChainAction chainAction = m_supplyActionMap.key(action);
