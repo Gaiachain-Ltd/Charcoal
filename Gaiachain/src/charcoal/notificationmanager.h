@@ -1,10 +1,15 @@
-#ifndef NOTIFICATIONMANAGER_H
-#define NOTIFICATIONMANAGER_H
+#pragma once
 
 #include "controllers/abstractmanager.h"
 #include "common/enums.h"
 
+#include <QSharedPointer>
+#include <QNetworkReply>
 #include <QObject>
+#include <QTimer>
+
+class RestSessionManager;
+class UserManager;
 
 class NotificationManager : public AbstractManager
 {
@@ -15,14 +20,28 @@ public:
 
     void setupQmlContext(QQmlApplicationEngine &engine) override;
 
+    void setSessionManager(const QSharedPointer<RestSessionManager> &manager);
+    void setUserManager(const QSharedPointer<UserManager> &manager);
+
 public slots:
-    void stepComplete(const Enums::SupplyChainAction step, const QString &id) const;
+    void checkNotifications();
+    void stepComplete(const Enums::SupplyChainAction step,
+                      const QString &pid) const;
+
+protected slots:
+    void webErrorHandler(const QString &errorString,
+                         const QNetworkReply::NetworkError code) const;
+    void webReplyHandler(const QJsonDocument &reply) const;
 
 signals:
     void notify(const Enums::Page page,
                 const QString &header,
                 const QString &text,
                 const QString &redirectText) const;
-};
 
-#endif // NOTIFICATIONMANAGER_H
+private:
+    QSharedPointer<RestSessionManager> m_sessionManager;
+    QSharedPointer<UserManager> m_userManager;
+
+    QTimer m_notificationTimer;
+};

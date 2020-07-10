@@ -206,7 +206,7 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
         const qint64 eventDate = event.value(Tags::webEventDate).toVariant().toLongLong();
         const QJsonArray location = event.value("location_display").toArray();
         const int eventTypeId = CharcoalDbHelpers::getEventTypeId(
-            m_connectionName, event.value("action").toString());
+            m_connectionName, event.value(Tags::action).toString());
         const QString userId(event.value("user_code").toString());
 
         int eventId = CharcoalDbHelpers::getEventIdFromWebId(
@@ -269,7 +269,7 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
 bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) const
 {
     const QJsonObject webEntity(object.value("entity").toObject());
-    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+    const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("beginning_date").toVariant().toLongLong();
     const int parcelId = object.value("parcel_id").toInt();
@@ -291,7 +291,7 @@ bool TrackingUpdater::processDetailsLoggingBeginning(const QJsonObject &object) 
 bool TrackingUpdater::processDetailsLoggingEnding(const QJsonObject &object) const
 {
     const QJsonObject webEntity(object.value("entity").toObject());
-    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+    const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("ending_date").toVariant().toLongLong();
     const int numberOfTrees = object.value("number_of_trees").toInt();
@@ -319,7 +319,7 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
             cb.isEmpty() == false)
         {
             const QJsonObject webEntity(cb.value("entity").toObject());
-            const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+            const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
             const int webId = webEntity.value("id").toInt();
 
             const QString ovenTypeName(cb.value("oven_type_display").toString());
@@ -397,7 +397,7 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
             ce.isEmpty() == false)
         {
             const QJsonObject webEntity(ce.value("entity").toObject());
-            const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+            const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
             const int webId = webEntity.value("id").toInt();
             const qint64 eventDate = ce.value("end_date").toVariant().toLongLong();
 
@@ -445,7 +445,7 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
         CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
 
     const QJsonObject webEntity(object.value("entity").toObject());
-    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+    const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("loading_date").toVariant().toLongLong();
     const QString plateNumber = object.value("plate_number").toString();
@@ -465,7 +465,7 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
 bool TrackingUpdater::processDetailsReception(const QJsonObject &object) const
 {
     const QJsonObject webEntity(object.value("entity").toObject());
-    const qint64 timestamp(webEntity.value("timestamp").toVariant().toLongLong());
+    const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
     const qint64 eventDate = object.value("reception_date").toVariant().toLongLong();
 

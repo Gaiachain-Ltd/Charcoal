@@ -57,6 +57,11 @@ MainController::MainController(QObject *parent)
     qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
+#ifdef CHARCOAL
+    m_notificationsManager.setSessionManager(m_sessionManager);
+    m_notificationsManager.setUserManager(m_userManager);
+#endif
+
     setupConnections();
 
     m_languageManager->load();
@@ -145,25 +150,8 @@ void MainController::setupDataConnections()
             dataManager, &CocoaDataManager::onUnusedLotIdsLoaded);
 
 #elif CHARCOAL
-    // TODO: use a regular slot in PageManager
     connect(&m_notificationsManager, &NotificationManager::notify,
-            &m_pageManager, [this](const Enums::Page page,
-                                   const QString &header,
-                                   const QString &text,
-                                   const QString &redirectText) {
-                qDebug() << "Please notify!" << page << header << text << redirectText;
-                m_pageManager.openPopup(Enums::Popup::NotificationWithLink,
-                                        {
-                                            { "headerText", header },
-                                            { "text", text },
-                                            { "redirectText", redirectText },
-                                            { "redirectPage", int(page) }
-                                        });
-            });
-
-    connect(&m_pageManager, &PageManager::stepComplete,
-            &m_notificationsManager, &NotificationManager::stepComplete,
-            Qt::QueuedConnection);
+            &m_pageManager, &PageManager::showNotificationWithLink);
 
     auto dataManager = qobject_cast<CharcoalDataManager *>(m_dataManager);
     connect(dataManager, &CharcoalDataManager::error,

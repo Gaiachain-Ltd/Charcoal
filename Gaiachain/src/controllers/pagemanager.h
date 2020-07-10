@@ -30,9 +30,6 @@ signals:
     void popupAction(const Enums::PopupAction &action, const QString &popupId) const;
     void popupClosed(const Enums::Popup &popup, const QString &popupId) const;
 
-    // TEMP
-    void stepComplete(const Enums::SupplyChainAction step, const QString &id) const;
-
 signals:
     // Signals below should only be used by StackView!!!
     void stackViewPush(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
@@ -46,19 +43,34 @@ signals:
 
 public slots:
     // Page managment
-    void enter(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
-    void enterReplace(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
+    void enter(const Enums::Page page,
+               QVariantMap properties = QVariantMap{},
+               const bool immediate = false);
+    void enterReplace(const Enums::Page page,
+                      QVariantMap properties = QVariantMap{},
+                      const bool immediate = false);
     void back(const bool immediate = false);
-    bool backTo(const Enums::Page page, QVariantMap properties = QVariantMap{}, const bool immediate = false);
+    bool backTo(const Enums::Page page,
+                QVariantMap properties = QVariantMap{},
+                const bool immediate = false);
 
     // Popup managment
-    void openPopup(const Enums::Popup popup, QVariantMap properties = QVariantMap{}, const QString &id = {});
+    void openPopup(const Enums::Popup popup,
+                   QVariantMap properties = QVariantMap{},
+                   const QString &id = {});
     void closePopup();
     void sendAction(Enums::PopupAction action);
 
     bool backToAndOpenPopup(const Enums::Page page, const Enums::Popup popup,
-                            QVariantMap pageProperties = QVariantMap{}, QVariantMap popupProperties = QVariantMap{},
-                            const bool immediateBack = false, const QString &popupId = {});
+                            const QVariantMap &pageProperties = QVariantMap{},
+                            const QVariantMap &popupProperties = QVariantMap{},
+                            const bool immediateBack = false,
+                            const QString &popupId = {});
+
+    void showNotificationWithLink(const Enums::Page page,
+                                  const QString &header,
+                                  const QString &text,
+                                  const QString &redirectText);
 
 private:
     const QString m_qrcPrefix = QStringLiteral("qrc:/");

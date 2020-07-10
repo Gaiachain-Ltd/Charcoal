@@ -83,6 +83,11 @@ Enums::SupplyChainAction CharcoalDbHelpers::actionById(const QString &connection
     return cached;
 }
 
+Enums::SupplyChainAction CharcoalDbHelpers::actionByName(const QString &actionName)
+{
+    return m_supplyActionMap.key(actionName, Enums::SupplyChainAction::Unknown);
+}
+
 int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const int id)
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));

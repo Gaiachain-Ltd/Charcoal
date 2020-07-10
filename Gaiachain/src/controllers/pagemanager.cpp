@@ -74,7 +74,9 @@ void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, c
     emit topPageChanged(topPage());
 }
 
-void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties, const QString &id)
+void PageManager::openPopup(const Enums::Popup popup,
+                            QVariantMap properties,
+                            const QString &id)
 {
     qCDebug(corePageManager) << CYAN("[POPUP] Print stack on enter") << m_pageStack;
     qCDebug(corePageManager) << CYAN("[POPUP] Enter:") << popup << "properties:" << properties;
@@ -110,12 +112,32 @@ void PageManager::sendAction(Enums::PopupAction action)
     emit popupAction(action, popupId);
 }
 
-bool PageManager::backToAndOpenPopup(const Enums::Page page, const Enums::Popup popup, QVariantMap pageProperties, QVariantMap popupProperties, const bool immediateBack, const QString &popupId)
+bool PageManager::backToAndOpenPopup(const Enums::Page page,
+                                     const Enums::Popup popup,
+                                     const QVariantMap &pageProperties,
+                                     const QVariantMap &popupProperties,
+                                     const bool immediateBack,
+                                     const QString &popupId)
 {
     auto result = backTo(page, pageProperties, immediateBack);
     openPopup(popup, popupProperties, popupId);
 
     return result;
+}
+
+void PageManager::showNotificationWithLink(const Enums::Page page,
+                                           const QString &header,
+                                           const QString &text,
+                                           const QString &redirectText)
+{
+    qDebug() << "Please notify!" << page << header << text << redirectText;
+    openPopup(Enums::Popup::NotificationWithLink,
+              {
+                  { "headerText", header },
+                  { "text", text },
+                  { "redirectText", redirectText },
+                  { "redirectPage", int(page) }
+              });
 }
 
 void PageManager::back(const bool immediate)
@@ -157,20 +179,10 @@ bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const b
 
     Enums::Page currentTop = m_pageStack.last();
     const Enums::Page closedPage = currentTop;
-#ifdef CHARCOAL
-    Enums::Page stepPage = Enums::Page::InvalidPage;
-#endif
+
     while (currentTop != page) {
         m_pageStack.removeLast();
         currentTop = m_pageStack.last();
-#ifdef CHARCOAL
-        if (currentTop == Enums::Page::SupplyChainLoggingEnding
-            || currentTop == Enums::Page::SupplyChainCarbonizationEnding
-            || (currentTop == Enums::Page::SupplyChainLoadingAndTransport
-                && page != Enums::Page::SupplyChainLoadingAndTransport)) {
-            stepPage = currentTop;
-        }
-#endif
     }
 
     qCDebug(corePageManager) << "Going back to page" << toFilePath(page)
@@ -178,26 +190,6 @@ bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const b
                              << "from page:" << closedPage;
     emit stackViewPopTo(page, properties, immediate);
     emit topPageChanged(topPage());
-
-#ifdef CHARCOAL
-    /*
-     * TODO WARNING TEMPORARY CODE
-     *
-     * Signals the NotificationManager that an action has been completed.
-     */
-    switch (stepPage) {
-    case Enums::Page::SupplyChainLoggingEnding:
-        emit stepComplete(Enums::SupplyChainAction::LoggingEnding, "AM003PM/0595112/04-03-2020");
-        break;
-    case Enums::Page::SupplyChainCarbonizationEnding:
-        emit stepComplete(Enums::SupplyChainAction::CarbonizationEnding, "AM003PM/0595112/04-03-2020/ZZZ");
-        break;
-    case Enums::Page::SupplyChainLoadingAndTransport:
-        emit stepComplete(Enums::SupplyChainAction::LoadingAndTransport, "AM003PM/0595112/04-03-2020/ZZZ/T1");
-        break;
-    default: break;
-    }
-#endif
 
     return true;
 }

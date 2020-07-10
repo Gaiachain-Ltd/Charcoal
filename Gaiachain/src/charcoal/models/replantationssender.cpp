@@ -66,7 +66,7 @@ void ReplantationsSender::sendEvents()
                 { "trees_planted", numberOfTrees },
                 { Tags::webBeginningDate, beginning },
                 { Tags::webEndingDate, ending },
-                { "location", location },
+                { Tags::location, location },
                 { "plot", webPlotId },
                 { Tags::webTreeSpecies, treeSpecies }
             });
