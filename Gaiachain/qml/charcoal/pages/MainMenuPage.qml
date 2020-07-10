@@ -106,6 +106,7 @@ GPage {
                     color: GStyle.submenuLoggingColor
                     icon: GStyle.submenuLoggingUrl
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     leftText: Strings.loggingBeginning
                     leftColor: GStyle.submenuLoggingBeginningColor
@@ -130,6 +131,7 @@ GPage {
                     color: GStyle.submenuCarbonizationColor
                     icon: GStyle.submenuCarbonizationUrl
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     leftText: Strings.carbonizationBeginning
                     leftColor: GStyle.submenuCarbonizationBeginningColor
@@ -154,6 +156,7 @@ GPage {
                     icon: GStyle.submenuLoadingAndTransportUrl
                     color: GStyle.submenuLoadingAndTransportColor
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     onClicked: pageManager.enter(
                                    Enums.Page.SupplyChainLoadingAndTransport)
@@ -168,6 +171,7 @@ GPage {
                     icon: GStyle.submenuReceptionUrl
                     color: GStyle.submenuReceptionColor
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     onClicked: pageManager.enter(Enums.Page.SupplyChainReception)
                 }

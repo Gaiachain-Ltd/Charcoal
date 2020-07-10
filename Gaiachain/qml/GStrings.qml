@@ -202,7 +202,7 @@ QtObject {
     property string carbonization: tr.empty + qsTr("Carbonization")
     property string carbonizationBeginning: tr.empty + qsTr("Carbonization beginning")
     property string carbonizationEnding: tr.empty + qsTr("Carbonization ending")
-    property string loadingAndTransport: tr.empty + qsTr("Loading and transport")
+    property string loadingAndTransport: tr.empty + qsTr("Loading and \ntransport")
     //property string reception: tr.empty + qsTr("Reception")
 
     // Charcoal - user info
