@@ -22,8 +22,7 @@ NotificationManager::NotificationManager(QObject *parent) : AbstractManager(pare
     connect(&m_notificationTimer, &QTimer::timeout,
             this, &NotificationManager::checkNotifications);
 
-    // TODO: Enable notifications when Web is ready!
-    //m_notificationTimer.start();
+    m_notificationTimer.start();
 }
 
 void NotificationManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -49,10 +48,9 @@ void NotificationManager::checkNotifications()
         return;
     }
 
-    // TODO: use real URL from Web!
     const auto request = QSharedPointer<BaseRequest>::create(
-        "/entities/notifications/",
-        BaseRequest::Type::Post
+        "/notifications/" + m_userManager->getUserData().code + "/",
+        BaseRequest::Type::Get
         );
 
     request->setToken(m_sessionManager->token());
