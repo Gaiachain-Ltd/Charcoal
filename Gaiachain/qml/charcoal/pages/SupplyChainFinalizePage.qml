@@ -23,7 +23,7 @@ Pages.SupplyChainPageBase {
     property int registeredTrucksCount: -1
     property int registeredTrucksTotal: -1
 
-    readonly property int defaultMargin: s(GStyle.middleMargin)
+    readonly property int defaultMargin: s(GStyle.middleBigMargin)
 
     title: Strings.summary
 
@@ -53,12 +53,13 @@ Pages.SupplyChainPageBase {
     Items.GText {
         Layout.fillWidth: true
         Layout.topMargin: defaultMargin
+        Layout.bottomMargin: defaultMargin
         Layout.leftMargin: defaultMargin
         Layout.rightMargin: defaultMargin
 
-        font.pixelSize: s(GStyle.bigPixelSize)
+        font.pixelSize: s(GStyle.subtitlePixelSize)
         font.capitalization: Font.AllUppercase
-        font.bold: true
+        font.bold: false
         horizontalAlignment: Text.AlignLeft
         wrapMode: Text.WordWrap
         text: Strings.doYouWantToCompleteSupplyChain
@@ -97,7 +98,7 @@ Pages.SupplyChainPageBase {
         Layout.leftMargin: defaultMargin
         Layout.rightMargin: defaultMargin
 
-        font.pixelSize: s(GStyle.titlePixelSize)
+        font.pixelSize: s(GStyle.smallPixelSize)
         font.capitalization: Font.AllUppercase
         font.bold: true
         horizontalAlignment: Text.AlignLeft
@@ -110,7 +111,7 @@ Pages.SupplyChainPageBase {
         Layout.leftMargin: defaultMargin
         Layout.rightMargin: defaultMargin
 
-        font.pixelSize: s(GStyle.titlePixelSize)
+        font.pixelSize: s(GStyle.smallPixelSize)
         horizontalAlignment: Text.AlignLeft
         text: Strings.numberOfBagsDetail.arg(scannedBagsCount).arg(scannedBagsTotal)
     }
@@ -121,7 +122,7 @@ Pages.SupplyChainPageBase {
         Layout.leftMargin: defaultMargin
         Layout.rightMargin: defaultMargin
 
-        font.pixelSize: s(GStyle.titlePixelSize)
+        font.pixelSize: s(GStyle.smallPixelSize)
         font.capitalization: Font.AllUppercase
         font.bold: true
         horizontalAlignment: Text.AlignLeft
@@ -134,7 +135,7 @@ Pages.SupplyChainPageBase {
         Layout.leftMargin: defaultMargin
         Layout.rightMargin: defaultMargin
 
-        font.pixelSize: s(GStyle.titlePixelSize)
+        font.pixelSize: s(GStyle.smallPixelSize)
         horizontalAlignment: Text.AlignLeft
         text: Strings.numberOfBagsDetail.arg(registeredTrucksCount).arg(registeredTrucksTotal)
     }

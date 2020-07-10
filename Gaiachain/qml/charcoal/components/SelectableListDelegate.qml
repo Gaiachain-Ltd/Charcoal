@@ -37,7 +37,9 @@ Item {
                 id: delegateText
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
-                font.bold: true
+                font.bold: false
+                font.pixelSize: s(GStyle.smallPixelSize)
+                font.capitalization: Font.AllUppercase
                 padding: s(GStyle.middleMargin)
             }
 
