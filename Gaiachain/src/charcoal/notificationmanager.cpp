@@ -11,7 +11,8 @@ NotificationManager::NotificationManager(QObject *parent) : AbstractManager(pare
 
 void NotificationManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
-    engine.rootContext()->setContextProperty(QStringLiteral("notificationManager"), this);
+    engine.rootContext()->setContextProperty(
+        QStringLiteral("notificationManager"), this);
 }
 
 void NotificationManager::stepComplete(const Enums::SupplyChainAction step,

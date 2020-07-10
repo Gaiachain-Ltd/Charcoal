@@ -74,7 +74,9 @@ void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, c
     emit topPageChanged(topPage());
 }
 
-void PageManager::openPopup(const Enums::Popup popup, QVariantMap properties, const QString &id)
+void PageManager::openPopup(const Enums::Popup popup,
+                            QVariantMap properties,
+                            const QString &id)
 {
     qCDebug(corePageManager) << CYAN("[POPUP] Print stack on enter") << m_pageStack;
     qCDebug(corePageManager) << CYAN("[POPUP] Enter:") << popup << "properties:" << properties;
@@ -110,12 +112,32 @@ void PageManager::sendAction(Enums::PopupAction action)
     emit popupAction(action, popupId);
 }
 
-bool PageManager::backToAndOpenPopup(const Enums::Page page, const Enums::Popup popup, QVariantMap pageProperties, QVariantMap popupProperties, const bool immediateBack, const QString &popupId)
+bool PageManager::backToAndOpenPopup(const Enums::Page page,
+                                     const Enums::Popup popup,
+                                     const QVariantMap &pageProperties,
+                                     const QVariantMap &popupProperties,
+                                     const bool immediateBack,
+                                     const QString &popupId)
 {
     auto result = backTo(page, pageProperties, immediateBack);
     openPopup(popup, popupProperties, popupId);
 
     return result;
+}
+
+void PageManager::showNotificationWithLink(const Enums::Page page,
+                                           const QString &header,
+                                           const QString &text,
+                                           const QString &redirectText)
+{
+    qDebug() << "Please notify!" << page << header << text << redirectText;
+    openPopup(Enums::Popup::NotificationWithLink,
+              {
+                  { "headerText", header },
+                  { "text", text },
+                  { "redirectText", redirectText },
+                  { "redirectPage", int(page) }
+              });
 }
 
 void PageManager::back(const bool immediate)

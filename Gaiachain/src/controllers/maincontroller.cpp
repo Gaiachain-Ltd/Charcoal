@@ -145,21 +145,8 @@ void MainController::setupDataConnections()
             dataManager, &CocoaDataManager::onUnusedLotIdsLoaded);
 
 #elif CHARCOAL
-    // TODO: use a regular slot in PageManager
     connect(&m_notificationsManager, &NotificationManager::notify,
-            &m_pageManager, [this](const Enums::Page page,
-                                   const QString &header,
-                                   const QString &text,
-                                   const QString &redirectText) {
-                qDebug() << "Please notify!" << page << header << text << redirectText;
-                m_pageManager.openPopup(Enums::Popup::NotificationWithLink,
-                                        {
-                                            { "headerText", header },
-                                            { "text", text },
-                                            { "redirectText", redirectText },
-                                            { "redirectPage", int(page) }
-                                        });
-            });
+            &m_pageManager, &PageManager::showNotificationWithLink);
 
     connect(&m_pageManager, &PageManager::stepComplete,
             &m_notificationsManager, &NotificationManager::stepComplete,
