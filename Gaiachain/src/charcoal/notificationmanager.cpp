@@ -21,6 +21,9 @@ NotificationManager::NotificationManager(QObject *parent) : AbstractManager(pare
 
     connect(&m_notificationTimer, &QTimer::timeout,
             this, &NotificationManager::checkNotifications);
+
+    // TODO: Enable notifications when Web is ready!
+    //m_notificationTimer.start();
 }
 
 void NotificationManager::setupQmlContext(QQmlApplicationEngine &engine)
