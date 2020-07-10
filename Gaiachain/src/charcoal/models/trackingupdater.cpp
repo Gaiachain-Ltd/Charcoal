@@ -176,7 +176,7 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
         if (parentEntityId != -1) {
             query.bindValue(":parent", parentEntityId);
         } else {
-            query.bindValue(":parent", 0);
+            query.bindValue(":parent", QVariant(QVariant::Int));
         }
         query.bindValue(":webId", webId);
         query.bindValue(":isFinished", int(isFinished));

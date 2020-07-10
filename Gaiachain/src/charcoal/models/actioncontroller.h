@@ -7,6 +7,7 @@
 #include <QVariant>
 
 class QGeoCoordinate;
+class QSqlQuery;
 class PicturesManager;
 
 class ActionController : public QObject
@@ -127,6 +128,19 @@ signals:
 private:
     int scannedBagsForAction(const QString &transportId,
                              const Enums::SupplyChainAction action) const;
+
+    bool insertEntity(QSqlQuery *query, const int typeId,
+                      const QString &packageId,
+                      const int parentId = -1) const;
+    bool insertEvent(QSqlQuery *query,
+                     const int entityId,
+                     const int eventTypeId,
+                     const QString &userId,
+                     const QDateTime &timestamp,
+                     const QDateTime &eventDate,
+                     const QGeoCoordinate &coordinate,
+                     const QVariantMap &properties) const;
+
     const QString dateFormat = "dd-MM-yyyy";
 
     QString m_dbConnName;
