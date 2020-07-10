@@ -14,6 +14,8 @@ GPage {
     title: Strings.gaiachain
     logoVisible: true
 
+    readonly property int userType: userManager.userData.type
+
     function closeEventHandler() {
         return true // android back button will close app
     }
@@ -66,22 +68,18 @@ GPage {
     Flickable {
         anchors.fill: parent
 
-        contentHeight: menuColumn.implicitHeight + 2 * menuColumn.margins
+        contentHeight: menuColumn.height
         boundsBehavior: Flickable.StopAtBounds
 
-        ColumnLayout {
+        Column {
             id: menuColumn
 
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-            }
+            width: parent.width
 
             spacing: 0
 
             Components.ExpandableMenuButton {
-                Layout.fillWidth: true
+                width: parent.width
 
                 text: Strings.supplyChain
                 icon: GStyle.menuSupplyChainUrl
@@ -90,18 +88,25 @@ GPage {
                 onClicked: supplyChainSubmenu.visible = !supplyChainSubmenu.visible
             }
 
-            ColumnLayout {
+            Column {
                 id: supplyChainSubmenu
                 spacing: 0
                 visible: false
 
+                width: parent.width
+
                 Components.DoubleMenuButton {
-                    Layout.fillWidth: true
+                    width: parent.width
+
+                    visible: userType === Enums.UserType.SuperUser
+                             || userType === Enums.UserType.Logger
+                             || userType === Enums.UserType.Carbonizer
 
                     text: Strings.logging
                     color: GStyle.submenuLoggingColor
                     icon: GStyle.submenuLoggingUrl
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     leftText: Strings.loggingBeginning
                     leftColor: GStyle.submenuLoggingBeginningColor
@@ -117,12 +122,16 @@ GPage {
                 }
 
                 Components.DoubleMenuButton {
-                    Layout.fillWidth: true
+                    width: parent.width
+
+                    visible: userType === Enums.UserType.SuperUser
+                             || userType === Enums.UserType.Carbonizer
 
                     text: Strings.carbonization
                     color: GStyle.submenuCarbonizationColor
                     icon: GStyle.submenuCarbonizationUrl
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     leftText: Strings.carbonizationBeginning
                     leftColor: GStyle.submenuCarbonizationBeginningColor
@@ -138,31 +147,38 @@ GPage {
                 }
 
                 Components.MenuButton {
-                    Layout.fillWidth: true
+                    width: parent.width
+
+                    visible: userType === Enums.UserType.SuperUser
+                             || userType === Enums.UserType.Carbonizer
 
                     text: Strings.loadingAndTransport
                     icon: GStyle.submenuLoadingAndTransportUrl
                     color: GStyle.submenuLoadingAndTransportColor
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     onClicked: pageManager.enter(
                                    Enums.Page.SupplyChainLoadingAndTransport)
                 }
 
                 Components.MenuButton {
-                    Layout.fillWidth: true
+                    width: parent.width
+
+                    visible: userType === Enums.UserType.SuperUser
 
                     text: Strings.reception
                     icon: GStyle.submenuReceptionUrl
                     color: GStyle.submenuReceptionColor
                     fontColor: GStyle.textPrimaryColor
+                    fontBold: false
 
                     onClicked: pageManager.enter(Enums.Page.SupplyChainReception)
                 }
             }
 
             Components.MenuButton {
-                Layout.fillWidth: true
+                width: parent.width
 
                 text: Strings.tracking
                 icon: GStyle.menuTrackingUrl
@@ -172,11 +188,13 @@ GPage {
             }
 
             Components.MenuButton {
-                Layout.fillWidth: true
+                width: parent.width
 
                 text: Strings.replantation
                 icon: GStyle.menuReplantationUrl
                 color: GStyle.menuReplantationColor
+
+                visible: userType === Enums.UserType.SuperUser
 
                 onClicked: pageManager.enter(Enums.Page.PageReplantation)
             }
