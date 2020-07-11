@@ -48,8 +48,10 @@ void NotificationManager::checkNotifications()
         return;
     }
 
+    // General "notifications" endpoint - Web will know which user is calling
+    // from the token
     const auto request = QSharedPointer<BaseRequest>::create(
-        "/notifications/" + m_userManager->getUserData().code + "/",
+        "/notifications/",
         BaseRequest::Type::Get
         );
 
