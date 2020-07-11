@@ -25,7 +25,7 @@ public:
 
 public slots:
     void checkNotifications();
-    void stepComplete(const Enums::SupplyChainAction step,
+    void stepComplete(const Enums::SupplyChainAction nextStep,
                       const QString &pid) const;
 
 protected slots:
