@@ -133,7 +133,7 @@ namespace Enums {
     inline uint qHash(AdditionalDataType key, uint seed) { return qH<AdditionalDataType>(key, seed);}
 
     enum class UserType {
-        Annonymous = -1,
+        Anonymous = -1,
 #ifdef COCOA
         SuperUser,
         Inspector,

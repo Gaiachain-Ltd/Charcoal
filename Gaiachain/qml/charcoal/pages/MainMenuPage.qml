@@ -101,6 +101,7 @@ GPage {
                     visible: userType === Enums.UserType.SuperUser
                              || userType === Enums.UserType.Logger
                              || userType === Enums.UserType.Carbonizer
+                             || userType === Enums.UserType.Anonymous
 
                     text: Strings.logging
                     color: GStyle.submenuLoggingColor
@@ -126,6 +127,7 @@ GPage {
 
                     visible: userType === Enums.UserType.SuperUser
                              || userType === Enums.UserType.Carbonizer
+                             || userType === Enums.UserType.Anonymous
 
                     text: Strings.carbonization
                     color: GStyle.submenuCarbonizationColor
@@ -151,6 +153,7 @@ GPage {
 
                     visible: userType === Enums.UserType.SuperUser
                              || userType === Enums.UserType.Carbonizer
+                             || userType === Enums.UserType.Anonymous
 
                     text: Strings.loadingAndTransport
                     icon: GStyle.submenuLoadingAndTransportUrl
@@ -166,6 +169,7 @@ GPage {
                     width: parent.width
 
                     visible: userType === Enums.UserType.SuperUser
+                             || userType === Enums.UserType.Anonymous
 
                     text: Strings.reception
                     icon: GStyle.submenuReceptionUrl
@@ -195,6 +199,7 @@ GPage {
                 color: GStyle.menuReplantationColor
 
                 visible: userType === Enums.UserType.SuperUser
+                         || userType === Enums.UserType.Anonymous
 
                 onClicked: pageManager.enter(Enums.Page.PageReplantation)
             }

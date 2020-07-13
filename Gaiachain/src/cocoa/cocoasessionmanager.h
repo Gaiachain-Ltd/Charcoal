@@ -18,7 +18,7 @@ public:
     Q_INVOKABLE void getUnusedLotIds();
     Q_INVOKABLE void postUnusedLotId();
 
-    Q_INVOKABLE void getAdditionalData() ;
+    Q_INVOKABLE void getAdditionalData();
 
     Q_INVOKABLE void getEntitiesInfo(const QDateTime &from, const QDateTime &to);
     Q_INVOKABLE void getEntitiesInfo(int limit, int offset, const QDateTime &from,

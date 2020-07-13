@@ -10,4 +10,5 @@ class CharcoalSessionManager : public RestSessionManager
 
 public:
     CharcoalSessionManager(QObject *parent = nullptr);
+    Q_INVOKABLE void getAdditionalData();
 };

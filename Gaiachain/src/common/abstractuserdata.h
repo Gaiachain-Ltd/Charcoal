@@ -13,7 +13,7 @@ struct AbstractUserData
 
 public:
     QString email;
-    Enums::UserType type = Enums::UserType::Annonymous;
+    Enums::UserType type = Enums::UserType::Anonymous;
 
     Q_INVOKABLE bool isAnonymous() const;
 };

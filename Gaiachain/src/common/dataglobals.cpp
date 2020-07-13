@@ -127,7 +127,7 @@ Enums::SupplyChainAction DataGlobals::packageTypeCreationAction(const Enums::Pac
 
 QList<Enums::UserType> DataGlobals::availableUserTypes()
 {
-    static const auto availableList = Utility::generateEnumValues(Enums::UserType::Annonymous, Enums::UserType::UserTypeCount);
+    static const auto availableList = Utility::generateEnumValues(Enums::UserType::Anonymous, Enums::UserType::UserTypeCount);
     return availableList;
 }
 

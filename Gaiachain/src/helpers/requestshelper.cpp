@@ -188,7 +188,7 @@ QString RequestsHelper::companyTypeToString(const Enums::CompanyType &companyTyp
 Enums::UserType RequestsHelper::userTypeFromString(const QString &text)
 {
 #ifdef COCOA
-    return UserTypeStrings.key(text, Enums::UserType::Annonymous);
+    return UserTypeStrings.key(text, Enums::UserType::Anonymous);
 #elif CHARCOAL
     if (text == Tags::superUser) {
         return Enums::UserType::SuperUser;
@@ -200,7 +200,7 @@ Enums::UserType RequestsHelper::userTypeFromString(const QString &text)
         return Enums::UserType::Logger;
     }
 
-    return Enums::UserType::Annonymous;
+    return Enums::UserType::Anonymous;
 #endif
 }
 
