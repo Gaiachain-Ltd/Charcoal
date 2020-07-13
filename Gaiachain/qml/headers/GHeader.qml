@@ -33,6 +33,7 @@ Item {
     property string helpText
 
     property int margins: s(GStyle.hugeMargin)
+    property bool extraLeftMargin: false
 
     readonly property bool isCocoa: mainController.flavor === "cocoa"
 
