@@ -27,10 +27,10 @@ Pages.GPage {
     Flickable {
         anchors.fill: parent
 
-        contentHeight: menuColumn.implicitHeight + 2 * menuColumn.margins
+        contentHeight: menuColumn.height
         boundsBehavior: Flickable.StopAtBounds
 
-        ColumnLayout {
+        Column {
             id: menuColumn
 
             anchors {
@@ -43,7 +43,7 @@ Pages.GPage {
 
             Headers.InputHeader {
                 id: nameHeader
-                Layout.fillWidth: true
+                width: parent.width
                 readOnly: true
                 borderWidth: 0
                 summaryMode: true
@@ -55,7 +55,7 @@ Pages.GPage {
 
             Headers.InputHeader {
                 id: jobHeader
-                Layout.fillWidth: true
+                width: parent.width
                 readOnly: true
                 borderWidth: 0
                 summaryMode: true
@@ -67,7 +67,7 @@ Pages.GPage {
 
             Headers.InputHeader {
                 id: contactHeader
-                Layout.fillWidth: true
+                width: parent.width
                 readOnly: true
                 borderWidth: 0
                 summaryMode: true
@@ -79,7 +79,7 @@ Pages.GPage {
 
             Headers.InputHeader {
                 id: codeHeader
-                Layout.fillWidth: true
+                width: parent.width
                 readOnly: true
                 borderWidth: 0
                 summaryMode: true

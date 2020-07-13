@@ -38,7 +38,8 @@ ApplicationWindow
 
     Timer {
         interval: Static.internetCheckConnectionTimeInterval
-        running: (sessionManager.connectionState === Enums.ConnectionState.ConnectionError)
+        running: (sessionManager.connectionState === Enums.ConnectionState.ConnectionError
+                  && userManager.offlineMode === false)
         repeat: true
         onTriggered: sessionManager.ping()
     }

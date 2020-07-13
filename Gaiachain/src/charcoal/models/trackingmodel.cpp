@@ -1,5 +1,6 @@
 #include "trackingmodel.h"
 
+#include "helpers/requestshelper.h"
 #include "database/dbhelpers.h"
 #include "rest/baserequest.h"
 #include "controllers/session/restsessionmanager.h"
@@ -465,7 +466,7 @@ void TrackingModel::refreshWebData()
         "/entities/packages/",
         BaseRequest::Type::Get);
 
-    if (m_userManager->isLoggedIn()) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
         request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &TrackingModel::webErrorHandler,
@@ -550,7 +551,7 @@ void TrackingModel::startPackageDetailsUpdate()
             const auto request = QSharedPointer<BaseRequest>::create(
                 url, BaseRequest::Type::Get);
 
-            if (m_userManager->isLoggedIn()) {
+            if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
                 request->setToken(m_sessionManager->token());
                 m_sessionManager->sendRequest(request, this,
                                               &TrackingModel::webErrorHandler,

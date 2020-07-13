@@ -2,6 +2,7 @@
 
 #include "common/tags.h"
 #include "common/logs.h"
+#include "helpers/requestshelper.h"
 #include "rest/baserequest.h"
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
@@ -45,7 +46,8 @@ void EventsSender::sendEvents()
         return;
     }
 
-    const bool isLoggedIn = m_userManager->isLoggedIn();
+    const bool isLoggedIn = RequestsHelper::isOnline(m_sessionManager.get(),
+                                                     m_userManager.get());
     for (int i = 0; i < count; ++i) {
         // use query().next()?
         if (query().seek(i) == false) {
@@ -161,7 +163,7 @@ void EventsSender::onFinalizePackage(const int webId)
         QString("/entities/packages/%1/finalize_supply_chain/").arg(webId),
         BaseRequest::Type::Post);
 
-    if (m_userManager->isLoggedIn()) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
         request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &EventsSender::webErrorHandler,
@@ -250,7 +252,7 @@ void EventsSender::onFetchPhoto(const QString &path)
     const auto request = QSharedPointer<ImageRequest>::create(
         adjusted, m_picturesManager->cachePath());
 
-    if (m_userManager->isLoggedIn()) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
         m_sessionManager->sendRequest(request);
     } else {
         qDebug() << "Enqueing request";

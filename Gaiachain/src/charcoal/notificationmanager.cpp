@@ -1,5 +1,6 @@
 #include "notificationmanager.h"
 
+#include "helpers/requestshelper.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
@@ -44,8 +45,7 @@ void NotificationManager::setUserManager(const QSharedPointer<UserManager> &mana
 
 void NotificationManager::checkNotifications()
 {
-    const bool isLoggedIn = m_userManager->isLoggedIn();
-    if (isLoggedIn == false) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get()) == false) {
         return;
     }
 

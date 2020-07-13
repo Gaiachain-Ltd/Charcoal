@@ -3,10 +3,13 @@
 #include <QJsonObject>
 #include <QJsonValue>
 
-#include "../common/globals.h"
-#include "../common/tags.h"
-#include "../common/types.h"
+#include "common/globals.h"
+#include "common/tags.h"
+#include "common/types.h"
 #include "packagedataproperties.h"
+
+#include "controllers/session/restsessionmanager.h"
+#include "controllers/usermanager.h"
 
 namespace {
 const QHash<Enums::UserType, QString> UserTypeStrings = {
@@ -234,6 +237,13 @@ QVariantMap RequestsHelper::convertPropertiesToRemote(const QVariantMap &propert
 QVariantMap RequestsHelper::convertPropertiesToLocal(const QVariantMap &properties)
 {
     return convertProperties(properties, PropertiesLocalTypes);
+}
+
+bool RequestsHelper::isOnline(const RestSessionManager *session, const UserManager *user)
+{
+    return (user->isLoggedIn()
+            && user->isOfflineMode() == false
+            && session->connectionState() == Enums::ConnectionState::ConnectionSuccessful);
 }
 
 RequestsHelper::RequestsHelper()

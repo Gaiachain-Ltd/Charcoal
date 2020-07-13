@@ -1,5 +1,6 @@
 #include "parcelsmodel.h"
 
+#include "helpers/requestshelper.h"
 #include "database/dbhelpers.h"
 #include "rest/additionaldatarequest.h"
 #include "controllers/session/restsessionmanager.h"
@@ -25,7 +26,7 @@ void ParcelsModel::refreshWebData()
     const auto request = QSharedPointer<AdditionalDataRequest>::create(
         AdditionalDataRequest::DataType::Parcels);
 
-    if (m_userManager->isLoggedIn()) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
         request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &ParcelsModel::webErrorHandler,
@@ -42,7 +43,7 @@ void ParcelsModel::getUnusedParcels()
         "/additional_data/parcels/unused/",
         BaseRequest::Type::Get);
 
-    if (m_userManager->isLoggedIn()) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
         request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &ParcelsModel::webErrorHandler,
