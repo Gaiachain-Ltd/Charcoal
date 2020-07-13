@@ -1,5 +1,6 @@
 #include "treespeciesmodel.h"
 
+#include "helpers/requestshelper.h"
 #include "rest/additionaldatarequest.h"
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
@@ -19,7 +20,7 @@ void TreeSpeciesModel::refreshWebData()
     const auto request = QSharedPointer<AdditionalDataRequest>::create(
         AdditionalDataRequest::DataType::TreeSpecies);
 
-    if (m_userManager->isLoggedIn()) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
         request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &TreeSpeciesModel::webErrorHandler,

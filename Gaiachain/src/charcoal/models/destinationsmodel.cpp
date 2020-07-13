@@ -1,5 +1,6 @@
 #include "destinationsmodel.h"
 
+#include "helpers/requestshelper.h"
 #include "rest/additionaldatarequest.h"
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
@@ -19,7 +20,7 @@ void DestinationsModel::refreshWebData()
     const auto request = QSharedPointer<AdditionalDataRequest>::create(
         AdditionalDataRequest::DataType::Destinations);
 
-    if (m_userManager->isLoggedIn()) {
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
         request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &DestinationsModel::webErrorHandler,

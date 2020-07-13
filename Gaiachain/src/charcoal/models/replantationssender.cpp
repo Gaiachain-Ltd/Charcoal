@@ -5,6 +5,7 @@
 #include "rest/baserequest.h"
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
+#include "helpers/requestshelper.h"
 #include "database/dbhelpers.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 
@@ -32,7 +33,8 @@ void ReplantationsSender::sendEvents()
         return;
     }
 
-    const bool isLoggedIn = m_userManager->isLoggedIn();
+    const bool isLoggedIn = RequestsHelper::isOnline(m_sessionManager.get(),
+                                                     m_userManager.get());
     for (int i = 0; i < count; ++i) {
         // use query().next()?
         if (query().seek(i) == false) {

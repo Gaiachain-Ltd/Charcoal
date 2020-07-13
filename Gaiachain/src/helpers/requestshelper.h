@@ -7,7 +7,10 @@
 #include <QDate>
 #include <QNetworkReply>
 
-#include "../common/enums.h"
+#include "common/enums.h"
+
+class RestSessionManager;
+class UserManager;
 
 class RequestsHelper : public QObject
 {
@@ -41,6 +44,8 @@ public:
 
     static QVariantMap convertPropertiesToRemote(const QVariantMap &properties);
     static QVariantMap convertPropertiesToLocal(const QVariantMap &properties);
+
+    static bool isOnline(const RestSessionManager *session, const UserManager *user);
 
 private:
     RequestsHelper();

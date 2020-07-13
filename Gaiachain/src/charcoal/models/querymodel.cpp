@@ -1,6 +1,7 @@
 #include "querymodel.h"
 
 #include "database/dbhelpers.h"
+#include "helpers/requestshelper.h"
 #include "common/logs.h"
 
 #include "controllers/session/restsessionmanager.h"
@@ -67,6 +68,10 @@ bool QueryModel::hasQueuedRequests() const
 void QueryModel::sendQueuedRequests()
 {
     if (hasQueuedRequests()) {
+        if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get()) == false) {
+            return;
+        }
+
         const QString token(m_sessionManager->token());
         for (const auto &request : qAsConst(m_queuedRequests)) {
             request->setToken(token);
