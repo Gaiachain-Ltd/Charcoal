@@ -100,7 +100,7 @@ void NotificationManager::stepComplete(const Enums::SupplyChainAction nextStep,
         emit notify(Enums::Page::PageReplantation,
                     tr("Reception process for <b>%1</b> has ended.").arg(pid),
                     tr("If the parcel has been replanted, register it!"),
-                    tr("Reception"));
+                    tr("Replantation"));
         break;
     case Enums::SupplyChainAction::LoggingBeginning:
     case Enums::SupplyChainAction::Tracking:
