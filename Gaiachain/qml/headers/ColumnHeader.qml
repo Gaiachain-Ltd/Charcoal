@@ -12,7 +12,7 @@ Headers.AbstractListHeader {
 
     widget: ColumnLayout {
         Layout.fillWidth: true
-        Layout.leftMargin: top.margins
+        Layout.leftMargin: extraLeftMargin? top.margins * 2 : top.margins
         Layout.rightMargin: top.margins
 
         Repeater {

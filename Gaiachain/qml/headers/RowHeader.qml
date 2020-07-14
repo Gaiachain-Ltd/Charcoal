@@ -10,6 +10,8 @@ import "../headers" as Headers
 Headers.AbstractListHeader {
     id: top
 
+    headerUnderlineVisible: false
+
     signal valueChanged()
 
     widget: RowLayout {
@@ -28,12 +30,50 @@ Headers.AbstractListHeader {
                 Layout.fillWidth: true
 
                 Items.GText {
+                    readonly property int strikeMargin: 7
+
                     Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
 
                     visible: summaryMode
                     text: titles[index]
                     color: mainColor
                     font.bold: highlighted? true : false
+                    font.capitalization: summaryMode? Font.AllLowercase : Font.Capitalize
+                    font.pixelSize: s(GStyle.smallPixelSize)
+                    textFormat: Text.PlainText
+
+                    onLineLaidOut: {
+                        if (summaryMode) {
+                            let widgetMiddle = width * .5
+                            let lineMiddle = contentWidth * .5
+
+                            leftBar.width = widgetMiddle - lineMiddle - (strikeMargin * 2)
+                            rightBar.x = widgetMiddle + lineMiddle + strikeMargin
+                            rightBar.width = width - rightBar.x
+                        }
+                    }
+
+                    Rectangle {
+                        id: leftBar
+                        visible: summaryMode
+                        height: 1.5
+                        width: 1
+                        color: GStyle.separatorColor
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: parent.strikeMargin
+                    }
+
+                    Rectangle {
+                        id: rightBar
+                        visible: summaryMode
+                        height: 1.5
+                        width: 1
+                        color: GStyle.separatorColor
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.rightMargin: parent.strikeMargin
+                    }
                 }
 
                 Items.GInput {
@@ -56,6 +96,7 @@ Headers.AbstractListHeader {
                     font.bold: highlighted? true : false
                     validator: DoubleValidator {
                         bottom: 0.0
+                        top: 1000.0
                     }
                 }
             }

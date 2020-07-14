@@ -20,6 +20,7 @@ Row {
     property var inputTexts
     property bool summaryMode: true
     property bool highlighted: false
+    property bool extraLeftMargin: false
 
     Headers.InputHeader {
         implicitWidth: root.width * .5
@@ -34,6 +35,7 @@ Row {
         iconSource: ""
         summaryMode: root.summaryMode
         highlighted: root.highlighted
+        extraLeftMargin: root.extraLeftMargin
     }
 
      Headers.InputHeader {
@@ -50,5 +52,6 @@ Row {
         iconSource: ""
         summaryMode: root.summaryMode
         highlighted: root.highlighted
+        extraLeftMargin: root.extraLeftMargin
     }
 }

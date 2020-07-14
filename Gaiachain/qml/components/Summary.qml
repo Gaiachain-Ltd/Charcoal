@@ -72,6 +72,7 @@ ColumnLayout {
             summaryMode: isSummaryMode
             highlighted: isHighlighted
             underlineVisible: hasUnderline
+            extraLeftMargin: !isHighlighted
         }
     }
 
@@ -96,6 +97,7 @@ ColumnLayout {
             summaryMode: isSummaryMode
             highlighted: isHighlighted
             underlineVisible: hasUnderline
+            extraLeftMargin: !isHighlighted
         }
     }
 
@@ -118,6 +120,7 @@ ColumnLayout {
             summaryMode: isSummaryMode
             highlighted: isHighlighted
             underlineVisible: hasUnderline
+            extraLeftMargin: !isHighlighted
         }
     }
 
@@ -148,6 +151,7 @@ ColumnLayout {
             inputTexts: composite[1]
             summaryMode: isSummaryMode
             highlighted: isHighlighted
+            extraLeftMargin: !isHighlighted
         }
     }
 
@@ -167,6 +171,7 @@ ColumnLayout {
             summaryMode: isSummaryMode
             highlighted: isHighlighted
             underlineVisible: hasUnderline
+            extraLeftMargin: !isHighlighted
 
             Component.onCompleted: {
                 if(suffixValue.lenght > 0) {

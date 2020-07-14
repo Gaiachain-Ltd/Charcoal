@@ -22,6 +22,7 @@ Item {
     property color secondaryTextColor: secondaryColor
     property bool highlighted: false
     property bool underlineVisible: false
+    property bool headerUnderlineVisible: true
 
     property alias widget: mainLayout.data
 
@@ -33,6 +34,7 @@ Item {
     property string helpText
 
     property int margins: s(GStyle.hugeMargin)
+    property bool extraLeftMargin: false
 
     readonly property bool isCocoa: mainController.flavor === "cocoa"
 
@@ -70,7 +72,7 @@ Item {
                 Layout.fillWidth: true
 
                 font.bold: true
-                font.pixelSize: isCocoa? s(GStyle.pixelSize) : s(GStyle.titlePixelSize)
+                font.pixelSize: isCocoa? s(GStyle.pixelSize) : s(GStyle.subtitlePixelSize)
                 color: top.mainColor
                 font.capitalization: top.highlighted? Font.AllUppercase : Font.MixedCase
                 horizontalAlignment: Text.AlignLeft
@@ -102,7 +104,7 @@ Item {
             Layout.fillWidth: true
             height: sr(1)
             color: top.secondaryColor
-            visible: top.summaryMode && !headerIsEmpty
+            visible: top.summaryMode && !headerIsEmpty && headerUnderlineVisible
         }
     }
 

@@ -27,6 +27,7 @@ Headers.GHeader {
 
         Layout.fillWidth: true
         Layout.margins: root.margins
+        Layout.leftMargin: extraLeftMargin? root.margins * 2 : root.margins
 
         focus: false
         color: secondaryTextColor
