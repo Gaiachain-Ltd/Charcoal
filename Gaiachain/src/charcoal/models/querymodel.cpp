@@ -75,15 +75,21 @@ bool QueryModel::hasQueuedRequests() const
 void QueryModel::sendQueuedRequests()
 {
     if (hasQueuedRequests()) {
+        qDebug() << "CALL" << metaObject()->className();
+
         if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get()) == false) {
             return;
         }
 
-        bool postSent = m_sessionManager->hasPostRequests();
+        bool postSent = false; //m_sessionManager->hasPostRequests();
         auto newQueue = m_queuedRequests;
         const QString token(m_sessionManager->token());
         for (const auto &request : qAsConst(m_queuedRequests)) {
             const bool isPost = (request->type() == BaseRequest::Type::Post);
+
+            qDebug() << "PRE"
+                     << metaObject()->className()
+                     << isPost << postSent;
 
             if (isPost) {
                 if (postSent) {
@@ -93,7 +99,11 @@ void QueryModel::sendQueuedRequests()
                 }
             }
 
-            qDebug() << "SENDING QUEUED" << request->document();
+            qDebug() << "SENDING QUEUED"
+                     << metaObject()->className()
+                     << isPost << postSent
+                     << request->type()
+                     << request->document();
 
             request->setToken(token);
             m_sessionManager->sendRequest(request,

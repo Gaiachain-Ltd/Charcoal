@@ -43,6 +43,12 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
     connect(m_actionController, &ActionController::refreshLocalEvents,
             m_eventsSender, &EventsSender::refresh);
 
+    connect(m_replantationsSender, &ReplantationsSender::refreshed,
+            m_localEventsModel, &LocalEventsModel::refresh);
+
+    connect(m_eventsSender, &EventsSender::refreshed,
+            m_localEventsModel, &LocalEventsModel::refresh);
+
     connect(m_trackingModel, &TrackingModel::finalizePackages,
             m_eventsSender, &EventsSender::onFinalizePackages);
 
