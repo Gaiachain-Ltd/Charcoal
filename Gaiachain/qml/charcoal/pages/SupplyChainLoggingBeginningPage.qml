@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.11
+import QtPositioning 5.12
 
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
@@ -65,7 +66,7 @@ Pages.SupplyChainPageBase {
                         beginningDateHeader.selectedDate.toLocaleDateString(
                             Qt.locale(), Strings.dateFormat)),
                     Utility.createSummaryItem(Strings.gpsCoordinates,
-                                              gpsSource.coordinate.toString())
+                                              gpsSource.coordinateString)
                 ]
 
         return summary
@@ -156,7 +157,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
 
         headerText: Strings.gpsCoordinates
-        inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinate.toString()) : gpsSource.errorMessage())
+        inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinateString) : gpsSource.errorMessage())
         iconSource: (gpsSource.validCoordinate ? GStyle.gpsOkImgUrl : GStyle.gpsFailedImgUrl)
 
         onClicked: gpsSource.update()

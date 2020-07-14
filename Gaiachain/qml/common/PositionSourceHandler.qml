@@ -6,8 +6,10 @@ import com.gaiachain.static 1.0
 Item {
     readonly property bool validCoordinate: coordinate !== undefined
     property var coordinate: positionSourceLoader.positionReady &&
-                             positionSourceLoader.item.validCoordinate ? positionSourceLoader.item.position.coordinate
-                                                                       : undefined
+                             positionSourceLoader.item.validCoordinate ?
+                                 positionSourceLoader.item.position.coordinate
+                               : undefined
+    property string coordinateString: coordinate === undefined? "" : coordinate.toString()
     property bool valid: (positionSourceLoader.item ? positionSourceLoader.item.valid : false)
     property bool positioningSupported: (positionSourceLoader.item && positionSourceLoader.item.supportedPositioningMethods !== PositionSource.NoPositioningMethods)
     property bool noAccess: (positionSourceLoader.item && positionSourceLoader.item.sourceError === PositionSource.AccessError)
