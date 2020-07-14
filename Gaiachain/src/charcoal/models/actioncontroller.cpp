@@ -846,9 +846,9 @@ bool ActionController::insertEntity(QSqlQuery *query,
 {
     query->prepare("INSERT INTO Entities (typeId, name, parent, "
                   "isFinished, isReplanted) "
-                  "VALUES (:typeId, :harvestId, :parent, 0, 0)");
+                  "VALUES (:typeId, :packageId, :parent, 0, 0)");
     query->bindValue(":typeId", typeId);
-    query->bindValue(":harvestId", packageId);
+    query->bindValue(":packageId", packageId);
     query->bindValue(":parent", parentId == -1? QVariant(QVariant::Int) : parentId);
 
     if (query->exec() == false) {

@@ -31,6 +31,7 @@ public:
 
     bool hasQueuedRequests() const;
     void sendQueuedRequests();
+    void continueSendingQueuedRequests();
 
 signals:
     void refreshed() const;

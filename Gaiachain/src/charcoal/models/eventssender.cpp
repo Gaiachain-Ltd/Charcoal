@@ -144,7 +144,8 @@ void EventsSender::sendEvents()
             request = multi;
         }
 
-        if (isLoggedIn) {
+        // We send one event right away, and queue the rest
+        if (isLoggedIn && i == 0) {
             qDebug().noquote() << "Sending event!" << doc;
             request->setToken(m_sessionManager->token());
             m_sessionManager->sendRequest(request, this,
@@ -186,6 +187,8 @@ void EventsSender::webErrorHandler(const QString &errorString,
 {
     qDebug() << "Request error!" << errorString << code;
     emit error(errorString);
+
+    continueSendingQueuedRequests();
 }
 
 void EventsSender::webReplyHandler(const QJsonDocument &reply)
@@ -221,6 +224,8 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
                    << timestamp << Tags::pid << pid << "eid" << entityWebId;
         emit error(errorString);
     }
+
+    continueSendingQueuedRequests();
 }
 
 void EventsSender::finalizationReplyHandler(const QJsonDocument &reply)

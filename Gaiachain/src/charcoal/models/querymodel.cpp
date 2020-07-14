@@ -65,6 +65,13 @@ bool QueryModel::hasQueuedRequests() const
     return m_queuedRequests.isEmpty() == false;
 }
 
+/*!
+ * Begins sending queued requests. In order not to jam the server, we send POST
+ * requests one by one (next request is sent when previous is finished - that
+ * is, when we receive a reply).
+ *
+ * All other request types are sent en masse.
+ */
 void QueryModel::sendQueuedRequests()
 {
     if (hasQueuedRequests()) {
@@ -72,16 +79,37 @@ void QueryModel::sendQueuedRequests()
             return;
         }
 
+        bool postSent = m_sessionManager->hasPostRequests();
+        auto newQueue = m_queuedRequests;
         const QString token(m_sessionManager->token());
         for (const auto &request : qAsConst(m_queuedRequests)) {
+            const bool isPost = request->type() == BaseRequest::Type::Post;
+
+            if (isPost) {
+                if (postSent) {
+                    continue;
+                } else {
+                    postSent = true;
+                }
+            }
+
             request->setToken(token);
             m_sessionManager->sendRequest(request,
                                           this,
                                           &QueryModel::webErrorHandler,
                                           &QueryModel::webReplyHandler);
+            newQueue.removeOne(request);
         }
 
-        m_queuedRequests.clear();
+        m_queuedRequests = newQueue;
+    }
+}
+
+void QueryModel::continueSendingQueuedRequests()
+{
+    if (hasQueuedRequests()) {
+        qDebug() << "Continuing with the queue!";
+        sendQueuedRequests();
     }
 }
 
@@ -146,10 +174,14 @@ void QueryModel::webErrorHandler(const QString &errorString,
                                  const QNetworkReply::NetworkError code)
 {
     qDebug() << "Request error!" << errorString << code;
+
+    continueSendingQueuedRequests();
 }
 
 void QueryModel::webReplyHandler(const QJsonDocument &reply)
 {
     qDebug() << "Request success!" << reply;
     emit webDataRefreshed();
+
+    continueSendingQueuedRequests();
 }

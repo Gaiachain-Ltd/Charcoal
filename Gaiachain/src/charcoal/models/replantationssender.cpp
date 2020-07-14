@@ -75,7 +75,7 @@ void ReplantationsSender::sendEvents()
 
         request->setDocument(doc);
 
-        if (isLoggedIn) {
+        if (isLoggedIn && i == 0) {
             qDebug() << "Sending replantation event!" << doc;
             request->setToken(m_sessionManager->token());
             m_sessionManager->sendRequest(request, this,
@@ -93,6 +93,8 @@ void ReplantationsSender::webErrorHandler(const QString &errorString,
 {
     qDebug() << "Request error!" << errorString << code;
     emit error(errorString);
+
+    continueSendingQueuedRequests();
 }
 
 void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
@@ -113,4 +115,6 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
                    << reply;
         emit error(errorString);
     }
+
+    continueSendingQueuedRequests();
 }

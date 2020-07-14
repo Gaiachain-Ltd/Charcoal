@@ -41,8 +41,11 @@ public:
     MRestRequestManager(QObject *parent = nullptr);
     void send(MRestRequestPtr request);
     void ignoreSslErrors();
+    bool hasPostRequests() const;
+
 signals:
     void sslErrorsChanged(const QStringList &errors);
+
 protected:
     void onRequestFinished();
     void removeActiveRequest(QObject *sender);
