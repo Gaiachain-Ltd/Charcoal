@@ -24,7 +24,8 @@ public:
                      const Object *target,
                      PointerToErrorHandler errorHandler,
                      PointerToReplyHandler replyHandler,
-                     bool force = false)
+                     bool force = false,
+                     const bool updateProcessing = true)
     {
         if (!enabled() && !force) {
             return;
@@ -35,14 +36,16 @@ public:
         connect(request.data(), &BaseRequest::requestFinished,
                 target, replyHandler);
 
-        sendRequest(request);
+        sendRequest(request, updateProcessing);
     }
 
     void sendRequest(const QSharedPointer<BaseRequest> &request,
                      const std::function<void(const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
                      const std::function<void(const QJsonDocument &)> &replyHandler,
-                     bool force = false);
-    void sendRequest(const QSharedPointer<BaseRequest> &request);
+                     const bool force = false,
+                     const bool updateProcessing = true);
+    void sendRequest(const QSharedPointer<BaseRequest> &request,
+                     const bool updateProcessing = true);
 
 protected:
     RestAPIClient m_client;

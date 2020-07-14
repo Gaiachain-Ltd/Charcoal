@@ -59,7 +59,8 @@ void NotificationManager::checkNotifications()
     request->setToken(m_sessionManager->token());
     m_sessionManager->sendRequest(request, this,
                                   &NotificationManager::webErrorHandler,
-                                  &NotificationManager::webReplyHandler);
+                                  &NotificationManager::webReplyHandler,
+                                  false, false);
 }
 
 void NotificationManager::stepComplete(const Enums::SupplyChainAction nextStep,
@@ -113,7 +114,7 @@ void NotificationManager::stepComplete(const Enums::SupplyChainAction nextStep,
 void NotificationManager::webErrorHandler(const QString &errorString,
                                           const QNetworkReply::NetworkError code) const
 {
-    qDebug() << "Notification ping reply error!" << errorString << code;
+    qWarning() << "Notification ping reply error!" << errorString << code;
 }
 
 void NotificationManager::webReplyHandler(const QJsonDocument &reply) const
