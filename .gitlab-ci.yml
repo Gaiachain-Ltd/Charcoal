@@ -186,7 +186,7 @@ upload_job:
     - master
     - dev
     - schedules
-    - merge_requests
+#    - merge_requests
   tags:
     - LinuxAndroid
   stage: upload
