@@ -39,6 +39,4 @@ void VillagesModel::webReplyHandler(const QJsonDocument &reply)
     } else {
         qWarning() << RED("Updating items has failed");
     }
-
-    continueSendingQueuedRequests();
 }

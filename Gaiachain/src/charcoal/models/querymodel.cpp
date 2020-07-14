@@ -83,7 +83,7 @@ void QueryModel::sendQueuedRequests()
         auto newQueue = m_queuedRequests;
         const QString token(m_sessionManager->token());
         for (const auto &request : qAsConst(m_queuedRequests)) {
-            const bool isPost = request->type() == BaseRequest::Type::Post;
+            const bool isPost = (request->type() == BaseRequest::Type::Post);
 
             if (isPost) {
                 if (postSent) {
@@ -92,6 +92,8 @@ void QueryModel::sendQueuedRequests()
                     postSent = true;
                 }
             }
+
+            qDebug() << "SENDING QUEUED" << request->document();
 
             request->setToken(token);
             m_sessionManager->sendRequest(request,
@@ -174,14 +176,10 @@ void QueryModel::webErrorHandler(const QString &errorString,
                                  const QNetworkReply::NetworkError code)
 {
     qDebug() << "Request error!" << errorString << code;
-
-    continueSendingQueuedRequests();
 }
 
 void QueryModel::webReplyHandler(const QJsonDocument &reply)
 {
     qDebug() << "Request success!" << reply;
     emit webDataRefreshed();
-
-    continueSendingQueuedRequests();
 }

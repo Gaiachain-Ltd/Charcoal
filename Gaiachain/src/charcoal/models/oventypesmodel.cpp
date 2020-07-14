@@ -77,8 +77,6 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
     } else {
         qWarning() << RED("Updating items has failed");
     }
-
-    continueSendingQueuedRequests();
 }
 
 bool OvenTypesModel::isTraditional() const

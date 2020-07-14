@@ -62,8 +62,6 @@ void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
     } else {
         qWarning() << RED("Updating items has failed");
     }
-
-    continueSendingQueuedRequests();
 }
 
 void ParcelsModel::webUnusedParcelsReplyHandler(const QJsonDocument &reply)

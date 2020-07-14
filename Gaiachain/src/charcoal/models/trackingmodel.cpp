@@ -493,8 +493,6 @@ void TrackingModel::webReplyHandler(const QJsonDocument &reply)
     } else {
         emit error(tr("Error updating tracking information"));
     }
-
-    continueSendingQueuedRequests();
 }
 
 void TrackingModel::detailsReplyHandler(const QJsonDocument &reply)
