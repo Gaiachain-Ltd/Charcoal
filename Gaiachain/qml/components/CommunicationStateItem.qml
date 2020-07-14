@@ -9,6 +9,8 @@ import "../items" as Items
 
 Item {
     id: top
+
+    readonly property bool isCocoa: mainController.flavor === "cocoa"
     property bool communicationInProgress: false
 
     RowLayout {
@@ -21,7 +23,8 @@ Item {
 
             visible: communicationInProgress
 
-            text: communicationInProgress ? Strings.loading + "..." : Strings.empty
+            text: top.isCocoa && communicationInProgress ? Strings.loading + "..."
+                                                         : Strings.empty
             color: GStyle.unknownColor
 
             font.bold: true

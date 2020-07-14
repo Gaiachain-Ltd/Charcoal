@@ -42,7 +42,7 @@ void RestSessionManager::sendRequest(
     const QSharedPointer<BaseRequest> &request,
     const std::function<void (const QString &, const QNetworkReply::NetworkError &)> &errorHandler,
     const std::function<void (const QJsonDocument &)> &replyHandler,
-    bool force)
+    const bool force, const bool updateProcessing)
 {
     if (!enabled() && !force) {
         return;
@@ -52,10 +52,10 @@ void RestSessionManager::sendRequest(
             this, [errorHandler](const QString &msgs, const int errorCode) { errorHandler(msgs, static_cast<QNetworkReply::NetworkError>(errorCode)); });
     connect(request.data(), &BaseRequest::requestFinished, this, replyHandler);
 
-    sendRequest(request);
+    sendRequest(request, updateProcessing);
 }
 
-void RestSessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
+void RestSessionManager::sendRequest(const QSharedPointer<BaseRequest> &request, const bool updateProcessing)
 {
     connect(request.data(), &BaseRequest::requestFinished,
             this, [this](const QJsonDocument &) {
@@ -68,7 +68,9 @@ void RestSessionManager::sendRequest(const QSharedPointer<BaseRequest> &request)
         processFinished();
     });
 
-    processStarted();
+    if (updateProcessing) {
+        processStarted();
+    }
     updateConnectionStateBeforeRequest();
 
     m_client.send(request);

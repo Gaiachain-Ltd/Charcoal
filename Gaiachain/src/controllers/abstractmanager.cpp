@@ -21,7 +21,10 @@ void AbstractManager::processStarted() const
 
 void AbstractManager::processFinished() const
 {
-    Q_ASSERT(m_activeProcessesCount > 0);
+    if (m_activeProcessesCount == 0) {
+        return;
+    }
+
     if (--m_activeProcessesCount == 0) {   // last action
         emit processingChanged(false);
     }
