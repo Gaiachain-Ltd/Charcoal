@@ -600,9 +600,6 @@ void ActionController::registerLoadingAndTransport(
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
         m_dbConnName, CharcoalDbHelpers::getPlotName(transportId)));
-    const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, harvestId));
-    const int webHarvestId(
-        CharcoalDbHelpers::getWebPackageId(m_dbConnName, harvestEntity));
 
     if (typeId == -1) {
         qWarning() << RED("Transport ID type not found!");
@@ -628,7 +625,6 @@ void ActionController::registerLoadingAndTransport(
     if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
                              eventDate, coordinate,
                              {
-                                 { Tags::webHarvestId, webHarvestId },
                                  { Tags::webPlateNumber, plateNumber },
                                  { Tags::webDestination, destinationId },
                                  { Tags::webQrCodes, scannedQrs },

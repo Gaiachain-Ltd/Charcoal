@@ -437,11 +437,6 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
                                                         const QJsonObject &object) const
 {
     const QString harvestName(CharcoalDbHelpers::getHarvestName(packageName));
-    const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(
-        m_connectionName, harvestName));
-    const int webHarvestId(
-        CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
-
     const QJsonObject webEntity(object.value("entity").toObject());
     const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
@@ -452,7 +447,6 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
 
     return updateEventDetails(webId, timestamp,
                               {
-                                  { Tags::webHarvestId, webHarvestId },
                                   { Tags::webPlateNumber, plateNumber },
                                   { Tags::webDestination, destinationId },
                                   { Tags::webQrCodes, scannedQrs },
