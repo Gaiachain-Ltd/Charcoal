@@ -17,7 +17,13 @@ void RestSessionManager::ping()
     const auto replyHandler = [this](const QJsonDocument &) {
         emit pingSuccess();
     };
-    sendRequest(QSharedPointer<AuthRequest>::create(), errorHandler, replyHandler, true);
+
+    auto request = QSharedPointer<AuthRequest>::create();
+    if (request->isTokenRequired()) {
+        request->setToken(token());
+    }
+
+    sendRequest(request, errorHandler, replyHandler, true);
 }
 
 void RestSessionManager::login(const QString &login, const QString &password)
