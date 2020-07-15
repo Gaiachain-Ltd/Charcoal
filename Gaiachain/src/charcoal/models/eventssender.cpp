@@ -39,7 +39,186 @@ void EventsSender::setPicturesManager(PicturesManager *manager)
     }
 }
 
+bool EventsSender::hasQueuedRequests() const
+{
+    return rowCount() > 0 || QueryModel::hasQueuedRequests();
+}
+
+void EventsSender::sendQueuedRequests()
+{
+    if (QueryModel::hasQueuedRequests()) {
+        QueryModel::sendQueuedRequests();
+    }
+
+    if (rowCount() > 0) {
+        sendEvents();
+    }
+}
+
 void EventsSender::sendEvents()
+{
+    if (canSendNextEvent()) {
+        sendEvent();
+    }
+}
+
+void EventsSender::onFinalizePackage(const int webId)
+{
+    const auto request = QSharedPointer<BaseRequest>::create(
+        QString("/entities/packages/%1/finalize_supply_chain/").arg(webId),
+        BaseRequest::Type::Post);
+
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
+        qDebug() << "Sending finalization event!";
+        request->setToken(m_sessionManager->token());
+        m_sessionManager->sendRequest(request, this,
+                                      &EventsSender::webErrorHandler,
+                                      &EventsSender::finalizationReplyHandler);
+    } else {
+        qDebug() << "Enqueing finalization request";
+        m_queuedRequests.append(request);
+    }
+}
+
+void EventsSender::onFinalizePackages(const QVector<int> &webIds)
+{
+    for (const int webId : webIds) {
+        onFinalizePackage(webId);
+    }
+}
+
+void EventsSender::webErrorHandler(const QString &errorString,
+                                   const QNetworkReply::NetworkError code)
+{
+    qDebug() << "Request error!" << errorString << code;
+    emit error(errorString);
+
+    m_hasPendingEvent = false;
+    continueSendingQueuedRequests();
+}
+
+void EventsSender::webReplyHandler(const QJsonDocument &reply)
+{
+    qDebug() << "Request success!" << reply;
+
+    const QString pid(reply.object().value(Tags::pid).toString());
+    const qint64 entityWebId(reply.object().value(Tags::webEventId).toInt());
+    const qint64 timestamp(reply.object().value(Tags::eventTimestamp)
+                               .toVariant().toLongLong());
+    const int eventId(CharcoalDbHelpers::getEventId(m_connectionName, timestamp));
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+
+    query.prepare("UPDATE Events "
+                  "SET isCommitted=1, parentWebId=:entityWebId "
+                  "WHERE date=:timestamp");
+    query.bindValue(":entityWebId", entityWebId);
+    query.bindValue(":timestamp", timestamp);
+
+    if (query.exec()) {
+        if (updateEntityWebId(entityWebId, eventId) == false) {
+            const QLatin1String errorString = QLatin1String("Failed to update local DB");
+            qWarning() << RED(errorString)
+                       << query.lastError() << "For query:" << query.lastQuery()
+                       << reply;
+            emit error(errorString);
+        }
+    } else {
+        const QLatin1String errorString = QLatin1String("Query to update the Event has failed to execute");
+        qWarning() << RED(errorString)
+                   << query.lastError() << "For query:" << query.lastQuery()
+                   << timestamp << Tags::pid << pid << "eid" << entityWebId;
+        emit error(errorString);
+    }
+
+    m_hasPendingEvent = false;
+    setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+
+    continueSendingQueuedRequests();
+}
+
+void EventsSender::finalizationReplyHandler(const QJsonDocument &reply)
+{
+    qDebug() << "Finalization successful" << reply;
+}
+
+void EventsSender::onFetchPhoto(const QString &path)
+{
+    QString adjusted;
+    const QString prefix("/media/photos/");
+
+    if (path.contains(prefix)) {
+        adjusted = path;
+    } else {
+        adjusted.append(prefix);
+
+        QString justDateTime(path);
+        justDateTime = justDateTime.mid(path.indexOf('-', 0) + 1);
+        justDateTime.truncate(justDateTime.lastIndexOf('.'));
+
+        const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
+        adjusted.append(timestamp.toString("yyyy/MM/dd"));
+        adjusted.append("/");
+        adjusted.append(path);
+    }
+
+    qDebug() << "Fetch photo:" << adjusted;
+    const auto request = QSharedPointer<ImageRequest>::create(
+        adjusted, m_picturesManager->cachePath());
+
+    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
+        m_sessionManager->sendRequest(request);
+    } else {
+        qDebug() << "Enqueing request";
+        m_queuedRequests.append(request);
+    }
+}
+
+bool EventsSender::updateEntityWebId(const qint64 webId, const int eventId) const
+{
+    QString result;
+    const QString queryString(QString("UPDATE Entities SET webId=%1 "
+                                      "WHERE id IN (SELECT entityId FROM Events "
+                                      "WHERE id=%2)")
+                                  .arg(webId).arg(eventId));
+
+    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
+    if (query.exec()) {
+        return true;
+    } else {
+        qWarning() << RED("Unable to update web ID")
+                   << query.lastError() << "For query:" << query.lastQuery();
+    }
+
+    return false;
+}
+
+/*!
+ * This method takes \a properties from Events database and transformes
+ * them into a JSON object understood by Web.
+ */
+QJsonObject EventsSender::dbMapToWebObject(QJsonObject object) const
+{
+    if (object.value(Tags::webDocuments).isNull() == false) {
+        // We don't need to pass documents in properties, we send them separately
+        object.remove(Tags::webDocuments);
+    }
+
+    if (object.value(Tags::webReceipts).isNull() == false) {
+        // We don't need to pass receipts in properties, we send them separately
+        object.remove(Tags::webReceipts);
+    }
+
+    return object;
+}
+
+bool EventsSender::canSendNextEvent() const
+{
+    return (m_hasPendingEvent == false)
+        && RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get());
+}
+
+void EventsSender::sendEvent()
 {
     const int count = rowCount();
     if (count == 0) {
@@ -54,8 +233,8 @@ void EventsSender::sendEvents()
             continue;
         }
 
-        const auto record = query().record();
-        qDebug() << "Offline event is:" << record;
+        //const auto record = query().record();
+        //qDebug() << "Offline event is:" << record;
 
         // First, get query data. Subsequent calls to any QSqlQuery instances
         // might break the main query!
@@ -155,153 +334,9 @@ void EventsSender::sendEvents()
             qDebug().noquote() << "Enqueuing event!" << doc;
             m_queuedRequests.append(request);
         }
+
+        // We quit after one loop - next even will be sent when current one is finished.
+        m_hasPendingEvent = true;
+        return;
     }
-}
-
-void EventsSender::onFinalizePackage(const int webId)
-{
-    const auto request = QSharedPointer<BaseRequest>::create(
-        QString("/entities/packages/%1/finalize_supply_chain/").arg(webId),
-        BaseRequest::Type::Post);
-
-    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
-        request->setToken(m_sessionManager->token());
-        m_sessionManager->sendRequest(request, this,
-                                      &EventsSender::webErrorHandler,
-                                      &EventsSender::finalizationReplyHandler);
-    } else {
-        qDebug() << "Enqueing request";
-        m_queuedRequests.append(request);
-    }
-}
-
-void EventsSender::onFinalizePackages(const QVector<int> &webIds)
-{
-    for (const int webId : webIds) {
-        onFinalizePackage(webId);
-    }
-}
-
-void EventsSender::webErrorHandler(const QString &errorString,
-                                   const QNetworkReply::NetworkError code)
-{
-    qDebug() << "Request error!" << errorString << code;
-    emit error(errorString);
-
-    continueSendingQueuedRequests();
-}
-
-void EventsSender::webReplyHandler(const QJsonDocument &reply)
-{
-    qDebug() << "Request success!" << reply;
-
-    const QString pid(reply.object().value(Tags::pid).toString());
-    const qint64 entityWebId(reply.object().value(Tags::webEventId).toInt());
-    const qint64 timestamp(reply.object().value(Tags::eventTimestamp)
-                               .toVariant().toLongLong());
-    const int eventId(CharcoalDbHelpers::getEventId(m_connectionName, timestamp));
-
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-
-    query.prepare("UPDATE Events "
-                  "SET isCommitted=1, parentWebId=:entityWebId "
-                  "WHERE date=:timestamp");
-    query.bindValue(":entityWebId", entityWebId);
-    query.bindValue(":timestamp", timestamp);
-
-    if (query.exec()) {
-        if (updateEntityWebId(entityWebId, eventId) == false) {
-            const QLatin1String errorString = QLatin1String("Failed to update local DB");
-            qWarning() << RED(errorString)
-                       << query.lastError() << "For query:" << query.lastQuery()
-                       << reply;
-            emit error(errorString);
-        }
-    } else {
-        const QLatin1String errorString = QLatin1String("Query to update the Event has failed to execute");
-        qWarning() << RED(errorString)
-                   << query.lastError() << "For query:" << query.lastQuery()
-                   << timestamp << Tags::pid << pid << "eid" << entityWebId;
-        emit error(errorString);
-    }
-
-    // ???
-    //onWebDataRefreshed();
-
-    continueSendingQueuedRequests();
-}
-
-void EventsSender::finalizationReplyHandler(const QJsonDocument &reply)
-{
-    qDebug() << "Finalization successful" << reply;
-}
-
-void EventsSender::onFetchPhoto(const QString &path)
-{
-    QString adjusted;
-    const QString prefix("/media/photos/");
-
-    if (path.contains(prefix)) {
-        adjusted = path;
-    } else {
-        adjusted.append(prefix);
-
-        QString justDateTime(path);
-        justDateTime = justDateTime.mid(path.indexOf('-', 0) + 1);
-        justDateTime.truncate(justDateTime.lastIndexOf('.'));
-
-        const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
-        adjusted.append(timestamp.toString("yyyy/MM/dd"));
-        adjusted.append("/");
-        adjusted.append(path);
-    }
-
-    qDebug() << "Fetch photo:" << adjusted;
-    const auto request = QSharedPointer<ImageRequest>::create(
-        adjusted, m_picturesManager->cachePath());
-
-    if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
-        m_sessionManager->sendRequest(request);
-    } else {
-        qDebug() << "Enqueing request";
-        m_queuedRequests.append(request);
-    }
-}
-
-bool EventsSender::updateEntityWebId(const qint64 webId, const int eventId) const
-{
-    QString result;
-    const QString queryString(QString("UPDATE Entities SET webId=%1 "
-                                      "WHERE id IN (SELECT entityId FROM Events "
-                                      "WHERE id=%2)")
-                                  .arg(webId).arg(eventId));
-
-    QSqlQuery query(queryString, db::Helpers::databaseConnection(m_connectionName));
-    if (query.exec()) {
-        return true;
-    } else {
-        qWarning() << RED("Unable to update web ID")
-                   << query.lastError() << "For query:" << query.lastQuery();
-    }
-
-    return false;
-}
-
-/*!
- * This method takes \a properties from Events database and transformes
- * them into a JSON object understood by Web.
- */
-QJsonObject EventsSender::dbMapToWebObject(QJsonObject object) const
-{
-    if (object.value(Tags::webDocuments).isNull() == false) {
-        // We don't need to pass documents in properties, we send them separately
-        object.remove(Tags::webDocuments);
-    }
-
-    if (object.value(Tags::webReceipts).isNull() == false) {
-        // We don't need to pass receipts in properties, we send them separately
-        object.remove(Tags::webReceipts);
-    }
-
-    return object;
 }

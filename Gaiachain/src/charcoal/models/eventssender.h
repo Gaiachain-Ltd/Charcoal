@@ -9,10 +9,14 @@ class PicturesManager;
 class EventsSender : public QueryModel
 {
     Q_OBJECT
+
 public:
     explicit EventsSender(QObject *parent = nullptr);
 
     void setPicturesManager(PicturesManager *manager);
+
+    bool hasQueuedRequests() const override;
+    void sendQueuedRequests() override;
 
 public slots:
     void sendEvents();
@@ -32,6 +36,11 @@ private:
     bool updateEntityWebId(const qint64 webId, const int eventId) const;
     QJsonObject dbMapToWebObject(QJsonObject object) const;
 
+    bool canSendNextEvent() const;
+    void sendEvent();
+
     QPointer<PicturesManager> m_picturesManager;
+
+    bool m_hasPendingEvent = false;
 };
 
