@@ -74,10 +74,10 @@ void EventsSender::onFinalizePackage(const int webId)
         m_sessionManager->sendRequest(request, this,
                                       &EventsSender::webErrorHandler,
                                       &EventsSender::finalizationReplyHandler);
-    } else {
-        qDebug() << "Enqueing finalization request";
-        m_queuedRequests.append(request);
     }
+
+    // Finalization events are not queued - they are either sent directly
+    // or will be run after last reception from a package is processed
 }
 
 void EventsSender::onFinalizePackages(const QVector<int> &webIds)
@@ -116,12 +116,40 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     query.bindValue(":timestamp", timestamp);
 
     if (query.exec()) {
+        query.finish();
         if (updateEntityWebId(entityWebId, eventId) == false) {
             const QLatin1String errorString = QLatin1String("Failed to update local DB");
             qWarning() << RED(errorString)
                        << query.lastError() << "For query:" << query.lastQuery()
                        << reply;
             emit error(errorString);
+        }
+
+        // Only run this for RECEPTION events!
+        const Enums::SupplyChainAction action = CharcoalDbHelpers::getEventTypeFromEventId(
+            m_connectionName, eventId);
+
+        if (action == Enums::SupplyChainAction::Reception) {
+            // Check if package needs to be finalized
+            query.prepare("SELECT isFinished FROM Entities "
+                          "WHERE id IN (SELECT entityId FROM Events "
+                          "WHERE id=:eventId)");
+            query.bindValue(":eventId", eventId);
+
+            if (query.exec() && query.next()) {
+                if (query.value("isFinished").toInt() == 1) {
+                    onFinalizePackage(entityWebId);
+                }
+            } else {
+                const QLatin1String errorString = QLatin1String(
+                    "Failed to check if package is finalized");
+                qWarning() << RED(errorString)
+                           << query.lastError() << "For query:" << query.lastQuery()
+                           << reply;
+                emit error(errorString);
+            }
+
+            query.finish();
         }
     } else {
         const QLatin1String errorString = QLatin1String("Query to update the Event has failed to execute");

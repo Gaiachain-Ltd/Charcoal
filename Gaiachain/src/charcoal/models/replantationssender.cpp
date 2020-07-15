@@ -41,9 +41,6 @@ void ReplantationsSender::sendEvents()
             continue;
         }
 
-        const auto record = query().record();
-        qDebug() << "Offline replantation is:" << record;
-
         const auto request = QSharedPointer<BaseRequest>::create(
             "/entities/replantation/",
             BaseRequest::Type::Post
@@ -117,5 +114,6 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
         emit error(errorString);
     }
 
+    setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
     continueSendingQueuedRequests();
 }
