@@ -29,5 +29,9 @@ AuthRequest::AuthRequest(const QString &login, const QString &password)
 
 bool AuthRequest::isTokenRequired() const
 {
-    return false;
+    if (type() == BaseRequest::Type::Get) {
+        return true;
+    } else {
+        return false;
+    }
 }
