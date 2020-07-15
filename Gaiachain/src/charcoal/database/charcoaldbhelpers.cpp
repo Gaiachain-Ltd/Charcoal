@@ -265,6 +265,17 @@ int CharcoalDbHelpers::getEventTypeId(const QString &connectionName,
     return cached;
 }
 
+Enums::SupplyChainAction CharcoalDbHelpers::getEventTypeFromEventId(
+    const QString &connectionName, const int eventId)
+{
+    const int typeId = getSimpleInteger(connectionName, "Events",
+                                        "id", eventId,
+                                        "typeId",
+                                        true);
+
+    return actionById(connectionName, typeId);
+}
+
 int CharcoalDbHelpers::getEventIdFromWebId(const QString &connectionName,
                                            const int webId, const bool verbose)
 {

@@ -458,8 +458,6 @@ void ActionController::registerCarbonizationBeginning(
                                       : query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_dbConnName, Enums::SupplyChainAction::CarbonizationBeginning));
-    const int webPlotId(
-        CharcoalDbHelpers::getWebPackageId(m_dbConnName, parentEntityId));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -477,7 +475,6 @@ void ActionController::registerCarbonizationBeginning(
     QVariantMap properties {
         { Tags::webOvenType, ovenType },
         { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
-        { Tags::webPlotId, webPlotId },
         { Tags::webOvenId, ovenId }
     };
 
@@ -603,9 +600,6 @@ void ActionController::registerLoadingAndTransport(
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
         m_dbConnName, CharcoalDbHelpers::getPlotName(transportId)));
-    const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, harvestId));
-    const int webHarvestId(
-        CharcoalDbHelpers::getWebPackageId(m_dbConnName, harvestEntity));
 
     if (typeId == -1) {
         qWarning() << RED("Transport ID type not found!");
@@ -631,7 +625,6 @@ void ActionController::registerLoadingAndTransport(
     if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
                              eventDate, coordinate,
                              {
-                                 { Tags::webHarvestId, webHarvestId },
                                  { Tags::webPlateNumber, plateNumber },
                                  { Tags::webDestination, destinationId },
                                  { Tags::webQrCodes, scannedQrs },
@@ -846,9 +839,9 @@ bool ActionController::insertEntity(QSqlQuery *query,
 {
     query->prepare("INSERT INTO Entities (typeId, name, parent, "
                   "isFinished, isReplanted) "
-                  "VALUES (:typeId, :harvestId, :parent, 0, 0)");
+                  "VALUES (:typeId, :packageId, :parent, 0, 0)");
     query->bindValue(":typeId", typeId);
-    query->bindValue(":harvestId", packageId);
+    query->bindValue(":packageId", packageId);
     query->bindValue(":parent", parentId == -1? QVariant(QVariant::Int) : parentId);
 
     if (query->exec() == false) {

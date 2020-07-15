@@ -45,6 +45,9 @@ public:
     static int getEventTypeId(const QString &connectionName,
                               const Enums::SupplyChainAction action);
 
+    static Enums::SupplyChainAction getEventTypeFromEventId(const QString &connectionName,
+                                                            const int eventId);
+
     static int getEventIdFromWebId(const QString &connectionName, const int webId,
                                    const bool verbose = true);
 

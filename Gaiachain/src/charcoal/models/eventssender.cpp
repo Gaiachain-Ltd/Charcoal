@@ -39,121 +39,26 @@ void EventsSender::setPicturesManager(PicturesManager *manager)
     }
 }
 
-void EventsSender::sendEvents()
+bool EventsSender::hasQueuedRequests() const
 {
-    const int count = rowCount();
-    if (count == 0) {
-        return;
+    return rowCount() > 0 || QueryModel::hasQueuedRequests();
+}
+
+void EventsSender::sendQueuedRequests()
+{
+    if (QueryModel::hasQueuedRequests()) {
+        QueryModel::sendQueuedRequests();
     }
 
-    const bool isLoggedIn = RequestsHelper::isOnline(m_sessionManager.get(),
-                                                     m_userManager.get());
-    for (int i = 0; i < count; ++i) {
-        // use query().next()?
-        if (query().seek(i) == false) {
-            continue;
-        }
+    if (rowCount() > 0) {
+        sendEvents();
+    }
+}
 
-        const auto record = query().record();
-        qDebug() << "Offline event is:" << record;
-
-        // First, get query data. Subsequent calls to any QSqlQuery instances
-        // might break the main query!
-        const qint64 timestamp =
-            static_cast<qint64>(query().value("date").toLongLong());
-        const QString properties(query().value(Tags::properties).toString());
-
-        const int entityId(query().value("entityId").toInt());
-        const int typeId(query().value("typeId").toInt());
-
-        const QJsonObject location({
-            { "latitude", query().value("locationLatitude").toDouble() },
-            { "longitude", query().value("locationLongitude").toDouble() }
-        });
-
-        const QJsonObject propertiesObject(
-            CharcoalDbHelpers::dbPropertiesToJson(properties));
-        QStringList toUpload;
-
-        if (propertiesObject.contains(Tags::webDocuments)) {
-            const auto array = propertiesObject.value(Tags::webDocuments).toArray();
-            for (const auto &item : array) {
-                toUpload.append(item.toString());
-            }
-        }
-
-        if (propertiesObject.contains(Tags::webReceipts)) {
-            const auto array = propertiesObject.value(Tags::webReceipts).toArray();
-            for (const auto &item : array) {
-                toUpload.append(item.toString());
-            }
-        }
-
-        if (toUpload.isEmpty() == false) {
-            qDebug() << "Files to be uploaded:" << toUpload;
-        }
-
-        // Now generate stuff using additional QSqlQueries
-        const QString pid(CharcoalDbHelpers::getEntityName(m_connectionName, entityId));
-        const QString action(CharcoalDbHelpers::getEventType(m_connectionName, typeId));
-
-        const QJsonDocument doc(
-            {
-                { Tags::pid, pid },
-                { Tags::action, action },
-                { Tags::timestamp, timestamp },
-                { Tags::location, location },
-                { Tags::properties, dbMapToWebObject(propertiesObject, entityId) }
-            });
-
-        QSharedPointer<BaseRequest> request;
-
-        if (toUpload.isEmpty()) {
-            request = QSharedPointer<BaseRequest>::create(
-                "/entities/new/",
-                BaseRequest::Type::Post
-                );
-
-            request->setDocument(doc);
-        } else {
-            auto multi = QSharedPointer<MultiPartRequest>::create(
-                "/entities/new/",
-                MultiPartRequest::Type::Post
-                );
-
-            const auto docObject = doc.object();
-            for (const QString &key : docObject.keys()) {
-                const QJsonValue value(docObject.value(key));
-                if (value.isObject()) {
-                    multi->addPart(key, QJsonDocument(value.toObject()).toJson(
-                                            QJsonDocument::JsonFormat::Compact));
-                } else {
-                    multi->addPart(key, value.toVariant().toString());
-                }
-            }
-
-            for (const QString &path : qAsConst(toUpload)) {
-                const QFileInfo info(m_picturesManager->cachePath() + "/" + path);
-                if (info.fileName().startsWith(Tags::document)) {
-                    multi->addPart(Tags::webDocuments, info);
-                } else  {
-                    multi->addPart(Tags::webReceipts, info);
-                }
-            }
-
-            request = multi;
-        }
-
-        if (isLoggedIn) {
-            qDebug().noquote() << "Sending event!" << doc;
-            request->setToken(m_sessionManager->token());
-            m_sessionManager->sendRequest(request, this,
-                                          &EventsSender::webErrorHandler,
-                                          &EventsSender::webReplyHandler);
-        } else {
-            qDebug().noquote() << "Enqueuing event!" << doc;
-            m_queuedRequests.append(request);
-        }
+void EventsSender::sendEvents()
+{
+    if (canSendNextEvent()) {
+        sendEvent();
     }
 }
 
@@ -164,14 +69,15 @@ void EventsSender::onFinalizePackage(const int webId)
         BaseRequest::Type::Post);
 
     if (RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get())) {
+        qDebug() << "Sending finalization event!";
         request->setToken(m_sessionManager->token());
         m_sessionManager->sendRequest(request, this,
                                       &EventsSender::webErrorHandler,
                                       &EventsSender::finalizationReplyHandler);
-    } else {
-        qDebug() << "Enqueing request";
-        m_queuedRequests.append(request);
     }
+
+    // Finalization events are not queued - they are either sent directly
+    // or will be run after last reception from a package is processed
 }
 
 void EventsSender::onFinalizePackages(const QVector<int> &webIds)
@@ -186,6 +92,9 @@ void EventsSender::webErrorHandler(const QString &errorString,
 {
     qDebug() << "Request error!" << errorString << code;
     emit error(errorString);
+
+    m_hasPendingEvent = false;
+    continueSendingQueuedRequests();
 }
 
 void EventsSender::webReplyHandler(const QJsonDocument &reply)
@@ -207,12 +116,40 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
     query.bindValue(":timestamp", timestamp);
 
     if (query.exec()) {
+        query.finish();
         if (updateEntityWebId(entityWebId, eventId) == false) {
             const QLatin1String errorString = QLatin1String("Failed to update local DB");
             qWarning() << RED(errorString)
                        << query.lastError() << "For query:" << query.lastQuery()
                        << reply;
             emit error(errorString);
+        }
+
+        // Only run this for RECEPTION events!
+        const Enums::SupplyChainAction action = CharcoalDbHelpers::getEventTypeFromEventId(
+            m_connectionName, eventId);
+
+        if (action == Enums::SupplyChainAction::Reception) {
+            // Check if package needs to be finalized
+            query.prepare("SELECT isFinished FROM Entities "
+                          "WHERE id IN (SELECT entityId FROM Events "
+                          "WHERE id=:eventId)");
+            query.bindValue(":eventId", eventId);
+
+            if (query.exec() && query.next()) {
+                if (query.value("isFinished").toInt() == 1) {
+                    onFinalizePackage(entityWebId);
+                }
+            } else {
+                const QLatin1String errorString = QLatin1String(
+                    "Failed to check if package is finalized");
+                qWarning() << RED(errorString)
+                           << query.lastError() << "For query:" << query.lastQuery()
+                           << reply;
+                emit error(errorString);
+            }
+
+            query.finish();
         }
     } else {
         const QLatin1String errorString = QLatin1String("Query to update the Event has failed to execute");
@@ -221,6 +158,11 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
                    << timestamp << Tags::pid << pid << "eid" << entityWebId;
         emit error(errorString);
     }
+
+    m_hasPendingEvent = false;
+    setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+
+    continueSendingQueuedRequests();
 }
 
 void EventsSender::finalizationReplyHandler(const QJsonDocument &reply)
@@ -283,23 +225,8 @@ bool EventsSender::updateEntityWebId(const qint64 webId, const int eventId) cons
  * This method takes \a properties from Events database and transformes
  * them into a JSON object understood by Web.
  */
-QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
-                                           const int entityId) const
+QJsonObject EventsSender::dbMapToWebObject(QJsonObject object) const
 {
-    if (object.value(Tags::webPlotId).isNull()) {
-        // Plot ID from web was unknown when DB entry was created.
-        // We need to correct it
-        const int webPlotId(CharcoalDbHelpers::getWebPackageId(
-            m_connectionName, entityId));
-        if (webPlotId == -1) {
-            const QLatin1String errorString = QLatin1String("Failed to find Plot ID (Web) for plot");
-            qDebug() << errorString << object;
-            emit error(errorString);
-        } else {
-            object.insert(Tags::webPlotId, webPlotId);
-        }
-    }
-
     if (object.value(Tags::webDocuments).isNull() == false) {
         // We don't need to pass documents in properties, we send them separately
         object.remove(Tags::webDocuments);
@@ -311,4 +238,130 @@ QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
     }
 
     return object;
+}
+
+bool EventsSender::canSendNextEvent() const
+{
+    return (m_hasPendingEvent == false)
+        && RequestsHelper::isOnline(m_sessionManager.get(), m_userManager.get());
+}
+
+void EventsSender::sendEvent()
+{
+    const int count = rowCount();
+    if (count == 0) {
+        return;
+    }
+
+    const bool isLoggedIn = RequestsHelper::isOnline(m_sessionManager.get(),
+                                                     m_userManager.get());
+    for (int i = 0; i < count; ++i) {
+        // use query().next()?
+        if (query().seek(i) == false) {
+            continue;
+        }
+
+        // First, get query data. Subsequent calls to any QSqlQuery instances
+        // might break the main query!
+        const qint64 timestamp =
+            static_cast<qint64>(query().value("date").toLongLong());
+        const QString properties(query().value(Tags::properties).toString());
+
+        const int entityId(query().value("entityId").toInt());
+        const int typeId(query().value("typeId").toInt());
+
+        const QJsonObject location({
+            { "latitude", query().value("locationLatitude").toDouble() },
+            { "longitude", query().value("locationLongitude").toDouble() }
+        });
+
+        const QJsonObject propertiesObject(
+            CharcoalDbHelpers::dbPropertiesToJson(properties));
+        QStringList toUpload;
+
+        if (propertiesObject.contains(Tags::webDocuments)) {
+            const auto array = propertiesObject.value(Tags::webDocuments).toArray();
+            for (const auto &item : array) {
+                toUpload.append(item.toString());
+            }
+        }
+
+        if (propertiesObject.contains(Tags::webReceipts)) {
+            const auto array = propertiesObject.value(Tags::webReceipts).toArray();
+            for (const auto &item : array) {
+                toUpload.append(item.toString());
+            }
+        }
+
+        if (toUpload.isEmpty() == false) {
+            qDebug() << "Files to be uploaded:" << toUpload;
+        }
+
+        // Now generate stuff using additional QSqlQueries
+        const QString pid(CharcoalDbHelpers::getEntityName(m_connectionName, entityId));
+        const QString action(CharcoalDbHelpers::getEventType(m_connectionName, typeId));
+
+        const QJsonDocument doc(
+            {
+                { Tags::pid, pid },
+                { Tags::action, action },
+                { Tags::timestamp, timestamp },
+                { Tags::location, location },
+                { Tags::properties, dbMapToWebObject(propertiesObject) }
+            });
+
+        QSharedPointer<BaseRequest> request;
+
+        if (toUpload.isEmpty()) {
+            request = QSharedPointer<BaseRequest>::create(
+                "/entities/new/",
+                BaseRequest::Type::Post
+                );
+
+            request->setDocument(doc);
+        } else {
+            auto multi = QSharedPointer<MultiPartRequest>::create(
+                "/entities/new/",
+                MultiPartRequest::Type::Post
+                );
+
+            const auto docObject = doc.object();
+            for (const QString &key : docObject.keys()) {
+                const QJsonValue value(docObject.value(key));
+                if (value.isObject()) {
+                    multi->addPart(key, QJsonDocument(value.toObject()).toJson(
+                                            QJsonDocument::JsonFormat::Compact));
+                } else {
+                    multi->addPart(key, value.toVariant().toString());
+                }
+            }
+
+            for (const QString &path : qAsConst(toUpload)) {
+                const QFileInfo info(m_picturesManager->cachePath() + "/" + path);
+                if (info.fileName().startsWith(Tags::document)) {
+                    multi->addPart(Tags::webDocuments, info);
+                } else  {
+                    multi->addPart(Tags::webReceipts, info);
+                }
+            }
+
+            request = multi;
+        }
+
+        // We send one event right away, and queue the rest
+        if (isLoggedIn && i == 0) {
+            qDebug().noquote() << "Sending event!" << doc;
+            request->setToken(m_sessionManager->token());
+            m_sessionManager->sendRequest(request, this,
+                                          &EventsSender::webErrorHandler,
+                                          &EventsSender::webReplyHandler);
+        } else {
+            qDebug().noquote() << "Enqueuing event!" << doc;
+            m_queuedRequests.append(request);
+        }
+
+        // We quit after one loop - next even will be sent when current one is finished.
+        m_hasPendingEvent = true;
+        return;
+    }
 }

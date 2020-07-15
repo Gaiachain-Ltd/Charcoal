@@ -29,8 +29,9 @@ public:
 
     bool webModelCanChange() const;
 
-    bool hasQueuedRequests() const;
-    void sendQueuedRequests();
+    virtual bool hasQueuedRequests() const;
+    virtual void sendQueuedRequests();
+    void continueSendingQueuedRequests();
 
 signals:
     void refreshed() const;

@@ -102,7 +102,7 @@ Pages.SupplyChainPageBase {
                     Utility.createSummaryItem(Strings.deliveryDestination,
                                       deliveryDestinationComboBox.currentText),
                     Utility.createSummaryItem(Strings.gpsCoordinates,
-                                              gpsSource.coordinate.toString())
+                                              gpsSource.coordinateString)
                 ]
         return summary
     }
@@ -213,7 +213,7 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
 
         headerText: Strings.gpsCoordinates
-        inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinate.toString()) : gpsSource.errorMessage())
+        inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinateString) : gpsSource.errorMessage())
         iconSource: (gpsSource.validCoordinate ? GStyle.gpsOkImgUrl : GStyle.gpsFailedImgUrl)
 
         onClicked: gpsSource.update()

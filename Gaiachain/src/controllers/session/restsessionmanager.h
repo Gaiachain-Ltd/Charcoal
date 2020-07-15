@@ -17,6 +17,8 @@ public:
     Q_INVOKABLE void ping() override;
     Q_INVOKABLE void login(const QString &login, const QString &password) override;
 
+    bool hasPostRequests() const;
+
     template <typename Object,
               typename PointerToErrorHandler,
               typename PointerToReplyHandler>

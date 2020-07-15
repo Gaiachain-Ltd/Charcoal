@@ -85,6 +85,17 @@ void MRestRequestManager::ignoreSslErrors()
     mIgnoreSslErrors = true;
 }
 
+bool MRestRequestManager::hasPostRequests() const
+{
+    for (const auto &request : qAsConst(mActiveRequests)) {
+        if (request->type() == MRestRequest::Type::Post) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 /*!
  * \brief handle request queue
  */

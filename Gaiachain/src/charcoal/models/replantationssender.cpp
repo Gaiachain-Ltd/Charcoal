@@ -41,9 +41,6 @@ void ReplantationsSender::sendEvents()
             continue;
         }
 
-        const auto record = query().record();
-        qDebug() << "Offline replantation is:" << record;
-
         const auto request = QSharedPointer<BaseRequest>::create(
             "/entities/replantation/",
             BaseRequest::Type::Post
@@ -61,7 +58,8 @@ void ReplantationsSender::sendEvents()
         const qint64 ending = query().value("endingDate").toLongLong();
         const int treeSpecies = query().value("treeSpecies").toInt();
         const int parentId(query().value("plotId").toInt());
-        const int webPlotId(CharcoalDbHelpers::getWebPackageId(m_connectionName, parentId));
+        const int webPlotId(CharcoalDbHelpers::getWebPackageId(
+            m_connectionName, parentId));
 
         const QJsonDocument doc(
             {
@@ -75,7 +73,7 @@ void ReplantationsSender::sendEvents()
 
         request->setDocument(doc);
 
-        if (isLoggedIn) {
+        if (isLoggedIn && i == 0) {
             qDebug() << "Sending replantation event!" << doc;
             request->setToken(m_sessionManager->token());
             m_sessionManager->sendRequest(request, this,
@@ -93,6 +91,8 @@ void ReplantationsSender::webErrorHandler(const QString &errorString,
 {
     qDebug() << "Request error!" << errorString << code;
     emit error(errorString);
+
+    continueSendingQueuedRequests();
 }
 
 void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
@@ -113,4 +113,7 @@ void ReplantationsSender::webReplyHandler(const QJsonDocument &reply)
                    << reply;
         emit error(errorString);
     }
+
+    setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
+    continueSendingQueuedRequests();
 }

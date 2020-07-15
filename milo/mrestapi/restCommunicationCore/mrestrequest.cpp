@@ -191,7 +191,7 @@ void MRestRequest::setDocument(const QJsonDocument &document)
 void MRestRequest::send()
 {
     Q_ASSERT(mNetworkManager);
-    qCInfo(crequest) << mType << mUrl.toDisplayString() << mRequestRetryCounter;
+    qCInfo(crequest) << mType << mUrl.toDisplayString() << mRequestRetryCounter << mRequestDocument;
     mReplyData.clear();
     QNetworkRequest request(mUrl);
     request.setOriginatingObject(this);

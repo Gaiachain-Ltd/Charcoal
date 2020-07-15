@@ -38,6 +38,11 @@ void RestSessionManager::login(const QString &login, const QString &password)
     sendRequest(QSharedPointer<AuthRequest>::create(login, password), errorHandler, replyHandler);
 }
 
+bool RestSessionManager::hasPostRequests() const
+{
+    return m_client.hasPostRequests();
+}
+
 void RestSessionManager::sendRequest(
     const QSharedPointer<BaseRequest> &request,
     const std::function<void (const QString &, const QNetworkReply::NetworkError &)> &errorHandler,

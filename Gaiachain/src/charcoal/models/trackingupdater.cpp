@@ -335,13 +335,9 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
             const int ovenType = CharcoalDbHelpers::getOvenTypeIdFromName(
                 m_connectionName, ovenTypeName);
 
-            const int webPlotId(CharcoalDbHelpers::getWebPackageId(
-                m_connectionName, parentEntityId));
-
             QVariantMap properties {
                 { Tags::webOvenType, ovenType },
                 { Tags::webEventDate, eventDate },
-                { Tags::webPlotId, webPlotId },
                 { Tags::webOvenId, ovenWebId }
             };
 
@@ -366,12 +362,14 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
 
             QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
             q.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
-                          "oven_height, oven_width, oven_length) "
-                          "VALUES (:type, :plot, :event, :name, :height, :width, :length)");
+                      "oven_height, oven_width, oven_length) "
+                      "VALUES (:type, :plot, :event, :name, "
+                      ":height, :width, :length)");
             q.bindValue(":type", ovenType);
             q.bindValue(":plot", parentEntityId);
             q.bindValue(":event", eventId);
             q.bindValue(":name", ovenName);
+
             if (isDefault) {
                 q.bindValue(":height", defaultDims.at(0));
                 q.bindValue(":length", defaultDims.at(1));
@@ -439,11 +437,6 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
                                                         const QJsonObject &object) const
 {
     const QString harvestName(CharcoalDbHelpers::getHarvestName(packageName));
-    const int harvestEntity(CharcoalDbHelpers::getEntityIdFromName(
-        m_connectionName, harvestName));
-    const int webHarvestId(
-        CharcoalDbHelpers::getWebPackageId(m_connectionName, harvestEntity));
-
     const QJsonObject webEntity(object.value("entity").toObject());
     const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
     const int webId = webEntity.value("id").toInt();
@@ -454,7 +447,6 @@ bool TrackingUpdater::processDetailsLoadingAndTransport(const QString &packageNa
 
     return updateEventDetails(webId, timestamp,
                               {
-                                  { Tags::webHarvestId, webHarvestId },
                                   { Tags::webPlateNumber, plateNumber },
                                   { Tags::webDestination, destinationId },
                                   { Tags::webQrCodes, scannedQrs },
