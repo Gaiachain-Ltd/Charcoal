@@ -197,8 +197,23 @@ bool EventsSender::updateEntityWebId(const qint64 webId, const int eventId) cons
  * This method takes \a properties from Events database and transformes
  * them into a JSON object understood by Web.
  */
-QJsonObject EventsSender::dbMapToWebObject(QJsonObject object) const
+QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
+                                           const int entityId) const
 {
+    if (object.value(Tags::webPlotId).isNull()) {
+        // Plot ID from web was unknown when DB entry was created.
+        // We need to correct it
+        const int webPlotId(CharcoalDbHelpers::getWebPackageId(
+            m_connectionName, entityId));
+        if (webPlotId == -1) {
+            const QLatin1String errorString = QLatin1String("Failed to find Plot ID (Web) for plot");
+            qDebug() << errorString << object;
+            emit error(errorString);
+        } else {
+            object.insert(Tags::webPlotId, webPlotId);
+        }
+    }
+
     if (object.value(Tags::webDocuments).isNull() == false) {
         // We don't need to pass documents in properties, we send them separately
         object.remove(Tags::webDocuments);
@@ -282,7 +297,7 @@ void EventsSender::sendEvent()
                 { Tags::action, action },
                 { Tags::timestamp, timestamp },
                 { Tags::location, location },
-                { Tags::properties, dbMapToWebObject(propertiesObject) }
+                { Tags::properties, dbMapToWebObject(propertiesObject, entityId) }
             });
 
         QSharedPointer<BaseRequest> request;

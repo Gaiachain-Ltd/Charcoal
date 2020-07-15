@@ -458,6 +458,8 @@ void ActionController::registerCarbonizationBeginning(
                                       : query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_dbConnName, Enums::SupplyChainAction::CarbonizationBeginning));
+    const int webPlotId(
+        CharcoalDbHelpers::getWebPackageId(m_dbConnName, parentEntityId));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -475,6 +477,7 @@ void ActionController::registerCarbonizationBeginning(
     QVariantMap properties {
         { Tags::webOvenType, ovenType },
         { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
+        { Tags::webPlotId, webPlotId },
         { Tags::webOvenId, ovenId }
     };
 
