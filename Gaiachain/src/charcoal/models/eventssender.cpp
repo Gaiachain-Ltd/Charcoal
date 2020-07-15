@@ -200,17 +200,20 @@ bool EventsSender::updateEntityWebId(const qint64 webId, const int eventId) cons
 QJsonObject EventsSender::dbMapToWebObject(QJsonObject object,
                                            const int entityId) const
 {
-    if (object.value(Tags::webPlotId).isNull()) {
-        // Plot ID from web was unknown when DB entry was created.
-        // We need to correct it
-        const int webPlotId(CharcoalDbHelpers::getWebPackageId(
-            m_connectionName, entityId));
-        if (webPlotId == -1) {
-            const QLatin1String errorString = QLatin1String("Failed to find Plot ID (Web) for plot");
-            qDebug() << errorString << object;
-            emit error(errorString);
-        } else {
-            object.insert(Tags::webPlotId, webPlotId);
+    if (object.contains(Tags::webPlotId)) {
+        const QJsonValue plotIdValue(object.value(Tags::webPlotId));
+        if (plotIdValue.isNull() || plotIdValue.toInt() == 0) {
+            // Plot ID from web was unknown when DB entry was created.
+            // We need to correct it
+            const int webPlotId(CharcoalDbHelpers::getWebPackageId(
+                m_connectionName, entityId));
+            if (webPlotId == -1) {
+                const QLatin1String errorString = QLatin1String("Failed to find Plot ID (Web) for plot");
+                qDebug() << errorString << object;
+                emit error(errorString);
+            } else {
+                object.insert(Tags::webPlotId, webPlotId);
+            }
         }
     }
 
@@ -247,9 +250,6 @@ void EventsSender::sendEvent()
         if (query().seek(i) == false) {
             continue;
         }
-
-        //const auto record = query().record();
-        //qDebug() << "Offline event is:" << record;
 
         // First, get query data. Subsequent calls to any QSqlQuery instances
         // might break the main query!
