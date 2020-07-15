@@ -225,6 +225,9 @@ void EventsSender::webReplyHandler(const QJsonDocument &reply)
         emit error(errorString);
     }
 
+    // ???
+    //onWebDataRefreshed();
+
     continueSendingQueuedRequests();
 }
 

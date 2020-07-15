@@ -122,6 +122,8 @@ void QueryModel::continueSendingQueuedRequests()
     if (hasQueuedRequests()) {
         qDebug() << "Continuing with the queue!";
         sendQueuedRequests();
+    } else {
+        emit refreshed();
     }
 }
 
