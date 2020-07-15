@@ -353,6 +353,7 @@ QtObject {
     property string photoTaken: tr.empty + qsTr("Photo taken")
     property string uploadThis: tr.empty + qsTr("Upload this?")
     property string photoAdded: tr.empty + qsTr("Photo added")
+    property string photoDiscarded: tr.empty + qsTr("Photo discarded")
     property string addAnother: tr.empty + qsTr("Add another?")
     property string cameraErrorString: tr.empty + qsTr("Camera error: %1")
 
