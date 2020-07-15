@@ -53,7 +53,11 @@ Pages.GPage {
             return Strings.photoTaken
         case TakeDocumentPicturesPage.DocumentsSummary:
         case TakeDocumentPicturesPage.ReceiptsSummary:
-            return Strings.photoAdded
+            if (photoAccepted) {
+                return Strings.photoAdded
+            } else {
+                return Strings.photoDiscarded
+            }
         default:
             return Strings.empty
         }
@@ -71,6 +75,8 @@ Pages.GPage {
             return Strings.empty
         }
     }
+
+    property bool photoAccepted: true
 
     property var infoImages: [ GStyle.iconPhotoCameraGreenUrl ]
 
@@ -213,8 +219,8 @@ Pages.GPage {
 
                 visible: (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm
                           || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm
-                          || currentStatus === TakeDocumentPicturesPage.DocumentsSummary
-                          || currentStatus === TakeDocumentPicturesPage.ReceiptsSummary)
+                          || (currentStatus === TakeDocumentPicturesPage.DocumentsSummary && photoAccepted)
+                          || (currentStatus === TakeDocumentPicturesPage.ReceiptsSummary && photoAccepted))
 
                 Image {
                     property string savedPath
@@ -297,6 +303,7 @@ Pages.GPage {
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
                     onClicked: {
+                        photoAccepted = true
                         if (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm) {
                             picturesManager.saveDocumentPhoto(photoPreview.savedPath)
                             currentStatus = TakeDocumentPicturesPage.DocumentsSummary
@@ -313,6 +320,7 @@ Pages.GPage {
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
                     onClicked: {
+                        photoAccepted = false
                         picturesManager.discardPhoto(photoPreview.savedPath)
 
                         if (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm) {
