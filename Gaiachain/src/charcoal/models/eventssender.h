@@ -34,7 +34,7 @@ protected slots:
 
 private:
     bool updateEntityWebId(const qint64 webId, const int eventId) const;
-    QJsonObject dbMapToWebObject(QJsonObject object, const int entityId) const;
+    QJsonObject dbMapToWebObject(QJsonObject object) const;
 
     bool canSendNextEvent() const;
     void sendEvent();

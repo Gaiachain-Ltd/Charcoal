@@ -61,7 +61,8 @@ void ReplantationsSender::sendEvents()
         const qint64 ending = query().value("endingDate").toLongLong();
         const int treeSpecies = query().value("treeSpecies").toInt();
         const int parentId(query().value("plotId").toInt());
-        const int webPlotId(CharcoalDbHelpers::getWebPackageId(m_connectionName, parentId));
+        const int webPlotId(CharcoalDbHelpers::getWebPackageId(
+            m_connectionName, parentId));
 
         const QJsonDocument doc(
             {
