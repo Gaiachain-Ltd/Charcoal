@@ -18,7 +18,7 @@
 ParcelsModel::ParcelsModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(false);
-    setDbQuery("SELECT code FROM Parcels WHERE isUsed=0");
+    setDbQuery("SELECT code FROM Parcels");
 }
 
 void ParcelsModel::refreshWebData()
@@ -58,7 +58,11 @@ void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 {
     ListUpdater updates("Parcels", m_connectionName);
     if (updates.updateTable(reply, "code")) {
+        // The unused parcels information is not used :D
+        // Reason: parcels can be reused freely, see:
+        // https://projects.milosolutions.com/issues/87745
         getUnusedParcels();
+        return;
     } else {
         qWarning() << RED("Updating items has failed");
     }
