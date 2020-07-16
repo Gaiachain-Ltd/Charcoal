@@ -212,11 +212,6 @@ QtObject {
     property string userInfoContact: tr.empty + qsTr("Contact")
     property string userInfoCode: tr.empty + qsTr("Code")
 
-    property string userInfoNameHelp: tr.empty + qsTr("Dummy text - user name help")
-    property string userInfoJobHelp: tr.empty + qsTr("Dummy text - user function help")
-    property string userInfoContactHelp: tr.empty + qsTr("Dummy text - user contact help")
-    property string userInfoCodeHelp: tr.empty + qsTr("Dummy text - user code help")
-
     // Charcoal - logging beginning page
     property string parcel: tr.empty + qsTr("Parcel")
     property string malebiRepsId: tr.empty + qsTr("Malebi Rep's ID")

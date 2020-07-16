@@ -49,8 +49,7 @@ Pages.GPage {
                 summaryMode: true
                 headerText: Strings.userInfoName
                 inputText: userManager.userData.name
-                helpButtonVisible: true
-                helpText: Strings.userInfoNameHelp
+                helpButtonVisible: false
             }
 
             Headers.InputHeader {
@@ -61,8 +60,7 @@ Pages.GPage {
                 summaryMode: true
                 headerText: Strings.userInfoJob
                 inputText: userManager.userData.job
-                helpButtonVisible: true
-                helpText: Strings.userInfoJobHelp
+                helpButtonVisible: false
             }
 
             Headers.InputHeader {
@@ -73,8 +71,7 @@ Pages.GPage {
                 summaryMode: true
                 headerText: Strings.userInfoContact
                 inputText: userManager.userData.contact
-                helpButtonVisible: true
-                helpText: Strings.userInfoContactHelp
+                helpButtonVisible: false
             }
 
             Headers.InputHeader {
@@ -85,8 +82,7 @@ Pages.GPage {
                 summaryMode: true
                 headerText: Strings.userInfoCode
                 inputText: userManager.userData.code
-                helpButtonVisible: true
-                helpText: Strings.userInfoCodeHelp
+                helpButtonVisible: false
             }
         }
     }
