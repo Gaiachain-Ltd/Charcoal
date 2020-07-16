@@ -15,7 +15,11 @@ Headers.InputHeader {
     readOnly: true
 
     MouseArea {
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            topMargin: widgetX
+        }
+
         onClicked: {
             forceActiveFocus()
             top.clicked()

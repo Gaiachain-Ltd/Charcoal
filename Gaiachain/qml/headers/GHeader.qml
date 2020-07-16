@@ -25,6 +25,7 @@ Item {
     property bool headerUnderlineVisible: true
 
     property alias widget: mainLayout.data
+    readonly property int widgetX: mainLayout.childrenRect.height - (separatorLine.height + topSpacer.height + headerLayout.height + (mainLayout.spacing * 3))
 
     property alias headerText: header.text
     property alias headerTextColor: header.color
@@ -61,6 +62,8 @@ Item {
         }
 
         RowLayout {
+            id: headerLayout
+
             Layout.topMargin: top.isFirstItem? top.margins : 0
             Layout.leftMargin: top.margins
             Layout.rightMargin: top.margins
@@ -97,10 +100,11 @@ Item {
         }
 
         Rectangle {
+            id: separatorLine
+
             Layout.leftMargin: top.margins
             Layout.rightMargin: top.margins
 
-            id: separatorLine
             Layout.fillWidth: true
             height: sr(1)
             color: top.secondaryColor

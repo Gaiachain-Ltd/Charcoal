@@ -14,7 +14,11 @@ Headers.InputHeader {
     inputText: userManager.userData.code
 
     MouseArea {
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            topMargin: widgetX
+        }
+
         onClicked: pageManager.enter(Enums.Page.UserInfo)
     }
 }
