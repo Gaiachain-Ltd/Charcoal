@@ -80,12 +80,13 @@ Items.GInput {
 
                 boundsBehavior: Flickable.StopAtBounds
 
-                delegate: Item {
+                delegate: Rectangle {
                     readonly property string text: modelData
 
                     id: delegateItem
                     width: entriesList.width
                     height: layout.implicitHeight
+                    color: selection.includes(text)? "#eeeeee" : "transparent"
 
                     ColumnLayout {
                         id: layout
