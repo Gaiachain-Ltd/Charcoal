@@ -27,8 +27,9 @@ GPage {
     Connections {
         target: pageManager
         enabled: pageManager.isOnTop(page)
-        onPopupAction: {
-            if (popupId != "EXIT_CONFIRM") {
+
+        function onPopupAction(action, popupId) {
+            if (popupId !== "EXIT_CONFIRM") {
                 return
             }
 

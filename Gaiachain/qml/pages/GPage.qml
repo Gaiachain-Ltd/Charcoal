@@ -87,11 +87,12 @@ Items.GPanel
         target: sessionManager
         enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode
 
-        onPingError: {
+        function onPingError(code) {
             pageManager.openPopup(Enums.Popup.Information,
                                   { "text": Strings.serverConnectionError })
         }
-        onPingSuccess: {
+
+        function onPingSuccess() {
             pageManager.openPopup(Enums.Popup.YesNoQuestion,
                                   { "text": Strings.onlineLogoutQuestion },
                                   "OFFLINE_LOGOUT")
@@ -103,8 +104,8 @@ Items.GPanel
         enabled: (Number(pageManager.topPage) === page) && userManager.offlineMode
             && (page !== Enums.Login) && (page !== Enums.LoginLoading)
 
-        onPopupAction: {
-            if (popupId != "OFFLINE_LOGOUT") {
+        function onPopupAction(action, popupId) {
+            if (popupId !== "OFFLINE_LOGOUT") {
                 return
             }
 
@@ -120,7 +121,7 @@ Items.GPanel
     Connections {
         target: dbManager
 
-        onProcessingChanged: {
+        function onProcessingChanged(processing) {
             if (processing) {
                 showOverlay(Strings.dbUpdateProgress)
             } else {
@@ -128,7 +129,7 @@ Items.GPanel
             }
         }
 
-        onDatabaseUpdateError: {
+        function onDatabaseUpdateError() {
             pageManager.openPopup(Enums.Popup.Information,
                                   { "text": Strings.dbUpdateError })
         }

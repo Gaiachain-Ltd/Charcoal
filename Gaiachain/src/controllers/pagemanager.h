@@ -32,11 +32,18 @@ signals:
 
 signals:
     // Signals below should only be used by StackView!!!
-    void stackViewPush(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
+    void stackViewPush(const QString &url,
+                       const QVariantMap properties = QVariantMap{},
+                       const bool immediate = false) const;
     void stackViewPop(const bool immediate = false) const;
-    void stackViewPopTo(const Enums::Page page, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
-    void stackViewReplace(const QString &url, const QVariantMap properties = QVariantMap{}, const bool immediate = false) const;
-    void popupManagerOpen(const QString &url, const QVariantMap properties = QVariantMap{}) const;
+    void stackViewPopTo(const Enums::Page page,
+                        const QVariantMap properties = QVariantMap{},
+                        const bool immediate = false) const;
+    void stackViewReplace(const QString &url,
+                          const QVariantMap properties = QVariantMap{},
+                          const bool immediate = false) const;
+    void popupManagerOpen(const QString &url,
+                          const QVariantMap properties = QVariantMap{}) const;
     void popupManagerClose() const;
 
     void topPageChanged(Enums::Page topPage);
