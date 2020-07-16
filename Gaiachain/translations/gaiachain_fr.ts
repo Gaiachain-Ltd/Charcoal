@@ -1179,7 +1179,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="351"/>
         <source>Photo discarded</source>
-        <translation type="unfinished"></translation>
+        <translation>Photo supprimée</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="352"/>
@@ -1536,7 +1536,7 @@ transport</translation>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="415"/>
         <source>Receipts</source>
-        <translation type="unfinished"></translation>
+        <translation>Reçus</translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="444"/>
@@ -1556,12 +1556,12 @@ transport</translation>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="494"/>
         <source>Error updating tracking information</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de la mise à jour des informations de suivi</translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="506"/>
         <source>Error updating detailed information</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de la mise à jour des informations détaillées</translation>
     </message>
 </context>
 </TS>
