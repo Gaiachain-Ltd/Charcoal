@@ -45,7 +45,7 @@ Item {
         anchors.fill: parent
         spacing: s(GStyle.tinyMargin)
 
-        Items.GTabBar {
+        TabBar {
             id: tabBar
 
             Layout.fillWidth: true
@@ -57,6 +57,7 @@ Item {
 
                 Items.GTabButton {
                     text: name
+                    width: implicitWidth
 
                     selectedColor: GStyle.headerBackgroundColor
                     deselectedColor: GStyle.backgroundColor
