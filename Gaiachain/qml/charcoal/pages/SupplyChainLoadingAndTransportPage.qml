@@ -147,7 +147,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportPlateNumberHelp
         validator: RegularExpressionValidator {
-            regularExpression: /[0-9A-F]{1,8}+/
+            regularExpression: /[0-9A-Z]{1,8}+/
         }
     }
 
