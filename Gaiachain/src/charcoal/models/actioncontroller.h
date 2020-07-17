@@ -71,6 +71,7 @@ public:
         const QString &plotId,
         const QString &ovenId,
         const int ovenType,
+        const int ovenIdNumber,
         const QVariantList &ovenDimensions
         ) const;
 

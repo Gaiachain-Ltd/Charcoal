@@ -406,7 +406,8 @@ void ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &plotId, const QString &ovenId,
-    const int ovenType, const QVariantList &ovenDimensions) const
+    const int ovenType, const int ovenIdNumber,
+    const QVariantList &ovenDimensions) const
 {
     /*
      * Algorithm is:
@@ -420,7 +421,8 @@ void ActionController::registerCarbonizationBeginning(
      */
 
     qDebug() << "Registering carbonization beginning" << coordinate << timestamp
-             << plotId << ovenId << userId << ovenType << ovenDimensions;
+             << plotId << ovenId << userId << ovenType << ovenIdNumber
+             << ovenDimensions;
 
     // Check if Harvest ID already exists
     const QString harvestId(generateHarvestId(plotId, userId));
@@ -473,7 +475,7 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     QVariantMap properties {
-        { Tags::webOvenType, ovenType },
+        { Tags::webOvenType, ovenIdNumber },
         { Tags::webEventDate, eventDate.toSecsSinceEpoch() },
         { Tags::webOvenId, ovenId }
     };
