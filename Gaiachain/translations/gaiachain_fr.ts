@@ -628,17 +628,17 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="183"/>
         <source>MM/dd/yyyy</source>
-        <translation>MM/jj/aaaa</translation>
+        <translation>MM/dd/yyyy</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="183"/>
         <source>dd/MM/yyyy</source>
-        <translation>jj/MM/aaaa</translation>
+        <translation>dd/MM/yyyy</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="184"/>
         <source>dd-MM-yyyy</source>
-        <translation>jj-MM-aaaa</translation>
+        <translation>dd-MM-yyyy</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="189"/>
