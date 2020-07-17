@@ -116,6 +116,7 @@ Pages.SupplyChainPageBase {
                     plotIdComboBox.currentText,
                     ovenIdHeader.inputText,
                     ovenTypeComboBox.ovenType,
+                    ovenTypeComboBox.ovenIdNumber,
                     ovenDimensionsHeader.values)
 
         pageManager.enter(Enums.Page.MainMenu)

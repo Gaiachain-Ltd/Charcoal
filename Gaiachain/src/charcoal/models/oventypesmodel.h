@@ -29,7 +29,7 @@ protected slots:
 
 private:
     const QHash<int, QByteArray> m_roleNames = {
-        { OvenTypesRole::Id, "id" },
+        { OvenTypesRole::Id, "idNumber" },
         { OvenTypesRole::Name, "name" },
         { OvenTypesRole::TranslatedName, "translatedName" },
         { OvenTypesRole::IsTraditionalOven, "isTraditionalOven" },
