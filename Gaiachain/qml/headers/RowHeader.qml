@@ -97,6 +97,8 @@ Headers.AbstractListHeader {
                     validator: DoubleValidator {
                         bottom: 0.0
                         top: 1000.0
+                        decimals: 2
+                        notation: DoubleValidator.StandardNotation
                     }
                 }
             }

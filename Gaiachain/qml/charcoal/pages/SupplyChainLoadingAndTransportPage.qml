@@ -1,4 +1,4 @@
-import QtQuick 2.12
+import QtQuick 2.14
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.11
 
@@ -146,6 +146,9 @@ Pages.SupplyChainPageBase {
         headerText: Strings.plateNumber
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportPlateNumberHelp
+        validator: RegularExpressionValidator {
+            regularExpression: /[0-9A-F]{1,8}+/
+        }
     }
 
     CharcoalHeaders.CharcoalButtonHeader {
@@ -155,18 +158,19 @@ Pages.SupplyChainPageBase {
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
         text: Strings.loadAndScanBags
-        onClicked: pageManager.enter(Enums.Page.QRScanner,
-                                     {
-                                         "title": top.title,
-                                         "infoText": Strings.scanAllBagsInfoText,
-                                         "backToPage":
-                                         Enums.Page.SupplyChainLoadingAndTransport,
-                                         "infoImages": [ GStyle.bagsLoadingUrl ],
-                                         "showProceedPage": true,
-                                         "truckId": plateNumberHeader.inputText,
-                                         "idBase": harvestIdComboBox.currentText,
-                                         "scannedQrs": scannedQrs
-                                     })
+        onClicked: pageManager.enter(
+                       Enums.Page.QRScanner,
+                       {
+                           "title": top.title,
+                           "infoText": Strings.scanAllBagsInfoText,
+                           "backToPage":
+                           Enums.Page.SupplyChainLoadingAndTransport,
+                           "infoImages": [ GStyle.bagsLoadingUrl ],
+                           "showProceedPage": true,
+                           "truckId": plateNumberHeader.inputText,
+                           "idBase": harvestIdComboBox.currentText,
+                           "scannedQrs": scannedQrs
+                       })
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {
