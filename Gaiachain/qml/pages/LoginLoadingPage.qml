@@ -27,16 +27,23 @@ GPage
     {
         target: sessionManager
         enabled: Number(pageManager.topPage) === page
-        onLoginFinished: d.onLoginReady()
-        onLoginError: d.handleLoginError(code)
+
+        function onLoginFinished(login, userDataObj) {
+            d.onLoginReady()
+        }
+
+        function onLoginError(login, code) {
+            d.handleLoginError(code)
+        }
     }
 
     Connections
     {
         target: pageManager
         enabled: Number(pageManager.topPage) === page
-        onPopupAction: {
-            if (popupId == "OFFLINE_LOGIN") {
+
+        function onPopupAction(action, popupId) {
+            if (popupId === "OFFLINE_LOGIN") {
                 switch(action) {
                 case Enums.PopupAction.Yes:
                     d.tryOfflineLogin()
@@ -45,7 +52,7 @@ GPage
                 default:
                     pageManager.back()
                 }
-            } else if (popupId == "LOGIN_ERROR") {
+            } else if (popupId === "LOGIN_ERROR") {
                 switch(action) {
                 case Enums.PopupAction.Ok:  // accepting error
                 default:

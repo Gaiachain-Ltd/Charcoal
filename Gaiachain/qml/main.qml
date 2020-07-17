@@ -31,7 +31,7 @@ ApplicationWindow
     {
         target: Qt.application
 
-        onStateChanged: {
+        function onStateChanged(state) {
             Qt.inputMethod.hide()
         }
     }

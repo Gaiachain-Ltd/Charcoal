@@ -41,7 +41,7 @@ GPage {
     Connections {
         target: sessionManager
 
-        onLoginFinished: {
+        function onLoginFinished(login, userDataObj) {
             loginSettings.login = login
         }
     }

@@ -11,13 +11,15 @@ Item {
     Connections {
         target: pageManager
 
-        onStackViewPush: {
+        function onStackViewPush(url, properties, immediate) {
             stackView.push(url, properties, getMode(immediate))
         }
-        onStackViewPop: {
+
+        function onStackViewPop(immediate) {
             stackView.pop(getMode(immediate))
         }
-        onStackViewPopTo: {
+
+        function onStackViewPopTo(page, properties, immediate) {
             var backToPage = page
             stackView.pop(stackView.find(function(item) {
                   return item.page === backToPage
@@ -28,14 +30,16 @@ Item {
                 stackView.currentItem[key] = properties[key]
             }
         }
-        onStackViewReplace: {
+
+        function onStackViewReplace(url, properties, immediate) {
             stackView.replace(stackView.currentItem, url, properties, getMode(immediate))
         }
 
-        onPopupManagerOpen: {
+        function onPopupManagerOpen(url, properties) {
             popupManager.openPopup(url, properties)
         }
-        onPopupManagerClose: {
+
+        function onPopupManagerClose() {
             popupManager.closePopup()
         }
     }

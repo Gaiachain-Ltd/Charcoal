@@ -9,7 +9,7 @@ import com.gaiachain.enums 1.0
 import "../../items" as Items
 
 ListView {
-    id: top
+    id: root
 
     signal delegateClicked(string packageId, int type)
 
@@ -21,8 +21,7 @@ ListView {
     boundsBehavior: Flickable.StopAtBounds
 
     delegate: Item {
-
-        width: parent.width
+        width: root.width
         height: item.height
 
         MouseArea {
