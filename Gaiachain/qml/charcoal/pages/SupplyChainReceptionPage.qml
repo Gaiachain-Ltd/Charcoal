@@ -18,6 +18,7 @@ Pages.SupplyChainPageBase {
     property string transportId
 
     property var scannedQrs: []
+    readonly property bool hasQrs: scannedQrs.length > 0
 
     onScannedQrsChanged: {
         transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
@@ -27,11 +28,12 @@ Pages.SupplyChainPageBase {
     property var documents: []
     property var receipts: []
 
+    readonly property bool hasDocs: documents.length > 0
+    readonly property bool hasRecs: receipts.length > 0
+
     title: Strings.reception
 
-    proceedButtonEnabled: (scannedQrs.length > 0
-                           /*&& documents.length > 0
-                           && receipts.length > 0*/)
+    proceedButtonEnabled: hasQrs
 
     Component.onCompleted: {
         picturesManager.cleanUpWaitingPictures()
@@ -163,11 +165,18 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
+
         text: Strings.receiveDocumentsAndReceipt
-        onClicked: pageManager.enter(Enums.Page.TakeDocumentPictures,
-                                     {
-                                         "backToPage": Enums.Page.SupplyChainReception
-                                     })
+        extraText: (hasDocs || hasRecs)?
+                       Strings.greenDocsCount.arg(documents.length).arg(receipts.length)
+                     : ""
+        iconVisible: hasDocs || hasRecs
+
+        onClicked: pageManager.enter(
+                       Enums.Page.TakeDocumentPictures,
+                       {
+                           "backToPage": Enums.Page.SupplyChainReception
+                       })
     }
 
     CharcoalHeaders.CharcoalButtonHeader {
@@ -176,15 +185,20 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
+
         text: Strings.scanAllBagsFromTruck
-        onClicked: pageManager.enter(Enums.Page.QRScanner,
-                                     {
-                                         "title": top.title,
-                                         "infoText": Strings.scanAllBagsToCheckInfoText,
-                                         "backToPage": Enums.Page.SupplyChainReception,
-                                         "infoImages": [ GStyle.bagsReceptionUrl ],
-                                         "scannedQrs": scannedQrs
-                                     })
+        extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
+        iconVisible: hasQrs
+
+        onClicked: pageManager.enter(
+                       Enums.Page.QRScanner,
+                       {
+                           "title": top.title,
+                           "infoText": Strings.scanAllBagsToCheckInfoText,
+                           "backToPage": Enums.Page.SupplyChainReception,
+                           "infoImages": [ GStyle.bagsReceptionUrl ],
+                           "scannedQrs": scannedQrs
+                       })
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {

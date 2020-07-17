@@ -10,7 +10,10 @@ import "../../headers" as Headers
 Headers.GHeader {
     id: root
 
-    property alias text: textWidget.text
+    property string text
+    property string extraText
+    property alias icon: iconComponent.source
+    property alias iconVisible: iconComponent.visible
 
     property bool optional: false
     readonly property bool isEmpty: (text === Strings.empty)
@@ -44,11 +47,27 @@ Headers.GHeader {
 
         padding: root.margins
 
+        textFormat: Text.StyledText
+        text: root.text + (extraText.length > 0? "<br/>" + extraText : "")
+
         background: Rectangle {
             color: GStyle.blank
             radius: s(GStyle.tinyMargin)
             border.color: GStyle.inputBorderColor
             border.width: sr(1)
+        }
+
+        Image {
+            id: iconComponent
+            source: GStyle.checkGreenUrl
+            visible: false
+            width: s(40)
+            height: width
+            anchors {
+                verticalCenter: parent.verticalCenter
+                right: parent.right
+                rightMargin: s(GStyle.middleMargin)
+            }
         }
 
         MouseArea {

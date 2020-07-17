@@ -18,8 +18,9 @@ Pages.SupplyChainPageBase {
     property string transportId
 
     property var scannedQrs: []
+    readonly property bool hasQrs: scannedQrs.length > 0
 
-    proceedButtonEnabled: (scannedQrs.length > 0
+    proceedButtonEnabled: (hasQrs
                            && harvestIdComboBox.currentText.length > 0
                            && plateNumberHeader.inputText.length > 0
                            && deliveryDestinationComboBox.currentText.length > 0)
@@ -156,7 +157,11 @@ Pages.SupplyChainPageBase {
         Layout.fillWidth: true
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
+
         text: Strings.loadAndScanBags
+        extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
+        iconVisible: hasQrs
+
         onClicked: pageManager.enter(
                        Enums.Page.QRScanner,
                        {

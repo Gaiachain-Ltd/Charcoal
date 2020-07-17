@@ -79,9 +79,6 @@ Pages.GPage {
 
     property var infoImages: [ GStyle.iconPhotoCameraGreenUrl ]
 
-    property var documentPhotos: []
-    property var receiptPhotos: []
-
     property int currentStatus: TakeDocumentPicturesPage.DocumentsInfo
     property int backToPage: Enums.Page.InvalidPage
 
@@ -100,8 +97,8 @@ Pages.GPage {
 
     function closePage() {
         pageManager.backTo(backToPage, {
-                               "documents": documentPhotos,
-                               "receipts": receiptPhotos
+                               "documents": picturesManager.documents(),
+                               "receipts": picturesManager.receipts()
                            })
         return false
     }
