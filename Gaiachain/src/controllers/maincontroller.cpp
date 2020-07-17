@@ -13,13 +13,10 @@
 
 #include "common/globals.h"
 #include "common/enums.h"
-#include "common/packagedata.h"
 #include "common/dataglobals.h"
 #include "helpers/utility.h"
 #include "helpers/requestshelper.h"
-#include "helpers/modelhelper.h"
 #include "helpers/packagedataproperties.h"
-#include "helpers/keywordfilterproxymodel.h"
 
 #ifdef EASY_LOGIN
 #include "../common/dummy/commondummydata.h"
@@ -28,6 +25,9 @@
 #ifdef COCOA
 #include "cocoa/cocoasessionmanager.h"
 #include "cocoa/cocoadatamanager.h"
+#include "cocoa/common/packagedata.h"
+#include "cocoa/helpers/keywordfilterproxymodel.h"
+#include "cocoa/helpers/modelhelper.h"
 #elif CHARCOAL
 #include "charcoal/tickmarkiconprovider.h"
 #include "charcoal/charcoalsessionmanager.h"
@@ -195,13 +195,19 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     qRegisterMetaType<Gaia::ModelEntry>("Gaia::ModelEntry");
 
     // register other types
+#ifdef COCOA
     qRegisterMetaType<PackageData>("PackageData");
     qmlRegisterUncreatableType<PackageData>("com.gaiachain.types", 1, 0, "PackageData", "Cannot create types in QML");
+#endif
 
     // register singleton types
     qmlRegisterSingletonType(QUrl("qrc:///GStrings.qml"), "com.gaiachain.style", 1, 0, "Strings");
 #ifdef COCOA
     qmlRegisterSingletonType(QUrl("qrc:///cocoa/CocoaStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
+    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.helpers", 1, 0,
+                                          "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);
+    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.types", 1, 0,
+                                                    "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
 #endif
 #ifdef CHARCOAL
     qmlRegisterSingletonType(QUrl("qrc:///charcoal/CharcoalStyle.qml"), "com.gaiachain.style", 1, 0, "GStyle");
@@ -215,10 +221,6 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
                                              "RequestHelper", &registerCppOwnershipSingletonType<RequestsHelper>);
     qmlRegisterSingletonType<DataGlobals>("com.gaiachain.helpers", 1, 0,
                                           "DataGlobals", &registerCppOwnershipSingletonType<DataGlobals>);
-    qmlRegisterSingletonType<ModelHelper>("com.gaiachain.helpers", 1, 0,
-                                          "ModelHelper", &registerCppOwnershipSingletonType<ModelHelper>);
-    qmlRegisterSingletonType<PackageDataProperties>("com.gaiachain.types", 1, 0,
-                                                    "PackageDataProperties", &registerCppOwnershipSingletonType<PackageDataProperties>);
 
 #ifdef Q_OS_ANDROID
     qmlRegisterSingletonType<Android::PermissionsHandler>("com.gaiachain.platforms", 1, 0,
@@ -228,7 +230,9 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
 #endif
 
     // register qml types
+#ifdef COCOA
     qmlRegisterType<KeywordFilterProxyModel>("com.gaiachain.helpers", 1, 0, "KeywordFilterProxyModel");
+#endif
 
     // add context property
     engine.rootContext()->setContextProperty(QStringLiteral("mainController"), this);

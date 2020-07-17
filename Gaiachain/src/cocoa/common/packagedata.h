@@ -6,7 +6,7 @@
 #include <QVariantHash>
 #include <QDateTime>
 
-#include "enums.h"
+#include "common/enums.h"
 
 struct PackageData
 {

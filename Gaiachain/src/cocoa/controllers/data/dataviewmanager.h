@@ -7,28 +7,28 @@
 
 #include "common/globals.h"
 #include "common/enums.h"
-#include "common/packagedata.h"
+#include "cocoa/common/packagedata.h"
 
-#include "../../models/producermodel.h"
-#include "../../models/parcelmodel.h"
-#include "../../models/companymodel.h"
-#include "../../models/namemodel.h"
+#include "cocoa/models/producermodel.h"
+#include "cocoa/models/parcelmodel.h"
+#include "cocoa/models/companymodel.h"
+#include "cocoa/models/namemodel.h"
 
-#include "../../models/eventmodel.h"
-#include "../../models/relationmodel.h"
-#include "../../models/unusedidsmodel.h"
+#include "cocoa/models/eventmodel.h"
+#include "cocoa/models/relationmodel.h"
+#include "cocoa/models/unusedidsmodel.h"
 
-#include "../../models/views/parcelviewmodel.h"
-#include "../../models/views/transactionsviewmodel.h"
-#include "../../models/views/calendarviewmodel.h"
-#include "../../models/views/cooperativeviewmodel.h"
-#include "../../models/views/localviewmodel.h"
-#include "../../models/views/packageviewmodel.h"
-#include "../../models/views/packagerelationsviewmodel.h"
+#include "cocoa/models/views/parcelviewmodel.h"
+#include "cocoa/models/views/transactionsviewmodel.h"
+#include "cocoa/models/views/calendarviewmodel.h"
+#include "cocoa/models/views/cooperativeviewmodel.h"
+#include "cocoa/models/views/localviewmodel.h"
+#include "cocoa/models/views/packageviewmodel.h"
+#include "cocoa/models/views/packagerelationsviewmodel.h"
 
-#include "../../models/proxy/latestrangeeventsproxymodel.h"
-#include "../../models/proxy/packagetypeeventsproxymodel.h"
-#include "../../models/proxy/packagelastactionproxymodel.h"
+#include "cocoa/models/proxy/latestrangeeventsproxymodel.h"
+#include "cocoa/models/proxy/packagetypeeventsproxymodel.h"
+#include "cocoa/models/proxy/packagelastactionproxymodel.h"
 
 class QQmlApplicationEngine;
 

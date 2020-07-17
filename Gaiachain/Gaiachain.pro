@@ -38,11 +38,14 @@ cocoa {
         src/cocoa/cocoauserdata.h \
         src/cocoa/cocoasessionmanager.h \
         src/cocoa/cocoadatamanager.h \
+        src/cocoa/common/packagedata.h \
         src/cocoa/controllers/data/abstractdatamodelsmanager.h \
         src/cocoa/controllers/data/datalocalmanager.h \
         src/cocoa/controllers/data/datamodelsmanager.h \
         src/cocoa/controllers/data/datarequestsmanager.h \
         src/cocoa/controllers/data/dataviewmanager.h \
+        src/cocoa/helpers/keywordfilterproxymodel.h \
+        src/cocoa/helpers/modelhelper.h \
         src/cocoa/models/abstractmodel.h \
         src/cocoa/models/abstractreadmodel.h \
         src/cocoa/models/companymodel.h \
@@ -81,16 +84,20 @@ cocoa {
         src/cocoa/models/views/packageviewmodel.h \
         src/cocoa/models/views/parcelviewmodel.h \
         src/cocoa/models/views/transactionsviewmodel.h \
+        src/cocoa/rest/entityrequest.h \
 
     SOURCES = \
         src/cocoa/cocoamigrations.cpp \
         src/cocoa/cocoasessionmanager.cpp \
         src/cocoa/cocoadatamanager.cpp \
+        src/cocoa/common/packagedata.cpp \
         src/cocoa/controllers/data/abstractdatamodelsmanager.cpp \
         src/cocoa/controllers/data/datalocalmanager.cpp \
         src/cocoa/controllers/data/datamodelsmanager.cpp \
         src/cocoa/controllers/data/datarequestsmanager.cpp \
         src/cocoa/controllers/data/dataviewmanager.cpp \
+        src/cocoa/helpers/keywordfilterproxymodel.cpp \
+        src/cocoa/helpers/modelhelper.cpp \
         src/cocoa/models/proxy/abstractidentityproxymodel.cpp \
         src/cocoa/models/abstractmodel.cpp \
         src/cocoa/models/abstractreadmodel.cpp \
@@ -118,6 +125,7 @@ cocoa {
         src/cocoa/models/views/packageviewmodel.cpp \
         src/cocoa/models/views/parcelviewmodel.cpp \
         src/cocoa/models/views/transactionsviewmodel.cpp \
+        src/cocoa/rest/entityrequest.cpp \
 
 }
 
@@ -242,7 +250,6 @@ HEADERS += \
     src/common/abstractuserdata.h \
     src/common/enums.h \
     src/common/globals.h \
-    src/common/packagedata.h \
     src/common/tags.h \
     src/common/logs.h \
     src/controllers/data/abstractdatamanager.h \
@@ -257,10 +264,8 @@ HEADERS += \
     src/database/dbhelpers.h \
     src/database/dbmigrationmanager.h \
     src/database/dbmigrations.h \
-    src/helpers/cryptohelper.h \
-    src/helpers/keywordfilterproxymodel.h \
-    src/helpers/modelhelper.h \
     src/helpers/packagedataproperties.h \
+    src/helpers/cryptohelper.h \
     src/helpers/requestshelper.h \
     src/helpers/typetraits.h \
     src/helpers/utility.h \
@@ -268,13 +273,11 @@ HEADERS += \
     src/rest/authrequest.h \
     src/rest/baserequest.h \
     src/rest/restapiclient.h \
-    src/rest/entityrequest.h \
 
 SOURCES += src/main.cpp \
     src/common/dummy/commondummydata.cpp \
     src/common/languagemanager.cpp \
     src/common/logs.cpp \
-    src/common/packagedata.cpp \
     src/common/dataglobals.cpp \
     src/common/globals.cpp \
     src/common/types.cpp \
@@ -291,17 +294,14 @@ SOURCES += src/main.cpp \
     src/database/dbhelpers.cpp \
     src/database/dbmigrationmanager.cpp \
     src/database/dbmigrations.cpp \
-    src/helpers/cryptohelper.cpp \
-    src/helpers/keywordfilterproxymodel.cpp \
-    src/helpers/modelhelper.cpp \
     src/helpers/packagedataproperties.cpp \
+    src/helpers/cryptohelper.cpp \
     src/helpers/requestshelper.cpp \
     src/helpers/utility.cpp \
     src/rest/additionaldatarequest.cpp \
     src/rest/authrequest.cpp \
     src/rest/baserequest.cpp \
     src/rest/restapiclient.cpp \
-    src/rest/entityrequest.cpp \
 
 RESOURCES +=  \
     qml/common.qrc \

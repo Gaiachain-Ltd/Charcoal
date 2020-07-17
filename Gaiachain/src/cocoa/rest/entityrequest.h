@@ -1,11 +1,11 @@
 #ifndef ENTITYREQUEST_H
 #define ENTITYREQUEST_H
 
-#include "baserequest.h"
+#include "rest/baserequest.h"
 
 #include <QGeoCoordinate>
 
-#include "../common/enums.h"
+#include "common/enums.h"
 
 class EntityRequest : public BaseRequest
 {

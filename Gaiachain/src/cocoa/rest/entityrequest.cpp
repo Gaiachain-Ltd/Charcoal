@@ -4,9 +4,9 @@
 #include <QJsonObject>
 #include <QUrlQuery>
 
-#include "../common/tags.h"
-#include "../common/dataglobals.h"
-#include "../helpers/requestshelper.h"
+#include "common/tags.h"
+#include "common/dataglobals.h"
+#include "helpers/requestshelper.h"
 
 const QString EntityRequest::sc_basePath = QStringLiteral("/entities/%1");
 

@@ -1,7 +1,7 @@
 #include "packageviewmodel.h"
 
 #include "../query/idkeywordquery.h"
-#include "common/packagedata.h"
+#include "cocoa/common/packagedata.h"
 #include "common/dataglobals.h"
 
 PackageViewModel::PackageViewModel(QObject *parent)

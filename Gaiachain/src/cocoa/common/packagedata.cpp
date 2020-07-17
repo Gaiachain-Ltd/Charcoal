@@ -1,6 +1,6 @@
 #include "packagedata.h"
 
-#include "../helpers/utility.h"
+#include "helpers/utility.h"
 
 QVariantList PackageData::actions() const
 {

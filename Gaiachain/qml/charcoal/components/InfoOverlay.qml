@@ -7,7 +7,6 @@ import QZXing 2.3
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
-import com.gaiachain.types 1.0
 import com.gaiachain.static 1.0
 
 import "../../items" as Items

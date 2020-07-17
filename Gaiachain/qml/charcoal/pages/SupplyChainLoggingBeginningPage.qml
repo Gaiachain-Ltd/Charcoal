@@ -6,7 +6,6 @@ import QtPositioning 5.12
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
-import com.gaiachain.types 1.0
 
 import "../../common" as Common
 import "../../headers" as Headers
