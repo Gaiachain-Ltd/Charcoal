@@ -278,6 +278,7 @@ QtObject {
     property string loadingDate: tr.empty + qsTr("Loading date")
     property string deliveryDestination: tr.empty + qsTr("Delivery destination")
     property string selectDeliveryDestination: tr.empty + qsTr("Select delivery destination")
+    property string greenBagCount: "<font color=\"#65cb00\">%1</font>"
 
     property string loadingAndTransportHarvestIdHelp: tr.empty + qsTr("Dummy text - harvest ID help")
     property string loadingAndTransportPlateNumberHelp: tr.empty + qsTr("Dummy text - plate number help")
@@ -295,6 +296,7 @@ QtObject {
     property string approved: tr.empty + qsTr("Approved")
     property string noPhoto: tr.empty + qsTr("No photo")
     property string numberOfBagsDetail: tr.empty + qsTr("%1 of %2")
+    property string greenDocsCount: tr.empty + qsTr("<font color=\"#65cb00\">Documents: %1<br/>Receipts: %2</font>")
 
     property string receptionUnloadingDateHelp: tr.empty + qsTr("Dummy text - unloading timestamp help")
     property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
