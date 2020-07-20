@@ -18,7 +18,7 @@ class Migration;
 #ifdef COCOA
 const QVersionNumber LATEST_DB_VERSION = { 0, 9, 1 };
 #elif CHARCOAL
-const QVersionNumber LATEST_DB_VERSION = { 0, 0, 3 };
+const QVersionNumber LATEST_DB_VERSION = { 0, 0, 4 };
 #endif
 
 extern const QVector<Migration> DB_MIGRATIONS;
