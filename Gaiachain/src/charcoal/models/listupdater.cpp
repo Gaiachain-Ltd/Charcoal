@@ -41,8 +41,8 @@ bool ListUpdater::updateTable(const QJsonDocument &webData,
 
     const auto webItems = webList(names, webData);
     const auto dbItems = dbList(names);
-    return (insertMissingItems(webItems, dbItems)
-            && removeObsoleteItems(webItems, dbItems));
+    return (removeObsoleteItems(webItems, dbItems)
+            && insertMissingItems(webItems, dbItems));
 }
 
 RecordsList ListUpdater::webList(const QStringList &fieldNames,
