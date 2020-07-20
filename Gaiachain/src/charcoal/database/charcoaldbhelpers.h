@@ -72,6 +72,7 @@ public:
     static QString getParcelCode(const QString &connectionName, const int id);
     static QString getVillageName(const QString &connectionName, const int id);
     static QString getTreeSpeciesName(const QString &connectionName, const int id);
+    static QString getDestinationName(const QString &connectionName, const int id);
     static QString getOvenLetter(const QString &connectionName, const int ovenId);
     static QString getEventType(const QString &connectionName, const int typeId);
     static QString getEntityName(const QString &connectionName, const int entityId);

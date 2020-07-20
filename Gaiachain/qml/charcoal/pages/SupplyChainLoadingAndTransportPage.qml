@@ -22,6 +22,24 @@ Pages.SupplyChainPageBase {
 
     property bool shouldPause: false
 
+    property bool isPausedEvent: false
+
+    onIsPausedEventChanged: {
+        if (isPausedEvent) {
+            harvestIdComboBox.currentText = dataManager.unusedHarvestIdsModel.harvestId()
+            gpsSource.coordinate = dataManager.unusedHarvestIdsModel.location()
+            plateNumberHeader.inputText = dataManager.unusedHarvestIdsModel.plateNumber()
+            deliveryDestinationComboBox.currentText = dataManager.unusedHarvestIdsModel.destination()
+            scannedQrs = dataManager.unusedHarvestIdsModel.scannedQrs()
+        } else {
+            harvestIdComboBox.currentText = ""
+            gpsSource.coordinate = ""
+            plateNumberHeader.inputText = ""
+            deliveryDestinationComboBox.currentText = ""
+            scannedQrs = []
+        }
+    }
+
     proceedButtonEnabled: (hasQrs
                            && harvestIdComboBox.currentText.length > 0
                            && plateNumberHeader.inputText.length > 0
@@ -45,6 +63,7 @@ Pages.SupplyChainPageBase {
         dataManager.unusedHarvestIdsModel.refresh()
         dataManager.destinationsModel.refresh()
         dataManager.minimumDateModel.plotId = ""
+        isPausedEvent = dataManager.unusedHarvestIdsModel.hasPausedEvent
     }
 
     function proceed() {
@@ -113,7 +132,8 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerLoadingAndTransport(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    new Date,
+                    isPausedEvent? dataManager.unusedHarvestIdsModel.loadingDate()
+                                 : new Date,
                     loadingDateHeader.selectedDate,
                     userManager.userData.code,
                     transportId,
@@ -140,6 +160,8 @@ Pages.SupplyChainPageBase {
 
         model: dataManager.unusedHarvestIdsModel
 
+        readOnly: isPausedEvent
+
         onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentText
     }
 
@@ -152,6 +174,8 @@ Pages.SupplyChainPageBase {
         validator: RegularExpressionValidator {
             regularExpression: /[0-9A-Z]{1,8}+/
         }
+
+        readOnly: isPausedEvent
     }
 
     CharcoalHeaders.CharcoalButtonHeader {
@@ -187,6 +211,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportLoadingDateHelp
         minimumDate: dataManager.minimumDateModel.date
+        readOnly: isPausedEvent
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {
@@ -198,6 +223,7 @@ Pages.SupplyChainPageBase {
         popupTitle: Strings.selectDeliveryDestination
 
         model: dataManager.destinationsModel
+        readOnly: isPausedEvent
     }
 
     Common.PositionSourceHandler {
@@ -227,7 +253,7 @@ Pages.SupplyChainPageBase {
         inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinateString) : gpsSource.errorMessage())
         iconSource: (gpsSource.validCoordinate ? GStyle.gpsOkImgUrl : GStyle.gpsFailedImgUrl)
 
-        onClicked: gpsSource.update()
+        onClicked: if (isPausedEvent == false) gpsSource.update()
     }
 }
 

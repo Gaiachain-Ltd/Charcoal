@@ -392,6 +392,11 @@ QString CharcoalDbHelpers::getTreeSpeciesName(const QString &connectionName, con
     return getSimpleString(connectionName, "TreeSpecies", "id", id, "name", true);
 }
 
+QString CharcoalDbHelpers::getDestinationName(const QString &connectionName, const int id)
+{
+    return getSimpleString(connectionName, "Destinations", "id", id, "name", true);
+}
+
 QString CharcoalDbHelpers::getOvenLetter(const QString &connectionName, const int ovenId)
 {
     return getSimpleString(connectionName, "Ovens", "id", ovenId, "name");

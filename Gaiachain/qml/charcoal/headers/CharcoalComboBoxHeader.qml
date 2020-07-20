@@ -21,6 +21,8 @@ Headers.GHeader {
 
     property alias multiSelect: comboBox.multiSelect
 
+    property alias readOnly: comboBox.readOnly
+
     widget: CharcoalItems.CharcoalComboBox {
         id: comboBox
 
