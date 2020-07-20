@@ -11,7 +11,7 @@
 
 DestinationsModel::DestinationsModel(QObject *parent) : QueryModel(parent)
 {
-    setWebModelCanChange(false);
+    setWebModelCanChange(true);
     setDbQuery("SELECT name FROM Destinations");
 }
 
