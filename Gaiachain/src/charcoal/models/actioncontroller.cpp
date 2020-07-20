@@ -481,9 +481,9 @@ void ActionController::registerCarbonizationBeginning(
     };
 
     if (ovenType != 2) {
-        properties.insert(Tags::webOvenHeight, dimensions.at(0));
-        properties.insert(Tags::webOvenLength, dimensions.at(1));
-        properties.insert(Tags::webOvenWidth, dimensions.at(2));
+        properties.insert(Tags::webOvenHeight, dimensions.at(0).toDouble());
+        properties.insert(Tags::webOvenLength, dimensions.at(1).toDouble());
+        properties.insert(Tags::webOvenWidth, dimensions.at(2).toDouble());
     }
 
     if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
@@ -503,9 +503,9 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
     // Height, length, width is the order from GUI
-    query.bindValue(":height", dimensions.at(0));
-    query.bindValue(":length", dimensions.at(1));
-    query.bindValue(":width", dimensions.at(2));
+    query.bindValue(":height", dimensions.at(0).toDouble());
+    query.bindValue(":length", dimensions.at(1).toDouble());
+    query.bindValue(":width", dimensions.at(2).toDouble());
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")
