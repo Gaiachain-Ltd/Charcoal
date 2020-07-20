@@ -17,7 +17,7 @@
 
 ParcelsModel::ParcelsModel(QObject *parent) : QueryModel(parent)
 {
-    setWebModelCanChange(false);
+    setWebModelCanChange(true);
     setDbQuery("SELECT code FROM Parcels");
 }
 

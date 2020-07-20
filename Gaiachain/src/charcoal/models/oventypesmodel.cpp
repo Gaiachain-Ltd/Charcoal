@@ -13,7 +13,7 @@
 
 OvenTypesModel::OvenTypesModel(QObject *parent) : QueryModel(parent)
 {
-    setWebModelCanChange(false);
+    setWebModelCanChange(true);
     setDbQuery("SELECT id, name, type FROM OvenTypes");
 }
 
