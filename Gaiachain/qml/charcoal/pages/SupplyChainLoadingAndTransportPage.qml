@@ -26,12 +26,14 @@ Pages.SupplyChainPageBase {
 
     onIsPausedEventChanged: {
         if (isPausedEvent) {
+            console.log("Resuming loading and transport")
             harvestIdComboBox.currentText = dataManager.unusedHarvestIdsModel.harvestId()
             gpsSource.coordinate = dataManager.unusedHarvestIdsModel.location()
             plateNumberHeader.inputText = dataManager.unusedHarvestIdsModel.plateNumber()
             deliveryDestinationComboBox.currentText = dataManager.unusedHarvestIdsModel.destination()
             scannedQrs = dataManager.unusedHarvestIdsModel.scannedQrs()
         } else {
+            console.log("NOT resuming loading and transport")
             harvestIdComboBox.currentText = ""
             gpsSource.coordinate = ""
             plateNumberHeader.inputText = ""
@@ -145,6 +147,18 @@ Pages.SupplyChainPageBase {
                     )
 
         pageManager.enter(Enums.Page.MainMenu)
+    }
+
+    Items.GText {
+        Layout.fillWidth: true
+        color: GStyle.textSecondaryColor
+        text: Strings.pausedLoading
+        visible: isPausedEvent
+        wrapMode: Text.WordWrap
+
+        background: Rectangle {
+            color: GStyle.errorColor
+        }
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {

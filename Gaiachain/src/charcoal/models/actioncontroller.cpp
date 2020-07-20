@@ -617,7 +617,8 @@ void ActionController::registerLoadingAndTransport(
 
     // Then, insert a new Event under that Entity
     const int entityId(query.lastInsertId().toInt());
-    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
     const int destinationId(CharcoalDbHelpers::getDestinationId(m_dbConnName, destination));
 
     if (eventTypeId == -1) {
@@ -889,6 +890,48 @@ bool ActionController::insertEvent(
 
     if (query->exec() == false) {
         qWarning() << RED("Inserting event has failed!")
+                   << query->lastError().text()
+                   << "for query:" << query->lastQuery()
+                   << entityId << eventTypeId << userId << timestamp << eventDate
+                   << coordinate << properties;
+        return false;
+    }
+
+    return true;
+}
+
+bool ActionController::updateEvent(
+    QSqlQuery *query,
+    const int eventId,
+    const int entityId,
+    const int eventTypeId,
+    const QString &userId,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QGeoCoordinate &coordinate,
+    const QVariantMap &properties,
+    const bool pauseEvent) const
+{
+    query->prepare("UPDATE Events "
+                   "SET entityId=:entityId, typeId=:typeId, userId=:userId,"
+                   "date=:date, eventDate=:eventDate, "
+                   "locationLatitude=:locationLatitude, locationLongitude=:locationLongitude, "
+                   "properties=:properties, "
+                   "isCommitted=0, isPaused=:isPaused "
+                   "WHERE id=:eventId");
+    query->bindValue(":entityId", entityId);
+    query->bindValue(":typeId", eventTypeId);
+    query->bindValue(":userId", userId);
+    query->bindValue(":date", timestamp.toSecsSinceEpoch());
+    query->bindValue(":eventDate", eventDate.toSecsSinceEpoch());
+    query->bindValue(":locationLatitude", coordinate.latitude());
+    query->bindValue(":locationLongitude", coordinate.longitude());
+    query->bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
+    query->bindValue(":isPaused", pauseEvent);
+    query->bindValue(":eventId", eventId);
+
+    if (query->exec() == false) {
+        qWarning() << RED("Updating paused event has failed!")
                    << query->lastError().text()
                    << "for query:" << query->lastQuery()
                    << entityId << eventTypeId << userId << timestamp << eventDate

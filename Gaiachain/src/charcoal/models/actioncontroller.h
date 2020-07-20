@@ -143,6 +143,16 @@ private:
                      const QGeoCoordinate &coordinate,
                      const QVariantMap &properties,
                      const bool pauseEvent = false) const;
+    bool updateEvent(QSqlQuery *query,
+                     const int eventId,
+                     const int entityId,
+                     const int eventTypeId,
+                     const QString &userId,
+                     const QDateTime &timestamp,
+                     const QDateTime &eventDate,
+                     const QGeoCoordinate &coordinate,
+                     const QVariantMap &properties,
+                     const bool pauseEvent = false) const;
 
     const QString dateFormat = "dd-MM-yyyy";
 
