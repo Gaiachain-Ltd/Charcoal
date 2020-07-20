@@ -84,7 +84,10 @@ Pages.GPage {
     }
 
     function closePage() {
-        pageManager.backTo(backToPage, { "scannedQrs": prepareScannedIds() })
+        pageManager.backTo(backToPage, {
+                               "scannedQrs": prepareScannedIds(),
+                               "shouldPause": true
+                           })
         return false
     }
 
@@ -346,6 +349,7 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
+                            shouldPause = true
                             closePage()
                         } else if (currentStatus === QRScannerPage.ManualScan) {
                             parseScannedId(currentQr)

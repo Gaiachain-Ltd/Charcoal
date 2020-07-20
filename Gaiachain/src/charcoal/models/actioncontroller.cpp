@@ -584,7 +584,8 @@ void ActionController::registerLoadingAndTransport(
     const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &transportId, const QString &harvestId,
     const QString &plateNumber, const QString &destination,
-    const QVariantList &scannedQrs) const
+    const QVariantList &scannedQrs,
+    const bool pauseEvent) const
 {
     /*
      * Algorithm is:
@@ -631,7 +632,8 @@ void ActionController::registerLoadingAndTransport(
                                  { Tags::webDestination, destinationId },
                                  { Tags::webQrCodes, scannedQrs },
                                  { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                             }))
+                             },
+                             pauseEvent))
     {
         return;
     }
@@ -866,13 +868,15 @@ bool ActionController::insertEvent(
     const QDateTime &timestamp,
     const QDateTime &eventDate,
     const QGeoCoordinate &coordinate,
-    const QVariantMap &properties) const
+    const QVariantMap &properties,
+    const bool pauseEvent) const
 {
     query->prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted) "
+                  "isCommitted, isPaused) "
                   "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, 0)");
+                  ":locationLatitude, :locationLongitude, :properties, "
+                   "0, :isPaused)");
     query->bindValue(":entityId", entityId);
     query->bindValue(":typeId", eventTypeId);
     query->bindValue(":userId", userId);
@@ -881,6 +885,7 @@ bool ActionController::insertEvent(
     query->bindValue(":locationLatitude", coordinate.latitude());
     query->bindValue(":locationLongitude", coordinate.longitude());
     query->bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
+    query->bindValue(":isPaused", pauseEvent);
 
     if (query->exec() == false) {
         qWarning() << RED("Inserting event has failed!")

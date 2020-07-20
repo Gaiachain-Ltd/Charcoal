@@ -20,6 +20,8 @@ Pages.SupplyChainPageBase {
     property var scannedQrs: []
     readonly property bool hasQrs: scannedQrs.length > 0
 
+    property bool shouldPause: false
+
     proceedButtonEnabled: (hasQrs
                            && harvestIdComboBox.currentText.length > 0
                            && plateNumberHeader.inputText.length > 0
@@ -118,7 +120,8 @@ Pages.SupplyChainPageBase {
                     harvestIdComboBox.currentText,
                     plateNumberHeader.inputText,
                     deliveryDestinationComboBox.currentText,
-                    scannedQrs
+                    scannedQrs,
+                    shouldPause
                     )
 
         pageManager.enter(Enums.Page.MainMenu)
