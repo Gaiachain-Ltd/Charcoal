@@ -29,9 +29,9 @@ QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
     case Qt::ItemDataRole::DisplayRole:
     case OvenTypesRole::TranslatedName:
         if (isTraditional()) {
-            return tr("Traditional oven");
+            return tr("%1 (Traditional oven)").arg(query().value("name").toString());
         } else {
-            return tr("Metallic oven");
+            return tr("%1 (Metallic oven)").arg(query().value("name").toString());
         }
         break;
     case OvenTypesRole::Id:
