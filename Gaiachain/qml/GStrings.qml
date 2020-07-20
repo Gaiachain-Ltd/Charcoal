@@ -285,6 +285,7 @@ QtObject {
     property string loadingAndTransportLoadingDateHelp: tr.empty + qsTr("Dummy text - loading date help")
     property string loadingAndTransportDeliveryDestinationHelp: tr.empty + qsTr("Dummy text - delivery destination help")
     property string loadingAndTransportGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
+    property string pausedLoading: tr.empty + qsTr("You have a truck which has not been fully loaded. Please finish it")
 
     // Charcoal - reception page
     property string receiveDocumentsAndReceipt: tr.empty + qsTr("Receive documents and receipt")

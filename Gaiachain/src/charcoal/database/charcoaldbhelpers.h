@@ -6,6 +6,11 @@
 #include <QString>
 #include <QJsonObject>
 
+struct ContinueEvent {
+    int entityId = -1;
+    int eventId = -1;
+};
+
 class CharcoalDbHelpers
 {
 public:
@@ -58,6 +63,9 @@ public:
     static int getEventId(const QString &connectionName, qint64 timestamp,
                           const bool verbose = true);
 
+    static ContinueEvent getContinueEvent(const QString &connectionName,
+                                          const int eventTypeId);
+
     static int getEventTypeId(const QString &connectionName, const QString &action);
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,
@@ -72,6 +80,7 @@ public:
     static QString getParcelCode(const QString &connectionName, const int id);
     static QString getVillageName(const QString &connectionName, const int id);
     static QString getTreeSpeciesName(const QString &connectionName, const int id);
+    static QString getDestinationName(const QString &connectionName, const int id);
     static QString getOvenLetter(const QString &connectionName, const int ovenId);
     static QString getEventType(const QString &connectionName, const int typeId);
     static QString getEntityName(const QString &connectionName, const int entityId);

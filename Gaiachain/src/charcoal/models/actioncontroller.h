@@ -94,7 +94,8 @@ public:
         const QString &harvestId,
         const QString &plateNumber,
         const QString &destination,
-        const QVariantList &scannedQrs
+        const QVariantList &scannedQrs,
+        const bool pauseEvent
         ) const;
 
     Q_INVOKABLE void registerReception(
@@ -140,7 +141,18 @@ private:
                      const QDateTime &timestamp,
                      const QDateTime &eventDate,
                      const QGeoCoordinate &coordinate,
-                     const QVariantMap &properties) const;
+                     const QVariantMap &properties,
+                     const bool pauseEvent = false) const;
+    bool updateEvent(QSqlQuery *query,
+                     const int eventId,
+                     const int entityId,
+                     const int eventTypeId,
+                     const QString &userId,
+                     const QDateTime &timestamp,
+                     const QDateTime &eventDate,
+                     const QGeoCoordinate &coordinate,
+                     const QVariantMap &properties,
+                     const bool pauseEvent = false) const;
 
     const QString dateFormat = "dd-MM-yyyy";
 

@@ -25,6 +25,8 @@ Headers.GHeader {
     property bool optional: false
     readonly property bool isEmpty: selectedDate === undefined
 
+    property bool readOnly: false
+
     property QtObject popup: Popups.CalendarPopup {
         currentDate: top.currentDate
         selectedDate: top.selectedDate
@@ -67,8 +69,10 @@ Headers.GHeader {
             id: ma
             anchors.fill: parent
             onClicked: {
-                forceActiveFocus()
-                top.togglePopup()
+                if (readOnly == false) {
+                    forceActiveFocus()
+                    top.togglePopup()
+                }
             }
         }
     }

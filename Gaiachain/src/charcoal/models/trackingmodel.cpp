@@ -7,6 +7,7 @@
 #include "controllers/usermanager.h"
 #include "common/logs.h"
 #include "common/tags.h"
+#include "common/enums.h"
 #include "helpers/utility.h"
 #include "trackingupdater.h"
 #include "charcoal/database/charcoaldbhelpers.h"
@@ -242,8 +243,8 @@ QVariantList TrackingModel::summaryForPlot(
 }
 
 QVariantList TrackingModel::summaryForHarvest(
-    const TrackingModel::Entity entity,
-    const QVector<TrackingModel::Event> &events) const
+    const Entity entity,
+    const QVector<Event> &events) const
 {
     const auto &utility = Utility::instance();
 
@@ -347,8 +348,8 @@ QVariantList TrackingModel::summaryForHarvest(
 }
 
 QVariantList TrackingModel::summaryForTransport(
-    const TrackingModel::Entity entity,
-    const QVector<TrackingModel::Event> &events) const
+    const Entity entity,
+    const QVector<Event> &events) const
 {
     const auto &utility = Utility::instance();
 
@@ -598,118 +599,5 @@ void TrackingModel::getMissingPictures()
         for (const auto &rec : recs) {
             m_picturesManager->checkFileIsCached(rec.toString());
         }
-    }
-}
-
-bool TrackingModel::Entity::loadFromDb(const QString &connectionName, const int id)
-{
-    QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
-    q.prepare("SELECT id, typeId, name, parent, webId FROM Entities "
-                  "WHERE id=:id");
-    q.bindValue(":id", id);
-
-    if (q.exec() && q.next()) {
-        this->id = q.value("id").toInt();
-        parent = q.value("parent").toInt();
-        typeId = q.value("typeId").toInt();
-        name = q.value("name").toString();
-        return true;
-    } else {
-        qWarning() << RED("Could not load Entity from DB")
-                   << "SQL error:" << q.lastError()
-                   << "For query:" << q.lastQuery()
-                   << id;
-    }
-
-    return false;
-}
-
-QVector<TrackingModel::Event> TrackingModel::Entity::loadEvents(
-    const QString &connectionName) const
-{
-    QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
-    q.prepare("SELECT id, typeId, userId, eventDate, date, properties FROM Events "
-              "WHERE entityId=:id");
-    q.bindValue(":id", id);
-
-    if (q.exec() == false) {
-        qWarning() << RED("Getting event details has failed!")
-                   << q.lastError().text() << "for query:" << q.lastQuery();
-        return {};
-    }
-
-    QVector<Event> events;
-    while (q.next()) {
-        Event event;
-        event.id = q.value("id").toInt();
-        event.typeId = q.value("typeId").toInt();
-        event.userId = q.value("userId").toString();
-        event.date = q.value("eventDate").toLongLong();
-        event.timestamp = q.value("date").toLongLong();
-        event.properties = QJsonDocument::fromJson(
-                               q.value(Tags::properties).toByteArray()).object();
-        events.append(event);
-    }
-
-    return events;
-}
-
-TrackingModel::Oven TrackingModel::Event::loadOven(const QString &connectionName) const
-{
-    QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
-    q.prepare("SELECT id, type, plot, "
-              "carbonizationBeginning, carbonizationEnding, "
-              "name, "
-              "oven_height, oven_width, oven_length "
-              "FROM Ovens "
-              "WHERE carbonizationBeginning=:id OR carbonizationEnding=:id");
-    q.bindValue(":id", id);
-
-    if (q.exec() == false) {
-        qWarning() << RED("Getting oven details has failed!")
-                   << q.lastError().text() << "for query:" << q.lastQuery() << id;
-        return {};
-    }
-
-    if (q.next() == false) {
-        return {};
-    }
-
-    Oven oven;
-    oven.id = q.value("id").toInt();
-    oven.typeId = q.value("type").toInt();
-    oven.plotId = q.value("plot").toInt();
-    oven.name = q.value("name").toString();
-    oven.height = q.value("oven_height").toReal();
-    oven.width = q.value("oven_width").toReal();
-    oven.length = q.value("oven_length").toReal();
-    oven.carbonizerId = userId;
-
-    const QVariant beginningEvent(q.value("carbonizationBeginning"));
-    if (beginningEvent.isValid() && beginningEvent.toInt() == id) {
-        oven.carbonizationBeginningId = id;
-        oven.carbonizationBeginning = date;
-    }
-
-    const QVariant endingEvent(q.value("carbonizationEnding"));
-    if (endingEvent.isValid() && endingEvent.toInt() == id) {
-        oven.carbonizationEndingId = id;
-        oven.carbonizationEnding = date;
-    }
-
-    return oven;
-}
-
-void TrackingModel::Oven::updateDates(const TrackingModel::Oven &other,
-                                      const TrackingModel::Event &otherEvent)
-{
-    if (other.carbonizationBeginningId != -1) {
-        carbonizationBeginningId = other.carbonizationBeginningId;
-        carbonizationBeginning = otherEvent.date;
-    }
-
-    if (other.carbonizationEndingId != -1) {
-        carbonizationEndingId = other.carbonizationEndingId;
-        carbonizationEnding = otherEvent.date;
     }
 }

@@ -302,6 +302,25 @@ int CharcoalDbHelpers::getEventId(const QString &connectionName,
                             verbose);
 }
 
+ContinueEvent CharcoalDbHelpers::getContinueEvent(const QString &connectionName,
+                                                  const int eventTypeId)
+{
+    QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
+    q.prepare("SELECT id, entityId "
+              "FROM Events "
+              "WHERE isPaused=1 AND typeId=:eventTypeId");
+    q.bindValue(":eventTypeId", eventTypeId);
+
+    if (q.exec() && q.next()) {
+        ContinueEvent event;
+        event.entityId = q.value("entityId").toInt();
+        event.eventId = q.value("id").toInt();
+        return event;
+    }
+
+    return ContinueEvent();
+}
+
 int CharcoalDbHelpers::getEventTypeId(const QString &connectionName, const QString &action)
 {
     const Enums::SupplyChainAction chainAction = m_supplyActionMap.key(action);
@@ -390,6 +409,11 @@ QString CharcoalDbHelpers::getVillageName(const QString &connectionName, const i
 QString CharcoalDbHelpers::getTreeSpeciesName(const QString &connectionName, const int id)
 {
     return getSimpleString(connectionName, "TreeSpecies", "id", id, "name", true);
+}
+
+QString CharcoalDbHelpers::getDestinationName(const QString &connectionName, const int id)
+{
+    return getSimpleString(connectionName, "Destinations", "id", id, "name", true);
 }
 
 QString CharcoalDbHelpers::getOvenLetter(const QString &connectionName, const int ovenId)

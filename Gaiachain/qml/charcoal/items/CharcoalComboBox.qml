@@ -21,7 +21,7 @@ Items.GInput {
     property bool multiSelect: false
     property var selection: []
 
-    readOnly: true
+    readOnly: false
     iconSource: GStyle.downArrowImgUrl
     iconEdge: Enums.Edge.RightEdge
     showIcon: true
@@ -29,7 +29,7 @@ Items.GInput {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: popup.open()
+        onClicked: if (readOnly == false) popup.open()
     }
 
     Popup {

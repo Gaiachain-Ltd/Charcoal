@@ -584,7 +584,8 @@ void ActionController::registerLoadingAndTransport(
     const QDateTime &timestamp, const QDateTime &eventDate,
     const QString &userId, const QString &transportId, const QString &harvestId,
     const QString &plateNumber, const QString &destination,
-    const QVariantList &scannedQrs) const
+    const QVariantList &scannedQrs,
+    const bool pauseEvent) const
 {
     /*
      * Algorithm is:
@@ -599,7 +600,8 @@ void ActionController::registerLoadingAndTransport(
              << destination << scannedQrs.size();
 
     // First, insert a new Entity into table
-    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(
+        m_dbConnName, Enums::PackageType::Transport));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
         m_dbConnName, CharcoalDbHelpers::getPlotName(transportId)));
 
@@ -608,32 +610,55 @@ void ActionController::registerLoadingAndTransport(
         return;
     }
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    if (insertEntity(&query, typeId, transportId, parentEntityId) == false) {
-        return;
-    }
-
-    // Then, insert a new Event under that Entity
-    const int entityId(query.lastInsertId().toInt());
-    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
-    const int destinationId(CharcoalDbHelpers::getDestinationId(m_dbConnName, destination));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
 
-    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
-                             eventDate, coordinate,
-                             {
-                                 { Tags::webPlateNumber, plateNumber },
-                                 { Tags::webDestination, destinationId },
-                                 { Tags::webQrCodes, scannedQrs },
-                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                             }))
-    {
-        return;
+    const int destinationId(CharcoalDbHelpers::getDestinationId(
+        m_dbConnName, destination));
+
+    const ContinueEvent existingEvent(CharcoalDbHelpers::getContinueEvent(
+        m_dbConnName, eventTypeId));
+
+    const QVariantMap props {
+        { Tags::webPlateNumber, plateNumber },
+        { Tags::webDestination, destinationId },
+        { Tags::webQrCodes, scannedQrs },
+        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+    };
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    if (existingEvent.eventId > 0) {
+        // Event exists - we are continuing a paused event
+        if (false == updateEvent(&query, existingEvent.eventId,
+                                 existingEvent.entityId,
+                                 eventTypeId, userId, timestamp,
+                                 eventDate, coordinate,
+                                 props,
+                                 pauseEvent))
+        {
+            return;
+        }
+    } else {
+        if (insertEntity(&query, typeId, transportId, parentEntityId) == false) {
+            return;
+        }
+
+        // Then, insert a new Event under that Entity
+        const int entityId(query.lastInsertId().toInt());
+
+        if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                                 eventDate, coordinate,
+                                 props,
+                                 pauseEvent))
+        {
+            return;
+        }
     }
 
     emit refreshLocalEvents();
@@ -866,13 +891,15 @@ bool ActionController::insertEvent(
     const QDateTime &timestamp,
     const QDateTime &eventDate,
     const QGeoCoordinate &coordinate,
-    const QVariantMap &properties) const
+    const QVariantMap &properties,
+    const bool pauseEvent) const
 {
     query->prepare("INSERT INTO Events (entityId, typeId, userId,"
                   "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted) "
+                  "isCommitted, isPaused) "
                   "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, 0)");
+                  ":locationLatitude, :locationLongitude, :properties, "
+                   "0, :isPaused)");
     query->bindValue(":entityId", entityId);
     query->bindValue(":typeId", eventTypeId);
     query->bindValue(":userId", userId);
@@ -881,9 +908,52 @@ bool ActionController::insertEvent(
     query->bindValue(":locationLatitude", coordinate.latitude());
     query->bindValue(":locationLongitude", coordinate.longitude());
     query->bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
+    query->bindValue(":isPaused", pauseEvent);
 
     if (query->exec() == false) {
         qWarning() << RED("Inserting event has failed!")
+                   << query->lastError().text()
+                   << "for query:" << query->lastQuery()
+                   << entityId << eventTypeId << userId << timestamp << eventDate
+                   << coordinate << properties;
+        return false;
+    }
+
+    return true;
+}
+
+bool ActionController::updateEvent(
+    QSqlQuery *query,
+    const int eventId,
+    const int entityId,
+    const int eventTypeId,
+    const QString &userId,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QGeoCoordinate &coordinate,
+    const QVariantMap &properties,
+    const bool pauseEvent) const
+{
+    query->prepare("UPDATE Events "
+                   "SET entityId=:entityId, typeId=:typeId, userId=:userId,"
+                   "date=:date, eventDate=:eventDate, "
+                   "locationLatitude=:locationLatitude, locationLongitude=:locationLongitude, "
+                   "properties=:properties, "
+                   "isCommitted=0, isPaused=:isPaused "
+                   "WHERE id=:eventId");
+    query->bindValue(":entityId", entityId);
+    query->bindValue(":typeId", eventTypeId);
+    query->bindValue(":userId", userId);
+    query->bindValue(":date", timestamp.toSecsSinceEpoch());
+    query->bindValue(":eventDate", eventDate.toSecsSinceEpoch());
+    query->bindValue(":locationLatitude", coordinate.latitude());
+    query->bindValue(":locationLongitude", coordinate.longitude());
+    query->bindValue(":properties", CharcoalDbHelpers::propertiesToString(properties));
+    query->bindValue(":isPaused", pauseEvent);
+    query->bindValue(":eventId", eventId);
+
+    if (query->exec() == false) {
+        qWarning() << RED("Updating paused event has failed!")
                    << query->lastError().text()
                    << "for query:" << query->lastQuery()
                    << entityId << eventTypeId << userId << timestamp << eventDate

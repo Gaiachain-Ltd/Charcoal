@@ -122,4 +122,15 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("VACUUM")
         }, true)
     },
+    // Support for pausing of Loading and Transport step
+    {
+        { 0, 0, 4 },
+        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("ALTER TABLE Events "
+                "ADD `isPaused` BOOLEAN NOT NULL DEFAULT(0) CHECK (isPaused IN (0,1)) ")
+                                                               }, true),
+        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("ALTER TABLE Events DROP COLUMN isPaused"),
+                                                               }, true)
+    },
 };

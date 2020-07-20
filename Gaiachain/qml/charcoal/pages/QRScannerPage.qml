@@ -69,6 +69,7 @@ Pages.GPage {
     onScannedQrsChanged: console.log("Scanned IDs:", scannedQrs)
 
     property string currentQr: ""
+    property bool shouldPause: false
 
     backgroundColor: GStyle.backgroundShadowColor
 
@@ -84,7 +85,10 @@ Pages.GPage {
     }
 
     function closePage() {
-        pageManager.backTo(backToPage, { "scannedQrs": prepareScannedIds() })
+        pageManager.backTo(backToPage, {
+                               "scannedQrs": prepareScannedIds(),
+                               "shouldPause": shouldPause
+                           })
         return false
     }
 
@@ -346,6 +350,7 @@ Pages.GPage {
 
                     onClicked: {
                         if (currentStatus === QRScannerPage.Proceed) {
+                            shouldPause = true
                             closePage()
                         } else if (currentStatus === QRScannerPage.ManualScan) {
                             parseScannedId(currentQr)
