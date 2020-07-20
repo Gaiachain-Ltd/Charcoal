@@ -28,6 +28,10 @@ Pages.SupplyChainPageBase {
     property var documents: []
     property var receipts: []
 
+    // Used by QRScanner page. Not used here, however. It's only used on
+    // Loading and Transport page
+    property bool shouldPause: false
+
     readonly property bool hasDocs: documents.length > 0
     readonly property bool hasRecs: receipts.length > 0
 

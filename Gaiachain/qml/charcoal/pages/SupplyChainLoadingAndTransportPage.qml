@@ -26,14 +26,14 @@ Pages.SupplyChainPageBase {
 
     onIsPausedEventChanged: {
         if (isPausedEvent) {
-            console.log("Resuming loading and transport")
+            console.log("Resuming loading and transport", isPausedEvent, shouldPause)
             harvestIdComboBox.currentText = dataManager.unusedHarvestIdsModel.harvestId()
             gpsSource.coordinate = dataManager.unusedHarvestIdsModel.location()
             plateNumberHeader.inputText = dataManager.unusedHarvestIdsModel.plateNumber()
             deliveryDestinationComboBox.currentText = dataManager.unusedHarvestIdsModel.destination()
             scannedQrs = dataManager.unusedHarvestIdsModel.scannedQrs()
         } else {
-            console.log("NOT resuming loading and transport")
+            console.log("NOT resuming loading and transport", isPausedEvent, shouldPause)
             harvestIdComboBox.currentText = ""
             gpsSource.coordinate = ""
             plateNumberHeader.inputText = ""
