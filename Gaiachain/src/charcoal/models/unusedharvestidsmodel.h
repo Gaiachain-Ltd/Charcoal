@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE QString destination() const;
     Q_INVOKABLE QVariantList scannedQrs() const;
     Q_INVOKABLE QDateTime loadingDate() const;
+    Q_INVOKABLE QDateTime timestamp() const;
 
 signals:
     void hasPausedEventChanged(const bool hasPausedEvent) const;

@@ -600,7 +600,8 @@ void ActionController::registerLoadingAndTransport(
              << destination << scannedQrs.size();
 
     // First, insert a new Entity into table
-    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(
+        m_dbConnName, Enums::PackageType::Transport));
     const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
         m_dbConnName, CharcoalDbHelpers::getPlotName(transportId)));
 
@@ -609,34 +610,55 @@ void ActionController::registerLoadingAndTransport(
         return;
     }
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-
-    if (insertEntity(&query, typeId, transportId, parentEntityId) == false) {
-        return;
-    }
-
-    // Then, insert a new Event under that Entity
-    const int entityId(query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
-    const int destinationId(CharcoalDbHelpers::getDestinationId(m_dbConnName, destination));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
 
-    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
-                             eventDate, coordinate,
-                             {
-                                 { Tags::webPlateNumber, plateNumber },
-                                 { Tags::webDestination, destinationId },
-                                 { Tags::webQrCodes, scannedQrs },
-                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
-                             },
-                             pauseEvent))
-    {
-        return;
+    const int destinationId(CharcoalDbHelpers::getDestinationId(
+        m_dbConnName, destination));
+
+    const ContinueEvent existingEvent(CharcoalDbHelpers::getContinueEvent(
+        m_dbConnName, eventTypeId));
+
+    const QVariantMap props {
+        { Tags::webPlateNumber, plateNumber },
+        { Tags::webDestination, destinationId },
+        { Tags::webQrCodes, scannedQrs },
+        { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+    };
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+
+    if (existingEvent.eventId > 0) {
+        // Event exists - we are continuing a paused event
+        if (false == updateEvent(&query, existingEvent.eventId,
+                                 existingEvent.entityId,
+                                 eventTypeId, userId, timestamp,
+                                 eventDate, coordinate,
+                                 props,
+                                 pauseEvent))
+        {
+            return;
+        }
+    } else {
+        if (insertEntity(&query, typeId, transportId, parentEntityId) == false) {
+            return;
+        }
+
+        // Then, insert a new Event under that Entity
+        const int entityId(query.lastInsertId().toInt());
+
+        if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+                                 eventDate, coordinate,
+                                 props,
+                                 pauseEvent))
+        {
+            return;
+        }
     }
 
     emit refreshLocalEvents();

@@ -86,7 +86,12 @@ QVariantList UnusedHarvestIdsModel::scannedQrs() const
 QDateTime UnusedHarvestIdsModel::loadingDate() const
 {
     return QDateTime::fromSecsSinceEpoch(
-        m_pausedEvent.properties.value(Tags::webEventDate).toVariant().toLongLong());
+                m_pausedEvent.properties.value(Tags::webEventDate).toVariant().toLongLong());
+}
+
+QDateTime UnusedHarvestIdsModel::timestamp() const
+{
+    return QDateTime::fromSecsSinceEpoch(m_pausedEvent.timestamp);
 }
 
 void UnusedHarvestIdsModel::refreshWebData()

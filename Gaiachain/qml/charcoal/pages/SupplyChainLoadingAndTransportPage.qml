@@ -31,6 +31,7 @@ Pages.SupplyChainPageBase {
             gpsSource.coordinate = dataManager.unusedHarvestIdsModel.location()
             plateNumberHeader.inputText = dataManager.unusedHarvestIdsModel.plateNumber()
             deliveryDestinationComboBox.currentText = dataManager.unusedHarvestIdsModel.destination()
+            loadingDateHeader.selectedDate = dataManager.unusedHarvestIdsModel.loadingDate()
             scannedQrs = dataManager.unusedHarvestIdsModel.scannedQrs()
         } else {
             console.log("NOT resuming loading and transport", isPausedEvent, shouldPause)
@@ -38,6 +39,7 @@ Pages.SupplyChainPageBase {
             gpsSource.coordinate = ""
             plateNumberHeader.inputText = ""
             deliveryDestinationComboBox.currentText = ""
+            loadingDateHeader.selectedDate = ""
             scannedQrs = []
         }
     }
@@ -134,7 +136,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerLoadingAndTransport(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    isPausedEvent? dataManager.unusedHarvestIdsModel.loadingDate()
+                    isPausedEvent? dataManager.unusedHarvestIdsModel.timestamp()
                                  : new Date,
                     loadingDateHeader.selectedDate,
                     userManager.userData.code,
