@@ -24,7 +24,7 @@ EventsSender::EventsSender(QObject *parent) : QueryModel(parent)
     setWebModelCanChange(false);
     setDbQuery("SELECT id, entityId, typeId, userId, date, "
                "locationLatitude, locationLongitude, properties "
-               "FROM Events WHERE isCommitted=0");
+               "FROM Events WHERE isCommitted=0 AND isPaused=0");
 
     connect(this, &EventsSender::refreshed,
             this, &EventsSender::sendEvents);
