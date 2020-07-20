@@ -388,7 +388,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="115"/>
         <source>To select</source>
-        <translation>Pour sélectionner</translation>
+        <translation>Sélectionner</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="116"/>
