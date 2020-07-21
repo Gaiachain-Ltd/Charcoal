@@ -50,6 +50,11 @@ void QueryModel::markDirty()
     m_isDirty = true;
 }
 
+bool QueryModel::isRequestPending() const
+{
+    return m_isPending;
+}
+
 /*!
  * Returns true if model data can change on Web side during application run.
  *
@@ -141,7 +146,7 @@ void QueryModel::setWebModelCanChange(const bool canChange)
 
 bool QueryModel::shouldRefreshWebData() const
 {
-    return webModelCanChange() || isDirty();
+    return !isRequestPending() && (webModelCanChange() || isDirty());
 }
 
 void QueryModel::refresh()
@@ -174,6 +179,7 @@ void QueryModel::refresh()
  */
 void QueryModel::refreshWebData()
 {
+    m_isPending = true;
     emit webDataRefreshed();
 }
 
@@ -181,12 +187,14 @@ void QueryModel::onWebDataRefreshed()
 {
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
     m_isDirty = false;
+    m_isPending = false;
     emit refreshed();
 }
 
 void QueryModel::webErrorHandler(const QString &errorString,
                                  const QNetworkReply::NetworkError code)
 {
+    m_isPending = false;
     qDebug() << "Request error!" << errorString << code;
 }
 

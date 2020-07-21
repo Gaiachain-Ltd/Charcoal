@@ -19,6 +19,7 @@ void RestSessionManager::ping()
     };
 
     auto request = QSharedPointer<AuthRequest>::create();
+    request->setQuiet(true);
     if (request->isTokenRequired()) {
         request->setToken(token());
     }

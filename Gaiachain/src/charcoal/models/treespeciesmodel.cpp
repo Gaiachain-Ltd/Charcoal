@@ -30,6 +30,8 @@ void TreeSpeciesModel::refreshWebData()
         qDebug() << "Enqueing request";
         m_queuedRequests.append(request);
     }
+
+    m_isPending = true;
 }
 
 void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)

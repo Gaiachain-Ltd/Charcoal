@@ -36,6 +36,8 @@ void ParcelsModel::refreshWebData()
         qDebug() << "Enqueing request";
         m_queuedRequests.append(request);
     }
+
+    m_isPending = true;
 }
 
 void ParcelsModel::getUnusedParcels()

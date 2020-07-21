@@ -30,6 +30,8 @@ void DestinationsModel::refreshWebData()
         qDebug() << "Enqueing request";
         m_queuedRequests.append(request);
     }
+
+    m_isPending = true;
 }
 
 void DestinationsModel::webReplyHandler(const QJsonDocument &reply)

@@ -27,6 +27,8 @@ public:
     bool isDirty() const;
     void markDirty();
 
+    bool isRequestPending() const;
+
     bool webModelCanChange() const;
 
     virtual bool hasQueuedRequests() const;
@@ -58,6 +60,7 @@ protected:
 
     bool m_webModelCanChange = false;
     bool m_isDirty = true;
+    bool m_isPending = false;
 
     QString m_query;
     QString m_connectionName;

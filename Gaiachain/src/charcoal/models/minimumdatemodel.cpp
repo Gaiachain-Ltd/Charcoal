@@ -40,7 +40,8 @@ void MinimumDateModel::setPlotId(const QString &id)
         setDbQuery(QString());
     } else {
         const QString plotName(CharcoalDbHelpers::getPlotName(id));
-        const QString parentId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotName));
+        const QString parentId(CharcoalDbHelpers::getEntityIdFromName(
+            m_connectionName, plotName));
 
         setDbQuery(QString("SELECT date "
                            "FROM Events "
