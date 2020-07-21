@@ -73,6 +73,7 @@ void OvenTypesModel::refreshWebData()
 
 void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     //qDebug() << "Oven types:" << reply;
 
     ListUpdater updates("OvenTypes", m_connectionName);

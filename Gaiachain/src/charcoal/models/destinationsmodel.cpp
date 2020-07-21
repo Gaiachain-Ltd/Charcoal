@@ -36,6 +36,7 @@ void DestinationsModel::refreshWebData()
 
 void DestinationsModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     ListUpdater updates("Destinations", m_connectionName);
     if (updates.updateTable(reply, Tags::name)) {
         emit webDataRefreshed();

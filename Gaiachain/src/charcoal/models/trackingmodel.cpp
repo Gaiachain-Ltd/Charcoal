@@ -482,6 +482,7 @@ void TrackingModel::refreshWebData()
 
 void TrackingModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     //qDebug() << "Data is:" << reply;
     TrackingUpdater updater(m_connectionName);
     const auto result = updater.updateTable(reply);

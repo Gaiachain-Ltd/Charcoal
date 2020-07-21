@@ -36,6 +36,7 @@ void VillagesModel::refreshWebData()
 
 void VillagesModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     ListUpdater updates("Villages", m_connectionName);
     if (updates.updateTable(reply, Tags::name)) {
         emit webDataRefreshed();

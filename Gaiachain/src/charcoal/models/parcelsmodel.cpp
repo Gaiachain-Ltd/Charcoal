@@ -59,6 +59,7 @@ void ParcelsModel::getUnusedParcels()
 
 void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     ListUpdater updates("Parcels", m_connectionName);
     if (updates.updateTable(reply, Tags::code)) {
         // The unused parcels information is not used :D

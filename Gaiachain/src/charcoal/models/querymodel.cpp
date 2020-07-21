@@ -187,7 +187,6 @@ void QueryModel::onWebDataRefreshed()
 {
     setQuery(m_query, db::Helpers::databaseConnection(m_connectionName));
     m_isDirty = false;
-    m_isPending = false;
     emit refreshed();
 }
 
@@ -200,6 +199,7 @@ void QueryModel::webErrorHandler(const QString &errorString,
 
 void QueryModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     qDebug() << "Request success!" << reply;
     emit webDataRefreshed();
 }
