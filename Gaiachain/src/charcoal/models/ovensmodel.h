@@ -6,7 +6,7 @@ class OvensModel : public QueryModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString plotId READ plotId WRITE setPlotId NOTIFY plotIdChanged)
+    Q_PROPERTY(int plotId READ plotId WRITE setPlotId NOTIFY plotIdChanged)
 
 public:
     enum OvenRole {
@@ -21,14 +21,14 @@ public:
 
     void refresh() override;
 
-    void setPlotId(const QString &id);
-    QString plotId() const;
+    void setPlotId(const int id);
+    int plotId() const;
 
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
 signals:
-    void plotIdChanged(const QString &plotId) const;
+    void plotIdChanged(const int plotId) const;
 
 private:
     const QHash<int, QByteArray> m_roleNames = {
@@ -38,6 +38,6 @@ private:
         { OvenRole::SecondRow, "secondRow" }
     };
 
-    QString m_plotId;
+    int m_plotId = -1;
 };
 

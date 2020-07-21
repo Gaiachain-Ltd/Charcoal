@@ -33,24 +33,23 @@ void OvensModel::refresh()
     emit refreshed();
 }
 
-void OvensModel::setPlotId(const QString &id)
+void OvensModel::setPlotId(const int id)
 {
-    m_plotId = id;
+    m_plotId = CharcoalDbHelpers::getParentEntityId(m_connectionName, id);
 
     setDbQuery(QString("SELECT id, type, name, oven_height, oven_length, oven_width, "
                        "carbonizationBeginning "
                        "FROM Ovens WHERE carbonizationEnding IS NULL "
-                       "AND plot IS "
-                       "(SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
+                       "AND plot=%1").arg(m_plotId));
 
     refresh();
 
-    //qDebug() << "OVEN MODELS:" << rowCount();
+    qDebug() << "OVEN MODELS:" << id << rowCount();
 
     emit plotIdChanged(id);
 }
 
-QString OvensModel::plotId() const
+int OvensModel::plotId() const
 {
     return m_plotId;
 }

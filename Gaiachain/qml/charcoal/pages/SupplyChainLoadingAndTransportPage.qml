@@ -66,7 +66,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
         dataManager.destinationsModel.refresh()
-        dataManager.minimumDateModel.plotId = ""
+        dataManager.minimumDateModel.plotId = -1
         isPausedEvent = dataManager.unusedHarvestIdsModel.hasPausedEvent
     }
 
@@ -179,7 +179,7 @@ Pages.SupplyChainPageBase {
 
         popupLocked: isPausedEvent
 
-        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentText
+        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentId
     }
 
     Headers.InputHeader {

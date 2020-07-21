@@ -30,7 +30,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedPlotIdsModel.refresh()
         dataManager.ovenTypesModel.refresh()
-        dataManager.minimumDateModel.plotId = ""
+        dataManager.minimumDateModel.plotId = -1
     }
 
     function proceed() {
@@ -138,7 +138,7 @@ Pages.SupplyChainPageBase {
 
         onCurrentTextChanged: {
             ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentId)
-            dataManager.minimumDateModel.plotId = currentText
+            dataManager.minimumDateModel.plotId = currentId
         }
     }
 

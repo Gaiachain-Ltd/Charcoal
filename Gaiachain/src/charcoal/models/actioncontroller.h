@@ -32,14 +32,16 @@ public:
 
     Q_INVOKABLE QString getPlotId(const QString &packageId);
 
-    Q_INVOKABLE QString getTransportIdFromBags(const QVariantList &scannedQrs) const;
+    Q_INVOKABLE int getTransportIdFromBags(const QVariantList &scannedQrs) const;
+    Q_INVOKABLE QString getEntityName(const int id) const;
+
     Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
-    Q_INVOKABLE int bagCountInTransport(const QString &transportName) const;
-    Q_INVOKABLE QString plateNumberInTransport(const QString &transportId) const;
-    Q_INVOKABLE int scannedBagsCount(const QString &transportId) const;
-    Q_INVOKABLE int scannedBagsTotal(const QString &transportId) const;
-    Q_INVOKABLE int registeredTrucksCount(const QString &transportId) const;
-    Q_INVOKABLE int registeredTrucksTotal(const QString &transportId) const;
+    Q_INVOKABLE int bagCountInTransport(const int transportId) const;
+    Q_INVOKABLE QString plateNumberInTransport(const int transportId) const;
+    Q_INVOKABLE int scannedBagsCount(const int transportId) const;
+    Q_INVOKABLE int scannedBagsTotal(const int transportId) const;
+    Q_INVOKABLE int registeredTrucksCount(const int transportId) const;
+    Q_INVOKABLE int registeredTrucksTotal(const int transportId) const;
 
     Q_INVOKABLE QString nextOvenNumber(int parentEntityId) const;
     Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenType) const;
@@ -81,8 +83,7 @@ public:
         const QDateTime &timestamp,
         const QDateTime &eventDate,
         const QString &userId,
-        const QString &harvestId,
-        const QString &plotId,
+        const int harvestId,
         const QVariantList &ovenIds
         ) const;
 
@@ -105,7 +106,7 @@ public:
         const QDateTime &timestamp,
         const QDateTime &eventDate,
         const QString &userId,
-        const QString &transportId,
+        const int transportId,
         const QVariantList &documents,
         const QVariantList &receipts,
         const QVariantList &scannedQrs
@@ -130,7 +131,7 @@ signals:
     void finalizePackages(const QVector<int> &webIds) const;
 
 private:
-    int scannedBagsForAction(const QString &transportId,
+    int scannedBagsForAction(const int transportId,
                              const Enums::SupplyChainAction action) const;
 
     bool insertEntity(QSqlQuery *query, const int typeId,

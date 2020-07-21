@@ -23,7 +23,7 @@ Pages.SupplyChainPageBase {
 
     function refreshData() {
         dataManager.unusedPlotIdsModel.refresh()
-        dataManager.minimumDateModel.plotId = ""
+        dataManager.minimumDateModel.plotId = -1
     }
 
     function proceed() {
@@ -85,7 +85,7 @@ Pages.SupplyChainPageBase {
 
         model: dataManager.unusedPlotIdsModel
 
-        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentText
+        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentId
     }
 
     CharcoalHeaders.UserInfoHeader {
