@@ -176,7 +176,7 @@ Pages.SupplyChainPageBase {
 
         model: dataManager.unusedHarvestIdsModel
 
-        readOnly: isPausedEvent
+        popupLocked: isPausedEvent
 
         onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentText
     }
@@ -239,7 +239,7 @@ Pages.SupplyChainPageBase {
         popupTitle: Strings.selectDeliveryDestination
 
         model: dataManager.destinationsModel
-        readOnly: isPausedEvent
+        popupLocked: isPausedEvent
     }
 
     Common.PositionSourceHandler {

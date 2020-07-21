@@ -22,7 +22,7 @@ Headers.GHeader {
 
     property alias multiSelect: comboBox.multiSelect
 
-    property alias readOnly: comboBox.readOnly
+    property alias popupLocked: comboBox.popupLocked
 
     widget: CharcoalItems.CharcoalComboBox {
         id: comboBox

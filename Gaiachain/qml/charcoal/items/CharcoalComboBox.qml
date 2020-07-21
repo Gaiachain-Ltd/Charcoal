@@ -23,7 +23,9 @@ Items.GInput {
 
     property int currentId: -1
 
-    readOnly: false
+    property bool popupLocked: false
+
+    readOnly: true
     iconSource: GStyle.downArrowImgUrl
     iconEdge: Enums.Edge.RightEdge
     showIcon: true
@@ -31,7 +33,7 @@ Items.GInput {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: if (readOnly == false) popup.open()
+        onClicked: if (popupLocked == false) popup.open()
     }
 
     Popup {
