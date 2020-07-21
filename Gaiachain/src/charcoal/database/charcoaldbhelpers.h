@@ -101,7 +101,8 @@ public:
 
     static QString getSimpleString(const QString &connectionName, const QString &table,
                                    const QString &matchColumn, const QVariant &matchValue,
-                                   const QString &returnColumn, const bool verbose = true);
+                                   const QString &returnColumn,
+                                   const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static constexpr char sep = '/';
     static constexpr int metalOvenType = 2;

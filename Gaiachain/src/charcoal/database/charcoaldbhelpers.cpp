@@ -407,22 +407,26 @@ int CharcoalDbHelpers::getInteger(const QString &connectionName,
 
 QString CharcoalDbHelpers::getParcelCode(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "Parcels", Tags::id, id, Tags::code, true);
+    return getSimpleString(connectionName, "Parcels", Tags::id, id, Tags::code,
+                           db::QueryFlag::Verbose);
 }
 
 QString CharcoalDbHelpers::getVillageName(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "Villages", Tags::id, id, Tags::name, true);
+    return getSimpleString(connectionName, "Villages", Tags::id, id, Tags::name,
+                           db::QueryFlag::Verbose);
 }
 
 QString CharcoalDbHelpers::getTreeSpeciesName(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "TreeSpecies", Tags::id, id, Tags::name, true);
+    return getSimpleString(connectionName, "TreeSpecies", Tags::id, id, Tags::name,
+                           db::QueryFlag::Verbose);
 }
 
 QString CharcoalDbHelpers::getDestinationName(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "Destinations", Tags::id, id, Tags::name, true);
+    return getSimpleString(connectionName, "Destinations", Tags::id, id, Tags::name,
+                           db::QueryFlag::Verbose);
 }
 
 QString CharcoalDbHelpers::getOvenLetter(const QString &connectionName, const int ovenId)
@@ -459,7 +463,7 @@ QString CharcoalDbHelpers::getSimpleString(const QString &connectionName,
                                            const QString &matchColumn,
                                            const QVariant &matchValue,
                                            const QString &returnColumn,
-                                           const bool verbose)
+                                           const db::QueryFlags settings)
 {
     QString result;
     const QString queryString(QString("SELECT %1 FROM %2 WHERE %3=:value").arg(
@@ -471,7 +475,7 @@ QString CharcoalDbHelpers::getSimpleString(const QString &connectionName,
 
     if (query.exec() && query.next()) {
         result = query.value(returnColumn).toString();
-    } else if (verbose) {
+    } else if (settings.testFlag(db::QueryFlag::Verbose)) {
         qWarning() << RED("Unable to fetch")
                    << connectionName << table << matchColumn << matchValue
                    << returnColumn
@@ -486,7 +490,8 @@ Enums::SupplyChainAction CharcoalDbHelpers::cacheSupplyAction(
     const QString &connectionName, const int actionId)
 {
     const QString name(getSimpleString(connectionName, "EventTypes",
-                                      Tags::id, actionId, Tags::actionName, true));
+                                       Tags::id, actionId, Tags::actionName,
+                                       db::QueryFlag::Verbose));
     const Enums::SupplyChainAction mapped = m_supplyActionMap.key(
         name, Enums::SupplyChainAction::Unknown);
 
@@ -504,7 +509,7 @@ Enums::SupplyChainAction CharcoalDbHelpers::cacheSupplyAction(
     const QString &connectionName, const Enums::SupplyChainAction action)
 {
     const int actionId(getSimpleInteger(connectionName, "EventTypes",
-                                      Tags::actionName, m_supplyActionMap.value(action),
+                                        Tags::actionName, m_supplyActionMap.value(action),
                                         Tags::id, db::QueryFlag::Verbose));
 
     if (action == Enums::SupplyChainAction::Unknown || actionId == -1) {
@@ -521,7 +526,8 @@ Enums::PackageType CharcoalDbHelpers::cachePackageType(const QString &connection
                                                        const int typeId)
 {
     const QString name(getSimpleString(connectionName, "EntityTypes",
-                                       Tags::id, typeId, Tags::name, true));
+                                       Tags::id, typeId, Tags::name,
+                                       db::QueryFlag::Verbose));
     const Enums::PackageType mapped = m_packageTypeMap.key(
         name, Enums::PackageType::Unknown);
 
