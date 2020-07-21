@@ -194,6 +194,8 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
             return result;
         }
 
+        //qDebug() << "TRACKING: ENTITY update!" << pid << isFinished << "!";
+
         if (entityId == -1) {
             entityId = query.lastInsertId().toInt();
         }

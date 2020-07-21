@@ -136,6 +136,7 @@ Pages.SupplyChainPageBase {
         model: dataManager.unusedPlotIdsModel
 
         onCurrentTextChanged: {
+            console.log("PLOT:", currentText, "ID", currentId)
             ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentText)
             dataManager.minimumDateModel.plotId = currentText
         }

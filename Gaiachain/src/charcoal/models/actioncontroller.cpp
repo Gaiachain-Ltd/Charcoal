@@ -405,7 +405,10 @@ void ActionController::registerLoggingEnding(
 void ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &plotId, const QString &ovenId,
+    const QString &userId,
+    const QString &plotId,
+    const int plotDbId,
+    const QString &ovenId,
     const int ovenType, const int ovenIdNumber,
     const QVariantList &ovenDimensions) const
 {
@@ -433,7 +436,7 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":harvestId", harvestId);
 
     if (query.exec() == false) {
-        qWarning() << RED("Determining whether harves already exists has failed!")
+        qWarning() << RED("Determining whether harvest already exists has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
@@ -441,9 +444,9 @@ void ActionController::registerCarbonizationBeginning(
     const bool alreadyPresent = query.next();
 
     // Insert a new Entity into table, if needed
-    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Harvest));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
-        m_dbConnName, plotId, db::QueryFlag::Verbose | db::QueryFlag::MatchLast));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(
+        m_dbConnName, Enums::PackageType::Harvest));
+    const int parentEntityId(plotDbId);
 
     if (typeId == -1) {
         qWarning() << RED("Harvest ID type not found!");
@@ -758,6 +761,9 @@ void ActionController::finalizeSupplyChain(const QString &plotName) const
     // In offline mode - do nothing. Finalization will be handled by TrackingModel
     const auto webIds = CharcoalDbHelpers::getWebPackageIds(
         m_dbConnName, plotName, parentId);
+
+    qDebug() << "ENTITY HAS BEEN FINISHED!" << plotName << parentId << webIds;
+
     if (webIds.isEmpty() == false) {
         emit finalizePackages(webIds);
     }
@@ -866,8 +872,8 @@ bool ActionController::insertEntity(QSqlQuery *query,
                                     const int parentId) const
 {
     query->prepare("INSERT INTO Entities (typeId, name, parent, "
-                  "isFinished, isReplanted) "
-                  "VALUES (:typeId, :packageId, :parent, 0, 0)");
+                   "isFinished, isReplanted) "
+                   "VALUES (:typeId, :packageId, :parent, 0, 0)");
     query->bindValue(":typeId", typeId);
     query->bindValue(":packageId", packageId);
     query->bindValue(":parent", parentId == -1? QVariant(QVariant::Int) : parentId);

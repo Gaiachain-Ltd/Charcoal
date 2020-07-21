@@ -223,17 +223,20 @@ int CharcoalDbHelpers::getOvenTypeIdFromName(const QString &connectionName,
                             db::QueryFlag::Verbose);
 }
 
-int CharcoalDbHelpers::getEntityIdFromWebId(const QString &connectionName, const int webId,
+int CharcoalDbHelpers::getEntityIdFromWebId(const QString &connectionName,
+                                            const int webId,
                                             const db::QueryFlags settings)
 {
-    return getSimpleInteger(connectionName, "Entities", Tags::webId, webId, Tags::id, settings);
+    return getSimpleInteger(connectionName, "Entities", Tags::webId, webId,
+                            Tags::id, settings);
 }
 
 int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName,
                                            const QString &name,
                                            const db::QueryFlags settings)
 {
-    return getSimpleInteger(connectionName, "Entities", Tags::name, name, Tags::id, settings);
+    return getSimpleInteger(connectionName, "Entities", Tags::name, name, Tags::id,
+                            settings);
 }
 
 int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName,

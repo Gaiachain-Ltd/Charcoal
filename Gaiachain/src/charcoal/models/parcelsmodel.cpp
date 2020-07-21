@@ -16,10 +16,29 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-ParcelsModel::ParcelsModel(QObject *parent) : QueryModel(parent)
+ParcelsModel::ParcelsModel(QObject *parent) : SimpleListQueryModel(parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT code FROM Parcels");
+    setDbQuery("SELECT id, code FROM Parcels");
+}
+
+QVariant ParcelsModel::data(const QModelIndex &index, int role) const
+{
+    if (index.isValid() == false) {
+        return {};
+    }
+
+    query().seek(index.row());
+
+    switch (role) {
+    case Qt::ItemDataRole::DisplayRole:
+    case ListRole::Name:
+        return query().value(Tags::code).toString();
+    case ListRole::Id:
+        return query().value(Tags::id).toInt();
+    }
+
+    return {};
 }
 
 void ParcelsModel::refreshWebData()

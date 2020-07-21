@@ -69,6 +69,7 @@ public:
         const QDateTime &eventDate,
         const QString &userId,
         const QString &plotId,
+        const int plotDbId,
         const QString &ovenId,
         const int ovenType,
         const int ovenIdNumber,

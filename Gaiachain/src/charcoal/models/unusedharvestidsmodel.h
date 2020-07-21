@@ -1,11 +1,11 @@
 #pragma once
 
-#include "querymodel.h"
+#include "simplelistquerymodel.h"
 #include "dbobjects.h"
 
 #include <QGeoCoordinate>
 
-class UnusedHarvestIdsModel : public QueryModel
+class UnusedHarvestIdsModel : public SimpleListQueryModel
 {
     Q_OBJECT
 
