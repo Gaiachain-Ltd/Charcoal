@@ -6,6 +6,7 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "listupdater.h"
 
 #include <QJsonDocument>
@@ -57,7 +58,7 @@ void ParcelsModel::getUnusedParcels()
 void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 {
     ListUpdater updates("Parcels", m_connectionName);
-    if (updates.updateTable(reply, "code")) {
+    if (updates.updateTable(reply, Tags::code)) {
         // The unused parcels information is not used :D
         // Reason: parcels can be reused freely, see:
         // https://projects.milosolutions.com/issues/87745
@@ -76,7 +77,7 @@ void ParcelsModel::webUnusedParcelsReplyHandler(const QJsonDocument &reply)
 
     for (const QJsonValue &item : mainArray) {
         const QJsonObject object(item.toObject());
-        unusedParcelIds.append(object.value("id").toInt());
+        unusedParcelIds.append(object.value(Tags::id).toInt());
     }
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));

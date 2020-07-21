@@ -5,6 +5,7 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "listupdater.h"
 
 #include <QSqlQuery>
@@ -34,7 +35,7 @@ void TreeSpeciesModel::refreshWebData()
 void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)
 {
     ListUpdater updates("TreeSpecies", m_connectionName);
-    if (updates.updateTable(reply, "name")) {
+    if (updates.updateTable(reply, Tags::name)) {
         emit webDataRefreshed();
     } else {
         qWarning() << RED("Updating items has failed");

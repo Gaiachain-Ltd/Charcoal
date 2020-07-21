@@ -2,6 +2,7 @@
 
 #include "database/dbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
@@ -54,7 +55,7 @@ void MinimumDateModel::setPlotId(const QString &id)
     emit plotIdChanged(id);
 
     if (query().seek(0)) {
-        const qint64 timestamp = query().value("date").toLongLong();
+        const qint64 timestamp = query().value(Tags::date).toLongLong();
         setDate(QDateTime::fromSecsSinceEpoch(timestamp));
     }
 }

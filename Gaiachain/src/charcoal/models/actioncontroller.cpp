@@ -82,7 +82,7 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
 
             for (const QVariant &qr : scannedQrs) {
                 if (qrs.contains(qr)) {
-                    transportEntityId = query.value("entityId").toString();
+                    transportEntityId = query.value(Tags::entityId).toString();
                     //qDebug() << "HIT!" << qr.toString() << transportEntityId;
                     break;
                 }
@@ -110,7 +110,7 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
 
     if (query.exec()) {
         query.next();
-        return query.value("name").toString();
+        return query.value(Tags::name).toString();
     }
 
     qWarning() << RED("Getting Transport ID for bags has failed!")
@@ -442,7 +442,8 @@ void ActionController::registerCarbonizationBeginning(
 
     // Insert a new Entity into table, if needed
     const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Harvest));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
+        m_dbConnName, plotId, db::QueryFlag::Verbose | db::QueryFlag::MatchLast));
 
     if (typeId == -1) {
         qWarning() << RED("Harvest ID type not found!");
@@ -456,7 +457,7 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     // Then, insert a new Event under that Entity
-    const int entityId(alreadyPresent? query.value("id").toInt()
+    const int entityId(alreadyPresent? query.value(Tags::id).toInt()
                                       : query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_dbConnName, Enums::SupplyChainAction::CarbonizationBeginning));
@@ -704,9 +705,9 @@ void ActionController::registerReception(
     // events
     const int existing = CharcoalDbHelpers::getInteger(
         m_dbConnName, "Events",
-        { "entityId", "typeId" },
+        { Tags::entityId, Tags::typeId },
         { entityId, eventTypeId },
-        "id",
+        Tags::id,
         QString(), false
         );
 

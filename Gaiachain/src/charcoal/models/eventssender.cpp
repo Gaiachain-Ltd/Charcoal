@@ -264,11 +264,11 @@ void EventsSender::sendEvent()
         // First, get query data. Subsequent calls to any QSqlQuery instances
         // might break the main query!
         const qint64 timestamp =
-            static_cast<qint64>(query().value("date").toLongLong());
+            static_cast<qint64>(query().value(Tags::date).toLongLong());
         const QString properties(query().value(Tags::properties).toString());
 
-        const int entityId(query().value("entityId").toInt());
-        const int typeId(query().value("typeId").toInt());
+        const int entityId(query().value(Tags::entityId).toInt());
+        const int typeId(query().value(Tags::typeId).toInt());
 
         const QJsonObject location({
             { "latitude", query().value("locationLatitude").toDouble() },

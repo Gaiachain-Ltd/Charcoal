@@ -3,6 +3,7 @@
 #include "database/dbhelpers.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -64,13 +65,13 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case OvenRole::Id:
-        return query().value("id").toString();
+        return query().value(Tags::id).toString();
     case Qt::ItemDataRole::DisplayRole:
     case OvenRole::LetterId:
-        return query().value("name").toString();
+        return query().value(Tags::name).toString();
     case OvenRole::FirstRow:
     {
-        const QString ovenTypeId(query().value("type").toString());
+        const QString ovenTypeId(query().value(Tags::type).toString());
         QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
         q.prepare("SELECT type FROM OvenTypes WHERE id=:ovenTypeId");
         q.bindValue(":ovenTypeId", ovenTypeId);
@@ -82,14 +83,14 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
         }
 
         q.next();
-        const int type(q.value("type").toInt());
+        const int type(q.value(Tags::type).toInt());
         const bool isMetallic = (type == CharcoalDbHelpers::metalOvenType);
 
         return tr("%1 - %2 x %3 x %4m")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))
-            .arg(query().value("oven_height").toString())
-            .arg(query().value("oven_width").toString())
-            .arg(query().value("oven_length").toString());
+            .arg(query().value(Tags::webOvenHeight).toString())
+            .arg(query().value(Tags::webOvenWidth).toString())
+            .arg(query().value(Tags::webOvenLength).toString());
     }
     case OvenRole::SecondRow:
     {
@@ -105,7 +106,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
         }
 
         q.next();
-        const qint64 timestamp = q.value("date").toLongLong();
+        const qint64 timestamp = q.value(Tags::date).toLongLong();
         const QDateTime date = QDateTime::fromSecsSinceEpoch(timestamp);
         return tr("Carbonization beginning: %1").arg(date.toString("dd/MM/yyyy"));
     }

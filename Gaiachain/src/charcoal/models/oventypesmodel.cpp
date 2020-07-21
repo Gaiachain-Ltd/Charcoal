@@ -5,6 +5,7 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "listupdater.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 
@@ -29,19 +30,19 @@ QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
     case Qt::ItemDataRole::DisplayRole:
     case OvenTypesRole::TranslatedName:
         if (isTraditional()) {
-            return tr("%1 (Traditional oven)").arg(query().value("name").toString());
+            return tr("%1 (Traditional oven)").arg(query().value(Tags::name).toString());
         } else {
-            return tr("%1 (Metallic oven)").arg(query().value("name").toString());
+            return tr("%1 (Metallic oven)").arg(query().value(Tags::name).toString());
         }
         break;
     case OvenTypesRole::Id:
-        return query().value("id").toInt();
+        return query().value(Tags::id).toInt();
     case OvenTypesRole::Name:
-        return query().value("name").toString();
+        return query().value(Tags::name).toString();
     case OvenTypesRole::IsTraditionalOven:
         return isTraditional();
     case OvenTypesRole::Type:
-        return query().value("type").toInt();
+        return query().value(Tags::type).toInt();
     }
 
     return {};
@@ -73,8 +74,8 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
     //qDebug() << "Oven types:" << reply;
 
     ListUpdater updates("OvenTypes", m_connectionName);
-    if (updates.updateTable(reply, { "name", "type", "oven_height",
-                                    "oven_width", "oven_length" }))
+    if (updates.updateTable(reply, { Tags::name, Tags::type, Tags::webOvenHeight,
+                                    Tags::webOvenWidth, Tags::webOvenLength }))
     {
         emit webDataRefreshed();
     } else {
@@ -84,7 +85,7 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
 
 bool OvenTypesModel::isTraditional() const
 {
-    const int type(query().value("type").toInt());
+    const int type(query().value(Tags::type).toInt());
     if (type == 1) {
         return true;
     } else if (type == CharcoalDbHelpers::metalOvenType) {

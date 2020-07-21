@@ -128,9 +128,9 @@ QVariantList CharcoalDbHelpers::defaultOvenDimensions(const QString &connectionN
         }
 
         query.next();
-        dimensions.append(query.value("oven_height").toDouble());
-        dimensions.append(query.value("oven_width").toDouble());
-        dimensions.append(query.value("oven_length").toDouble());
+        dimensions.append(query.value(Tags::webOvenHeight).toDouble());
+        dimensions.append(query.value(Tags::webOvenWidth).toDouble());
+        dimensions.append(query.value(Tags::webOvenLength).toDouble());
     } else {
         return QVariantList{ 0, 0, 0 };
     }
@@ -146,7 +146,7 @@ QJsonObject CharcoalDbHelpers::dbPropertiesToJson(const QString &properties)
 
 int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int entityId)
 {
-    return getSimpleInteger(connectionName, "Entities", "id", entityId, "webId");
+    return getSimpleInteger(connectionName, "Entities", Tags::id, entityId, Tags::webId);
 }
 
 /*!
@@ -174,7 +174,7 @@ QVector<int> CharcoalDbHelpers::getWebPackageIds(const QString &connectionName,
     QVector<int> result;
     bool ok = false;
     while (query.next()) {
-        const int id = query.value("webId").toInt(&ok);
+        const int id = query.value(Tags::webId).toInt(&ok);
         if (ok) {
             result.append(id);
         }
@@ -185,52 +185,55 @@ QVector<int> CharcoalDbHelpers::getWebPackageIds(const QString &connectionName,
 
 int CharcoalDbHelpers::getVillageId(const QString &connectionName, const QString &name)
 {
-    return getSimpleInteger(connectionName, "Villages", "name", name, "id");
+    return getSimpleInteger(connectionName, "Villages", Tags::name, name, Tags::id);
 }
 
 int CharcoalDbHelpers::getDestinationId(const QString &connectionName, const QString &name)
 {
-    return getSimpleInteger(connectionName, "Destinations", "name", name, "id");
+    return getSimpleInteger(connectionName, "Destinations", Tags::name, name, Tags::id);
 }
 
 int CharcoalDbHelpers::getParcelId(const QString &connectionName, const QString &parcel)
 {
-    return getSimpleInteger(connectionName, "Parcels", "code", parcel, "id");
+    return getSimpleInteger(connectionName, "Parcels", Tags::code, parcel, Tags::id);
 }
 
 int CharcoalDbHelpers::getTreeSpeciesId(const QString &connectionName, const QString &species)
 {
-    return  getSimpleInteger(connectionName, "TreeSpecies", "name", species, "id");
+    return  getSimpleInteger(connectionName, "TreeSpecies", Tags::name, species, Tags::id);
 }
 
 int CharcoalDbHelpers::getOvenId(const QString &connectionName, const int plotId,
                                  const QString &ovenName, const bool verbose)
 {
-    return getInteger(connectionName, "Ovens", { "plot", "name" },
-                      { plotId, ovenName }, "id", QString(), verbose);
+    return getInteger(connectionName, "Ovens", { Tags::plot, Tags::name },
+                      { plotId, ovenName }, Tags::id, QString(), verbose);
 }
 
 int CharcoalDbHelpers::getOvenTypeId(const QString &connectionName, const QString &ovenType)
 {
-    return getSimpleInteger(connectionName, "OvenTypes", "type", ovenType, "id", true);
+    return getSimpleInteger(connectionName, "OvenTypes", Tags::type, ovenType, Tags::id,
+                            db::QueryFlag::Verbose);
 }
 
 int CharcoalDbHelpers::getOvenTypeIdFromName(const QString &connectionName,
                                              const QString &name)
 {
-    return getSimpleInteger(connectionName, "OvenTypes", "name", name, "id", true);
+    return getSimpleInteger(connectionName, "OvenTypes", Tags::name, name, Tags::id,
+                            db::QueryFlag::Verbose);
 }
 
 int CharcoalDbHelpers::getEntityIdFromWebId(const QString &connectionName, const int webId,
-                                            const bool verbose)
+                                            const db::QueryFlags settings)
 {
-    return getSimpleInteger(connectionName, "Entities", "webId", webId, "id", verbose);
+    return getSimpleInteger(connectionName, "Entities", Tags::webId, webId, Tags::id, settings);
 }
 
-int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName, const QString &name,
-                                           const bool verbose)
+int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName,
+                                           const QString &name,
+                                           const db::QueryFlags settings)
 {
-    return getSimpleInteger(connectionName, "Entities", "name", name, "id", verbose);
+    return getSimpleInteger(connectionName, "Entities", Tags::name, name, Tags::id, settings);
 }
 
 int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName,
@@ -269,17 +272,17 @@ Enums::SupplyChainAction CharcoalDbHelpers::getEventTypeFromEventId(
     const QString &connectionName, const int eventId)
 {
     const int typeId = getSimpleInteger(connectionName, "Events",
-                                        "id", eventId,
-                                        "typeId",
-                                        true);
+                                        Tags::id, eventId,
+                                        Tags::typeId,
+                                        db::QueryFlag::Verbose);
 
     return actionById(connectionName, typeId);
 }
 
 int CharcoalDbHelpers::getEventIdFromWebId(const QString &connectionName,
-                                           const int webId, const bool verbose)
+                                           const int webId, const db::QueryFlags settings)
 {
-    return getSimpleInteger(connectionName, "Events", "webId", webId, "id", verbose);
+    return getSimpleInteger(connectionName, "Events", Tags::webId, webId, Tags::id, settings);
 }
 
 int CharcoalDbHelpers::getEventId(const QString &connectionName,
@@ -289,17 +292,17 @@ int CharcoalDbHelpers::getEventId(const QString &connectionName,
                                   const bool verbose)
 {
     return getInteger(connectionName, "Events",
-                      { "entityId", "typeId", "date" },
+                      { Tags::entityId, Tags::typeId, Tags::date },
                       { entityId, eventTypeId, timestamp },
-                      "id", "AND properties IS NOT NULL", verbose);
+                      Tags::id, "AND properties IS NOT NULL", verbose);
 }
 
 int CharcoalDbHelpers::getEventId(const QString &connectionName,
                                   qint64 timestamp,
-                                  const bool verbose)
+                                  const db::QueryFlags settings)
 {
-    return getSimpleInteger(connectionName, "Events", "date", timestamp, "id",
-                            verbose);
+    return getSimpleInteger(connectionName, "Events", Tags::date, timestamp, Tags::id,
+                            settings);
 }
 
 ContinueEvent CharcoalDbHelpers::getContinueEvent(const QString &connectionName,
@@ -313,8 +316,8 @@ ContinueEvent CharcoalDbHelpers::getContinueEvent(const QString &connectionName,
 
     if (q.exec() && q.next()) {
         ContinueEvent event;
-        event.entityId = q.value("entityId").toInt();
-        event.eventId = q.value("id").toInt();
+        event.entityId = q.value(Tags::entityId).toInt();
+        event.eventId = q.value(Tags::id).toInt();
         return event;
     }
 
@@ -332,11 +335,17 @@ int CharcoalDbHelpers::getSimpleInteger(const QString &connectionName,
                                         const QString &matchColumn,
                                         const QVariant &matchValue,
                                         const QString &returnColumn,
-                                        const bool verbose)
+                                        const db::QueryFlags settings)
 {
+    QString ordering("DESC");
+    if (settings.testFlag(db::QueryFlag::MatchFirst)) {
+        ordering = "ASC";
+    }
+
     int result = -1;
-    const QString queryString(QString("SELECT %1 FROM %2 WHERE %3=:value").arg(
-        returnColumn, table, matchColumn));
+    const QString queryString(
+        QString("SELECT %1 FROM %2 WHERE %3=:value ORDER BY %1 %4 LIMIT 1")
+            .arg(returnColumn, table, matchColumn, ordering));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
     query.prepare(queryString);
@@ -344,7 +353,7 @@ int CharcoalDbHelpers::getSimpleInteger(const QString &connectionName,
 
     if (query.exec() && query.next()) {
         result = query.value(returnColumn).toInt();
-    } else if (verbose) {
+    } else if (settings.testFlag(db::QueryFlag::Verbose)) {
         qWarning() << RED("Unable to fetch")
                    << connectionName << table << matchColumn << matchValue
                    << returnColumn
@@ -398,27 +407,27 @@ int CharcoalDbHelpers::getInteger(const QString &connectionName,
 
 QString CharcoalDbHelpers::getParcelCode(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "Parcels", "id", id, "code", true);
+    return getSimpleString(connectionName, "Parcels", Tags::id, id, Tags::code, true);
 }
 
 QString CharcoalDbHelpers::getVillageName(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "Villages", "id", id, "name", true);
+    return getSimpleString(connectionName, "Villages", Tags::id, id, Tags::name, true);
 }
 
 QString CharcoalDbHelpers::getTreeSpeciesName(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "TreeSpecies", "id", id, "name", true);
+    return getSimpleString(connectionName, "TreeSpecies", Tags::id, id, Tags::name, true);
 }
 
 QString CharcoalDbHelpers::getDestinationName(const QString &connectionName, const int id)
 {
-    return getSimpleString(connectionName, "Destinations", "id", id, "name", true);
+    return getSimpleString(connectionName, "Destinations", Tags::id, id, Tags::name, true);
 }
 
 QString CharcoalDbHelpers::getOvenLetter(const QString &connectionName, const int ovenId)
 {
-    return getSimpleString(connectionName, "Ovens", "id", ovenId, "name");
+    return getSimpleString(connectionName, "Ovens", Tags::id, ovenId, Tags::name);
 }
 
 QString CharcoalDbHelpers::getEventType(const QString &connectionName, const int typeId)
@@ -429,7 +438,7 @@ QString CharcoalDbHelpers::getEventType(const QString &connectionName, const int
 
 QString CharcoalDbHelpers::getEntityName(const QString &connectionName, const int entityId)
 {
-    return getSimpleString(connectionName, "Entities", "id", entityId, "name");
+    return getSimpleString(connectionName, "Entities", Tags::id, entityId, Tags::name);
 }
 
 Enums::PackageType CharcoalDbHelpers::getEntityType(const QString &connectionName,
@@ -477,7 +486,7 @@ Enums::SupplyChainAction CharcoalDbHelpers::cacheSupplyAction(
     const QString &connectionName, const int actionId)
 {
     const QString name(getSimpleString(connectionName, "EventTypes",
-                                      "id", actionId, "actionName", true));
+                                      Tags::id, actionId, Tags::actionName, true));
     const Enums::SupplyChainAction mapped = m_supplyActionMap.key(
         name, Enums::SupplyChainAction::Unknown);
 
@@ -495,8 +504,8 @@ Enums::SupplyChainAction CharcoalDbHelpers::cacheSupplyAction(
     const QString &connectionName, const Enums::SupplyChainAction action)
 {
     const int actionId(getSimpleInteger(connectionName, "EventTypes",
-                                      "actionName", m_supplyActionMap.value(action),
-                                      "id", true));
+                                      Tags::actionName, m_supplyActionMap.value(action),
+                                        Tags::id, db::QueryFlag::Verbose));
 
     if (action == Enums::SupplyChainAction::Unknown || actionId == -1) {
         qWarning() << RED("Invalid type ID!") << actionId << action;
@@ -512,7 +521,7 @@ Enums::PackageType CharcoalDbHelpers::cachePackageType(const QString &connection
                                                        const int typeId)
 {
     const QString name(getSimpleString(connectionName, "EntityTypes",
-                                       "id", typeId, "name", true));
+                                       Tags::id, typeId, Tags::name, true));
     const Enums::PackageType mapped = m_packageTypeMap.key(
         name, Enums::PackageType::Unknown);
 
@@ -530,8 +539,8 @@ Enums::PackageType CharcoalDbHelpers::cachePackageType(const QString &connection
                                                        const Enums::PackageType type)
 {
     const int typeId(getSimpleInteger(connectionName, "EntityTypes",
-                                      "name", m_packageTypeMap.value(type),
-                                      "id", true));
+                                      Tags::name, m_packageTypeMap.value(type),
+                                      Tags::id, db::QueryFlag::Verbose));
 
     if (type == Enums::PackageType::Unknown || typeId == -1) {
         qWarning() << RED("Invalid type ID!") << typeId << type;

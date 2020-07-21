@@ -6,6 +6,17 @@
 #include <QString>
 #include <QJsonObject>
 
+namespace db {
+enum QueryFlag {
+    Silent = 0x0,
+    Verbose = 0x1,
+    MatchFirst = 0x2,
+    MatchLast = 0x4
+};
+Q_DECLARE_FLAGS(QueryFlags, QueryFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QueryFlags)
+}
+
 struct ContinueEvent {
     int entityId = -1;
     int eventId = -1;
@@ -41,9 +52,9 @@ public:
     static int getOvenTypeIdFromName(const QString &connectionName, const QString &name);
 
     static int getEntityIdFromWebId(const QString &connectionName, const int webId,
-                                    const bool verbose = true);
+                                    const db::QueryFlags settings = db::QueryFlag::Verbose);
     static int getEntityIdFromName(const QString &connectionName, const QString &name,
-                                   const bool verbose = true);
+                                   const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static int getEntityTypeId(const QString &connectionName, const Enums::PackageType type);
 
@@ -54,14 +65,14 @@ public:
                                                             const int eventId);
 
     static int getEventIdFromWebId(const QString &connectionName, const int webId,
-                                   const bool verbose = true);
+                                   const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static int getEventId(const QString &connectionName, const int entityId,
                           const int eventTypeId, qint64 timestamp,
                           const bool verbose = true);
 
     static int getEventId(const QString &connectionName, qint64 timestamp,
-                          const bool verbose = true);
+                          const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static ContinueEvent getContinueEvent(const QString &connectionName,
                                           const int eventTypeId);
@@ -70,7 +81,8 @@ public:
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,
                                 const QString &matchColumn, const QVariant &matchValue,
-                                const QString &returnColumn, const bool verbose = true);
+                                const QString &returnColumn,
+                                const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static int getInteger(const QString &connectionName, const QString &table,
                           const QStringList &matchColumns, const QVariantList &matchValues,
