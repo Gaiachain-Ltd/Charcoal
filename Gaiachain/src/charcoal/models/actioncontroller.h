@@ -52,8 +52,11 @@ public:
         const QDateTime &eventDate,
         const QString &userId,
         const QString &parcel,
+        const int parcelId,
         const QString &village,
-        const QString &treeSpecies
+        const int villageId,
+        const QString &treeSpecies,
+        const int treeSpeciesId
         ) const;
 
     Q_INVOKABLE void registerLoggingEnding(
@@ -61,7 +64,7 @@ public:
         const QDateTime &timestamp,
         const QDateTime &eventDate,
         const QString &userId,
-        const QString &plotId,
+        const int plotId,
         const int numberOfTrees
         ) const;
 
@@ -97,6 +100,7 @@ public:
         const int harvestDbId,
         const QString &plateNumber,
         const QString &destination,
+        const int destinationId,
         const QVariantList &scannedQrs,
         const bool pauseEvent
         ) const;
@@ -118,9 +122,10 @@ public:
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QString &userId,
-        const QString &plotId,
+        const QString &plotName,
+        const int plotId,
         const int numberOfTrees,
-        const QString &treeSpecies,
+        const QString &treeSpecies, const int treeSpeciesId,
         const QDateTime &beginningDate,
         const QDateTime &endingDate
         ) const;

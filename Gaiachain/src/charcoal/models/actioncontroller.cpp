@@ -285,10 +285,15 @@ QVariantList ActionController::defaultOvenDimensions(const int ovenType) const
 
 void ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
     const QString &userId,
-    const QString &parcel, const QString &village,
-    const QString &treeSpecies) const
+    const QString &parcel,
+    const int parcelId,
+    const QString &village,
+    const int villageId,
+    const QString &treeSpecies,
+    const int treeSpeciesId) const
 {
     /*
      * Algorithm is:
@@ -303,7 +308,8 @@ void ActionController::registerLoggingBeginning(
 
     // First, insert a new Entity into table
     const QString plotId(generatePlotId(userId, parcel, timestamp.date()));
-    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_connectionName, Enums::PackageType::Plot));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(
+        m_connectionName, Enums::PackageType::Plot));
 
     if (typeId == -1) {
         qWarning() << RED("Plot ID type not found!");
@@ -320,9 +326,6 @@ void ActionController::registerLoggingBeginning(
     const int entityId(query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_connectionName, Enums::SupplyChainAction::LoggingBeginning));
-    const int villageId(CharcoalDbHelpers::getVillageId(m_connectionName, village));
-    const int parcelId(CharcoalDbHelpers::getParcelId(m_connectionName, parcel));
-    const int treeSpeciesId(CharcoalDbHelpers::getTreeSpeciesId(m_connectionName, treeSpecies));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -358,7 +361,7 @@ void ActionController::registerLoggingBeginning(
 void ActionController::registerLoggingEnding(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &plotId,
+    const QString &userId, const int plotId,
     const int numberOfTrees) const
 {
     /*
@@ -370,8 +373,6 @@ void ActionController::registerLoggingEnding(
 
     qDebug() << "Registering logging ending" << coordinate << timestamp
              << plotId << userId << numberOfTrees;
-
-    const int entityId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotId));
 
     if (entityId == -1) {
         qWarning() << RED("Entity ID not found!");
@@ -388,7 +389,7 @@ void ActionController::registerLoggingEnding(
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+    if (false == insertEvent(&query, plotId, eventTypeId, userId, timestamp,
                              eventDate, coordinate,
                              {
                                  { Tags::webNumberOfTrees, numberOfTrees },
@@ -589,10 +590,15 @@ void ActionController::registerCarbonizationEnding(
 
 void ActionController::registerLoadingAndTransport(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &transportId,
-    const QString &harvestId, const int harvestDbId,
-    const QString &plateNumber, const QString &destination,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const QString &transportId,
+    const QString &harvestId,
+    const int harvestDbId,
+    const QString &plateNumber,
+    const QString &destination,
+    const int destinationId,
     const QVariantList &scannedQrs,
     const bool pauseEvent) const
 {
@@ -627,9 +633,6 @@ void ActionController::registerLoadingAndTransport(
         qWarning() << RED("Event Type ID not found!");
         return;
     }
-
-    const int destinationId(CharcoalDbHelpers::getDestinationId(
-        m_connectionName, destination));
 
     const ContinueEvent existingEvent(CharcoalDbHelpers::getContinueEvent(
         m_connectionName, eventTypeId));
@@ -776,9 +779,14 @@ void ActionController::finalizeSupplyChain(const QString &plotName) const
 void ActionController::registerReplantation(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
-    const QString &userId, const QString &plotId,
-    const int numberOfTrees, const QString &treeSpecies,
-    const QDateTime &beginningDate, const QDateTime &endingDate) const
+    const QString &userId,
+    const QString &plotName,
+    const int plotId,
+    const int numberOfTrees,
+    const QString &treeSpecies,
+    const int treeSpeciesId,
+    const QDateTime &beginningDate,
+    const QDateTime &endingDate) const
 {
     /*
      * Algorithm is:
@@ -788,11 +796,9 @@ void ActionController::registerReplantation(
      */
 
     qDebug() << "Registering replantation" << coordinate << timestamp
-             << userId << plotId << numberOfTrees << treeSpecies
+             << userId << plotName << plotId << numberOfTrees
+             << treeSpecies << treeSpeciesId
              << beginningDate << endingDate;
-
-    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotId));
-    const int treeSpeciesId(CharcoalDbHelpers::getTreeSpeciesId(m_connectionName, treeSpecies));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
@@ -806,7 +812,7 @@ void ActionController::registerReplantation(
                   ":numberOfTrees, :treeSpecies, "
                   ":locationLatitude, :locationLongitude, "
                   ":beginningDate, :endingDate, 0)");
-    query.bindValue(":plotId", parentId);
+    query.bindValue(":plotId", plotId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp.toSecsSinceEpoch());
     query.bindValue(":numberOfTrees", numberOfTrees);

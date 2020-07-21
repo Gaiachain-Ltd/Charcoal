@@ -66,7 +66,7 @@ Pages.SupplyChainPageBase {
                     new Date,
                     endingDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
-                    plotIdComboBox.currentText,
+                    plotIdComboBox.currentId,
                     numberOfTreesHeader.inputText)
 
         pageManager.enter(Enums.Page.MainMenu)

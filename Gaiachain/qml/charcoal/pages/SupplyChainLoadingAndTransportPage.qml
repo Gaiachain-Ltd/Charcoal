@@ -145,6 +145,7 @@ Pages.SupplyChainPageBase {
                     harvestIdComboBox.currentId,
                     plateNumberHeader.inputText,
                     deliveryDestinationComboBox.currentText,
+                    deliveryDestinationComboBox.currentId,
                     scannedQrs,
                     shouldPause
                     )

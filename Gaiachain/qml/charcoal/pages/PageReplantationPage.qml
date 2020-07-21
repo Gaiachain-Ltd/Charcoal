@@ -74,8 +74,10 @@ Pages.SupplyChainPageBase {
                     new Date,
                     userManager.userData.code,
                     plotIdComboBox.currentText,
+                    plotIdComboBox.currentId,
                     numberOfTreesHeader.inputText,
                     treeSpeciesComboBox.currentText,
+                    treeSpeciesComboBox.currentId,
                     beginningDateHeader.selectedDate,
                     endingDateHeader.selectedDate
                     )
