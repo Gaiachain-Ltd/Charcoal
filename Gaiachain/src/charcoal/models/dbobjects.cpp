@@ -94,7 +94,7 @@ bool Entity::loadFromDb(const QString &connectionName, const int id)
 
     if (q.exec() && q.next()) {
         this->id = q.value(Tags::id).toInt();
-        parent = q.value("parent").toInt();
+        parent = q.value(Tags::parent).toInt();
         typeId = q.value(Tags::typeId).toInt();
         name = q.value(Tags::name).toString();
         return true;

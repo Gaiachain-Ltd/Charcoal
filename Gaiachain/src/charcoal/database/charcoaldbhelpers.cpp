@@ -255,6 +255,11 @@ int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName,
     return cached;
 }
 
+int CharcoalDbHelpers::getParentEntityId(const QString &connectionName, const int id)
+{
+    return getSimpleInteger(connectionName, "Entities", Tags::id, id, Tags::parent);
+}
+
 int CharcoalDbHelpers::getEventTypeId(const QString &connectionName,
                                       const Enums::SupplyChainAction action)
 {

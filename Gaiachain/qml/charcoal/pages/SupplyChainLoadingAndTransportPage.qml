@@ -142,6 +142,7 @@ Pages.SupplyChainPageBase {
                     userManager.userData.code,
                     transportId,
                     harvestIdComboBox.currentText,
+                    harvestIdComboBox.currentId,
                     plateNumberHeader.inputText,
                     deliveryDestinationComboBox.currentText,
                     scannedQrs,

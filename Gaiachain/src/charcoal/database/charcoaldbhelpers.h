@@ -58,6 +58,8 @@ public:
 
     static int getEntityTypeId(const QString &connectionName, const Enums::PackageType type);
 
+    static int getParentEntityId(const QString &connectionName, const int id);
+
     static int getEventTypeId(const QString &connectionName,
                               const Enums::SupplyChainAction action);
 

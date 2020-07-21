@@ -61,7 +61,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
     {
         Entity entity;
         entity.id = query().value(Tags::id).toInt();
-        entity.parent = query().value("parent").toInt();
+        entity.parent = query().value(Tags::parent).toInt();
         entity.typeId = query().value(Tags::typeId).toInt();
         entity.name = query().value(Tags::name).toString();
         const QVector<Event> events = entity.loadEvents(m_connectionName);
@@ -122,7 +122,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 
         Entity entity;
         entity.id = query().value(Tags::id).toInt();
-        entity.parent = query().value("parent").toInt();
+        entity.parent = query().value(Tags::parent).toInt();
         entity.typeId = query().value(Tags::typeId).toInt();
         entity.name = query().value(Tags::name).toString();
 

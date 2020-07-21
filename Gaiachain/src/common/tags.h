@@ -52,6 +52,7 @@ namespace Tags {
     const QLatin1String entityId = QLatin1String("entityId");
     const QLatin1String date = QLatin1String("date");
     const QLatin1String actionName = QLatin1String("actionName");
+    const QLatin1String parent = QLatin1String("parent");
     // Charcoal user data
     const QLatin1String code = QLatin1String("code");
     const QLatin1String contact = QLatin1String("contact");

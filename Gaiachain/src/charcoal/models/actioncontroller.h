@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE int registeredTrucksCount(const QString &transportId) const;
     Q_INVOKABLE int registeredTrucksTotal(const QString &transportId) const;
 
-    Q_INVOKABLE QString nextOvenNumber(const QString &plotId) const;
+    Q_INVOKABLE QString nextOvenNumber(int parentEntityId) const;
     Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenType) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
@@ -93,6 +93,7 @@ public:
         const QString &userId,
         const QString &transportId,
         const QString &harvestId,
+        const int harvestDbId,
         const QString &plateNumber,
         const QString &destination,
         const QVariantList &scannedQrs,
@@ -157,7 +158,7 @@ private:
 
     const QString dateFormat = "dd-MM-yyyy";
 
-    QString m_dbConnName;
+    QString m_connectionName;
     QPointer<PicturesManager> m_picturesManager;
 };
 

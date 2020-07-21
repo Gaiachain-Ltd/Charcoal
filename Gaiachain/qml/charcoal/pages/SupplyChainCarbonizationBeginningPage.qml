@@ -114,6 +114,7 @@ Pages.SupplyChainPageBase {
                     beginningDateHeader.selectedDate,
                     carbonizerIdInputHeader.inputText,
                     plotIdComboBox.currentText,
+                    plotIdComboBox.currentId,
                     ovenIdHeader.inputText,
                     ovenTypeComboBox.ovenType,
                     ovenTypeComboBox.ovenIdNumber,
@@ -136,7 +137,7 @@ Pages.SupplyChainPageBase {
         model: dataManager.unusedPlotIdsModel
 
         onCurrentTextChanged: {
-            ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentText)
+            ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentId)
             dataManager.minimumDateModel.plotId = currentText
         }
     }
