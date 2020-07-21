@@ -360,8 +360,10 @@ void ActionController::registerLoggingBeginning(
 
 void ActionController::registerLoggingEnding(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const int plotId,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const int plotId,
     const int numberOfTrees) const
 {
     /*
@@ -374,7 +376,7 @@ void ActionController::registerLoggingEnding(
     qDebug() << "Registering logging ending" << coordinate << timestamp
              << plotId << userId << numberOfTrees;
 
-    if (entityId == -1) {
+    if (plotId == -1) {
         qWarning() << RED("Entity ID not found!");
         return;
     }
