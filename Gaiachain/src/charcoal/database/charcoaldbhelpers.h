@@ -56,7 +56,11 @@ public:
     static int getEntityIdFromWebId(const QString &connectionName, const int webId,
                                     const db::QueryFlags settings = db::QueryFlag::Verbose);
 
-    static int getEntityTypeId(const QString &connectionName, const Enums::PackageType type);
+    static int getEntityIdFromName(const QString &connectionName,
+                                   const QString &name);
+
+    static int getEntityTypeId(const QString &connectionName,
+                               const Enums::PackageType type);
 
     static int getParentEntityId(const QString &connectionName, const int id);
 

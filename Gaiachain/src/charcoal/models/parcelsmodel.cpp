@@ -36,6 +36,12 @@ QVariant ParcelsModel::data(const QModelIndex &index, int role) const
         return query().value(Tags::code).toString();
     case ListRole::Id:
         return query().value(Tags::id).toInt();
+    case ListRole::IsActive:
+        if (m_hasActiveBit) {
+            return query().value(Tags::active).toBool();
+        } else {
+            return true;
+        }
     }
 
     return {};
