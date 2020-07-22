@@ -115,6 +115,16 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
         m_connectionName, parentWebId,
         db::QueryFlag::Silent | db::QueryFlag::MatchLast);
 
+    /*
+     * Web uses "parent" to mean direct parent. So Transport has parent Harvest.
+     * Harvest has parent Plot.
+     *
+     * But Qt app works in a different way: parent is ALWAYS a Plot.
+     *
+     * Thus, we need to run parent search again when we process Transport
+     * element - to get up to Plot level.
+     */
+
     {
         QString entityString;
         if (entityId == -1) {
