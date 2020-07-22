@@ -58,6 +58,9 @@ public:
 
     Type type() const;
 
+    void setQuiet(const bool isQuiet);
+    bool isQuiet() const;
+
 signals:
     void finished() const;
     void replyError(const QString &msgs,
@@ -77,6 +80,7 @@ protected:
     virtual void readReplyData(const QString &requestName,
                                const QString &status);
 
+    bool mQuiet = false;
     Priority mPriority = Priority::Normal;
     Type mType = Type::Get;
     QUrl mUrl;

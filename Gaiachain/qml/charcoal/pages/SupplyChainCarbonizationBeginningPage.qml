@@ -30,7 +30,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedPlotIdsModel.refresh()
         dataManager.ovenTypesModel.refresh()
-        dataManager.minimumDateModel.plotId = ""
+        dataManager.minimumDateModel.plotId = -1
     }
 
     function proceed() {
@@ -43,7 +43,7 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         let dims = ovenTypeComboBox.ovenType === "2"?
-                dataManager.actionController.defaultOvenDimensions(ovenTypeComboBox.ovenType)
+                dataManager.actionController.defaultOvenDimensions(ovenTypeComboBox.ovenIdNumber)
               : ovenDimensionsHeader.values
 
         var summary = [
@@ -114,8 +114,8 @@ Pages.SupplyChainPageBase {
                     beginningDateHeader.selectedDate,
                     carbonizerIdInputHeader.inputText,
                     plotIdComboBox.currentText,
+                    plotIdComboBox.currentId,
                     ovenIdHeader.inputText,
-                    ovenTypeComboBox.ovenType,
                     ovenTypeComboBox.ovenIdNumber,
                     ovenDimensionsHeader.values)
 
@@ -136,8 +136,8 @@ Pages.SupplyChainPageBase {
         model: dataManager.unusedPlotIdsModel
 
         onCurrentTextChanged: {
-            ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentText)
-            dataManager.minimumDateModel.plotId = currentText
+            ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentId)
+            dataManager.minimumDateModel.plotId = currentId
         }
     }
 

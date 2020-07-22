@@ -1,8 +1,8 @@
 #pragma once
 
-#include "querymodel.h"
+#include "simplelistquerymodel.h"
 
-class UnusedPlotIdsForReplantationModel : public QueryModel
+class UnusedPlotIdsForReplantationModel : public SimpleListQueryModel
 {
     Q_OBJECT
 

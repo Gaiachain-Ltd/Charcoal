@@ -219,6 +219,12 @@ namespace Enums {
     Q_ENUM_NS(DelegateType)
     inline uint qHash(DelegateType key, uint seed) { return qH<DelegateType>(key, seed);}
 
+    enum class OvenType {
+        Unknown = 0,
+        Traditional,
+        Metallic
+    };
+
     // REMEMBER TO REGISTER ENUM IN maincontroller.setupQmlContext TO MAKE IT VISIBLE FOR QML!
 }
 

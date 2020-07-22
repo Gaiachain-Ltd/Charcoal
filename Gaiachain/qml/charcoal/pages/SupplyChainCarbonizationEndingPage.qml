@@ -23,8 +23,8 @@ Pages.SupplyChainPageBase {
 
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
-        dataManager.ovensModel.plotId = ""
-        dataManager.minimumDateModel.plotId = ""
+        dataManager.ovensModel.plotId = -1
+        dataManager.minimumDateModel.plotId = -1
     }
 
     function proceed() {
@@ -87,8 +87,7 @@ Pages.SupplyChainPageBase {
                     new Date,
                     endingDateHeader.selectedDate,
                     carbonizerIdInputHeader.inputText,
-                    harvestIdComboBox.currentText,
-                    dataManager.actionController.getPlotId(harvestIdComboBox.currentText),
+                    harvestIdComboBox.currentId,
                     ovenIdComboBox.ids
                     )
 
@@ -110,8 +109,8 @@ Pages.SupplyChainPageBase {
 
         onCurrentTextChanged: {
             // Refresh available ovens
-            dataManager.ovensModel.plotId = dataManager.actionController.getPlotId(currentText)
-            dataManager.minimumDateModel.plotId = currentText
+            dataManager.ovensModel.plotId = currentId
+            dataManager.minimumDateModel.plotId = currentId
         }
     }
 

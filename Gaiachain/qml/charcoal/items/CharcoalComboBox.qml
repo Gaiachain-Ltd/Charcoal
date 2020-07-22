@@ -10,7 +10,7 @@ import "../../items" as Items
 import "../../components" as Components
 
 Items.GInput {
-    id: top
+    id: root
 
     property alias popupTitle: popup.title
     property alias model: entriesList.model
@@ -21,7 +21,11 @@ Items.GInput {
     property bool multiSelect: false
     property var selection: []
 
-    readOnly: false
+    property int currentId: -1
+
+    property bool popupLocked: false
+
+    readOnly: true
     iconSource: GStyle.downArrowImgUrl
     iconEdge: Enums.Edge.RightEdge
     showIcon: true
@@ -29,7 +33,7 @@ Items.GInput {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: if (readOnly == false) popup.open()
+        onClicked: if (popupLocked == false) popup.open()
     }
 
     Popup {
@@ -81,7 +85,8 @@ Items.GInput {
                 boundsBehavior: Flickable.StopAtBounds
 
                 delegate: Rectangle {
-                    readonly property string text: modelData
+                    readonly property string text: model.name
+                    readonly property int currentId: model.idNumber? model.idNumber : -1
 
                     id: delegateItem
                     width: entriesList.width
@@ -131,6 +136,7 @@ Items.GInput {
                                 newSelection.splice(newSelection.indexOf(text), 1)
                             } else {
                                 newSelection.push(text)
+                                root.currentId = currentId
                             }
                             newSelection.sort()
                             selection = newSelection
@@ -157,12 +163,12 @@ Items.GInput {
                 text: Strings.select
 
                 onClicked: {
-                    top.text = ""
+                    root.text = ""
                     for (let index = 0; index < selection.length; ++index) {
-                        if (top.text.length === 0) {
-                            top.text += selection[index]
+                        if (root.text.length === 0) {
+                            root.text += selection[index]
                         } else {
-                            top.text += ", " + selection[index]
+                            root.text += ", " + selection[index]
                         }
                     }
 

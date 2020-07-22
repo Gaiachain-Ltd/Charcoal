@@ -6,6 +6,7 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "listupdater.h"
 
 #include <QJsonDocument>
@@ -15,10 +16,29 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-ParcelsModel::ParcelsModel(QObject *parent) : QueryModel(parent)
+ParcelsModel::ParcelsModel(QObject *parent) : SimpleListQueryModel(parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT code FROM Parcels");
+    setDbQuery("SELECT id, code FROM Parcels");
+}
+
+QVariant ParcelsModel::data(const QModelIndex &index, int role) const
+{
+    if (index.isValid() == false) {
+        return {};
+    }
+
+    query().seek(index.row());
+
+    switch (role) {
+    case Qt::ItemDataRole::DisplayRole:
+    case ListRole::Name:
+        return query().value(Tags::code).toString();
+    case ListRole::Id:
+        return query().value(Tags::id).toInt();
+    }
+
+    return {};
 }
 
 void ParcelsModel::refreshWebData()
@@ -35,6 +55,8 @@ void ParcelsModel::refreshWebData()
         qDebug() << "Enqueing request";
         m_queuedRequests.append(request);
     }
+
+    m_isPending = true;
 }
 
 void ParcelsModel::getUnusedParcels()
@@ -56,8 +78,9 @@ void ParcelsModel::getUnusedParcels()
 
 void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     ListUpdater updates("Parcels", m_connectionName);
-    if (updates.updateTable(reply, "code")) {
+    if (updates.updateTable(reply, Tags::code)) {
         // The unused parcels information is not used :D
         // Reason: parcels can be reused freely, see:
         // https://projects.milosolutions.com/issues/87745
@@ -76,7 +99,7 @@ void ParcelsModel::webUnusedParcelsReplyHandler(const QJsonDocument &reply)
 
     for (const QJsonValue &item : mainArray) {
         const QJsonObject object(item.toObject());
-        unusedParcelIds.append(object.value("id").toInt());
+        unusedParcelIds.append(object.value(Tags::id).toInt());
     }
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));

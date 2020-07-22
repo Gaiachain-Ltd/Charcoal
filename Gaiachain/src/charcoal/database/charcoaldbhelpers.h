@@ -6,6 +6,17 @@
 #include <QString>
 #include <QJsonObject>
 
+namespace db {
+enum QueryFlag {
+    Silent = 0x0,
+    Verbose = 0x1,
+    MatchFirst = 0x2,
+    MatchLast = 0x4
+};
+Q_DECLARE_FLAGS(QueryFlags, QueryFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QueryFlags)
+}
+
 struct ContinueEvent {
     int entityId = -1;
     int eventId = -1;
@@ -23,13 +34,13 @@ public:
     static Enums::SupplyChainAction actionByName(const QString &actionName);
     static int bagCountInTransport(const QString &connectionName, const int id);
     static QVariantList defaultOvenDimensions(const QString &connectionName,
-                                              const int ovenType);
+                                              const int ovenId);
 
     static QJsonObject dbPropertiesToJson(const QString &properties);
 
     static int getWebPackageId(const QString &connectionName, const int entityId);
     static QVector<int> getWebPackageIds(const QString &connectionName,
-                                         const QString &plotName,
+                                         const int transportId,
                                          const int parentId);
     static int getVillageId(const QString &connectionName, const QString &name);
     static int getDestinationId(const QString &connectionName, const QString &name);
@@ -39,13 +50,17 @@ public:
                          const QString &ovenName, const bool verbose = true);
     static int getOvenTypeId(const QString &connectionName, const QString &ovenType);
     static int getOvenTypeIdFromName(const QString &connectionName, const QString &name);
+    static Enums::OvenType getOvenType(const QString &connectionName,
+                                       const int typeId);
 
     static int getEntityIdFromWebId(const QString &connectionName, const int webId,
-                                    const bool verbose = true);
+                                    const db::QueryFlags settings = db::QueryFlag::Verbose);
     static int getEntityIdFromName(const QString &connectionName, const QString &name,
-                                   const bool verbose = true);
+                                   const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static int getEntityTypeId(const QString &connectionName, const Enums::PackageType type);
+
+    static int getParentEntityId(const QString &connectionName, const int id);
 
     static int getEventTypeId(const QString &connectionName,
                               const Enums::SupplyChainAction action);
@@ -54,14 +69,14 @@ public:
                                                             const int eventId);
 
     static int getEventIdFromWebId(const QString &connectionName, const int webId,
-                                   const bool verbose = true);
+                                   const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static int getEventId(const QString &connectionName, const int entityId,
                           const int eventTypeId, qint64 timestamp,
                           const bool verbose = true);
 
     static int getEventId(const QString &connectionName, qint64 timestamp,
-                          const bool verbose = true);
+                          const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static ContinueEvent getContinueEvent(const QString &connectionName,
                                           const int eventTypeId);
@@ -70,7 +85,8 @@ public:
 
     static int getSimpleInteger(const QString &connectionName, const QString &table,
                                 const QString &matchColumn, const QVariant &matchValue,
-                                const QString &returnColumn, const bool verbose = true);
+                                const QString &returnColumn,
+                                const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static int getInteger(const QString &connectionName, const QString &table,
                           const QStringList &matchColumns, const QVariantList &matchValues,
@@ -89,7 +105,8 @@ public:
 
     static QString getSimpleString(const QString &connectionName, const QString &table,
                                    const QString &matchColumn, const QVariant &matchValue,
-                                   const QString &returnColumn, const bool verbose = true);
+                                   const QString &returnColumn,
+                                   const db::QueryFlags settings = db::QueryFlag::Verbose);
 
     static constexpr char sep = '/';
     static constexpr int metalOvenType = 2;
@@ -110,5 +127,7 @@ private:
 
     static const QHash<Enums::PackageType, QString> m_packageTypeMap;
     static QHash<int, Enums::PackageType> m_packageTypeDbMap;
+
+    static QHash<int, Enums::OvenType> m_ovenTypeDbMap;
 };
 

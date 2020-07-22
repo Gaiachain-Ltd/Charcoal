@@ -38,6 +38,7 @@ namespace Tags {
     const QLatin1String companies = QLatin1String("companies");
     const QLatin1String destinations = QLatin1String("destinations");
     const QLatin1String id = QLatin1String("id");
+    const QLatin1String parentId = QLatin1String("parent_id");
     const QLatin1String name = QLatin1String("name");
     const QLatin1String type = QLatin1String("type");
     const QLatin1String village = QLatin1String("village");
@@ -47,6 +48,12 @@ namespace Tags {
     const QLatin1String ovenTypes = QLatin1String("oven-types");
     const QLatin1String treeSpecies = QLatin1String("tree-species");
     const QLatin1String villages = QLatin1String("villages");
+    const QLatin1String plot = QLatin1String("plot");
+    const QLatin1String typeId = QLatin1String("typeId");
+    const QLatin1String entityId = QLatin1String("entityId");
+    const QLatin1String date = QLatin1String("date");
+    const QLatin1String actionName = QLatin1String("actionName");
+    const QLatin1String parent = QLatin1String("parent");
     // Charcoal user data
     const QLatin1String code = QLatin1String("code");
     const QLatin1String contact = QLatin1String("contact");
@@ -59,6 +66,7 @@ namespace Tags {
     const QLatin1String logger = QLatin1String("LOGGER");
     // Charcoal Event reply fields and charcoal Replantation reply fields
     const QLatin1String eventTimestamp = QLatin1String("timestamp");
+    const QLatin1String webId = QLatin1String("webId");
     const QLatin1String webEventId = QLatin1String("package_id");
     const QLatin1String webPlotId = QLatin1String("plot_id");
     const QLatin1String webHarvestId = QLatin1String("harvest_id");

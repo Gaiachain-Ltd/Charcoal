@@ -37,7 +37,6 @@ private:
 
     QString wrapAndJoin(const QStringList &items) const;
 
-    const QLatin1String id = QLatin1String("id");
     const QLatin1String wrap = QLatin1String("\"");
     const QLatin1String sep = QLatin1String(", ");
 

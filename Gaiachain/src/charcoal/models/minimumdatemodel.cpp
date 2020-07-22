@@ -2,6 +2,7 @@
 
 #include "database/dbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
@@ -31,35 +32,29 @@ void MinimumDateModel::refresh()
     emit refreshed();
 }
 
-void MinimumDateModel::setPlotId(const QString &id)
+void MinimumDateModel::setPlotId(const int id)
 {
     m_plotId = id;
 
-    if (m_plotId.isEmpty()) {
+    if (m_plotId == -1) {
         setDbQuery(QString());
     } else {
-        const QString plotName(CharcoalDbHelpers::getPlotName(id));
-        const QString parentId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotName));
-
-        setDbQuery(QString("SELECT date "
-                           "FROM Events "
-                           "WHERE entityId IN "
-                           "(SELECT id FROM Entities WHERE id=\"%1\" "
-                           "OR parent=\"%1\") "
-                           "ORDER BY date DESC LIMIT 1").arg(parentId));
+        setDbQuery(QString("SELECT date FROM Events "
+                           "WHERE entityId=%1 "
+                           "ORDER BY date DESC LIMIT 1").arg(m_plotId));
     }
 
     refresh();
 
-    emit plotIdChanged(id);
+    emit plotIdChanged(m_plotId);
 
     if (query().seek(0)) {
-        const qint64 timestamp = query().value("date").toLongLong();
+        const qint64 timestamp = query().value(Tags::date).toLongLong();
         setDate(QDateTime::fromSecsSinceEpoch(timestamp));
     }
 }
 
-QString MinimumDateModel::plotId() const
+int MinimumDateModel::plotId() const
 {
     return m_plotId;
 }

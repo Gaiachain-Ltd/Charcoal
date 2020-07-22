@@ -1,8 +1,8 @@
 #pragma once
 
-#include "querymodel.h"
+#include "simplelistquerymodel.h"
 
-class VillagesModel : public QueryModel
+class VillagesModel : public SimpleListQueryModel
 {
     Q_OBJECT
 

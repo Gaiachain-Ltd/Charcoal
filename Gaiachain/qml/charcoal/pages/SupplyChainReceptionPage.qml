@@ -15,13 +15,15 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
-    property string transportId
+    property string transportName
+    property int transportId
 
     property var scannedQrs: []
     readonly property bool hasQrs: scannedQrs.length > 0
 
     onScannedQrsChanged: {
         transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
+        transportName = dataManager.actionController.getEntityName(transportId)
         dataManager.minimumDateModel.plotId = transportId
     }
 
@@ -45,7 +47,7 @@ Pages.SupplyChainPageBase {
     }
 
     function refreshData() {
-        dataManager.minimumDateModel.plotId = ""
+        dataManager.minimumDateModel.plotId = -1
     }
 
     function proceed() {
@@ -72,7 +74,7 @@ Pages.SupplyChainPageBase {
         var summary = [
                     Utility.createSummaryItem(
                         Strings.transportId,
-                        transportId,
+                        transportName,
                         "", "",
                         GStyle.delegateHighlightColor4,
                         GStyle.fontHighlightColor4,
@@ -148,14 +150,14 @@ Pages.SupplyChainPageBase {
                     scannedQrs
                     )
 
-        let plotId = dataManager.actionController.getPlotId(transportId)
+        let plotId = dataManager.actionController.getPlotId(transportName)
         let scannedBagsCount = dataManager.actionController.scannedBagsCount(transportId)
         let scannedBagsTotal = dataManager.actionController.scannedBagsTotal(transportId)
         let registeredTrucksCount = dataManager.actionController.registeredTrucksCount(transportId)
         let registeredTrucksTotal = dataManager.actionController.registeredTrucksTotal(transportId)
 
         pageManager.enter(Enums.Page.SupplyChainFinalize, {
-                              "plotId": plotId,
+                              "transportId": transportId,
                               "scannedBagsCount": scannedBagsCount,
                               "scannedBagsTotal": scannedBagsTotal,
                               "registeredTrucksCount": registeredTrucksCount,

@@ -56,6 +56,7 @@ void NotificationManager::checkNotifications()
         BaseRequest::Type::Get
         );
 
+    request->setQuiet(true);
     request->setToken(m_sessionManager->token());
     m_sessionManager->sendRequest(request, this,
                                   &NotificationManager::webErrorHandler,

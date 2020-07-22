@@ -5,14 +5,15 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "listupdater.h"
 
 #include <QSqlQuery>
 
-VillagesModel::VillagesModel(QObject *parent) : QueryModel(parent)
+VillagesModel::VillagesModel(QObject *parent) : SimpleListQueryModel(parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT name FROM Villages");
+    setDbQuery("SELECT id, name FROM Villages");
 }
 
 void VillagesModel::refreshWebData()
@@ -29,12 +30,15 @@ void VillagesModel::refreshWebData()
         qDebug() << "Enqueing request";
         m_queuedRequests.append(request);
     }
+
+    m_isPending = true;
 }
 
 void VillagesModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     ListUpdater updates("Villages", m_connectionName);
-    if (updates.updateTable(reply, "name")) {
+    if (updates.updateTable(reply, Tags::name)) {
         emit webDataRefreshed();
     } else {
         qWarning() << RED("Updating items has failed");

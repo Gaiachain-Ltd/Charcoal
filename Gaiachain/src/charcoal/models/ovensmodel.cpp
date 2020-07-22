@@ -3,6 +3,7 @@
 #include "database/dbhelpers.h"
 #include "charcoal/database/charcoaldbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -32,24 +33,23 @@ void OvensModel::refresh()
     emit refreshed();
 }
 
-void OvensModel::setPlotId(const QString &id)
+void OvensModel::setPlotId(const int id)
 {
-    m_plotId = id;
+    m_plotId = CharcoalDbHelpers::getParentEntityId(m_connectionName, id);
 
     setDbQuery(QString("SELECT id, type, name, oven_height, oven_length, oven_width, "
                        "carbonizationBeginning "
                        "FROM Ovens WHERE carbonizationEnding IS NULL "
-                       "AND plot IS "
-                       "(SELECT id FROM Entities WHERE name=\"%1\")").arg(m_plotId));
+                       "AND plot=%1").arg(m_plotId));
 
     refresh();
 
-    //qDebug() << "OVEN MODELS:" << rowCount();
+    qDebug() << "OVEN MODELS:" << id << rowCount();
 
     emit plotIdChanged(id);
 }
 
-QString OvensModel::plotId() const
+int OvensModel::plotId() const
 {
     return m_plotId;
 }
@@ -64,32 +64,22 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case OvenRole::Id:
-        return query().value("id").toString();
+        return query().value(Tags::id).toString();
     case Qt::ItemDataRole::DisplayRole:
     case OvenRole::LetterId:
-        return query().value("name").toString();
+        return query().value(Tags::name).toString();
     case OvenRole::FirstRow:
     {
-        const QString ovenTypeId(query().value("type").toString());
-        QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-        q.prepare("SELECT type FROM OvenTypes WHERE id=:ovenTypeId");
-        q.bindValue(":ovenTypeId", ovenTypeId);
-
-        if (q.exec() == false) {
-            qWarning() << RED("Getting oven type has failed!")
-                       << q.lastError().text() << "for query:" << q.lastQuery();
-            return {};
-        }
-
-        q.next();
-        const int type(q.value("type").toInt());
-        const bool isMetallic = (type == CharcoalDbHelpers::metalOvenType);
+        const int ovenTypeId(query().value(Tags::type).toInt());
+        const Enums::OvenType type = CharcoalDbHelpers::getOvenType(
+            m_connectionName, ovenTypeId);
+        const bool isMetallic = (type == Enums::OvenType::Metallic);
 
         return tr("%1 - %2 x %3 x %4m")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))
-            .arg(query().value("oven_height").toString())
-            .arg(query().value("oven_width").toString())
-            .arg(query().value("oven_length").toString());
+            .arg(query().value(Tags::webOvenHeight).toString())
+            .arg(query().value(Tags::webOvenWidth).toString())
+            .arg(query().value(Tags::webOvenLength).toString());
     }
     case OvenRole::SecondRow:
     {
@@ -105,7 +95,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
         }
 
         q.next();
-        const qint64 timestamp = q.value("date").toLongLong();
+        const qint64 timestamp = q.value(Tags::date).toLongLong();
         const QDateTime date = QDateTime::fromSecsSinceEpoch(timestamp);
         return tr("Carbonization beginning: %1").arg(date.toString("dd/MM/yyyy"));
     }

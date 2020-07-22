@@ -66,7 +66,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
         dataManager.destinationsModel.refresh()
-        dataManager.minimumDateModel.plotId = ""
+        dataManager.minimumDateModel.plotId = -1
         isPausedEvent = dataManager.unusedHarvestIdsModel.hasPausedEvent
     }
 
@@ -141,9 +141,10 @@ Pages.SupplyChainPageBase {
                     loadingDateHeader.selectedDate,
                     userManager.userData.code,
                     transportId,
-                    harvestIdComboBox.currentText,
+                    harvestIdComboBox.currentId,
                     plateNumberHeader.inputText,
                     deliveryDestinationComboBox.currentText,
+                    deliveryDestinationComboBox.currentId,
                     scannedQrs,
                     shouldPause
                     )
@@ -176,9 +177,9 @@ Pages.SupplyChainPageBase {
 
         model: dataManager.unusedHarvestIdsModel
 
-        readOnly: isPausedEvent
+        popupLocked: isPausedEvent
 
-        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentText
+        onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentId
     }
 
     Headers.InputHeader {
@@ -239,7 +240,7 @@ Pages.SupplyChainPageBase {
         popupTitle: Strings.selectDeliveryDestination
 
         model: dataManager.destinationsModel
-        readOnly: isPausedEvent
+        popupLocked: isPausedEvent
     }
 
     Common.PositionSourceHandler {

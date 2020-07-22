@@ -1,13 +1,15 @@
 #pragma once
 
-#include "querymodel.h"
+#include "simplelistquerymodel.h"
 
-class ParcelsModel : public QueryModel
+class ParcelsModel : public SimpleListQueryModel
 {
     Q_OBJECT
 
 public:
     explicit ParcelsModel(QObject *parent = nullptr);
+
+    QVariant data(const QModelIndex &index, int role) const override;
 
 public slots:
     void refreshWebData() override;

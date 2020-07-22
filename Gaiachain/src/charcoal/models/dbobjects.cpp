@@ -44,13 +44,13 @@ Oven Event::loadOven(const QString &connectionName) const
     }
 
     Oven oven;
-    oven.id = q.value("id").toInt();
-    oven.typeId = q.value("type").toInt();
-    oven.plotId = q.value("plot").toInt();
-    oven.name = q.value("name").toString();
-    oven.height = q.value("oven_height").toReal();
-    oven.width = q.value("oven_width").toReal();
-    oven.length = q.value("oven_length").toReal();
+    oven.id = q.value(Tags::id).toInt();
+    oven.typeId = q.value(Tags::type).toInt();
+    oven.plotId = q.value(Tags::plot).toInt();
+    oven.name = q.value(Tags::name).toString();
+    oven.height = q.value(Tags::webOvenHeight).toReal();
+    oven.width = q.value(Tags::webOvenWidth).toReal();
+    oven.length = q.value(Tags::webOvenLength).toReal();
     oven.carbonizerId = userId;
 
     const QVariant beginningEvent(q.value("carbonizationBeginning"));
@@ -70,12 +70,12 @@ Oven Event::loadOven(const QString &connectionName) const
 
 void Event::loadFromQuery(QSqlQuery *query)
 {
-    id = query->value("id").toInt();
-    typeId = query->value("typeId").toInt();
-    entityId = query->value("entityId").toInt();
+    id = query->value(Tags::id).toInt();
+    typeId = query->value(Tags::typeId).toInt();
+    entityId = query->value(Tags::entityId).toInt();
     userId = query->value("userId").toString();
     date = query->value("eventDate").toLongLong();
-    timestamp = query->value("date").toLongLong();
+    timestamp = query->value(Tags::date).toLongLong();
 
     const double latitude = query->value("locationLatitude").toDouble();
     const double longitude = query->value("locationLongitude").toDouble();
@@ -93,10 +93,10 @@ bool Entity::loadFromDb(const QString &connectionName, const int id)
     q.bindValue(":id", id);
 
     if (q.exec() && q.next()) {
-        this->id = q.value("id").toInt();
-        parent = q.value("parent").toInt();
-        typeId = q.value("typeId").toInt();
-        name = q.value("name").toString();
+        this->id = q.value(Tags::id).toInt();
+        parent = q.value(Tags::parent).toInt();
+        typeId = q.value(Tags::typeId).toInt();
+        name = q.value(Tags::name).toString();
         return true;
     } else {
         qWarning() << RED("Could not load Entity from DB")

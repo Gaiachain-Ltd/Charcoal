@@ -155,6 +155,7 @@ charcoal {
         src/charcoal/models/unusedharvestidsmodel.h \
         src/charcoal/models/unusedtransportidsmodel.h \
         src/charcoal/models/querymodel.h \
+        src/charcoal/models/simplelistquerymodel.h \
         src/charcoal/models/unusedplotidsforreplantationmodel.h \
         src/charcoal/models/ovensmodel.h \
         src/charcoal/models/trackingmodel.h \
@@ -187,6 +188,7 @@ charcoal {
         src/charcoal/models/unusedharvestidsmodel.cpp \
         src/charcoal/models/unusedtransportidsmodel.cpp \
         src/charcoal/models/querymodel.cpp \
+        src/charcoal/models/simplelistquerymodel.cpp \
         src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
         src/charcoal/models/ovensmodel.cpp \
         src/charcoal/models/trackingmodel.cpp \

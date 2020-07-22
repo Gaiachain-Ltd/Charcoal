@@ -2,6 +2,7 @@
 
 #include "database/dbhelpers.h"
 #include "common/logs.h"
+#include "common/tags.h"
 
 #include <QVariant>
 
@@ -32,10 +33,10 @@ bool ListUpdater::updateTable(const QJsonDocument &webData,
                               const QStringList &fieldNames) const
 {
     QStringList names;
-    if (fieldNames.contains(id)) {
+    if (fieldNames.contains(Tags::id)) {
         names = fieldNames;
     } else {
-        names.append(id);
+        names.append(Tags::id);
         names.append(fieldNames);
     }
 
@@ -130,7 +131,7 @@ bool ListUpdater::removeObsoleteItems(const RecordsList &webItems,
     const QString remove("DELETE FROM %1 WHERE %2=%3");
 
     for (const auto &item : qAsConst(toRemove)) {
-        query.prepare(remove.arg(m_tableName, id, item.value(id)));
+        query.prepare(remove.arg(m_tableName, Tags::id, item.value(Tags::id)));
         if (query.exec() == false) {
             qWarning() << RED("Removing") << m_tableName << ("has failed!")
                        << query.lastError().text()

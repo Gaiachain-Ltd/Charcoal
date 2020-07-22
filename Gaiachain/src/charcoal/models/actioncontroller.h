@@ -32,17 +32,19 @@ public:
 
     Q_INVOKABLE QString getPlotId(const QString &packageId);
 
-    Q_INVOKABLE QString getTransportIdFromBags(const QVariantList &scannedQrs) const;
-    Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
-    Q_INVOKABLE int bagCountInTransport(const QString &transportName) const;
-    Q_INVOKABLE QString plateNumberInTransport(const QString &transportId) const;
-    Q_INVOKABLE int scannedBagsCount(const QString &transportId) const;
-    Q_INVOKABLE int scannedBagsTotal(const QString &transportId) const;
-    Q_INVOKABLE int registeredTrucksCount(const QString &transportId) const;
-    Q_INVOKABLE int registeredTrucksTotal(const QString &transportId) const;
+    Q_INVOKABLE int getTransportIdFromBags(const QVariantList &scannedQrs) const;
+    Q_INVOKABLE QString getEntityName(const int id) const;
 
-    Q_INVOKABLE QString nextOvenNumber(const QString &plotId) const;
-    Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenType) const;
+    Q_INVOKABLE int nextTransportNumber(const QString &harvestId) const;
+    Q_INVOKABLE int bagCountInTransport(const int transportId) const;
+    Q_INVOKABLE QString plateNumberInTransport(const int transportId) const;
+    Q_INVOKABLE int scannedBagsCount(const int transportId) const;
+    Q_INVOKABLE int scannedBagsTotal(const int transportId) const;
+    Q_INVOKABLE int registeredTrucksCount(const int transportId) const;
+    Q_INVOKABLE int registeredTrucksTotal(const int transportId) const;
+
+    Q_INVOKABLE QString nextOvenNumber(int parentEntityId) const;
+    Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenId) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,
@@ -50,8 +52,9 @@ public:
         const QDateTime &eventDate,
         const QString &userId,
         const QString &parcel,
-        const QString &village,
-        const QString &treeSpecies
+        const int parcelId,
+        const int villageId,
+        const int treeSpeciesId
         ) const;
 
     Q_INVOKABLE void registerLoggingEnding(
@@ -59,7 +62,7 @@ public:
         const QDateTime &timestamp,
         const QDateTime &eventDate,
         const QString &userId,
-        const QString &plotId,
+        const int plotId,
         const int numberOfTrees
         ) const;
 
@@ -69,8 +72,8 @@ public:
         const QDateTime &eventDate,
         const QString &userId,
         const QString &plotId,
+        const int plotDbId,
         const QString &ovenId,
-        const int ovenType,
         const int ovenIdNumber,
         const QVariantList &ovenDimensions
         ) const;
@@ -80,8 +83,7 @@ public:
         const QDateTime &timestamp,
         const QDateTime &eventDate,
         const QString &userId,
-        const QString &harvestId,
-        const QString &plotId,
+        const int harvestId,
         const QVariantList &ovenIds
         ) const;
 
@@ -91,9 +93,10 @@ public:
         const QDateTime &eventDate,
         const QString &userId,
         const QString &transportId,
-        const QString &harvestId,
+        const int harvestId,
         const QString &plateNumber,
         const QString &destination,
+        const int destinationId,
         const QVariantList &scannedQrs,
         const bool pauseEvent
         ) const;
@@ -103,21 +106,21 @@ public:
         const QDateTime &timestamp,
         const QDateTime &eventDate,
         const QString &userId,
-        const QString &transportId,
+        const int transportId,
         const QVariantList &documents,
         const QVariantList &receipts,
         const QVariantList &scannedQrs
         ) const;
 
-    Q_INVOKABLE void finalizeSupplyChain(const QString &plotName) const;
+    Q_INVOKABLE void finalizeSupplyChain(const int transportId) const;
 
     Q_INVOKABLE void registerReplantation(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QString &userId,
-        const QString &plotId,
+        const int plotId,
         const int numberOfTrees,
-        const QString &treeSpecies,
+        const int treeSpeciesId,
         const QDateTime &beginningDate,
         const QDateTime &endingDate
         ) const;
@@ -128,7 +131,7 @@ signals:
     void finalizePackages(const QVector<int> &webIds) const;
 
 private:
-    int scannedBagsForAction(const QString &transportId,
+    int scannedBagsForAction(const int transportId,
                              const Enums::SupplyChainAction action) const;
 
     bool insertEntity(QSqlQuery *query, const int typeId,
@@ -156,7 +159,7 @@ private:
 
     const QString dateFormat = "dd-MM-yyyy";
 
-    QString m_dbConnName;
+    QString m_connectionName;
     QPointer<PicturesManager> m_picturesManager;
 };
 

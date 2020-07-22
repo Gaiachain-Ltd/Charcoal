@@ -5,14 +5,15 @@
 #include "controllers/session/restsessionmanager.h"
 #include "controllers/usermanager.h"
 #include "common/logs.h"
+#include "common/tags.h"
 #include "listupdater.h"
 
 #include <QSqlQuery>
 
-TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : QueryModel(parent)
+TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : SimpleListQueryModel(parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT name FROM TreeSpecies");
+    setDbQuery("SELECT id, name FROM TreeSpecies");
 }
 
 void TreeSpeciesModel::refreshWebData()
@@ -29,12 +30,15 @@ void TreeSpeciesModel::refreshWebData()
         qDebug() << "Enqueing request";
         m_queuedRequests.append(request);
     }
+
+    m_isPending = true;
 }
 
 void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     ListUpdater updates("TreeSpecies", m_connectionName);
-    if (updates.updateTable(reply, "name")) {
+    if (updates.updateTable(reply, Tags::name)) {
         emit webDataRefreshed();
     } else {
         qWarning() << RED("Updating items has failed");

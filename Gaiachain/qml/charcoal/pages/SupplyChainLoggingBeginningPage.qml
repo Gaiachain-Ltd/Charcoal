@@ -79,8 +79,9 @@ Pages.SupplyChainPageBase {
                     beginningDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
                     parcelComboBox.currentText,
-                    villageComboBox.currentText,
-                    treeSpeciesComboBox.currentText)
+                    parcelComboBox.currentId,
+                    villageComboBox.currentId,
+                    treeSpeciesComboBox.currentId)
 
         pageManager.enter(Enums.Page.MainMenu)
     }

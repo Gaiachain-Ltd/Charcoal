@@ -48,22 +48,22 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case TrackingRole::Id:
-        return query().value("id").toString();
+        return query().value(Tags::id).toString();
     case TrackingRole::Name:
     case Qt::ItemDataRole::DisplayRole:
-        return query().value("name").toString();
+        return query().value(Tags::name).toString();
     case TrackingRole::Type:
     {
-        const int id(query().value("typeId").toInt());
+        const int id(query().value(Tags::typeId).toInt());
         return int(CharcoalDbHelpers::getEntityType(m_connectionName, id));
     }
     case TrackingRole::Events:
     {
         Entity entity;
-        entity.id = query().value("id").toInt();
-        entity.parent = query().value("parent").toInt();
-        entity.typeId = query().value("typeId").toInt();
-        entity.name = query().value("name").toString();
+        entity.id = query().value(Tags::id).toInt();
+        entity.parent = query().value(Tags::parent).toInt();
+        entity.typeId = query().value(Tags::typeId).toInt();
+        entity.name = query().value(Tags::name).toString();
         const QVector<Event> events = entity.loadEvents(m_connectionName);
 
         QVariantList result;
@@ -105,7 +105,7 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
 
             const QVariantMap row {
                 { "eventName", name },
-                { "date", dateString(event.date) }
+                { Tags::date, dateString(event.date) }
             };
 
             result.append(row);
@@ -121,10 +121,10 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
          */
 
         Entity entity;
-        entity.id = query().value("id").toInt();
-        entity.parent = query().value("parent").toInt();
-        entity.typeId = query().value("typeId").toInt();
-        entity.name = query().value("name").toString();
+        entity.id = query().value(Tags::id).toInt();
+        entity.parent = query().value(Tags::parent).toInt();
+        entity.typeId = query().value(Tags::typeId).toInt();
+        entity.name = query().value(Tags::name).toString();
 
         const Enums::PackageType entityType = CharcoalDbHelpers::getEntityType(
             m_connectionName, entity.typeId);
@@ -476,10 +476,13 @@ void TrackingModel::refreshWebData()
         qDebug() << "Enqueing request";
         m_queuedRequests.append(request);
     }
+
+    m_isPending = true;
 }
 
 void TrackingModel::webReplyHandler(const QJsonDocument &reply)
 {
+    m_isPending = false;
     //qDebug() << "Data is:" << reply;
     TrackingUpdater updater(m_connectionName);
     const auto result = updater.updateTable(reply);

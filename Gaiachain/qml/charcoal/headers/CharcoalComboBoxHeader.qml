@@ -14,6 +14,7 @@ Headers.GHeader {
     property alias model: comboBox.model
     property alias placeholderText: comboBox.placeholderText
     property alias currentText: comboBox.text
+    property alias currentId: comboBox.currentId
     property alias popupTitle: comboBox.popupTitle
 
     property alias checkIcon: comboBox.checkIcon
@@ -21,7 +22,7 @@ Headers.GHeader {
 
     property alias multiSelect: comboBox.multiSelect
 
-    property alias readOnly: comboBox.readOnly
+    property alias popupLocked: comboBox.popupLocked
 
     widget: CharcoalItems.CharcoalComboBox {
         id: comboBox

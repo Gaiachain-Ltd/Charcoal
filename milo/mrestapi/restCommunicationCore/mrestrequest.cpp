@@ -178,6 +178,16 @@ MRestRequest::Type MRestRequest::type() const
     return mType;
 }
 
+void MRestRequest::setQuiet(const bool isQuiet)
+{
+    mQuiet = isQuiet;
+}
+
+bool MRestRequest::isQuiet() const
+{
+    return mQuiet;
+}
+
 void MRestRequest::setDocument(const QJsonDocument &document)
 {
     mRequestDocument = document;
@@ -191,7 +201,10 @@ void MRestRequest::setDocument(const QJsonDocument &document)
 void MRestRequest::send()
 {
     Q_ASSERT(mNetworkManager);
-    qCInfo(crequest) << mType << mUrl.toDisplayString() << mRequestRetryCounter << mRequestDocument;
+    if (mQuiet == false) {
+        qCInfo(crequest) << mType << mUrl.toDisplayString() << mRequestRetryCounter
+                         << mRequestDocument;
+    }
     mReplyData.clear();
     QNetworkRequest request(mUrl);
     request.setOriginatingObject(this);
@@ -276,11 +289,14 @@ void MRestRequest::readReplyData(const QString &requestName, const QString &stat
     // rawData can still be parsed in another formats
     mReplyDocument = QJsonDocument::fromJson(mReplyData, &parseError);
     if (parseError.error != QJsonParseError::NoError) {
-        qCDebug(crequest) << requestName << status
+        qCWarning(crequest) << requestName << status
                           << "Error while parsing json document:"
                           << parseError.errorString();
     } else {
-        qCDebug(crequest) << requestName << status << "Request reply is a valid JSON";
+        if (mQuiet == false) {
+            qCDebug(crequest) << requestName << status
+                              << "Request reply is a valid JSON";
+        }
     }
 }
 

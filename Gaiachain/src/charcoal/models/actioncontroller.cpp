@@ -26,7 +26,7 @@ ActionController::ActionController(QObject *parent) : QObject(parent)
 
 void ActionController::setDbConnection(const QString &connectionName)
 {
-    m_dbConnName = connectionName;
+    m_connectionName = connectionName;
 }
 
 void ActionController::setPicturesManager(PicturesManager *manager)
@@ -55,7 +55,7 @@ QString ActionController::generateTransportId(const QString &harvestId,
 {
     return harvestId + CharcoalDbHelpers::sep + licensePlate
         + CharcoalDbHelpers::sep + "T" + QString::number(transportNumber)
-            + CharcoalDbHelpers::sep + date.toString(dateFormat);
+        + CharcoalDbHelpers::sep + date.toString(dateFormat);
 }
 
 QString ActionController::getPlotId(const QString &packageId)
@@ -63,16 +63,16 @@ QString ActionController::getPlotId(const QString &packageId)
     return CharcoalDbHelpers::getPlotName(packageId);
 }
 
-QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
+int ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
 {
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT properties, entityId FROM Events "
                   "WHERE entityId IN (SELECT id FROM Entities WHERE isFinished=0) "
                   "AND typeId IN (SELECT id FROM EventTypes WHERE actionName=\"TR\") "
                   "ORDER BY entityId DESC");
 
-    QString transportEntityId;
+    int transportEntityId = -1;
     if (query.exec()) {
         while (query.next()) {
             const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
@@ -80,15 +80,16 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
                 CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
             const QVariantList qrs(properties.value(Tags::webQrCodes).toArray().toVariantList());
 
+            bool ok = true;
             for (const QVariant &qr : scannedQrs) {
                 if (qrs.contains(qr)) {
-                    transportEntityId = query.value("entityId").toString();
+                    transportEntityId = query.value(Tags::entityId).toInt(&ok);
                     //qDebug() << "HIT!" << qr.toString() << transportEntityId;
                     break;
                 }
             }
 
-            if (transportEntityId.isEmpty() == false) {
+            if (ok == false) {
                 break;
             }
         }
@@ -96,28 +97,32 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
         qWarning() << RED("Getting transport ID from bags has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
+                   << "DB:" << m_connectionName;
     }
 
-    if (transportEntityId.isEmpty()) {
+    if (transportEntityId == -1) {
         qWarning() << RED("No transport matching scanned bags has been found!")
                    << scannedQrs;
-        return QString();
     }
 
-    query.prepare("SELECT name FROM Entities WHERE id=:transportEntityId");
-    query.bindValue(":transportEntityId", transportEntityId);
+    return transportEntityId;
+}
+
+QString ActionController::getEntityName(const int id) const
+{
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+    query.prepare("SELECT name FROM Entities WHERE id=:id");
+    query.bindValue(":id", id);
 
     if (query.exec()) {
         query.next();
-        return query.value("name").toString();
+        return query.value(Tags::name).toString();
     }
 
-    qWarning() << RED("Getting Transport ID for bags has failed!")
+    qWarning() << RED("Getting Entity name has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName
-               << scannedQrs;
+               << "DB:" << m_connectionName;
 
     return QString();
 }
@@ -125,10 +130,10 @@ QString ActionController::getTransportIdFromBags(const QVariantList &scannedQrs)
 int ActionController::nextTransportNumber(const QString &harvestId) const
 {
     const QString plotId(CharcoalDbHelpers::getPlotName(harvestId));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
-    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
+    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotId));
+    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_connectionName, Enums::PackageType::Transport));
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT id FROM Entities WHERE parent=:parentEntityId "
                   "AND typeId=:transportTypeId");
@@ -149,24 +154,21 @@ int ActionController::nextTransportNumber(const QString &harvestId) const
     qWarning() << RED("Getting next transport number has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
+               << "DB:" << m_connectionName;
     return -1;
 }
 
-int ActionController::bagCountInTransport(const QString &transportName) const
+int ActionController::bagCountInTransport(const int transportId) const
 {
-    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportName));
-    return CharcoalDbHelpers::bagCountInTransport(m_dbConnName, transportEntityId);
+    return CharcoalDbHelpers::bagCountInTransport(m_connectionName, transportId);
 }
 
-QString ActionController::plateNumberInTransport(const QString &transportId) const
+QString ActionController::plateNumberInTransport(const int transportId) const
 {
-    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
-
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT properties FROM Events WHERE entityId=:transportEntityId");
-    query.bindValue(":transportEntityId", transportEntityId);
+    query.bindValue(":transportEntityId", transportId);
 
     if (query.exec()) {
         query.next();
@@ -179,42 +181,40 @@ QString ActionController::plateNumberInTransport(const QString &transportId) con
     qWarning() << RED("Getting plate number has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
+               << "DB:" << m_connectionName;
 
     return QString();
 }
 
-int ActionController::scannedBagsCount(const QString &transportId) const
+int ActionController::scannedBagsCount(const int transportId) const
 {
     return scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
 }
 
-int ActionController::scannedBagsTotal(const QString &transportId) const
+int ActionController::scannedBagsTotal(const int transportId) const
 {
     return scannedBagsForAction(transportId, Enums::SupplyChainAction::LoadingAndTransport);
 }
 
-int ActionController::registeredTrucksCount(const QString &transportId) const
+int ActionController::registeredTrucksCount(const int transportId) const
 {
-    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(
-        m_dbConnName, transportId));
     const int receptionTypeId(CharcoalDbHelpers::getEventTypeId(
-        m_dbConnName, Enums::SupplyChainAction::Reception));
+        m_connectionName, Enums::SupplyChainAction::Reception));
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     // It's a bit "hacky" we count only Reception events, that gives us number
     // of events where transport has left but not arrived yet.
     query.prepare("SELECT COUNT(id) FROM Events WHERE typeId=:receptionTypeId "
-                  "AND entityId=:transportEntityId");
+                  "AND entityId=:transportId");
     query.bindValue(":receptionTypeId", receptionTypeId);
-    query.bindValue(":transportEntityId", transportEntityId);
+    query.bindValue(":transportId", transportId);
 
     if (query.exec() == false) {
         qWarning() << RED("Getting number of received trucks has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
+                   << "DB:" << m_connectionName;
         return -1;
     }
 
@@ -222,24 +222,25 @@ int ActionController::registeredTrucksCount(const QString &transportId) const
     return query.value(0).toInt();
 }
 
-int ActionController::registeredTrucksTotal(const QString &transportId) const
+int ActionController::registeredTrucksTotal(const int transportId) const
 {
-    const QString plotId(CharcoalDbHelpers::getPlotName(transportId));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
-    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Transport));
+    const int plotId(CharcoalDbHelpers::getParentEntityId(
+        m_connectionName, transportId));
+    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(
+        m_connectionName, Enums::PackageType::Transport));
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT COUNT(id) FROM Entities WHERE parent=:parentEntityId "
                   "AND typeId=:transportTypeId");
-    query.bindValue(":parentEntityId", parentEntityId);
+    query.bindValue(":parentEntityId", plotId);
     query.bindValue(":transportTypeId", transportTypeId);
 
     if (query.exec() == false) {
         qWarning() << RED("Getting total number of trucks has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
+                   << "DB:" << m_connectionName;
         return -1;
     }
 
@@ -247,11 +248,9 @@ int ActionController::registeredTrucksTotal(const QString &transportId) const
     return query.value(0).toInt();
 }
 
-QString ActionController::nextOvenNumber(const QString &plotId) const
+QString ActionController::nextOvenNumber(int parentEntityId) const
 {
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
-
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT id FROM Ovens WHERE plot=:parentEntityId");
     query.bindValue(":parentEntityId", parentEntityId);
@@ -274,22 +273,25 @@ QString ActionController::nextOvenNumber(const QString &plotId) const
     qWarning() << RED("Getting next transport number has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
-               << "DB:" << m_dbConnName;
+               << "DB:" << m_connectionName;
 
     return "-1";
 }
 
-QVariantList ActionController::defaultOvenDimensions(const int ovenType) const
+QVariantList ActionController::defaultOvenDimensions(const int ovenId) const
 {
-    return CharcoalDbHelpers::defaultOvenDimensions(m_dbConnName, ovenType);
+    return CharcoalDbHelpers::defaultOvenDimensions(m_connectionName, ovenId);
 }
 
 void ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
     const QString &userId,
-    const QString &parcel, const QString &village,
-    const QString &treeSpecies) const
+    const QString &parcel,
+    const int parcelId,
+    const int villageId,
+    const int treeSpeciesId) const
 {
     /*
      * Algorithm is:
@@ -300,18 +302,19 @@ void ActionController::registerLoggingBeginning(
      */
 
     qDebug() << "Registering logging beginning" << coordinate << timestamp
-             << parcel << userId << village << treeSpecies;
+             << parcel << userId << villageId << treeSpeciesId;
 
     // First, insert a new Entity into table
     const QString plotId(generatePlotId(userId, parcel, timestamp.date()));
-    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Plot));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(
+        m_connectionName, Enums::PackageType::Plot));
 
     if (typeId == -1) {
         qWarning() << RED("Plot ID type not found!");
         return;
     }
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     if (insertEntity(&query, typeId, plotId, -1) == false) {
         return;
@@ -320,10 +323,7 @@ void ActionController::registerLoggingBeginning(
     // Then, insert a new Event under that Entity
     const int entityId(query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
-        m_dbConnName, Enums::SupplyChainAction::LoggingBeginning));
-    const int villageId(CharcoalDbHelpers::getVillageId(m_dbConnName, village));
-    const int parcelId(CharcoalDbHelpers::getParcelId(m_dbConnName, parcel));
-    const int treeSpeciesId(CharcoalDbHelpers::getTreeSpeciesId(m_dbConnName, treeSpecies));
+        m_connectionName, Enums::SupplyChainAction::LoggingBeginning));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -358,8 +358,10 @@ void ActionController::registerLoggingBeginning(
 
 void ActionController::registerLoggingEnding(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &plotId,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const int plotId,
     const int numberOfTrees) const
 {
     /*
@@ -372,24 +374,22 @@ void ActionController::registerLoggingEnding(
     qDebug() << "Registering logging ending" << coordinate << timestamp
              << plotId << userId << numberOfTrees;
 
-    const int entityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
-
-    if (entityId == -1) {
+    if (plotId == -1) {
         qWarning() << RED("Entity ID not found!");
         return;
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
-        m_dbConnName, Enums::SupplyChainAction::LoggingEnding));
+        m_connectionName, Enums::SupplyChainAction::LoggingEnding));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+    if (false == insertEvent(&query, plotId, eventTypeId, userId, timestamp,
                              eventDate, coordinate,
                              {
                                  { Tags::webNumberOfTrees, numberOfTrees },
@@ -404,9 +404,13 @@ void ActionController::registerLoggingEnding(
 
 void ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &plotId, const QString &ovenId,
-    const int ovenType, const int ovenIdNumber,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const QString &plotId,
+    const int plotDbId,
+    const QString &ovenId,
+    const int ovenIdNumber,
     const QVariantList &ovenDimensions) const
 {
     /*
@@ -421,28 +425,33 @@ void ActionController::registerCarbonizationBeginning(
      */
 
     qDebug() << "Registering carbonization beginning" << coordinate << timestamp
-             << plotId << ovenId << userId << ovenType << ovenIdNumber
+             << plotId << ovenId << userId << ovenIdNumber
              << ovenDimensions;
+
+    const int parentEntityId(plotDbId);
 
     // Check if Harvest ID already exists
     const QString harvestId(generateHarvestId(plotId, userId));
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    query.prepare("SELECT id, name FROM Entities WHERE name=:harvestId");
+    query.prepare("SELECT id, name FROM Entities "
+                  "WHERE name=:harvestId AND parent=:parentEntityId");
     query.bindValue(":harvestId", harvestId);
+    query.bindValue(":parentEntityId", parentEntityId);
 
     if (query.exec() == false) {
-        qWarning() << RED("Determining whether harves already exists has failed!")
+        qWarning() << RED("Determining whether harvest already exists has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery();
         return;
     }
 
     const bool alreadyPresent = query.next();
+    query.finish();
 
     // Insert a new Entity into table, if needed
-    const int typeId(CharcoalDbHelpers::getEntityTypeId(m_dbConnName, Enums::PackageType::Harvest));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
+    const int typeId(CharcoalDbHelpers::getEntityTypeId(
+        m_connectionName, Enums::PackageType::Harvest));
 
     if (typeId == -1) {
         qWarning() << RED("Harvest ID type not found!");
@@ -456,10 +465,10 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     // Then, insert a new Event under that Entity
-    const int entityId(alreadyPresent? query.value("id").toInt()
+    const int entityId(alreadyPresent? query.value(Tags::id).toInt()
                                       : query.lastInsertId().toInt());
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
-        m_dbConnName, Enums::SupplyChainAction::CarbonizationBeginning));
+        m_connectionName, Enums::SupplyChainAction::CarbonizationBeginning));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -467,9 +476,11 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     // Get proper oven dimensions
+    const Enums::OvenType ovenType = CharcoalDbHelpers::getOvenType(
+        m_connectionName, ovenIdNumber);
     QVariantList dimensions;
-    if (ovenType == CharcoalDbHelpers::metalOvenType) {
-        dimensions = defaultOvenDimensions(ovenType);
+    if (ovenType == Enums::OvenType::Metallic) {
+        dimensions = defaultOvenDimensions(ovenIdNumber);
     } else {
         dimensions = ovenDimensions;
     }
@@ -480,7 +491,7 @@ void ActionController::registerCarbonizationBeginning(
         { Tags::webOvenId, ovenId }
     };
 
-    if (ovenType != 2) {
+    if (ovenType != Enums::OvenType::Metallic) {
         properties.insert(Tags::webOvenHeight, dimensions.at(0).toDouble());
         properties.insert(Tags::webOvenLength, dimensions.at(1).toDouble());
         properties.insert(Tags::webOvenWidth, dimensions.at(2).toDouble());
@@ -498,7 +509,7 @@ void ActionController::registerCarbonizationBeginning(
     query.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
                   "oven_height, oven_width, oven_length) "
                   "VALUES (:type, :plot, :event, :name, :height, :width, :length)");
-    query.bindValue(":type", ovenType);
+    query.bindValue(":type", ovenIdNumber);
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
@@ -518,8 +529,10 @@ void ActionController::registerCarbonizationBeginning(
 
 void ActionController::registerCarbonizationEnding(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &harvestId, const QString &plotId,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const int harvestId,
     const QVariantList &ovenIds) const
 {
     /*
@@ -530,16 +543,15 @@ void ActionController::registerCarbonizationEnding(
      */
 
     qDebug() << "Registering carbonization ending" << coordinate << timestamp
-             << harvestId << plotId << ovenIds << userId;
+             << harvestId << ovenIds << userId;
 
-    const int entityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, harvestId));
-
-    if (entityId == -1) {
+    if (harvestId == -1) {
         qWarning() << RED("Entity ID not found!");
         return;
     }
 
-    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, Enums::SupplyChainAction::CarbonizationEnding));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::CarbonizationEnding));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -548,11 +560,11 @@ void ActionController::registerCarbonizationEnding(
 
     for (const QVariant &idVar : ovenIds) {
         const int ovenId(idVar.toInt());
-        const QString ovenLetter(CharcoalDbHelpers::getOvenLetter(m_dbConnName, ovenId));
+        const QString ovenLetter(CharcoalDbHelpers::getOvenLetter(m_connectionName, ovenId));
 
-        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+        QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-        if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+        if (false == insertEvent(&query, harvestId, eventTypeId, userId, timestamp,
                                  eventDate, coordinate,
                                  {
                                      { Tags::webOvenId, ovenLetter },
@@ -581,9 +593,14 @@ void ActionController::registerCarbonizationEnding(
 
 void ActionController::registerLoadingAndTransport(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &transportId, const QString &harvestId,
-    const QString &plateNumber, const QString &destination,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const QString &transportId,
+    const int harvestId,
+    const QString &plateNumber,
+    const QString &destination,
+    const int destinationId,
     const QVariantList &scannedQrs,
     const bool pauseEvent) const
 {
@@ -596,14 +613,15 @@ void ActionController::registerLoadingAndTransport(
      */
 
     qDebug() << "Registering transport and loading" << coordinate << timestamp
-             << userId << transportId << harvestId << plateNumber
+             << userId << transportId << plateNumber
              << destination << scannedQrs.size();
 
     // First, insert a new Entity into table
     const int typeId(CharcoalDbHelpers::getEntityTypeId(
-        m_dbConnName, Enums::PackageType::Transport));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
-        m_dbConnName, CharcoalDbHelpers::getPlotName(transportId)));
+        m_connectionName, Enums::PackageType::Transport));
+
+    const int parentEntityId(CharcoalDbHelpers::getParentEntityId(
+        m_connectionName, harvestId));
 
     if (typeId == -1) {
         qWarning() << RED("Transport ID type not found!");
@@ -611,18 +629,15 @@ void ActionController::registerLoadingAndTransport(
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
-        m_dbConnName, Enums::SupplyChainAction::LoadingAndTransport));
+        m_connectionName, Enums::SupplyChainAction::LoadingAndTransport));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
         return;
     }
 
-    const int destinationId(CharcoalDbHelpers::getDestinationId(
-        m_dbConnName, destination));
-
     const ContinueEvent existingEvent(CharcoalDbHelpers::getContinueEvent(
-        m_dbConnName, eventTypeId));
+        m_connectionName, eventTypeId));
 
     const QVariantMap props {
         { Tags::webPlateNumber, plateNumber },
@@ -631,7 +646,7 @@ void ActionController::registerLoadingAndTransport(
         { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
     };
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     if (existingEvent.eventId > 0) {
         // Event exists - we are continuing a paused event
@@ -666,9 +681,12 @@ void ActionController::registerLoadingAndTransport(
 
 void ActionController::registerReception(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const QString &transportId,
-    const QVariantList &documents, const QVariantList &receipts,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const int transportId,
+    const QVariantList &documents,
+    const QVariantList &receipts,
     const QVariantList &scannedQrs) const
 {
     /*
@@ -683,15 +701,13 @@ void ActionController::registerReception(
              << userId << transportId << documents << receipts
              << scannedQrs.size();
 
-    const int entityId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, transportId));
-
-    if (entityId == -1) {
+    if (transportId == -1) {
         qWarning() << RED("Entity ID not found!");
         return;
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
-        m_dbConnName, Enums::SupplyChainAction::Reception));
+        m_connectionName, Enums::SupplyChainAction::Reception));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
@@ -703,25 +719,25 @@ void ActionController::registerReception(
     // This can only happen for debug server where we have some dummy, unfinished
     // events
     const int existing = CharcoalDbHelpers::getInteger(
-        m_dbConnName, "Events",
-        { "entityId", "typeId" },
-        { entityId, eventTypeId },
-        "id",
+        m_connectionName, "Events",
+        { Tags::entityId, Tags::typeId },
+        { transportId, eventTypeId },
+        Tags::id,
         QString(), false
         );
 
     if (existing != -1) {
         qDebug() << RED("Reception already exists - special case!")
-                 << entityId << eventTypeId << existing;
+                 << transportId << eventTypeId << existing;
         return;
     }
 
     const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
     const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-    if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
+    if (false == insertEvent(&query, transportId, eventTypeId, userId, timestamp,
                              eventDate, coordinate,
                              {
                                  { Tags::webDocuments, cachedDocs },
@@ -736,27 +752,31 @@ void ActionController::registerReception(
     emit refreshLocalEvents();
 }
 
-void ActionController::finalizeSupplyChain(const QString &plotName) const
+void ActionController::finalizeSupplyChain(const int transportId) const
 {
-    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotName));
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
-    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId "
+    const int parentId(CharcoalDbHelpers::getParentEntityId(
+        m_connectionName, transportId));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+    query.prepare("UPDATE Entities SET isFinished=1 WHERE id=:transportId "
                   "OR parent=:parentId");
-    query.bindValue(":plotId", plotName);
+    query.bindValue(":transportId", transportId);
     query.bindValue(":parentId", parentId);
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing a supply chain has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "with params:" << plotName << parentId;
+                   << "with params:" << transportId << parentId;
         return;
     }
 
     // In online mode - send finalization call.
     // In offline mode - do nothing. Finalization will be handled by TrackingModel
     const auto webIds = CharcoalDbHelpers::getWebPackageIds(
-        m_dbConnName, plotName, parentId);
+        m_connectionName, transportId, parentId);
+
+    qDebug() << "ENTITY HAS BEEN FINISHED!" << transportId << parentId << webIds;
+
     if (webIds.isEmpty() == false) {
         emit finalizePackages(webIds);
     }
@@ -765,9 +785,12 @@ void ActionController::finalizeSupplyChain(const QString &plotName) const
 void ActionController::registerReplantation(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
-    const QString &userId, const QString &plotId,
-    const int numberOfTrees, const QString &treeSpecies,
-    const QDateTime &beginningDate, const QDateTime &endingDate) const
+    const QString &userId,
+    const int plotId,
+    const int numberOfTrees,
+    const int treeSpeciesId,
+    const QDateTime &beginningDate,
+    const QDateTime &endingDate) const
 {
     /*
      * Algorithm is:
@@ -777,13 +800,11 @@ void ActionController::registerReplantation(
      */
 
     qDebug() << "Registering replantation" << coordinate << timestamp
-             << userId << plotId << numberOfTrees << treeSpecies
+             << userId << plotId << numberOfTrees
+             << treeSpeciesId
              << beginningDate << endingDate;
 
-    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_dbConnName, plotId));
-    const int treeSpeciesId(CharcoalDbHelpers::getTreeSpeciesId(m_dbConnName, treeSpecies));
-
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("INSERT INTO Replantations (plotId, userId, "
                   "date, "
@@ -795,7 +816,7 @@ void ActionController::registerReplantation(
                   ":numberOfTrees, :treeSpecies, "
                   ":locationLatitude, :locationLongitude, "
                   ":beginningDate, :endingDate, 0)");
-    query.bindValue(":plotId", parentId);
+    query.bindValue(":plotId", plotId);
     query.bindValue(":userId", userId);
     query.bindValue(":date", timestamp.toSecsSinceEpoch());
     query.bindValue(":numberOfTrees", numberOfTrees);
@@ -809,7 +830,7 @@ void ActionController::registerReplantation(
         qWarning() << RED("Inserting Replantation has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
+                   << "DB:" << m_connectionName;
         return;
     }
 
@@ -826,25 +847,23 @@ void ActionController::registerReplantation(
     emit refreshLocalEvents();
 }
 
-int ActionController::scannedBagsForAction(const QString &transportId,
+int ActionController::scannedBagsForAction(const int transportId,
                                            const Enums::SupplyChainAction action) const
 {
-    const int transportEntityId(CharcoalDbHelpers::getEntityIdFromName(
-        m_dbConnName, transportId));
-    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_dbConnName, action));
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(m_connectionName, action));
 
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_dbConnName));
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT properties FROM Events WHERE typeId=:eventTypeId "
-                  "AND entityId=:transportEntityId");
+                  "AND entityId=:transportId");
     query.bindValue(":eventTypeId", eventTypeId);
-    query.bindValue(":transportEntityId", transportEntityId);
+    query.bindValue(":transportId", transportId);
 
     if (query.exec() == false) {
         qWarning() << RED("Getting total number of bags has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "DB:" << m_dbConnName;
+                   << "DB:" << m_connectionName;
         return -1;
     }
 
@@ -865,8 +884,8 @@ bool ActionController::insertEntity(QSqlQuery *query,
                                     const int parentId) const
 {
     query->prepare("INSERT INTO Entities (typeId, name, parent, "
-                  "isFinished, isReplanted) "
-                  "VALUES (:typeId, :packageId, :parent, 0, 0)");
+                   "isFinished, isReplanted) "
+                   "VALUES (:typeId, :packageId, :parent, 0, 0)");
     query->bindValue(":typeId", typeId);
     query->bindValue(":packageId", packageId);
     query->bindValue(":parent", parentId == -1? QVariant(QVariant::Int) : parentId);
@@ -875,7 +894,7 @@ bool ActionController::insertEntity(QSqlQuery *query,
         qWarning() << RED("Inserting new entity has failed!")
                    << query->lastError().text()
                    << "for query:" << query->lastQuery()
-                   << "DB:" << m_dbConnName
+                   << "DB:" << m_connectionName
                    << typeId << packageId << parentId;
         return false;
     }
@@ -895,10 +914,10 @@ bool ActionController::insertEvent(
     const bool pauseEvent) const
 {
     query->prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted, isPaused) "
-                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, "
+                   "date, eventDate, locationLatitude, locationLongitude, properties, "
+                   "isCommitted, isPaused) "
+                   "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
+                   ":locationLatitude, :locationLongitude, :properties, "
                    "0, :isPaused)");
     query->bindValue(":entityId", entityId);
     query->bindValue(":typeId", eventTypeId);
