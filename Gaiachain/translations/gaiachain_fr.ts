@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>GStrings</name>
     <message>
@@ -86,7 +86,7 @@
     <message>
         <location filename="../qml/GStrings.qml" line="32"/>
         <location filename="../qml/GStrings.qml" line="83"/>
-        <location filename="../qml/GStrings.qml" line="311"/>
+        <location filename="../qml/GStrings.qml" line="314"/>
         <source>Transport</source>
         <translation>Transport</translation>
     </message>
@@ -193,19 +193,19 @@
     </message>
     <message>
         <source>Searching</source>
-        <translation type="vanished">Recherche</translation>
+        <translation>Recherche</translation>
     </message>
     <message>
         <source>Searching...</source>
-        <translation type="vanished">Recherche...</translation>
+        <translation>Recherche...</translation>
     </message>
     <message>
         <source>Online</source>
-        <translation type="vanished">En ligne</translation>
+        <translation>En ligne</translation>
     </message>
     <message>
         <source>Offline</source>
-        <translation type="vanished">Hors ligne</translation>
+        <translation>Hors ligne</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="64"/>
@@ -261,7 +261,7 @@ Vérifiez votre connection internet.</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="78"/>
-        <location filename="../qml/GStrings.qml" line="310"/>
+        <location filename="../qml/GStrings.qml" line="313"/>
         <source>Harvest</source>
         <translation>Récolte</translation>
     </message>
@@ -533,7 +533,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="153"/>
         <source>Add Harvest ID</source>
-        <translation>Ajouter un Récolte ID</translation>
+        <translation>Ajouter ID Récolte</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="154"/>
@@ -702,7 +702,7 @@ Vérifiez votre connection internet.</translation>
     </message>
     <message>
         <source>Loading and transport</source>
-        <translation type="vanished">Chargement et transport</translation>
+        <translation>Chargement et transport</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="209"/>
@@ -778,23 +778,23 @@ Vérifiez votre connection internet.</translation>
         <location filename="../qml/GStrings.qml" line="228"/>
         <location filename="../qml/GStrings.qml" line="240"/>
         <source>Dummy text - Malebi representative ID help</source>
-        <translation>Ceci est votre numéro d&apos;utilisateur unique.</translation>
+        <translation>Ceci est votre numéro d&apos;utilisateur unique</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="229"/>
         <source>Dummy text - village help</source>
-        <translation>Ceci est le site où vous allez couper les arbres.</translation>
+        <translation>Ceci est le site où vous allez couper les arbres</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="230"/>
-        <location filename="../qml/GStrings.qml" line="319"/>
+        <location filename="../qml/GStrings.qml" line="322"/>
         <source>Dummy text - tree species help</source>
         <translation>Ceci sont les arbres que vous allez couper.</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="231"/>
         <location filename="../qml/GStrings.qml" line="257"/>
-        <location filename="../qml/GStrings.qml" line="321"/>
+        <location filename="../qml/GStrings.qml" line="324"/>
         <source>Dummy text - beginning date help</source>
         <translation>Ceci est la date à laquelle vous avez commencé a coupé les arbres.</translation>
     </message>
@@ -818,7 +818,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="237"/>
         <source>Update Plot ID</source>
-        <translation>Mettre à jour ID parcelle</translation>
+        <translation>Mise à jour ID parcelle</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="239"/>
@@ -828,7 +828,7 @@ Vérifiez votre connection internet.</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="241"/>
-        <location filename="../qml/GStrings.qml" line="322"/>
+        <location filename="../qml/GStrings.qml" line="325"/>
         <source>Dummy text - ending date help</source>
         <translation>Ceci est la date à laquelle vous avez fini de couper les arbres.</translation>
     </message>
@@ -895,7 +895,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="263"/>
         <source>Carbonization end date</source>
-        <translation>Date de fin de la carbonisation</translation>
+        <translation>Date de fin de carbonisation</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="264"/>
@@ -905,11 +905,11 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="265"/>
         <source>Select harvest ID</source>
-        <translation>Sélectionner ID récolte</translation>
+        <translation>Selectionner ID récolte</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="267"/>
-        <location filename="../qml/GStrings.qml" line="282"/>
+        <location filename="../qml/GStrings.qml" line="283"/>
         <source>Dummy text - harvest ID help</source>
         <translation>Ceci est le numéro d&apos;identification pour aider à retracer les transactions.</translation>
     </message>
@@ -930,9 +930,9 @@ Vérifiez votre connection internet.</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="271"/>
-        <location filename="../qml/GStrings.qml" line="286"/>
-        <location filename="../qml/GStrings.qml" line="300"/>
-        <location filename="../qml/GStrings.qml" line="323"/>
+        <location filename="../qml/GStrings.qml" line="287"/>
+        <location filename="../qml/GStrings.qml" line="303"/>
+        <location filename="../qml/GStrings.qml" line="326"/>
         <source>Dummy text - GPS help</source>
         <translation>Ceci est votre position exacte en ce moment.</translation>
     </message>
@@ -969,272 +969,282 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="280"/>
         <source>Select delivery destination</source>
-        <translation>Sélectionner la destination de la livraison</translation>
+        <translation>Sélectionner la destination de livraison</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="283"/>
+        <location filename="../qml/GStrings.qml" line="284"/>
         <source>Dummy text - plate number help</source>
         <translation>Ceci est le numéro de plaque d&apos;immatriculation du camion de transport.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="284"/>
+        <location filename="../qml/GStrings.qml" line="285"/>
         <source>Dummy text - loading date help</source>
         <translation>Ceci est la date à laquelle le chargement a commencé.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="285"/>
+        <location filename="../qml/GStrings.qml" line="286"/>
         <source>Dummy text - delivery destination help</source>
         <translation>Ceci est la destination de livraison du charbon de bois.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="289"/>
+        <location filename="../qml/GStrings.qml" line="288"/>
+        <source>You have a truck which has not been fully loaded. Please finish it</source>
+        <translation>Le camion n&apos;est pas complètement chargé. Veuillez poursuivre le chargement.</translation>
+    </message>
+    <message>
+        <location filename="../qml/GStrings.qml" line="291"/>
         <source>Receive documents and receipt</source>
         <translation>Recevoir les documents et les reçus</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="290"/>
+        <location filename="../qml/GStrings.qml" line="292"/>
         <source>Scan all bags from truck</source>
-        <translation>Scanner tous les sacs du camion</translation>
+        <translation>Scanner tous les sacs de camion</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="291"/>
+        <location filename="../qml/GStrings.qml" line="293"/>
         <source>Time &amp; Date stamp</source>
         <translation>Horodatage</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="293"/>
+        <location filename="../qml/GStrings.qml" line="295"/>
         <source>Documents</source>
         <translation>Documents</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="294"/>
+        <location filename="../qml/GStrings.qml" line="296"/>
         <source>Receipt</source>
         <translation>Reçu</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="295"/>
+        <location filename="../qml/GStrings.qml" line="297"/>
         <source>Approved</source>
         <translation>Approuvé</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="296"/>
+        <location filename="../qml/GStrings.qml" line="298"/>
         <source>No photo</source>
         <translation>Pas de photo</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="297"/>
+        <location filename="../qml/GStrings.qml" line="299"/>
         <source>%1 of %2</source>
         <translation>%1 de %2</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="299"/>
+        <location filename="../qml/GStrings.qml" line="300"/>
+        <source>&lt;font color=&quot;#65cb00&quot;&gt;Documents: %1&lt;br/&gt;Receipts: %2&lt;/font&gt;</source>
+        <translation>&lt;font color=&quot;#65cb00&quot;&gt;Documents: %1&lt;br/&gt;Reçus: %2&lt;/font&gt;</translation>
+    </message>
+    <message>
+        <location filename="../qml/GStrings.qml" line="302"/>
         <source>Dummy text - unloading timestamp help</source>
         <translation>Ceci est la date et l&apos;eure exacte à laquelle le camion est arrivé.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="303"/>
+        <location filename="../qml/GStrings.qml" line="306"/>
         <source>Do you want to complete the supply chain?</source>
-        <translation>Voulez-vous clôturer cet approvisionnement?</translation>
+        <translation>Voulez-vous compléter l&apos;approvisionnement?</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="304"/>
+        <location filename="../qml/GStrings.qml" line="307"/>
         <source>total number of scanned bags</source>
         <translation>Nombre total de sacs scannés</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="305"/>
+        <location filename="../qml/GStrings.qml" line="308"/>
         <source>total number of registered trucks</source>
         <translation>Nombre total de camions enregistrés</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="308"/>
+        <location filename="../qml/GStrings.qml" line="311"/>
         <source>All</source>
         <translation>Tous</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="309"/>
+        <location filename="../qml/GStrings.qml" line="312"/>
         <source>Plot</source>
         <translation>Parcelle</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="314"/>
+        <location filename="../qml/GStrings.qml" line="317"/>
         <source>Number of trees planted</source>
         <translation>Nombre d&apos;arbres plantés</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="315"/>
+        <location filename="../qml/GStrings.qml" line="318"/>
         <source>User Id</source>
-        <translation>ID utilisateur</translation>
+        <translation>Identifiant d&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="317"/>
+        <location filename="../qml/GStrings.qml" line="320"/>
         <source>Dummy text - plot ID help</source>
         <translation>Ceci est le numéro d&apos;identification pour aider à retracer les transactions.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="318"/>
+        <location filename="../qml/GStrings.qml" line="321"/>
         <source>Dummy text - number of trees planted help</source>
         <translation>Ceci est le nombre total d&apos;arbres plantés à cet emplacement.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="320"/>
+        <location filename="../qml/GStrings.qml" line="323"/>
         <source>Dummy text - user id help</source>
         <translation>Ceci est de votre numéro d&apos;utilisateur unique.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="326"/>
+        <location filename="../qml/GStrings.qml" line="329"/>
         <source>QR code already assigned!</source>
         <translation>Code QR déjà assigné!</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="327"/>
+        <location filename="../qml/GStrings.qml" line="330"/>
         <source>QR code scanned successfully</source>
         <translation>Code QR scanné avec succès</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="328"/>
-        <source>Do you go to the next oven?</source>
-        <translation>Voulez-vous procéder au prochain four?</translation>
-    </message>
-    <message>
-        <location filename="../qml/GStrings.qml" line="330"/>
-        <source>Fix QR code to each bag, then scan the qr code in order to assign it to the bag</source>
-        <translation>Fixer le code QR sur chaque sac, puis scanner le code QR afin de l&apos;assigner au sac</translation>
-    </message>
-    <message>
         <location filename="../qml/GStrings.qml" line="331"/>
-        <source>Scan all bags&apos; QR codes that go to selected truck</source>
-        <translation>Scanner le code QR de chaque sac chargé qui va sur le camion sélectionné</translation>
+        <source>Do you go to the next oven?</source>
+        <translation>Voulez-vous procéder au four suivant?</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="332"/>
-        <source>Scan QR code from all bags on truck to check transport</source>
-        <translation>Scanner le code QR de chaque sac chargé sur le camion pour valider le Transport</translation>
+        <location filename="../qml/GStrings.qml" line="333"/>
+        <source>Fix QR code to each bag, then scan the qr code in order to assign it to the bag</source>
+        <translation>Fixer le code QR sur chaque sac, puis scanner le code QR afin de l&apos;assigner aux sacs</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="334"/>
+        <source>Scan all bags&apos; QR codes that go to selected truck</source>
+        <translation>Scanner le code QR de chaque sac chargés sur le camion sélectionné</translation>
+    </message>
+    <message>
+        <location filename="../qml/GStrings.qml" line="335"/>
+        <source>Scan QR code from all bags on truck to check transport</source>
+        <translation>Scanner le code QR code de chaque sac sur le camion pour vérifier le transport</translation>
+    </message>
+    <message>
+        <location filename="../qml/GStrings.qml" line="337"/>
         <source>Delete all scanned QR codes</source>
         <translation>Supprimer tous les codes QR</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="335"/>
-        <source>You have &lt;font color=&quot;#65cb00&quot;&gt;%1&lt;/font&gt; scanned bags in your local working copy</source>
-        <translation>Vous avez &lt;font color=&quot;#65cb00&quot;&gt;%1&lt;/font&gt; sacs scannés dans  in your copie de travail local</translation>
-    </message>
-    <message>
-        <location filename="../qml/GStrings.qml" line="336"/>
-        <source>You have &lt;font color=&quot;#65cb00&quot;&gt;%1&lt;/font&gt; scanned bags. Do you want to save them?</source>
-        <translation>Vous avez &lt;font color=&quot;#65cb00&quot;&gt;%1&lt;/font&gt; sacs scannés. Voulez-vous les sauvegarder ?</translation>
-    </message>
-    <message>
         <location filename="../qml/GStrings.qml" line="338"/>
+        <source>You have &lt;font color=&quot;#65cb00&quot;&gt;%1&lt;/font&gt; scanned bags in your local working copy</source>
+        <translation>Vous avez &lt;font color = &quot;#65cb00&quot;&gt;%1&lt;/font&gt; sacs scannés dans votre copie locale</translation>
+    </message>
+    <message>
+        <location filename="../qml/GStrings.qml" line="339"/>
+        <source>You have &lt;font color=&quot;#65cb00&quot;&gt;%1&lt;/font&gt; scanned bags. Do you want to save them?</source>
+        <translation>Vous avez &lt;font color=&quot;#65cb00&quot;&gt;%1&lt;/font&gt; scannée sacs. Voulez-vous pour les sauvegarder?</translation>
+    </message>
+    <message>
+        <location filename="../qml/GStrings.qml" line="341"/>
         <source>Do you want to &lt;font color=&quot;#E40000&quot;&gt;clear&lt;/font&gt; all scanned QR codes?</source>
         <translation>Voulez-vous &lt;font color=&quot;#E40000&quot;&gt;clear&lt;/font&gt; tous les codes QR scannés ?</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="340"/>
+        <location filename="../qml/GStrings.qml" line="343"/>
         <source>Delete</source>
         <translation>Supprimer </translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="341"/>
+        <location filename="../qml/GStrings.qml" line="344"/>
         <source>Restore</source>
         <translation>Restaurer</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="344"/>
+        <location filename="../qml/GStrings.qml" line="347"/>
         <source>Take a photo of the signature and stamp on the permit and the Carnet de Voyage by the authorities</source>
-        <translation>Prendre une photo du permis et du Carnet de voyage signé et tamponné par les autorités</translation>
+        <translation>Prenez une photo de la signature et le cachet sur le permis et le carnet de voyage remis par les autorités</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="345"/>
+        <location filename="../qml/GStrings.qml" line="348"/>
         <source>Take a photo of the receipt</source>
         <translation>Prendre une photo du reçu</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="346"/>
+        <location filename="../qml/GStrings.qml" line="349"/>
         <source>Skip</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="347"/>
+        <location filename="../qml/GStrings.qml" line="350"/>
         <source>Take a photo</source>
         <translation>Prendre une photo</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="348"/>
+        <location filename="../qml/GStrings.qml" line="351"/>
         <source>Photo taken</source>
         <translation>Photo prise</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="349"/>
+        <location filename="../qml/GStrings.qml" line="352"/>
         <source>Upload this?</source>
-        <translation>Télécharger?</translation>
+        <translation>Télécharger ceci?</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="350"/>
+        <location filename="../qml/GStrings.qml" line="353"/>
         <source>Photo added</source>
         <translation>Photo ajoutée</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="351"/>
+        <location filename="../qml/GStrings.qml" line="354"/>
         <source>Photo discarded</source>
         <translation>Photo supprimée</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="352"/>
+        <location filename="../qml/GStrings.qml" line="355"/>
         <source>Add another?</source>
-        <translation>Autre photo à ajouter?</translation>
+        <translation>Ajouter un(e) autre?</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="353"/>
+        <location filename="../qml/GStrings.qml" line="356"/>
         <source>Camera error: %1</source>
         <translation>Erreur appareil photo : %1</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="356"/>
+        <location filename="../qml/GStrings.qml" line="359"/>
         <source>Select date</source>
         <translation>Sélectionner la date</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="357"/>
+        <location filename="../qml/GStrings.qml" line="360"/>
         <source>You can&apos;t select this day</source>
         <translation>Vous ne pouvez pas sélectionner ce jour</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="359"/>
+        <location filename="../qml/GStrings.qml" line="362"/>
         <source>Plot ID details</source>
-        <translation>ID parcelle</translation>
+        <translation>Détails ID parcelle</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="360"/>
+        <location filename="../qml/GStrings.qml" line="363"/>
         <source>Harvest ID details</source>
         <translation>ID récolte</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="361"/>
+        <location filename="../qml/GStrings.qml" line="364"/>
         <source>Transport ID details</source>
-        <translation>ID Transport</translation>
+        <translation>Détails ID transport</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="362"/>
+        <location filename="../qml/GStrings.qml" line="365"/>
         <source>Reception at the storage facility</source>
         <translation>Réception au dépôt</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="363"/>
+        <location filename="../qml/GStrings.qml" line="366"/>
         <source>Uploaded</source>
         <translation>Téléchargé</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="365"/>
+        <location filename="../qml/GStrings.qml" line="368"/>
         <source>Select</source>
         <translation>Sélectionner</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="223"/>
         <source>Select parcel</source>
-        <translation>Sélectionner la parcelle</translation>
+        <translation>Select parcelle</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="59"/>
@@ -1259,7 +1269,7 @@ transport</source>
 transport</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="368"/>
+        <location filename="../qml/GStrings.qml" line="371"/>
         <source>Go to: %1</source>
         <translation>Aller à : %1</translation>
     </message>
@@ -1267,92 +1277,92 @@ transport</translation>
 <context>
     <name>NotificationManager</name>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="72"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="73"/>
         <source>Logging process for &lt;b&gt;%1&lt;/b&gt; has begun.</source>
-        <translation>L&apos;étape d&apos;abattage pour &lt;b&gt;%1&lt;/b&gt; a commencé.</translation>
+        <translation>L&apos;abattage pour &lt;b&gt;%1&lt;/b&gt; a commencé.</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="73"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="74"/>
         <source>Trees are ready to be felled!</source>
         <translation>Les arbres sont prêts à être coupés!</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="74"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="75"/>
         <source>Logging - ending</source>
         <translation>Abattage - fin</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="78"/>
-        <source>Logging process for &lt;b&gt;%1&lt;/b&gt; has ended.</source>
-        <translation>L&apos;étape d&apos;abattage pour &lt;b&gt;%1&lt;/b&gt; est terminée.</translation>
-    </message>
-    <message>
         <location filename="../src/charcoal/notificationmanager.cpp" line="79"/>
-        <source>Logs are ready to carbonize!</source>
-        <translation>Le bois est prêt à être carbonisé !</translation>
+        <source>Logging process for &lt;b&gt;%1&lt;/b&gt; has ended.</source>
+        <translation>L&apos;abattage pour &lt;b&gt;%1&lt;/b&gt; est terminé.</translation>
     </message>
     <message>
         <location filename="../src/charcoal/notificationmanager.cpp" line="80"/>
+        <source>Logs are ready to carbonize!</source>
+        <translation>Le bois est prêt à être carbonisé!</translation>
+    </message>
+    <message>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="81"/>
         <source>Carbonization - beggining</source>
         <translation>Carbonisation - début</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="84"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="85"/>
         <source>Carbonization process for &lt;b&gt;%1&lt;/b&gt; has begun.</source>
-        <translation>L&apos;étape de carbonisation pour &lt;b&gt;%1&lt;/b&gt; a commencé.</translation>
+        <translation>La carbonisation pour &lt;b&gt;%1&lt;/b&gt; a commencé.</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="85"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="86"/>
         <source>End carbonization when wood is fully burned!</source>
         <translation>Terminer la carbonisation quand le bois est complètement brûlé !</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="86"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="87"/>
         <source>Carbonization - ending</source>
         <translation>Carbonisation - fin</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="90"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="91"/>
         <source>Carbonization process for &lt;b&gt;%1&lt;/b&gt; has ended.</source>
-        <translation>L&apos;étape de carbonisation pour &lt;b&gt;%1&lt;/b&gt; est terminée.</translation>
+        <translation>La carbonisation pour &lt;b&gt;%1&lt;/b&gt; est terminé.</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="91"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="92"/>
         <source>Charcoal is ready for loading and transport!</source>
         <translation>Le charbon est prêt pour le chargement et le transport !</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="92"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="93"/>
         <source>Loading and transport</source>
-        <translation>Chargement et transport</translation>
-    </message>
-    <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="96"/>
-        <source>Loading and transport process for &lt;b&gt;%1&lt;/b&gt; has ended.</source>
-        <translation>L&apos;étape du chargement et du transport pour &lt;b&gt;%1&lt;/b&gt; s&apos;est terminé.</translation>
+        <translation>Chargement &amp; transport</translation>
     </message>
     <message>
         <location filename="../src/charcoal/notificationmanager.cpp" line="97"/>
+        <source>Loading and transport process for &lt;b&gt;%1&lt;/b&gt; has ended.</source>
+        <translation>Le chargement et le transport pour &lt;b&gt;%1&lt;/b&gt; est terminé.</translation>
+    </message>
+    <message>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="98"/>
         <source>If the truck has arrived, you can register it!</source>
         <translation>Si le camion est arrivé, vous pouvez l&apos;enregistrer !</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="98"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="99"/>
         <source>Reception</source>
-        <translation>Accueil</translation>
+        <translation>Réception</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="102"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="103"/>
         <source>Reception process for &lt;b&gt;%1&lt;/b&gt; has ended.</source>
         <translation>L&apos;étape de réception pour &lt;b&gt;%1&lt;/b&gt; s&apos;est terminé.</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="103"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="104"/>
         <source>If the parcel has been replanted, register it!</source>
         <translation>Si la parcelle a été replantée, enregistrez-la !</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/notificationmanager.cpp" line="104"/>
+        <location filename="../src/charcoal/notificationmanager.cpp" line="105"/>
         <source>Replantation</source>
         <translation>Replantation</translation>
     </message>
@@ -1360,35 +1370,43 @@ transport</translation>
 <context>
     <name>OvenTypesModel</name>
     <message>
-        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="32"/>
         <source>Traditional oven</source>
         <translation>Four traditionnel</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="34"/>
         <source>Metallic oven</source>
         <translation>Four métallique</translation>
+    </message>
+    <message>
+        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="33"/>
+        <source>%1 (Traditional oven)</source>
+        <translation>%1 (Four traditionnel)</translation>
+    </message>
+    <message>
+        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="35"/>
+        <source>%1 (Metallic oven)</source>
+        <translation>%1 (Four métallique)</translation>
     </message>
 </context>
 <context>
     <name>OvensModel</name>
     <message>
-        <location filename="../src/charcoal/models/ovensmodel.cpp" line="88"/>
+        <location filename="../src/charcoal/models/ovensmodel.cpp" line="78"/>
         <source>%1 - %2 x %3 x %4m</source>
         <translation>%1 - %2 x %3 x %4m</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/ovensmodel.cpp" line="89"/>
+        <location filename="../src/charcoal/models/ovensmodel.cpp" line="79"/>
         <source>Metallic oven</source>
         <translation>Four métallique</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/ovensmodel.cpp" line="89"/>
+        <location filename="../src/charcoal/models/ovensmodel.cpp" line="79"/>
         <source>Traditional oven</source>
         <translation>Four traditionnel</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/ovensmodel.cpp" line="110"/>
+        <location filename="../src/charcoal/models/ovensmodel.cpp" line="100"/>
         <source>Carbonization beginning: %1</source>
         <translation>Début de la carbonisation: %1</translation>
     </message>
@@ -1396,170 +1414,175 @@ transport</translation>
 <context>
     <name>TrackingModel</name>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="76"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="78"/>
         <source>Logging has begun</source>
         <translation>L&apos;abattage a commencé</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="79"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="81"/>
         <source>Logging has ended</source>
-        <translation>L&apos;abttage est terminé</translation>
+        <translation>L&apos;abattage est terminé</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="84"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="86"/>
         <source>Oven %1 - carbonization has begun</source>
-        <translation>Four %1 - la carbonisation a commencé</translation>
+        <translation>Four %1 - a commencé la carbonisation</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="90"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="92"/>
         <source>Oven %1 - carbonization has ended</source>
-        <translation>Four %1 - la carbonisation est terminée</translation>
+        <translation>Four %1 - a terminé la carbonisation</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="95"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="97"/>
         <source>Bags have been loaded on truck %1</source>
         <translation>Les sacs ont été chargés sur le camion %1</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="100"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="102"/>
         <source>Reception at storage facility</source>
         <translation>Réception au dépôt</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="212"/>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="256"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="216"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="262"/>
         <source>Plot ID</source>
         <translation>ID parcelle</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="218"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="222"/>
         <source>Malebi Rep&apos;s ID</source>
         <translation>ID réprésentant de MALEBI</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="221"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="225"/>
         <source>Parcel</source>
         <translation>Parcelle</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="223"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="227"/>
         <source>Village</source>
         <translation>Village</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="228"/>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="306"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="232"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="312"/>
         <source>Beginning date</source>
         <translation>Date de début</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="229"/>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="307"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="233"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="313"/>
         <source>Ending date</source>
         <translation>Date de fin</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="240"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="244"/>
         <source>Tree species</source>
         <translation>Essences d&apos;arbre</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="265"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="246"/>
+        <source>Number of trees</source>
+        <translation>Nombre d&apos;abres</translation>
+    </message>
+    <message>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="271"/>
         <source>Plot ID details</source>
         <translation>ID parcelle</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="273"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="279"/>
         <source>Harvest ID</source>
         <translation>Récolte ID</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="318"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="324"/>
         <source>Carbonizer ID</source>
         <translation>ID carbonisateur</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="320"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="326"/>
         <source>Oven measurement (meters)</source>
         <translation>Mesurement du four (mètres)</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="323"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="329"/>
         <source>Height</source>
         <translation>Hauteur</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="324"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="330"/>
         <source>Length</source>
         <translation>Longueur</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="325"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="331"/>
         <source>Width</source>
         <translation>Wargeur</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="336"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="342"/>
         <source>Timber volume</source>
         <translation>Volume de bois</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="340"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="346"/>
         <source>Oven %1</source>
         <translation>Four %1</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="397"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="403"/>
         <source>Uploaded</source>
         <translation>Téléchargé</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="398"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="404"/>
         <source>No photo</source>
         <translation>Pas de photo</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="412"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="418"/>
         <source>Number of bags</source>
         <translation>Nombre de sacs</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="413"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="419"/>
         <source>Loading date</source>
         <translation>Date de chargement</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="414"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="420"/>
         <source>Documents</source>
         <translation>Documents</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="415"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="421"/>
         <source>Receipts</source>
         <translation>Reçus</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="444"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="450"/>
         <source>Transport ID</source>
         <translation>ID transport</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="455"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="461"/>
         <source>Plate number</source>
         <translation>Plaque d&apos;immatriculation</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="457"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="463"/>
         <source>Reception at the storage facility</source>
         <translation>Réception au dépôt</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="494"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="503"/>
         <source>Error updating tracking information</source>
         <translation>Erreur lors de la mise à jour des informations de suivi</translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/trackingmodel.cpp" line="506"/>
+        <location filename="../src/charcoal/models/trackingmodel.cpp" line="515"/>
         <source>Error updating detailed information</source>
         <translation>Erreur lors de la mise à jour des informations détaillées</translation>
     </message>
