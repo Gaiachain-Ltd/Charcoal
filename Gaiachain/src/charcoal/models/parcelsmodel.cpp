@@ -16,10 +16,10 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-ParcelsModel::ParcelsModel(QObject *parent) : SimpleListQueryModel(parent)
+ParcelsModel::ParcelsModel(QObject *parent) : SimpleListQueryModel(true, parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, code FROM Parcels");
+    setDbQuery("SELECT id, code, active FROM Parcels WHERE active=1");
 }
 
 QVariant ParcelsModel::data(const QModelIndex &index, int role) const

@@ -23,14 +23,29 @@ const QVector<Migration> db::DB_MIGRATIONS = {
         { 0, 0, 2 },
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             // Additional data
-            QLatin1String("CREATE TABLE Villages (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
-            QLatin1String("CREATE TABLE TreeSpecies (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
-            QLatin1String("CREATE TABLE Parcels (`id` INTEGER primary key AUTOINCREMENT, `code` TEXT NOT NULL UNIQUE, "
-                "`isUsed` BOOLEAN NOT NULL DEFAULT(1) CHECK (isUsed IN (0,1))) "),
-            QLatin1String("CREATE TABLE Destinations (`id` INTEGER primary key AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE)"),
-            QLatin1String("CREATE TABLE OvenTypes (`id` INTEGER primary key AUTOINCREMENT, "
-                "`name` TEXT NOT NULL UNIQUE, `type` INTEGER NOT NULL, "
-                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2))"),
+            QLatin1String("CREATE TABLE Villages ("
+                "`id` INTEGER primary key AUTOINCREMENT, "
+                "`name` TEXT NOT NULL UNIQUE, "
+                "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
+            QLatin1String("CREATE TABLE TreeSpecies ("
+                "`id` INTEGER primary key AUTOINCREMENT, "
+                "`name` TEXT NOT NULL UNIQUE"
+                "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
+            QLatin1String("CREATE TABLE Parcels ("
+                "`id` INTEGER primary key AUTOINCREMENT, "
+                "`code` TEXT NOT NULL UNIQUE, "
+                "`isUsed` BOOLEAN NOT NULL DEFAULT(1) CHECK (isUsed IN (0,1))"
+                "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
+            QLatin1String("CREATE TABLE Destinations ("
+                "`id` INTEGER primary key AUTOINCREMENT, "
+                "`name` TEXT NOT NULL UNIQUE"
+                "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
+            QLatin1String("CREATE TABLE OvenTypes ("
+                "`id` INTEGER primary key AUTOINCREMENT, "
+                "`name` TEXT NOT NULL UNIQUE, "
+                "`type` INTEGER NOT NULL, "
+                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2)"
+                "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
 
             // SupplyChain
             // Entities are how Transactions are called on Web side
@@ -58,6 +73,7 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`locationLatitude` REAL NOT NULL, `locationLongitude` REAL NOT NULL, "
                 "`properties` TEXT, "
                 "`isCommitted` BOOLEAN NOT NULL CHECK (isCommitted IN (0,1)), "
+                "`isPaused` BOOLEAN NOT NULL DEFAULT(0) CHECK (isPaused IN (0,1)), "
                 "FOREIGN KEY(entityId) REFERENCES Entities(id), "
                 "FOREIGN KEY(typeId) REFERENCES EventTypes(id))"),
             QLatin1String("CREATE TABLE EventTypes (`id` INTEGER primary key AUTOINCREMENT, "
@@ -121,16 +137,5 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("DELETE FROM EventTypes"),
             QLatin1String("VACUUM")
         }, true)
-    },
-    // Support for pausing of Loading and Transport step
-    {
-        { 0, 0, 4 },
-        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("ALTER TABLE Events "
-                "ADD `isPaused` BOOLEAN NOT NULL DEFAULT(0) CHECK (isPaused IN (0,1)) ")
-                                                               }, true),
-        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("ALTER TABLE Events DROP COLUMN isPaused"),
-                                                               }, true)
     },
 };

@@ -56,6 +56,7 @@ namespace Tags {
     const QLatin1String actionName = QLatin1String("actionName");
     const QLatin1String parent = QLatin1String("parent");
     const QLatin1String bags = QLatin1String("bags");
+    const QLatin1String active = QLatin1String("active");
     // Charcoal user data
     const QLatin1String code = QLatin1String("code");
     const QLatin1String contact = QLatin1String("contact");

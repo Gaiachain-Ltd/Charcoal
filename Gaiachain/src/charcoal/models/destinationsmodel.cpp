@@ -11,10 +11,10 @@
 #include <QSqlQuery>
 
 DestinationsModel::DestinationsModel(QObject *parent)
-    : SimpleListQueryModel(parent)
+    : SimpleListQueryModel(true, parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, name FROM Destinations");
+    setDbQuery("SELECT id, name, active FROM Destinations WHERE active=1");
 }
 
 void DestinationsModel::refreshWebData()

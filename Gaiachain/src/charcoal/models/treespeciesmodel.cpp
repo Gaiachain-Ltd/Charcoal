@@ -10,10 +10,10 @@
 
 #include <QSqlQuery>
 
-TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : SimpleListQueryModel(parent)
+TreeSpeciesModel::TreeSpeciesModel(QObject *parent) : SimpleListQueryModel(true, parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, name FROM TreeSpecies");
+    setDbQuery("SELECT id, name, active FROM TreeSpecies WHERE active=1");
 }
 
 void TreeSpeciesModel::refreshWebData()
