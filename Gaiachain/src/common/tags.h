@@ -49,11 +49,13 @@ namespace Tags {
     const QLatin1String treeSpecies = QLatin1String("tree-species");
     const QLatin1String villages = QLatin1String("villages");
     const QLatin1String plot = QLatin1String("plot");
+    const QLatin1String entity = QLatin1String("entity");
     const QLatin1String typeId = QLatin1String("typeId");
     const QLatin1String entityId = QLatin1String("entityId");
     const QLatin1String date = QLatin1String("date");
     const QLatin1String actionName = QLatin1String("actionName");
     const QLatin1String parent = QLatin1String("parent");
+    const QLatin1String bags = QLatin1String("bags");
     // Charcoal user data
     const QLatin1String code = QLatin1String("code");
     const QLatin1String contact = QLatin1String("contact");

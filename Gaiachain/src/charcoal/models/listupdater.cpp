@@ -51,7 +51,7 @@ RecordsList ListUpdater::webList(const QStringList &fieldNames,
 {
     RecordsList result;
     const QJsonObject mainObject(json.object());
-    const QJsonArray mainArray(mainObject.value("results").toArray());
+    const QJsonArray mainArray(mainObject.value(Tags::results).toArray());
 
     for (const QJsonValue &item : mainArray) {
         Record record;

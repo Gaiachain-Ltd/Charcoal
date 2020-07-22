@@ -94,7 +94,7 @@ void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 void ParcelsModel::webUnusedParcelsReplyHandler(const QJsonDocument &reply)
 {
     const QJsonObject mainObject(reply.object());
-    const QJsonArray mainArray(mainObject.value("results").toArray());
+    const QJsonArray mainArray(mainObject.value(Tags::results).toArray());
     QVector<int> unusedParcelIds(mainArray.size());
 
     for (const QJsonValue &item : mainArray) {
