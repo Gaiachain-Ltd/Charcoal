@@ -55,7 +55,21 @@ QString ActionController::generateTransportId(const QString &harvestId,
 {
     return harvestId + CharcoalDbHelpers::sep + licensePlate
         + CharcoalDbHelpers::sep + "T" + QString::number(transportNumber)
-        + CharcoalDbHelpers::sep + date.toString(dateFormat);
+            + CharcoalDbHelpers::sep + date.toString(dateFormat);
+}
+
+/*!
+ * Returns true if plot generated from \a userId, \a parcelCode and \a date is
+ * already present.
+ */
+bool ActionController::plotExists(const QString &userId,
+                                  const QString &parcelCode,
+                                  const QDate &date)
+{
+    const QString plotName(generatePlotId(userId, parcelCode, date));
+    const int id = CharcoalDbHelpers::getEntityIdFromName(
+        m_connectionName, plotName);
+    return (id > 0);
 }
 
 QString ActionController::getPlotId(const QString &packageId)
@@ -306,7 +320,7 @@ void ActionController::registerLoggingBeginning(
              << parcel << userId << villageId << treeSpeciesId;
 
     // First, insert a new Entity into table
-    const QString plotId(generatePlotId(userId, parcel, timestamp.date()));
+    const QString plotId(generatePlotId(userId, parcel, eventDate.date()));
     const int typeId(CharcoalDbHelpers::getEntityTypeId(
         m_connectionName, Enums::PackageType::Plot));
 

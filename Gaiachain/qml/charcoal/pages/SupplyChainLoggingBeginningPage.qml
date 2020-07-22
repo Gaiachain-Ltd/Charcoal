@@ -19,7 +19,11 @@ Pages.SupplyChainPageBase {
 
     proceedButtonEnabled: (parcelComboBox.currentText.length > 0
                            && villageComboBox.currentText.length > 0
-                           && treeSpeciesComboBox.currentText.length > 0)
+                           && treeSpeciesComboBox.currentText.length > 0
+                           && !dataManager.actionController.plotExists(
+                               repsIdInputHeader.inputText,
+                               parcelComboBox.currentText,
+                               beginningDateHeader.selectedDate))
 
     Component.onCompleted: refreshData()
 

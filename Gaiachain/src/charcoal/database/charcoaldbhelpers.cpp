@@ -592,3 +592,10 @@ Enums::OvenType CharcoalDbHelpers::getOvenType(const QString &connectionName,
 
     return Enums::OvenType::Unknown;
 }
+
+int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName,
+                                           const QString &name)
+{
+    return getSimpleInteger(connectionName, "Entities", Tags::name, name,
+                            Tags::id, db::QueryFlag::Silent);
+}

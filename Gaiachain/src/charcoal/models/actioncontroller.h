@@ -30,6 +30,10 @@ public:
                                             const int transportNumber,
                                             const QDate &date) const;
 
+    Q_INVOKABLE bool plotExists(const QString &userId,
+                                const QString &parcelCode,
+                                const QDate &date);
+
     Q_INVOKABLE QString getPlotId(const QString &packageId);
 
     Q_INVOKABLE int getTransportIdFromBags(const QVariantList &scannedQrs) const;
