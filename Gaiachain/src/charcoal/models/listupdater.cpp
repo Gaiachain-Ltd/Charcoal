@@ -57,7 +57,7 @@ RecordsList ListUpdater::webList(const QStringList &fieldNames,
         Record record;
         const QJsonObject object(item.toObject());
         for (const QString &name : fieldNames) {
-            record.insert(name, object.value(name).toVariant().toString());
+            record.insert(name, object.value(name).toVariant());
         }
         result.append(record);
     }
@@ -131,7 +131,7 @@ bool ListUpdater::removeObsoleteItems(const RecordsList &webItems,
     const QString remove("DELETE FROM %1 WHERE %2=%3");
 
     for (const auto &item : qAsConst(toRemove)) {
-        query.prepare(remove.arg(m_tableName, Tags::id, item.value(Tags::id)));
+        query.prepare(remove.arg(m_tableName, Tags::id, item.value(Tags::id).toString()));
         if (query.exec() == false) {
             qWarning() << RED("Removing") << m_tableName << ("has failed!")
                        << query.lastError().text()
@@ -149,16 +149,29 @@ bool ListUpdater::isValid() const
     return (m_tableName.isEmpty() == false && m_connectionName.isEmpty() == false);
 }
 
-QString ListUpdater::wrapAndJoin(const QStringList &items) const
+QString ListUpdater::wrapAndJoin(const QList<QVariant> &items) const
 {
     QString result;
 
-    for (const QString &item : items) {
+    for (const QVariant &item : items) {
         if (result.isEmpty() == false) {
             result.append(sep);
         }
 
-        result.append(wrap + item + wrap);
+        const auto type = item.type();
+        switch (type) {
+        case QVariant::Type::Bool:
+            result.append(QString::number(item.toBool()));
+            break;
+        case QVariant::Type::Int:
+            result.append(QString::number(item.toInt()));
+            break;
+        case QVariant::Type::String:
+        default:
+            result.append(wrap + item.toString() + wrap);
+            break;
+
+        }
     }
 
     return result;

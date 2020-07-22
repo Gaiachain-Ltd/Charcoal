@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QHash>
+#include <QVariant>
 #include <QString>
 #include <QStringList>
 
-using Record = QHash<QString, QString>;
+using Record = QHash<QString, QVariant>;
 using RecordsList = QVector<Record>;
 
 class QJsonDocument;
@@ -35,7 +36,7 @@ private:
 
     bool isValid() const;
 
-    QString wrapAndJoin(const QStringList &items) const;
+    QString wrapAndJoin(const QList<QVariant> &items) const;
 
     const QLatin1String wrap = QLatin1String("\"");
     const QLatin1String sep = QLatin1String(", ");
