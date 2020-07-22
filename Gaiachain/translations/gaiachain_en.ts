@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.0" language="en_US">
 <context>
     <name>GStrings</name>
     <message>
@@ -371,7 +371,7 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="115"/>
         <source>To select</source>
-        <translation></translation>
+        <translation>Select</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="116"/>
