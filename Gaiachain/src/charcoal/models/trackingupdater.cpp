@@ -96,6 +96,7 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
                                                   UpdateResult result) const
 {
     const int webId(object.value(Tags::id).toInt(-1));
+    const int parentWebId(object.value(Tags::parentId).toInt(-1));
     const QString pid(object.value(Tags::pid).toString());
     const QString webType(object.value(Tags::type).toString());
     const Enums::PackageType type = packageType(webType);
@@ -110,26 +111,19 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
         m_connectionName, webId, db::QueryFlag::Silent);
 
     // Set proper parent
-    int parentEntityId = -1;
-    if (type == Enums::PackageType::Plot) {
-        parentEntityId = 0;
-    } else if (type == Enums::PackageType::Harvest) {
-        const QString ppid(CharcoalDbHelpers::getPlotName(pid));
-        parentEntityId = CharcoalDbHelpers::getEntityIdFromName(
-            m_connectionName, ppid, db::QueryFlag::Silent);
-    } else if (type == Enums::PackageType::Transport) {
-        const QString ppid(CharcoalDbHelpers::getHarvestName(pid));
-        parentEntityId = CharcoalDbHelpers::getEntityIdFromName(
-            m_connectionName, ppid, db::QueryFlag::Silent);
-    }
+    const int parentEntityId = CharcoalDbHelpers::getEntityIdFromWebId(
+        m_connectionName, parentWebId,
+        db::QueryFlag::Silent | db::QueryFlag::MatchLast);
 
     {
         QString entityString;
         if (entityId == -1) {
             // Entity does not exist in our DB - add it!
-            entityString = "INSERT INTO Entities (typeId, name, parent, webId, "
+            entityString = "INSERT INTO Entities (typeId, name, parent, "
+                           "webId, "
                            "isFinished, isReplanted) "
-                           "VALUES (:typeId, :name, :parent, :webId, "
+                           "VALUES (:typeId, :name, :parent, "
+                           ":webId, "
                            ":isFinished, :isReplanted)";
         } else {
             QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));

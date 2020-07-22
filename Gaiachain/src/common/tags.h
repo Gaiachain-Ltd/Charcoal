@@ -38,6 +38,7 @@ namespace Tags {
     const QLatin1String companies = QLatin1String("companies");
     const QLatin1String destinations = QLatin1String("destinations");
     const QLatin1String id = QLatin1String("id");
+    const QLatin1String parentId = QLatin1String("parent_id");
     const QLatin1String name = QLatin1String("name");
     const QLatin1String type = QLatin1String("type");
     const QLatin1String village = QLatin1String("village");
