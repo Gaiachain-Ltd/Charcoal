@@ -57,6 +57,8 @@ namespace Tags {
     const QLatin1String parent = QLatin1String("parent");
     const QLatin1String bags = QLatin1String("bags");
     const QLatin1String active = QLatin1String("active");
+    const QLatin1String locationLatitude = QLatin1String("locationLatitude");
+    const QLatin1String locationLongitude = QLatin1String("locationLongitude");
     // Charcoal user data
     const QLatin1String code = QLatin1String("code");
     const QLatin1String contact = QLatin1String("contact");

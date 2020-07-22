@@ -47,8 +47,8 @@ void ReplantationsSender::sendEvents()
             );
 
         const QJsonObject location({
-            { "latitude", query().value("locationLatitude").toDouble() },
-            { "longitude", query().value("locationLongitude").toDouble() }
+            { "latitude", query().value(Tags::locationLatitude).toDouble() },
+            { "longitude", query().value(Tags::locationLongitude).toDouble() }
         });
 
         // We have to read all data first, and only then we can call
