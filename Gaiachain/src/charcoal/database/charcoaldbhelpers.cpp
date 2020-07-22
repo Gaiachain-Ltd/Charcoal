@@ -33,6 +33,7 @@ const QHash<Enums::PackageType, QString> CharcoalDbHelpers::m_packageTypeMap = {
 // Static
 QHash<int, Enums::SupplyChainAction> CharcoalDbHelpers::m_supplyActionDbMap;
 QHash<int, Enums::PackageType> CharcoalDbHelpers::m_packageTypeDbMap;
+QHash<int, Enums::OvenType> CharcoalDbHelpers::m_ovenTypeDbMap;
 
 QString CharcoalDbHelpers::propertiesToString(const QVariantMap &properties)
 {
@@ -564,4 +565,38 @@ Enums::PackageType CharcoalDbHelpers::cachePackageType(const QString &connection
     m_packageTypeDbMap.insert(typeId, type);
 
     return type;
+}
+
+Enums::OvenType CharcoalDbHelpers::getOvenType(const QString &connectionName,
+                                               const int typeId)
+{
+    const auto cachedType = m_ovenTypeDbMap.value(typeId, Enums::OvenType::Unknown);
+
+    if (cachedType == Enums::OvenType::Unknown) {
+        QSqlQuery q(QString(), db::Helpers::databaseConnection(connectionName));
+        q.prepare("SELECT type FROM OvenTypes WHERE id=:typeId");
+        q.bindValue(":typeId", typeId);
+        if (q.exec() == false) {
+            qWarning() << RED("Getting oven type has failed!")
+                       << q.lastError().text() << "for query:" << q.lastQuery();
+            return {};
+        }
+
+        q.next();
+
+        const int type(q.value(Tags::type).toInt());
+        const bool isMetallic = (type == CharcoalDbHelpers::metalOvenType);
+
+        Enums::OvenType toInsert = Enums::OvenType::Traditional;
+        if (isMetallic) {
+            toInsert = Enums::OvenType::Metallic;
+        }
+        m_ovenTypeDbMap.insert(typeId, toInsert);
+
+        return toInsert;
+    } else {
+        return cachedType;
+    }
+
+    return Enums::OvenType::Unknown;
 }

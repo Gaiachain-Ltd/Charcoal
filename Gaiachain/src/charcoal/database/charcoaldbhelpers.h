@@ -50,6 +50,8 @@ public:
                          const QString &ovenName, const bool verbose = true);
     static int getOvenTypeId(const QString &connectionName, const QString &ovenType);
     static int getOvenTypeIdFromName(const QString &connectionName, const QString &name);
+    static Enums::OvenType getOvenType(const QString &connectionName,
+                                       const int typeId);
 
     static int getEntityIdFromWebId(const QString &connectionName, const int webId,
                                     const db::QueryFlags settings = db::QueryFlag::Verbose);
@@ -125,5 +127,7 @@ private:
 
     static const QHash<Enums::PackageType, QString> m_packageTypeMap;
     static QHash<int, Enums::PackageType> m_packageTypeDbMap;
+
+    static QHash<int, Enums::OvenType> m_ovenTypeDbMap;
 };
 

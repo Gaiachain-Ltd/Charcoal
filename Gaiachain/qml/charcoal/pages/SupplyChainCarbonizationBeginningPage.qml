@@ -116,7 +116,6 @@ Pages.SupplyChainPageBase {
                     plotIdComboBox.currentText,
                     plotIdComboBox.currentId,
                     ovenIdHeader.inputText,
-                    ovenTypeComboBox.ovenType,
                     ovenTypeComboBox.ovenIdNumber,
                     ovenDimensionsHeader.values)
 

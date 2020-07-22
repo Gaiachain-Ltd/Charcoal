@@ -70,20 +70,10 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
         return query().value(Tags::name).toString();
     case OvenRole::FirstRow:
     {
-        const QString ovenTypeId(query().value(Tags::type).toString());
-        QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-        q.prepare("SELECT type FROM OvenTypes WHERE id=:ovenTypeId");
-        q.bindValue(":ovenTypeId", ovenTypeId);
-
-        if (q.exec() == false) {
-            qWarning() << RED("Getting oven type has failed!")
-                       << q.lastError().text() << "for query:" << q.lastQuery();
-            return {};
-        }
-
-        q.next();
-        const int type(q.value(Tags::type).toInt());
-        const bool isMetallic = (type == CharcoalDbHelpers::metalOvenType);
+        const int ovenTypeId(query().value(Tags::type).toInt());
+        const Enums::OvenType type = CharcoalDbHelpers::getOvenType(
+            m_connectionName, ovenTypeId);
+        const bool isMetallic = (type == Enums::OvenType::Metallic);
 
         return tr("%1 - %2 x %3 x %4m")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))

@@ -410,7 +410,7 @@ void ActionController::registerCarbonizationBeginning(
     const QString &plotId,
     const int plotDbId,
     const QString &ovenId,
-    const int ovenType, const int ovenIdNumber,
+    const int ovenIdNumber,
     const QVariantList &ovenDimensions) const
 {
     /*
@@ -425,7 +425,7 @@ void ActionController::registerCarbonizationBeginning(
      */
 
     qDebug() << "Registering carbonization beginning" << coordinate << timestamp
-             << plotId << ovenId << userId << ovenType << ovenIdNumber
+             << plotId << ovenId << userId << ovenIdNumber
              << ovenDimensions;
 
     const int parentEntityId(plotDbId);
@@ -476,9 +476,11 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     // Get proper oven dimensions
+    const Enums::OvenType ovenType = CharcoalDbHelpers::getOvenType(
+        m_connectionName, ovenIdNumber);
     QVariantList dimensions;
-    if (ovenType == CharcoalDbHelpers::metalOvenType) {
-        dimensions = defaultOvenDimensions(ovenType);
+    if (ovenType == Enums::OvenType::Metallic) {
+        dimensions = defaultOvenDimensions(int(ovenType));
     } else {
         dimensions = ovenDimensions;
     }
@@ -489,7 +491,7 @@ void ActionController::registerCarbonizationBeginning(
         { Tags::webOvenId, ovenId }
     };
 
-    if (ovenType != 2) {
+    if (ovenType != Enums::OvenType::Metallic) {
         properties.insert(Tags::webOvenHeight, dimensions.at(0).toDouble());
         properties.insert(Tags::webOvenLength, dimensions.at(1).toDouble());
         properties.insert(Tags::webOvenWidth, dimensions.at(2).toDouble());
@@ -507,7 +509,7 @@ void ActionController::registerCarbonizationBeginning(
     query.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
                   "oven_height, oven_width, oven_length) "
                   "VALUES (:type, :plot, :event, :name, :height, :width, :length)");
-    query.bindValue(":type", ovenType);
+    query.bindValue(":type", ovenIdNumber);
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
