@@ -77,8 +77,8 @@ void Event::loadFromQuery(QSqlQuery *query)
     date = query->value("eventDate").toLongLong();
     timestamp = query->value(Tags::date).toLongLong();
 
-    const double latitude = query->value("locationLatitude").toDouble();
-    const double longitude = query->value("locationLongitude").toDouble();
+    const double latitude = query->value(Tags::locationLatitude).toDouble();
+    const double longitude = query->value(Tags::locationLongitude).toDouble();
     location = QGeoCoordinate(latitude, longitude);
 
     properties = QJsonDocument::fromJson(

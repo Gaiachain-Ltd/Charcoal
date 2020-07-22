@@ -232,14 +232,6 @@ int CharcoalDbHelpers::getEntityIdFromWebId(const QString &connectionName,
                             Tags::id, settings);
 }
 
-int CharcoalDbHelpers::getEntityIdFromName(const QString &connectionName,
-                                           const QString &name,
-                                           const db::QueryFlags settings)
-{
-    return getSimpleInteger(connectionName, "Entities", Tags::name, name, Tags::id,
-                            settings);
-}
-
 int CharcoalDbHelpers::getEntityTypeId(const QString &connectionName,
                                        const Enums::PackageType type)
 {

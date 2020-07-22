@@ -4,7 +4,8 @@
 
 #include <QSqlQuery>
 
-SimpleListQueryModel::SimpleListQueryModel(QObject *parent) : QueryModel(parent)
+SimpleListQueryModel::SimpleListQueryModel(const bool hasActiveBit, QObject *parent)
+    : QueryModel(parent), m_hasActiveBit(hasActiveBit)
 {
 }
 
@@ -22,6 +23,12 @@ QVariant SimpleListQueryModel::data(const QModelIndex &index, int role) const
         return query().value(Tags::name).toString();
     case ListRole::Id:
         return query().value(Tags::id).toInt();
+    case ListRole::IsActive:
+        if (m_hasActiveBit) {
+            return query().value(Tags::active).toBool();
+        } else {
+            return true;
+        }
     }
 
     return {};

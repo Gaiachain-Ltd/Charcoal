@@ -9,19 +9,24 @@ class SimpleListQueryModel : public QueryModel
 public:
     enum ListRole {
         Id = Qt::UserRole + 1,
-        Name
+        Name,
+        IsActive
     };
     Q_ENUM(ListRole)
 
-    explicit SimpleListQueryModel(QObject *parent = nullptr);
+    explicit SimpleListQueryModel(const bool hasActiveBit = false,
+                                  QObject *parent = nullptr);
 
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-private:
+protected:
     const QHash<int, QByteArray> m_roleNames = {
         { ListRole::Id, "idNumber" },
-        { ListRole::Name, "name" }
+        { ListRole::Name, "name" },
+        { ListRole::IsActive, "isActive" }
     };
+
+    const bool m_hasActiveBit = false;
 };
 

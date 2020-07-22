@@ -271,8 +271,8 @@ void EventsSender::sendEvent()
         const int typeId(query().value(Tags::typeId).toInt());
 
         const QJsonObject location({
-            { "latitude", query().value("locationLatitude").toDouble() },
-            { "longitude", query().value("locationLongitude").toDouble() }
+            { "latitude", query().value(Tags::locationLatitude).toDouble() },
+            { "longitude", query().value(Tags::locationLongitude).toDouble() }
         });
 
         const QJsonObject propertiesObject(

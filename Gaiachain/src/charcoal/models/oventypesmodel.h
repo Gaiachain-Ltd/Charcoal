@@ -12,7 +12,8 @@ public:
         Name,
         TranslatedName,
         IsTraditionalOven,
-        Type
+        Type,
+        IsActive
     };
     Q_ENUM(OvenTypesRole)
 
@@ -33,7 +34,8 @@ private:
         { OvenTypesRole::Name, "name" },
         { OvenTypesRole::TranslatedName, "translatedName" },
         { OvenTypesRole::IsTraditionalOven, "isTraditionalOven" },
-        { OvenTypesRole::Type, "type" }
+        { OvenTypesRole::Type, "type" },
+        { OvenTypesRole::IsActive, "isActive" }
     };
 
     bool isTraditional() const;

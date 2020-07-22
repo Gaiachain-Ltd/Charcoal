@@ -1371,11 +1371,21 @@ transport</translation>
     <name>OvenTypesModel</name>
     <message>
         <source>Traditional oven</source>
-        <translation>Four traditionnel</translation>
+        <translation type="vanished">Four traditionnel</translation>
     </message>
     <message>
         <source>Metallic oven</source>
-        <translation>Four métallique</translation>
+        <translation type="vanished">Four métallique</translation>
+    </message>
+    <message>
+        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="33"/>
+        <source>%1 (Traditional oven)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="35"/>
+        <source>%1 (Metallic oven)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/oventypesmodel.cpp" line="33"/>

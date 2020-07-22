@@ -10,10 +10,10 @@
 
 #include <QSqlQuery>
 
-VillagesModel::VillagesModel(QObject *parent) : SimpleListQueryModel(parent)
+VillagesModel::VillagesModel(QObject *parent) : SimpleListQueryModel(true, parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, name FROM Villages");
+    setDbQuery("SELECT id, name, active FROM Villages WHERE active=1");
 }
 
 void VillagesModel::refreshWebData()

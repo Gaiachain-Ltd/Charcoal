@@ -69,8 +69,9 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         QVariantList result;
 
         for (const Event &event : events) {
-            const auto action = CharcoalDbHelpers::actionById(m_connectionName,
-                                                              event.typeId);
+            const auto action = CharcoalDbHelpers::actionById(
+                m_connectionName, event.typeId);
+
             QString name;
             switch (action) {
             case Enums::SupplyChainAction::LoggingBeginning:
@@ -173,6 +174,7 @@ QVariantList TrackingModel::summaryForPlot(
     int parcelId = -1;
     int villageId = -1;
     int treeSpeciesId = -1;
+    int numberOfTrees = -1;
     qint64 beginningTimestamp = -1;
     qint64 endingTimestamp = -1;
 
@@ -191,6 +193,7 @@ QVariantList TrackingModel::summaryForPlot(
         if (action == Enums::SupplyChainAction::LoggingEnding
             && endingTimestamp == -1) {
             endingTimestamp = event.date;
+            numberOfTrees = event.properties.value(Tags::webNumberOfTrees).toInt(-1);
         }
     }
 
@@ -239,6 +242,8 @@ QVariantList TrackingModel::summaryForPlot(
         ));
     result.append(utility.createSummaryItem(
         tr("Tree species"), treeSpecies));
+    result.append(utility.createSummaryItem(
+        tr("Number of trees"), numberOfTrees));
     return result;
 }
 

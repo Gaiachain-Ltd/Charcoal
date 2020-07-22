@@ -123,7 +123,7 @@ void NotificationManager::webReplyHandler(const QJsonDocument &reply) const
     const QJsonObject object = reply.object();
 
     const int count = object.value("count").toInt();
-    const QJsonArray results = object.value("results").toArray();
+    const QJsonArray results = object.value(Tags::results).toArray();
 
     if (count <= 0) {
         return;

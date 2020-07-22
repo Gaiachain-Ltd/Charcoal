@@ -33,7 +33,7 @@ private:
 
     bool processDetailsLoggingBeginning(const QJsonObject &object) const;
     bool processDetailsLoggingEnding(const QJsonObject &object) const;
-    bool processDetailsOvens(const QString &packageId, const QJsonArray &array) const;
+    bool processDetailsOvens(const int webId, const QJsonArray &array) const;
     bool processDetailsLoadingAndTransport(const QString &packageName,
                                            const QJsonObject &object) const;
     bool processDetailsReception(const QJsonObject &object) const;

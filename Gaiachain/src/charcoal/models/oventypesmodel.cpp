@@ -15,7 +15,7 @@
 OvenTypesModel::OvenTypesModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, name, type FROM OvenTypes");
+    setDbQuery("SELECT id, name, type, active FROM OvenTypes WHERE active=1");
 }
 
 QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
@@ -43,6 +43,8 @@ QVariant OvenTypesModel::data(const QModelIndex &index, int role) const
         return isTraditional();
     case OvenTypesRole::Type:
         return query().value(Tags::type).toInt();
+    case OvenTypesRole::IsActive:
+        return query().value(Tags::active).toInt();
     }
 
     return {};

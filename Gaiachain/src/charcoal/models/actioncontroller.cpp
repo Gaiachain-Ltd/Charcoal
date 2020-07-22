@@ -127,11 +127,12 @@ QString ActionController::getEntityName(const int id) const
     return QString();
 }
 
-int ActionController::nextTransportNumber(const QString &harvestId) const
+int ActionController::nextTransportNumber(const int harvestId) const
 {
-    const QString plotId(CharcoalDbHelpers::getPlotName(harvestId));
-    const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotId));
-    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(m_connectionName, Enums::PackageType::Transport));
+    const int parentEntityId(CharcoalDbHelpers::getParentEntityId(
+        m_connectionName, harvestId));
+    const int transportTypeId(CharcoalDbHelpers::getEntityTypeId(
+        m_connectionName, Enums::PackageType::Transport));
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
