@@ -166,6 +166,12 @@ QString ListUpdater::wrapAndJoin(const QList<QVariant> &items) const
         case QVariant::Type::Int:
             result.append(QString::number(item.toInt()));
             break;
+        case QVariant::Type::Double:
+            result.append(QString::number(item.toDouble()));
+            break;
+        case QVariant::Type::LongLong:
+            result.append(QString::number(item.toLongLong()));
+            break;
         case QVariant::Type::String:
         default:
             result.append(wrap + item.toString() + wrap);
