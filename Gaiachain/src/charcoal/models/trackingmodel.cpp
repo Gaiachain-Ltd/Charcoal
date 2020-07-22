@@ -173,6 +173,7 @@ QVariantList TrackingModel::summaryForPlot(
     int parcelId = -1;
     int villageId = -1;
     int treeSpeciesId = -1;
+    int numberOfTrees = -1;
     qint64 beginningTimestamp = -1;
     qint64 endingTimestamp = -1;
 
@@ -191,6 +192,7 @@ QVariantList TrackingModel::summaryForPlot(
         if (action == Enums::SupplyChainAction::LoggingEnding
             && endingTimestamp == -1) {
             endingTimestamp = event.date;
+            numberOfTrees = event.properties.value(Tags::webNumberOfTrees).toInt(-1);
         }
     }
 
@@ -239,6 +241,8 @@ QVariantList TrackingModel::summaryForPlot(
         ));
     result.append(utility.createSummaryItem(
         tr("Tree species"), treeSpecies));
+    result.append(utility.createSummaryItem(
+        tr("Number of trees"), numberOfTrees));
     return result;
 }
 
