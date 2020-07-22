@@ -29,22 +29,22 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
             QLatin1String("CREATE TABLE TreeSpecies ("
                 "`id` INTEGER primary key AUTOINCREMENT, "
-                "`name` TEXT NOT NULL UNIQUE"
+                "`name` TEXT NOT NULL UNIQUE, "
                 "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
             QLatin1String("CREATE TABLE Parcels ("
                 "`id` INTEGER primary key AUTOINCREMENT, "
                 "`code` TEXT NOT NULL UNIQUE, "
-                "`isUsed` BOOLEAN NOT NULL DEFAULT(1) CHECK (isUsed IN (0,1))"
+                "`isUsed` BOOLEAN NOT NULL DEFAULT(1) CHECK (isUsed IN (0,1)), "
                 "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
             QLatin1String("CREATE TABLE Destinations ("
                 "`id` INTEGER primary key AUTOINCREMENT, "
-                "`name` TEXT NOT NULL UNIQUE"
+                "`name` TEXT NOT NULL UNIQUE, "
                 "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
             QLatin1String("CREATE TABLE OvenTypes ("
                 "`id` INTEGER primary key AUTOINCREMENT, "
                 "`name` TEXT NOT NULL UNIQUE, "
                 "`type` INTEGER NOT NULL, "
-                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2)"
+                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2), "
                 "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
 
             // SupplyChain
