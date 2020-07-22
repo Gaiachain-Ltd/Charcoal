@@ -80,8 +80,7 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
 
     ListUpdater updates("OvenTypes", m_connectionName);
     if (updates.updateTable(reply, { Tags::name, Tags::type, Tags::webOvenHeight,
-                                    Tags::webOvenWidth, Tags::webOvenLength,
-                                    Tags::active}))
+                                    Tags::webOvenWidth, Tags::webOvenLength }))
     {
         emit webDataRefreshed();
     } else {

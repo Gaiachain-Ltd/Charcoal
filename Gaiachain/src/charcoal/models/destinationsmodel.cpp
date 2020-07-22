@@ -39,7 +39,7 @@ void DestinationsModel::webReplyHandler(const QJsonDocument &reply)
 {
     m_isPending = false;
     ListUpdater updates("Destinations", m_connectionName);
-    if (updates.updateTable(reply, { Tags::name, Tags::active } )) {
+    if (updates.updateTable(reply, Tags::name)) {
         emit webDataRefreshed();
     } else {
         qWarning() << RED("Updating items has failed");

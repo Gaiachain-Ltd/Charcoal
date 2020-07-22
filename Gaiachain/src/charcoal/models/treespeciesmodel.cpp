@@ -38,7 +38,7 @@ void TreeSpeciesModel::webReplyHandler(const QJsonDocument &reply)
 {
     m_isPending = false;
     ListUpdater updates("TreeSpecies", m_connectionName);
-    if (updates.updateTable(reply, { Tags::name, Tags::active } )) {
+    if (updates.updateTable(reply, Tags::name)) {
         emit webDataRefreshed();
     } else {
         qWarning() << RED("Updating items has failed");
