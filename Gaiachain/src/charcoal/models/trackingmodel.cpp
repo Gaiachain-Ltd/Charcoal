@@ -69,8 +69,9 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
         QVariantList result;
 
         for (const Event &event : events) {
-            const auto action = CharcoalDbHelpers::actionById(m_connectionName,
-                                                              event.typeId);
+            const auto action = CharcoalDbHelpers::actionById(
+                m_connectionName, event.typeId);
+
             QString name;
             switch (action) {
             case Enums::SupplyChainAction::LoggingBeginning:

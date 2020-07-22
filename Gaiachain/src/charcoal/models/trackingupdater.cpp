@@ -69,7 +69,7 @@ bool TrackingUpdater::updateDetails(const QJsonDocument &json) const
                 result = false;
             }
         } else if (key == "ovens") {
-            if (processDetailsOvens(pid, properties.value(key).toArray()) == false) {
+            if (processDetailsOvens(webId, properties.value(key).toArray()) == false) {
                 result = false;
             }
         } else if (key == "loading_transport") {
@@ -206,6 +206,8 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
     }
 
     for (const QJsonValue &value : events) {
+//    for (int i = (events.size() - 1); i >= 0; --i) {
+//        const QJsonValue value(events.at(i));
         const QJsonObject event(value.toObject());
         const int eventWebId(event.value(Tags::id).toInt(-1));
         const qint64 timestamp = event.value(Tags::timestamp).toVariant().toLongLong();
@@ -309,7 +311,7 @@ bool TrackingUpdater::processDetailsLoggingEnding(const QJsonObject &object) con
                               });
 }
 
-bool TrackingUpdater::processDetailsOvens(const QString &packageId,
+bool TrackingUpdater::processDetailsOvens(const int webId,
                                           const QJsonArray &array) const
 {
     bool result = true;
@@ -317,9 +319,8 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
         const QJsonObject object(value.toObject());
         const int ovenWebId(object.value(Tags::id).toInt());
         const QString ovenName(object.value(Tags::webOvenId).toString());
-        const QString plotId(CharcoalDbHelpers::getPlotName(packageId));
-        const int parentEntityId(CharcoalDbHelpers::getEntityIdFromName(
-            m_connectionName, plotId));
+        const int parentEntityId(CharcoalDbHelpers::getEntityIdFromWebId(
+            m_connectionName, webId));
 
         if (const QJsonObject cb(object.value("carbonization_beginning").toObject());
             cb.isEmpty() == false)
