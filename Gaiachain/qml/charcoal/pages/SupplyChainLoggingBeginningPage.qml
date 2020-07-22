@@ -81,7 +81,6 @@ Pages.SupplyChainPageBase {
                     parcelComboBox.currentText,
                     parcelComboBox.currentId,
                     villageComboBox.currentId,
-                    treeSpeciesComboBox.currentText,
                     treeSpeciesComboBox.currentId)
 
         pageManager.enter(Enums.Page.MainMenu)
