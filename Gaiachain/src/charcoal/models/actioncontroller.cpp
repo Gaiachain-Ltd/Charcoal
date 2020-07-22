@@ -55,7 +55,7 @@ QString ActionController::generateTransportId(const QString &harvestId,
 {
     return harvestId + CharcoalDbHelpers::sep + licensePlate
         + CharcoalDbHelpers::sep + "T" + QString::number(transportNumber)
-            + CharcoalDbHelpers::sep + date.toString(dateFormat);
+        + CharcoalDbHelpers::sep + date.toString(dateFormat);
 }
 
 QString ActionController::getPlotId(const QString &packageId)
@@ -290,9 +290,7 @@ void ActionController::registerLoggingBeginning(
     const QString &userId,
     const QString &parcel,
     const int parcelId,
-    const QString &village,
     const int villageId,
-    const QString &treeSpecies,
     const int treeSpeciesId) const
 {
     /*
@@ -304,7 +302,7 @@ void ActionController::registerLoggingBeginning(
      */
 
     qDebug() << "Registering logging beginning" << coordinate << timestamp
-             << parcel << userId << village << treeSpecies;
+             << parcel << userId << villageId << treeSpeciesId;
 
     // First, insert a new Entity into table
     const QString plotId(generatePlotId(userId, parcel, timestamp.date()));
@@ -406,7 +404,8 @@ void ActionController::registerLoggingEnding(
 
 void ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
     const QString &userId,
     const QString &plotId,
     const int plotDbId,
@@ -596,8 +595,7 @@ void ActionController::registerLoadingAndTransport(
     const QDateTime &eventDate,
     const QString &userId,
     const QString &transportId,
-    const QString &harvestId,
-    const int harvestDbId,
+    const int harvestId,
     const QString &plateNumber,
     const QString &destination,
     const int destinationId,
@@ -613,7 +611,7 @@ void ActionController::registerLoadingAndTransport(
      */
 
     qDebug() << "Registering transport and loading" << coordinate << timestamp
-             << userId << transportId << harvestId << plateNumber
+             << userId << transportId << plateNumber
              << destination << scannedQrs.size();
 
     // First, insert a new Entity into table
@@ -621,7 +619,7 @@ void ActionController::registerLoadingAndTransport(
         m_connectionName, Enums::PackageType::Transport));
 
     const int parentEntityId(CharcoalDbHelpers::getParentEntityId(
-        m_connectionName, harvestDbId));
+        m_connectionName, harvestId));
 
     if (typeId == -1) {
         qWarning() << RED("Transport ID type not found!");
@@ -681,9 +679,12 @@ void ActionController::registerLoadingAndTransport(
 
 void ActionController::registerReception(
     const QGeoCoordinate &coordinate,
-    const QDateTime &timestamp, const QDateTime &eventDate,
-    const QString &userId, const int transportId,
-    const QVariantList &documents, const QVariantList &receipts,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const int transportId,
+    const QVariantList &documents,
+    const QVariantList &receipts,
     const QVariantList &scannedQrs) const
 {
     /*
@@ -749,29 +750,30 @@ void ActionController::registerReception(
     emit refreshLocalEvents();
 }
 
-void ActionController::finalizeSupplyChain(const QString &plotName) const
+void ActionController::finalizeSupplyChain(const int transportId) const
 {
-    const int parentId(CharcoalDbHelpers::getEntityIdFromName(m_connectionName, plotName));
+    const int parentId(CharcoalDbHelpers::getParentEntityId(
+        m_connectionName, transportId));
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-    query.prepare("UPDATE Entities SET isFinished=1 WHERE name=:plotId "
+    query.prepare("UPDATE Entities SET isFinished=1 WHERE id=:transportId "
                   "OR parent=:parentId");
-    query.bindValue(":plotId", plotName);
+    query.bindValue(":transportId", transportId);
     query.bindValue(":parentId", parentId);
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing a supply chain has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "with params:" << plotName << parentId;
+                   << "with params:" << transportId << parentId;
         return;
     }
 
     // In online mode - send finalization call.
     // In offline mode - do nothing. Finalization will be handled by TrackingModel
     const auto webIds = CharcoalDbHelpers::getWebPackageIds(
-        m_connectionName, plotName, parentId);
+        m_connectionName, transportId, parentId);
 
-    qDebug() << "ENTITY HAS BEEN FINISHED!" << plotName << parentId << webIds;
+    qDebug() << "ENTITY HAS BEEN FINISHED!" << transportId << parentId << webIds;
 
     if (webIds.isEmpty() == false) {
         emit finalizePackages(webIds);
@@ -782,10 +784,8 @@ void ActionController::registerReplantation(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QString &userId,
-    const QString &plotName,
     const int plotId,
     const int numberOfTrees,
-    const QString &treeSpecies,
     const int treeSpeciesId,
     const QDateTime &beginningDate,
     const QDateTime &endingDate) const
@@ -798,8 +798,8 @@ void ActionController::registerReplantation(
      */
 
     qDebug() << "Registering replantation" << coordinate << timestamp
-             << userId << plotName << plotId << numberOfTrees
-             << treeSpecies << treeSpeciesId
+             << userId << plotId << numberOfTrees
+             << treeSpeciesId
              << beginningDate << endingDate;
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
@@ -912,10 +912,10 @@ bool ActionController::insertEvent(
     const bool pauseEvent) const
 {
     query->prepare("INSERT INTO Events (entityId, typeId, userId,"
-                  "date, eventDate, locationLatitude, locationLongitude, properties, "
-                  "isCommitted, isPaused) "
-                  "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
-                  ":locationLatitude, :locationLongitude, :properties, "
+                   "date, eventDate, locationLatitude, locationLongitude, properties, "
+                   "isCommitted, isPaused) "
+                   "VALUES (:entityId, :typeId, :userId, :date, :eventDate, "
+                   ":locationLatitude, :locationLongitude, :properties, "
                    "0, :isPaused)");
     query->bindValue(":entityId", entityId);
     query->bindValue(":typeId", eventTypeId);

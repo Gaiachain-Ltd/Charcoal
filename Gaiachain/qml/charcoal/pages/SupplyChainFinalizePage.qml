@@ -16,7 +16,7 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
-    property string plotId
+    property int transportId
     property int scannedBagsCount: -1
     property int scannedBagsTotal: -1
     property int registeredTrucksCount: -1
@@ -41,7 +41,7 @@ Pages.SupplyChainPageBase {
 
     function addAction() {
         if (yes.selected) {
-            dataManager.actionController.finalizeSupplyChain(plotId)
+            dataManager.actionController.finalizeSupplyChain(transportId)
             pageManager.backTo(Enums.Page.MainMenu)
             return
         }

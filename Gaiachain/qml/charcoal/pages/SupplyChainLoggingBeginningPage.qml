@@ -80,7 +80,6 @@ Pages.SupplyChainPageBase {
                     repsIdInputHeader.inputText,
                     parcelComboBox.currentText,
                     parcelComboBox.currentId,
-                    villageComboBox.currentText,
                     villageComboBox.currentId,
                     treeSpeciesComboBox.currentText,
                     treeSpeciesComboBox.currentId)

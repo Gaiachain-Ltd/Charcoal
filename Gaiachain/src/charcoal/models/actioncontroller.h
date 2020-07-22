@@ -53,9 +53,7 @@ public:
         const QString &userId,
         const QString &parcel,
         const int parcelId,
-        const QString &village,
         const int villageId,
-        const QString &treeSpecies,
         const int treeSpeciesId
         ) const;
 
@@ -96,8 +94,7 @@ public:
         const QDateTime &eventDate,
         const QString &userId,
         const QString &transportId,
-        const QString &harvestId,
-        const int harvestDbId,
+        const int harvestId,
         const QString &plateNumber,
         const QString &destination,
         const int destinationId,
@@ -116,16 +113,15 @@ public:
         const QVariantList &scannedQrs
         ) const;
 
-    Q_INVOKABLE void finalizeSupplyChain(const QString &plotName) const;
+    Q_INVOKABLE void finalizeSupplyChain(const int transportId) const;
 
     Q_INVOKABLE void registerReplantation(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QString &userId,
-        const QString &plotName,
         const int plotId,
         const int numberOfTrees,
-        const QString &treeSpecies, const int treeSpeciesId,
+        const int treeSpeciesId,
         const QDateTime &beginningDate,
         const QDateTime &endingDate
         ) const;

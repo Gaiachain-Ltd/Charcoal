@@ -154,20 +154,20 @@ int CharcoalDbHelpers::getWebPackageId(const QString &connectionName, const int 
  * or has \a parentId, using SQL connection \a connectionName.
  */
 QVector<int> CharcoalDbHelpers::getWebPackageIds(const QString &connectionName,
-                                                 const QString &plotName,
+                                                 const int transportId,
                                                  const int parentId)
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
-    query.prepare("SELECT webId FROM Entities WHERE name=:plotId "
+    query.prepare("SELECT webId FROM Entities WHERE id=:transportId "
                   "OR parent=:parentId");
-    query.bindValue(":plotId", plotName);
+    query.bindValue(":transportId", transportId);
     query.bindValue(":parentId", parentId);
 
     if (query.exec() == false) {
         qWarning() << RED("Getting list of web IDs has failed!")
                    << query.lastError().text()
                    << "for query:" << query.lastQuery()
-                   << "with params:" << plotName << parentId;
+                   << "with params:" << transportId << parentId;
         return {};
     }
 

@@ -157,7 +157,7 @@ Pages.SupplyChainPageBase {
         let registeredTrucksTotal = dataManager.actionController.registeredTrucksTotal(transportId)
 
         pageManager.enter(Enums.Page.SupplyChainFinalize, {
-                              "plotId": plotId,
+                              "transportId": transportId,
                               "scannedBagsCount": scannedBagsCount,
                               "scannedBagsTotal": scannedBagsTotal,
                               "registeredTrucksCount": registeredTrucksCount,
