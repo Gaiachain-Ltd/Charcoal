@@ -306,7 +306,7 @@ void ActionController::registerLoggingBeginning(
              << parcel << userId << villageId << treeSpeciesId;
 
     // First, insert a new Entity into table
-    const QString plotId(generatePlotId(userId, parcel, timestamp.date()));
+    const QString plotId(generatePlotId(userId, parcel, eventDate.date()));
     const int typeId(CharcoalDbHelpers::getEntityTypeId(
         m_connectionName, Enums::PackageType::Plot));
 
