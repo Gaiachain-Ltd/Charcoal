@@ -34,7 +34,7 @@ public:
     static Enums::SupplyChainAction actionByName(const QString &actionName);
     static int bagCountInTransport(const QString &connectionName, const int id);
     static QVariantList defaultOvenDimensions(const QString &connectionName,
-                                              const int ovenType);
+                                              const int ovenId);
 
     static QJsonObject dbPropertiesToJson(const QString &properties);
 

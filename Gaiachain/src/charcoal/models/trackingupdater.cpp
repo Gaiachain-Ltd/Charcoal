@@ -334,20 +334,20 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
             const double width = ovenMeasurements.value(Tags::webOvenWidth).toDouble();
             const double length = ovenMeasurements.value(Tags::webOvenLength).toDouble();
 
-            const int ovenType = CharcoalDbHelpers::getOvenTypeIdFromName(
+            const int ovenTypeId = CharcoalDbHelpers::getOvenTypeIdFromName(
                 m_connectionName, ovenTypeName);
 
             QVariantMap properties {
-                { Tags::webOvenType, ovenType },
+                { Tags::webOvenType, ovenTypeId },
                 { Tags::webEventDate, eventDate },
                 { Tags::webOvenId, ovenWebId }
             };
 
-            const bool isDefault = ovenType == CharcoalDbHelpers::metalOvenType;
+            const bool isDefault = ovenTypeId == CharcoalDbHelpers::metalOvenType;
             QVariantList defaultDims;
             if (isDefault) {
                 defaultDims = CharcoalDbHelpers::defaultOvenDimensions(
-                    m_connectionName, ovenType);
+                    m_connectionName, ovenTypeId);
             } else {
                 properties.insert(Tags::webOvenHeight, height);
                 properties.insert(Tags::webOvenLength, length);
@@ -367,7 +367,7 @@ bool TrackingUpdater::processDetailsOvens(const QString &packageId,
                       "oven_height, oven_width, oven_length) "
                       "VALUES (:type, :plot, :event, :name, "
                       ":height, :width, :length)");
-            q.bindValue(":type", ovenType);
+            q.bindValue(":type", ovenTypeId);
             q.bindValue(":plot", parentEntityId);
             q.bindValue(":event", eventId);
             q.bindValue(":name", ovenName);

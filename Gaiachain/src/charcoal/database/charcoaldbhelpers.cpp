@@ -113,30 +113,30 @@ int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const 
 }
 
 QVariantList CharcoalDbHelpers::defaultOvenDimensions(const QString &connectionName,
-                                                      const int ovenType)
+                                                      const int ovenId)
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
     QVariantList dimensions;
-    if (ovenType == CharcoalDbHelpers::metalOvenType) {
-        query.prepare("SELECT oven_height, oven_width, oven_length "
-                      "FROM OvenTypes WHERE type=:ovenType");
-        query.bindValue(":ovenType", ovenType);
+    query.prepare("SELECT oven_height, oven_width, oven_length, type "
+                  "FROM OvenTypes WHERE id=:ovenId");
+    query.bindValue(":ovenId", ovenId);
 
-        if (query.exec() == false) {
-            qWarning() << RED("Getting metallic oven dimensions has failed!")
-                       << query.lastError().text() << "for query:" << query.lastQuery();
-            return QVariantList{ 0, 0, 0 };
-        }
-
-        query.next();
-        dimensions.append(query.value(Tags::webOvenHeight).toDouble());
-        dimensions.append(query.value(Tags::webOvenWidth).toDouble());
-        dimensions.append(query.value(Tags::webOvenLength).toDouble());
-    } else {
+    if (query.exec() == false) {
+        qWarning() << RED("Getting metallic oven dimensions has failed!")
+                   << query.lastError().text() << "for query:" << query.lastQuery();
         return QVariantList{ 0, 0, 0 };
     }
 
-    return dimensions;
+    query.next();
+
+    if (query.value(Tags::type).toInt() == CharcoalDbHelpers::metalOvenType) {
+        dimensions.append(query.value(Tags::webOvenHeight).toDouble());
+        dimensions.append(query.value(Tags::webOvenWidth).toDouble());
+        dimensions.append(query.value(Tags::webOvenLength).toDouble());
+        return dimensions;
+    } else {
+        return QVariantList{ 0, 0, 0 };
+    }
 }
 
 QJsonObject CharcoalDbHelpers::dbPropertiesToJson(const QString &properties)

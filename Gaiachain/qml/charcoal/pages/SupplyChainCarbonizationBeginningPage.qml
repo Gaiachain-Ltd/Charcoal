@@ -43,7 +43,7 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         let dims = ovenTypeComboBox.ovenType === "2"?
-                dataManager.actionController.defaultOvenDimensions(ovenTypeComboBox.ovenType)
+                dataManager.actionController.defaultOvenDimensions(ovenTypeComboBox.ovenIdNumber)
               : ovenDimensionsHeader.values
 
         var summary = [

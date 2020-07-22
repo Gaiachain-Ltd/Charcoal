@@ -44,7 +44,7 @@ public:
     Q_INVOKABLE int registeredTrucksTotal(const int transportId) const;
 
     Q_INVOKABLE QString nextOvenNumber(int parentEntityId) const;
-    Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenType) const;
+    Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenId) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,

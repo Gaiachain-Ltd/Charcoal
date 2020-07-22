@@ -278,9 +278,9 @@ QString ActionController::nextOvenNumber(int parentEntityId) const
     return "-1";
 }
 
-QVariantList ActionController::defaultOvenDimensions(const int ovenType) const
+QVariantList ActionController::defaultOvenDimensions(const int ovenId) const
 {
-    return CharcoalDbHelpers::defaultOvenDimensions(m_connectionName, ovenType);
+    return CharcoalDbHelpers::defaultOvenDimensions(m_connectionName, ovenId);
 }
 
 void ActionController::registerLoggingBeginning(
@@ -480,7 +480,7 @@ void ActionController::registerCarbonizationBeginning(
         m_connectionName, ovenIdNumber);
     QVariantList dimensions;
     if (ovenType == Enums::OvenType::Metallic) {
-        dimensions = defaultOvenDimensions(int(ovenType));
+        dimensions = defaultOvenDimensions(ovenIdNumber);
     } else {
         dimensions = ovenDimensions;
     }
