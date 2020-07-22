@@ -80,7 +80,7 @@ void ParcelsModel::webReplyHandler(const QJsonDocument &reply)
 {
     m_isPending = false;
     ListUpdater updates("Parcels", m_connectionName);
-    if (updates.updateTable(reply, Tags::code)) {
+    if (updates.updateTable(reply, { Tags::code, Tags::active } )) {
         // The unused parcels information is not used :D
         // Reason: parcels can be reused freely, see:
         // https://projects.milosolutions.com/issues/87745
