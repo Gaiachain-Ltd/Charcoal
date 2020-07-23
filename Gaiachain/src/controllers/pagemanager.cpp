@@ -29,8 +29,12 @@ void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
  */
 void PageManager::enter(const Enums::Page page, QVariantMap properties, const bool immediate)
 {
+    const bool hasCredentials = (page == Enums::Page::LoginLoading);
+
     qCDebug(corePageManager) << CYAN("[PAGE] Print stack on enter") << m_pageStack;
-    qCDebug(corePageManager) << CYAN("[PAGE] Enter:") << page << "properties:" << properties;
+    qCDebug(corePageManager) << CYAN("[PAGE] Enter:")
+                             << page << "properties:"
+                             << (hasCredentials? QVariantMap() : properties);
 
     if (!m_popupStack.isEmpty()) {
         qCWarning(corePageManager) << "Popup stack not empty:" <<  m_popupStack

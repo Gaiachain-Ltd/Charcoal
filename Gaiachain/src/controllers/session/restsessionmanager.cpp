@@ -42,7 +42,11 @@ void RestSessionManager::login(const QString &login, const QString &password)
             emit loginError(login, QNetworkReply::NetworkError::UnknownContentError);
         }
     };
-    sendRequest(QSharedPointer<AuthRequest>::create(login, password), errorHandler, replyHandler);
+
+    const auto request = QSharedPointer<AuthRequest>::create(login, password);
+    request->setQuiet(true);
+
+    sendRequest(request, errorHandler, replyHandler);
 }
 
 bool RestSessionManager::hasPostRequests() const

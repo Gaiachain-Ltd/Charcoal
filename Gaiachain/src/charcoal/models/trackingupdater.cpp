@@ -408,7 +408,8 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
             ce.isEmpty() == false)
         {
             const QJsonObject webEntity(ce.value(Tags::entity).toObject());
-            const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
+            const qint64 timestamp(webEntity.value(Tags::timestamp)
+                                       .toVariant().toLongLong());
             const int webId = webEntity.value(Tags::id).toInt();
             const qint64 eventDate = ce.value("end_date").toVariant().toLongLong();
 
@@ -427,7 +428,7 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
 
             QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
             q.prepare("UPDATE Ovens SET carbonizationEnding=:carbonizationEndingId "
-                          "WHERE id=:ovenId");
+                      "WHERE id=:ovenId");
             q.bindValue(":carbonizationEndingId", eventId);
             q.bindValue(":ovenId", ovenId);
 
