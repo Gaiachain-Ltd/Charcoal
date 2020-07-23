@@ -118,6 +118,7 @@ android-dev-cocoa-easy-login:
   <<: *only-common
   <<: *android-build
   stage: build
+  when: manual
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
     QMAKE_CONFIG: "CONFIG+=easy_login"
@@ -145,8 +146,9 @@ android-release-charcoal:
   <<: *only-common
   <<: *android-build
   stage: build
-  when: manual
   allow_failure: true
+  only:
+    - master
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
     QMAKE_CONFIG: "CONFIG+=release_server"
@@ -159,9 +161,11 @@ android-dev-charcoal-easy-login:
   <<: *only-common
   <<: *android-build
   stage: build
+  only:
+    - merge_requests
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
-    QMAKE_CONFIG: "CCONFIG+=easy_login"
+    QMAKE_CONFIG: "CONFIG+=easy_login"
     FLAVOR: "charcoal"
     PROJECT_NAME: "GaiachainCharcoal"
     SECRET: $SECRET_CHARCOAL
@@ -172,6 +176,8 @@ android-dev-charcoal:
   <<: *android-build
   stage: build
   when: manual
+  only:
+    - dev
   allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
