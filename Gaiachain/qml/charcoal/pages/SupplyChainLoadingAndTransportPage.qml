@@ -195,10 +195,12 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loadingAndTransportPlateNumberHelp
         validator: RegularExpressionValidator {
-            regularExpression: /[0-9A-Z]{1,8}+/
+            regularExpression: /[0-9A-Za-z]{1,8}+/
         }
 
         readOnly: isPausedEvent
+
+        onInputTextChanged: inputText = Utility.allUpperCase(inputText)
     }
 
     CharcoalHeaders.CharcoalButtonHeader {

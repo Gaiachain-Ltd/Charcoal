@@ -79,6 +79,11 @@ QString Utility::colorString(const QColor &color) const
     return color.name(QColor::HexArgb);
 }
 
+QString Utility::allUpperCase(const QString &input) const
+{
+    return input.toUpper();
+}
+
 QVariantMap Utility::createSummaryItem(
     const QString &headerText,
     const QVariant &value,

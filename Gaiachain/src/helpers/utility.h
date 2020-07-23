@@ -66,6 +66,8 @@ public:
 
     Q_INVOKABLE QString colorString(const QColor &color) const;
 
+    Q_INVOKABLE QString allUpperCase(const QString &input) const;
+
     Q_INVOKABLE QVariantMap createSummaryItem(
         const QString &headerText,
         const QVariant &value,
