@@ -282,6 +282,7 @@ QString ActionController::nextOvenNumber(int parentEntityId) const
             return "-2";
         }
 
+        //qDebug() << "Next oven for" << parentEntityId << "is" << QChar(size);
         return QChar(size);
     }
 
@@ -440,7 +441,7 @@ void ActionController::registerCarbonizationBeginning(
      */
 
     qDebug() << "Registering carbonization beginning" << coordinate << timestamp
-             << plotId << ovenId << userId << ovenIdNumber
+             << plotId << plotDbId << ovenId << userId << ovenIdNumber
              << ovenDimensions;
 
     const int parentEntityId(plotDbId);
@@ -462,18 +463,17 @@ void ActionController::registerCarbonizationBeginning(
     }
 
     const bool alreadyPresent = query.next();
-    query.finish();
-
-    // Insert a new Entity into table, if needed
-    const int typeId(CharcoalDbHelpers::getEntityTypeId(
-        m_connectionName, Enums::PackageType::Harvest));
-
-    if (typeId == -1) {
-        qWarning() << RED("Harvest ID type not found!");
-        return;
-    }
 
     if (alreadyPresent == false) {
+        // Insert a new Entity into table, if needed
+        const int typeId(CharcoalDbHelpers::getEntityTypeId(
+            m_connectionName, Enums::PackageType::Harvest));
+
+        if (typeId == -1) {
+            qWarning() << RED("Harvest ID type not found!");
+            return;
+        }
+
         if (insertEntity(&query, typeId, harvestId, parentEntityId) == false) {
             return;
         }
@@ -482,6 +482,8 @@ void ActionController::registerCarbonizationBeginning(
     // Then, insert a new Event under that Entity
     const int entityId(alreadyPresent? query.value(Tags::id).toInt()
                                       : query.lastInsertId().toInt());
+    query.finish();
+
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
         m_connectionName, Enums::SupplyChainAction::CarbonizationBeginning));
 

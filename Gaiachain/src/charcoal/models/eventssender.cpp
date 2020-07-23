@@ -184,7 +184,8 @@ void EventsSender::onFetchPhoto(const QString &path)
         justDateTime = justDateTime.mid(path.indexOf('-', 0) + 1);
         justDateTime.truncate(justDateTime.lastIndexOf('.'));
 
-        const QDateTime timestamp(QDateTime::fromString(justDateTime, "yyyy-MM-ddTHHmmss"));
+        const QDateTime timestamp(QDateTime::fromString(
+            justDateTime, "yyyy-MM-ddTHHmmss"));
         adjusted.append(timestamp.toString("yyyy/MM/dd"));
         adjusted.append("/");
         adjusted.append(path);
