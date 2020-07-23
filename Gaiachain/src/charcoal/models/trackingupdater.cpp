@@ -319,8 +319,10 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
         const QJsonObject object(value.toObject());
         const int ovenWebId(object.value(Tags::id).toInt());
         const QString ovenName(object.value(Tags::webOvenId).toString());
-        const int parentEntityId(CharcoalDbHelpers::getEntityIdFromWebId(
+        const int harvestEntityId(CharcoalDbHelpers::getEntityIdFromWebId(
             m_connectionName, webId));
+        const int plotEntityId(CharcoalDbHelpers::getParentEntityId(
+            m_connectionName, harvestEntityId));
 
         if (const QJsonObject cb(object.value("carbonization_beginning").toObject());
             cb.isEmpty() == false)
@@ -377,8 +379,7 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
                       "VALUES (:type, :plot, :event, :name, "
                       ":height, :width, :length)");
             q.bindValue(":type", ovenTypeId);
-            q.bindValue(":plot", CharcoalDbHelpers::getParentEntityId(
-                                     m_connectionName, parentEntityId));
+            q.bindValue(":plot", plotEntityId);
             q.bindValue(":event", eventId);
             q.bindValue(":name", ovenName);
 
@@ -422,7 +423,7 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
             const int eventId = CharcoalDbHelpers::getEventIdFromWebId(
                 m_connectionName, webId);
             const int ovenId = CharcoalDbHelpers::getOvenId(
-                m_connectionName, parentEntityId, ovenName);
+                m_connectionName, plotEntityId, ovenName);
 
             QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
             q.prepare("UPDATE Ovens SET carbonizationEnding=:carbonizationEndingId "
