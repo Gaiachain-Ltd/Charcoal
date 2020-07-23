@@ -11,6 +11,10 @@ Q_LOGGING_CATEGORY(corePageManager, "core.pageManager")
 PageManager::PageManager(QObject *parent) : AbstractManager(parent)
 {
     m_pageStack.append(m_initialPage);
+
+    connect(this, &PageManager::topPageChanged,
+            this, &PageManager::onTopPageChanged,
+            Qt::QueuedConnection);
 }
 
 void PageManager::setupQmlContext(QQmlApplicationEngine &engine)
@@ -54,7 +58,8 @@ void PageManager::enter(const Enums::Page page, QVariantMap properties, const bo
     emit topPageChanged(topPage());
 }
 
-void PageManager::enterReplace(const Enums::Page page, QVariantMap properties, const bool immediate)
+void PageManager::enterReplace(const Enums::Page page, QVariantMap properties,
+                               const bool immediate)
 {
     qCDebug(corePageManager) << CYAN("[PAGE] Print stack on enter") << m_pageStack;
     qCDebug(corePageManager) << CYAN("[PAGE] Enter replace:") << page << "properties:" << properties;
@@ -135,13 +140,16 @@ void PageManager::showNotificationWithLink(const Enums::Page page,
                                            const QString &redirectText)
 {
     qDebug() << "Please notify!" << page << header << text << redirectText;
-    openPopup(Enums::Popup::NotificationWithLink,
-              {
-                  { "headerText", header },
-                  { "text", text },
-                  { "redirectText", redirectText },
-                  { "redirectPage", int(page) }
-              });
+
+    Notification notification;
+    notification.header = header;
+    notification.text = text;
+    notification.redirectText = redirectText;
+    notification.page = page;
+
+    m_notificationQueue.append(notification);
+
+    onTopPageChanged(topPage());
 }
 
 void PageManager::onError(const QString &error)
@@ -151,6 +159,14 @@ void PageManager::onError(const QString &error)
                   { "text", error },
                   { "backgroundColor", "#cb0000" }
               });
+}
+
+void PageManager::onTopPageChanged(const Enums::Page topPage)
+{
+    if (topPage == Enums::Page::MainMenu && m_notificationQueue.isEmpty() == false) {
+        const Notification notification = m_notificationQueue.takeFirst();
+        openPopup(Enums::Popup::NotificationWithLink, notification.toMap());
+    }
 }
 
 void PageManager::back(const bool immediate)

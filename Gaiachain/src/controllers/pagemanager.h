@@ -9,6 +9,23 @@
 #include "../common/enums.h"
 #include "../helpers/utility.h"
 
+struct Notification {
+    QString header;
+    QString text;
+    QString redirectText;
+    Enums::Page page;
+
+    QVariantMap toMap() const
+    {
+        return {
+            { "headerText", header },
+            { "text", text },
+            { "redirectText", redirectText },
+            { "redirectPage", int(page) }
+        };
+    }
+};
+
 class PageManager : public AbstractManager
 {
     Q_OBJECT
@@ -46,7 +63,7 @@ signals:
                           const QVariantMap properties = QVariantMap{}) const;
     void popupManagerClose() const;
 
-    void topPageChanged(Enums::Page topPage);
+    void topPageChanged(const Enums::Page topPage) const;
 
 public slots:
     // Page managment
@@ -81,6 +98,9 @@ public slots:
 
     void onError(const QString &error);
 
+private slots:
+    void onTopPageChanged(const Enums::Page topPage);
+
 private:
     const QString m_qrcPrefix = QStringLiteral("qrc:/");
     const QString m_flavorPrefix =
@@ -97,6 +117,8 @@ private:
 
     QVector<Enums::Page> m_pageStack;
     QVector<QPair<Enums::Popup, QString>> m_popupStack;
+
+    QVector<Notification> m_notificationQueue;
 
     void prepareConnections();
 
