@@ -155,14 +155,7 @@ void MainController::setupDataConnections()
 
     auto dataManager = qobject_cast<CharcoalDataManager *>(m_dataManager);
     connect(dataManager, &CharcoalDataManager::error,
-            &m_pageManager, [this](const QString &error) {
-                qDebug() << "Error!" << error;
-                m_pageManager.openPopup(Enums::Popup::Notification,
-                                        {
-                                            { "text", error },
-                                            { "backgroundColor", "#cb0000" }
-                                        });
-            });
+            &m_pageManager, &PageManager::onError);
 #endif
 }
 
