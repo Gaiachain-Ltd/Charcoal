@@ -66,6 +66,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedHarvestIdsModel.refresh()
         dataManager.destinationsModel.refresh()
+        dataManager.unusedHarvestIdsModel.checkForPausedEvent()
         dataManager.minimumDateModel.plotId = -1
         isPausedEvent = dataManager.unusedHarvestIdsModel.hasPausedEvent
     }
@@ -153,11 +154,16 @@ Pages.SupplyChainPageBase {
     }
 
     Items.GText {
+        id: pauseMessage
+
         Layout.fillWidth: true
+
+        verticalAlignment: Text.AlignTop
         color: GStyle.textSecondaryColor
         text: Strings.pausedLoading
         visible: isPausedEvent
         wrapMode: Text.WordWrap
+        elide: Text.ElideNone
 
         background: Rectangle {
             color: GStyle.errorColor

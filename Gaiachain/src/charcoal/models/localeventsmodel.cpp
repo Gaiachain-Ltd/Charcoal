@@ -4,7 +4,7 @@
 LocalEventsModel::LocalEventsModel(QObject *parent) : QueryModel(parent)
 {
     setWebModelCanChange(false);
-    setDbQuery("SELECT id FROM Events WHERE isCommitted=0 "
+    setDbQuery("SELECT id FROM Events WHERE isCommitted=0 AND isPaused=0 "
                "UNION ALL "
                "SELECT id FROM Replantations WHERE isCommitted=0");
 

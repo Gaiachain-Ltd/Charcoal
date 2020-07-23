@@ -54,6 +54,9 @@ void UnusedHarvestIdsModel::checkForPausedEvent()
                    << "for query:" << q.lastQuery()
                    << "DB:" << m_connectionName;
     }
+
+    qDebug() << "Checking for paused events" << m_hasPausedEvent
+             << m_pausedEvent.id << m_pausedEntity.name;
 }
 
 QString UnusedHarvestIdsModel::harvestId() const
