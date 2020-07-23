@@ -27,10 +27,12 @@ Pages.SupplyChainPageBase {
     onIsPausedEventChanged: {
         if (isPausedEvent) {
             console.log("Resuming loading and transport", isPausedEvent, shouldPause)
-            harvestIdComboBox.currentText = dataManager.unusedHarvestIdsModel.harvestId()
+            harvestIdComboBox.currentText = dataManager.unusedHarvestIdsModel.harvestName()
+            harvestIdComboBox.currentId = dataManager.unusedHarvestIdsModel.harvestId()
             gpsSource.coordinate = dataManager.unusedHarvestIdsModel.location()
             plateNumberHeader.inputText = dataManager.unusedHarvestIdsModel.plateNumber()
             deliveryDestinationComboBox.currentText = dataManager.unusedHarvestIdsModel.destination()
+            deliveryDestinationComboBox.currentId = dataManager.unusedHarvestIdsModel.destinationId()
             loadingDateHeader.selectedDate = dataManager.unusedHarvestIdsModel.loadingDate()
             scannedQrs = dataManager.unusedHarvestIdsModel.scannedQrs()
         } else {

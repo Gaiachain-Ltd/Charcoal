@@ -631,7 +631,7 @@ void ActionController::registerLoadingAndTransport(
 
     qDebug() << "Registering transport and loading" << coordinate << timestamp
              << userId << transportId << plateNumber
-             << destination << scannedQrs.size()
+             << destination << destinationId << scannedQrs.size()
              << pauseEvent;
 
     // First, insert a new Entity into table

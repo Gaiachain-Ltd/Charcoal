@@ -59,9 +59,14 @@ void UnusedHarvestIdsModel::checkForPausedEvent()
              << m_pausedEvent.id << m_pausedEntity.name;
 }
 
-QString UnusedHarvestIdsModel::harvestId() const
+QString UnusedHarvestIdsModel::harvestName() const
 {
     return CharcoalDbHelpers::getHarvestName(m_pausedEntity.name);
+}
+
+int UnusedHarvestIdsModel::harvestId() const
+{
+    return m_pausedEntity.id;
 }
 
 QGeoCoordinate UnusedHarvestIdsModel::location() const
@@ -78,7 +83,12 @@ QString UnusedHarvestIdsModel::destination() const
 {
     return CharcoalDbHelpers::getDestinationName(
         m_connectionName,
-        m_pausedEvent.properties.value(Tags::webDestination).toInt());
+                m_pausedEvent.properties.value(Tags::webDestination).toInt());
+}
+
+int UnusedHarvestIdsModel::destinationId() const
+{
+    return m_pausedEvent.properties.value(Tags::webDestination).toInt();
 }
 
 QVariantList UnusedHarvestIdsModel::scannedQrs() const

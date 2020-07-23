@@ -18,10 +18,12 @@ public:
 
     Q_INVOKABLE void checkForPausedEvent();
 
-    Q_INVOKABLE QString harvestId() const;
+    Q_INVOKABLE QString harvestName() const;
+    Q_INVOKABLE int harvestId() const;
     Q_INVOKABLE QGeoCoordinate location() const;
     Q_INVOKABLE QString plateNumber() const;
     Q_INVOKABLE QString destination() const;
+    Q_INVOKABLE int destinationId() const;
     Q_INVOKABLE QVariantList scannedQrs() const;
     Q_INVOKABLE QDateTime loadingDate() const;
     Q_INVOKABLE QDateTime timestamp() const;
