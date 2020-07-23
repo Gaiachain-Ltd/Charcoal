@@ -141,7 +141,7 @@ QString ActionController::getEntityName(const int id) const
     return QString();
 }
 
-int ActionController::nextTransportNumber(const int harvestId) const
+int ActionController::nextTransportNumber(const int harvestId, const bool isPausedEvent) const
 {
     const int parentEntityId(CharcoalDbHelpers::getParentEntityId(
         m_connectionName, harvestId));
@@ -151,7 +151,7 @@ int ActionController::nextTransportNumber(const int harvestId) const
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT id FROM Entities WHERE parent=:parentEntityId "
-                  "AND typeId=:transportTypeId");
+                  "AND typeId=:transportTypeId ");
     query.bindValue(":parentEntityId", parentEntityId);
     query.bindValue(":transportTypeId", transportTypeId);
 
@@ -161,7 +161,10 @@ int ActionController::nextTransportNumber(const int harvestId) const
         while (query.next()) {
             size++;
         }
-        size++;
+
+        if (isPausedEvent == false) {
+            size++;
+        }
 
         return size;
     }

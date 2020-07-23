@@ -86,7 +86,7 @@ Pages.SupplyChainPageBase {
                         harvestIdComboBox.currentText,
                         plateNumberHeader.inputText,
                         dataManager.actionController.nextTransportNumber(
-                            harvestIdComboBox.currentId),
+                            harvestIdComboBox.currentId, isPausedEvent),
                         loadingDateHeader.selectedDate
                     )
         var summary = [

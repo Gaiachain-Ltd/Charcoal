@@ -39,7 +39,8 @@ public:
     Q_INVOKABLE int getTransportIdFromBags(const QVariantList &scannedQrs) const;
     Q_INVOKABLE QString getEntityName(const int id) const;
 
-    Q_INVOKABLE int nextTransportNumber(const int harvestId) const;
+    Q_INVOKABLE int nextTransportNumber(const int harvestId,
+                                        const bool isPausedEvent) const;
     Q_INVOKABLE int bagCountInTransport(const int transportId) const;
     Q_INVOKABLE QString plateNumberInTransport(const int transportId) const;
     Q_INVOKABLE int scannedBagsCount(const int transportId) const;
