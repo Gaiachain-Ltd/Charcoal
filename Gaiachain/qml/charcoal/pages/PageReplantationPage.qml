@@ -26,6 +26,7 @@ Pages.SupplyChainPageBase {
     function refreshData() {
         dataManager.unusedPlotIdsForReplantationModel.refresh()
         dataManager.treeSpeciesModel.refresh()
+        dataManager.minimumDateModel.plotId = -1
     }
 
     function proceed() {
@@ -95,6 +96,10 @@ Pages.SupplyChainPageBase {
         delegateTextColor: GStyle.fontHighlightColor
 
         model: dataManager.unusedPlotIdsForReplantationModel
+
+        onCurrentTextChanged: {
+            dataManager.minimumDateModel.plotId = currentId
+        }
     }
 
     Headers.InputHeader {
@@ -133,6 +138,7 @@ Pages.SupplyChainPageBase {
         headerText: Strings.beginningDate
         helpButtonVisible: true
         helpText: Strings.replantationBeginningDateHelp
+        minimumDate: dataManager.minimumDateModel.date
     }
 
     CharcoalHeaders.CharcoalInputDateHeader {
