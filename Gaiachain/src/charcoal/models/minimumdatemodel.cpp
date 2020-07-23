@@ -18,8 +18,8 @@ MinimumDateModel::MinimumDateModel(QObject *parent) : QueryModel(parent)
 void MinimumDateModel::refresh()
 {
     if (m_connectionName.isEmpty()) {
-        qWarning() << RED("Cannot establish DB connection when connection name is empty!")
-                   << m_query;
+        qWarning() << RED("Cannot establish DB connection when connection "
+                          "name is empty!") << m_query;
         return;
     }
 
@@ -39,7 +39,7 @@ void MinimumDateModel::setPlotId(const int id)
     if (m_plotId == -1) {
         setDbQuery(QString());
     } else {
-        setDbQuery(QString("SELECT date FROM Events "
+        setDbQuery(QString("SELECT eventDate FROM Events "
                            "WHERE entityId=%1 "
                            "ORDER BY date DESC LIMIT 1").arg(m_plotId));
     }
@@ -49,7 +49,7 @@ void MinimumDateModel::setPlotId(const int id)
     emit plotIdChanged(m_plotId);
 
     if (query().seek(0)) {
-        const qint64 timestamp = query().value(Tags::date).toLongLong();
+        const qint64 timestamp = query().value(Tags::eventDate).toLongLong();
         setDate(QDateTime::fromSecsSinceEpoch(timestamp));
     }
 }

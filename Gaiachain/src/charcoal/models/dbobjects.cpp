@@ -74,7 +74,7 @@ void Event::loadFromQuery(QSqlQuery *query)
     typeId = query->value(Tags::typeId).toInt();
     entityId = query->value(Tags::entityId).toInt();
     userId = query->value("userId").toString();
-    date = query->value("eventDate").toLongLong();
+    date = query->value(Tags::eventDate).toLongLong();
     timestamp = query->value(Tags::date).toLongLong();
 
     const double latitude = query->value(Tags::locationLatitude).toDouble();

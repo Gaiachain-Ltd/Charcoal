@@ -85,7 +85,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
     {
         const int carbId(query().value("carbonizationBeginning").toInt());
         QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
-        q.prepare("SELECT date FROM Events WHERE id=:carbonizationBeginning");
+        q.prepare("SELECT eventDate FROM Events WHERE id=:carbonizationBeginning");
         q.bindValue(":carbonizationBeginning", carbId);
 
         if (q.exec() == false) {
@@ -95,7 +95,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
         }
 
         q.next();
-        const qint64 timestamp = q.value(Tags::date).toLongLong();
+        const qint64 timestamp = q.value(Tags::eventDate).toLongLong();
         const QDateTime date = QDateTime::fromSecsSinceEpoch(timestamp);
         return tr("Carbonization beginning: %1").arg(date.toString("dd/MM/yyyy"));
     }

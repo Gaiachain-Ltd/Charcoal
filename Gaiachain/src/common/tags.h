@@ -53,6 +53,7 @@ namespace Tags {
     const QLatin1String typeId = QLatin1String("typeId");
     const QLatin1String entityId = QLatin1String("entityId");
     const QLatin1String date = QLatin1String("date");
+    const QLatin1String eventDate = QLatin1String("eventDate");
     const QLatin1String actionName = QLatin1String("actionName");
     const QLatin1String parent = QLatin1String("parent");
     const QLatin1String bags = QLatin1String("bags");
