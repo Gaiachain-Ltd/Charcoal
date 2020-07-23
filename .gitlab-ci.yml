@@ -175,7 +175,6 @@ android-dev-charcoal:
   <<: *only-common
   <<: *android-build
   stage: build
-  when: manual
   only:
     - dev
   allow_failure: true
