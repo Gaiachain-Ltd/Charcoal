@@ -95,7 +95,7 @@ bool ListUpdater::insertMissingItems(const RecordsList &webItems,
         }
     }
 
-    const QString insert("INSERT INTO %1 (%2) VALUES (%3)");
+    const QString insert("INSERT OR REPLACE INTO %1 (%2) VALUES (%3)");
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     for (const auto &item : qAsConst(toInsert)) {
