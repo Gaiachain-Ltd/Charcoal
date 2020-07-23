@@ -119,6 +119,7 @@ android-dev-cocoa-easy-login:
   <<: *android-build
   stage: build
   when: manual
+  allow_failure: true
   variables:
     PACKAGE_NAME: "${CI_JOB_NAME}-$CI_COMMIT_REF_SLUG.apk"
     QMAKE_CONFIG: "CONFIG+=easy_login"
