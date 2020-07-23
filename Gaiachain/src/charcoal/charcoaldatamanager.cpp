@@ -198,6 +198,11 @@ LocalEventsModel *CharcoalDataManager::localEventsModel() const
     return m_localEventsModel;
 }
 
+void CharcoalDataManager::refreshTracking()
+{
+    m_trackingModel->refresh();
+}
+
 bool CharcoalDataManager::checkModels() const
 {
     const auto models = findChildren<QueryModel*>();

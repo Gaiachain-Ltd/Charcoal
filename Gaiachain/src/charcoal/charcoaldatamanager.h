@@ -76,6 +76,9 @@ public:
 signals:
     void error(const QString &text) const;
 
+public slots:
+    void refreshTracking();
+
 private:
     bool checkModels() const;
     void setupModel(QueryModel *model) const;

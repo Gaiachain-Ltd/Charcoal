@@ -150,19 +150,15 @@ void MainController::setupDataConnections()
             dataManager, &CocoaDataManager::onUnusedLotIdsLoaded);
 
 #elif CHARCOAL
+    auto dataManager = qobject_cast<CharcoalDataManager *>(m_dataManager);
+
     connect(&m_notificationsManager, &NotificationManager::notify,
             &m_pageManager, &PageManager::showNotificationWithLink);
+    connect(&m_notificationsManager, &NotificationManager::notify,
+            dataManager, &CharcoalDataManager::refreshTracking);
 
-    auto dataManager = qobject_cast<CharcoalDataManager *>(m_dataManager);
     connect(dataManager, &CharcoalDataManager::error,
-            &m_pageManager, [this](const QString &error) {
-                qDebug() << "Error!" << error;
-                m_pageManager.openPopup(Enums::Popup::Notification,
-                                        {
-                                            { "text", error },
-                                            { "backgroundColor", "#cb0000" }
-                                        });
-            });
+            &m_pageManager, &PageManager::onError);
 #endif
 }
 
@@ -170,9 +166,12 @@ void MainController::initialWork()
 {
 #ifdef Q_OS_ANDROID
     QMetaObject::invokeMethod(&Android::PermissionsHandler::instance(),
-                              std::bind(&Android::PermissionsHandler::requestPermissions, &Android::PermissionsHandler::instance(),
-                                        QList<Android::PermissionsHandler::Permissions>{ Android::PermissionsHandler::Permissions::Internet,
-                                                                                         Android::PermissionsHandler::Permissions::Storage }));
+                              std::bind(&Android::PermissionsHandler::requestPermissions,
+                                        &Android::PermissionsHandler::instance(),
+                                        QList<Android::PermissionsHandler::Permissions>{
+                                            Android::PermissionsHandler::Permissions::Internet,
+                                            Android::PermissionsHandler::Permissions::Storage
+                                        }));
 #endif
     m_dbManager.setupDatabase();
 }

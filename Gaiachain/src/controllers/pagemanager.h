@@ -79,6 +79,8 @@ public slots:
                                   const QString &text,
                                   const QString &redirectText);
 
+    void onError(const QString &error);
+
 private:
     const QString m_qrcPrefix = QStringLiteral("qrc:/");
     const QString m_flavorPrefix =

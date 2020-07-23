@@ -326,7 +326,8 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
             cb.isEmpty() == false)
         {
             const QJsonObject webEntity(cb.value(Tags::entity).toObject());
-            const qint64 timestamp(webEntity.value(Tags::timestamp).toVariant().toLongLong());
+            const qint64 timestamp(webEntity.value(Tags::timestamp)
+                                       .toVariant().toLongLong());
             const int webId = webEntity.value(Tags::id).toInt();
 
             const QString ovenTypeName(cb.value("oven_type_display").toString());
@@ -335,9 +336,12 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
 
             const QJsonObject ovenMeasurements(cb.value("oven_measurements")
                                                    .toObject());
-            const double height = ovenMeasurements.value(Tags::webOvenHeight).toDouble();
-            const double width = ovenMeasurements.value(Tags::webOvenWidth).toDouble();
-            const double length = ovenMeasurements.value(Tags::webOvenLength).toDouble();
+            const double height = ovenMeasurements.value(Tags::webOvenHeight)
+                                      .toDouble();
+            const double width = ovenMeasurements.value(Tags::webOvenWidth)
+                                     .toDouble();
+            const double length = ovenMeasurements.value(Tags::webOvenLength)
+                                      .toDouble();
 
             const int ovenTypeId = CharcoalDbHelpers::getOvenTypeIdFromName(
                 m_connectionName, ovenTypeName);
@@ -373,7 +377,8 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
                       "VALUES (:type, :plot, :event, :name, "
                       ":height, :width, :length)");
             q.bindValue(":type", ovenTypeId);
-            q.bindValue(":plot", parentEntityId);
+            q.bindValue(":plot", CharcoalDbHelpers::getParentEntityId(
+                                     m_connectionName, parentEntityId));
             q.bindValue(":event", eventId);
             q.bindValue(":name", ovenName);
 

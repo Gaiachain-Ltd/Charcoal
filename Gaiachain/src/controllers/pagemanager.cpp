@@ -140,6 +140,15 @@ void PageManager::showNotificationWithLink(const Enums::Page page,
               });
 }
 
+void PageManager::onError(const QString &error)
+{
+    openPopup(Enums::Popup::Notification,
+              {
+                  { "text", error },
+                  { "backgroundColor", "#cb0000" }
+              });
+}
+
 void PageManager::back(const bool immediate)
 {
     qCDebug(corePageManager) << CYAN("[PAGE] Print stack on pop") << m_pageStack;
