@@ -42,8 +42,9 @@ void PageManager::enter(const Enums::Page page, QVariantMap properties, const bo
 
     if (!m_popupStack.isEmpty()) {
         qCWarning(corePageManager) << "Popup stack not empty:" <<  m_popupStack
-                   << ". Returning as page cannot be pushed over popup!";
-        return;
+                                   << "Cleaning up popups";
+        while (m_popupStack.isEmpty() == false)
+            closePopup();
     }
 
     if (m_pageStack.contains(page)) {
@@ -62,12 +63,14 @@ void PageManager::enterReplace(const Enums::Page page, QVariantMap properties,
                                const bool immediate)
 {
     qCDebug(corePageManager) << CYAN("[PAGE] Print stack on enter") << m_pageStack;
-    qCDebug(corePageManager) << CYAN("[PAGE] Enter replace:") << page << "properties:" << properties;
+    qCDebug(corePageManager) << CYAN("[PAGE] Enter replace:") << page
+                             << "properties:" << properties;
 
     if (!m_popupStack.isEmpty()) {
         qCWarning(corePageManager) << "Popup stack not empty:" <<  m_popupStack
-                   << ". Returning as page cannot be pushed over popup!";
-        return;
+                                   << "Cleaning up popups";
+        while (m_popupStack.isEmpty() == false)
+            closePopup();
     }
 
     if (m_pageStack.contains(page)) {
