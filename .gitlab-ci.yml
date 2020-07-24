@@ -210,12 +210,11 @@ upload_job:
     UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
   script:
     - ls -lh apks/cocoa
-    - cd apks/cocoa
-    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN; done
-    - cd ..
     - ls -lh apks/charcoal
-    - cd ../charcoal
-    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN; done
+    # From: https://unix.stackexchange.com/questions/239772/bash-iterate-file-list-except-when-empty
+    # find . -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c 'echo "$0"' {} \;
+    - find apks/cocoa/ -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c '$UPLOAD_SCRIPT -f "$0" -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN' {} \;
+    - find apks/charcoal/ -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c '$UPLOAD_SCRIPT -f "$0" -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN' {} \;
 
 cleanup:
   <<: *common
