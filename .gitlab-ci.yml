@@ -32,9 +32,9 @@ variables:
 #    - mkdir -p $OUT_PACKAGES_DIR
 #    - mkdir -p $OUT_PACKAGES_DIR/cocoa
 #    - mkdir -p $OUT_PACKAGES_DIR/charcoal
-#    - mkdir -p $CI_PROJECT_DIR/cocoa
-#    - mkdir -p $CI_PROJECT_DIR/charcoal
     - mkdir -p $CI_PROJECT_DIR/apks
+    - mkdir -p $CI_PROJECT_DIR/apks/cocoa
+    - mkdir -p $CI_PROJECT_DIR/apks/charcoal
     - git submodule sync --recursive
     - git submodule update --init --recursive
     - git submodule status --recursive
@@ -75,10 +75,11 @@ variables:
     - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
     - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
-    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $CI_PROJECT_DIR/"$BUILD_TIMESTAMP"-$PACKAGE_NAME
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $CI_PROJECT_DIR/apks/${FLAVOR}/"$BUILD_TIMESTAMP"-$PACKAGE_NAME
   artifacts:
     paths:
       - apks/
+    expire_in: 30 mins
 
 # Linux
 linux-cocoa:
@@ -209,8 +210,10 @@ upload_job:
     UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
   script:
     - ls -lh apks/
-    - for PACKAGE in apks/*-cocoa-*.apk ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN; done
-    - for PACKAGE in apks/*-charcoal-*.apk ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN; done
+    - cd apks/cocoa
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN; done
+    - cd ../charcoal
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN; done
 
 cleanup:
   <<: *common
