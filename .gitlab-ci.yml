@@ -28,10 +28,13 @@ variables:
 .common: &common
   allow_failure: false
   before_script:
-    - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
-    - mkdir -p $OUT_PACKAGES_DIR
-    - mkdir -p $OUT_PACKAGES_DIR/cocoa
-    - mkdir -p $OUT_PACKAGES_DIR/charcoal
+#    - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
+#    - mkdir -p $OUT_PACKAGES_DIR
+#    - mkdir -p $OUT_PACKAGES_DIR/cocoa
+#    - mkdir -p $OUT_PACKAGES_DIR/charcoal
+    - mkdir -p $CI_PROJECT_DIR/apks
+    - mkdir -p $CI_PROJECT_DIR/apks/cocoa
+    - mkdir -p $CI_PROJECT_DIR/apks/charcoal
     - git submodule sync --recursive
     - git submodule update --init --recursive
     - git submodule status --recursive
@@ -71,7 +74,12 @@ variables:
     - cd Gaiachain
     - ls -la
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-$PROJECT_NAME-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle --release $ANDROID_SIGN_COMMANDS
-    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $OUT_PACKAGES_DIR/$FLAVOR/$PACKAGE_NAME
+    - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $CI_PROJECT_DIR/apks/${FLAVOR}/"$BUILD_TIMESTAMP"-$PACKAGE_NAME
+  artifacts:
+    paths:
+      - apks/
+    expire_in: 30 mins
 
 # Linux
 linux-cocoa:
@@ -193,7 +201,7 @@ upload_job:
     - master
     - dev
     - schedules
-#    - merge_requests
+    - merge_requests
   tags:
     - LinuxAndroid
   stage: upload
@@ -201,17 +209,12 @@ upload_job:
   variables:
     UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
   script:
-    - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
-    #- cd $OUT_PACKAGES_DIR/cocoa
-    #- ls -lh
-    #- APK_PACKAGES=*.apk
-    #- for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
-    #- for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN; done
-    - cd $OUT_PACKAGES_DIR/charcoal
-    - ls -lh
-    - APK_PACKAGES=*.apk
-    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"-"$PACKAGE"; done
-    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN; done
+    - ls -lh apks/cocoa
+    - ls -lh apks/charcoal
+    # From: https://unix.stackexchange.com/questions/239772/bash-iterate-file-list-except-when-empty
+    # find . -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c 'echo "$0"' {} \;
+    - find apks/cocoa/ -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c '$UPLOAD_SCRIPT -f "$0" -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN' {} \;
+    - find apks/charcoal/ -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c '$UPLOAD_SCRIPT -f "$0" -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN' {} \;
 
 cleanup:
   <<: *common
