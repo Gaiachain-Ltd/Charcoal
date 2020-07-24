@@ -41,12 +41,13 @@ Pages.SupplyChainPageBase {
 
     function addAction() {
         if (yes.selected) {
+            console.log("Finalizing supply chain")
             dataManager.actionController.finalizeSupplyChain(transportId)
-            pageManager.backTo(Enums.Page.MainMenu)
-            return
+        } else {
+            console.log("Supply chain will remain open")
         }
 
-        pageManager.backTo(Enums.Page.SupplyChainReception)
+        pageManager.backTo(Enums.Page.MainMenu)
     }
 
     Items.GText {
