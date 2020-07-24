@@ -209,9 +209,11 @@ upload_job:
   variables:
     UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
   script:
-    - ls -lh apks/
+    - ls -lh apks/cocoa
     - cd apks/cocoa
     - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN; done
+    - cd ..
+    - ls -lh apks/charcoal
     - cd ../charcoal
     - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN; done
 
