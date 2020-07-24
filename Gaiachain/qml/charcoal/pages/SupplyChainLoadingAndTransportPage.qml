@@ -155,20 +155,33 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.MainMenu)
     }
 
-    Items.GText {
-        id: pauseMessage
-
+    Rectangle {
         Layout.fillWidth: true
-
-        verticalAlignment: Text.AlignTop
-        color: GStyle.textSecondaryColor
-        text: Strings.pausedLoading
+        color: GStyle.errorColor
         visible: isPausedEvent
-        wrapMode: Text.WordWrap
-        elide: Text.ElideNone
 
-        background: Rectangle {
-            color: GStyle.errorColor
+        function updateHeight() {
+            implicitHeight = pauseMessage.contentHeight
+        }
+
+        onWidthChanged: Qt.callLater(updateHeight)
+
+        Component.onCompleted: Qt.callLater(updateHeight)
+
+        Items.GText {
+            id: pauseMessage
+
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+
+            verticalAlignment: Text.AlignTop
+            color: GStyle.textSecondaryColor
+            text: Strings.pausedLoading
+            wrapMode: Text.WordWrap
+            elide: Text.ElideNone
         }
     }
 
