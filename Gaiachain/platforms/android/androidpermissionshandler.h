@@ -7,23 +7,29 @@ namespace Android {
 class PermissionsHandler final : public QObject
 {
     Q_OBJECT
+
 public:
-    enum class Permissions {
+    enum class Permission {
         Unknown = -1,
         Internet,
         Storage,
         Location,
         Camera
     };
-    Q_ENUM(Permissions)
+    Q_ENUM(Permission)
 
     static PermissionsHandler &instance();
 
-    Q_INVOKABLE void requestPermission(const Permissions &permission) const;
-    Q_INVOKABLE void requestPermissions(const QList<Permissions> &permissions) const;
+    Q_INVOKABLE void requestPermission(const Permission &permission) const;
+    Q_INVOKABLE void requestPermissions(const QList<Permission> &permissions) const;
+
+signals:
+    void permissionGranted(const Permission permission) const;
 
 private:
     PermissionsHandler();
+
+    Permission findPermission(const QString &text) const;
 };
 }
 

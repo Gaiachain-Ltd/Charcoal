@@ -7,10 +7,7 @@
 
 #include <QZXing.h>
 
-#ifdef Q_OS_ANDROID
-#include "androidpermissionshandler.h"
-#endif
-
+#include "mlog.h"
 #include "common/globals.h"
 #include "common/enums.h"
 #include "common/dataglobals.h"
@@ -165,12 +162,16 @@ void MainController::setupDataConnections()
 void MainController::initialWork()
 {
 #ifdef Q_OS_ANDROID
+    connect(&Android::PermissionsHandler::instance(),
+            &Android::PermissionsHandler::permissionGranted,
+            this, &MainController::onPermissionGranted);
+
     QMetaObject::invokeMethod(&Android::PermissionsHandler::instance(),
                               std::bind(&Android::PermissionsHandler::requestPermissions,
                                         &Android::PermissionsHandler::instance(),
-                                        QList<Android::PermissionsHandler::Permissions>{
-                                            Android::PermissionsHandler::Permissions::Internet,
-                                            Android::PermissionsHandler::Permissions::Storage
+                                        QList<Android::PermissionsHandler::Permission>{
+                                            Android::PermissionsHandler::Permission::Internet,
+                                            Android::PermissionsHandler::Permission::Storage
                                         }));
 #endif
     m_dbManager.setupDatabase();
@@ -319,6 +320,20 @@ LanguageManager *MainController::languageManager() const
 {
     return m_languageManager;
 }
+
+#ifdef Q_OS_ANDROID
+void MainController::onPermissionGranted(
+    const Android::PermissionsHandler::Permission permission)
+{
+    qDebug() << "Permission granted" << permission;
+
+    const auto androidPermission = Android::PermissionsHandler::Permission(permission);
+    if (androidPermission == Android::PermissionsHandler::Permission::Storage) {
+        qDebug() << "Enabling log to file" << AppName;
+        MLog::instance()->enableLogToFile(AppName);
+    }
+}
+#endif
 
 void MainController::setupQZXing(QQmlApplicationEngine &engine)
 {

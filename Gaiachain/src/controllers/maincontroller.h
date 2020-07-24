@@ -8,6 +8,10 @@
 
 #include "common/languagemanager.h"
 
+#ifdef Q_OS_ANDROID
+#include "androidpermissionshandler.h"
+#endif
+
 #ifdef CHARCOAL
 #include "charcoal/picturesmanager.h"
 #include "charcoal/notificationmanager.h"
@@ -82,6 +86,11 @@ public:
 
     Application *application() const;
     LanguageManager *languageManager() const;
+
+private slots:
+#ifdef Q_OS_ANDROID
+    void onPermissionGranted(const Android::PermissionsHandler::Permission permission);
+#endif
 
 private:
     void setupConnections();
