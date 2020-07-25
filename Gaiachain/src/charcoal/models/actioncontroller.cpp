@@ -94,16 +94,23 @@ int ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) con
                 CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
             const QVariantList qrs(properties.value(Tags::webQrCodes).toArray().toVariantList());
 
-            bool ok = true;
+            bool found = false;
             for (const QVariant &qr : scannedQrs) {
                 if (qrs.contains(qr)) {
-                    transportEntityId = query.value(Tags::entityId).toInt(&ok);
+                    bool ok = true;
+                    const int result = query.value(Tags::entityId).toInt(&ok);
+
+                    if (ok) {
+                        transportEntityId = result;
+                        found = true;
+                        break;
+                    }
+
                     //qDebug() << "HIT!" << qr.toString() << transportEntityId;
-                    break;
                 }
             }
 
-            if (ok == false) {
+            if (found) {
                 break;
             }
         }
