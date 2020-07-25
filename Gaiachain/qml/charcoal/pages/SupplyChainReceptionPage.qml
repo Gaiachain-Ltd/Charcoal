@@ -138,17 +138,22 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.actionController.registerReception(
-                    (gpsSource.coordinate? gpsSource.coordinate
-                                         : QtPositioning.coordinate()),
-                    new Date,
-                    unloadingDateHeader.selectedDate,
-                    userManager.userData.code,
-                    transportId,
-                    picturesManager.documents(),
-                    picturesManager.receipts(),
-                    scannedQrs
-                    )
+        let success = dataManager.actionController.registerReception(
+                (gpsSource.coordinate? gpsSource.coordinate
+                                     : QtPositioning.coordinate()),
+                new Date,
+                unloadingDateHeader.selectedDate,
+                userManager.userData.code,
+                transportId,
+                picturesManager.documents(),
+                picturesManager.receipts(),
+                scannedQrs
+                )
+
+        if (success === false) {
+            pageManager.backTo(Enums.Page.MainMenu)
+            return;
+        }
 
         let plotId = dataManager.actionController.getPlotId(transportName)
         let scannedBagsCount = dataManager.actionController.scannedBagsCount(transportId)

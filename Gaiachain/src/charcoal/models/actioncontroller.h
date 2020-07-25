@@ -106,7 +106,7 @@ public:
         const bool pauseEvent
         ) const;
 
-    Q_INVOKABLE void registerReception(
+    Q_INVOKABLE bool registerReception(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,
@@ -134,6 +134,8 @@ signals:
     void refreshLocalEvents() const;
 
     void finalizePackages(const QVector<int> &webIds) const;
+
+    void error(const QString &text) const;
 
 private:
     int scannedBagsForAction(const int transportId,

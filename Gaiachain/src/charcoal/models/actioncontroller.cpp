@@ -707,7 +707,7 @@ void ActionController::registerLoadingAndTransport(
     emit refreshLocalEvents();
 }
 
-void ActionController::registerReception(
+bool ActionController::registerReception(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -731,7 +731,8 @@ void ActionController::registerReception(
 
     if (transportId == -1) {
         qWarning() << RED("Entity ID not found!");
-        return;
+        emit error(tr("Transport ID is incorrect %1").arg(transportId));
+        return false;
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
@@ -739,7 +740,8 @@ void ActionController::registerReception(
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
-        return;
+        emit error(tr("Transport type is incorrect %1").arg(eventTypeId));
+        return false;
     }
 
     // Special case: if this replantation ALREADY EXISTS, we skip inserting it
@@ -757,7 +759,7 @@ void ActionController::registerReception(
     if (existing != -1) {
         qDebug() << RED("Reception already exists - special case!")
                  << transportId << eventTypeId << existing;
-        return;
+        return true;
     }
 
     const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
@@ -774,10 +776,12 @@ void ActionController::registerReception(
                                  { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                              }))
     {
-        return;
+        emit error(tr("Failed to insert reception %1").arg(transportId));
+        return false;
     }
 
     emit refreshLocalEvents();
+    return true;
 }
 
 void ActionController::finalizeSupplyChain(const int transportId) const

@@ -54,6 +54,9 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
 
     connect(m_actionController, &ActionController::finalizePackages,
             m_eventsSender, &EventsSender::onFinalizePackages);
+
+    connect(m_actionController, &ActionController::error,
+            this, &CharcoalDataManager::error);
 }
 
 void CharcoalDataManager::setupDatabase(const QString &dbPath)
