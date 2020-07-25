@@ -155,7 +155,6 @@ Pages.SupplyChainPageBase {
             return;
         }
 
-        let plotId = dataManager.actionController.getPlotId(transportName)
         let scannedBagsCount = dataManager.actionController.scannedBagsCount(transportId)
         let scannedBagsTotal = dataManager.actionController.scannedBagsTotal(transportId)
         let registeredTrucksCount = dataManager.actionController.registeredTrucksCount(transportId)
