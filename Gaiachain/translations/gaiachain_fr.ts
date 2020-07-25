@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>GStrings</name>
     <message>
@@ -193,19 +193,19 @@
     </message>
     <message>
         <source>Searching</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
     </message>
     <message>
         <source>Searching...</source>
-        <translation>Recherche...</translation>
+        <translation type="vanished">Recherche...</translation>
     </message>
     <message>
         <source>Online</source>
-        <translation>En ligne</translation>
+        <translation type="vanished">En ligne</translation>
     </message>
     <message>
         <source>Offline</source>
-        <translation>Hors ligne</translation>
+        <translation type="vanished">Hors ligne</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="64"/>
@@ -702,7 +702,7 @@ Vérifiez votre connection internet.</translation>
     </message>
     <message>
         <source>Loading and transport</source>
-        <translation>Chargement et transport</translation>
+        <translation type="vanished">Chargement et transport</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="209"/>
@@ -1042,9 +1042,8 @@ Vérifiez votre connection internet.</translation>
         <translation>Ceci est la date et l&apos;eure exacte à laquelle le camion est arrivé.</translation>
     </message>
     <message>
-        <location filename="../qml/GStrings.qml" line="306"/>
         <source>Do you want to complete the supply chain?</source>
-        <translation>Voulez-vous compléter l&apos;approvisionnement?</translation>
+        <translation type="vanished">Voulez-vous compléter l&apos;approvisionnement?</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="307"/>
@@ -1269,6 +1268,11 @@ transport</source>
 transport</translation>
     </message>
     <message>
+        <location filename="../qml/GStrings.qml" line="306"/>
+        <source>Do you want to complete this supply chain?</source>
+        <translation>Voulez-vous terminer cet approvisionnement?</translation>
+    </message>
+    <message>
         <location filename="../qml/GStrings.qml" line="371"/>
         <source>Go to: %1</source>
         <translation>Aller à : %1</translation>
@@ -1376,16 +1380,6 @@ transport</translation>
     <message>
         <source>Metallic oven</source>
         <translation type="vanished">Four métallique</translation>
-    </message>
-    <message>
-        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="33"/>
-        <source>%1 (Traditional oven)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/charcoal/models/oventypesmodel.cpp" line="35"/>
-        <source>%1 (Metallic oven)</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/oventypesmodel.cpp" line="33"/>

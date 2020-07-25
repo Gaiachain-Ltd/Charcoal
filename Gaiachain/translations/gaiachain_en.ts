@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en_US">
+<TS version="2.1" language="en_US">
 <context>
     <name>GStrings</name>
     <message>
@@ -968,7 +968,7 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="288"/>
         <source>You have a truck which has not been fully loaded. Please finish it</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="291"/>
@@ -1013,17 +1013,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="300"/>
         <source>&lt;font color=&quot;#65cb00&quot;&gt;Documents: %1&lt;br/&gt;Receipts: %2&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="302"/>
         <source>Dummy text - unloading timestamp help</source>
         <translation>It is exact time and date when truck arrived.</translation>
-    </message>
-    <message>
-        <location filename="../qml/GStrings.qml" line="306"/>
-        <source>Do you want to complete the supply chain?</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="307"/>
@@ -1247,6 +1242,11 @@ transport</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="../qml/GStrings.qml" line="306"/>
+        <source>Do you want to complete this supply chain?</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../qml/GStrings.qml" line="371"/>
         <source>Go to: %1</source>
         <translation></translation>
@@ -1350,12 +1350,12 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/oventypesmodel.cpp" line="33"/>
         <source>%1 (Traditional oven)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/oventypesmodel.cpp" line="35"/>
         <source>%1 (Metallic oven)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1454,7 +1454,7 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="246"/>
         <source>Number of trees</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="271"/>
