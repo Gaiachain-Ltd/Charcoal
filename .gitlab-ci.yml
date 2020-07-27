@@ -1,7 +1,6 @@
 stages:
 - build
 - upload
-- cleanup
 
 #Global variables
 variables:
@@ -28,10 +27,6 @@ variables:
 .common: &common
   allow_failure: false
   before_script:
-#    - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
-#    - mkdir -p $OUT_PACKAGES_DIR
-#    - mkdir -p $OUT_PACKAGES_DIR/cocoa
-#    - mkdir -p $OUT_PACKAGES_DIR/charcoal
     - mkdir -p $CI_PROJECT_DIR/apks
     - mkdir -p $CI_PROJECT_DIR/apks/cocoa
     - mkdir -p $CI_PROJECT_DIR/apks/charcoal
@@ -215,15 +210,3 @@ upload_job:
     # find . -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c 'echo "$0"' {} \;
     - find apks/cocoa/ -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c '$UPLOAD_SCRIPT -f "$0" -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "cocoa/packages" -t $SEAFILE_API_TOKEN' {} \;
     - find apks/charcoal/ -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c '$UPLOAD_SCRIPT -f "$0" -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "charcoal/packages" -t $SEAFILE_API_TOKEN' {} \;
-
-cleanup:
-  <<: *common
-  <<: *only-common
-  tags:
-    - LinuxDesktop
-    - LinuxAndroid
-  stage: cleanup
-  when: always
-  script:
-    - ls -lh $OUT_PACKAGES_DIR
-    - rm -rf $OUT_PACKAGES_DIR
