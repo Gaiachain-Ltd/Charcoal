@@ -174,7 +174,7 @@ GPage {
             borderColor: GStyle.inputBorderColor
 
             text: Strings.skipLogin
-            //visible: mainController.isEasyLogin
+            visible: false
 
             onClicked: {
                 pageManager.enter(Enums.Page.LoginLoading, { "skipLogin": true })
