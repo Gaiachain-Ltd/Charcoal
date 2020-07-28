@@ -8,7 +8,7 @@ import com.gaiachain.enums 1.0
 import "../../items" as Items
 
 // TODO: reuse this component in OvenTypeComboBox and regular ComboBox
-Item {
+Rectangle {
     property alias text: delegateText.text
     property alias textColor: delegateText.color
     property url checkIcon: GStyle.checkBlackUrl
@@ -23,6 +23,7 @@ Item {
 
     id: delegateItem
     height: layout.implicitHeight
+    color: selected? "#eeeeee" : "transparent"
 
     ColumnLayout {
         id: layout

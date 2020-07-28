@@ -117,7 +117,7 @@ Headers.GHeader {
 
                     boundsBehavior: Flickable.StopAtBounds
 
-                    delegate: Item {
+                    delegate: Rectangle {
                         readonly property string oven: ovenId
                         readonly property string text: letterId
                         readonly property string extraHeader: firstRow
@@ -126,6 +126,7 @@ Headers.GHeader {
                         id: delegateItem
                         width: entriesList.width
                         height: layout.implicitHeight
+                        color: comboBox.text.includes(text)? "#eeeeee" : "transparent"
 
                         ColumnLayout {
                             id: layout
