@@ -22,9 +22,16 @@ Pages.SupplyChainPageBase {
     readonly property bool hasQrs: scannedQrs.length > 0
 
     onScannedQrsChanged: {
-        transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
-        transportName = dataManager.actionController.getEntityName(transportId)
-        dataManager.minimumDateModel.plotId = transportId
+        // Note: you cannot use `hasQrs` here, because it is not reevaluated
+        // at this point, yet.
+        if (scannedQrs.length > 0) {
+            transportId = dataManager.actionController.getTransportIdFromBags(scannedQrs)
+            if (transportId !== -1) {
+                transportName = dataManager.actionController.getEntityName(transportId)
+                dataManager.minimumDateModel.plotId = transportId
+            }
+        }
+        console.log("Scanned have changed", hasQrs, transportId)
     }
 
     property var documents: []
@@ -39,7 +46,7 @@ Pages.SupplyChainPageBase {
 
     title: Strings.reception
 
-    proceedButtonEnabled: hasQrs
+    proceedButtonEnabled: hasQrs && (transportId !== -1)
 
     Component.onCompleted: {
         picturesManager.cleanUpWaitingPictures()

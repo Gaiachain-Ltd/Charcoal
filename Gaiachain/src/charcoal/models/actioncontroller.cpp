@@ -82,7 +82,8 @@ int ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) con
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     query.prepare("SELECT properties, entityId FROM Events "
-                  "WHERE entityId IN (SELECT id FROM Entities WHERE isFinished=0) "
+                  "WHERE isPaused=0 "
+                  "AND entityId IN (SELECT id FROM Entities WHERE isFinished=0) "
                   "AND typeId IN (SELECT id FROM EventTypes WHERE actionName=\"TR\") "
                   "ORDER BY entityId DESC");
 
@@ -122,8 +123,9 @@ int ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) con
     }
 
     if (transportEntityId == -1) {
-        qWarning() << RED("No transport matching scanned bags has been found!")
-                   << scannedQrs;
+        const QString msg(tr("No active transport matching scanned bags has been found!"));
+        qWarning() << RED(msg) << scannedQrs;
+        emit error(msg);
     }
 
     return transportEntityId;
