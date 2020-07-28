@@ -202,7 +202,8 @@ void MRestRequest::send()
 {
     Q_ASSERT(mNetworkManager);
     if (mQuiet == false) {
-        qCInfo(crequest) << mType << mUrl.toDisplayString() << mRequestRetryCounter
+        qCInfo(crequest) << mType << mUrl.toDisplayString()
+                         << mRequestRetryCounter
                          << mRequestDocument;
     }
     mReplyData.clear();
