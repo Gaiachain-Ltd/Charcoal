@@ -22,7 +22,7 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        dataManager.unusedPlotIdsModel.refresh()
+        dataManager.unusedPlotIdsForLoggingEndingModel.refresh()
         dataManager.minimumDateModel.plotId = -1
     }
 
@@ -83,7 +83,7 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkBlueUrl
         delegateTextColor: GStyle.fontHighlightColor
 
-        model: dataManager.unusedPlotIdsModel
+        model: dataManager.unusedPlotIdsForLoggingEndingModel
 
         onCurrentTextChanged: dataManager.minimumDateModel.plotId = currentId
     }

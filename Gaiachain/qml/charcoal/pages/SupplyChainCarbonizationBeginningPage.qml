@@ -29,7 +29,7 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        dataManager.unusedPlotIdsModel.refresh()
+        dataManager.unusedPlotIdsForCarbonizationModel.refresh()
         dataManager.ovenTypesModel.refresh()
         dataManager.minimumDateModel.plotId = -1
     }
@@ -134,7 +134,7 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkBlueUrl
         delegateTextColor: GStyle.fontHighlightColor
 
-        model: dataManager.unusedPlotIdsModel
+        model: dataManager.unusedPlotIdsForCarbonizationModel
 
         onCurrentTextChanged: {
             ovenIdHeader.inputText = dataManager.actionController.nextOvenNumber(currentId)
