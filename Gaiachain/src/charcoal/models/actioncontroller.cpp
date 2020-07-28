@@ -289,19 +289,22 @@ QString ActionController::nextOvenNumber(int parentEntityId) const
 
         if (size > 'Z') {
             qWarning() << RED("Too many ovens!") << size;
-            return "-2";
+            emit error(tr("Too many ovens (%1) are assotiated with this harvest!")
+                       .arg(size - 1));
+            return QString();
         }
 
         //qDebug() << "Next oven for" << parentEntityId << "is" << QChar(size);
         return QChar(size);
     }
 
-    qWarning() << RED("Getting next transport number has failed!")
+    qWarning() << RED("Getting next oven letter has failed!")
                << query.lastError().text()
                << "for query:" << query.lastQuery()
                << "DB:" << m_connectionName;
 
-    return "-1";
+    emit error(tr("Could not determine next oven letter for given harvest"));
+    return QString();
 }
 
 QVariantList ActionController::defaultOvenDimensions(const int ovenId) const

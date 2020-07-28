@@ -20,10 +20,11 @@ Pages.SupplyChainPageBase {
     // 1 - Traditional oven
     // 2 - Metallic oven
     // These ids come from Web :shrug:
-    proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
+    proceedButtonEnabled: (ovenIdHeader.inputText.length > 0
+                           && plotIdComboBox.currentText.length > 0
                            && (ovenTypeComboBox.ovenType === "2"
-                           || (ovenTypeComboBox.ovenType === "1"
-                               && ovenDimensionsHeader.isEmpty === false)))
+                               || (ovenTypeComboBox.ovenType === "1"
+                                   && ovenDimensionsHeader.isEmpty === false)))
 
     Component.onCompleted: refreshData()
 
