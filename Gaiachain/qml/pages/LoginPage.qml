@@ -161,8 +161,8 @@ GPage {
         Items.GButton
         {
             id: skipLoginButton
-            Layout.fillWidth: true
 
+            Layout.fillWidth: true
             Layout.leftMargin: layout.margin
             Layout.rightMargin: layout.margin
 
@@ -170,9 +170,11 @@ GPage {
                 button: GStyle.buttonSecondaryColor
                 buttonText: GStyle.textPrimaryColor
             }
+
             borderColor: GStyle.inputBorderColor
 
             text: Strings.skipLogin
+            //visible: mainController.isEasyLogin
 
             onClicked: {
                 pageManager.enter(Enums.Page.LoginLoading, { "skipLogin": true })

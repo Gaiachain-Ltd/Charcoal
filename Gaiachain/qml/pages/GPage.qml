@@ -48,6 +48,10 @@ Items.GPanel
     }
 
     function retryConnection() {
+        if (userManager.userData.type === Enums.UserType.Anonymous) {
+            return;
+        }
+
         if (userManager.offlineMode) {  // for offline always only ping
             sessionManager.ping()
         } else {
