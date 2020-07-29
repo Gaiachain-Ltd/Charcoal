@@ -145,7 +145,9 @@ void MRestRequestManager::onSslErrors(QNetworkReply *reply, const QList<QSslErro
     reply->deleteLater();
     mLastSslErrors.clear();
     foreach (QSslError error, errors) {
-        mLastSslErrors << error.errorString();
+        const QString errorString(error.errorString());
+        mLastSslErrors << errorString;
+        qWarning() << "SSL error:" << errorString;
     }
 
     emit sslErrorsChanged(mLastSslErrors);
