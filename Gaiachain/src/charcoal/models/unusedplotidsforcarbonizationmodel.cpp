@@ -1,10 +1,7 @@
-#include "unusedplotidsmodel.h"
+#include "unusedplotidsforcarbonizationmodel.h"
 
-#include "common/tags.h"
-
-#include <QSqlQuery>
-
-UnusedPlotIdsModel::UnusedPlotIdsModel(QObject *parent) : SimpleListQueryModel(parent)
+UnusedPlotIdsForCarbonizationModel::UnusedPlotIdsForCarbonizationModel(QObject *parent)
+    : SimpleListQueryModel(parent)
 {
     setWebModelCanChange(true);
     setDbQuery("SELECT id, name FROM Entities WHERE isFinished=0 "

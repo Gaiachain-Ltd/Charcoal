@@ -206,8 +206,6 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
     }
 
     for (const QJsonValue &value : events) {
-//    for (int i = (events.size() - 1); i >= 0; --i) {
-//        const QJsonValue value(events.at(i));
         const QJsonObject event(value.toObject());
         const int eventWebId(event.value(Tags::id).toInt(-1));
         const qint64 timestamp = event.value(Tags::timestamp).toVariant().toLongLong();
@@ -234,7 +232,7 @@ UpdateResult TrackingUpdater::processTrackingItem(const QJsonObject &object,
                           "VALUES (:entityId, :typeId, :userId, "
                           ":eventWebId, :parentWebId, "
                           ":date, :eventDate, :locationLatitude, :locationLongitude, "
-                          " 1)";
+                          "1)";
         } else {
             eventString = "UPDATE Events SET "
                           "entityId=:entityId, typeId=:typeId, userId=:userId, "

@@ -85,6 +85,8 @@ GPage {
                 icon: GStyle.menuSupplyChainUrl
                 color: GStyle.menuSupplyChainColor
 
+                visible: userType !== Enums.UserType.Anonymous
+
                 onClicked: supplyChainSubmenu.visible = !supplyChainSubmenu.visible
             }
 
@@ -199,7 +201,6 @@ GPage {
                 color: GStyle.menuReplantationColor
 
                 visible: userType === Enums.UserType.SuperUser
-                         || userType === Enums.UserType.Anonymous
 
                 onClicked: pageManager.enter(Enums.Page.PageReplantation)
             }

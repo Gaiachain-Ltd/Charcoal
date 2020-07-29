@@ -151,12 +151,13 @@ charcoal {
         src/charcoal/models/villagesmodel.h \
         src/charcoal/models/destinationsmodel.h \
         src/charcoal/models/oventypesmodel.h \
-        src/charcoal/models/unusedplotidsmodel.h \
+        src/charcoal/models/unusedplotidsforcarbonizationmodel.h \
+        src/charcoal/models/unusedplotidsforloggingendingmodel.h \
+        src/charcoal/models/unusedplotidsforreplantationmodel.h \
         src/charcoal/models/unusedharvestidsmodel.h \
         src/charcoal/models/unusedtransportidsmodel.h \
         src/charcoal/models/querymodel.h \
         src/charcoal/models/simplelistquerymodel.h \
-        src/charcoal/models/unusedplotidsforreplantationmodel.h \
         src/charcoal/models/ovensmodel.h \
         src/charcoal/models/trackingmodel.h \
         src/charcoal/models/trackingfilterproxymodel.h \
@@ -184,12 +185,13 @@ charcoal {
         src/charcoal/models/villagesmodel.cpp \
         src/charcoal/models/destinationsmodel.cpp \
         src/charcoal/models/oventypesmodel.cpp \
-        src/charcoal/models/unusedplotidsmodel.cpp \
+        src/charcoal/models/unusedplotidsforcarbonizationmodel.cpp \
+        src/charcoal/models/unusedplotidsforloggingendingmodel.cpp \
+        src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
         src/charcoal/models/unusedharvestidsmodel.cpp \
         src/charcoal/models/unusedtransportidsmodel.cpp \
         src/charcoal/models/querymodel.cpp \
         src/charcoal/models/simplelistquerymodel.cpp \
-        src/charcoal/models/unusedplotidsforreplantationmodel.cpp \
         src/charcoal/models/ovensmodel.cpp \
         src/charcoal/models/trackingmodel.cpp \
         src/charcoal/models/trackingfilterproxymodel.cpp \

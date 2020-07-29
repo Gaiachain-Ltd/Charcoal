@@ -20,10 +20,11 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
       m_parcelsModel(new ParcelsModel(this)),
       m_destinationsModel(new DestinationsModel(this)),
       m_ovenTypesModel(new OvenTypesModel(this)),
-      m_unusedPlotIdsModel(new UnusedPlotIdsModel(this)),
+      m_unusedPlotIdsForLoggingEndingModel(new UnusedPlotIdsForLoggingEndingModel(this)),
+      m_unusedPlotIdsForCarbonizationModel(new UnusedPlotIdsForCarbonizationModel(this)),
+      m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
       m_unusedHarvestIdsModel(new UnusedHarvestIdsModel(this)),
       m_unusedTransportIdsModel(new UnusedTransportIdsModel(this)),
-      m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
       m_ovensModel(new OvensModel(this)),
       m_trackingModel(new TrackingModel(this)),
       m_trackingFilterProxyModel(new TrackingFilterProxyModel(this)),
@@ -73,10 +74,11 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     setupModel(m_parcelsModel);
     setupModel(m_destinationsModel);
     setupModel(m_ovenTypesModel);
-    setupModel(m_unusedPlotIdsModel);
+    setupModel(m_unusedPlotIdsForLoggingEndingModel);
+    setupModel(m_unusedPlotIdsForCarbonizationModel);
+    setupModel(m_unusedPlotIdsForReplantationModel);
     setupModel(m_unusedHarvestIdsModel);
     setupModel(m_unusedTransportIdsModel);
-    setupModel(m_unusedPlotIdsForReplantationModel);
     setupModel(m_ovensModel);
     setupModel(m_trackingModel);
     setupModel(m_minimumDateModel);
@@ -151,14 +153,19 @@ OvenTypesModel *CharcoalDataManager::ovenTypesModel() const
     return m_ovenTypesModel;
 }
 
+UnusedPlotIdsForLoggingEndingModel *CharcoalDataManager::unusedPlotIdsForLoggingEndingModel() const
+{
+    return m_unusedPlotIdsForLoggingEndingModel;
+}
+
 ActionController *CharcoalDataManager::actionController() const
 {
     return m_actionController;
 }
 
-UnusedPlotIdsModel *CharcoalDataManager::unusedPlotIdsModel() const
+UnusedPlotIdsForCarbonizationModel *CharcoalDataManager::unusedPlotIdsForCarbonizationModel() const
 {
-    return m_unusedPlotIdsModel;
+    return m_unusedPlotIdsForCarbonizationModel;
 }
 
 UnusedHarvestIdsModel *CharcoalDataManager::unusedHarvestIdsModel() const
