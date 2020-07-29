@@ -21,6 +21,8 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
 protected:
+    void setDbColumnForNameRole(const QString &dbColumn);
+
     const QHash<int, QByteArray> m_roleNames = {
         { ListRole::Id, "idNumber" },
         { ListRole::Name, "name" },
@@ -28,5 +30,6 @@ protected:
     };
 
     const bool m_hasActiveBit = false;
+    QString m_dbColumnForName;
 };
 

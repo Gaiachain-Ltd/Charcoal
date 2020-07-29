@@ -18,33 +18,12 @@
 
 ParcelsModel::ParcelsModel(QObject *parent) : SimpleListQueryModel(true, parent)
 {
+    setDbColumnForNameRole(Tags::code);
+
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, code, active FROM Parcels WHERE active=1");
-}
-
-QVariant ParcelsModel::data(const QModelIndex &index, int role) const
-{
-    if (index.isValid() == false) {
-        return {};
-    }
-
-    query().seek(index.row());
-
-    switch (role) {
-    case Qt::ItemDataRole::DisplayRole:
-    case ListRole::Name:
-        return query().value(Tags::code).toString();
-    case ListRole::Id:
-        return query().value(Tags::id).toInt();
-    case ListRole::IsActive:
-        if (m_hasActiveBit) {
-            return query().value(Tags::active).toBool();
-        } else {
-            return true;
-        }
-    }
-
-    return {};
+    setDbQuery("SELECT id, code, active FROM Parcels WHERE active=1 ");
+               //"AND (SELECT (COUNT(DISTINCT id) = 0) FROM Entities "
+               //"WHERE name LIKE '%' + Parcels.code + '%' AND isFinished=0)");
 }
 
 void ParcelsModel::refreshWebData()

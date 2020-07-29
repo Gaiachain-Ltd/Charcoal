@@ -9,8 +9,6 @@ class ParcelsModel : public SimpleListQueryModel
 public:
     explicit ParcelsModel(QObject *parent = nullptr);
 
-    QVariant data(const QModelIndex &index, int role) const override;
-
 public slots:
     void refreshWebData() override;
     void getUnusedParcels();
