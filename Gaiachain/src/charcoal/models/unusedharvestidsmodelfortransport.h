@@ -5,14 +5,14 @@
 
 #include <QGeoCoordinate>
 
-class UnusedHarvestIdsModel : public SimpleListQueryModel
+class UnusedHarvestIdsModelForTransport : public SimpleListQueryModel
 {
     Q_OBJECT
 
     Q_PROPERTY(bool hasPausedEvent READ hasPausedEvent NOTIFY hasPausedEventChanged)
 
 public:
-    explicit UnusedHarvestIdsModel(QObject *parent = nullptr);
+    explicit UnusedHarvestIdsModelForTransport(QObject *parent = nullptr);
 
     bool hasPausedEvent() const;
 

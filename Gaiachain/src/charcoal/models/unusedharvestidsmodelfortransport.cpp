@@ -1,4 +1,4 @@
-#include "unusedharvestidsmodel.h"
+#include "unusedharvestidsmodelfortransport.h"
 
 #include "common/tags.h"
 #include "common/logs.h"
@@ -10,19 +10,23 @@
 
 #include <QJsonArray>
 
-UnusedHarvestIdsModel::UnusedHarvestIdsModel(QObject *parent) : SimpleListQueryModel(parent)
+UnusedHarvestIdsModelForTransport::UnusedHarvestIdsModelForTransport(QObject *parent) : SimpleListQueryModel(parent)
 {
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, name FROM Entities WHERE isFinished=0 AND typeId IN "
-               "(SELECT id FROM EntityTypes WHERE name=\"Harvest\")");
+    setDbQuery("SELECT id, name FROM Entities WHERE isFinished=0 "
+               "AND typeId IN "
+               "(SELECT id FROM EntityTypes WHERE name=\"Harvest\") "
+               "AND (SELECT COUNT(id) = 0 FROM Ovens "
+               "WHERE carbonizationEnding IS NULL AND plot=Entities.parent)");
+    // We only show harvests which have all their ovens fully carbonized
 }
 
-bool UnusedHarvestIdsModel::hasPausedEvent() const
+bool UnusedHarvestIdsModelForTransport::hasPausedEvent() const
 {
     return m_hasPausedEvent;
 }
 
-void UnusedHarvestIdsModel::checkForPausedEvent()
+void UnusedHarvestIdsModelForTransport::checkForPausedEvent()
 {
     QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
     q.prepare("SELECT id, entityId, typeId, userId, date, eventDate, "
@@ -59,55 +63,55 @@ void UnusedHarvestIdsModel::checkForPausedEvent()
              << m_pausedEvent.id << m_pausedEntity.name;
 }
 
-QString UnusedHarvestIdsModel::harvestName() const
+QString UnusedHarvestIdsModelForTransport::harvestName() const
 {
     return CharcoalDbHelpers::getHarvestName(m_pausedEntity.name);
 }
 
-int UnusedHarvestIdsModel::harvestId() const
+int UnusedHarvestIdsModelForTransport::harvestId() const
 {
     return m_pausedEntity.id;
 }
 
-QGeoCoordinate UnusedHarvestIdsModel::location() const
+QGeoCoordinate UnusedHarvestIdsModelForTransport::location() const
 {
     return m_pausedEvent.location;
 }
 
-QString UnusedHarvestIdsModel::plateNumber() const
+QString UnusedHarvestIdsModelForTransport::plateNumber() const
 {
     return m_pausedEvent.properties.value(Tags::webPlateNumber).toString();
 }
 
-QString UnusedHarvestIdsModel::destination() const
+QString UnusedHarvestIdsModelForTransport::destination() const
 {
     return CharcoalDbHelpers::getDestinationName(
         m_connectionName,
                 m_pausedEvent.properties.value(Tags::webDestination).toInt());
 }
 
-int UnusedHarvestIdsModel::destinationId() const
+int UnusedHarvestIdsModelForTransport::destinationId() const
 {
     return m_pausedEvent.properties.value(Tags::webDestination).toInt();
 }
 
-QVariantList UnusedHarvestIdsModel::scannedQrs() const
+QVariantList UnusedHarvestIdsModelForTransport::scannedQrs() const
 {
     return m_pausedEvent.properties.value(Tags::webQrCodes).toArray().toVariantList();
 }
 
-QDateTime UnusedHarvestIdsModel::loadingDate() const
+QDateTime UnusedHarvestIdsModelForTransport::loadingDate() const
 {
     return QDateTime::fromSecsSinceEpoch(
                 m_pausedEvent.properties.value(Tags::webEventDate).toVariant().toLongLong());
 }
 
-QDateTime UnusedHarvestIdsModel::timestamp() const
+QDateTime UnusedHarvestIdsModelForTransport::timestamp() const
 {
     return QDateTime::fromSecsSinceEpoch(m_pausedEvent.timestamp);
 }
 
-void UnusedHarvestIdsModel::refreshWebData()
+void UnusedHarvestIdsModelForTransport::refreshWebData()
 {
     checkForPausedEvent();
     QueryModel::refreshWebData();

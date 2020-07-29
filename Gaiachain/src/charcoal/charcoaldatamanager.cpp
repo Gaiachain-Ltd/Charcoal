@@ -23,7 +23,8 @@ CharcoalDataManager::CharcoalDataManager(const QSharedPointer<RestSessionManager
       m_unusedPlotIdsForLoggingEndingModel(new UnusedPlotIdsForLoggingEndingModel(this)),
       m_unusedPlotIdsForCarbonizationModel(new UnusedPlotIdsForCarbonizationModel(this)),
       m_unusedPlotIdsForReplantationModel(new UnusedPlotIdsForReplantationModel(this)),
-      m_unusedHarvestIdsModel(new UnusedHarvestIdsModel(this)),
+      m_unusedHarvestIdsModelForCarbonizationEnding(new UnusedHarvestIdsModelForCarbonizationEnding(this)),
+      m_unusedHarvestIdsModelForTransport(new UnusedHarvestIdsModelForTransport(this)),
       m_unusedTransportIdsModel(new UnusedTransportIdsModel(this)),
       m_ovensModel(new OvensModel(this)),
       m_trackingModel(new TrackingModel(this)),
@@ -77,7 +78,8 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
     setupModel(m_unusedPlotIdsForLoggingEndingModel);
     setupModel(m_unusedPlotIdsForCarbonizationModel);
     setupModel(m_unusedPlotIdsForReplantationModel);
-    setupModel(m_unusedHarvestIdsModel);
+    setupModel(m_unusedHarvestIdsModelForCarbonizationEnding);
+    setupModel(m_unusedHarvestIdsModelForTransport);
     setupModel(m_unusedTransportIdsModel);
     setupModel(m_ovensModel);
     setupModel(m_trackingModel);
@@ -168,19 +170,24 @@ UnusedPlotIdsForCarbonizationModel *CharcoalDataManager::unusedPlotIdsForCarboni
     return m_unusedPlotIdsForCarbonizationModel;
 }
 
-UnusedHarvestIdsModel *CharcoalDataManager::unusedHarvestIdsModel() const
+UnusedPlotIdsForReplantationModel *CharcoalDataManager::unusedPlotIdsForReplantationModel() const
 {
-    return m_unusedHarvestIdsModel;
+    return m_unusedPlotIdsForReplantationModel;
+}
+
+UnusedHarvestIdsModelForCarbonizationEnding *CharcoalDataManager::unusedHarvestIdsModelForCarbonizationEnding() const
+{
+    return m_unusedHarvestIdsModelForCarbonizationEnding;
+}
+
+UnusedHarvestIdsModelForTransport *CharcoalDataManager::unusedHarvestIdsModelForTransport() const
+{
+    return m_unusedHarvestIdsModelForTransport;
 }
 
 UnusedTransportIdsModel *CharcoalDataManager::unusedTransportIdsModel() const
 {
     return m_unusedTransportIdsModel;
-}
-
-UnusedPlotIdsForReplantationModel *CharcoalDataManager::unusedPlotIdsForReplantationModel() const
-{
-    return m_unusedPlotIdsForReplantationModel;
 }
 
 OvensModel *CharcoalDataManager::ovensModel() const

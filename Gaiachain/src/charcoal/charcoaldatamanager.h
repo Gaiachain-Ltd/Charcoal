@@ -13,7 +13,8 @@
 #include "charcoal/models/unusedplotidsforloggingendingmodel.h"
 #include "charcoal/models/unusedplotidsforcarbonizationmodel.h"
 #include "charcoal/models/unusedplotidsforreplantationmodel.h"
-#include "charcoal/models/unusedharvestidsmodel.h"
+#include "charcoal/models/unusedharvestidsmodelforcarbonizationending.h"
+#include "charcoal/models/unusedharvestidsmodelfortransport.h"
 #include "charcoal/models/unusedtransportidsmodel.h"
 #include "charcoal/models/ovensmodel.h"
 #include "charcoal/models/trackingmodel.h"
@@ -39,7 +40,8 @@ class CharcoalDataManager : public AbstractDataManager
     Q_PROPERTY(UnusedPlotIdsForLoggingEndingModel* unusedPlotIdsForLoggingEndingModel READ unusedPlotIdsForLoggingEndingModel CONSTANT)
     Q_PROPERTY(UnusedPlotIdsForCarbonizationModel* unusedPlotIdsForCarbonizationModel READ unusedPlotIdsForCarbonizationModel CONSTANT)
     Q_PROPERTY(UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel READ unusedPlotIdsForReplantationModel CONSTANT)
-    Q_PROPERTY(UnusedHarvestIdsModel* unusedHarvestIdsModel READ unusedHarvestIdsModel CONSTANT)
+    Q_PROPERTY(UnusedHarvestIdsModelForCarbonizationEnding* unusedHarvestIdsModelForCarbonizationEnding READ unusedHarvestIdsModelForCarbonizationEnding CONSTANT)
+    Q_PROPERTY(UnusedHarvestIdsModelForTransport* unusedHarvestIdsModelForTransport READ unusedHarvestIdsModelForTransport CONSTANT)
     Q_PROPERTY(UnusedTransportIdsModel* unusedTransportIdsModel READ unusedTransportIdsModel CONSTANT)
     Q_PROPERTY(OvensModel* ovensModel READ ovensModel CONSTANT)
     Q_PROPERTY(TrackingModel* trackingModel READ trackingModel CONSTANT)
@@ -67,14 +69,16 @@ public:
     OvenTypesModel* ovenTypesModel() const;
     UnusedPlotIdsForLoggingEndingModel* unusedPlotIdsForLoggingEndingModel() const;
     UnusedPlotIdsForCarbonizationModel* unusedPlotIdsForCarbonizationModel() const;
-    UnusedHarvestIdsModel* unusedHarvestIdsModel() const;
-    UnusedTransportIdsModel* unusedTransportIdsModel() const;
     UnusedPlotIdsForReplantationModel* unusedPlotIdsForReplantationModel() const;
+    UnusedHarvestIdsModelForCarbonizationEnding* unusedHarvestIdsModelForCarbonizationEnding() const;
+    UnusedHarvestIdsModelForTransport* unusedHarvestIdsModelForTransport() const;
+    UnusedTransportIdsModel* unusedTransportIdsModel() const;
     OvensModel* ovensModel() const;
     TrackingModel* trackingModel() const;
     TrackingFilterProxyModel* trackingFilterProxyModel() const;
     MinimumDateModel* minimumDateModel() const;
     LocalEventsModel* localEventsModel() const;
+
 
 
 signals:
@@ -104,7 +108,8 @@ private:
     UnusedPlotIdsForLoggingEndingModel* m_unusedPlotIdsForLoggingEndingModel = nullptr;
     UnusedPlotIdsForCarbonizationModel* m_unusedPlotIdsForCarbonizationModel = nullptr;
     UnusedPlotIdsForReplantationModel* m_unusedPlotIdsForReplantationModel = nullptr;
-    UnusedHarvestIdsModel* m_unusedHarvestIdsModel = nullptr;
+    UnusedHarvestIdsModelForCarbonizationEnding* m_unusedHarvestIdsModelForCarbonizationEnding = nullptr;
+    UnusedHarvestIdsModelForTransport* m_unusedHarvestIdsModelForTransport = nullptr;
     UnusedTransportIdsModel* m_unusedTransportIdsModel = nullptr;
     OvensModel* m_ovensModel = nullptr;
     TrackingModel* m_trackingModel = nullptr;

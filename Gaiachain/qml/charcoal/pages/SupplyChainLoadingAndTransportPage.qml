@@ -27,14 +27,14 @@ Pages.SupplyChainPageBase {
     onIsPausedEventChanged: {
         if (isPausedEvent) {
             console.log("Resuming loading and transport", isPausedEvent, shouldPause)
-            harvestIdComboBox.currentText = dataManager.unusedHarvestIdsModel.harvestName()
-            harvestIdComboBox.currentId = dataManager.unusedHarvestIdsModel.harvestId()
-            gpsSource.coordinate = dataManager.unusedHarvestIdsModel.location()
-            plateNumberHeader.inputText = dataManager.unusedHarvestIdsModel.plateNumber()
-            deliveryDestinationComboBox.currentText = dataManager.unusedHarvestIdsModel.destination()
-            deliveryDestinationComboBox.currentId = dataManager.unusedHarvestIdsModel.destinationId()
-            loadingDateHeader.selectedDate = dataManager.unusedHarvestIdsModel.loadingDate()
-            scannedQrs = dataManager.unusedHarvestIdsModel.scannedQrs()
+            harvestIdComboBox.currentText = dataManager.unusedHarvestIdsModelForTransport.harvestName()
+            harvestIdComboBox.currentId = dataManager.unusedHarvestIdsModelForTransport.harvestId()
+            gpsSource.coordinate = dataManager.unusedHarvestIdsModelForTransport.location()
+            plateNumberHeader.inputText = dataManager.unusedHarvestIdsModelForTransport.plateNumber()
+            deliveryDestinationComboBox.currentText = dataManager.unusedHarvestIdsModelForTransport.destination()
+            deliveryDestinationComboBox.currentId = dataManager.unusedHarvestIdsModelForTransport.destinationId()
+            loadingDateHeader.selectedDate = dataManager.unusedHarvestIdsModelForTransport.loadingDate()
+            scannedQrs = dataManager.unusedHarvestIdsModelForTransport.scannedQrs()
         } else {
             console.log("NOT resuming loading and transport", isPausedEvent, shouldPause)
             harvestIdComboBox.currentText = ""
@@ -66,11 +66,11 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        dataManager.unusedHarvestIdsModel.refresh()
+        dataManager.unusedHarvestIdsModelForTransport.refresh()
         dataManager.destinationsModel.refresh()
-        dataManager.unusedHarvestIdsModel.checkForPausedEvent()
+        dataManager.unusedHarvestIdsModelForTransport.checkForPausedEvent()
         dataManager.minimumDateModel.plotId = -1
-        isPausedEvent = dataManager.unusedHarvestIdsModel.hasPausedEvent
+        isPausedEvent = dataManager.unusedHarvestIdsModelForTransport.hasPausedEvent
     }
 
     function proceed() {
@@ -139,7 +139,7 @@ Pages.SupplyChainPageBase {
         dataManager.actionController.registerLoadingAndTransport(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
-                    isPausedEvent? dataManager.unusedHarvestIdsModel.timestamp()
+                    isPausedEvent? dataManager.unusedHarvestIdsModelForTransport.timestamp()
                                  : new Date,
                     loadingDateHeader.selectedDate,
                     userManager.userData.code,
@@ -196,7 +196,7 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkGreenUrl
         delegateTextColor: GStyle.fontHighlightColor2
 
-        model: dataManager.unusedHarvestIdsModel
+        model: dataManager.unusedHarvestIdsModelForTransport
 
         popupLocked: isPausedEvent
 

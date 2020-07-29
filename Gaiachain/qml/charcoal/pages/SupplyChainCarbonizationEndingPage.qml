@@ -22,7 +22,7 @@ Pages.SupplyChainPageBase {
     Component.onCompleted: refreshData()
 
     function refreshData() {
-        dataManager.unusedHarvestIdsModel.refresh()
+        dataManager.unusedHarvestIdsModelForCarbonizationEnding.refresh()
         dataManager.ovensModel.plotId = -1
         dataManager.minimumDateModel.plotId = -1
     }
@@ -105,7 +105,7 @@ Pages.SupplyChainPageBase {
         checkIcon: GStyle.checkGreenUrl
         delegateTextColor: GStyle.fontHighlightColor2
 
-        model: dataManager.unusedHarvestIdsModel
+        model: dataManager.unusedHarvestIdsModelForCarbonizationEnding
 
         onCurrentTextChanged: {
             // Refresh available ovens
