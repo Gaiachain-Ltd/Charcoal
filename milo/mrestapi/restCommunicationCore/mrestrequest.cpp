@@ -63,13 +63,7 @@ MRestRequest::MRestRequest(const QUrl& url) :
 {
     mRequestTimer = new QTimer(this);
     mRequestTimer->setSingleShot(true);
-    constexpr int second(1000);
-    constexpr int minute(second * 60);
-    if (isMultiPart()) {
-        setRequestTimeout(5 * minute);
-    } else {
-        setRequestTimeout(10 * second);
-    }
+    setDefaultRequestTimeout();
     connect(mRequestTimer, &QTimer::timeout,
             this, &MRestRequest::retry);
 }
@@ -304,6 +298,17 @@ void MRestRequest::readReplyData(const QString &requestName, const QString &stat
             qCDebug(crequest) << requestName << status
                               << "Request reply is a valid JSON";
         }
+    }
+}
+
+void MRestRequest::setDefaultRequestTimeout()
+{
+    constexpr quint32 second(1000);
+    constexpr quint32 minute(second * 60);
+    if (isMultiPart()) {
+        setRequestTimeout(5 * minute);
+    } else {
+        setRequestTimeout(10 * second);
     }
 }
 

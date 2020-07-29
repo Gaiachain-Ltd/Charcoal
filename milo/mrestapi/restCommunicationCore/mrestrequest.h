@@ -80,6 +80,8 @@ protected:
     virtual void readReplyData(const QString &requestName,
                                const QString &status);
 
+    void setDefaultRequestTimeout();
+
     bool mQuiet = false;
     Priority mPriority = Priority::Normal;
     Type mType = Type::Get;

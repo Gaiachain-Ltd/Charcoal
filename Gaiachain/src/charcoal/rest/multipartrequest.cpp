@@ -10,6 +10,8 @@
 MultiPartRequest::MultiPartRequest(const QString &path, const Type &type, const QString &token)
     : BaseRequest(path, type, token)
 {
+    setDefaultRequestTimeout();
+    qDebug() << "Multipart - timeout length:" << mRequestTimeout;
 }
 
 void MultiPartRequest::addPart(const QString &key, const QString &value)
