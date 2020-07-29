@@ -3,6 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QStandardPaths>
+#include <QDebug>
 
 #include "../helpers/cryptohelper.h"
 
@@ -63,16 +64,26 @@ bool OfflineUsersHandler::canLogin(const QString &login, const QString &password
 
     const_cast<QSettings &>(m_usersData).endGroup();        // endGroup is not a const function :(
 
-    return (storedHash == CryptoHelper::passwordHash(password.toLatin1(), salt));
+    const QByteArray currentHash = CryptoHelper::passwordHash(password.toLatin1(), salt);
+
+    //qDebug() << "Stored:" << storedHash << salt;
+    //qDebug() << "current:" << currentHash;
+    //qDebug() << "Login:" << login << password;
+
+    return (storedHash == currentHash);
 }
 
 void OfflineUsersHandler::putTemporaryPassword(const QString &login, const QString &password)
 {
     m_usersData.beginGroup(login);
 
-    auto salt = CryptoHelper::randomSalt();
+    const auto salt = CryptoHelper::randomSalt();
     m_usersData.setValue(SettingKey::TmpSalt, salt);
-    m_usersData.setValue(SettingKey::TmpPassword, CryptoHelper::passwordHash(password.toLatin1(), salt));
+    const QByteArray currentHash = CryptoHelper::passwordHash(password.toLatin1(), salt);
+    m_usersData.setValue(SettingKey::TmpPassword, currentHash);
+
+    //qDebug() << "Putting temp hash:" << currentHash << salt
+    //         << "for user:" << login << password;
 
     m_usersData.endGroup();
 }
@@ -80,6 +91,8 @@ void OfflineUsersHandler::putTemporaryPassword(const QString &login, const QStri
 void OfflineUsersHandler::acknowledgePassword(const QString &login)
 {
     m_usersData.beginGroup(login);
+
+    //qDebug() << "Password ACK" << login << m_usersData.value(SettingKey::TmpSalt);
 
     m_usersData.setValue(SettingKey::Salt, m_usersData.value(SettingKey::TmpSalt));
     m_usersData.setValue(SettingKey::Password, m_usersData.value(SettingKey::TmpPassword));
