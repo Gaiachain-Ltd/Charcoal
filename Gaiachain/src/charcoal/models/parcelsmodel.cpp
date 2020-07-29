@@ -21,9 +21,11 @@ ParcelsModel::ParcelsModel(QObject *parent) : SimpleListQueryModel(true, parent)
     setDbColumnForNameRole(Tags::code);
 
     setWebModelCanChange(true);
-    setDbQuery("SELECT id, code, active FROM Parcels WHERE active=1 ");
-               //"AND (SELECT (COUNT(DISTINCT id) = 0) FROM Entities "
-               //"WHERE name LIKE '%' + Parcels.code + '%' AND isFinished=0)");
+    setDbQuery("SELECT id, code, active FROM Parcels p WHERE active=1 "
+               "AND NOT EXISTS (SELECT id FROM Entities "
+               "WHERE isFinished=0 AND name LIKE '%/' || p.code || '/%')");
+    // This query selects only parcels which are ACTIVE and which are not used
+    // in pending supply chains.
 }
 
 void ParcelsModel::refreshWebData()

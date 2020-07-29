@@ -749,7 +749,7 @@ bool ActionController::registerReception(
         return false;
     }
 
-    // Special case: if this replantation ALREADY EXISTS, we skip inserting it
+    // Special case: if this reception ALREADY EXISTS, we skip inserting it
     // into DB.
     // This can only happen for debug server where we have some dummy, unfinished
     // events
@@ -762,8 +762,8 @@ bool ActionController::registerReception(
         );
 
     if (existing != -1) {
-        qDebug() << RED("Reception already exists - special case!")
-                 << transportId << eventTypeId << existing;
+        qWarning() << RED("Reception already exists - special case!")
+                   << transportId << eventTypeId << existing;
         return true;
     }
 

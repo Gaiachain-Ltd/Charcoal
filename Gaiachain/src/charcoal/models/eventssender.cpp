@@ -296,6 +296,7 @@ void EventsSender::sendEvent()
 
         if (toUpload.isEmpty() == false) {
             qDebug() << "Files to be uploaded:" << toUpload;
+            qInfo() << "Number of files to upload:" << toUpload.size();
         }
 
         // Now generate stuff using additional QSqlQueries
