@@ -52,7 +52,7 @@ bool CryptoHelper::loadEncryptedSettings(QIODevice &device, QSettings::SettingsM
     const auto encryptedData = device.readAll();
     auto jsonData = MCrypto().decrypt(encryptedData, QByteArray(APP_STORAGE_PASSWORD));
     if (jsonData.isEmpty()) {
-        qDebug() << "Decryption failed, trying with obsolete password";
+        qWarning() << "Decryption failed, trying with obsolete password";
         jsonData = MCrypto().decrypt(encryptedData, p12a34s56w67r89d);
 
         if (jsonData.isEmpty()) {
@@ -64,10 +64,12 @@ bool CryptoHelper::loadEncryptedSettings(QIODevice &device, QSettings::SettingsM
     auto error = QJsonParseError{};
     const auto jsonDoc = QJsonDocument::fromJson(jsonData, &error);
     if (error.error != QJsonParseError::NoError || !jsonDoc.isObject()) {
+        qWarning() << "Settings decryption error - JSON data could not be read!";
         return false;
     }
 
     map = jsonDoc.object().toVariantMap();
+
     return true;
 }
 
@@ -78,4 +80,26 @@ bool CryptoHelper::storeEncryptedSettings(QIODevice &device,
     const auto encryptedData = MCrypto().encrypt(jsonData, QByteArray(APP_STORAGE_PASSWORD));
 
     return device.write(encryptedData);
+}
+
+QByteArray CryptoHelper::readBytes(const QVariant &data)
+{
+    QByteArray result(data.toByteArray());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    return QByteArray::fromBase64Encoding(result).decoded;
+#else
+    return QByteArray::fromBase64(result);
+#endif
+}
+
+QVariant CryptoHelper::writeBytes(const QByteArray &data)
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    // Data will be auto-translated to base64
+    return data;
+#else
+    // We manually encode to base64
+    const QByteArray encoded(data.toBase64());
+    return encoded;
+#endif
 }

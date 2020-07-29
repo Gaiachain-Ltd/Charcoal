@@ -59,16 +59,12 @@ bool OfflineUsersHandler::canLogin(const QString &login, const QString &password
 
     const_cast<QSettings &>(m_usersData).beginGroup(login); // beginGroup is not a const function :(
 
-    auto salt = m_usersData.value(SettingKey::Salt).toByteArray();
-    auto storedHash = m_usersData.value(SettingKey::Password).toByteArray();
+    const QByteArray salt = CryptoHelper::readBytes(m_usersData.value(SettingKey::Salt));
+    const QByteArray storedHash = CryptoHelper::readBytes(m_usersData.value(SettingKey::Password));
 
     const_cast<QSettings &>(m_usersData).endGroup();        // endGroup is not a const function :(
 
     const QByteArray currentHash = CryptoHelper::passwordHash(password.toLatin1(), salt);
-
-    //qDebug() << "Stored:" << storedHash << salt;
-    //qDebug() << "current:" << currentHash;
-    //qDebug() << "Login:" << login << password;
 
     return (storedHash == currentHash);
 }
@@ -77,13 +73,10 @@ void OfflineUsersHandler::putTemporaryPassword(const QString &login, const QStri
 {
     m_usersData.beginGroup(login);
 
-    const auto salt = CryptoHelper::randomSalt();
-    m_usersData.setValue(SettingKey::TmpSalt, salt);
+    const QByteArray salt = CryptoHelper::randomSalt();
+    m_usersData.setValue(SettingKey::TmpSalt, CryptoHelper::writeBytes(salt));
     const QByteArray currentHash = CryptoHelper::passwordHash(password.toLatin1(), salt);
-    m_usersData.setValue(SettingKey::TmpPassword, currentHash);
-
-    //qDebug() << "Putting temp hash:" << currentHash << salt
-    //         << "for user:" << login << password;
+    m_usersData.setValue(SettingKey::TmpPassword, CryptoHelper::writeBytes(currentHash));
 
     m_usersData.endGroup();
 }
@@ -91,8 +84,6 @@ void OfflineUsersHandler::putTemporaryPassword(const QString &login, const QStri
 void OfflineUsersHandler::acknowledgePassword(const QString &login)
 {
     m_usersData.beginGroup(login);
-
-    //qDebug() << "Password ACK" << login << m_usersData.value(SettingKey::TmpSalt);
 
     m_usersData.setValue(SettingKey::Salt, m_usersData.value(SettingKey::TmpSalt));
     m_usersData.setValue(SettingKey::Password, m_usersData.value(SettingKey::TmpPassword));

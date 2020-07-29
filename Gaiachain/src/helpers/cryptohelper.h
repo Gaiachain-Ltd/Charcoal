@@ -16,6 +16,9 @@ struct CryptoHelper
     static QSettings::Format encryptedSettingsFormat();
     static bool loadEncryptedSettings(QIODevice &device, QSettings::SettingsMap &map);
     static bool storeEncryptedSettings(QIODevice &device, const QSettings::SettingsMap &map);
+
+    static QByteArray readBytes(const QVariant &data);
+    static QVariant writeBytes(const QByteArray &data);
 };
 
 #endif // CRYPTOHELPER_H
