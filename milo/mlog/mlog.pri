@@ -5,7 +5,8 @@ CONFIG += c++11
 # https://www.kdab.com/uncovering-32-qt-best-practices-compile-time-clazy/
 # !!!
 DEFINES *= QT_USE_QSTRINGBUILDER QT_MESSAGELOGCONTEXT
-CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
+# Show all messages, always!
+#CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 INCLUDEPATH += $$PWD
 
