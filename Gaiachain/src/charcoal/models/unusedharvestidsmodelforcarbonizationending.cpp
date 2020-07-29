@@ -1,7 +1,7 @@
 #include "unusedharvestidsmodelforcarbonizationending.h"
 
 UnusedHarvestIdsModelForCarbonizationEnding::UnusedHarvestIdsModelForCarbonizationEnding(
-    QObject *parent) : SimpleListQueryModel(parent)
+    QObject *parent) : SimpleListQueryModel(false, parent)
 {
     setWebModelCanChange(true);
     setDbQuery("SELECT id, name FROM Entities WHERE isFinished=0 "

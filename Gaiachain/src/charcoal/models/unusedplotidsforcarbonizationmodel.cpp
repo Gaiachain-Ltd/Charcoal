@@ -1,7 +1,7 @@
 #include "unusedplotidsforcarbonizationmodel.h"
 
 UnusedPlotIdsForCarbonizationModel::UnusedPlotIdsForCarbonizationModel(QObject *parent)
-    : SimpleListQueryModel(parent)
+    : SimpleListQueryModel(false, parent)
 {
     setWebModelCanChange(true);
     setDbQuery("SELECT id, name FROM Entities WHERE isFinished=0 "

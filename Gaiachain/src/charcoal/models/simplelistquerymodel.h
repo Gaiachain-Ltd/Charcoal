@@ -14,7 +14,7 @@ public:
     };
     Q_ENUM(ListRole)
 
-    explicit SimpleListQueryModel(const bool hasActiveBit = false,
+    explicit SimpleListQueryModel(const bool hasActiveBit,
                                   QObject *parent = nullptr);
 
     QVariant data(const QModelIndex &index, int role) const override;

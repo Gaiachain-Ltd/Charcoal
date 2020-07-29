@@ -10,7 +10,8 @@
 
 #include <QJsonArray>
 
-UnusedHarvestIdsModelForTransport::UnusedHarvestIdsModelForTransport(QObject *parent) : SimpleListQueryModel(parent)
+UnusedHarvestIdsModelForTransport::UnusedHarvestIdsModelForTransport(QObject *parent)
+    : SimpleListQueryModel(false, parent)
 {
     setWebModelCanChange(true);
     setDbQuery("SELECT id, name FROM Entities WHERE isFinished=0 "
