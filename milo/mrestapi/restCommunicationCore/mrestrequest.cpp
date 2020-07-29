@@ -63,7 +63,13 @@ MRestRequest::MRestRequest(const QUrl& url) :
 {
     mRequestTimer = new QTimer(this);
     mRequestTimer->setSingleShot(true);
-    setRequestTimeout(5000);
+    constexpr int second(1000);
+    constexpr int minute(second * 60);
+    if (isMultiPart()) {
+        setRequestTimeout(5 * minute);
+    } else {
+        setRequestTimeout(10 * second);
+    }
     connect(mRequestTimer, &QTimer::timeout,
             this, &MRestRequest::retry);
 }
