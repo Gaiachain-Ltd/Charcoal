@@ -49,7 +49,7 @@ Pages.SupplyChainPageBase {
 
     title: Strings.reception
 
-    proceedButtonEnabled: hasQrs && qrsMatchingTransport && (transportId !== -1)
+    proceedButtonEnabled: hasQrs && (transportId !== -1)
 
     Component.onCompleted: {
         picturesManager.cleanUpWaitingPictures()
