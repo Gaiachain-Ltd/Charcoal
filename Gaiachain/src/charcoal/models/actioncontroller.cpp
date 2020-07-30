@@ -190,6 +190,58 @@ int ActionController::bagCountInTransport(const int transportId) const
     return CharcoalDbHelpers::bagCountInTransport(m_connectionName, transportId);
 }
 
+bool ActionController::matchBags(const int transportId,
+                                 QVariantList qrsFromReception)
+{
+    bool result = false;
+
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::LoadingAndTransport);
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+
+    query.prepare("SELECT properties FROM Events "
+                  "WHERE entityId=:transportId AND typeId=:typeId");
+    query.bindValue(":transportId", transportId);
+    query.bindValue(":typeId", typeId);
+
+    if (query.exec() == false || query.next() == false) {
+        const QString msg(tr("Could not check bags for transport %1").arg(transportId));
+        qWarning() << msg;
+        emit error(msg);
+        return false;
+    }
+
+    const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+    const QJsonObject properties(
+        CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+    QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
+
+    if (qrsFromReception.size() != qrsFromTransport.size()) {
+        const QString msg(tr("The number of scanned QR codes (%1) does not "
+                             "match the number of bags sent in transport (%2)")
+                              .arg(qrsFromTransport.size()).arg(qrsFromReception.size()));
+        qWarning() << msg;
+        emit error(msg);
+        return false;
+    }
+
+    std::sort(qrsFromReception.begin(), qrsFromReception.end());
+    std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
+
+    if (qrsFromReception == qrsFromTransport) {
+        return true;
+    }
+
+    if (result == false) {
+        const QString msg(tr("Scanned QR codes do not match bags sent in transport"));
+        qWarning() << msg;
+        emit error(msg);
+    }
+
+    return result;
+}
+
 QString ActionController::plateNumberInTransport(const int transportId) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));

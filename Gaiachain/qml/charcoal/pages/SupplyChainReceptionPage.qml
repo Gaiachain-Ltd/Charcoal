@@ -19,6 +19,7 @@ Pages.SupplyChainPageBase {
     property int transportId
 
     property var scannedQrs: []
+    property bool qrsMatchingTransport: false
     readonly property bool hasQrs: scannedQrs.length > 0
 
     onScannedQrsChanged: {
@@ -29,6 +30,8 @@ Pages.SupplyChainPageBase {
             if (transportId !== -1) {
                 transportName = dataManager.actionController.getEntityName(transportId)
                 dataManager.minimumDateModel.plotId = transportId
+                qrsMatchingTransport = dataManager.actionController.matchBags(
+                            transportId, scannedQrs)
             }
         }
         console.log("Scanned have changed", hasQrs, transportId)
@@ -46,7 +49,7 @@ Pages.SupplyChainPageBase {
 
     title: Strings.reception
 
-    proceedButtonEnabled: hasQrs && (transportId !== -1)
+    proceedButtonEnabled: hasQrs && qrsMatchingTransport && (transportId !== -1)
 
     Component.onCompleted: {
         picturesManager.cleanUpWaitingPictures()
