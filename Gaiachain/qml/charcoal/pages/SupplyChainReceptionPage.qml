@@ -209,6 +209,7 @@ Pages.SupplyChainPageBase {
         text: Strings.scanAllBagsFromTruck
         extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
         iconVisible: hasQrs
+        icon: qrsMatchingTransport? GStyle.checkGreenUrl : GStyle.iconNoUrl
 
         onClicked: pageManager.enter(
                        Enums.Page.QRScanner,
