@@ -793,11 +793,16 @@ void ActionController::finalizeSupplyChain(const int transportId) const
 {
     const int parentId(CharcoalDbHelpers::getParentEntityId(
         m_connectionName, transportId));
+    const int grandParentId(CharcoalDbHelpers::getParentEntityId(
+        m_connectionName, parentId));
+
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-    query.prepare("UPDATE Entities SET isFinished=1 WHERE id=:transportId "
-                  "OR parent=:parentId");
+    query.prepare("UPDATE Entities SET isFinished=1 WHERE "
+                  "id=:transportId OR id=:parentId OR id=:grandParentId "
+                  "OR parent=:parentId OR parent=:grandParentId");
     query.bindValue(":transportId", transportId);
     query.bindValue(":parentId", parentId);
+    query.bindValue(":grandParentId", grandParentId);
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing a supply chain has failed!")
