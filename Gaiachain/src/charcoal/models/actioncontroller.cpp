@@ -796,6 +796,11 @@ void ActionController::finalizeSupplyChain(const int transportId) const
     const int grandParentId(CharcoalDbHelpers::getParentEntityId(
         m_connectionName, parentId));
 
+    // Query below looks for all entities related to current transport. It will
+    // also finalize harvests stemming from the same plot. However, it will
+    // leave out transports coming from those parallel harvests. This is a bug!
+    // Next time app synchronizes data from web, the DB will be fully corrected.
+
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
     query.prepare("UPDATE Entities SET isFinished=1 WHERE "
                   "id=:transportId OR id=:parentId OR id=:grandParentId "
