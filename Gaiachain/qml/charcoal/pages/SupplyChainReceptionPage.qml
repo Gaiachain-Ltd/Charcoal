@@ -19,7 +19,7 @@ Pages.SupplyChainPageBase {
     property int transportId
 
     property var scannedQrs: []
-    property bool qrsMatchingTransport: false
+    property var bagsMatch: undefined
     readonly property bool hasQrs: scannedQrs.length > 0
 
     onScannedQrsChanged: {
@@ -30,7 +30,7 @@ Pages.SupplyChainPageBase {
             if (transportId !== -1) {
                 transportName = dataManager.actionController.getEntityName(transportId)
                 dataManager.minimumDateModel.plotId = transportId
-                qrsMatchingTransport = dataManager.actionController.matchBags(
+                bagsMatch = dataManager.actionController.matchBags(
                             transportId, scannedQrs)
             }
         }
@@ -78,7 +78,6 @@ Pages.SupplyChainPageBase {
         let recsIcon = "image://tickmark/receipt-" + hasRecs
 
         let bagCount = dataManager.actionController.bagCountInTransport(transportId)
-        // TODO: check if all QRs are MATCHING!
         let allBags = scannedQrs.length === bagCount
 
         var summary = [
@@ -209,7 +208,8 @@ Pages.SupplyChainPageBase {
         text: Strings.scanAllBagsFromTruck
         extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
         iconVisible: hasQrs
-        icon: qrsMatchingTransport? GStyle.checkGreenUrl : GStyle.iconNoUrl
+        icon: bagsMatch !== undefined && bagsMatch.fullMatch?
+                  GStyle.checkGreenUrl : GStyle.iconNoUrl
 
         onClicked: pageManager.enter(
                        Enums.Page.QRScanner,

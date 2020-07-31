@@ -22,6 +22,7 @@
 
 ActionController::ActionController(QObject *parent) : QObject(parent)
 {
+    qRegisterMetaType<BagsMatch>("BagsMatch");
 }
 
 void ActionController::setDbConnection(const QString &connectionName)
@@ -190,10 +191,10 @@ int ActionController::bagCountInTransport(const int transportId) const
     return CharcoalDbHelpers::bagCountInTransport(m_connectionName, transportId);
 }
 
-bool ActionController::matchBags(const int transportId,
+BagsMatch ActionController::matchBags(const int transportId,
                                  QVariantList qrsFromReception)
 {
-    bool result = false;
+    BagsMatch result;
 
     const int typeId = CharcoalDbHelpers::getEventTypeId(
         m_connectionName, Enums::SupplyChainAction::LoadingAndTransport);
@@ -209,7 +210,7 @@ bool ActionController::matchBags(const int transportId,
         const QString msg(tr("Could not check bags for transport %1").arg(transportId));
         qWarning() << msg;
         emit error(msg);
-        return false;
+        return result;
     }
 
     const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
@@ -223,17 +224,30 @@ bool ActionController::matchBags(const int transportId,
                               .arg(qrsFromTransport.size()).arg(qrsFromReception.size()));
         qWarning() << msg;
         emit error(msg);
-        return false;
+        return result;
     }
 
     std::sort(qrsFromReception.begin(), qrsFromReception.end());
     std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
 
     if (qrsFromReception == qrsFromTransport) {
-        return true;
+        result.fullMatch = true;
+        return result;
     }
 
-    if (result == false) {
+    for (const QVariant &transport : qAsConst(qrsFromTransport)) {
+        if (qrsFromReception.contains(transport) == false) {
+            result.missingBags.append(transport);
+        }
+    }
+
+    for (const QVariant &reception : qAsConst(qrsFromReception)) {
+        if (qrsFromTransport.contains(reception) == false) {
+            result.extraBags.append(reception);
+        }
+    }
+
+    if (result.fullMatch == false) {
         const QString msg(tr("Scanned QR codes do not match bags sent in transport"));
         qWarning() << msg;
         emit error(msg);
