@@ -54,6 +54,7 @@ namespace Enums {
         TakeDocumentPictures,
         PhotoGallery,
         SetOvenMeasurements,
+        QrMismatchSummary,
 #endif
 
         PageCount

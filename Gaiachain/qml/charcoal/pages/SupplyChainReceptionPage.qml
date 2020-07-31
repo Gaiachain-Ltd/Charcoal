@@ -32,9 +32,27 @@ Pages.SupplyChainPageBase {
                 dataManager.minimumDateModel.plotId = transportId
                 bagsMatch = dataManager.actionController.matchBags(
                             transportId, scannedQrs)
+
+                if (bagsMatch.fullMatch === false) {
+                    pageManager.enter(
+                                 Enums.Page.QrMismatchSummary,
+                                 {
+                                     "bagsMatch": bagsMatch
+                                 },
+                                 false)
+                }
+            } else {
+                transportName = ""
+                dataManager.minimumDateModel.plotId = -1
+                bagsMatch = undefined
             }
+        } else {
+            transportName = ""
+            dataManager.minimumDateModel.plotId = -1
+            bagsMatch = undefined
         }
-        console.log("Scanned have changed", hasQrs, transportId)
+
+        console.log("Scanned have changed", scannedQrs.length, transportId)
     }
 
     property var documents: []

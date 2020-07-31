@@ -218,15 +218,6 @@ BagsMatch ActionController::matchBags(const int transportId,
         CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
     QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
 
-    if (qrsFromReception.size() != qrsFromTransport.size()) {
-        const QString msg(tr("The number of scanned QR codes (%1) does not "
-                             "match the number of bags sent in transport (%2)")
-                              .arg(qrsFromTransport.size()).arg(qrsFromReception.size()));
-        qWarning() << msg;
-        emit error(msg);
-        return result;
-    }
-
     std::sort(qrsFromReception.begin(), qrsFromReception.end());
     std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
 
@@ -237,12 +228,14 @@ BagsMatch ActionController::matchBags(const int transportId,
 
     for (const QVariant &transport : qAsConst(qrsFromTransport)) {
         if (qrsFromReception.contains(transport) == false) {
+            qDebug() << "Missing bag" << transport;
             result.missingBags.append(transport);
         }
     }
 
     for (const QVariant &reception : qAsConst(qrsFromReception)) {
         if (qrsFromTransport.contains(reception) == false) {
+            qDebug() << "Extra bag" << reception;
             result.extraBags.append(reception);
         }
     }
@@ -250,7 +243,6 @@ BagsMatch ActionController::matchBags(const int transportId,
     if (result.fullMatch == false) {
         const QString msg(tr("Scanned QR codes do not match bags sent in transport"));
         qWarning() << msg;
-        emit error(msg);
     }
 
     return result;
