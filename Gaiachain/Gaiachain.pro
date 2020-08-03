@@ -143,6 +143,7 @@ charcoal {
         src/charcoal/notificationmanager.h \
         src/charcoal/charcoalsessionmanager.h \
         src/charcoal/charcoaldatamanager.h \
+        src/charcoal/components/trapezoidovenitem.h \
         src/charcoal/database/charcoaldbhelpers.h \
         src/charcoal/models/dbobjects.h \
         src/charcoal/models/actioncontroller.h \
@@ -178,6 +179,7 @@ charcoal {
         src/charcoal/charcoalmigrations.cpp \
         src/charcoal/charcoalsessionmanager.cpp \
         src/charcoal/charcoaldatamanager.cpp \
+        src/charcoal/components/trapezoidovenitem.cpp \
         src/charcoal/database/charcoaldbhelpers.cpp \
         src/charcoal/models/dbobjects.cpp \
         src/charcoal/models/actioncontroller.cpp \

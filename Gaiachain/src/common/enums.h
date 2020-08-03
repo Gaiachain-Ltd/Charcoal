@@ -53,6 +53,7 @@ namespace Enums {
         UserInfo,
         TakeDocumentPictures,
         PhotoGallery,
+        SetOvenMeasurements,
 #endif
 
         PageCount

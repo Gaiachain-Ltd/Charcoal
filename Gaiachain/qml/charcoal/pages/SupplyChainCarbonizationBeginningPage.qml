@@ -15,6 +15,8 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
+    property var ovenDimensions: []
+
     title: Strings.carbonizationBeginning
 
     // 1 - Traditional oven
@@ -178,29 +180,57 @@ Pages.SupplyChainPageBase {
         model: dataManager.ovenTypesModel
     }
 
-    Headers.RowHeader {
-        property bool isEmpty: true
-
-        onValueChanged: {
-            let emptyCheck = false;
-            for (let value of values) {
-                if (value.length === 0) {
-                    emptyCheck = true
-                    break
-                }
-            }
-
-            isEmpty = emptyCheck
-        }
+    CharcoalHeaders.CharcoalButtonHeader {
+        property var titles: ovenTypeComboBox.isTraditional?
+            [ Strings.height, Strings.length, Strings.width, Strings.height ]
+            : [ Strings.height, Strings.length, Strings.width ]
 
         id: ovenDimensionsHeader
+
         Layout.fillWidth: true
+        forceBoldValue: true
+        //valueFontSize: s(GStyle.titlePixelSize)
+
         headerText: Strings.ovenDimensions
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
-        titles: [ Strings.height, Strings.length, Strings.width ]
-        enabled: ovenTypeComboBox.isTraditional
+        //enabled: ovenTypeComboBox.isTraditional
+
+        text: Strings.set
+        extraText: ""
+        iconVisible: false
+
+        onClicked: pageManager.enter(
+                       Enums.Page.SetOvenMeasurements,
+                       {
+                           "backToPage": Enums.Page.SupplyChainCarbonizationBeginning,
+                           "ovenDimensions": top.ovenDimensions
+                       })
     }
+
+//    Headers.RowHeader {
+//        property bool isEmpty: true
+
+//        onValueChanged: {
+//            let emptyCheck = false;
+//            for (let value of values) {
+//                if (value.length === 0) {
+//                    emptyCheck = true
+//                    break
+//                }
+//            }
+
+//            isEmpty = emptyCheck
+//        }
+
+//        id: ovenDimensionsHeader
+//        Layout.fillWidth: true
+//        headerText: Strings.ovenDimensions
+//        helpButtonVisible: true
+//        helpText: Strings.carbonizationBeginningOvenDimensionsHelp
+//        titles: [ Strings.height, Strings.length, Strings.width ]
+//        enabled: ovenTypeComboBox.isTraditional
+//    }
 
     Common.PositionSourceHandler {
         id: gpsSource

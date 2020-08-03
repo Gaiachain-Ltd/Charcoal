@@ -251,6 +251,13 @@ QtObject {
     property string selectPlotId: tr.empty + qsTr("Select plot ID")
     property string selectOvenType: tr.empty + qsTr("Select oven type")
 
+    property string set: tr.empty + qsTr("Set")
+    property string setOvenMeasurements: tr.empty + qsTr("Set oven measurements")
+    property string widthPlaceholder: tr.empty + qsTr("Width (A)")
+    property string lengthPlaceholder: tr.empty + qsTr("Length (B)")
+    property string height1Placeholder: tr.empty + qsTr("Height (C)")
+    property string height2Placeholder: tr.empty + qsTr("Height (D)")
+
     property string carbonizationBeginningPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
     property string carbonizationBeginningOvenIdHelp: tr.empty + qsTr("Dummy text - oven id help")
     property string carbonizationBeginningCarbonizerIdHelp: tr.empty + qsTr("Dummy text - carbonizer id help")
