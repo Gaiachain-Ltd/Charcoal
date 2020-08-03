@@ -314,6 +314,24 @@ QVariantList ActionController::defaultOvenDimensions(const int ovenId) const
     return CharcoalDbHelpers::defaultOvenDimensions(m_connectionName, ovenId);
 }
 
+qreal ActionController::ovenVolume(const qreal width, const qreal height,
+                                   const qreal length) const
+{
+    return width * height * length;
+}
+
+qreal ActionController::ovenVolume(const qreal width,
+                                   const qreal height1,
+                                   const qreal height2,
+                                   const qreal length) const
+{
+    const qreal small = std::min(height1, height2);
+    const qreal big = std::max(height1, height2);
+    const qreal triangleHeight = big - small;
+
+    return ((small * length) + ((triangleHeight * length) / 2)) * width;
+}
+
 void ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,

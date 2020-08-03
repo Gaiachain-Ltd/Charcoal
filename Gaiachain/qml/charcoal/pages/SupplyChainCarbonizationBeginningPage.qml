@@ -16,6 +16,26 @@ Pages.SupplyChainPageBase {
     id: top
 
     property var ovenDimensions: []
+    property string volume: value
+
+    onOvenDimensionsChanged: {
+        console.log("Oven dimensions length:", ovenDimensions.length)
+
+        volume = ""
+
+        if (ovenDimensions.length === 3) {
+            volume = dataManager.actionController.ovenVolume(
+                        parseFloat(ovenDimensions[0]),
+                        parseFloat(ovenDimensions[1]),
+                        parseFloat(ovenDimensions[2]))
+        } else if (ovenDimensions.length === 4) {
+            volume = dataManager.actionController.ovenVolume(
+                        parseFloat(ovenDimensions[0]),
+                        parseFloat(ovenDimensions[1]),
+                        parseFloat(ovenDimensions[2]),
+                        parseFloat(ovenDimensions[3]))
+        }
+    }
 
     title: Strings.carbonizationBeginning
 
@@ -26,7 +46,7 @@ Pages.SupplyChainPageBase {
                            && plotIdComboBox.currentText.length > 0
                            && (ovenTypeComboBox.ovenType === "2"
                                || (ovenTypeComboBox.ovenType === "1"
-                                   && ovenDimensionsHeader.isEmpty === false)))
+                                   && ovenDimensions.length === 4)))
 
     Component.onCompleted: refreshData()
 
@@ -45,9 +65,12 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
-        let dims = ovenTypeComboBox.ovenType === "2"?
-                dataManager.actionController.defaultOvenDimensions(ovenTypeComboBox.ovenIdNumber)
-              : ovenDimensionsHeader.values
+        let dims = ovenDimensions
+        let dimensionsString = dims[0] + " x " + dims[1] + " x " + dims[2]
+        if (dims.length === 4) {
+            dimensionsString += " x " + dims[3]
+        }
+        dimensionsString += "m"
 
         var summary = [
                     Utility.createSummaryItem(
@@ -55,9 +78,8 @@ Pages.SupplyChainPageBase {
                         [
                             [ ovenIdHeader.inputText ],
                             [ ovenTypeComboBox.currentText + " - "
-                             + dims[0] + " x "
-                             + dims[1] + " x "
-                             + dims[2] + "m" ]
+                             + dimensionsString
+                            ]
                         ],
                         "", "",
                         GStyle.delegateHighlightColor3,
@@ -178,6 +200,15 @@ Pages.SupplyChainPageBase {
         popupTitle: Strings.selectOvenType
 
         model: dataManager.ovenTypesModel
+
+        onCurrentTextChanged: {
+            if (ovenType === "2") {
+                ovenDimensions = dataManager.actionController.defaultOvenDimensions(
+                            ovenIdNumber)
+            } else {
+                ovenDimensions = []
+            }
+        }
     }
 
     CharcoalHeaders.CharcoalButtonHeader {
@@ -188,15 +219,13 @@ Pages.SupplyChainPageBase {
         id: ovenDimensionsHeader
 
         Layout.fillWidth: true
-        forceBoldValue: true
-        //valueFontSize: s(GStyle.titlePixelSize)
 
         headerText: Strings.ovenDimensions
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
-        //enabled: ovenTypeComboBox.isTraditional
+        enabled: ovenTypeComboBox.isTraditional
 
-        text: Strings.set
+        text: Strings.set + (volume.length === 0? "" : (" " + volume + "m³"))
         extraText: ""
         iconVisible: false
 
@@ -207,30 +236,6 @@ Pages.SupplyChainPageBase {
                            "ovenDimensions": top.ovenDimensions
                        })
     }
-
-//    Headers.RowHeader {
-//        property bool isEmpty: true
-
-//        onValueChanged: {
-//            let emptyCheck = false;
-//            for (let value of values) {
-//                if (value.length === 0) {
-//                    emptyCheck = true
-//                    break
-//                }
-//            }
-
-//            isEmpty = emptyCheck
-//        }
-
-//        id: ovenDimensionsHeader
-//        Layout.fillWidth: true
-//        headerText: Strings.ovenDimensions
-//        helpButtonVisible: true
-//        helpText: Strings.carbonizationBeginningOvenDimensionsHelp
-//        titles: [ Strings.height, Strings.length, Strings.width ]
-//        enabled: ovenTypeComboBox.isTraditional
-//    }
 
     Common.PositionSourceHandler {
         id: gpsSource

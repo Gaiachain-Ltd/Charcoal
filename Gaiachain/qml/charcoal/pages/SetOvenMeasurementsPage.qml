@@ -26,6 +26,11 @@ Pages.GPage {
     property int backToPage: Enums.Page.InvalidPage
 
     function proceed() {
+        ovenDimensions[0] = widthInput.text
+        ovenDimensions[1] = lengthInput.text
+        ovenDimensions[2] = height1Input.text
+        ovenDimensions[3] = height2Input.text
+
         pageManager.backTo(backToPage, {
                                "ovenDimensions": ovenDimensions
                            })
@@ -33,6 +38,12 @@ Pages.GPage {
 
     function backToHomeHandler() {
         pageManager.back()
+    }
+
+    DoubleValidator {
+        id: dimensionValidator
+        top: 1000
+        bottom: 0
     }
 
     ColumnLayout {
@@ -66,6 +77,11 @@ Pages.GPage {
                 width: flickable.width
                 spacing: s(GStyle.smallMargin)
 
+                Item {
+                    width: 1
+                    height: s(GStyle.bigMargin)
+                }
+
                 GridLayout {
                     readonly property int padding: s(GStyle.bigMargin)
 
@@ -79,32 +95,40 @@ Pages.GPage {
                     Items.GInput {
                         id: widthInput
                         Layout.fillWidth: true
+                        validator: dimensionValidator
                         placeholderText: Strings.widthPlaceholder
                         borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
+                        borderWidth: activeFocus? sr(2) : sr(1)
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Width
                     }
 
                     Items.GInput {
                         id: lengthInput
                         Layout.fillWidth: true
+                        validator: dimensionValidator
                         placeholderText: Strings.lengthPlaceholder
                         borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
+                        borderWidth: activeFocus? sr(2) : sr(1)
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Length
                     }
 
                     Items.GInput {
                         id: height1Input
                         Layout.fillWidth: true
+                        validator: dimensionValidator
                         placeholderText: Strings.height1Placeholder
                         borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
+                        borderWidth: activeFocus? sr(2) : sr(1)
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Height1
                     }
 
                     Items.GInput {
                         id: height2Input
                         Layout.fillWidth: true
+                        validator: dimensionValidator
                         placeholderText: Strings.height2Placeholder
                         borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
+                        borderWidth: activeFocus? sr(2) : sr(1)
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Height2
                     }
                 }
@@ -137,7 +161,7 @@ Pages.GPage {
 
             text: Strings.proceed
 
-            onClicked: top.proceed()
+            onClicked: root.proceed()
         }
     }
 }

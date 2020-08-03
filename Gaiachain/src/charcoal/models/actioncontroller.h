@@ -50,6 +50,13 @@ public:
 
     Q_INVOKABLE QString nextOvenNumber(int parentEntityId) const;
     Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenId) const;
+    Q_INVOKABLE qreal ovenVolume(const qreal width,
+                                 const qreal height,
+                                 const qreal length) const;
+    Q_INVOKABLE qreal ovenVolume(const qreal width,
+                                 const qreal height1,
+                                 const qreal height2,
+                                 const qreal length) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,
