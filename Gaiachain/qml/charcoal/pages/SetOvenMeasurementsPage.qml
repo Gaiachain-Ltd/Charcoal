@@ -64,19 +64,23 @@ Pages.GPage {
             Column {
                 id: content
                 width: flickable.width
-                padding: s(GStyle.bigMargin)
                 spacing: s(GStyle.smallMargin)
 
                 GridLayout {
-                    width: content.width
+                    readonly property int padding: s(GStyle.bigMargin)
+
+                    width: content.width - (2*padding)
                     columns: 2
                     columnSpacing: s(GStyle.middleMargin)
                     rowSpacing: columnSpacing
+
+                    anchors.horizontalCenter: parent.horizontalCenter
 
                     Items.GInput {
                         id: widthInput
                         Layout.fillWidth: true
                         placeholderText: Strings.widthPlaceholder
+                        borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Width
                     }
 
@@ -84,6 +88,7 @@ Pages.GPage {
                         id: lengthInput
                         Layout.fillWidth: true
                         placeholderText: Strings.lengthPlaceholder
+                        borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Length
                     }
 
@@ -91,6 +96,7 @@ Pages.GPage {
                         id: height1Input
                         Layout.fillWidth: true
                         placeholderText: Strings.height1Placeholder
+                        borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Height1
                     }
 
@@ -98,6 +104,7 @@ Pages.GPage {
                         id: height2Input
                         Layout.fillWidth: true
                         placeholderText: Strings.height2Placeholder
+                        borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
                         onActiveFocusChanged: if (activeFocus) image.selectedDimension = TrapezoidOvenItem.Height2
                     }
                 }
@@ -105,7 +112,12 @@ Pages.GPage {
                 TrapezoidOvenItem {
                     id: image
                     width: flickable.width
-                    height: 300
+                    height: 350
+
+                    ovenWidth: widthInput.text
+                    ovenLength: lengthInput.text
+                    ovenHeight1: height1Input.text
+                    ovenHeight2: height2Input.text
                 }
             }
         }

@@ -17,6 +17,8 @@ void TrapezoidOvenItem::paint(QPainter *painter)
 {
     painter->save();
 
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
     QPen fgPen = painter->pen();
     fgPen.setWidth(2);
     fgPen.setCapStyle(Qt::PenCapStyle::RoundCap);
@@ -25,8 +27,11 @@ void TrapezoidOvenItem::paint(QPainter *painter)
 
     QPen bgPen(fgPen);
     bgPen.setColor(backgroundColor);
+    bgPen.setWidth(1);
+
     QPen selectionPen(fgPen);
     selectionPen.setColor(selectionColor);
+    selectionPen.setWidth(3);
 
     const auto boundingRectangle(boundingRect());
     const auto points = getPoints(boundingRectangle);
@@ -92,9 +97,16 @@ void TrapezoidOvenItem::paint(QPainter *painter)
         }
     }
 
-    const auto textAnchors = getTextAnchors(points);
+    QFont font = painter->font();
+    font.setFamily("PublicSans");
+    font.setPixelSize(18);
+    font.setBold(true);
+    painter->setFont(font);
+
+    const auto textAnchors = getTextAnchors(points, font.pixelSize());
+    const QString measurement("%1 m");
     Dimension dimension = Dimension::Width;
-    char text('A');
+    char currentLetter('A');
     for (const QPointF &point : textAnchors) {
         if (dimension == m_selectedDimension) {
             painter->setPen(selectionPen);
@@ -102,17 +114,61 @@ void TrapezoidOvenItem::paint(QPainter *painter)
             painter->setPen(bgPen);
         }
 
-        painter->drawText(point, QChar(text));
+        QString text(currentLetter);
+        switch (currentLetter) {
+        case 'A':
+            if (ovenWidth().isEmpty() == false) {
+                text = measurement.arg(ovenWidth());
+            }
+            break;
+        case 'B':
+            if (ovenLength().isEmpty() == false) {
+                text = measurement.arg(ovenLength());
+            }
+            break;
+        case 'C':
+            if (ovenHeight1().isEmpty() == false) {
+                text = measurement.arg(ovenHeight1());
+            }
+            break;
+        case 'D':
+            if (ovenHeight2().isEmpty() == false) {
+                text = measurement.arg(ovenHeight2());
+            }
+            break;
+        }
 
-        text++;
+        painter->drawText(point, text);
+
+        currentLetter++;
         dimension = Dimension(int(dimension) + 1);
     }
 
     painter->restore();
 }
 
+QString TrapezoidOvenItem::ovenWidth() const
+{
+    return m_ovenWidth;
+}
+
+QString TrapezoidOvenItem::ovenLength() const
+{
+    return m_ovenLength;
+}
+
+QString TrapezoidOvenItem::ovenHeight1() const
+{
+    return m_ovenHeight1;
+}
+
+QString TrapezoidOvenItem::ovenHeight2() const
+{
+    return m_ovenHeight2;
+}
+
 void TrapezoidOvenItem::setSelectedDimension(
-    const TrapezoidOvenItem::Dimension selectedDimension)
+        const TrapezoidOvenItem::Dimension selectedDimension)
 {
     if (m_selectedDimension == selectedDimension)
         return;
@@ -122,9 +178,49 @@ void TrapezoidOvenItem::setSelectedDimension(
     update();
 }
 
+void TrapezoidOvenItem::setOvenWidth(const QString ovenWidth)
+{
+    if (m_ovenWidth == ovenWidth)
+        return;
+
+    m_ovenWidth = ovenWidth;
+    emit ovenWidthChanged(m_ovenWidth);
+    update();
+}
+
+void TrapezoidOvenItem::setOvenLength(const QString ovenLength)
+{
+    if (m_ovenLength == ovenLength)
+        return;
+
+    m_ovenLength = ovenLength;
+    emit ovenLengthChanged(m_ovenLength);
+    update();
+}
+
+void TrapezoidOvenItem::setOvenHeight1(const QString ovenHeight1)
+{
+    if (m_ovenHeight1 == ovenHeight1)
+        return;
+
+    m_ovenHeight1 = ovenHeight1;
+    emit ovenHeight1Changed(m_ovenHeight1);
+    update();
+}
+
+void TrapezoidOvenItem::setOvenHeight2(const QString ovenHeight2)
+{
+    if (m_ovenHeight2 == ovenHeight2)
+        return;
+
+    m_ovenHeight2 = ovenHeight2;
+    emit ovenHeight2Changed(m_ovenHeight2);
+    update();
+}
+
 PointList TrapezoidOvenItem::getPoints(const QRectF &boundingRectangle) const
 {
-    PointList result(pointsCount);
+    PointList result;
 
     const auto width = boundingRectangle.width();
     const auto height = boundingRectangle.height();
@@ -164,6 +260,8 @@ PointList TrapezoidOvenItem::getPoints(const QRectF &boundingRectangle) const
         }
     }
 
+    Q_ASSERT(result.length() == pointsCount);
+
     return result;
 }
 
@@ -171,25 +269,35 @@ PointList TrapezoidOvenItem::getPoints(const QRectF &boundingRectangle) const
  * Based on list of \a points, prepares coordinates where dimension numbers
  * should be drawn.
  */
-PointList TrapezoidOvenItem::getTextAnchors(const PointList &points) const
+PointList TrapezoidOvenItem::getTextAnchors(const PointList &points,
+                                            const int fontSize) const
 {
-    PointList result(4);
+    PointList result;
 
     QPointF a = QLineF(points.at(0), points.at(4)).center();
     QPointF b = QLineF(points.at(2), points.at(3)).center();
     QPointF c = QLineF(points.at(0), points.at(3)).center();
     QPointF d = QLineF(points.at(1), points.at(2)).center();
 
-    const int padding = 10;
-    a.setX(a.x() - padding);
-    b.setY(b.y() + padding);
-    c.setX(c.x() - padding);
-    d.setX(d.x() + padding);
+    const int padding = 14;
+    const int halfPadding = padding / 2;
+    a.setX(a.x() + halfPadding);
+    b.setY(b.y() - halfPadding);
+    c.setX(c.x() + halfPadding);
+    d.setX(d.x() + halfPadding);
+
+    const int vCenter = fontSize / 2;
+    a.setY(a.y() + vCenter);
+    //b.setY(b.y() + vCenter);
+    c.setY(c.y() + vCenter);
+    d.setY(d.y() + vCenter);
 
     result.append(a);
     result.append(b);
     result.append(c);
     result.append(d);
+
+    Q_ASSERT(result.length() == 4);
 
     return result;
 }
