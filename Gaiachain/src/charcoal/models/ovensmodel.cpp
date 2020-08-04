@@ -92,7 +92,7 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
     }
     case OvenRole::SecondRow:
     {
-        const int carbId(query().value("carbonizationBeginning").toInt());
+        const int carbId(query().value(Tags::carbonizationBeginning).toInt());
         QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
         q.prepare("SELECT eventDate FROM Events WHERE id=:carbonizationBeginning");
         q.bindValue(":carbonizationBeginning", carbId);

@@ -307,8 +307,6 @@ QVariantList TrackingModel::summaryForHarvest(
         QVariantList ovenHeaders = {
             tr("Width"),
             tr("Length"),
-            tr("Height A"),
-            tr("Height B")
         };
 
         QString unit(" m");
@@ -320,8 +318,11 @@ QVariantList TrackingModel::summaryForHarvest(
         };
 
         if (oven.dimensions.count() == 3) {
-            ovenHeaders.removeLast();
+            ovenHeaders.append(tr("Height"));
             ovenValues.removeLast();
+        } else {
+            ovenHeaders.append(tr("Height A"));
+            ovenHeaders.append(tr("Height B"));
         }
 
         QVariantList ovenSummary;

@@ -83,13 +83,13 @@ Oven Event::loadOven(const QString &connectionName) const
     oven.dimensions.length = q.value(Tags::webOvenLength).toReal();
     oven.carbonizerId = userId;
 
-    const QVariant beginningEvent(q.value("carbonizationBeginning"));
+    const QVariant beginningEvent(q.value(Tags::carbonizationBeginning));
     if (beginningEvent.isValid() && beginningEvent.toInt() == id) {
         oven.carbonizationBeginningId = id;
         oven.carbonizationBeginning = date;
     }
 
-    const QVariant endingEvent(q.value("carbonizationEnding"));
+    const QVariant endingEvent(q.value(Tags::carbonizationEnding));
     if (endingEvent.isValid() && endingEvent.toInt() == id) {
         oven.carbonizationEndingId = id;
         oven.carbonizationEnding = date;
