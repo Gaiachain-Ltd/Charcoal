@@ -65,12 +65,11 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
-        let dims = ovenDimensions
-        let dimensionsString = dims[0] + " x " + dims[1] + " x " + dims[2]
-        if (dims.length === 4) {
-            dimensionsString += " x " + dims[3]
+        let dims = []
+
+        for (let dim in ovenDimensions) {
+            dims.push(dim + " m")
         }
-        dimensionsString += "m"
 
         var summary = [
                     Utility.createSummaryItem(
@@ -93,12 +92,11 @@ Pages.SupplyChainPageBase {
         if (dims.length === 4) {
             let row1 = [ ovenDimensionsHeader.titles[0], ovenDimensionsHeader.titles[1] ]
             let row2 = [ ovenDimensionsHeader.titles[2], ovenDimensionsHeader.titles[3] ]
+            let val1 = [ dims[0], dims[1] ]
+            let val2 = [ dims[2], dims[3] ]
             summary.push(Utility.createSummaryItem(
                              "",
-                             [
-                                 row1,
-                                 dims
-                             ],
+                             [ row1, val1 ],
                              "", "",
                              GStyle.delegateHighlightColor3,
                              GStyle.fontHighlightColor3,
@@ -107,10 +105,7 @@ Pages.SupplyChainPageBase {
                              false),
                          Utility.createSummaryItem(
                              "",
-                             [
-                                 row2,
-                                 dims
-                             ],
+                             [ row2, val2 ],
                              "", "",
                              GStyle.delegateHighlightColor3,
                              GStyle.fontHighlightColor3,
@@ -121,10 +116,7 @@ Pages.SupplyChainPageBase {
         } else {
             summary.push(Utility.createSummaryItem(
                              "",
-                             [
-                                 ovenDimensionsHeader.titles,
-                                 dims
-                             ],
+                             [ ovenDimensionsHeader.titles, dims ],
                              "", "",
                              GStyle.delegateHighlightColor3,
                              GStyle.fontHighlightColor3,

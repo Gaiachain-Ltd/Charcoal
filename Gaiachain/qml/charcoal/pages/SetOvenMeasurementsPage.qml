@@ -96,6 +96,7 @@ Pages.GPage {
                         id: widthInput
                         Layout.fillWidth: true
                         validator: dimensionValidator
+                        nextInput: lengthInput
                         placeholderText: Strings.widthPlaceholder
                         borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
                         borderWidth: activeFocus? sr(2) : sr(1)
@@ -106,6 +107,7 @@ Pages.GPage {
                         id: lengthInput
                         Layout.fillWidth: true
                         validator: dimensionValidator
+                        nextInput: height1Input
                         placeholderText: Strings.lengthPlaceholder
                         borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
                         borderWidth: activeFocus? sr(2) : sr(1)
@@ -116,6 +118,7 @@ Pages.GPage {
                         id: height1Input
                         Layout.fillWidth: true
                         validator: dimensionValidator
+                        nextInput: height2Input
                         placeholderText: Strings.height1Placeholder
                         borderColor: activeFocus? GStyle.statusGreen : GStyle.inputBorderColor
                         borderWidth: activeFocus? sr(2) : sr(1)
