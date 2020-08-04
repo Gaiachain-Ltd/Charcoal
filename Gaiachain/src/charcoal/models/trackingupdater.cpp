@@ -357,7 +357,7 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
             };
 
             const bool isDefault = ovenTypeId == CharcoalDbHelpers::metalOvenType;
-            QVariantList defaultDims;
+            OvenDimensions defaultDims;
             if (isDefault) {
                 defaultDims = CharcoalDbHelpers::defaultOvenDimensions(
                     m_connectionName, ovenTypeId);
@@ -379,7 +379,7 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
 
             QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
             q.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
-                      "oven_height, oven_height, oven_width, oven_length) "
+                      "oven_height, oven_height2, oven_width, oven_length) "
                       "VALUES (:type, :plot, :event, :name, "
                       ":height, :height2, :width, :length)");
             q.bindValue(":type", ovenTypeId);
@@ -388,9 +388,10 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
             q.bindValue(":name", ovenName);
 
             if (isDefault) {
-                q.bindValue(":height", defaultDims.at(0));
-                q.bindValue(":length", defaultDims.at(1));
-                q.bindValue(":width", defaultDims.at(2));
+                q.bindValue(":height", defaultDims.height1);
+                q.bindValue(":height2", defaultDims.height2);
+                q.bindValue(":length", defaultDims.length);
+                q.bindValue(":width", defaultDims.width);
             } else {
                 q.bindValue(":height", height);
                 q.bindValue(":height2", height2);

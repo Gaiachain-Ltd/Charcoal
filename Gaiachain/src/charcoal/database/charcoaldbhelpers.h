@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/enums.h"
+#include "charcoal/models/dbobjects.h"
 
 #include <QHash>
 #include <QString>
@@ -36,7 +37,7 @@ public:
                                                const int id);
     static Enums::SupplyChainAction actionByName(const QString &actionName);
     static int bagCountInTransport(const QString &connectionName, const int id);
-    static QVariantList defaultOvenDimensions(const QString &connectionName,
+    static OvenDimensions defaultOvenDimensions(const QString &connectionName,
                                               const int ovenId);
 
     static QJsonObject dbPropertiesToJson(const QString &properties);

@@ -5,7 +5,32 @@
 #include <QJsonObject>
 #include <QGeoCoordinate>
 
+#include <QDebug>
+
 class QSqlQuery;
+
+class OvenDimensions
+{
+    Q_GADGET
+
+    Q_PROPERTY(qreal width MEMBER width)
+    Q_PROPERTY(qreal length MEMBER length)
+    Q_PROPERTY(qreal height1 MEMBER height1)
+    Q_PROPERTY(qreal height2 MEMBER height2)
+
+public:
+    qreal height1 = -1.0;
+    qreal height2 = -1.0;
+    qreal width = -1.0;
+    qreal length = -1.0;
+
+    Q_INVOKABLE int count() const;
+    Q_INVOKABLE qreal volume() const;
+};
+
+Q_DECLARE_METATYPE(OvenDimensions)
+
+QDebug operator<<(QDebug debug, const OvenDimensions &dims);
 
 struct Event;
 struct Oven {
@@ -17,14 +42,8 @@ struct Oven {
     qint64 carbonizationBeginning = -1;
     qint64 carbonizationEnding = -1;
     QString name;
-    float height1 = -1.0;
-    float height2 = -1.0;
-    float width = -1.0;
-    float length = -1.0;
-
     QString carbonizerId;
-
-    float volume() const;
+    OvenDimensions dimensions;
 
     void updateDates(const Oven &other, const Event &otherEvent);
 };

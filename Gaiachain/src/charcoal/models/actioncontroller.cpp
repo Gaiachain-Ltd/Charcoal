@@ -309,9 +309,15 @@ QString ActionController::nextOvenNumber(int parentEntityId) const
     return QString();
 }
 
-QVariantList ActionController::defaultOvenDimensions(const int ovenId) const
+OvenDimensions ActionController::defaultOvenDimensions(const int ovenId) const
 {
     return CharcoalDbHelpers::defaultOvenDimensions(m_connectionName, ovenId);
+}
+
+OvenDimensions ActionController::emptyOvenDimensions() const
+{
+    OvenDimensions result;
+    return result;
 }
 
 qreal ActionController::ovenVolume(const qreal width, const qreal height,
@@ -456,7 +462,7 @@ void ActionController::registerCarbonizationBeginning(
     const int plotDbId,
     const QString &ovenId,
     const int ovenIdNumber,
-    const QVariantList &ovenDimensions) const
+    const OvenDimensions &ovenDimensions) const
 {
     /*
      * Algorithm is:
@@ -524,7 +530,7 @@ void ActionController::registerCarbonizationBeginning(
     // Get proper oven dimensions
     const Enums::OvenType ovenType = CharcoalDbHelpers::getOvenType(
         m_connectionName, ovenIdNumber);
-    QVariantList dimensions;
+    OvenDimensions dimensions;
     if (ovenType == Enums::OvenType::Metallic) {
         dimensions = defaultOvenDimensions(ovenIdNumber);
     } else {
@@ -537,12 +543,12 @@ void ActionController::registerCarbonizationBeginning(
         { Tags::webOvenId, ovenId }
     };
 
-    // TODO: we really need a dedicated struct for oven dimensions!
     if (ovenType != Enums::OvenType::Metallic) {
-        properties.insert(Tags::webOvenHeight, dimensions.at(0).toDouble());
-        properties.insert(Tags::webOvenLength, dimensions.at(1).toDouble());
-        properties.insert(Tags::webOvenWidth, dimensions.at(2).toDouble());
-        properties.insert(Tags::webOvenHeight2, dimensions.at(3).toDouble());
+        properties.insert(Tags::webOvenHeight, dimensions.height1);
+        properties.insert(Tags::webOvenHeight2, dimensions.height2);
+        properties.insert(Tags::webOvenLength, dimensions.length);
+        properties.insert(Tags::webOvenWidth, dimensions.width);
+        properties.insert(Tags::webOvenVolume, dimensions.volume());
     }
 
     if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
@@ -562,11 +568,10 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
     query.bindValue(":name", ovenId);
-    // Height, length, width is the order from GUI
-    query.bindValue(":height", dimensions.at(0).toDouble());
-    query.bindValue(":length", dimensions.at(1).toDouble());
-    query.bindValue(":width", dimensions.at(2).toDouble());
-    query.bindValue(":height2", dimensions.at(3).toDouble());
+    query.bindValue(":height", dimensions.height1);
+    query.bindValue(":height2", dimensions.height2);
+    query.bindValue(":length", dimensions.length);
+    query.bindValue(":width", dimensions.width);
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")

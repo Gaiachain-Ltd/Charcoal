@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.items 1.0
 
 import "../../common" as Common
 import "../../headers" as Headers
@@ -15,27 +16,7 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
-    property var ovenDimensions: []
-    property string volume: value
-
-    onOvenDimensionsChanged: {
-        console.log("Oven dimensions length:", ovenDimensions.length)
-
-        volume = ""
-
-        if (ovenDimensions.length === 3) {
-            volume = dataManager.actionController.ovenVolume(
-                        parseFloat(ovenDimensions[0]),
-                        parseFloat(ovenDimensions[1]),
-                        parseFloat(ovenDimensions[2]))
-        } else if (ovenDimensions.length === 4) {
-            volume = dataManager.actionController.ovenVolume(
-                        parseFloat(ovenDimensions[0]),
-                        parseFloat(ovenDimensions[1]),
-                        parseFloat(ovenDimensions[2]),
-                        parseFloat(ovenDimensions[3]))
-        }
-    }
+    property var ovenDimensions: dataManager.actionController.emptyOvenDimensions
 
     title: Strings.carbonizationBeginning
 
@@ -46,7 +27,7 @@ Pages.SupplyChainPageBase {
                            && plotIdComboBox.currentText.length > 0
                            && (ovenTypeComboBox.ovenType === "2"
                                || (ovenTypeComboBox.ovenType === "1"
-                                   && ovenDimensions.length === 4)))
+                                   && ovenDimensions.count() === 4)))
 
     Component.onCompleted: refreshData()
 
@@ -66,9 +47,13 @@ Pages.SupplyChainPageBase {
 
     function summary() {
         let dims = []
+        let unit = " m";
 
-        for (let dim in ovenDimensions) {
-            dims.push(dim + " m")
+        dims.push(ovenDimensions.width + unit)
+        dims.push(ovenDimensions.length + unit)
+        dims.push(ovenDimensions.height1 + unit)
+        if (ovenDimensions.count() === 4) {
+            dims.push(ovenDimensions.height2 + unit)
         }
 
         var summary = [
@@ -78,7 +63,7 @@ Pages.SupplyChainPageBase {
                             [ ovenIdHeader.inputText ],
                             [ ovenTypeComboBox.currentText
                              + " - "
-                             + volume + " m³"
+                             + ovenDimensions.volume() + " m³"
                             ]
                         ],
                         "", "",
@@ -89,7 +74,7 @@ Pages.SupplyChainPageBase {
                         false)
                 ]
 
-        if (dims.length === 4) {
+        if (ovenDimensions.count() === 4) {
             let row1 = [ ovenDimensionsHeader.titles[0], ovenDimensionsHeader.titles[1] ]
             let row2 = [ ovenDimensionsHeader.titles[2], ovenDimensionsHeader.titles[3] ]
             let val1 = [ dims[0], dims[1] ]
@@ -174,7 +159,7 @@ Pages.SupplyChainPageBase {
                     plotIdComboBox.currentId,
                     ovenIdHeader.inputText,
                     ovenTypeComboBox.ovenIdNumber,
-                    ovenDimensionsHeader.values)
+                    ovenDimensions)
 
         pageManager.enter(Enums.Page.MainMenu)
     }
@@ -238,15 +223,15 @@ Pages.SupplyChainPageBase {
                 ovenDimensions = dataManager.actionController.defaultOvenDimensions(
                             ovenIdNumber)
             } else {
-                ovenDimensions = []
+                ovenDimensions = dataManager.actionController.emptyOvenDimensions
             }
         }
     }
 
     CharcoalHeaders.CharcoalButtonHeader {
-        property var titles: ovenTypeComboBox.isTraditional?
-            [ Strings.length, Strings.width, Strings.heightA, Strings.heightB ]
-            : [ Strings.height, Strings.length, Strings.width ]
+        property var titles: (ovenTypeComboBox.ovenType === "2")?
+             [ Strings.width, Strings.length, Strings.height ]
+           : [ Strings.width, Strings.length, Strings.heightA, Strings.heightB ]
 
         id: ovenDimensionsHeader
 
@@ -257,7 +242,8 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
         enabled: ovenTypeComboBox.isTraditional
 
-        text: Strings.set + (volume.length === 0? "" : (" " + volume + "m³"))
+        text: Strings.set + (ovenDimensions.volume() < 0?
+                                 "" : (" " + ovenDimensions.volume() + "m³"))
         extraText: ""
         iconVisible: false
 

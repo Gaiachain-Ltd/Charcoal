@@ -22,14 +22,14 @@ Pages.GPage {
     property alias proceedButtonEnabled: proceedButton.enabled
     property alias proceedButtonText: proceedButton.text
 
-    property var ovenDimensions: []
+    property var ovenDimensions: dataManager.actionController.emptyOvenDimensions
     property int backToPage: Enums.Page.InvalidPage
 
     function proceed() {
-        ovenDimensions[0] = widthInput.text
-        ovenDimensions[1] = lengthInput.text
-        ovenDimensions[2] = height1Input.text
-        ovenDimensions[3] = height2Input.text
+        ovenDimensions.width = parseFloat(widthInput.text)
+        ovenDimensions.length = parseFloat(lengthInput.text)
+        ovenDimensions.height1 = parseFloat(height1Input.text)
+        ovenDimensions.height2 = parseFloat(height2Input.text)
 
         pageManager.backTo(backToPage, {
                                "ovenDimensions": ovenDimensions
