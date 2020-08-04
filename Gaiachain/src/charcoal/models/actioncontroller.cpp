@@ -317,7 +317,7 @@ QVariantList ActionController::defaultOvenDimensions(const int ovenId) const
 qreal ActionController::ovenVolume(const qreal width, const qreal height,
                                    const qreal length) const
 {
-    return width * height * length;
+    return CharcoalDbHelpers::ovenVolume(width, length, height);
 }
 
 qreal ActionController::ovenVolume(const qreal width,
@@ -325,11 +325,7 @@ qreal ActionController::ovenVolume(const qreal width,
                                    const qreal height2,
                                    const qreal length) const
 {
-    const qreal small = std::min(height1, height2);
-    const qreal big = std::max(height1, height2);
-    const qreal triangleHeight = big - small;
-
-    return ((small * length) + ((triangleHeight * length) / 2)) * width;
+    return CharcoalDbHelpers::ovenVolume(width, length, height1, height2);
 }
 
 void ActionController::registerLoggingBeginning(

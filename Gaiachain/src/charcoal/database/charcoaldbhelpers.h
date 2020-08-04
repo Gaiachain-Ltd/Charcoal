@@ -25,6 +25,9 @@ struct ContinueEvent {
 class CharcoalDbHelpers
 {
 public:
+    static qreal ovenVolume(
+        const qreal width, const qreal length, const qreal height1, const qreal height2 = -1.0);
+
     static QString propertiesToString(const QVariantMap &properties);
     static QString getPlotName(const QString &packageName);
     static QString getHarvestName(const QString &packageName);

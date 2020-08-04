@@ -17,13 +17,14 @@ struct Oven {
     qint64 carbonizationBeginning = -1;
     qint64 carbonizationEnding = -1;
     QString name;
-    float height = -1.0;
+    float height1 = -1.0;
+    float height2 = -1.0;
     float width = -1.0;
     float length = -1.0;
 
     QString carbonizerId;
 
-    float volume() const { return height * width * length; }
+    float volume() const;
 
     void updateDates(const Oven &other, const Event &otherEvent);
 };

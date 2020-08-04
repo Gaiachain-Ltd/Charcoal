@@ -331,7 +331,7 @@ QVariantList TrackingModel::summaryForHarvest(
                     tr("Width")
                 },
                 QVariantList {
-                    oven.height,
+                    oven.height1,
                     oven.length,
                     oven.width
                 }

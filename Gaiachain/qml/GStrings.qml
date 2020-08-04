@@ -189,6 +189,8 @@ QtObject {
     property string height: tr.empty + qsTr("height")
     property string length: tr.empty + qsTr("length")
     property string width: tr.empty + qsTr("width")
+    property string heightA: tr.empty + qsTr("height A")
+    property string heightB: tr.empty + qsTr("height B")
 
     // Help
     property string helpTitle: tr.empty + qsTr("What is %1?")

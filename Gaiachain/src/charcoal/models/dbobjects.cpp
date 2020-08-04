@@ -3,11 +3,16 @@
 #include "common/logs.h"
 #include "common/tags.h"
 #include "database/dbhelpers.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
 
 #include <QJsonDocument>
+
+float Oven::volume() const {
+    return CharcoalDbHelpers::ovenVolume(width, length, height1, height2);
+}
 
 void Oven::updateDates(const Oven &other, const Event &otherEvent)
 {
@@ -48,7 +53,7 @@ Oven Event::loadOven(const QString &connectionName) const
     oven.typeId = q.value(Tags::type).toInt();
     oven.plotId = q.value(Tags::plot).toInt();
     oven.name = q.value(Tags::name).toString();
-    oven.height = q.value(Tags::webOvenHeight).toReal();
+    oven.height1 = q.value(Tags::webOvenHeight).toReal();
     oven.width = q.value(Tags::webOvenWidth).toReal();
     oven.length = q.value(Tags::webOvenLength).toReal();
     oven.carbonizerId = userId;

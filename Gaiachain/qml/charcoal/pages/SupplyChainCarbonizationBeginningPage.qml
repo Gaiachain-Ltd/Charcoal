@@ -77,8 +77,10 @@ Pages.SupplyChainPageBase {
                         Strings.ovenId,
                         [
                             [ ovenIdHeader.inputText ],
-                            [ ovenTypeComboBox.currentText + " - "
-                             + dimensionsString
+                            [ ovenTypeComboBox.currentText
+                             + " - "
+                             + volume + " m³"
+                             //+ dimensionsString
                             ]
                         ],
                         "", "",
@@ -86,6 +88,18 @@ Pages.SupplyChainPageBase {
                         GStyle.fontHighlightColor3,
                         GStyle.fontHighlightColor3,
                         Enums.DelegateType.Column,
+                        false),
+                    Utility.createSummaryItem(
+                        "",
+                        [
+                            ovenDimensionsHeader.titles,
+                            dims
+                        ],
+                        "", "",
+                        GStyle.delegateHighlightColor3,
+                        GStyle.fontHighlightColor3,
+                        GStyle.fontHighlightColor3,
+                        Enums.DelegateType.Row,
                         true),
                     Utility.createSummaryItem(
                         Strings.harvestId,
@@ -116,15 +130,6 @@ Pages.SupplyChainPageBase {
                             Qt.locale(), Strings.dateFormat)),
                     Utility.createSummaryItem(Strings.ovenType,
                                               ovenTypeComboBox.currentText),
-                    Utility.createSummaryItem(
-                        Strings.ovenDimensions,
-                        [
-                            ovenDimensionsHeader.titles,
-                            dims
-                        ],
-                        "", "",
-                        "", "", "",
-                        Enums.DelegateType.Row),
                     Utility.createSummaryItem(Strings.gpsCoordinates,
                                               gpsSource.coordinateString)
                 ]
@@ -213,7 +218,7 @@ Pages.SupplyChainPageBase {
 
     CharcoalHeaders.CharcoalButtonHeader {
         property var titles: ovenTypeComboBox.isTraditional?
-            [ Strings.height, Strings.length, Strings.width, Strings.height ]
+            [ Strings.length, Strings.width, Strings.heightA, Strings.heightB ]
             : [ Strings.height, Strings.length, Strings.width ]
 
         id: ovenDimensionsHeader

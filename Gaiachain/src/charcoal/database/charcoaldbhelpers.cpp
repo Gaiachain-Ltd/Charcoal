@@ -35,6 +35,20 @@ QHash<int, Enums::SupplyChainAction> CharcoalDbHelpers::m_supplyActionDbMap;
 QHash<int, Enums::PackageType> CharcoalDbHelpers::m_packageTypeDbMap;
 QHash<int, Enums::OvenType> CharcoalDbHelpers::m_ovenTypeDbMap;
 
+qreal CharcoalDbHelpers::ovenVolume(const qreal width, const qreal length,
+                                    const qreal height1, const qreal height2)
+{
+    if (height2 < 0) {
+        return width * height1 * length;
+    } else {
+        const qreal small = std::min(height1, height2);
+        const qreal big = std::max(height1, height2);
+        const qreal triangleHeight = big - small;
+
+        return ((small * length) + ((triangleHeight * length) / 2)) * width;
+    }
+}
+
 QString CharcoalDbHelpers::propertiesToString(const QVariantMap &properties)
 {
     return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);

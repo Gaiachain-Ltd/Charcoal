@@ -37,7 +37,8 @@ void OvensModel::setPlotId(const int id)
 {
     m_plotId = CharcoalDbHelpers::getParentEntityId(m_connectionName, id);
 
-    setDbQuery(QString("SELECT id, type, name, oven_height, oven_length, oven_width, "
+    setDbQuery(QString("SELECT id, type, name, "
+                       "oven_height, oven_height2, oven_length, oven_width, "
                        "carbonizationBeginning "
                        "FROM Ovens WHERE carbonizationEnding IS NULL "
                        "AND plot=%1").arg(m_plotId));
@@ -75,11 +76,19 @@ QVariant OvensModel::data(const QModelIndex &index, int role) const
             m_connectionName, ovenTypeId);
         const bool isMetallic = (type == Enums::OvenType::Metallic);
 
-        return tr("%1 - %2 x %3 x %4m")
+        const qreal width = query().value(Tags::webOvenWidth).toReal();
+        const qreal length = query().value(Tags::webOvenLength).toReal();
+        const qreal height1 = query().value(Tags::webOvenHeight).toReal();
+        const qreal height2 = query().value(Tags::webOvenHeight2).isNull()?
+            -1 : query().value(Tags::webOvenHeight2).toReal();
+
+        const qreal volume = CharcoalDbHelpers::ovenVolume(
+            width, length, height1, height2
+            );
+
+        return tr("%1 - %2 m³")
             .arg(isMetallic? tr("Metallic oven") : tr("Traditional oven"))
-            .arg(query().value(Tags::webOvenHeight).toString())
-            .arg(query().value(Tags::webOvenWidth).toString())
-            .arg(query().value(Tags::webOvenLength).toString());
+            .arg(volume);
     }
     case OvenRole::SecondRow:
     {
