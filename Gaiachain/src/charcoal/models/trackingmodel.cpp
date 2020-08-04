@@ -326,14 +326,16 @@ QVariantList TrackingModel::summaryForHarvest(
             tr("Oven measurement (meters)"),
             QVariantList {
                 QVariantList {
-                    tr("Height"),
+                    tr("Height A"),
                     tr("Length"),
-                    tr("Width")
+                    tr("Width"),
+                    tr("Height B")
                 },
                 QVariantList {
                     oven.height1,
                     oven.length,
-                    oven.width
+                    oven.width,
+                    oven.height2,
                 }
             },
             QString(), QString(), QString(), QString(), QString(),

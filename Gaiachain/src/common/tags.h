@@ -84,6 +84,7 @@ namespace Tags {
     const QLatin1String webOvenHeight2 = QLatin1String("oven_height2");
     const QLatin1String webOvenWidth = QLatin1String("oven_width");
     const QLatin1String webOvenLength = QLatin1String("oven_length");
+    const QLatin1String webOvenVolume = QLatin1String("oven_volume");
     const QLatin1String webBeginningDate = QLatin1String("beginning_date");
     const QLatin1String webEndingDate = QLatin1String("ending_date");
     const QLatin1String webEventDate = QLatin1String("event_date");

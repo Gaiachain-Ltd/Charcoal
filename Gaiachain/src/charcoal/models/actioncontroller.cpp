@@ -537,10 +537,12 @@ void ActionController::registerCarbonizationBeginning(
         { Tags::webOvenId, ovenId }
     };
 
+    // TODO: we really need a dedicated struct for oven dimensions!
     if (ovenType != Enums::OvenType::Metallic) {
         properties.insert(Tags::webOvenHeight, dimensions.at(0).toDouble());
         properties.insert(Tags::webOvenLength, dimensions.at(1).toDouble());
         properties.insert(Tags::webOvenWidth, dimensions.at(2).toDouble());
+        properties.insert(Tags::webOvenHeight2, dimensions.at(3).toDouble());
     }
 
     if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
@@ -553,8 +555,9 @@ void ActionController::registerCarbonizationBeginning(
     const QString eventId(query.lastInsertId().toString());
 
     query.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
-                  "oven_height, oven_width, oven_length) "
-                  "VALUES (:type, :plot, :event, :name, :height, :width, :length)");
+                  "oven_height, oven_height2, oven_width, oven_length) "
+                  "VALUES (:type, :plot, :event, :name, "
+                  ":height, :height2, :width, :length)");
     query.bindValue(":type", ovenIdNumber);
     query.bindValue(":plot", parentEntityId);
     query.bindValue(":event", eventId);
@@ -563,6 +566,7 @@ void ActionController::registerCarbonizationBeginning(
     query.bindValue(":height", dimensions.at(0).toDouble());
     query.bindValue(":length", dimensions.at(1).toDouble());
     query.bindValue(":width", dimensions.at(2).toDouble());
+    query.bindValue(":height2", dimensions.at(3).toDouble());
 
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")

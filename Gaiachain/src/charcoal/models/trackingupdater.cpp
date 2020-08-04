@@ -338,9 +338,13 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
                                                    .toObject());
             const double height = ovenMeasurements.value(Tags::webOvenHeight)
                                       .toDouble();
+            const double height2 = ovenMeasurements.value(Tags::webOvenHeight2)
+                                      .toDouble();
             const double width = ovenMeasurements.value(Tags::webOvenWidth)
                                      .toDouble();
             const double length = ovenMeasurements.value(Tags::webOvenLength)
+                                      .toDouble();
+            const double volume = ovenMeasurements.value(Tags::webOvenVolume)
                                       .toDouble();
 
             const int ovenTypeId = CharcoalDbHelpers::getOvenTypeIdFromName(
@@ -361,6 +365,8 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
                 properties.insert(Tags::webOvenHeight, height);
                 properties.insert(Tags::webOvenLength, length);
                 properties.insert(Tags::webOvenWidth, width);
+                properties.insert(Tags::webOvenHeight2, height2);
+                properties.insert(Tags::webOvenVolume, volume);
             }
 
             bool r = true;
@@ -373,9 +379,9 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
 
             QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
             q.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
-                      "oven_height, oven_width, oven_length) "
+                      "oven_height, oven_height, oven_width, oven_length) "
                       "VALUES (:type, :plot, :event, :name, "
-                      ":height, :width, :length)");
+                      ":height, :height2, :width, :length)");
             q.bindValue(":type", ovenTypeId);
             q.bindValue(":plot", plotEntityId);
             q.bindValue(":event", eventId);
@@ -387,6 +393,7 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
                 q.bindValue(":width", defaultDims.at(2));
             } else {
                 q.bindValue(":height", height);
+                q.bindValue(":height2", height2);
                 q.bindValue(":length", length);
                 q.bindValue(":width", width);
             }
