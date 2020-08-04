@@ -80,7 +80,6 @@ Pages.SupplyChainPageBase {
                             [ ovenTypeComboBox.currentText
                              + " - "
                              + volume + " m³"
-                             //+ dimensionsString
                             ]
                         ],
                         "", "",
@@ -88,19 +87,54 @@ Pages.SupplyChainPageBase {
                         GStyle.fontHighlightColor3,
                         GStyle.fontHighlightColor3,
                         Enums.DelegateType.Column,
-                        false),
-                    Utility.createSummaryItem(
-                        "",
-                        [
-                            ovenDimensionsHeader.titles,
-                            dims
-                        ],
-                        "", "",
-                        GStyle.delegateHighlightColor3,
-                        GStyle.fontHighlightColor3,
-                        GStyle.fontHighlightColor3,
-                        Enums.DelegateType.Row,
-                        true),
+                        false)
+                ]
+
+        if (dims.length === 4) {
+            let row1 = [ ovenDimensionsHeader.titles[0], ovenDimensionsHeader.titles[1] ]
+            let row2 = [ ovenDimensionsHeader.titles[2], ovenDimensionsHeader.titles[3] ]
+            summary.push(Utility.createSummaryItem(
+                             "",
+                             [
+                                 row1,
+                                 dims
+                             ],
+                             "", "",
+                             GStyle.delegateHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             Enums.DelegateType.Row,
+                             false),
+                         Utility.createSummaryItem(
+                             "",
+                             [
+                                 row2,
+                                 dims
+                             ],
+                             "", "",
+                             GStyle.delegateHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             Enums.DelegateType.Row,
+                             true),
+                         )
+        } else {
+            summary.push(Utility.createSummaryItem(
+                             "",
+                             [
+                                 ovenDimensionsHeader.titles,
+                                 dims
+                             ],
+                             "", "",
+                             GStyle.delegateHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             Enums.DelegateType.Row,
+                             true)
+                         )
+        }
+
+        summary.push(
                     Utility.createSummaryItem(
                         Strings.harvestId,
                         dataManager.actionController.generateHarvestId(
@@ -132,7 +166,8 @@ Pages.SupplyChainPageBase {
                                               ovenTypeComboBox.currentText),
                     Utility.createSummaryItem(Strings.gpsCoordinates,
                                               gpsSource.coordinateString)
-                ]
+                    )
+
         return summary
     }
 
