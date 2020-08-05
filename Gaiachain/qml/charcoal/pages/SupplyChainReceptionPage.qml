@@ -33,14 +33,15 @@ Pages.SupplyChainPageBase {
                 bagsMatch = dataManager.actionController.matchBags(
                             transportId, scannedQrs)
 
-                if (bagsMatch.fullMatch === false) {
-                    pageManager.enter(
-                                 Enums.Page.QrMismatchSummary,
-                                 {
-                                     "bagsMatch": bagsMatch
-                                 },
-                                 false)
-                }
+                // TODO: turn back on when QrMismatch feature is fully designed
+                //if (bagsMatch.fullMatch === false) {
+                //    pageManager.enter(
+                //                 Enums.Page.QrMismatchSummary,
+                //                 {
+                //                     "bagsMatch": bagsMatch
+                //                 },
+                //                 false)
+                //}
             } else {
                 transportName = ""
                 dataManager.minimumDateModel.plotId = -1
