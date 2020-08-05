@@ -42,6 +42,18 @@ public:
      * Transport.
      */
     QVariantList extraBags;
+
+    /*!
+     * List of bags scanned in Loading and Transport step.
+     */
+    QVariantList bagsFromTransport;
+
+    /*!
+     * List of bags scanned in Reception step.
+     */
+    QVariantList bagsFromReception;
+
+    Q_INVOKABLE QString matchStatusMessage() const;
 };
 
 Q_DECLARE_METATYPE(BagsMatch)

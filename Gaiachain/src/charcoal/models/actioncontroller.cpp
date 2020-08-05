@@ -20,6 +20,18 @@
 #include <QDateTime>
 #include <QDate>
 
+QString BagsMatch::matchStatusMessage() const
+{
+    const QString numbers(QObject::tr("%1 of %2").arg(bagsFromReception.size())
+                              .arg(bagsFromTransport.size()));
+
+    if (fullMatch) {
+        return numbers;
+    }
+
+    return QString();
+}
+
 ActionController::ActionController(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<BagsMatch>("BagsMatch");
@@ -192,7 +204,7 @@ int ActionController::bagCountInTransport(const int transportId) const
 }
 
 BagsMatch ActionController::matchBags(const int transportId,
-                                 QVariantList qrsFromReception)
+                                      QVariantList qrsFromReception)
 {
     BagsMatch result;
 
@@ -220,6 +232,8 @@ BagsMatch ActionController::matchBags(const int transportId,
 
     std::sort(qrsFromReception.begin(), qrsFromReception.end());
     std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
+    result.bagsFromTransport = qrsFromTransport;
+    result.bagsFromReception = qrsFromReception;
 
     if (qrsFromReception == qrsFromTransport) {
         result.fullMatch = true;

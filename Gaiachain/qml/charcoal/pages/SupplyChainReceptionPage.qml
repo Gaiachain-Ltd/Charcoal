@@ -97,7 +97,7 @@ Pages.SupplyChainPageBase {
         let recsIcon = "image://tickmark/receipt-" + hasRecs
 
         let bagCount = dataManager.actionController.bagCountInTransport(transportId)
-        let allBags = scannedQrs.length === bagCount
+        let allBagsMatch = (bagsMatch.fullMatch === true)
 
         var summary = [
                     Utility.createSummaryItem(
@@ -125,7 +125,7 @@ Pages.SupplyChainPageBase {
                                 hasRecs? Strings.approved : Strings.noPhoto
                             ],
                             [
-                                allBags? GStyle.checkGreenUrl : GStyle.warningUrl,
+                                allBagsMatch? GStyle.checkGreenUrl : GStyle.warningUrl,
                                 docsIcon,
                                 recsIcon
                             ],
