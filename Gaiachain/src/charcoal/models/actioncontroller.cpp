@@ -613,13 +613,17 @@ void ActionController::registerCarbonizationEnding(
         return;
     }
 
+    const int count = ovenIds.count();
+    quint64 uniqueTimestamp = timestamp.toSecsSinceEpoch() - count;
+
     for (const QVariant &idVar : ovenIds) {
         const int ovenId(idVar.toInt());
         const QString ovenLetter(CharcoalDbHelpers::getOvenLetter(m_connectionName, ovenId));
 
         QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
-        if (false == insertEvent(&query, harvestId, eventTypeId, userId, timestamp,
+        if (false == insertEvent(&query, harvestId, eventTypeId, userId,
+                                 QDateTime::fromSecsSinceEpoch(uniqueTimestamp),
                                  eventDate, coordinate,
                                  {
                                      { Tags::webOvenId, ovenLetter },
@@ -628,6 +632,8 @@ void ActionController::registerCarbonizationEnding(
         {
             return;
         }
+
+        uniqueTimestamp++;
 
         const QString eventId(query.lastInsertId().toString());
 
