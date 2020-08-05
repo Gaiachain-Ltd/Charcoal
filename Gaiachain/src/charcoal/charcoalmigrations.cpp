@@ -138,4 +138,16 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("VACUUM")
         }, true)
     },
+    // Add support for trapezoid oven
+    {
+        { 0, 0, 4 },
+        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("ALTER TABLE OvenTypes ADD COLUMN `oven_height2` DECIMAL(5,2)"),
+            QLatin1String("ALTER TABLE Ovens ADD COLUMN `oven_height2` DECIMAL(5,2)"),
+        }, true),
+        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("ALTER TABLE OvenTypes DROP COLUMN oven_height2"),
+            QLatin1String("ALTER TABLE Ovens DROP COLUMN oven_height2"),
+        }, true)
+    },
 };

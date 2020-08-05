@@ -18,6 +18,7 @@ Headers.AbstractListHeader {
         Layout.fillWidth: true
         Layout.leftMargin: top.margins
         Layout.rightMargin: top.margins
+        spacing: 0
 
         Repeater {
             id: repeater
@@ -28,6 +29,7 @@ Headers.AbstractListHeader {
 
             ColumnLayout {
                 Layout.fillWidth: true
+                spacing: 0
 
                 Items.GText {
                     readonly property int strikeMargin: 7
@@ -42,6 +44,7 @@ Headers.AbstractListHeader {
                     font.capitalization: summaryMode? Font.AllLowercase : Font.Capitalize
                     font.pixelSize: s(GStyle.smallPixelSize)
                     textFormat: Text.PlainText
+                    height: font.pixelSize
 
                     onLineLaidOut: {
                         if (summaryMode) {
@@ -87,6 +90,8 @@ Headers.AbstractListHeader {
                         valueChanged()
                     }
                     horizontalAlignment: TextInput.AlignHCenter
+
+                    padding: summaryMode? s(GStyle.picoMargin) : s(GStyle.bigMargin)
 
                     readOnly: repeater.readOnly
                     borderWidth: summaryMode? 0 : sr(1)

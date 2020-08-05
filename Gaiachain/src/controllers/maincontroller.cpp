@@ -29,6 +29,7 @@
 #include "charcoal/tickmarkiconprovider.h"
 #include "charcoal/charcoalsessionmanager.h"
 #include "charcoal/charcoaldatamanager.h"
+#include "charcoal/components/trapezoidovenitem.h"
 #endif
 
 template <typename Singleton>
@@ -254,6 +255,9 @@ void MainController::setupQmlContext(QQmlApplicationEngine &engine)
     auto tickMarkProvider = new TickMarkIconProvider;
     tickMarkProvider->setPicturesManager(&m_picturesManager);
     engine.addImageProvider(TickMarkIconProvider::name(), tickMarkProvider);
+
+    qmlRegisterType<TrapezoidOvenItem>("com.gaiachain.items", 1, 0,
+                                       "TrapezoidOvenItem");
 #endif
 
     setupQZXing(engine);

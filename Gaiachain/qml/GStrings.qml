@@ -189,6 +189,8 @@ QtObject {
     property string height: tr.empty + qsTr("height")
     property string length: tr.empty + qsTr("length")
     property string width: tr.empty + qsTr("width")
+    property string heightA: tr.empty + qsTr("height A")
+    property string heightB: tr.empty + qsTr("height B")
 
     // Help
     property string helpTitle: tr.empty + qsTr("What is %1?")
@@ -250,6 +252,13 @@ QtObject {
     property string ovenDimensions: tr.empty + qsTr("Oven measurement (meters)")
     property string selectPlotId: tr.empty + qsTr("Select plot ID")
     property string selectOvenType: tr.empty + qsTr("Select oven type")
+
+    property string set: tr.empty + qsTr("Set")
+    property string setOvenMeasurements: tr.empty + qsTr("Set oven measurements")
+    property string widthPlaceholder: tr.empty + qsTr("Width (A)")
+    property string lengthPlaceholder: tr.empty + qsTr("Length (B)")
+    property string height1Placeholder: tr.empty + qsTr("Height (C)")
+    property string height2Placeholder: tr.empty + qsTr("Height (D)")
 
     property string carbonizationBeginningPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
     property string carbonizationBeginningOvenIdHelp: tr.empty + qsTr("Dummy text - oven id help")

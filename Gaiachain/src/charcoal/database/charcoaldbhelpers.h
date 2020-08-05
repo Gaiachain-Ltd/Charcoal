@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/enums.h"
+#include "charcoal/models/dbobjects.h"
 
 #include <QHash>
 #include <QString>
@@ -25,6 +26,9 @@ struct ContinueEvent {
 class CharcoalDbHelpers
 {
 public:
+    static qreal ovenVolume(
+        const qreal width, const qreal length, const qreal height1, const qreal height2 = -1.0);
+
     static QString propertiesToString(const QVariantMap &properties);
     static QString getPlotName(const QString &packageName);
     static QString getHarvestName(const QString &packageName);
@@ -33,7 +37,7 @@ public:
                                                const int id);
     static Enums::SupplyChainAction actionByName(const QString &actionName);
     static int bagCountInTransport(const QString &connectionName, const int id);
-    static QVariantList defaultOvenDimensions(const QString &connectionName,
+    static OvenDimensions defaultOvenDimensions(const QString &connectionName,
                                               const int ovenId);
 
     static QJsonObject dbPropertiesToJson(const QString &properties);

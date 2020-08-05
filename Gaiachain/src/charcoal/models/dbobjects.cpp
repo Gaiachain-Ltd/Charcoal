@@ -3,11 +3,37 @@
 #include "common/logs.h"
 #include "common/tags.h"
 #include "database/dbhelpers.h"
+#include "charcoal/database/charcoaldbhelpers.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
 
 #include <QJsonDocument>
+
+int OvenDimensions::count() const
+{
+    if (height2 < 0 || qFuzzyIsNull(height2)) {
+        return 3;
+    } else {
+        return 4;
+    }
+}
+
+qreal OvenDimensions::volume() const
+{
+    return CharcoalDbHelpers::ovenVolume(width, length, height1, height2);
+}
+
+QDebug operator<<(QDebug debug, const OvenDimensions &dims)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "( w: " << dims.width << ", l: " << dims.length
+                    << ", h1: " << dims.height1
+                    << ", h2: " << dims.height2
+                    << ')';
+
+    return debug;
+}
 
 void Oven::updateDates(const Oven &other, const Event &otherEvent)
 {
@@ -28,7 +54,7 @@ Oven Event::loadOven(const QString &connectionName) const
     q.prepare("SELECT id, type, plot, "
               "carbonizationBeginning, carbonizationEnding, "
               "name, "
-              "oven_height, oven_width, oven_length "
+              "oven_height, oven_height2, oven_width, oven_length "
               "FROM Ovens "
               "WHERE carbonizationBeginning=:id OR carbonizationEnding=:id");
     q.bindValue(":id", id);
@@ -48,18 +74,22 @@ Oven Event::loadOven(const QString &connectionName) const
     oven.typeId = q.value(Tags::type).toInt();
     oven.plotId = q.value(Tags::plot).toInt();
     oven.name = q.value(Tags::name).toString();
-    oven.height = q.value(Tags::webOvenHeight).toReal();
-    oven.width = q.value(Tags::webOvenWidth).toReal();
-    oven.length = q.value(Tags::webOvenLength).toReal();
+    oven.dimensions.height1 = q.value(Tags::webOvenHeight).toReal();
+    oven.dimensions.height2 = q.value(Tags::webOvenHeight2).toReal();
+    if (qFuzzyIsNull(oven.dimensions.height2)) {
+        oven.dimensions.height2 = -1;
+    }
+    oven.dimensions.width = q.value(Tags::webOvenWidth).toReal();
+    oven.dimensions.length = q.value(Tags::webOvenLength).toReal();
     oven.carbonizerId = userId;
 
-    const QVariant beginningEvent(q.value("carbonizationBeginning"));
+    const QVariant beginningEvent(q.value(Tags::carbonizationBeginning));
     if (beginningEvent.isValid() && beginningEvent.toInt() == id) {
         oven.carbonizationBeginningId = id;
         oven.carbonizationBeginning = date;
     }
 
-    const QVariant endingEvent(q.value("carbonizationEnding"));
+    const QVariant endingEvent(q.value(Tags::carbonizationEnding));
     if (endingEvent.isValid() && endingEvent.toInt() == id) {
         oven.carbonizationEndingId = id;
         oven.carbonizationEnding = date;

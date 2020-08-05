@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/enums.h"
+#include "dbobjects.h"
 
 #include <QObject>
 #include <QPointer>
@@ -13,6 +14,8 @@ class PicturesManager;
 class ActionController : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(OvenDimensions emptyOvenDimensions READ emptyOvenDimensions CONSTANT)
 
 public:
     explicit ActionController(QObject *parent = nullptr);
@@ -49,7 +52,16 @@ public:
     Q_INVOKABLE int registeredTrucksTotal(const int transportId) const;
 
     Q_INVOKABLE QString nextOvenNumber(int parentEntityId) const;
-    Q_INVOKABLE QVariantList defaultOvenDimensions(const int ovenId) const;
+    Q_INVOKABLE OvenDimensions defaultOvenDimensions(const int ovenId) const;
+    OvenDimensions emptyOvenDimensions() const;
+
+    Q_INVOKABLE qreal ovenVolume(const qreal width,
+                                 const qreal height,
+                                 const qreal length) const;
+    Q_INVOKABLE qreal ovenVolume(const qreal width,
+                                 const qreal height1,
+                                 const qreal height2,
+                                 const qreal length) const;
 
     Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,
@@ -80,7 +92,7 @@ public:
         const int plotDbId,
         const QString &ovenId,
         const int ovenIdNumber,
-        const QVariantList &ovenDimensions
+        const OvenDimensions &ovenDimensions
         ) const;
 
     Q_INVOKABLE void registerCarbonizationEnding(

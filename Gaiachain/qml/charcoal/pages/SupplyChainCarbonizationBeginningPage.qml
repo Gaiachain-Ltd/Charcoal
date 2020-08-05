@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.11
 import com.gaiachain.style 1.0
 import com.gaiachain.enums 1.0
 import com.gaiachain.helpers 1.0
+import com.gaiachain.items 1.0
 
 import "../../common" as Common
 import "../../headers" as Headers
@@ -15,6 +16,8 @@ import "../../pages" as Pages
 Pages.SupplyChainPageBase {
     id: top
 
+    property var ovenDimensions: dataManager.actionController.emptyOvenDimensions
+
     title: Strings.carbonizationBeginning
 
     // 1 - Traditional oven
@@ -24,7 +27,7 @@ Pages.SupplyChainPageBase {
                            && plotIdComboBox.currentText.length > 0
                            && (ovenTypeComboBox.ovenType === "2"
                                || (ovenTypeComboBox.ovenType === "1"
-                                   && ovenDimensionsHeader.isEmpty === false)))
+                                   && ovenDimensions.count() === 4)))
 
     Component.onCompleted: refreshData()
 
@@ -43,26 +46,72 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
-        let dims = ovenTypeComboBox.ovenType === "2"?
-                dataManager.actionController.defaultOvenDimensions(ovenTypeComboBox.ovenIdNumber)
-              : ovenDimensionsHeader.values
+        let dims = []
+        let unit = " m";
+
+        dims.push(ovenDimensions.width + unit)
+        dims.push(ovenDimensions.length + unit)
+        dims.push(ovenDimensions.height1 + unit)
+        if (ovenDimensions.count() === 4) {
+            dims.push(ovenDimensions.height2 + unit)
+        }
 
         var summary = [
                     Utility.createSummaryItem(
                         Strings.ovenId,
                         [
                             [ ovenIdHeader.inputText ],
-                            [ ovenTypeComboBox.currentText + " - "
-                             + dims[0] + " x "
-                             + dims[1] + " x "
-                             + dims[2] + "m" ]
+                            [ ovenTypeComboBox.currentText
+                             + " - "
+                             + ovenDimensions.volume() + " m³"
+                            ]
                         ],
                         "", "",
                         GStyle.delegateHighlightColor3,
                         GStyle.fontHighlightColor3,
                         GStyle.fontHighlightColor3,
                         Enums.DelegateType.Column,
-                        true),
+                        false)
+                ]
+
+        if (ovenDimensions.count() === 4) {
+            let row1 = [ ovenDimensionsHeader.titles[0], ovenDimensionsHeader.titles[1] ]
+            let row2 = [ ovenDimensionsHeader.titles[2], ovenDimensionsHeader.titles[3] ]
+            let val1 = [ dims[0], dims[1] ]
+            let val2 = [ dims[2], dims[3] ]
+            summary.push(Utility.createSummaryItem(
+                             "",
+                             [ row1, val1 ],
+                             "", "",
+                             GStyle.delegateHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             Enums.DelegateType.Row,
+                             false),
+                         Utility.createSummaryItem(
+                             "",
+                             [ row2, val2 ],
+                             "", "",
+                             GStyle.delegateHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             Enums.DelegateType.Row,
+                             true),
+                         )
+        } else {
+            summary.push(Utility.createSummaryItem(
+                             "",
+                             [ ovenDimensionsHeader.titles, dims ],
+                             "", "",
+                             GStyle.delegateHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             Enums.DelegateType.Row,
+                             true)
+                         )
+        }
+
+        summary.push(
                     Utility.createSummaryItem(
                         Strings.harvestId,
                         dataManager.actionController.generateHarvestId(
@@ -92,18 +141,10 @@ Pages.SupplyChainPageBase {
                             Qt.locale(), Strings.dateFormat)),
                     Utility.createSummaryItem(Strings.ovenType,
                                               ovenTypeComboBox.currentText),
-                    Utility.createSummaryItem(
-                        Strings.ovenDimensions,
-                        [
-                            ovenDimensionsHeader.titles,
-                            dims
-                        ],
-                        "", "",
-                        "", "", "",
-                        Enums.DelegateType.Row),
                     Utility.createSummaryItem(Strings.gpsCoordinates,
                                               gpsSource.coordinateString)
-                ]
+                    )
+
         return summary
     }
 
@@ -118,7 +159,7 @@ Pages.SupplyChainPageBase {
                     plotIdComboBox.currentId,
                     ovenIdHeader.inputText,
                     ovenTypeComboBox.ovenIdNumber,
-                    ovenDimensionsHeader.values)
+                    ovenDimensions)
 
         pageManager.enter(Enums.Page.MainMenu)
     }
@@ -176,30 +217,42 @@ Pages.SupplyChainPageBase {
         popupTitle: Strings.selectOvenType
 
         model: dataManager.ovenTypesModel
+
+        onCurrentTextChanged: {
+            if (ovenType === "2") {
+                ovenDimensions = dataManager.actionController.defaultOvenDimensions(
+                            ovenIdNumber)
+            } else {
+                ovenDimensions = dataManager.actionController.emptyOvenDimensions
+            }
+        }
     }
 
-    Headers.RowHeader {
-        property bool isEmpty: true
-
-        onValueChanged: {
-            let emptyCheck = false;
-            for (let value of values) {
-                if (value.length === 0) {
-                    emptyCheck = true
-                    break
-                }
-            }
-
-            isEmpty = emptyCheck
-        }
+    CharcoalHeaders.CharcoalButtonHeader {
+        property var titles: (ovenTypeComboBox.ovenType === "2")?
+             [ Strings.width, Strings.length, Strings.height ]
+           : [ Strings.width, Strings.length, Strings.heightA, Strings.heightB ]
 
         id: ovenDimensionsHeader
+
         Layout.fillWidth: true
+
         headerText: Strings.ovenDimensions
         helpButtonVisible: true
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
-        titles: [ Strings.height, Strings.length, Strings.width ]
         enabled: ovenTypeComboBox.isTraditional
+
+        text: Strings.set + (ovenDimensions.volume() < 0?
+                                 "" : (" " + ovenDimensions.volume() + "m³"))
+        extraText: ""
+        iconVisible: false
+
+        onClicked: pageManager.enter(
+                       Enums.Page.SetOvenMeasurements,
+                       {
+                           "backToPage": Enums.Page.SupplyChainCarbonizationBeginning,
+                           "ovenDimensions": top.ovenDimensions
+                       })
     }
 
     Common.PositionSourceHandler {

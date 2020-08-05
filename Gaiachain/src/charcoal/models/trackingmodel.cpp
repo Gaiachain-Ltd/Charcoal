@@ -303,8 +303,29 @@ QVariantList TrackingModel::summaryForHarvest(
 
     for (const auto &ovenName : ovens.keys()) {
         const Oven oven = ovens.value(ovenName);
-        QVariantList ovenSummary;
 
+        QVariantList ovenHeaders = {
+            tr("Width"),
+            tr("Length"),
+        };
+
+        QString unit(" m");
+        QVariantList ovenValues = {
+            QString(QString::number(oven.dimensions.width) + unit),
+            QString(QString::number(oven.dimensions.length) + unit),
+            QString(QString::number(oven.dimensions.height1) + unit),
+            QString(QString::number(oven.dimensions.height2) + unit)
+        };
+
+        if (oven.dimensions.count() == 3) {
+            ovenHeaders.append(tr("Height"));
+            ovenValues.removeLast();
+        } else {
+            ovenHeaders.append(tr("Height A"));
+            ovenHeaders.append(tr("Height B"));
+        }
+
+        QVariantList ovenSummary;
         ovenSummary.append(utility.createSummaryItem(
             QString(),
             QVariantList {
@@ -325,21 +346,13 @@ QVariantList TrackingModel::summaryForHarvest(
         ovenSummary.append(utility.createSummaryItem(
             tr("Oven measurement (meters)"),
             QVariantList {
-                QVariantList {
-                    tr("Height"),
-                    tr("Length"),
-                    tr("Width")
-                },
-                QVariantList {
-                    oven.height,
-                    oven.length,
-                    oven.width
-                }
+                ovenHeaders,
+                ovenValues
             },
             QString(), QString(), QString(), QString(), QString(),
             Enums::DelegateType::Row));
         ovenSummary.append(utility.createSummaryItem(
-            tr("Timber volume"), QString("%1 m³").arg(oven.volume())
+            tr("Timber volume"), QString("%1 m³").arg(oven.dimensions.volume())
             ));
 
         result.append(utility.createSummaryItem(

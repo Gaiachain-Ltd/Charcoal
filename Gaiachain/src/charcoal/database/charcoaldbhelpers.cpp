@@ -35,6 +35,20 @@ QHash<int, Enums::SupplyChainAction> CharcoalDbHelpers::m_supplyActionDbMap;
 QHash<int, Enums::PackageType> CharcoalDbHelpers::m_packageTypeDbMap;
 QHash<int, Enums::OvenType> CharcoalDbHelpers::m_ovenTypeDbMap;
 
+qreal CharcoalDbHelpers::ovenVolume(const qreal width, const qreal length,
+                                    const qreal height1, const qreal height2)
+{
+    if (height2 < 0) {
+        return width * height1 * length;
+    } else {
+        const qreal small = std::min(height1, height2);
+        const qreal big = std::max(height1, height2);
+        const qreal triangleHeight = big - small;
+
+        return ((small * length) + ((triangleHeight * length) / 2)) * width;
+    }
+}
+
 QString CharcoalDbHelpers::propertiesToString(const QVariantMap &properties)
 {
     return QJsonDocument::fromVariant(properties).toJson(QJsonDocument::Compact);
@@ -112,30 +126,38 @@ int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const 
     return -1;
 }
 
-QVariantList CharcoalDbHelpers::defaultOvenDimensions(const QString &connectionName,
-                                                      const int ovenId)
+OvenDimensions CharcoalDbHelpers::defaultOvenDimensions(const QString &connectionName,
+                                                        const int ovenId)
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
-    QVariantList dimensions;
-    query.prepare("SELECT oven_height, oven_width, oven_length, type "
+    OvenDimensions dimensions;
+    query.prepare("SELECT oven_height, oven_height2, oven_width, oven_length, "
+                  "type "
                   "FROM OvenTypes WHERE id=:ovenId");
     query.bindValue(":ovenId", ovenId);
 
     if (query.exec() == false) {
         qWarning() << RED("Getting metallic oven dimensions has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery();
-        return QVariantList{ 0, 0, 0 };
+        return dimensions;
     }
 
     query.next();
 
     if (query.value(Tags::type).toInt() == CharcoalDbHelpers::metalOvenType) {
-        dimensions.append(query.value(Tags::webOvenHeight).toDouble());
-        dimensions.append(query.value(Tags::webOvenWidth).toDouble());
-        dimensions.append(query.value(Tags::webOvenLength).toDouble());
+        dimensions.height1 = query.value(Tags::webOvenHeight).toReal();
+        dimensions.height2 = query.value(Tags::webOvenHeight2).isNull()?
+            -1 : query.value(Tags::webOvenHeight2).toReal();
+
+        if (qFuzzyIsNull(dimensions.height2)) {
+            dimensions.height2 = -1;
+        }
+
+        dimensions.width = query.value(Tags::webOvenWidth).toReal();
+        dimensions.length = query.value(Tags::webOvenLength).toReal();
         return dimensions;
     } else {
-        return QVariantList{ 0, 0, 0 };
+        return dimensions;
     }
 }
 

@@ -79,7 +79,8 @@ void OvenTypesModel::webReplyHandler(const QJsonDocument &reply)
     //qDebug() << "Oven types:" << reply;
 
     ListUpdater updates("OvenTypes", m_connectionName);
-    if (updates.updateTable(reply, { Tags::name, Tags::type, Tags::webOvenHeight,
+    if (updates.updateTable(reply, { Tags::name, Tags::type,
+                                    Tags::webOvenHeight, Tags::webOvenHeight2,
                                     Tags::webOvenWidth, Tags::webOvenLength,
                                     Tags::active}))
     {

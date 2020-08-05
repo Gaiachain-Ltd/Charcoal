@@ -338,9 +338,13 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
                                                    .toObject());
             const double height = ovenMeasurements.value(Tags::webOvenHeight)
                                       .toDouble();
+            const double height2 = ovenMeasurements.value(Tags::webOvenHeight2)
+                                      .toDouble();
             const double width = ovenMeasurements.value(Tags::webOvenWidth)
                                      .toDouble();
             const double length = ovenMeasurements.value(Tags::webOvenLength)
+                                      .toDouble();
+            const double volume = ovenMeasurements.value(Tags::webOvenVolume)
                                       .toDouble();
 
             const int ovenTypeId = CharcoalDbHelpers::getOvenTypeIdFromName(
@@ -353,7 +357,7 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
             };
 
             const bool isDefault = ovenTypeId == CharcoalDbHelpers::metalOvenType;
-            QVariantList defaultDims;
+            OvenDimensions defaultDims;
             if (isDefault) {
                 defaultDims = CharcoalDbHelpers::defaultOvenDimensions(
                     m_connectionName, ovenTypeId);
@@ -361,6 +365,8 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
                 properties.insert(Tags::webOvenHeight, height);
                 properties.insert(Tags::webOvenLength, length);
                 properties.insert(Tags::webOvenWidth, width);
+                properties.insert(Tags::webOvenHeight2, height2);
+                properties.insert(Tags::webOvenVolume, volume);
             }
 
             bool r = true;
@@ -373,20 +379,22 @@ bool TrackingUpdater::processDetailsOvens(const int webId,
 
             QSqlQuery q(QString(), db::Helpers::databaseConnection(m_connectionName));
             q.prepare("INSERT INTO Ovens (type, plot, carbonizationBeginning, name, "
-                      "oven_height, oven_width, oven_length) "
+                      "oven_height, oven_height2, oven_width, oven_length) "
                       "VALUES (:type, :plot, :event, :name, "
-                      ":height, :width, :length)");
+                      ":height, :height2, :width, :length)");
             q.bindValue(":type", ovenTypeId);
             q.bindValue(":plot", plotEntityId);
             q.bindValue(":event", eventId);
             q.bindValue(":name", ovenName);
 
             if (isDefault) {
-                q.bindValue(":height", defaultDims.at(0));
-                q.bindValue(":length", defaultDims.at(1));
-                q.bindValue(":width", defaultDims.at(2));
+                q.bindValue(":height", defaultDims.height1);
+                q.bindValue(":height2", defaultDims.height2);
+                q.bindValue(":length", defaultDims.length);
+                q.bindValue(":width", defaultDims.width);
             } else {
                 q.bindValue(":height", height);
+                q.bindValue(":height2", height2);
                 q.bindValue(":length", length);
                 q.bindValue(":width", width);
             }
