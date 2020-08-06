@@ -118,9 +118,7 @@ Pages.SupplyChainPageBase {
                                 Strings.receipt
                             ],
                             [
-                                Strings.numberOfBagsDetail
-                                .arg(scannedQrs.length)
-                                .arg(bagCount),
+                                bagsMatch.matchStatusMessage(),
                                 hasDocs? Strings.approved : Strings.noPhoto,
                                 hasRecs? Strings.approved : Strings.noPhoto
                             ],

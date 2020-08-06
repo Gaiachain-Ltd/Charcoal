@@ -29,7 +29,19 @@ QString BagsMatch::matchStatusMessage() const
         return numbers;
     }
 
-    return QString();
+    QString result(numbers);
+    if (missingBags.isEmpty() == false) {
+        result.append("<br/>");
+        result.append(QObject::tr("<small>%1 bags are missing</small>").arg(missingBags.size()));
+    }
+
+    if (extraBags.isEmpty() == false) {
+        result.append("<br/>");
+        result.append(QObject::tr("<small>%1 bags are not from this transport</small>")
+                          .arg(extraBags.size()));
+    }
+
+    return result;
 }
 
 ActionController::ActionController(QObject *parent) : QObject(parent)
