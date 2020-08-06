@@ -172,12 +172,6 @@ ColumnLayout {
             highlighted: isHighlighted
             underlineVisible: hasUnderline
             extraLeftMargin: !isHighlighted
-
-            Component.onCompleted: {
-                if(suffixValue.lenght > 0) {
-                    console.log("TXT:", headerText, "#", suffixValue)
-                }
-            }
         }
     }
 }
