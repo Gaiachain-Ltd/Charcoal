@@ -20,8 +20,33 @@
 #include <QDateTime>
 #include <QDate>
 
+QString BagsMatch::matchStatusMessage() const
+{
+    const QString numbers(QObject::tr("%1 of %2").arg(bagsFromReception.size())
+                              .arg(bagsFromTransport.size()));
+
+    if (fullMatch) {
+        return numbers;
+    }
+
+    QString result(numbers);
+    if (missingBags.isEmpty() == false) {
+        result.append("<br/>");
+        result.append(QObject::tr("<small>%1 bags are missing</small>").arg(missingBags.size()));
+    }
+
+    if (extraBags.isEmpty() == false) {
+        result.append("<br/>");
+        result.append(QObject::tr("<small>%1 bags are not from this transport</small>")
+                          .arg(extraBags.size()));
+    }
+
+    return result;
+}
+
 ActionController::ActionController(QObject *parent) : QObject(parent)
 {
+    qRegisterMetaType<BagsMatch>("BagsMatch");
 }
 
 void ActionController::setDbConnection(const QString &connectionName)
@@ -188,6 +213,65 @@ int ActionController::nextTransportNumber(const int harvestId, const bool isPaus
 int ActionController::bagCountInTransport(const int transportId) const
 {
     return CharcoalDbHelpers::bagCountInTransport(m_connectionName, transportId);
+}
+
+BagsMatch ActionController::matchBags(const int transportId,
+                                      QVariantList qrsFromReception)
+{
+    BagsMatch result;
+
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::LoadingAndTransport);
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+
+    query.prepare("SELECT properties FROM Events "
+                  "WHERE entityId=:transportId AND typeId=:typeId");
+    query.bindValue(":transportId", transportId);
+    query.bindValue(":typeId", typeId);
+
+    if (query.exec() == false || query.next() == false) {
+        const QString msg(tr("Could not check bags for transport %1").arg(transportId));
+        qWarning() << msg;
+        emit error(msg);
+        return result;
+    }
+
+    const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+    const QJsonObject properties(
+        CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+    QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
+
+    std::sort(qrsFromReception.begin(), qrsFromReception.end());
+    std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
+    result.bagsFromTransport = qrsFromTransport;
+    result.bagsFromReception = qrsFromReception;
+
+    if (qrsFromReception == qrsFromTransport) {
+        result.fullMatch = true;
+        return result;
+    }
+
+    for (const QVariant &transport : qAsConst(qrsFromTransport)) {
+        if (qrsFromReception.contains(transport) == false) {
+            qDebug() << "Missing bag" << transport;
+            result.missingBags.append(transport);
+        }
+    }
+
+    for (const QVariant &reception : qAsConst(qrsFromReception)) {
+        if (qrsFromTransport.contains(reception) == false) {
+            qDebug() << "Extra bag" << reception;
+            result.extraBags.append(reception);
+        }
+    }
+
+    if (result.fullMatch == false) {
+        const QString msg(tr("Scanned QR codes do not match bags sent in transport"));
+        qWarning() << msg;
+    }
+
+    return result;
 }
 
 QString ActionController::plateNumberInTransport(const int transportId) const

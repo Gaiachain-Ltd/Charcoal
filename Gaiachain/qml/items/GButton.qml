@@ -13,8 +13,10 @@ Button
 
     property color disabledColorTint: GStyle.disabledColorTint
 
+    property int fontPixelSize: s(GStyle.buttonPixelSize)
+
     font {
-        pixelSize: s(GStyle.buttonPixelSize)
+        pixelSize: fontPixelSize
         family: GStyle.primaryFontFamily
         capitalization: Font.AllUppercase
         letterSpacing: s(GStyle.buttonLetterSpacing)

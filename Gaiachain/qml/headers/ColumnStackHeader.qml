@@ -37,27 +37,22 @@ Headers.AbstractListHeader {
                         font.capitalization: Font.AllUppercase
                     }
 
-                    Items.GInput {
-                        id: inputHeight
-
+                    Items.GText {
                         Layout.fillWidth: true
                         horizontalAlignment: TextInput.AlignLeft
                         padding: 0
 
-                        placeholderText: titles[index]
+                        textFormat: Text.RichText
+                        elide: Text.ElideNone
+                        wrapMode: Text.WordWrap
+
                         text: values[index]
                         onTextChanged: values[index] = text
 
-                        readOnly: repeater.readOnly
-                        borderWidth: summaryMode? 0 : sr(1)
                         focus: false
-                        backgroundColor: repeater.backgroundColor
                         color: highlighted? secondaryTextColor : mainColor
                         font.bold: false
                         font.capitalization: Font.AllUppercase
-                        validator: DoubleValidator {
-                            bottom: 0.0
-                        }
                     }
                 }
 

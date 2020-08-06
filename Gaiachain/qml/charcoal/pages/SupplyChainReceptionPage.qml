@@ -19,6 +19,7 @@ Pages.SupplyChainPageBase {
     property int transportId
 
     property var scannedQrs: []
+    property var bagsMatch: undefined
     readonly property bool hasQrs: scannedQrs.length > 0
 
     onScannedQrsChanged: {
@@ -29,9 +30,30 @@ Pages.SupplyChainPageBase {
             if (transportId !== -1) {
                 transportName = dataManager.actionController.getEntityName(transportId)
                 dataManager.minimumDateModel.plotId = transportId
+                bagsMatch = dataManager.actionController.matchBags(
+                            transportId, scannedQrs)
+
+                // TODO: turn back on when QrMismatch feature is fully designed
+                //if (bagsMatch.fullMatch === false) {
+                //    pageManager.enter(
+                //                 Enums.Page.QrMismatchSummary,
+                //                 {
+                //                     "bagsMatch": bagsMatch
+                //                 },
+                //                 false)
+                //}
+            } else {
+                transportName = ""
+                dataManager.minimumDateModel.plotId = -1
+                bagsMatch = undefined
             }
+        } else {
+            transportName = ""
+            dataManager.minimumDateModel.plotId = -1
+            bagsMatch = undefined
         }
-        console.log("Scanned have changed", hasQrs, transportId)
+
+        console.log("Scanned have changed", scannedQrs.length, transportId)
     }
 
     property var documents: []
@@ -75,8 +97,7 @@ Pages.SupplyChainPageBase {
         let recsIcon = "image://tickmark/receipt-" + hasRecs
 
         let bagCount = dataManager.actionController.bagCountInTransport(transportId)
-        // TODO: check if all QRs are MATCHING!
-        let allBags = scannedQrs.length === bagCount
+        let allBagsMatch = (bagsMatch.fullMatch === true)
 
         var summary = [
                     Utility.createSummaryItem(
@@ -97,14 +118,12 @@ Pages.SupplyChainPageBase {
                                 Strings.receipt
                             ],
                             [
-                                Strings.numberOfBagsDetail
-                                .arg(scannedQrs.length)
-                                .arg(bagCount),
+                                bagsMatch.matchStatusMessage(),
                                 hasDocs? Strings.approved : Strings.noPhoto,
                                 hasRecs? Strings.approved : Strings.noPhoto
                             ],
                             [
-                                allBags? GStyle.checkGreenUrl : GStyle.warningUrl,
+                                allBagsMatch? GStyle.checkGreenUrl : GStyle.warningUrl,
                                 docsIcon,
                                 recsIcon
                             ],
@@ -206,6 +225,8 @@ Pages.SupplyChainPageBase {
         text: Strings.scanAllBagsFromTruck
         extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
         iconVisible: hasQrs
+        icon: bagsMatch !== undefined && bagsMatch.fullMatch?
+                  GStyle.checkGreenUrl : GStyle.iconNoUrl
 
         onClicked: pageManager.enter(
                        Enums.Page.QRScanner,

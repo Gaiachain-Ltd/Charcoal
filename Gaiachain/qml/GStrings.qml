@@ -311,6 +311,10 @@ QtObject {
     property string receptionUnloadingDateHelp: tr.empty + qsTr("Dummy text - unloading timestamp help")
     property string receptionGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
 
+    // Charcoal - QrMismatchSummaryPage
+    property string missingBags: tr.empty + qsTr("Missing bags")
+    property string extraBags: tr.empty + qsTr("Extra bags not found in transport")
+
     // Charcoal - supply chain finalization page
     property string doYouWantToCompleteSupplyChain: tr.empty + qsTr("Do you want to complete this supply chain?")
     property string totalNumberOfScannedBags: tr.empty + qsTr("total number of scanned bags")

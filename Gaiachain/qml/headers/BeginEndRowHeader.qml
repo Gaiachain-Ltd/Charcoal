@@ -22,7 +22,7 @@ Row {
     property bool highlighted: false
     property bool extraLeftMargin: false
 
-    Headers.InputHeader {
+    Headers.TextHeader {
         implicitWidth: root.width * .5
         secondaryColor: root.highlighted? root.secondaryColor
                                         : GStyle.separatorColor
@@ -30,15 +30,13 @@ Row {
                                                                   : GStyle.textReadonlyColor
         backgroundColor: root.highlighted? root.backgroundColor : GStyle.backgroundColor
         headerText: headerTexts[0]
-        inputText: inputTexts[0]
-        readOnly: true
-        iconSource: ""
+        text: inputTexts[0]
         summaryMode: root.summaryMode
         highlighted: root.highlighted
         extraLeftMargin: root.extraLeftMargin
     }
 
-     Headers.InputHeader {
+     Headers.TextHeader {
         implicitWidth: root.width * .5
 
         secondaryColor: root.highlighted? root.secondaryColor
@@ -47,9 +45,7 @@ Row {
                                                                   : GStyle.textReadonlyColor
         backgroundColor: root.highlighted? root.backgroundColor : GStyle.backgroundColor
         headerText: headerTexts[1]
-        inputText: inputTexts[1]
-        readOnly: true
-        iconSource: ""
+        text: inputTexts[1]
         summaryMode: root.summaryMode
         highlighted: root.highlighted
         extraLeftMargin: root.extraLeftMargin

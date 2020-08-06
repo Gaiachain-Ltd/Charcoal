@@ -531,7 +531,13 @@ void TrackingModel::detailsReplyHandler(const QJsonDocument &reply)
 
 QString TrackingModel::dateString(const qint64 timestamp) const
 {
-    return QDateTime::fromSecsSinceEpoch(timestamp).toString(QStringLiteral("dd/MM/yyyy"));
+    const auto dateTime = QDateTime::fromSecsSinceEpoch(timestamp);
+
+    if (dateTime < QDate(1980, 1, 1).startOfDay()) {
+        return QString(Tags::noDateTime);
+    }
+
+    return dateTime.toString(QStringLiteral("dd/MM/yyyy"));
 }
 
 /*!

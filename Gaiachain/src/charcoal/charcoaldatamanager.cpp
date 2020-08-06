@@ -97,7 +97,8 @@ void CharcoalDataManager::setupDatabase(const QString &dbPath)
 void CharcoalDataManager::setupQmlContext(QQmlApplicationEngine &engine)
 {
     AbstractDataManager::setupQmlContext(engine);
-    engine.rootContext()->setContextProperty(QStringLiteral("localEventsModel"), m_localEventsModel);
+    engine.rootContext()->setContextProperty(QStringLiteral("localEventsModel"),
+                                             m_localEventsModel);
 }
 
 void CharcoalDataManager::setPicturesManager(PicturesManager *manager)

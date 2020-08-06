@@ -79,8 +79,6 @@ public:
     MinimumDateModel* minimumDateModel() const;
     LocalEventsModel* localEventsModel() const;
 
-
-
 signals:
     void error(const QString &text) const;
 

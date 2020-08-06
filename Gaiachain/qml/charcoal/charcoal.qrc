@@ -30,6 +30,7 @@
         <file>pages/TakeDocumentPicturesPage.qml</file>
         <file>pages/PhotoGalleryPage.qml</file>
         <file>pages/SetOvenMeasurementsPage.qml</file>
+        <file>pages/QrMismatchSummaryPage.qml</file>
         <file>popups/ColumnButtonsPopup.qml</file>
         <file>headers/CharcoalButtonHeader.qml</file>
     </qresource>

@@ -9,7 +9,54 @@
 
 class QGeoCoordinate;
 class QSqlQuery;
+class QQmlApplicationEngine;
+
 class PicturesManager;
+
+class BagsMatch
+{
+    Q_GADGET
+
+    Q_PROPERTY(bool fullMatch MEMBER fullMatch)
+    Q_PROPERTY(QVariantList missingBags MEMBER missingBags)
+    Q_PROPERTY(QVariantList extraBags MEMBER extraBags)
+
+public:
+    BagsMatch() = default;
+    ~BagsMatch() = default;
+
+    /*!
+     * Is set to true if bags from transport and reception stages match
+     * completely.
+     */
+    bool fullMatch = false;
+
+    /*!
+     * List of QR codes which are present in Transport stage but missing from
+     * Reception.
+     */
+    QVariantList missingBags;
+
+    /*!
+     * List of QR codes which are present in Reception but are not present in
+     * Transport.
+     */
+    QVariantList extraBags;
+
+    /*!
+     * List of bags scanned in Loading and Transport step.
+     */
+    QVariantList bagsFromTransport;
+
+    /*!
+     * List of bags scanned in Reception step.
+     */
+    QVariantList bagsFromReception;
+
+    Q_INVOKABLE QString matchStatusMessage() const;
+};
+
+Q_DECLARE_METATYPE(BagsMatch)
 
 class ActionController : public QObject
 {
@@ -45,6 +92,9 @@ public:
     Q_INVOKABLE int nextTransportNumber(const int harvestId,
                                         const bool isPausedEvent) const;
     Q_INVOKABLE int bagCountInTransport(const int transportId) const;
+    Q_INVOKABLE BagsMatch matchBags(const int transportId,
+                                    QVariantList qrsFromReception);
+
     Q_INVOKABLE QString plateNumberInTransport(const int transportId) const;
     Q_INVOKABLE int scannedBagsCount(const int transportId) const;
     Q_INVOKABLE int scannedBagsTotal(const int transportId) const;

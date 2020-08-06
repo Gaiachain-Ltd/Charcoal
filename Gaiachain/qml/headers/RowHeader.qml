@@ -79,11 +79,10 @@ Headers.AbstractListHeader {
                     }
                 }
 
-                Items.GInput {
+                Items.GText {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.fillWidth: true
 
-                    placeholderText: titles[index]
                     text: values[index]
                     onTextChanged: {
                         values[index] = text
@@ -93,18 +92,12 @@ Headers.AbstractListHeader {
 
                     padding: summaryMode? s(GStyle.picoMargin) : s(GStyle.bigMargin)
 
-                    readOnly: repeater.readOnly
-                    borderWidth: summaryMode? 0 : sr(1)
                     focus: false
-                    backgroundColor: repeater.backgroundColor
                     color: highlighted || summaryMode? secondaryTextColor : mainColor
                     font.bold: highlighted? true : false
-                    validator: DoubleValidator {
-                        bottom: 0.0
-                        top: 1000.0
-                        decimals: 2
-                        notation: DoubleValidator.StandardNotation
-                    }
+
+                    elide: Text.ElideNone
+                    wrapMode: Text.WordWrap
                 }
             }
         }
