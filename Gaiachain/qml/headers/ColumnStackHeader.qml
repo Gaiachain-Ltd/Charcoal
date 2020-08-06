@@ -43,7 +43,7 @@ Headers.AbstractListHeader {
                         padding: 0
 
                         textFormat: Text.RichText
-                        elide: Qt.ElideNone
+                        elide: Text.ElideNone
                         wrapMode: Text.WordWrap
 
                         text: values[index]

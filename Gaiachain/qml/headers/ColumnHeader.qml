@@ -35,27 +35,23 @@ Headers.AbstractListHeader {
                     height: font.pixelSize + 4
                 }
 
-                Items.GInput {
+                Items.GText {
                     id: inputHeight
 
                     Layout.fillWidth: true
                     horizontalAlignment: TextInput.AlignRight
 
-                    placeholderText: titles[index]
                     text: values[index]
                     onTextChanged: values[index] = text
 
                     padding: summaryMode? s(GStyle.picoMargin) : s(GStyle.bigMargin)
 
-                    readOnly: repeater.readOnly
-                    borderWidth: summaryMode? 0 : sr(1)
                     focus: false
-                    backgroundColor: repeater.backgroundColor
                     color: highlighted? secondaryTextColor : mainColor
                     font.bold: false
-                    validator: DoubleValidator {
-                        bottom: 0.0
-                    }
+
+                    elide: Text.ElideNone
+                    wrapMode: Text.WordWrap
                 }
             }
         }
