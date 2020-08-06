@@ -44,6 +44,7 @@ namespace Tags {
     const QLatin1String village = QLatin1String("village");
     const QLatin1String parcels = QLatin1String("parcels");
     const QLatin1String parcel = QLatin1String("parcel");
+    const QLatin1String noDateTime = QLatin1String("-");
     // Charcoal
     const QLatin1String ovenTypes = QLatin1String("oven-types");
     const QLatin1String treeSpecies = QLatin1String("tree-species");
