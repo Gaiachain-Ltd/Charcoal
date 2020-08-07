@@ -93,7 +93,7 @@ QStringList PicturesManager::moveToCache(const QStringList &photos) const
     for (const QString &photo : photos) {
         const QFileInfo info(photo);
         const QString fileName(info.fileName());
-        const QString destination(m_cachePath + "/" + fileName);
+        const QString destination(m_cachePath + sep + fileName);
 
         if (QFile::rename(photo, destination)) {
             result.append(fileName);
@@ -166,7 +166,7 @@ void PicturesManager::savePhoto(const QString &path,
         const QString fileName(typeString + "-"
                                + QDateTime::currentDateTime()
                                      .toString("yyyy-MM-ddTHHmmss"));
-        const QString destination(dir + "/" + fileName + "." + QFileInfo(path).suffix());
+        const QString destination(dir + sep + fileName + "." + QFileInfo(path).suffix());
         qDebug() << "Saving photo:" << destination;
 
         if (QFile::rename(path, destination) == false) {
@@ -179,11 +179,9 @@ void PicturesManager::savePhoto(const QString &path,
 
 void PicturesManager::cleanUpWaitingPictures() const
 {
-    const QDir picturesDir(m_path);
-    const QStringList files(picturesDir.entryList(QDir::Files | QDir::NoDotAndDotDot));
-    for (const QString &file : files) {
-        QFile::remove(file);
-    }
+    qDebug() << BLUE("Removing temp files");
+    cleanUpFiles(m_path);
+    cleanUpFiles(m_savePath);
 }
 
 QStringList PicturesManager::photosOfType(const PicturesManager::PictureType type) const
@@ -205,6 +203,19 @@ QStringList PicturesManager::photosOfType(const PicturesManager::PictureType typ
     }
 
     return result;
+}
+
+void PicturesManager::cleanUpFiles(const QString &path) const
+{
+    const QDir picturesDir(path);
+    const QStringList files(picturesDir.entryList(QDir::Files | QDir::NoDotAndDotDot));
+    for (const QString &file : files) {
+        if (QFile::remove(path + sep + file)) {
+            qDebug() << "Removed file" << file;
+        } else {
+            qWarning() << "Failed to remove file" << file;
+        }
+    }
 }
 
 QStringList PicturesManager::currentReceipts() const
