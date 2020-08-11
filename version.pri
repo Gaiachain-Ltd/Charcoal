@@ -1,7 +1,7 @@
 # Provide version number to application
 COMMIT = $$system(git rev-parse --short HEAD)
 
-VERSION=0.1.7
+VERSION=0.1.8
 
 HOST_MACHINE = $$[QMAKE_SPEC]
 contains (HOST_MACHINE, .*win32.*) {
@@ -27,7 +27,7 @@ COMPANY_NAME = "Milo Solutions"
 COMPANY_DOMAIN = "milosolutions.com"
 
 ANDROID_VERSION_NAME = "$$VERSION"
-ANDROID_VERSION_CODE = 5
+ANDROID_VERSION_CODE = 6
 
 # add defines
 DEFINES += AppVersion='"\\\"$$APP_VERSION\\\""'
