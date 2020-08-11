@@ -25,6 +25,8 @@ Items.GInput {
 
     property bool popupLocked: false
 
+    property alias emptyText: emptyWarning.text
+
     readOnly: true
     iconSource: GStyle.downArrowImgUrl
     iconEdge: Enums.Edge.RightEdge
@@ -72,6 +74,17 @@ Items.GInput {
                 function goBack() {
                     popup.close()
                 }
+            }
+
+            Items.GText {
+                id: emptyWarning
+                Layout.fillWidth: true
+                visible: entriesList.count === 0
+
+                elide: Text.ElideNone
+                wrapMode: Text.WordWrap
+
+                color: GStyle.textReadonlyColor
             }
 
             ListView {

@@ -24,6 +24,8 @@ Headers.GHeader {
 
     property alias popupLocked: comboBox.popupLocked
 
+    property alias emptyText: comboBox.emptyText
+
     widget: CharcoalItems.CharcoalComboBox {
         id: comboBox
 

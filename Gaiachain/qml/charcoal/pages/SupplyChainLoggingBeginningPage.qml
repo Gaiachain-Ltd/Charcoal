@@ -97,6 +97,7 @@ Pages.SupplyChainPageBase {
         helpButtonVisible: true
         helpText: Strings.loggingBeginningParcelHelp
         popupTitle: Strings.selectParcel
+        emptyText: Strings.noActiveParcels
 
         model: dataManager.parcelsModel
     }

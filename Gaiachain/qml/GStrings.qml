@@ -225,6 +225,7 @@ QtObject {
     property string selectParcel: tr.empty + qsTr("Select parcel")
     property string selectVillage: tr.empty + qsTr("Select village")
     property string selectTreeSpecies: tr.empty + qsTr("Select tree species")
+    property string noActiveParcels: tr.empty + qsTr("All parcels in use or no parcels added in web panel")
 
     property string loggingBeginningParcelHelp: tr.empty + qsTr("Dummy text - parcel help")
     property string loggingBeginningRepsIdHelp: tr.empty + qsTr("Dummy text - Malebi representative ID help")
