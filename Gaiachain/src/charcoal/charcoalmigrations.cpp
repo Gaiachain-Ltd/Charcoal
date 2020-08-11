@@ -44,7 +44,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`id` INTEGER primary key AUTOINCREMENT, "
                 "`name` TEXT NOT NULL UNIQUE, "
                 "`type` INTEGER NOT NULL, "
-                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2), "
+                "`oven_height` DECIMAL(5,2), `oven_height2` DECIMAL(5,2), "
+                "`oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2), "
                 "`active` BOOLEAN NOT NULL DEFAULT(1) CHECK (active IN (0,1)))"),
 
             // SupplyChain
@@ -91,7 +92,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
                 "`type` INTEGER NOT NULL, `plot` INTEGER NOT NULL, "
                 "`carbonizationBeginning` INTEGER NOT NULL, `carbonizationEnding` INTEGER, "
                 "`name` TEXT NOT NULL, "
-                "`oven_height` DECIMAL(5,2), `oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2), "
+                "`oven_height` DECIMAL(5,2), `oven_height2` DECIMAL(5,2), "
+                "`oven_width` DECIMAL(5,2), `oven_length` DECIMAL(5,2), "
                 "FOREIGN KEY(type) REFERENCES OvenTypes(id), "
                 "FOREIGN KEY(plot) REFERENCES Entities(id), "
                 "FOREIGN KEY(carbonizationBeginning) REFERENCES Events(id), "
@@ -136,18 +138,6 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("DELETE FROM EntityTypes"),
             QLatin1String("DELETE FROM EventTypes"),
             QLatin1String("VACUUM")
-        }, true)
-    },
-    // Add support for trapezoid oven
-    {
-        { 0, 0, 4 },
-        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("ALTER TABLE OvenTypes ADD COLUMN `oven_height2` DECIMAL(5,2)"),
-            QLatin1String("ALTER TABLE Ovens ADD COLUMN `oven_height2` DECIMAL(5,2)"),
-        }, true),
-        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
-            QLatin1String("ALTER TABLE OvenTypes DROP COLUMN oven_height2"),
-            QLatin1String("ALTER TABLE Ovens DROP COLUMN oven_height2"),
         }, true)
     },
 };
