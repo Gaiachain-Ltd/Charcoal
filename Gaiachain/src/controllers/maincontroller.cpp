@@ -174,8 +174,9 @@ void MainController::initialWork()
                                             Android::PermissionsHandler::Permission::Internet,
                                             Android::PermissionsHandler::Permission::Storage
                                         }));
-#endif
+#else
     m_dbManager.setupDatabase();
+#endif
 }
 
 void MainController::setupQmlContext(QQmlApplicationEngine &engine)
@@ -335,7 +336,10 @@ void MainController::onPermissionGranted(
     if (androidPermission == Android::PermissionsHandler::Permission::Storage) {
         qDebug() << "Enabling log to file" << AppName;
         MLog::instance()->enableLogToFile(AppName);
+        qDebug() << "Enabled log to file" << MLog::instance()->currentLogPath();
     }
+
+    m_dbManager.setupDatabase();
 }
 #endif
 
