@@ -34,8 +34,15 @@ void Android::PermissionsHandler::requestPermissions(const QList<Permission> &pe
 
     auto deniedPermissions = QStringList{};
     std::copy_if(permissionsList.constBegin(), permissionsList.constEnd(),
-                 std::back_inserter(deniedPermissions), [](const auto &permission) {
-        return QtAndroid::checkPermission(permission) == QtAndroid::PermissionResult::Denied;
+                 std::back_inserter(deniedPermissions), [this](const auto &permission) {
+        bool result = QtAndroid::checkPermission(permission) == QtAndroid::PermissionResult::Denied;
+        if (result) {
+            return result;
+        } else {
+            emit permissionGranted(findPermission(permission));
+        }
+
+        return false;
     });
 
     if (!deniedPermissions.isEmpty()) {
