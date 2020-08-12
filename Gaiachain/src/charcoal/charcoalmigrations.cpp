@@ -140,4 +140,14 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("VACUUM")
         }, true)
     },
+    // Dummy migration - fixes migration errors
+    {
+        { 0, 9, 2 },
+        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("SELECT 'nothing'"),
+        }, true),
+        std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
+            QLatin1String("SELECT 'nothing'")
+        }, true)
+    },
 };

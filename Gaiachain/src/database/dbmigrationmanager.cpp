@@ -79,6 +79,9 @@ QVersionNumber MigrationManager::getVersionNumber() const
 
 bool MigrationManager::updateDb()
 {
+    qCInfo(databaseMigration) << "Updating DB from" << m_dbVersion
+                              << "to" << LATEST_DB_VERSION;
+
     if (!db::Helpers::hasDatabaseConnection(c_dbConnectionName)) {
         // we need a separate connection, because we're now in a different thread
         db::Helpers::setupDatabaseConnection(c_dbPath, c_dbConnectionName);

@@ -54,6 +54,7 @@ void DatabaseManager::setupDatabase()
         m_migrationRunner = QtConcurrent::run(std::bind(&db::MigrationManager::update, &m_migrationManager));
         m_migrationProgress.setFuture(m_migrationRunner);
     } else {
+        qCInfo(databaseManager) << "DB is up-to-date";
         emit databaseReady(dbPath());
     }
 
