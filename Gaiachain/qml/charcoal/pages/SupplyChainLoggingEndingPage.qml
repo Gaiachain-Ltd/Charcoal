@@ -103,16 +103,12 @@ Pages.SupplyChainPageBase {
         minimumDate: dataManager.minimumDateModel.date
     }
 
-    Headers.InputHeader {
+    CharcoalHeaders.TreeCountHeader {
         id: numberOfTreesHeader
         Layout.fillWidth: true
-        headerText: Strings.numberOfTrees
-        helpButtonVisible: true
-        helpText: Strings.loggingEndingNumberOfTreesHelp
-        validator: IntValidator {
-            bottom: 0
-            top: 32767
-        }
+        //headerText: Strings.numberOfTrees
+        //helpButtonVisible: true
+        //helpText: Strings.loggingEndingNumberOfTreesHelp
     }
 
     Common.PositionSourceHandler {
