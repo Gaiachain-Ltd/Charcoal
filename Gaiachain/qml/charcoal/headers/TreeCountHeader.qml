@@ -27,31 +27,57 @@ Column {
     Headers.GHeader {
         id: button
 
-        property alias text: buttonTextWidget.text
-
         headerText: "Number of trees planted"
         helpButtonVisible: true
         helpText: "Trees number help"
-        text: "Tap to add a tree being planted"
 
         function clear() {
             text = Strings.empty
         }
 
-        widget: Items.GText {
-            id: buttonTextWidget
+        widget: Rectangle {
+            id: plusRectangle
 
             Layout.fillWidth: true
             Layout.margins: root.margins
             Layout.leftMargin: extraLeftMargin? root.margins * 2 : root.margins
 
-            focus: false
-            color: secondaryTextColor
-            font.bold: root.highlighted || forceBoldValue
-            font.pixelSize: valueFontSize
+            color: GStyle.blank
+            border {
+                width: sr(GStyle.controlDefaultBorderWidth)
+                color: GStyle.buttonBorderColor
+            }
 
-            wrapMode: Text.WrapAnywhere
-            horizontalAlignment: Text.AlignLeft
+            height: 100
+            radius: s(GStyle.buttonRadius)
+
+            RowLayout {
+                anchors.fill: parent
+
+                Text {
+                    id: plusTextWidget
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    focus: false
+                    color: secondaryTextColor
+                    font.bold: root.highlighted || forceBoldValue
+                    font.pixelSize: valueFontSize
+
+                    text: "Tap to add a tree being planted"
+
+                    wrapMode: Text.WrapAnywhere
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+//                    Image {
+//                    }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: counterTextWidget.text = parseInt(counterTextWidget.text) + 1
+            }
         }
     }
 
@@ -70,7 +96,6 @@ Column {
         headerText: "Total count of trees planted"
         helpButtonVisible: true
         helpText: "Total trees number help"
-        //inputText: "Tap to add a tree being planted"
 
         widget: Rectangle {
             id: inputRectangle
@@ -101,6 +126,8 @@ Column {
                     font.bold: root.highlighted || forceBoldValue
                     font.pixelSize: valueFontSize
 
+                    text: "0"
+
                     wrapMode: Text.WrapAnywhere
                     horizontalAlignment: Text.AlignLeft
 
@@ -110,7 +137,7 @@ Column {
                     }
 
                     background: Item {
-                         }
+                    }
                 }
 
                 Rectangle {
@@ -124,6 +151,19 @@ Column {
                     border {
                         width: sr(GStyle.controlDefaultBorderWidth)
                         color: GStyle.buttonBorderColor
+                    }
+
+//                    Image {
+//                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            let current = parseInt(counterTextWidget.text)
+                            if (current > 0) {
+                                counterTextWidget.text = current - 1
+                            }
+                        }
                     }
                 }
             }
