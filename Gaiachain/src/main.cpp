@@ -3,6 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QTimer>
+#include <QIcon>
 
 #include "src/controllers/maincontroller.h"
 #include "../milo/mlog/mlog.h"
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName(CompanyName);
     app.setOrganizationDomain(CompanyDomain);
     app.setApplicationName(AppName);
+    app.setWindowIcon(QIcon(":/ui/logoIcon"));
 
     qCInfo(coreMain) << "\nName:" << app.applicationName()
                      << "\nApp domain:" << AppDomain
