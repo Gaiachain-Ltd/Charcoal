@@ -18,7 +18,7 @@ Pages.SupplyChainPageBase {
     title: Strings.replantation
 
     proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
-                           && numberOfTreesHeader.inputText.length > 0
+                           && numberOfTreesHeader.counterValue.length > 0
                            && treeSpeciesComboBox.currentText.length > 0)
 
     Component.onCompleted: refreshData()
@@ -48,7 +48,7 @@ Pages.SupplyChainPageBase {
                         Enums.DelegateType.Standard,
                         true),
                     Utility.createSummaryItem(Strings.numberOfTreesPlanted,
-                                              numberOfTreesHeader.inputText),
+                                              numberOfTreesHeader.counterValue),
                     Utility.createSummaryItem(Strings.treeSpecies,
                                               treeSpeciesComboBox.currentText),
                     Utility.createSummaryItem(Strings.userId,
@@ -75,7 +75,7 @@ Pages.SupplyChainPageBase {
                     new Date,
                     userManager.userData.code,
                     plotIdComboBox.currentId,
-                    numberOfTreesHeader.inputText,
+                    numberOfTreesHeader.counterValue,
                     treeSpeciesComboBox.currentId,
                     beginningDateHeader.selectedDate,
                     endingDateHeader.selectedDate
@@ -102,16 +102,17 @@ Pages.SupplyChainPageBase {
         }
     }
 
-    Headers.InputHeader {
+    CharcoalHeaders.TreeCountHeader {
         id: numberOfTreesHeader
         Layout.fillWidth: true
-        headerText: Strings.numberOfTreesPlanted
-        helpButtonVisible: true
-        helpText: Strings.replantationNumberOfTreesHelp
-        validator: IntValidator {
-            bottom: 0
-            top: 32767
-        }
+
+        plusHelpText: Strings.replantationNumberOfTreesHelp
+        counterHelpText: Strings.replantationNumberOfTreesHelp
+
+        plusHeaderText: Strings.numberOfTreesPlanted
+        plusButtonText: Strings.tapToAddATreeBeingPlanted
+
+        counterHeaderText: Strings.totalCountOfTreesPlanted
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {

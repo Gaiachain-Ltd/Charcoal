@@ -1,6 +1,6 @@
 pragma Singleton
 
-import QtQuick 2.11
+import QtQuick 2.12
 
 QtObject {
     // general
@@ -237,6 +237,9 @@ QtObject {
     // Charcoal - logging ending page
     property string endingDate: tr.empty + qsTr("Ending date")
     property string numberOfTrees: tr.empty + qsTr("Number of trees")
+    property string numberOfTreesCut: tr.empty + qsTr("Number of trees cut")
+    property string tapToAddATreeBeingCut: tr.empty + qsTr("Tap to add a tree being cut")
+    property string totalCountOfTreesCut: tr.empty + qsTr("Total count of trees cut")
     property string updatePlotId: tr.empty + qsTr("Update Plot ID")
 
     property string loggingEndingPlotIdHelp: tr.empty + qsTr("Dummy text - plot id help")
@@ -329,6 +332,8 @@ QtObject {
 
     // Charcoal - replantation page
     property string numberOfTreesPlanted: tr.empty + qsTr("Number of trees planted")
+    property string tapToAddATreeBeingPlanted: tr.empty + qsTr("Tap to add a tree being planted")
+    property string totalCountOfTreesPlanted: tr.empty + qsTr("Total count of trees planted")
     property string userId: tr.empty + qsTr("User Id")
 
     property string replantationPlotIdHelp: tr.empty + qsTr("Dummy text - plot ID help")
