@@ -9,15 +9,20 @@ import com.gaiachain.helpers 1.0
 import "../../items" as Items
 import "../../headers" as Headers
 
-Column {
+ColumnLayout {
     id: root
 
     Layout.fillWidth: true
 
-    property color secondaryColor
+    property alias plusHeaderText: button.headerText
+    property alias plusButtonText: plusTextWidget.text
+    property alias plusHelpText: button.helpText
+
+    property alias counterHeaderText: counter.headerText
+    readonly property alias counterValue: counterTextWidget.text
+    property alias counterHelpText: counter.helpText
+
     property color secondaryTextColor
-    property color backgroundColor
-    property bool summaryMode: true
     property bool highlighted: false
     property bool extraLeftMargin: false
     property bool forceBoldValue: false
@@ -26,6 +31,8 @@ Column {
 
     Headers.GHeader {
         id: button
+
+        Layout.fillWidth: true
 
         headerText: "Number of trees planted"
         helpButtonVisible: true
@@ -48,11 +55,13 @@ Column {
                 color: GStyle.buttonBorderColor
             }
 
-            height: 100
+            height: s(350)
             radius: s(GStyle.buttonRadius)
 
             RowLayout {
                 anchors.fill: parent
+                anchors.margins: s(GStyle.middleMargin)
+                spacing: s(GStyle.bigMargin)
 
                 Text {
                     id: plusTextWidget
@@ -66,12 +75,14 @@ Column {
 
                     text: "Tap to add a tree being planted"
 
-                    wrapMode: Text.WrapAnywhere
+                    wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
                 }
 
-//                    Image {
-//                    }
+                Image {
+                    source: GStyle.iconPlus
+                }
             }
 
             MouseArea {
@@ -83,6 +94,8 @@ Column {
 
     Headers.GHeader {
         id: counter
+
+        Layout.fillWidth: true
 
         property alias text: counterTextWidget.text
 
@@ -110,7 +123,7 @@ Column {
                 color: GStyle.buttonBorderColor
             }
 
-            height: 100
+            height: s(100)
             radius: s(GStyle.buttonRadius)
 
             RowLayout {
@@ -128,8 +141,9 @@ Column {
 
                     text: "0"
 
-                    wrapMode: Text.WrapAnywhere
+                    wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
 
                     validator: IntValidator {
                         bottom: 0
@@ -153,8 +167,17 @@ Column {
                         color: GStyle.buttonBorderColor
                     }
 
-//                    Image {
-//                    }
+                    //Image {
+                    //    source: GStyle.iconMinus
+                    //}
+
+                    Rectangle {
+                        anchors.centerIn: parent
+                        color: "#D97F7F"
+                        height: s(4)
+                        radius: s(2)
+                        width: parent.width * .4
+                    }
 
                     MouseArea {
                         anchors.fill: parent

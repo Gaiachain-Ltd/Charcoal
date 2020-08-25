@@ -17,7 +17,7 @@ Pages.SupplyChainPageBase {
     title: Strings.loggingEnding
 
     proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
-                           && numberOfTreesHeader.inputText.length > 0)
+                           && numberOfTreesHeader.counterValue.length > 0)
 
     Component.onCompleted: refreshData()
 
@@ -51,7 +51,7 @@ Pages.SupplyChainPageBase {
                         endingDateHeader.selectedDate.toLocaleDateString(
                             Qt.locale(), Strings.dateFormat)),
                     Utility.createSummaryItem(Strings.numberOfTrees,
-                                              numberOfTreesHeader.inputText),
+                                              numberOfTreesHeader.counterValue),
                     Utility.createSummaryItem(Strings.gpsCoordinates,
                                               gpsSource.coordinateString)
                 ]
@@ -67,7 +67,7 @@ Pages.SupplyChainPageBase {
                     endingDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
                     plotIdComboBox.currentId,
-                    numberOfTreesHeader.inputText)
+                    numberOfTreesHeader.counterValue)
 
         pageManager.enter(Enums.Page.MainMenu)
     }
@@ -106,9 +106,14 @@ Pages.SupplyChainPageBase {
     CharcoalHeaders.TreeCountHeader {
         id: numberOfTreesHeader
         Layout.fillWidth: true
-        //headerText: Strings.numberOfTrees
-        //helpButtonVisible: true
-        //helpText: Strings.loggingEndingNumberOfTreesHelp
+
+        plusHelpText: Strings.loggingEndingNumberOfTreesHelp
+        counterHelpText: Strings.loggingEndingNumberOfTreesHelp
+
+        plusHeaderText: Strings.numberOfTreesCut
+        plusButtonText: Strings.tapToAddATreeBeingCut
+
+        counterHeaderText: Strings.totalCountOfTreesCut
     }
 
     Common.PositionSourceHandler {
