@@ -14,7 +14,8 @@
 using namespace db;
 
 MigrationManager::MigrationManager(const QString &dbPath, QObject *parent)
-    : QObject(parent), c_dbPath(dbPath), c_dbConnectionName(metaObject()->className())
+    : QObject(parent), c_dbPath(dbPath),
+      c_dbConnectionName(metaObject()->className())
 {}
 
 bool MigrationManager::checkAndCreate()
@@ -22,8 +23,15 @@ bool MigrationManager::checkAndCreate()
     auto exists = dbExist();
     if (!exists) {
         if (!QFileInfo(c_dbPath).absoluteDir().mkpath(".")) {
-            qCCritical(databaseMigration) << "Cannot create a directory for database: " << c_dbPath;
+            qCCritical(databaseMigration) << "Cannot create a directory for database: "
+                                          << c_dbPath;
         }
+    }
+
+    if (QFileInfo(c_dbPath).isWritable() == false) {
+        qCWarning(databaseMigration) << "DB file not writable - rewriting"
+                                     << c_dbPath;
+        QFile::remove(c_dbPath);
     }
 
     if (!openDb()) {
@@ -49,7 +57,17 @@ bool MigrationManager::update()
         return true;
     }
 
-    return updateDb();
+    const bool result = (updateDb() && QFileInfo(c_dbPath).isWritable());
+    if (result) {
+        return result;
+    } else {
+        // Update has failed - remove DB file and retry
+        qCWarning(databaseMigration) << "DB update has failed - retrying!"
+                                     << c_dbPath;
+        QFile::remove(c_dbPath);
+        checkAndCreate();
+        return updateDb();
+    }
 }
 
 bool MigrationManager::dbExist() const

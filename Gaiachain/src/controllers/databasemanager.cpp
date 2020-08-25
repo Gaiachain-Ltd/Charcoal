@@ -18,7 +18,9 @@ const QLatin1String DatabaseManager::sc_dbName =
 #endif
 
 DatabaseManager::DatabaseManager(QObject *parent)
-    : AbstractManager(parent), c_dbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + sc_dbName),
+    : AbstractManager(parent),
+      c_dbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
+               + "/" + sc_dbName),
       m_migrationManager(c_dbPath)
 {
     qCDebug(databaseManager) << "DB path:" << c_dbPath;
@@ -51,7 +53,8 @@ void DatabaseManager::setupDatabase()
     if (m_migrationManager.needsUpdate()) {
         processStarted();
 
-        m_migrationRunner = QtConcurrent::run(std::bind(&db::MigrationManager::update, &m_migrationManager));
+        m_migrationRunner = QtConcurrent::run(
+            std::bind(&db::MigrationManager::update, &m_migrationManager));
         m_migrationProgress.setFuture(m_migrationRunner);
     } else {
         qCInfo(databaseManager) << "DB is up-to-date";

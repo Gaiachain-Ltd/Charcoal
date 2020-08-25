@@ -18,6 +18,9 @@ Pages.SupplyChainPageBase {
 
     property var ovenDimensions: dataManager.actionController.emptyOvenDimensions
 
+    readonly property string fixedDimensionsOven: "2"
+    readonly property string variableDimensionsOven: "1"
+
     title: Strings.carbonizationBeginning
 
     // 1 - Traditional oven
@@ -25,8 +28,8 @@ Pages.SupplyChainPageBase {
     // These ids come from Web :shrug:
     proceedButtonEnabled: (ovenIdHeader.inputText.length > 0
                            && plotIdComboBox.currentText.length > 0
-                           && (ovenTypeComboBox.ovenType === "2"
-                               || (ovenTypeComboBox.ovenType === "1"
+                           && (ovenTypeComboBox.ovenType === fixedDimensionsOven
+                               || (ovenTypeComboBox.ovenType === variableDimensionsOven
                                    && ovenDimensions.count() === 4)))
 
     Component.onCompleted: refreshData()
@@ -219,7 +222,7 @@ Pages.SupplyChainPageBase {
         model: dataManager.ovenTypesModel
 
         onCurrentTextChanged: {
-            if (ovenType === "2") {
+            if (ovenType === fixedDimensionsOven) {
                 ovenDimensions = dataManager.actionController.defaultOvenDimensions(
                             ovenIdNumber)
             } else {
@@ -229,7 +232,7 @@ Pages.SupplyChainPageBase {
     }
 
     CharcoalHeaders.CharcoalButtonHeader {
-        property var titles: (ovenTypeComboBox.ovenType === "2")?
+        property var titles: (ovenTypeComboBox.ovenType === fixedDimensionsOven)?
              [ Strings.width, Strings.length, Strings.height ]
            : [ Strings.width, Strings.length, Strings.heightA, Strings.heightB ]
 
