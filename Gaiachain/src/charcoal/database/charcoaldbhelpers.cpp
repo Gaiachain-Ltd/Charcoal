@@ -155,8 +155,11 @@ OvenDimensions CharcoalDbHelpers::defaultOvenDimensions(const QString &connectio
 
         dimensions.width = query.value(Tags::webOvenWidth).toReal();
         dimensions.length = query.value(Tags::webOvenLength).toReal();
+        dimensions.hasFixedDimensions = true;
+
         return dimensions;
     } else {
+        dimensions.hasFixedDimensions = false;
         return dimensions;
     }
 }

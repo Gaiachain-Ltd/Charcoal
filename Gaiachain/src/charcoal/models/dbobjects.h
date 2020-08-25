@@ -17,12 +17,14 @@ class OvenDimensions
     Q_PROPERTY(qreal length MEMBER length)
     Q_PROPERTY(qreal height1 MEMBER height1)
     Q_PROPERTY(qreal height2 MEMBER height2)
+    Q_PROPERTY(bool hasFixedDimensions MEMBER hasFixedDimensions CONSTANT)
 
 public:
     qreal height1 = -1.0;
     qreal height2 = -1.0;
     qreal width = -1.0;
     qreal length = -1.0;
+    bool hasFixedDimensions = false;
 
     Q_INVOKABLE int count() const;
     Q_INVOKABLE qreal volume() const;
