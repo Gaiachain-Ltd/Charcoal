@@ -74,7 +74,18 @@ Pages.SupplyChainPageBase {
                         false)
                 ]
 
-        if (ovenDimensions.count() === 4) {
+        if (ovenDimensions.hasFixedDimensions) {
+            summary.push(Utility.createSummaryItem(
+                             "",
+                             [ ovenDimensionsHeader.titles, dims ],
+                             "", "",
+                             GStyle.delegateHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             GStyle.fontHighlightColor3,
+                             Enums.DelegateType.Row,
+                             true)
+                         )
+        } else {
             let row1 = [ ovenDimensionsHeader.titles[0], ovenDimensionsHeader.titles[1] ]
             let row2 = [ ovenDimensionsHeader.titles[2], ovenDimensionsHeader.titles[3] ]
             let val1 = [ dims[0], dims[1] ]
@@ -97,17 +108,6 @@ Pages.SupplyChainPageBase {
                              GStyle.fontHighlightColor3,
                              Enums.DelegateType.Row,
                              true),
-                         )
-        } else {
-            summary.push(Utility.createSummaryItem(
-                             "",
-                             [ ovenDimensionsHeader.titles, dims ],
-                             "", "",
-                             GStyle.delegateHighlightColor3,
-                             GStyle.fontHighlightColor3,
-                             GStyle.fontHighlightColor3,
-                             Enums.DelegateType.Row,
-                             true)
                          )
         }
 
