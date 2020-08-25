@@ -17,7 +17,8 @@ namespace {
     }
 }
 
-bool db::Helpers::setupDatabaseConnection(const QString &dbPath, const QString &connectionName)
+bool db::Helpers::setupDatabaseConnection(const QString &dbPath,
+                                          const QString &connectionName)
 {
     auto db = QSqlDatabase::addDatabase("QSQLITE", connectionThreadName(connectionName));
     db.setDatabaseName(dbPath);
@@ -55,7 +56,8 @@ void db::Helpers::execQuery(QSqlQuery &query, bool critical)
     }
 }
 
-bool db::Helpers::execQuery(const QSqlDatabase &db, const QLatin1String &queryStr, bool critical)
+bool db::Helpers::execQuery(const QSqlDatabase &db, const QLatin1String &queryStr,
+                            bool critical)
 {
     auto query = QSqlQuery(db);
     query.prepare(queryStr);
@@ -63,9 +65,14 @@ bool db::Helpers::execQuery(const QSqlDatabase &db, const QLatin1String &querySt
     return !hasError(query);
 }
 
-bool db::Helpers::runQueries(const QSqlDatabase &db, const QList<QLatin1String> &queries, bool critical)
+bool db::Helpers::runQueries(const QSqlDatabase &db,
+                             const QList<QLatin1String> &queries,
+                             bool critical)
 {
     return std::all_of(queries.constBegin(), queries.constEnd(),
-                       std::bind(qOverload<const QSqlDatabase &, const QLatin1String &, bool>(&execQuery),
+                       std::bind(qOverload<
+                                     const QSqlDatabase &,
+                                     const QLatin1String &,
+                                     bool>(&execQuery),
                                  db, std::placeholders::_1, critical));
 }
