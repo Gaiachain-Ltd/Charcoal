@@ -460,6 +460,42 @@ QVariantList TrackingModel::summaryForTransport(
 
             receptionData = value.toList();
         }
+
+        if (action == Enums::SupplyChainAction::LocalReception
+            && endingTimestamp == -1) {
+            endingTimestamp = event.date;
+
+            const QString bagNumberString(QString::number(
+                CharcoalDbHelpers::bagCountInTransport(m_connectionName, entity.id)));
+
+            Utility::SummaryValue value;
+            value.titles = QStringList {
+                bagNumberString,
+                dateString(beginningTimestamp)
+            };
+
+            value.values = QStringList {
+                tr("Number of bags"),
+                tr("Selling date")
+            };
+
+            value.icons = QStringList {
+                QString(),
+                QString()
+            };
+
+            value.linkDestinationPages = QList<Enums::Page>{
+                Enums::Page::InvalidPage,
+                Enums::Page::InvalidPage
+            };
+
+            value.linkDatas = QVariantList {
+                QVariant(),
+                QVariant()
+            };
+
+            receptionData = value.toList();
+        }
     }
 
     result.append(utility.createSummaryItem(
