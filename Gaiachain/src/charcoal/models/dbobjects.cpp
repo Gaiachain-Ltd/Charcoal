@@ -9,6 +9,7 @@
 #include <QSqlError>
 
 #include <QJsonDocument>
+#include <QJsonArray>
 
 int OvenDimensions::count() const
 {
@@ -112,7 +113,12 @@ void Event::loadFromQuery(QSqlQuery *query)
     location = QGeoCoordinate(latitude, longitude);
 
     properties = QJsonDocument::fromJson(
-                     query->value(Tags::properties).toByteArray()).object();
+                query->value(Tags::properties).toByteArray()).object();
+}
+
+QVariantList Event::qrCodes() const
+{
+    return properties.value(Tags::webQrCodes).toArray().toVariantList();
 }
 
 bool Entity::loadFromDb(const QString &connectionName, const int id)

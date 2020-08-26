@@ -98,7 +98,7 @@ int UnusedHarvestIdsModelForTransport::destinationId() const
 
 QVariantList UnusedHarvestIdsModelForTransport::scannedQrs() const
 {
-    return m_pausedEvent.properties.value(Tags::webQrCodes).toArray().toVariantList();
+    return m_pausedEvent.qrCodes();
 }
 
 QDateTime UnusedHarvestIdsModelForTransport::loadingDate() const
