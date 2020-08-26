@@ -26,6 +26,7 @@
         <file>pages/SupplyChainLoadingAndTransportPage.qml</file>
         <file>pages/SupplyChainLoggingBeginningPage.qml</file>
         <file>pages/SupplyChainLoggingEndingPage.qml</file>
+        <file>pages/SupplyChainSellAtTheLocalMarketPage.qml</file>
         <file>pages/SupplyChainReceptionPage.qml</file>
         <file>pages/SupplyChainFinalizePage.qml</file>
         <file>pages/QRScannerPage.qml</file>

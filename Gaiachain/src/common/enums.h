@@ -46,6 +46,7 @@ namespace Enums {
         SupplyChainCarbonizationBeginning,
         SupplyChainCarbonizationEnding,
         SupplyChainLoadingAndTransport,
+        SupplyChainSellAtTheLocalMarket,
         SupplyChainReception,
         SupplyChainFinalize,
         PageTracking,

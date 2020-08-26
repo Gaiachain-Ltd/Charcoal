@@ -20,12 +20,12 @@
 #include <QDateTime>
 #include <QDate>
 
-QString BagsMatch::matchStatusMessage() const
+QString BagsMatch::matchStatusMessage(const bool showOnlyBagNumbers) const
 {
     const QString numbers(QObject::tr("%1 of %2").arg(bagsFromReception.size())
                               .arg(bagsFromTransport.size()));
 
-    if (fullMatch) {
+    if (fullMatch || showOnlyBagNumbers) {
         return numbers;
     }
 
@@ -826,7 +826,58 @@ void ActionController::registerLoadingAndTransport(
     emit refreshLocalEvents();
 }
 
-bool ActionController::registerReception(
+bool ActionController::registerLocalMarketReception(
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const int transportId,
+    const QVariantList &scannedQrs) const
+{
+    /*
+     * Algorithm is:
+     * - find entity ID in table (created in Loading and Transport step)
+     * - insert event into table
+     * - send action to web server
+     */
+
+    qDebug() << "Registering local reception" << coordinate << timestamp
+             << userId << transportId
+             << scannedQrs.size();
+
+    if (transportId == -1) {
+        qWarning() << RED("Entity ID not found!");
+        emit error(tr("Transport ID is incorrect %1").arg(transportId));
+        return false;
+    }
+
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::Reception));
+
+    if (eventTypeId == -1) {
+        qWarning() << RED("Event Type ID not found!");
+        emit error(tr("Transport type is incorrect %1").arg(eventTypeId));
+        return false;
+    }
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+
+    if (false == insertEvent(&query, transportId, eventTypeId, userId, timestamp,
+                             eventDate, coordinate,
+                             {
+                                 { Tags::webQrCodes, scannedQrs },
+                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+                             }))
+    {
+        emit error(tr("Failed to insert local reception %1").arg(transportId));
+        return false;
+    }
+
+    emit refreshLocalEvents();
+    return true;
+}
+
+bool ActionController::registerFinalReception(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -844,7 +895,7 @@ bool ActionController::registerReception(
      * - send action to web server
      */
 
-    qDebug() << "Registering reception" << coordinate << timestamp
+    qDebug() << "Registering final reception" << coordinate << timestamp
              << userId << transportId << documents << receipts
              << scannedQrs.size();
 
@@ -867,19 +918,19 @@ bool ActionController::registerReception(
     // into DB.
     // This can only happen for debug server where we have some dummy, unfinished
     // events
-    const int existing = CharcoalDbHelpers::getInteger(
-        m_connectionName, "Events",
-        { Tags::entityId, Tags::typeId },
-        { transportId, eventTypeId },
-        Tags::id,
-        QString(), false
-        );
-
-    if (existing != -1) {
-        qWarning() << RED("Reception already exists - special case!")
-                   << transportId << eventTypeId << existing;
-        return true;
-    }
+    //const int existing = CharcoalDbHelpers::getInteger(
+    //    m_connectionName, "Events",
+    //    { Tags::entityId, Tags::typeId },
+    //    { transportId, eventTypeId },
+    //    Tags::id,
+    //    QString(), false
+    //    );
+    //
+    //if (existing != -1) {
+    //    qWarning() << RED("Reception already exists - special case!")
+    //               << transportId << eventTypeId << existing;
+    //    return true;
+    //}
 
     const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
     const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));

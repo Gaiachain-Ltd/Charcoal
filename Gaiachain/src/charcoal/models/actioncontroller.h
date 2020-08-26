@@ -53,7 +53,7 @@ public:
      */
     QVariantList bagsFromReception;
 
-    Q_INVOKABLE QString matchStatusMessage() const;
+    Q_INVOKABLE QString matchStatusMessage(const bool showOnlyBagNumbers = false) const;
 };
 
 Q_DECLARE_METATYPE(BagsMatch)
@@ -169,7 +169,16 @@ public:
         const bool pauseEvent
         ) const;
 
-    Q_INVOKABLE bool registerReception(
+    Q_INVOKABLE bool registerLocalMarketReception(
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QDateTime &eventDate,
+        const QString &userId,
+        const int transportId,
+        const QVariantList &scannedQrs
+        ) const;
+
+    Q_INVOKABLE bool registerFinalReception(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,

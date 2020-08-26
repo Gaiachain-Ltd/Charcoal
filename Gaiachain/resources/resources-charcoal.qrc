@@ -10,6 +10,7 @@
         <file alias="submenuLoggingBeginning">charcoal/ui/logging-beginning.svg</file>
         <file alias="submenuLoggingEnding">charcoal/ui/logging-ending.svg</file>
         <file alias="submenuLogging">charcoal/ui/logging.svg</file>
+        <file alias="submenuSellAtLocalMarket">charcoal/ui/sell-local-market.svg</file>
         <file alias="submenuReception">charcoal/ui/reception.svg</file>
         <file alias="menuReplantation">charcoal/ui/replantation.svg</file>
         <file alias="menuSupplyChain">charcoal/ui/supply-chain.svg</file>
