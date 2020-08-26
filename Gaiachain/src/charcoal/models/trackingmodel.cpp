@@ -236,8 +236,8 @@ QVariantList TrackingModel::summaryForPlot(
                 tr("Ending date")
             },
             QVariantList {
-                dateString(beginningTimestamp),
-                dateString(endingTimestamp)
+                dateString(beginningTimestamp, true),
+                dateString(endingTimestamp, true)
             }
         },
         QString(), QString(), QString(), QString(), QString(),
@@ -337,8 +337,8 @@ QVariantList TrackingModel::summaryForHarvest(
                     tr("Ending date")
                 },
                 QVariantList {
-                    dateString(oven.carbonizationBeginning),
-                    dateString(oven.carbonizationEnding)
+                    dateString(oven.carbonizationBeginning, true),
+                    dateString(oven.carbonizationEnding, true)
                 }
             },
             QString(), QString(), QString(), QString(), QString(),
@@ -393,13 +393,40 @@ QVariantList TrackingModel::summaryForTransport(
             beginningTimestamp = event.date;
 
             value.titles.append({
-                dateString(beginningTimestamp),
+                dateString(beginningTimestamp, true),
                 bagNumberString
             });
 
             value.values.append({
                 tr("Loading date"),
                 tr("Number of loaded bags")
+            });
+
+            value.icons.append({
+                QString(),
+                QString()
+            });
+
+            value.linkDestinationPages.append({
+                Enums::Page::InvalidPage,
+                Enums::Page::InvalidPage
+            });
+
+            value.linkDatas.append({
+                QVariant(),
+                QVariant()
+            });
+        }
+
+        if (action == Enums::SupplyChainAction::LocalReception) {
+            value.titles.append({
+                bagNumberString,
+                dateString(event.date, true)
+            });
+
+            value.values.append({
+                tr("Number of bags sold"),
+                tr("Selling date")
             });
 
             value.icons.append({
@@ -448,7 +475,7 @@ QVariantList TrackingModel::summaryForTransport(
 
             value.titles.append({
                 bagNumberString,
-                dateString(endingTimestamp),
+                dateString(endingTimestamp, true),
                 QString(hasDocs? uploaded : noPhoto),
                 QString(hasRecs? uploaded : noPhoto)
             });
@@ -481,33 +508,6 @@ QVariantList TrackingModel::summaryForTransport(
                 QVariantMap{ {"urls", recs} }
             });
         }
-
-        if (action == Enums::SupplyChainAction::LocalReception) {
-            value.titles.append({
-                bagNumberString,
-                dateString(event.date)
-            });
-
-            value.values.append({
-                tr("Number of bags sold"),
-                tr("Selling date")
-            });
-
-            value.icons.append({
-                QString(),
-                QString()
-            });
-
-            value.linkDestinationPages.append({
-                Enums::Page::InvalidPage,
-                Enums::Page::InvalidPage
-            });
-
-            value.linkDatas.append({
-                QVariant(),
-                QVariant()
-            });
-        }
     }
 
     result.append(utility.createSummaryItem(
@@ -524,7 +524,8 @@ QVariantList TrackingModel::summaryForTransport(
     result.append(utility.createSummaryItem(
         tr("Plate number"), plateNumber));
     result.append(utility.createSummaryItem(
-        tr("Reception at the storage facility"), dateString(endingTimestamp)));
+        tr("Reception at the storage facility"),
+        dateString(endingTimestamp, true)));
 
     return result;
 }
@@ -580,7 +581,7 @@ void TrackingModel::detailsReplyHandler(const QJsonDocument &reply)
     }
 }
 
-QString TrackingModel::dateString(const qint64 timestamp) const
+QString TrackingModel::dateString(const qint64 timestamp, const bool withTime) const
 {
     const auto dateTime = QDateTime::fromSecsSinceEpoch(timestamp);
 
@@ -588,7 +589,11 @@ QString TrackingModel::dateString(const qint64 timestamp) const
         return QString(Tags::noDateTime);
     }
 
-    return dateTime.toString(QStringLiteral("dd/MM/yyyy"));
+    if (withTime) {
+        return dateTime.toString(QStringLiteral("dd/MM/yyyy hh:mm:ss"));
+    } else {
+        return dateTime.toString(QStringLiteral("dd/MM/yyyy"));
+    }
 }
 
 /*!
