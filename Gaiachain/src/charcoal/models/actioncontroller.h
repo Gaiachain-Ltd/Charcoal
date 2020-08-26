@@ -54,9 +54,15 @@ public:
     QVariantList bagsFromTransport;
 
     /*!
-     * List of bags scanned in Reception step.
+     * List of bags scanned in most recent Reception step.
      */
     QVariantList bagsFromReception;
+
+    /*!
+     * List of bags scanned in all Reception steps (LocalReception and
+     * Reception).
+     */
+    QVariantList bagsFromOtherReceptions;
 
     Q_INVOKABLE QString matchStatusMessage(const bool showOnlyBagNumbers = false) const;
 };

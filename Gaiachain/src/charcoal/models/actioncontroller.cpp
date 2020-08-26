@@ -245,25 +245,39 @@ BagsMatch ActionController::matchBags(const int transportId,
 
     QVariantList qrsFromOtherReceptions(CharcoalDbHelpers::bagsInReceptions(
         m_connectionName, transportId));
+    result.bagsFromOtherReceptions = qrsFromOtherReceptions;
 
+    QVariantList allReceptions(qrsFromReception);
+    allReceptions.append(qrsFromOtherReceptions);
+
+    std::sort(qrsFromOtherReceptions.begin(), qrsFromOtherReceptions.end());
     std::sort(qrsFromReception.begin(), qrsFromReception.end());
     std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
+    std::sort(allReceptions.begin(), allReceptions.end());
+
     result.bagsFromTransport = qrsFromTransport;
     result.bagsFromReception = qrsFromReception;
 
-    if (qrsFromReception == qrsFromTransport) {
+    if (allReceptions == qrsFromTransport) {
         result.fullMatch = true;
         return result;
     }
 
+    for (const QVariant &other : qAsConst(qrsFromOtherReceptions)) {
+        if (qrsFromReception.contains(other)) {
+            qDebug() << "Duplicated bag" << other;
+            result.hasConflict = true;
+        }
+    }
+
     for (const QVariant &transport : qAsConst(qrsFromTransport)) {
-        if (qrsFromReception.contains(transport) == false) {
+        if (allReceptions.contains(transport) == false) {
             qDebug() << "Missing bag" << transport;
             result.missingBags.append(transport);
         }
     }
 
-    for (const QVariant &reception : qAsConst(qrsFromReception)) {
+    for (const QVariant &reception : qAsConst(allReceptions)) {
         if (qrsFromTransport.contains(reception) == false) {
             qDebug() << "Extra bag" << reception;
             result.extraBags.append(reception);
