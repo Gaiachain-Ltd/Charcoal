@@ -243,6 +243,9 @@ BagsMatch ActionController::matchBags(const int transportId,
         CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
     QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
 
+    QVariantList qrsFromOtherReceptions(CharcoalDbHelpers::bagsInReceptions(
+        m_connectionName, transportId));
+
     std::sort(qrsFromReception.begin(), qrsFromReception.end());
     std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
     result.bagsFromTransport = qrsFromTransport;

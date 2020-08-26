@@ -32,6 +32,11 @@ public:
     bool fullMatch = false;
 
     /*!
+     * If it is true it means that a QR code is duplicated.
+     */
+    bool hasConflict = false;
+
+    /*!
      * List of QR codes which are present in Transport stage but missing from
      * Reception.
      */
