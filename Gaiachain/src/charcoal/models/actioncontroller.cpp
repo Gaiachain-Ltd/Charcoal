@@ -852,11 +852,11 @@ bool ActionController::registerLocalMarketReception(
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
-        m_connectionName, Enums::SupplyChainAction::Reception));
+        m_connectionName, Enums::SupplyChainAction::LocalReception));
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
-        emit error(tr("Transport type is incorrect %1").arg(eventTypeId));
+        emit error(tr("Reception type is incorrect %1").arg(eventTypeId));
         return false;
     }
 

@@ -92,6 +92,7 @@ void NotificationManager::stepComplete(const Enums::SupplyChainAction nextStep,
                     tr("Charcoal is ready for loading and transport!"),
                     tr("Loading and transport"));
         break;
+    case Enums::SupplyChainAction::LocalReception:
     case Enums::SupplyChainAction::Reception:
         emit notify(Enums::Page::SupplyChainReception,
                     tr("Loading and transport process for <b>%1</b> has ended.").arg(pid),

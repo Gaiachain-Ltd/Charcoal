@@ -201,6 +201,7 @@ namespace Enums {
         CarbonizationBeginning,
         CarbonizationEnding,
         LoadingAndTransport,
+        LocalReception,
         Reception,
         Tracking,
         Replantation,

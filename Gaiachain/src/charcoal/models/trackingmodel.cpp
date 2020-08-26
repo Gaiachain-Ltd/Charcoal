@@ -98,6 +98,9 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                            .arg(event.properties.value(Tags::webPlateNumber).toString());
             }
             break;
+            case Enums::SupplyChainAction::LocalReception:
+                name = tr("Bags sold at a local market");
+                break;
             case Enums::SupplyChainAction::Reception:
                 name = tr("Reception at storage facility");
                 break;

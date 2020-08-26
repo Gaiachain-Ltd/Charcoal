@@ -132,7 +132,8 @@ const QVector<Migration> db::DB_MIGRATIONS = {
             QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"CB\")"), // Carbonization beginning
             QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"CE\")"), // Carbonization ending
             QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"TR\")"), // Loading & transport
-            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"RE\")"), // Reception
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"LR\")"), // Local market reception
+            QLatin1String("INSERT INTO EventTypes (actionName) VALUES (\"RE\")"), // Final reception
         }, true),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             QLatin1String("DELETE FROM EntityTypes"),

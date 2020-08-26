@@ -21,6 +21,7 @@ const QHash<Enums::SupplyChainAction, QString> CharcoalDbHelpers::m_supplyAction
     { Enums::SupplyChainAction::CarbonizationBeginning, QStringLiteral("CB") },
     { Enums::SupplyChainAction::CarbonizationEnding, QStringLiteral("CE") },
     { Enums::SupplyChainAction::LoadingAndTransport, QStringLiteral("TR") },
+    { Enums::SupplyChainAction::LocalReception, QStringLiteral("LR") },
     { Enums::SupplyChainAction::Reception, QStringLiteral("RE") }
 };
 
