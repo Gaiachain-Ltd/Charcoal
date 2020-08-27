@@ -1096,7 +1096,8 @@ void ActionController::registerReplantation(
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing replantation of a plot has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery();
         return;
     }
 

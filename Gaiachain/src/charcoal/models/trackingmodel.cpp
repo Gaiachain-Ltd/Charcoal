@@ -379,12 +379,18 @@ QVariantList TrackingModel::summaryForTransport(
     qint64 beginningTimestamp = -1;
     qint64 endingTimestamp = -1;
     QString plateNumber;
-    Utility::SummaryValue value;
+
+    result.append(utility.createSummaryItem(
+        tr("Transport ID"), entity.name, QString(), QString(),
+        m_transportHighlightColor, m_transportTextColor, m_transportTextColor,
+        Enums::DelegateType::Standard,
+        true));
 
     for (const Event &event : events) {
         const Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
             m_connectionName, event.typeId);
 
+        Utility::SummaryValue value;
         const QString bagNumberString(QString::number(event.qrCodes().size()));
 
         if (action == Enums::SupplyChainAction::LoadingAndTransport
@@ -475,52 +481,72 @@ QVariantList TrackingModel::summaryForTransport(
 
             value.titles.append({
                 bagNumberString,
-                dateString(endingTimestamp, true),
+                dateString(endingTimestamp, true)
+            });
+
+            value.values.append({
+                tr("Number of received bags"),
+                tr("Final reception date")
+            });
+
+            value.icons.append({
+                QString(),
+                QString()
+            });
+
+            value.linkDestinationPages.append({
+                Enums::Page::InvalidPage,
+                Enums::Page::InvalidPage
+            });
+
+            value.linkDatas.append({
+                QVariant(),
+                QVariant()
+            });
+
+            result.append(utility.createSummaryItem(
+                QString(), value.toList(),
+                QString(), QString(),
+                m_transportHighlightColor, m_transportTextColor, QColor("#000000"),
+                Enums::DelegateType::ColumnStack,
+                true));
+
+            value = Utility::SummaryValue();
+
+            value.titles.append({
                 QString(hasDocs? uploaded : noPhoto),
                 QString(hasRecs? uploaded : noPhoto)
             });
 
             value.values.append({
-                tr("Number of received bags"),
-                tr("Final reception date"),
                 tr("Documents"),
                 tr("Receipts")
             });
 
             value.icons.append({
-                QString(),
-                QString(),
                 "image://tickmark/document-" + QString(hasDocs? "true" : "false"),
                 "image://tickmark/receipt-" + QString(hasRecs? "true" : "false")
             });
 
             value.linkDestinationPages.append({
-                Enums::Page::InvalidPage,
-                Enums::Page::InvalidPage,
                 (hasDocs? Enums::Page::PhotoGallery : Enums::Page::InvalidPage),
                 (hasRecs? Enums::Page::PhotoGallery : Enums::Page::InvalidPage)
             });
 
             value.linkDatas.append({
-                QVariant(),
-                QVariant(),
                 QVariantMap{ {"urls", docs} },
                 QVariantMap{ {"urls", recs} }
             });
         }
+
+        result.append(utility.createSummaryItem(
+            QString(), value.toList(),
+            QString(), QString(),
+            m_transportHighlightColor, m_transportTextColor, QColor("#000000"),
+            Enums::DelegateType::ColumnStack,
+            true));
     }
 
-    result.append(utility.createSummaryItem(
-        tr("Transport ID"), entity.name, QString(), QString(),
-        m_transportHighlightColor, m_transportTextColor, m_transportTextColor,
-        Enums::DelegateType::Standard,
-        false));
-    result.append(utility.createSummaryItem(
-        QString(), value.toList(),
-        QString(), QString(),
-        m_transportHighlightColor, m_transportTextColor, QColor("#000000"),
-        Enums::DelegateType::ColumnStack,
-        true));
     result.append(utility.createSummaryItem(
         tr("Plate number"), plateNumber));
     result.append(utility.createSummaryItem(
