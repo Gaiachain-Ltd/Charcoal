@@ -343,7 +343,8 @@ QString ActionController::plateNumberInTransport(const int transportId) const
 
 int ActionController::scannedBagsCount(const int transportId) const
 {
-    return scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
+    return scannedBagsForAction(transportId, Enums::SupplyChainAction::LocalReception)
+        + scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
 }
 
 int ActionController::scannedBagsTotal(const int transportId) const
