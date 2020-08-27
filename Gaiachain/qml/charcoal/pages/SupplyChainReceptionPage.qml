@@ -124,26 +124,47 @@ Pages.SupplyChainPageBase {
                         [
                             [
                                 Strings.numberOfBagsReceived,
-                                Strings.totalNumberOfBags,
+                                Strings.totalNumberOfBags
+                            ],
+                            [
+                                bagsMatch.bagsFromReception.length,
+                                bagsMatch.matchStatusMessage()
+                            ],
+                            [
+                                "",
+                                allBagsMatch? GStyle.checkGreenUrl : GStyle.warningUrl
+                            ],
+                            [
+                                Enums.Page.InvalidPage,
+                                Enums.Page.InvalidPage
+                            ],
+                            [
+                                "",
+                                ""
+                            ]
+                        ],
+                        "", "",
+                        GStyle.delegateHighlightColor4,
+                        GStyle.fontHighlightColor4,
+                        GStyle.textPrimaryColor,
+                        Enums.DelegateType.ColumnStack,
+                        true),
+                    Utility.createSummaryItem(
+                        "",
+                        [
+                            [
                                 Strings.documents,
                                 Strings.receipt
                             ],
                             [
-                                bagsMatch.bagsFromReception.length,
-                                bagsMatch.matchStatusMessage(),
                                 hasDocs? Strings.approved : Strings.noPhoto,
                                 hasRecs? Strings.approved : Strings.noPhoto
                             ],
                             [
-                                "",
-                                allBagsMatch? GStyle.checkGreenUrl : GStyle.warningUrl,
                                 docsIcon,
                                 recsIcon
                             ],
                             [
-                                Enums.Page.InvalidPage,
-                                Enums.Page.InvalidPage,
-                                Enums.Page.InvalidPage,
                                 hasDocs? Enums.Page.PhotoGallery
                                        : Enums.Page.InvalidPage,
                                 hasRecs? Enums.Page.PhotoGallery
@@ -151,10 +172,7 @@ Pages.SupplyChainPageBase {
                             ],
                             [
                                 "",
-                                "",
-                                "",
-                                Utility.arrayToObject([ "urls", docs ]),
-                                Utility.arrayToObject([ "urls", recs ])
+                                ""
                             ]
                         ],
                         "", "",
