@@ -30,6 +30,9 @@ public:
     BagsMatch() = default;
     ~BagsMatch() = default;
 
+    void matchBags(const QString &connectionName, const int transportId,
+                   const QVariantList &qrsFromReception);
+
     /*!
      * Is set to true if bags from transport and reception stages match
      * completely.
@@ -40,6 +43,8 @@ public:
      * If it is true it means that a QR code is duplicated.
      */
     bool hasConflict = false;
+
+    bool queryError = false;
 
     /*!
      * List of QR codes which are present in Transport stage but missing from
@@ -116,7 +121,7 @@ public:
                                         const bool isPausedEvent) const;
     Q_INVOKABLE int bagCountInTransport(const int transportId) const;
     Q_INVOKABLE BagsMatch matchBags(const int transportId,
-                                    QVariantList qrsFromReception);
+                                    const QVariantList &qrsFromReception);
 
     Q_INVOKABLE QString plateNumberInTransport(const int transportId) const;
     Q_INVOKABLE int scannedBagsCount(const int transportId) const;

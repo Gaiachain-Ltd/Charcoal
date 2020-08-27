@@ -20,6 +20,74 @@
 #include <QDateTime>
 #include <QDate>
 
+void BagsMatch::matchBags(const QString &connectionName,
+    const int transportId, const QVariantList &qrsFromReception)
+{
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        connectionName, Enums::SupplyChainAction::LoadingAndTransport);
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+
+    query.prepare("SELECT properties FROM Events "
+                  "WHERE entityId=:transportId AND typeId=:typeId");
+    query.bindValue(":transportId", transportId);
+    query.bindValue(":typeId", typeId);
+
+    if (query.exec() == false || query.next() == false) {
+        queryError = true;
+        return;
+    }
+
+    const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+    const QJsonObject properties(
+        CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+    const QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
+
+    QVariantList qrsFromOtherReceptions(CharcoalDbHelpers::bagsInReceptions(
+        connectionName, transportId));
+    bagsFromOtherReceptions = qrsFromOtherReceptions;
+
+    QVariantList allReceptions(qrsFromReception);
+    allReceptions.append(qrsFromOtherReceptions);
+
+    bagsFromTransport = qrsFromTransport;
+    bagsFromReception = qrsFromReception;
+
+    std::sort(qrsFromOtherReceptions.begin(), qrsFromOtherReceptions.end());
+    std::sort(bagsFromReception.begin(), bagsFromReception.end());
+    std::sort(bagsFromTransport.begin(), bagsFromTransport.end());
+    std::sort(allReceptions.begin(), allReceptions.end());
+
+    if (allReceptions == bagsFromTransport) {
+        fullMatch = true;
+        return;
+    }
+
+    for (const QVariant &other : qAsConst(qrsFromOtherReceptions)) {
+        if (bagsFromReception.contains(other)) {
+            qDebug() << "Duplicated bag" << other;
+            duplicatedBags.append(other);
+            hasConflict = true;
+        }
+    }
+
+    for (const QVariant &transport : qAsConst(bagsFromTransport)) {
+        if (allReceptions.contains(transport) == false) {
+            qDebug() << "Missing bag" << transport;
+            missingBags.append(transport);
+        }
+    }
+
+    for (const QVariant &reception : qAsConst(allReceptions)) {
+        if (bagsFromTransport.contains(reception) == false) {
+            qDebug() << "Extra bag" << reception;
+            extraBags.append(reception);
+        }
+    }
+
+    return;
+}
+
 QString BagsMatch::matchStatusMessage() const
 {
     const QString numbers(QObject::tr("%1 of %2"));
@@ -223,72 +291,15 @@ int ActionController::bagCountInTransport(const int transportId) const
 }
 
 BagsMatch ActionController::matchBags(const int transportId,
-                                      QVariantList qrsFromReception)
+                                      const QVariantList &qrsFromReception)
 {
     BagsMatch result;
+    result.matchBags(m_connectionName, transportId, qrsFromReception);
 
-    const int typeId = CharcoalDbHelpers::getEventTypeId(
-        m_connectionName, Enums::SupplyChainAction::LoadingAndTransport);
-
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-
-    query.prepare("SELECT properties FROM Events "
-                  "WHERE entityId=:transportId AND typeId=:typeId");
-    query.bindValue(":transportId", transportId);
-    query.bindValue(":typeId", typeId);
-
-    if (query.exec() == false || query.next() == false) {
+    if (result.queryError) {
         const QString msg(tr("Could not check bags for transport %1").arg(transportId));
         qWarning() << msg;
         emit error(msg);
-        return result;
-    }
-
-    const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
-    const QJsonObject properties(
-        CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
-    QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
-
-    QVariantList qrsFromOtherReceptions(CharcoalDbHelpers::bagsInReceptions(
-        m_connectionName, transportId));
-    result.bagsFromOtherReceptions = qrsFromOtherReceptions;
-
-    QVariantList allReceptions(qrsFromReception);
-    allReceptions.append(qrsFromOtherReceptions);
-
-    std::sort(qrsFromOtherReceptions.begin(), qrsFromOtherReceptions.end());
-    std::sort(qrsFromReception.begin(), qrsFromReception.end());
-    std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
-    std::sort(allReceptions.begin(), allReceptions.end());
-
-    result.bagsFromTransport = qrsFromTransport;
-    result.bagsFromReception = qrsFromReception;
-
-    if (allReceptions == qrsFromTransport) {
-        result.fullMatch = true;
-        return result;
-    }
-
-    for (const QVariant &other : qAsConst(qrsFromOtherReceptions)) {
-        if (qrsFromReception.contains(other)) {
-            qDebug() << "Duplicated bag" << other;
-            result.duplicatedBags.append(other);
-            result.hasConflict = true;
-        }
-    }
-
-    for (const QVariant &transport : qAsConst(qrsFromTransport)) {
-        if (allReceptions.contains(transport) == false) {
-            qDebug() << "Missing bag" << transport;
-            result.missingBags.append(transport);
-        }
-    }
-
-    for (const QVariant &reception : qAsConst(allReceptions)) {
-        if (qrsFromTransport.contains(reception) == false) {
-            qDebug() << "Extra bag" << reception;
-            result.extraBags.append(reception);
-        }
     }
 
     if (result.fullMatch == false) {
