@@ -23,13 +23,13 @@
 QString BagsMatch::matchStatusMessage() const
 {
     const QString numbers(QObject::tr("%1 of %2"));
+    QString result(numbers.arg(bagsFromReception.size() + bagsFromOtherReceptions.size())
+                       .arg(bagsFromTransport.size()));
 
     if (fullMatch) {
-        return numbers.arg(bagsFromReception.size() + bagsFromOtherReceptions.size())
-            .arg(bagsFromTransport.size());
+        return result;
     }
 
-    QString result(numbers);
     if (missingBags.isEmpty() == false) {
         result.append("<br/>");
         result.append(QObject::tr("<small>%1 bags are missing</small>").arg(missingBags.size()));
