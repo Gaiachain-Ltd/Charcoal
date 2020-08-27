@@ -33,6 +33,13 @@ Pages.SupplyChainPageBase {
                 bagsMatch = dataManager.actionController.matchBags(
                             transportId, scannedQrs)
 
+                if (bagsMatch.hasConflict) {
+                    pageManager.openPopup(Enums.Popup.Information,
+                                          { "text": Strings.duplicatedBagError,
+                                              "buttonPrimaryColor": GStyle.errorColor
+                                          })
+                }
+
                 // TODO: turn back on when QrMismatch feature is fully designed
                 //if (bagsMatch.fullMatch === false) {
                 //    pageManager.enter(
@@ -43,17 +50,19 @@ Pages.SupplyChainPageBase {
                 //                 false)
                 //}
             } else {
-                transportName = ""
-                dataManager.minimumDateModel.plotId = -1
-                bagsMatch = undefined
+                clearTransportInfo()
             }
         } else {
-            transportName = ""
-            dataManager.minimumDateModel.plotId = -1
-            bagsMatch = undefined
+            clearTransportInfo()
         }
 
         console.log("Scanned have changed", scannedQrs.length, transportId)
+    }
+
+    function clearTransportInfo() {
+        transportName = ""
+        dataManager.minimumDateModel.plotId = -1
+        bagsMatch = undefined
     }
 
     property var documents: []
@@ -69,6 +78,7 @@ Pages.SupplyChainPageBase {
     title: Strings.reception
 
     proceedButtonEnabled: hasQrs && (transportId !== -1)
+                          && (bagsMatch.hasConflict === false)
 
     Component.onCompleted: {
         picturesManager.cleanUpWaitingPictures()
@@ -113,21 +123,25 @@ Pages.SupplyChainPageBase {
                         "",
                         [
                             [
-                                Strings.numberOfBags,
+                                Strings.numberOfBagsReceived,
+                                Strings.totalNumberOfBags,
                                 Strings.documents,
                                 Strings.receipt
                             ],
                             [
+                                bagsMatch.bagsFromReception.length,
                                 bagsMatch.matchStatusMessage(),
                                 hasDocs? Strings.approved : Strings.noPhoto,
                                 hasRecs? Strings.approved : Strings.noPhoto
                             ],
                             [
+                                "",
                                 allBagsMatch? GStyle.checkGreenUrl : GStyle.warningUrl,
                                 docsIcon,
                                 recsIcon
                             ],
                             [
+                                Enums.Page.InvalidPage,
                                 Enums.Page.InvalidPage,
                                 Enums.Page.InvalidPage,
                                 hasDocs? Enums.Page.PhotoGallery
@@ -136,6 +150,7 @@ Pages.SupplyChainPageBase {
                                        : Enums.Page.InvalidPage
                             ],
                             [
+                                "",
                                 "",
                                 "",
                                 Utility.arrayToObject([ "urls", docs ]),
@@ -225,7 +240,7 @@ Pages.SupplyChainPageBase {
         text: Strings.scanAllBagsFromTruck
         extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
         iconVisible: hasQrs
-        icon: bagsMatch !== undefined && bagsMatch.fullMatch?
+        icon: bagsMatch !== undefined && bagsMatch.fullMatch && !bagsMatch.hasConflict?
                   GStyle.checkGreenUrl : GStyle.iconNoUrl
 
         onClicked: pageManager.enter(

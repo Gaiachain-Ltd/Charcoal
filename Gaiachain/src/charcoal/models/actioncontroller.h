@@ -18,8 +18,13 @@ class BagsMatch
     Q_GADGET
 
     Q_PROPERTY(bool fullMatch MEMBER fullMatch)
+    Q_PROPERTY(bool hasConflict MEMBER hasConflict)
     Q_PROPERTY(QVariantList missingBags MEMBER missingBags)
     Q_PROPERTY(QVariantList extraBags MEMBER extraBags)
+    Q_PROPERTY(QVariantList duplicatedBags MEMBER duplicatedBags)
+    Q_PROPERTY(QVariantList bagsFromTransport MEMBER bagsFromTransport)
+    Q_PROPERTY(QVariantList bagsFromReception MEMBER bagsFromReception)
+    Q_PROPERTY(QVariantList bagsFromOtherReceptions MEMBER bagsFromOtherReceptions)
 
 public:
     BagsMatch() = default;
@@ -49,6 +54,11 @@ public:
     QVariantList extraBags;
 
     /*!
+     * When hasConflict is `true`, this member will hold the duplicated entries.
+     */
+    QVariantList duplicatedBags;
+
+    /*!
      * List of bags scanned in Loading and Transport step.
      */
     QVariantList bagsFromTransport;
@@ -64,7 +74,8 @@ public:
      */
     QVariantList bagsFromOtherReceptions;
 
-    Q_INVOKABLE QString matchStatusMessage(const bool showOnlyBagNumbers = false) const;
+    Q_INVOKABLE QString matchStatusMessage() const;
+    Q_INVOKABLE int countBagsLeftOnTruck() const;
 };
 
 Q_DECLARE_METATYPE(BagsMatch)

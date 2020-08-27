@@ -304,9 +304,13 @@ QtObject {
     // Charcoal - reception at a local market page
     property string scanBagsYouWantToSell: tr.empty + qsTr("Scan bags you want to sell at the local market")
     property string scanBagsInfoText: tr.empty + qsTr("Scan QR code from bags sold on the local market")
-    property string numberOfBagsForSale: tr.empty + qsTr("Numer of bags for sale")
+    property string numberOfBagsSold: tr.empty + qsTr("Numer of bags sold")
+    property string numberOfBagsLeft: tr.empty + qsTr("Number of bags left on truck")
+    property string duplicatedBagError: tr.empty + qsTr("Duplicated bag - at least one of the QR codes has already been scanned")
 
     // Charcoal - final reception page
+    property string numberOfBagsReceived: tr.empty + qsTr("Number of bags received")
+    property string totalNumberOfBags: tr.empty + qsTr("Total number of bags")
     property string receiveDocumentsAndReceipt: tr.empty + qsTr("Receive documents and receipt")
     property string scanAllBagsFromTruck: tr.empty + qsTr("Scan all bags from truck")
     property string receptionDateCharcoal: tr.empty + qsTr("Time & Date stamp")

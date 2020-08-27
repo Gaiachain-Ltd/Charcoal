@@ -20,13 +20,13 @@
 #include <QDateTime>
 #include <QDate>
 
-QString BagsMatch::matchStatusMessage(const bool showOnlyBagNumbers) const
+QString BagsMatch::matchStatusMessage() const
 {
-    const QString numbers(QObject::tr("%1 of %2").arg(bagsFromReception.size())
-                              .arg(bagsFromTransport.size()));
+    const QString numbers(QObject::tr("%1 of %2"));
 
-    if (fullMatch || showOnlyBagNumbers) {
-        return numbers;
+    if (fullMatch) {
+        return numbers.arg(bagsFromReception.size() + bagsFromOtherReceptions.size())
+            .arg(bagsFromTransport.size());
     }
 
     QString result(numbers);
@@ -42,6 +42,12 @@ QString BagsMatch::matchStatusMessage(const bool showOnlyBagNumbers) const
     }
 
     return result;
+}
+
+int BagsMatch::countBagsLeftOnTruck() const
+{
+    return bagsFromTransport.size() - bagsFromOtherReceptions.size()
+        - bagsFromReception.size();
 }
 
 ActionController::ActionController(QObject *parent) : QObject(parent)
@@ -266,6 +272,7 @@ BagsMatch ActionController::matchBags(const int transportId,
     for (const QVariant &other : qAsConst(qrsFromOtherReceptions)) {
         if (qrsFromReception.contains(other)) {
             qDebug() << "Duplicated bag" << other;
+            result.duplicatedBags.append(other);
             result.hasConflict = true;
         }
     }

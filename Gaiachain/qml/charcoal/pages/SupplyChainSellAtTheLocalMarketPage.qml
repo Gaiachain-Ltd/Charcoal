@@ -33,27 +33,26 @@ Pages.SupplyChainPageBase {
                 bagsMatch = dataManager.actionController.matchBags(
                             transportId, scannedQrs)
 
-                // TODO: turn back on when QrMismatch feature is fully designed
-                //if (bagsMatch.fullMatch === false) {
-                //    pageManager.enter(
-                //                 Enums.Page.QrMismatchSummary,
-                //                 {
-                //                     "bagsMatch": bagsMatch
-                //                 },
-                //                 false)
-                //}
+                if (bagsMatch.hasConflict) {
+                    pageManager.openPopup(Enums.Popup.Information,
+                                          { "text": Strings.duplicatedBagError,
+                                              "buttonPrimaryColor": GStyle.errorColor
+                                          })
+                }
             } else {
-                transportName = ""
-                dataManager.minimumDateModel.plotId = -1
-                bagsMatch = undefined
+                clearTransportInfo()
             }
         } else {
-            transportName = ""
-            dataManager.minimumDateModel.plotId = -1
-            bagsMatch = undefined
+            clearTransportInfo()
         }
 
         console.log("Scanned have changed", scannedQrs.length, transportId)
+    }
+
+    function clearTransportInfo() {
+        transportName = ""
+        dataManager.minimumDateModel.plotId = -1
+        bagsMatch = undefined
     }
 
     // Used by QRScanner page. Not used here, however. It's only used on
@@ -63,6 +62,7 @@ Pages.SupplyChainPageBase {
     title: Strings.sellAtTheLocalMarket
 
     proceedButtonEnabled: hasQrs && (transportId !== -1)
+                          && (bagsMatch.hasConflict === false)
 
     Component.onCompleted: refreshData()
 
@@ -96,10 +96,12 @@ Pages.SupplyChainPageBase {
                         "",
                         [
                             [
-                                Strings.numberOfBagsForSale
+                                Strings.numberOfBagsSold,
+                                Strings.numberOfBagsLeft
                             ],
                             [
-                                bagsMatch.matchStatusMessage(true)
+                                bagsMatch.bagsFromReception.length,
+                                bagsMatch.countBagsLeftOnTruck()
                             ],
                             [
                                 ""
@@ -155,6 +157,9 @@ Pages.SupplyChainPageBase {
 
         text: Strings.scanBagsYouWantToSell
         extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
+        iconVisible: hasQrs
+        icon: bagsMatch !== undefined && bagsMatch.hasConflict?
+                  GStyle.iconNoUrl : GStyle.checkGreenUrl
 
         onClicked: pageManager.enter(
                        Enums.Page.QRScanner,
