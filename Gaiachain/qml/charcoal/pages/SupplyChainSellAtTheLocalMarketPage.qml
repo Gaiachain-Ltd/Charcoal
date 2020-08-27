@@ -101,7 +101,7 @@ Pages.SupplyChainPageBase {
                             ],
                             [
                                 bagsMatch.bagsFromReception.length,
-                                bagsMatch.countBagsLeftOnTruck()
+                                bagsMatch.matchStatusMessage(true)
                             ],
                             [
                                 ""
@@ -158,7 +158,7 @@ Pages.SupplyChainPageBase {
         text: Strings.scanBagsYouWantToSell
         extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
         iconVisible: hasQrs
-        icon: bagsMatch !== undefined && bagsMatch.hasConflict?
+        icon: bagsMatch !== undefined && (bagsMatch.hasConflict || bagsMatch.hasExtraBags)?
                   GStyle.iconNoUrl : GStyle.checkGreenUrl
 
         onClicked: pageManager.enter(

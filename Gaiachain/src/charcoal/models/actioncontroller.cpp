@@ -67,7 +67,6 @@ void BagsMatch::matchBags(const QString &connectionName,
         if (bagsFromReception.contains(other)) {
             qDebug() << "Duplicated bag" << other;
             duplicatedBags.append(other);
-            hasConflict = true;
         }
     }
 
@@ -85,20 +84,35 @@ void BagsMatch::matchBags(const QString &connectionName,
         }
     }
 
+    hasConflict = !duplicatedBags.isEmpty();
+    hasExtraBags = !extraBags.isEmpty();
+
     return;
 }
 
-QString BagsMatch::matchStatusMessage() const
+int BagsMatch::countBagsLeftOnTruck() const
+{
+    return bagsFromTransport.size() - bagsFromOtherReceptions.size()
+        - bagsFromReception.size() + extraBags.size() + duplicatedBags.size();
+}
+
+QString BagsMatch::matchStatusMessage(const bool showOnlyTotal) const
 {
     const QString numbers(QObject::tr("%1 of %2"));
-    QString result(numbers.arg(bagsFromReception.size() + bagsFromOtherReceptions.size())
-                       .arg(bagsFromTransport.size()));
+    QString result;
+
+    if (showOnlyTotal) {
+        result = QString::number(countBagsLeftOnTruck());
+    } else {
+        result = (numbers.arg(bagsFromReception.size() + bagsFromOtherReceptions.size())
+                      .arg(bagsFromTransport.size()));
+    }
 
     if (fullMatch) {
         return result;
     }
 
-    if (missingBags.isEmpty() == false) {
+    if (showOnlyTotal == false && missingBags.isEmpty() == false) {
         result.append("<br/>");
         result.append(QObject::tr("<small>%1 bags are missing</small>").arg(missingBags.size()));
     }
@@ -110,12 +124,6 @@ QString BagsMatch::matchStatusMessage() const
     }
 
     return result;
-}
-
-int BagsMatch::countBagsLeftOnTruck() const
-{
-    return bagsFromTransport.size() - bagsFromOtherReceptions.size()
-        - bagsFromReception.size();
 }
 
 ActionController::ActionController(QObject *parent) : QObject(parent)

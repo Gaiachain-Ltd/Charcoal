@@ -19,6 +19,7 @@ class BagsMatch
 
     Q_PROPERTY(bool fullMatch MEMBER fullMatch)
     Q_PROPERTY(bool hasConflict MEMBER hasConflict)
+    Q_PROPERTY(bool hasExtraBags MEMBER hasExtraBags)
     Q_PROPERTY(QVariantList missingBags MEMBER missingBags)
     Q_PROPERTY(QVariantList extraBags MEMBER extraBags)
     Q_PROPERTY(QVariantList duplicatedBags MEMBER duplicatedBags)
@@ -33,6 +34,8 @@ public:
     void matchBags(const QString &connectionName, const int transportId,
                    const QVariantList &qrsFromReception);
 
+    int countBagsLeftOnTruck() const;
+
     /*!
      * Is set to true if bags from transport and reception stages match
      * completely.
@@ -43,6 +46,11 @@ public:
      * If it is true it means that a QR code is duplicated.
      */
     bool hasConflict = false;
+
+    /*!
+     * If it is true it means that an unrecognised QR code has been scanned.
+     */
+    bool hasExtraBags = false;
 
     bool queryError = false;
 
@@ -79,8 +87,7 @@ public:
      */
     QVariantList bagsFromOtherReceptions;
 
-    Q_INVOKABLE QString matchStatusMessage() const;
-    Q_INVOKABLE int countBagsLeftOnTruck() const;
+    Q_INVOKABLE QString matchStatusMessage(const bool showOnlyTotal = false) const;
 };
 
 Q_DECLARE_METATYPE(BagsMatch)
