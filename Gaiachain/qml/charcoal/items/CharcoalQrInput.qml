@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.12
 import "../../items" as Items
 
 import com.gaiachain.style 1.0
+import com.gaiachain.static 1.0
 
 RowLayout {
     id: root
@@ -27,6 +28,14 @@ RowLayout {
         borderWidth: 0
         padding: 0
         maximumLength: root.sectionLength
+        inputMask: Static.qrSectionInputMask
+
+        onCursorPositionChanged: {
+            console.log("QRP1 pos", cursorPosition)
+            if (cursorPosition === maximumLength) {
+                qrPart2.forceActiveFocus()
+            }
+        }
     }
 
     Text {
@@ -44,6 +53,16 @@ RowLayout {
         borderWidth: 0
         padding: 0
         maximumLength: root.sectionLength
+        inputMask: Static.qrSectionInputMask
+
+        onCursorPositionChanged: {
+            console.log("QRP2 pos", cursorPosition)
+            if (cursorPosition === 0) {
+                qrPart1.forceActiveFocus()
+            } else if (cursorPosition === maximumLength) {
+                qrPart3.forceActiveFocus()
+            }
+        }
     }
 
     Text {
@@ -61,5 +80,13 @@ RowLayout {
         borderWidth: 0
         padding: 0
         maximumLength: root.sectionLength
+        inputMask: Static.qrSectionInputMask
+
+        onCursorPositionChanged: {
+            console.log("QRP3 pos", cursorPosition)
+            if (cursorPosition === 0) {
+                qrPart2.forceActiveFocus()
+            }
+        }
     }
 }

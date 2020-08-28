@@ -410,23 +410,6 @@ Pages.GPage {
                     verticalAlignment: Text.AlignTop
                 }
 
-//                Items.GInput {
-//                    Layout.fillWidth: true
-//                    Layout.leftMargin: s(GStyle.bigMargin)
-//                    Layout.rightMargin: s(GStyle.bigMargin)
-
-//                    id: manualInput
-
-//                    inputMask: Static.qrInputMask
-
-//                    focus: false
-//                    visible: currentStatus === QRScannerPage.ManualScan
-//                    font.pixelSize: s(GStyle.bigPixelSize)
-//                    horizontalAlignment: TextInput.AlignHCenter
-
-//                    onTextChanged: currentQr = text
-//                }
-
                 CharcoalItems.CharcoalQrInput {
                     Layout.fillWidth: true
                     Layout.leftMargin: s(GStyle.bigMargin)
@@ -434,14 +417,8 @@ Pages.GPage {
 
                     id: manualInput
 
-                    //inputMask: Static.qrInputMask
-
                     focus: false
                     visible: currentStatus === QRScannerPage.ManualScan
-                    //font.pixelSize: s(GStyle.bigPixelSize)
-                    //horizontalAlignment: TextInput.AlignHCenter
-
-                    //onTextChanged: currentQr = text
 
                     onQrCodeChanged: currentQr = qrCode
                 }
