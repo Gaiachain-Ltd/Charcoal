@@ -54,7 +54,7 @@ void PicturesManager::discardPhoto(const QString &path) const
         qDebug() << "Removing photo:" << path;
         QFile::remove(path);
     } else {
-        qWarning() << "Could not remove photo:" << path;
+        qWarning() << RED("Could not remove photo:") << path;
     }
 }
 
@@ -98,7 +98,7 @@ QStringList PicturesManager::moveToCache(const QStringList &photos) const
         if (QFile::rename(photo, destination)) {
             result.append(fileName);
         } else {
-            qWarning() << "Moving to cache has failed!" << photo << destination;
+            qWarning() << RED("Moving to cache has failed!") << photo << destination;
         }
     }
 
@@ -128,7 +128,7 @@ void PicturesManager::prepareDirectories() const
 {
     if (QDir(m_path).exists() == false) {
         if (QDir(m_base).mkdir(m_picturesDir) == false) {
-            qWarning() << "Could not create the path for pictures!" << m_path;
+            qWarning() << RED("Could not create the path for pictures!") << m_path;
             return;
         }
     }
@@ -136,7 +136,7 @@ void PicturesManager::prepareDirectories() const
     const QString dir(m_savePath);
     if (QDir(dir).exists() == false) {
         if (QDir(m_path).mkdir(m_saveDir) == false) {
-            qWarning() << "Could not create the path for pictures!" << dir;
+            qWarning() << RED("Could not create the path for pictures!") << dir;
             return;
         }
     }
@@ -144,7 +144,7 @@ void PicturesManager::prepareDirectories() const
     const QString dirCache(m_cachePath);
     if (QDir(dirCache).exists() == false) {
         if (QDir(m_path).mkdir(m_cacheDir) == false) {
-            qWarning() << "Could not create the cache path for pictures!" << dir;
+            qWarning() << RED("Could not create the cache path for pictures!") << dir;
             return;
         }
     }
@@ -170,10 +170,10 @@ void PicturesManager::savePhoto(const QString &path,
         qDebug() << "Saving photo:" << destination;
 
         if (QFile::rename(path, destination) == false) {
-            qWarning() << "File could not be moved!" << path << destination;
+            qWarning() << RED("File could not be moved!") << path << destination;
         }
     } else {
-        qWarning() << "Photo does not exist!" << path;
+        qWarning() << RED("Photo does not exist!") << path;
     }
 }
 
@@ -213,7 +213,7 @@ void PicturesManager::cleanUpFiles(const QString &path) const
         if (QFile::remove(path + sep + file)) {
             qDebug() << "Removed file" << file;
         } else {
-            qWarning() << "Failed to remove file" << file;
+            qWarning() << RED("Failed to remove file") << file;
         }
     }
 }

@@ -65,7 +65,7 @@ android {
 } else {
     unix {
         exists($${OSSL_PATH}/*) {
-            LIBS += -L$${OSSL_PATH}/lib/linux -lssl -lcrypto
+            LIBS += -L$${OSSL_PATH}/lib/linux/linux -lssl -lcrypto
             CONFIG += openssl
         }
     }

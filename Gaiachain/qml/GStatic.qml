@@ -8,6 +8,7 @@ QtObject {
     readonly property int checkSvgImageHeight: 250
     readonly property real normalizedScanSize: 0.6 // Should be between 0 and 1
     readonly property string qrInputMask: "NNNN-NNNN-NNNN"
+    readonly property string qrSectionInputMask: "NNNN"
 
     // gps tracking
     readonly property int gpsRefreshInterval: 1000 // ms
