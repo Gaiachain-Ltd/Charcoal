@@ -84,9 +84,11 @@ RowLayout {
         }
 
         onTextChanged: {
-            if (checkAndGoBack() === false) {
-                checkAndGoForward()
+            if (text.length === 0 && checkAndGoBack()) {
+                return
             }
+
+            checkAndGoForward()
         }
 
         function checkAndGoBack() {
@@ -129,7 +131,11 @@ RowLayout {
             cursorPosition = cursorPosition - 1
         }
 
-        onTextChanged: checkAndGoBack()
+        onTextChanged: {
+            if (text.length === 0) {
+                checkAndGoBack()
+            }
+        }
 
         function checkAndGoBack() {
             if (cursorPosition <= 0) {
