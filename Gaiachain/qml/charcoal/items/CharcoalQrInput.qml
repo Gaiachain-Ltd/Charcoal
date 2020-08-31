@@ -14,7 +14,7 @@ RowLayout {
     readonly property int sectionLength: 4
     readonly property string separator: "-"
     readonly property real fontSize: s(GStyle.bigPixelSize)
-    readonly property int sectionWidth: s(fontSize * 5)
+    readonly property int sectionWidth: s(fontSize * 4)
 
     height: fontSize * 2
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
