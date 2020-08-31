@@ -19,6 +19,8 @@ RowLayout {
     height: fontSize * 2
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
+    onVisibleChanged: qrPart1.forceActiveFocus()
+
     Items.GInput {
         id: qrPart1
         Layout.fillWidth: true
@@ -29,11 +31,25 @@ RowLayout {
         padding: 0
         maximumLength: root.sectionLength
         inputMask: Static.qrSectionInputMask
+        horizontalAlignment: Qt.AlignRight
+        nextInput: qrPart2
 
-        onCursorPositionChanged: {
-            console.log("QRP1 pos", cursorPosition)
+        Keys.onRightPressed: {
+            checkAndGoForward()
+            cursorPosition = cursorPosition + 1
+        }
+
+        onTextChanged: checkAndGoForward()
+
+        function checkAndGoBack() {
+            // nothing
+            return false
+        }
+
+        function checkAndGoForward() {
             if (cursorPosition === maximumLength) {
-                qrPart2.forceActiveFocus()
+                moveToNextInput()
+                qrPart2.cursorPosition = 0
             }
         }
     }
@@ -54,14 +70,39 @@ RowLayout {
         padding: 0
         maximumLength: root.sectionLength
         inputMask: Static.qrSectionInputMask
+        horizontalAlignment: Qt.AlignHCenter
+        nextInput: qrPart3
 
-        onCursorPositionChanged: {
-            console.log("QRP2 pos", cursorPosition)
-            if (cursorPosition === 0) {
-                qrPart1.forceActiveFocus()
-            } else if (cursorPosition === maximumLength) {
-                qrPart3.forceActiveFocus()
+        Keys.onLeftPressed: {
+            checkAndGoBack()
+            cursorPosition = cursorPosition - 1
+        }
+
+        Keys.onRightPressed: {
+            checkAndGoForward()
+            cursorPosition = cursorPosition + 1
+        }
+
+        onTextChanged: {
+            if (checkAndGoBack() === false) {
+                checkAndGoForward()
             }
+        }
+
+        function checkAndGoBack() {
+            if (cursorPosition <= 0) {
+                qrPart1.forceActiveFocus()
+                qrPart1.cursorPosition = qrPart1.maximumLength
+                return true
+            }
+            return false
+        }
+
+        function checkAndGoForward() {
+            if (cursorPosition === maximumLength) {
+                moveToNextInput()
+                qrPart3.cursorPosition = 0
+           }
         }
     }
 
@@ -81,12 +122,26 @@ RowLayout {
         padding: 0
         maximumLength: root.sectionLength
         inputMask: Static.qrSectionInputMask
+        horizontalAlignment: Qt.AlignLeft
 
-        onCursorPositionChanged: {
-            console.log("QRP3 pos", cursorPosition)
-            if (cursorPosition === 0) {
+        Keys.onLeftPressed: {
+            checkAndGoBack()
+            cursorPosition = cursorPosition - 1
+        }
+
+        onTextChanged: checkAndGoBack()
+
+        function checkAndGoBack() {
+            if (cursorPosition <= 0) {
                 qrPart2.forceActiveFocus()
+                qrPart2.cursorPosition = qrPart2.maximumLength
+                return true
             }
+            return false
+        }
+
+        function checkAndGoForward() {
+            // Nothing
         }
     }
 }
