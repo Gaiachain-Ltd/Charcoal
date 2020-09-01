@@ -31,6 +31,22 @@ RowLayout {
         regularExpression: /[0-9A-Za-z]+/
     }
 
+    Component {
+        id: cursor
+
+        Rectangle {
+            height: root.fontSize
+            width: 1
+            color: "#000000"
+        }
+    }
+
+    Component {
+        id: emptyCursor
+
+        Item {}
+    }
+
     Items.GInput {
         id: qrPart1
         Layout.fillWidth: true
@@ -44,6 +60,8 @@ RowLayout {
         nextInput: qrPart2
         validator: qrValidator
         focus: false
+        overwriteMode: true
+        cursorDelegate: focus? cursor : emptyCursor
 
         Keys.onRightPressed: {
             checkAndGoForward()
@@ -59,6 +77,7 @@ RowLayout {
 
         function checkAndGoForward() {
             if (cursorPosition === maximumLength) {
+                focus = false
                 moveToNextInput()
                 qrPart2.cursorPosition = 0
             }
@@ -84,6 +103,8 @@ RowLayout {
         nextInput: qrPart3
         validator: qrValidator
         focus: false
+        overwriteMode: true
+        cursorDelegate: focus? cursor : emptyCursor
 
         Keys.onLeftPressed: {
             checkAndGoBack()
@@ -105,6 +126,7 @@ RowLayout {
 
         function checkAndGoBack() {
             if (cursorPosition <= 0) {
+                focus = false
                 qrPart1.forceActiveFocus()
                 qrPart1.cursorPosition = qrPart1.maximumLength
                 return true
@@ -114,6 +136,7 @@ RowLayout {
 
         function checkAndGoForward() {
             if (cursorPosition === maximumLength) {
+                focus = false
                 moveToNextInput()
                 qrPart3.cursorPosition = 0
            }
@@ -138,6 +161,8 @@ RowLayout {
         horizontalAlignment: Qt.AlignLeft
         validator: qrValidator
         focus: false
+        overwriteMode: true
+        cursorDelegate: focus? cursor : emptyCursor
 
         Keys.onLeftPressed: {
             checkAndGoBack()
@@ -152,6 +177,7 @@ RowLayout {
 
         function checkAndGoBack() {
             if (cursorPosition <= 0) {
+                focus = false
                 qrPart2.forceActiveFocus()
                 qrPart2.cursorPosition = qrPart2.maximumLength
                 return true
