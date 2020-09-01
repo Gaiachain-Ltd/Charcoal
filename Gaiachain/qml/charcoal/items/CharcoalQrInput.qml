@@ -21,6 +21,11 @@ RowLayout {
 
     onVisibleChanged: qrPart1.forceActiveFocus()
 
+    RegExpValidator {
+        id: qrValidator
+        regExp: /[0-9A-Za-z]+/
+    }
+
     Items.GInput {
         id: qrPart1
         Layout.fillWidth: true
@@ -30,9 +35,9 @@ RowLayout {
         borderWidth: 0
         padding: 0
         maximumLength: root.sectionLength
-        inputMask: Static.qrSectionInputMask
         horizontalAlignment: Qt.AlignRight
         nextInput: qrPart2
+        validator: qrValidator
 
         Keys.onRightPressed: {
             checkAndGoForward()
@@ -69,9 +74,9 @@ RowLayout {
         borderWidth: 0
         padding: 0
         maximumLength: root.sectionLength
-        inputMask: Static.qrSectionInputMask
         horizontalAlignment: Qt.AlignHCenter
         nextInput: qrPart3
+        validator: qrValidator
 
         Keys.onLeftPressed: {
             checkAndGoBack()
@@ -123,8 +128,8 @@ RowLayout {
         borderWidth: 0
         padding: 0
         maximumLength: root.sectionLength
-        inputMask: Static.qrSectionInputMask
         horizontalAlignment: Qt.AlignLeft
+        validator: qrValidator
 
         Keys.onLeftPressed: {
             checkAndGoBack()
