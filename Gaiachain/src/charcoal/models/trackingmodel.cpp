@@ -386,7 +386,10 @@ QVariantList TrackingModel::summaryForTransport(
         Enums::DelegateType::Standard,
         true));
 
-    for (const Event &event : events) {
+    QVector<Event> eventsAscending = events;
+    std::reverse(eventsAscending.begin(), eventsAscending.end());
+
+    for (const Event &event : qAsConst(eventsAscending)) {
         const Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
             m_connectionName, event.typeId);
 

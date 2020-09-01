@@ -150,7 +150,8 @@ QVector<Event> Entity::loadEvents(const QString &connectionName) const
     q.prepare("SELECT id, entityId, typeId, userId, eventDate, date, "
               "locationLatitude, locationLongitude, properties "
               "FROM Events "
-              "WHERE entityId=:id");
+              "WHERE entityId=:id "
+              "ORDER BY eventDate DESC");
     q.bindValue(":id", id);
 
     if (q.exec() == false) {
