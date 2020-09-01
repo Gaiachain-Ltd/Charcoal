@@ -19,7 +19,7 @@
         #define API_PATH QStringLiteral("/api/v1")
     #else
         #define SERVER_ADDRESS QStringLiteral("https://charcoal-dev.gaiachain.io")
-        #define API_PATH QStringLiteral("zzz") //"/api/v1")
+        #define API_PATH QStringLiteral("/api/v1")
     #endif
 #endif
 
