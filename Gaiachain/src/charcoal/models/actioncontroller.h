@@ -86,7 +86,8 @@ public:
 
     Q_INVOKABLE QString getPlotId(const QString &packageId);
 
-    Q_INVOKABLE int getTransportIdFromBags(const QVariantList &scannedQrs) const;
+    Q_INVOKABLE int getTransportIdFromBags(const QVariantList &scannedQrs,
+                                           const bool silent = false) const;
     Q_INVOKABLE QString getEntityName(const int id) const;
 
     Q_INVOKABLE int nextTransportNumber(const int harvestId,

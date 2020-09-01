@@ -453,7 +453,9 @@ Pages.GPage {
 
         property string title: root.title + " (%1)".arg(entriesList.count)
 
-        onOpened: entriesList.idBase = dataManager.actionController.getTransportIdFromBags(scannedQrs)
+        onOpened: entriesList.idBase = dataManager.actionController.getTransportIdFromBags(
+                      scannedQrs,
+                      (backToPage === Enums.Page.SupplyChainLoadingAndTransport))
 
         anchors.centerIn: Overlay.overlay
         width: Overlay.overlay? Overlay.overlay.width : 100
