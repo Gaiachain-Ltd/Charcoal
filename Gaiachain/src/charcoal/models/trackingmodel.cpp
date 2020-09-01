@@ -564,7 +564,7 @@ void TrackingModel::startPackageDetailsUpdate()
                                   .arg(webId));
 
             // Check if such request was already queued
-            for (const auto request : qAsConst(m_queuedRequests)) {
+            for (const auto &request : qAsConst(m_queuedRequests)) {
                 if (request->type() != BaseRequest::Type::Get) {
                     continue;
                 }

@@ -20,7 +20,11 @@ RowLayout {
     height: fontSize * 2
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-    onVisibleChanged: qrPart1.forceActiveFocus()
+    onVisibleChanged: {
+        if (visible) {
+            qrPart1.forceActiveFocus()
+        }
+    }
 
     RegularExpressionValidator {
         id: qrValidator
@@ -39,6 +43,7 @@ RowLayout {
         horizontalAlignment: Qt.AlignRight
         nextInput: qrPart2
         validator: qrValidator
+        focus: false
 
         Keys.onRightPressed: {
             checkAndGoForward()
@@ -78,6 +83,7 @@ RowLayout {
         horizontalAlignment: Qt.AlignHCenter
         nextInput: qrPart3
         validator: qrValidator
+        focus: false
 
         Keys.onLeftPressed: {
             checkAndGoBack()
@@ -131,6 +137,7 @@ RowLayout {
         maximumLength: root.sectionLength
         horizontalAlignment: Qt.AlignLeft
         validator: qrValidator
+        focus: false
 
         Keys.onLeftPressed: {
             checkAndGoBack()

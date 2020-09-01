@@ -417,7 +417,6 @@ Pages.GPage {
 
                     id: manualInput
 
-                    focus: false
                     visible: currentStatus === QRScannerPage.ManualScan
 
                     onQrCodeChanged: currentQr = qrCode
