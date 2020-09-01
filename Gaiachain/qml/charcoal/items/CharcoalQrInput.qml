@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.14
+import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.12
 
 import "../../items" as Items
@@ -10,20 +10,21 @@ import com.gaiachain.static 1.0
 RowLayout {
     id: root
 
-    property string qrCode
     readonly property int sectionLength: 4
     readonly property string separator: "-"
     readonly property real fontSize: s(GStyle.bigPixelSize)
-    readonly property int sectionWidth: s(fontSize * 4)
+    readonly property int sectionWidth: s(fontSize * 4.2)
+
+    property string qrCode: qrPart1.text + separator + qrPart2.text + separator + qrPart3.text
 
     height: fontSize * 2
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
     onVisibleChanged: qrPart1.forceActiveFocus()
 
-    RegExpValidator {
+    RegularExpressionValidator {
         id: qrValidator
-        regExp: /[0-9A-Za-z]+/
+        regularExpression: /[0-9A-Za-z]+/
     }
 
     Items.GInput {
