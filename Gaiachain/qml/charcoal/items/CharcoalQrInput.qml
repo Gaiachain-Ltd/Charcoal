@@ -20,11 +20,31 @@ RowLayout {
     height: fontSize * 2
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-    onVisibleChanged: qrPart1.forceActiveFocus()
+    onVisibleChanged: {
+        if (visible) {
+            qrPart1.forceActiveFocus()
+        }
+    }
 
     RegularExpressionValidator {
         id: qrValidator
         regularExpression: /[0-9A-Za-z]+/
+    }
+
+    Component {
+        id: cursor
+
+        Rectangle {
+            height: root.fontSize
+            width: 1
+            color: "#000000"
+        }
+    }
+
+    Component {
+        id: emptyCursor
+
+        Item {}
     }
 
     Items.GInput {
@@ -39,6 +59,9 @@ RowLayout {
         horizontalAlignment: Qt.AlignRight
         nextInput: qrPart2
         validator: qrValidator
+        focus: false
+        overwriteMode: true
+        cursorDelegate: focus? cursor : emptyCursor
 
         Keys.onRightPressed: {
             checkAndGoForward()
@@ -54,6 +77,7 @@ RowLayout {
 
         function checkAndGoForward() {
             if (cursorPosition === maximumLength) {
+                focus = false
                 moveToNextInput()
                 qrPart2.cursorPosition = 0
             }
@@ -78,6 +102,9 @@ RowLayout {
         horizontalAlignment: Qt.AlignHCenter
         nextInput: qrPart3
         validator: qrValidator
+        focus: false
+        overwriteMode: true
+        cursorDelegate: focus? cursor : emptyCursor
 
         Keys.onLeftPressed: {
             checkAndGoBack()
@@ -99,6 +126,7 @@ RowLayout {
 
         function checkAndGoBack() {
             if (cursorPosition <= 0) {
+                focus = false
                 qrPart1.forceActiveFocus()
                 qrPart1.cursorPosition = qrPart1.maximumLength
                 return true
@@ -108,6 +136,7 @@ RowLayout {
 
         function checkAndGoForward() {
             if (cursorPosition === maximumLength) {
+                focus = false
                 moveToNextInput()
                 qrPart3.cursorPosition = 0
            }
@@ -131,6 +160,9 @@ RowLayout {
         maximumLength: root.sectionLength
         horizontalAlignment: Qt.AlignLeft
         validator: qrValidator
+        focus: false
+        overwriteMode: true
+        cursorDelegate: focus? cursor : emptyCursor
 
         Keys.onLeftPressed: {
             checkAndGoBack()
@@ -145,6 +177,7 @@ RowLayout {
 
         function checkAndGoBack() {
             if (cursorPosition <= 0) {
+                focus = false
                 qrPart2.forceActiveFocus()
                 qrPart2.cursorPosition = qrPart2.maximumLength
                 return true

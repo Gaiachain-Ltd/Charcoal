@@ -102,7 +102,8 @@ QString ActionController::getPlotId(const QString &packageId)
     return CharcoalDbHelpers::getPlotName(packageId);
 }
 
-int ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) const
+int ActionController::getTransportIdFromBags(const QVariantList &scannedQrs,
+                                             const bool silent) const
 {
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
@@ -147,7 +148,7 @@ int ActionController::getTransportIdFromBags(const QVariantList &scannedQrs) con
                    << "DB:" << m_connectionName;
     }
 
-    if (transportEntityId == -1) {
+    if (transportEntityId == -1 && silent == false) {
         const QString msg(tr("No active transport matching scanned bags has been found!"));
         qWarning() << RED(msg) << scannedQrs;
         emit error(msg);

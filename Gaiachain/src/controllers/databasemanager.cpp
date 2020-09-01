@@ -45,7 +45,7 @@ void DatabaseManager::setupDatabase()
 {
     ProcessCounter p(this);
 
-    Q_ASSERT_X(!m_setupDone, __PRETTY_FUNCTION__, "Trying to setup database twice");
+    //Q_ASSERT_X(!m_setupDone, __PRETTY_FUNCTION__, "Trying to setup database twice");
     if (m_setupDone || !m_migrationManager.checkAndCreate()) {
         return;
     }
