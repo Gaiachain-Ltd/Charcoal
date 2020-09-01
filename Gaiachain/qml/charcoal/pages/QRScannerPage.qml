@@ -544,15 +544,23 @@ Pages.GPage {
                             }
 
                             Image {
+                                id: closeImage
                                 Layout.rightMargin: s(GStyle.middleMargin)
+                                Layout.topMargin: s(GStyle.tinyMargin)
+                                Layout.bottomMargin: s(GStyle.tinyMargin)
+                                Layout.fillHeight: true
+                                Layout.minimumWidth: height
                                 source: GStyle.deleteImgUrl
+                                // This can make the SVGs more sharp
+                                //sourceSize: Qt.size(width, height)
+                                fillMode: Image.PreserveAspectFit
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: entriesList.removeRow(index)
-                                }
+                                //Rectangle {
+                                //    color: "#5500ff00"
+                                //    anchors.fill: parent
+                                //}
                             }
-                        }
+                        }                        
 
                         Rectangle {
                             Layout.fillWidth: true
@@ -560,6 +568,24 @@ Pages.GPage {
                             color: GStyle.separatorColor
                             height: 1
                         }
+                    }
+
+                    MouseArea {
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                            right: parent.right
+                            margins: s(GStyle.microMargin)
+                        }
+
+                        width: closeImage.width * 2
+
+                        onClicked: entriesList.removeRow(index)
+
+                        //Rectangle {
+                        //    color: "#55ff0000"
+                        //    anchors.fill: parent
+                        //}
                     }
                 }
 
