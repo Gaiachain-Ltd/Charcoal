@@ -21,6 +21,7 @@ const QHash<Enums::SupplyChainAction, QString> CharcoalDbHelpers::m_supplyAction
     { Enums::SupplyChainAction::CarbonizationBeginning, QStringLiteral("CB") },
     { Enums::SupplyChainAction::CarbonizationEnding, QStringLiteral("CE") },
     { Enums::SupplyChainAction::LoadingAndTransport, QStringLiteral("TR") },
+    { Enums::SupplyChainAction::LocalReception, QStringLiteral("LR") },
     { Enums::SupplyChainAction::Reception, QStringLiteral("RE") }
 };
 
@@ -103,12 +104,49 @@ Enums::SupplyChainAction CharcoalDbHelpers::actionByName(const QString &actionNa
     return m_supplyActionMap.key(actionName, Enums::SupplyChainAction::Unknown);
 }
 
-int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const int id)
+/*!
+ * Returns a list of all QR codes already registered (in various reception
+ * events) for given \a transportId.
+ */
+QVariantList CharcoalDbHelpers::bagsInReceptions(const QString &connectionName, const int transportId)
 {
+    const int transportTypeId = CharcoalDbHelpers::getEventTypeId(
+        connectionName, Enums::SupplyChainAction::LoadingAndTransport);
+
     QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
 
-    query.prepare("SELECT properties FROM Events WHERE entityId=:transportEntityId");
+    query.prepare("SELECT properties FROM Events "
+                  "WHERE entityId=:transportEntityId "
+                  "AND typeId!=:transportTypeId");
+    query.bindValue(":transportEntityId", transportId);
+    query.bindValue(":transportTypeId", transportTypeId);
+
+    QVariantList result;
+
+    if (query.exec()) {
+        while (query.next()) {
+            const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+            const QJsonDocument propertiersJson(QJsonDocument::fromJson(propertiesString));
+            const QVariantMap properties(propertiersJson.toVariant().toMap());
+            result.append(properties.value(Tags::webQrCodes).toList());
+        }
+    }
+
+    return result;
+}
+
+int CharcoalDbHelpers::bagCountInTransport(const QString &connectionName, const int id)
+{
+    const int transportTypeId = CharcoalDbHelpers::getEventTypeId(
+        connectionName, Enums::SupplyChainAction::LoadingAndTransport);
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+
+    query.prepare("SELECT properties FROM Events "
+                  "WHERE entityId=:transportEntityId "
+                  "AND typeId=:transportTypeId");
     query.bindValue(":transportEntityId", id);
+    query.bindValue(":transportTypeId", transportTypeId);
 
     if (query.exec()) {
         query.next();

@@ -205,7 +205,8 @@ QtObject {
     property string carbonizationBeginning: tr.empty + qsTr("Carbonization beginning")
     property string carbonizationEnding: tr.empty + qsTr("Carbonization ending")
     property string loadingAndTransport: tr.empty + qsTr("Loading and \ntransport")
-    //property string reception: tr.empty + qsTr("Reception")
+    property string finalReception: tr.empty + qsTr("Final reception")
+    property string sellAtTheLocalMarket: tr.empty + qsTr("Sell at the local market")
 
     // Charcoal - user info
     property string userInfoPageTitle: tr.empty + qsTr("Malebi rep's ID details")
@@ -300,7 +301,16 @@ QtObject {
     property string loadingAndTransportGpsHelp: tr.empty + qsTr("Dummy text - GPS help")
     property string pausedLoading: tr.empty + qsTr("You have a truck which has not been fully loaded. Please finish it")
 
-    // Charcoal - reception page
+    // Charcoal - reception at a local market page
+    property string scanBagsYouWantToSell: tr.empty + qsTr("Scan bags you want to sell at the local market")
+    property string scanBagsInfoText: tr.empty + qsTr("Scan QR code from bags sold on the local market")
+    property string numberOfBagsSold: tr.empty + qsTr("Numer of bags sold")
+    property string numberOfBagsLeft: tr.empty + qsTr("Number of bags left on truck")
+    property string duplicatedBagError: tr.empty + qsTr("Duplicated bag - at least one of the QR codes has already been scanned")
+
+    // Charcoal - final reception page
+    property string numberOfBagsReceived: tr.empty + qsTr("Number of bags received")
+    property string totalNumberOfBags: tr.empty + qsTr("Total number of bags")
     property string receiveDocumentsAndReceipt: tr.empty + qsTr("Receive documents and receipt")
     property string scanAllBagsFromTruck: tr.empty + qsTr("Scan all bags from truck")
     property string receptionDateCharcoal: tr.empty + qsTr("Time & Date stamp")

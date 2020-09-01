@@ -12,6 +12,7 @@ const QList<Enums::SupplyChainAction> DataGlobals::sc_supplyChainOfflineActions 
     Enums::SupplyChainAction::CarbonizationBeginning,
     Enums::SupplyChainAction::CarbonizationEnding,
     Enums::SupplyChainAction::LoadingAndTransport,
+    Enums::SupplyChainAction::LocalReception,
     Enums::SupplyChainAction::Reception,
     Enums::SupplyChainAction::Tracking,
     Enums::SupplyChainAction::Replantation

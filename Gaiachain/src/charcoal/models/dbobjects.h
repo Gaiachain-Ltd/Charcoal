@@ -62,6 +62,8 @@ struct Event {
 
     Oven loadOven(const QString &connectionName) const;
     void loadFromQuery(QSqlQuery *query);
+
+    QVariantList qrCodes() const;
 };
 
 struct Entity {

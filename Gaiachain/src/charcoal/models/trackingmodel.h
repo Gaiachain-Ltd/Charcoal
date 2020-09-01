@@ -47,7 +47,7 @@ protected slots:
     void detailsReplyHandler(const QJsonDocument &reply);
 
 private:
-    QString dateString(const qint64 timestamp) const;
+    QString dateString(const qint64 timestamp, const bool withTime = false) const;
 
     void startPackageDetailsUpdate();
     void getMissingPictures();

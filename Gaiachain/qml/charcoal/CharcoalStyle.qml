@@ -34,7 +34,9 @@ AbstractStyle {
     readonly property url submenuLoggingBeginningUrl: "qrc:/ui/submenuLoggingBeginning"
     readonly property url submenuLoggingEndingUrl: "qrc:/ui/submenuLoggingEnding"
     readonly property url submenuLoggingUrl: "qrc:/ui/submenuLogging"
+    readonly property url submenuSellAtLocalMarketUrl: "qrc:/ui/submenuSellAtLocalMarket"
     readonly property url submenuReceptionUrl: "qrc:/ui/submenuReception"
+    readonly property url submenuFinalReceptionUrl: submenuReceptionUrl
     readonly property url menuReplantationUrl: "qrc:/ui/menuReplantation"
     readonly property url menuSupplyChainUrl: "qrc:/ui/menuSupplyChain"
     readonly property url menuTrackingUrl: "qrc:/ui/menuTracking"

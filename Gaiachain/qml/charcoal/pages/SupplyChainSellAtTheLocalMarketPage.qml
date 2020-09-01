@@ -39,16 +39,6 @@ Pages.SupplyChainPageBase {
                                               "buttonPrimaryColor": GStyle.errorColor
                                           })
                 }
-
-                // TODO: turn back on when QrMismatch feature is fully designed
-                //if (bagsMatch.fullMatch === false) {
-                //    pageManager.enter(
-                //                 Enums.Page.QrMismatchSummary,
-                //                 {
-                //                     "bagsMatch": bagsMatch
-                //                 },
-                //                 false)
-                //}
             } else {
                 clearTransportInfo()
             }
@@ -65,25 +55,16 @@ Pages.SupplyChainPageBase {
         bagsMatch = undefined
     }
 
-    property var documents: []
-    property var receipts: []
-
     // Used by QRScanner page. Not used here, however. It's only used on
     // Loading and Transport page
     property bool shouldPause: false
 
-    readonly property bool hasDocs: documents.length > 0
-    readonly property bool hasRecs: receipts.length > 0
-
-    title: Strings.reception
+    title: Strings.sellAtTheLocalMarket
 
     proceedButtonEnabled: hasQrs && (transportId !== -1)
                           && (bagsMatch.hasConflict === false)
 
-    Component.onCompleted: {
-        picturesManager.cleanUpWaitingPictures()
-        refreshData()
-    }
+    Component.onCompleted: refreshData()
 
     function refreshData() {
         dataManager.minimumDateModel.plotId = -1
@@ -98,14 +79,6 @@ Pages.SupplyChainPageBase {
     }
 
     function summary() {
-        picturesManager.resetCurrentPictures()
-        let docs = picturesManager.documents()
-        let recs = picturesManager.receipts()
-        let hasDocs = docs.length > 0
-        let hasRecs = recs.length > 0
-        let docsIcon = "image://tickmark/document-" + hasDocs
-        let recsIcon = "image://tickmark/receipt-" + hasRecs
-
         let bagCount = dataManager.actionController.bagCountInTransport(transportId)
         let allBagsMatch = (bagsMatch.fullMatch === true)
 
@@ -123,55 +96,20 @@ Pages.SupplyChainPageBase {
                         "",
                         [
                             [
-                                Strings.numberOfBagsReceived,
-                                Strings.totalNumberOfBags
+                                Strings.numberOfBagsSold,
+                                Strings.numberOfBagsLeft
                             ],
                             [
                                 bagsMatch.bagsFromReception.length,
-                                bagsMatch.matchStatusMessage()
+                                bagsMatch.matchStatusMessage(true)
                             ],
                             [
-                                "",
-                                allBagsMatch? GStyle.checkGreenUrl : GStyle.warningUrl
+                                ""
                             ],
                             [
-                                Enums.Page.InvalidPage,
                                 Enums.Page.InvalidPage
                             ],
                             [
-                                "",
-                                ""
-                            ]
-                        ],
-                        "", "",
-                        GStyle.delegateHighlightColor4,
-                        GStyle.fontHighlightColor4,
-                        GStyle.textPrimaryColor,
-                        Enums.DelegateType.ColumnStack,
-                        true),
-                    Utility.createSummaryItem(
-                        "",
-                        [
-                            [
-                                Strings.documents,
-                                Strings.receipt
-                            ],
-                            [
-                                hasDocs? Strings.approved : Strings.noPhoto,
-                                hasRecs? Strings.approved : Strings.noPhoto
-                            ],
-                            [
-                                docsIcon,
-                                recsIcon
-                            ],
-                            [
-                                hasDocs? Enums.Page.PhotoGallery
-                                       : Enums.Page.InvalidPage,
-                                hasRecs? Enums.Page.PhotoGallery
-                                       : Enums.Page.InvalidPage
-                            ],
-                            [
-                                "",
                                 ""
                             ]
                         ],
@@ -197,55 +135,17 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        let success = dataManager.actionController.registerFinalReception(
+        let success = dataManager.actionController.registerLocalMarketReception(
                 (gpsSource.coordinate? gpsSource.coordinate
                                      : QtPositioning.coordinate()),
                 new Date,
                 unloadingDateHeader.selectedDate,
                 userManager.userData.code,
                 transportId,
-                picturesManager.documents(),
-                picturesManager.receipts(),
                 scannedQrs
                 )
 
-        if (success === false) {
-            pageManager.backTo(Enums.Page.MainMenu)
-            return;
-        }
-
-        let scannedBagsCount = dataManager.actionController.scannedBagsCount(transportId)
-        let scannedBagsTotal = dataManager.actionController.scannedBagsTotal(transportId)
-        let registeredTrucksCount = dataManager.actionController.registeredTrucksCount(transportId)
-        let registeredTrucksTotal = dataManager.actionController.registeredTrucksTotal(transportId)
-
-        pageManager.enter(Enums.Page.SupplyChainFinalize, {
-                              "transportId": transportId,
-                              "scannedBagsCount": scannedBagsCount,
-                              "scannedBagsTotal": scannedBagsTotal,
-                              "registeredTrucksCount": registeredTrucksCount,
-                              "registeredTrucksTotal": registeredTrucksTotal
-                          })
-    }
-
-    CharcoalHeaders.CharcoalButtonHeader {
-        id: receiveDocsHeader
-
-        Layout.fillWidth: true
-        forceBoldValue: true
-        valueFontSize: s(GStyle.titlePixelSize)
-
-        text: Strings.receiveDocumentsAndReceipt
-        extraText: (hasDocs || hasRecs)?
-                       Strings.greenDocsCount.arg(documents.length).arg(receipts.length)
-                     : ""
-        iconVisible: hasDocs || hasRecs
-
-        onClicked: pageManager.enter(
-                       Enums.Page.TakeDocumentPictures,
-                       {
-                           "backToPage": Enums.Page.SupplyChainReception
-                       })
+        pageManager.backTo(Enums.Page.MainMenu)
     }
 
     CharcoalHeaders.CharcoalButtonHeader {
@@ -255,18 +155,18 @@ Pages.SupplyChainPageBase {
         forceBoldValue: true
         valueFontSize: s(GStyle.titlePixelSize)
 
-        text: Strings.scanAllBagsFromTruck
+        text: Strings.scanBagsYouWantToSell
         extraText: hasQrs? Strings.greenBagCount.arg(scannedQrs.length) : ""
         iconVisible: hasQrs
-        icon: bagsMatch !== undefined && bagsMatch.fullMatch && !bagsMatch.hasConflict?
-                  GStyle.checkGreenUrl : GStyle.iconNoUrl
+        icon: bagsMatch !== undefined && (bagsMatch.hasConflict || bagsMatch.hasExtraBags)?
+                  GStyle.iconNoUrl : GStyle.checkGreenUrl
 
         onClicked: pageManager.enter(
                        Enums.Page.QRScanner,
                        {
                            "title": top.title,
-                           "infoText": Strings.scanAllBagsToCheckInfoText,
-                           "backToPage": Enums.Page.SupplyChainReception,
+                           "infoText": Strings.scanBagsInfoText,
+                           "backToPage": Enums.Page.SupplyChainSellAtTheLocalMarket,
                            "infoImages": [ GStyle.bagsReceptionUrl ],
                            "scannedQrs": scannedQrs
                        })

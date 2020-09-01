@@ -18,18 +18,41 @@ class BagsMatch
     Q_GADGET
 
     Q_PROPERTY(bool fullMatch MEMBER fullMatch)
+    Q_PROPERTY(bool hasConflict MEMBER hasConflict)
+    Q_PROPERTY(bool hasExtraBags MEMBER hasExtraBags)
     Q_PROPERTY(QVariantList missingBags MEMBER missingBags)
     Q_PROPERTY(QVariantList extraBags MEMBER extraBags)
+    Q_PROPERTY(QVariantList duplicatedBags MEMBER duplicatedBags)
+    Q_PROPERTY(QVariantList bagsFromTransport MEMBER bagsFromTransport)
+    Q_PROPERTY(QVariantList bagsFromReception MEMBER bagsFromReception)
+    Q_PROPERTY(QVariantList bagsFromOtherReceptions MEMBER bagsFromOtherReceptions)
 
 public:
     BagsMatch() = default;
     ~BagsMatch() = default;
+
+    void matchBags(const QString &connectionName, const int transportId,
+                   const QVariantList &qrsFromReception);
+
+    int countBagsLeftOnTruck() const;
 
     /*!
      * Is set to true if bags from transport and reception stages match
      * completely.
      */
     bool fullMatch = false;
+
+    /*!
+     * If it is true it means that a QR code is duplicated.
+     */
+    bool hasConflict = false;
+
+    /*!
+     * If it is true it means that an unrecognised QR code has been scanned.
+     */
+    bool hasExtraBags = false;
+
+    bool queryError = false;
 
     /*!
      * List of QR codes which are present in Transport stage but missing from
@@ -44,16 +67,27 @@ public:
     QVariantList extraBags;
 
     /*!
+     * When hasConflict is `true`, this member will hold the duplicated entries.
+     */
+    QVariantList duplicatedBags;
+
+    /*!
      * List of bags scanned in Loading and Transport step.
      */
     QVariantList bagsFromTransport;
 
     /*!
-     * List of bags scanned in Reception step.
+     * List of bags scanned in most recent Reception step.
      */
     QVariantList bagsFromReception;
 
-    Q_INVOKABLE QString matchStatusMessage() const;
+    /*!
+     * List of bags scanned in all Reception steps (LocalReception and
+     * Reception).
+     */
+    QVariantList bagsFromOtherReceptions;
+
+    Q_INVOKABLE QString matchStatusMessage(const bool showOnlyTotal = false) const;
 };
 
 Q_DECLARE_METATYPE(BagsMatch)
@@ -94,7 +128,7 @@ public:
                                         const bool isPausedEvent) const;
     Q_INVOKABLE int bagCountInTransport(const int transportId) const;
     Q_INVOKABLE BagsMatch matchBags(const int transportId,
-                                    QVariantList qrsFromReception);
+                                    const QVariantList &qrsFromReception);
 
     Q_INVOKABLE QString plateNumberInTransport(const int transportId) const;
     Q_INVOKABLE int scannedBagsCount(const int transportId) const;
@@ -169,7 +203,16 @@ public:
         const bool pauseEvent
         ) const;
 
-    Q_INVOKABLE bool registerReception(
+    Q_INVOKABLE bool registerLocalMarketReception(
+        const QGeoCoordinate &coordinate,
+        const QDateTime &timestamp,
+        const QDateTime &eventDate,
+        const QString &userId,
+        const int transportId,
+        const QVariantList &scannedQrs
+        ) const;
+
+    Q_INVOKABLE bool registerFinalReception(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,

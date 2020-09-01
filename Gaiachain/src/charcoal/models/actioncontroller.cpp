@@ -20,17 +20,99 @@
 #include <QDateTime>
 #include <QDate>
 
-QString BagsMatch::matchStatusMessage() const
+void BagsMatch::matchBags(const QString &connectionName,
+    const int transportId, const QVariantList &qrsFromReception)
 {
-    const QString numbers(QObject::tr("%1 of %2").arg(bagsFromReception.size())
-                              .arg(bagsFromTransport.size()));
+    const int typeId = CharcoalDbHelpers::getEventTypeId(
+        connectionName, Enums::SupplyChainAction::LoadingAndTransport);
 
-    if (fullMatch) {
-        return numbers;
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(connectionName));
+
+    query.prepare("SELECT properties FROM Events "
+                  "WHERE entityId=:transportId AND typeId=:typeId");
+    query.bindValue(":transportId", transportId);
+    query.bindValue(":typeId", typeId);
+
+    if (query.exec() == false || query.next() == false) {
+        queryError = true;
+        return;
     }
 
-    QString result(numbers);
-    if (missingBags.isEmpty() == false) {
+    const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
+    const QJsonObject properties(
+        CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
+    const QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
+
+    QVariantList qrsFromOtherReceptions(CharcoalDbHelpers::bagsInReceptions(
+        connectionName, transportId));
+    bagsFromOtherReceptions = qrsFromOtherReceptions;
+
+    QVariantList allReceptions(qrsFromReception);
+    allReceptions.append(qrsFromOtherReceptions);
+
+    bagsFromTransport = qrsFromTransport;
+    bagsFromReception = qrsFromReception;
+
+    std::sort(qrsFromOtherReceptions.begin(), qrsFromOtherReceptions.end());
+    std::sort(bagsFromReception.begin(), bagsFromReception.end());
+    std::sort(bagsFromTransport.begin(), bagsFromTransport.end());
+    std::sort(allReceptions.begin(), allReceptions.end());
+
+    if (allReceptions == bagsFromTransport) {
+        fullMatch = true;
+        return;
+    }
+
+    for (const QVariant &other : qAsConst(qrsFromOtherReceptions)) {
+        if (bagsFromReception.contains(other)) {
+            qDebug() << "Duplicated bag" << other;
+            duplicatedBags.append(other);
+        }
+    }
+
+    for (const QVariant &transport : qAsConst(bagsFromTransport)) {
+        if (allReceptions.contains(transport) == false) {
+            qDebug() << "Missing bag" << transport;
+            missingBags.append(transport);
+        }
+    }
+
+    for (const QVariant &reception : qAsConst(allReceptions)) {
+        if (bagsFromTransport.contains(reception) == false) {
+            qDebug() << "Extra bag" << reception;
+            extraBags.append(reception);
+        }
+    }
+
+    hasConflict = !duplicatedBags.isEmpty();
+    hasExtraBags = !extraBags.isEmpty();
+
+    return;
+}
+
+int BagsMatch::countBagsLeftOnTruck() const
+{
+    return bagsFromTransport.size() - bagsFromOtherReceptions.size()
+        - bagsFromReception.size() + extraBags.size() + duplicatedBags.size();
+}
+
+QString BagsMatch::matchStatusMessage(const bool showOnlyTotal) const
+{
+    const QString numbers(QObject::tr("%1 of %2"));
+    QString result;
+
+    if (showOnlyTotal) {
+        result = QString::number(countBagsLeftOnTruck());
+    } else {
+        result = (numbers.arg(bagsFromReception.size() + bagsFromOtherReceptions.size())
+                      .arg(bagsFromTransport.size()));
+    }
+
+    if (fullMatch) {
+        return result;
+    }
+
+    if (showOnlyTotal == false && missingBags.isEmpty() == false) {
         result.append("<br/>");
         result.append(QObject::tr("<small>%1 bags are missing</small>").arg(missingBags.size()));
     }
@@ -217,54 +299,15 @@ int ActionController::bagCountInTransport(const int transportId) const
 }
 
 BagsMatch ActionController::matchBags(const int transportId,
-                                      QVariantList qrsFromReception)
+                                      const QVariantList &qrsFromReception)
 {
     BagsMatch result;
+    result.matchBags(m_connectionName, transportId, qrsFromReception);
 
-    const int typeId = CharcoalDbHelpers::getEventTypeId(
-        m_connectionName, Enums::SupplyChainAction::LoadingAndTransport);
-
-    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
-
-    query.prepare("SELECT properties FROM Events "
-                  "WHERE entityId=:transportId AND typeId=:typeId");
-    query.bindValue(":transportId", transportId);
-    query.bindValue(":typeId", typeId);
-
-    if (query.exec() == false || query.next() == false) {
+    if (result.queryError) {
         const QString msg(tr("Could not check bags for transport %1").arg(transportId));
         qWarning() << msg;
         emit error(msg);
-        return result;
-    }
-
-    const QByteArray propertiesString(query.value(Tags::properties).toByteArray());
-    const QJsonObject properties(
-        CharcoalDbHelpers::dbPropertiesToJson(propertiesString));
-    QVariantList qrsFromTransport(properties.value(Tags::webQrCodes).toArray().toVariantList());
-
-    std::sort(qrsFromReception.begin(), qrsFromReception.end());
-    std::sort(qrsFromTransport.begin(), qrsFromTransport.end());
-    result.bagsFromTransport = qrsFromTransport;
-    result.bagsFromReception = qrsFromReception;
-
-    if (qrsFromReception == qrsFromTransport) {
-        result.fullMatch = true;
-        return result;
-    }
-
-    for (const QVariant &transport : qAsConst(qrsFromTransport)) {
-        if (qrsFromReception.contains(transport) == false) {
-            qDebug() << "Missing bag" << transport;
-            result.missingBags.append(transport);
-        }
-    }
-
-    for (const QVariant &reception : qAsConst(qrsFromReception)) {
-        if (qrsFromTransport.contains(reception) == false) {
-            qDebug() << "Extra bag" << reception;
-            result.extraBags.append(reception);
-        }
     }
 
     if (result.fullMatch == false) {
@@ -300,7 +343,8 @@ QString ActionController::plateNumberInTransport(const int transportId) const
 
 int ActionController::scannedBagsCount(const int transportId) const
 {
-    return scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
+    return scannedBagsForAction(transportId, Enums::SupplyChainAction::LocalReception)
+        + scannedBagsForAction(transportId, Enums::SupplyChainAction::Reception);
 }
 
 int ActionController::scannedBagsTotal(const int transportId) const
@@ -826,7 +870,58 @@ void ActionController::registerLoadingAndTransport(
     emit refreshLocalEvents();
 }
 
-bool ActionController::registerReception(
+bool ActionController::registerLocalMarketReception(
+    const QGeoCoordinate &coordinate,
+    const QDateTime &timestamp,
+    const QDateTime &eventDate,
+    const QString &userId,
+    const int transportId,
+    const QVariantList &scannedQrs) const
+{
+    /*
+     * Algorithm is:
+     * - find entity ID in table (created in Loading and Transport step)
+     * - insert event into table
+     * - send action to web server
+     */
+
+    qDebug() << "Registering local reception" << coordinate << timestamp
+             << userId << transportId
+             << scannedQrs.size();
+
+    if (transportId == -1) {
+        qWarning() << RED("Entity ID not found!");
+        emit error(tr("Transport ID is incorrect %1").arg(transportId));
+        return false;
+    }
+
+    const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
+        m_connectionName, Enums::SupplyChainAction::LocalReception));
+
+    if (eventTypeId == -1) {
+        qWarning() << RED("Event Type ID not found!");
+        emit error(tr("Reception type is incorrect %1").arg(eventTypeId));
+        return false;
+    }
+
+    QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
+
+    if (false == insertEvent(&query, transportId, eventTypeId, userId, timestamp,
+                             eventDate, coordinate,
+                             {
+                                 { Tags::webQrCodes, scannedQrs },
+                                 { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
+                             }))
+    {
+        emit error(tr("Failed to insert local reception %1").arg(transportId));
+        return false;
+    }
+
+    emit refreshLocalEvents();
+    return true;
+}
+
+bool ActionController::registerFinalReception(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -844,7 +939,7 @@ bool ActionController::registerReception(
      * - send action to web server
      */
 
-    qDebug() << "Registering reception" << coordinate << timestamp
+    qDebug() << "Registering final reception" << coordinate << timestamp
              << userId << transportId << documents << receipts
              << scannedQrs.size();
 
@@ -867,19 +962,19 @@ bool ActionController::registerReception(
     // into DB.
     // This can only happen for debug server where we have some dummy, unfinished
     // events
-    const int existing = CharcoalDbHelpers::getInteger(
-        m_connectionName, "Events",
-        { Tags::entityId, Tags::typeId },
-        { transportId, eventTypeId },
-        Tags::id,
-        QString(), false
-        );
-
-    if (existing != -1) {
-        qWarning() << RED("Reception already exists - special case!")
-                   << transportId << eventTypeId << existing;
-        return true;
-    }
+    //const int existing = CharcoalDbHelpers::getInteger(
+    //    m_connectionName, "Events",
+    //    { Tags::entityId, Tags::typeId },
+    //    { transportId, eventTypeId },
+    //    Tags::id,
+    //    QString(), false
+    //    );
+    //
+    //if (existing != -1) {
+    //    qWarning() << RED("Reception already exists - special case!")
+    //               << transportId << eventTypeId << existing;
+    //    return true;
+    //}
 
     const QStringList cachedDocs(m_picturesManager->moveToCache(documents));
     const QStringList cachedRecs(m_picturesManager->moveToCache(receipts));
@@ -1001,7 +1096,8 @@ void ActionController::registerReplantation(
 
     if (query.exec() == false) {
         qWarning() << RED("Finishing replantation of a plot has failed!")
-                   << query.lastError().text() << "for query:" << query.lastQuery();
+                   << query.lastError().text()
+                   << "for query:" << query.lastQuery();
         return;
     }
 

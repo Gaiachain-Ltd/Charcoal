@@ -167,20 +167,31 @@ GPage {
                                    Enums.Page.SupplyChainLoadingAndTransport)
                 }
 
-                Components.MenuButton {
+                Components.DoubleMenuButton {
                     width: parent.width
 
                     visible: userType === Enums.UserType.SuperUser
                              || userType === Enums.UserType.Anonymous
 
                     text: Strings.reception
-                    icon: GStyle.submenuReceptionUrl
                     color: GStyle.submenuReceptionColor
+                    icon: GStyle.submenuReceptionUrl
                     fontColor: GStyle.textPrimaryColor
                     fontBold: false
 
-                    onClicked: pageManager.enter(Enums.Page.SupplyChainReception)
+                    leftText: Strings.sellAtTheLocalMarket
+                    leftColor: GStyle.submenuReceptionColor
+                    leftIcon:  GStyle.submenuSellAtLocalMarketUrl
+                    onLeftClicked: pageManager.enter(
+                                       Enums.Page.SupplyChainSellAtTheLocalMarket)
+
+                    rightText: Strings.finalReception
+                    rightColor: GStyle.submenuReceptionColor
+                    rightIcon:  GStyle.submenuFinalReceptionUrl
+                    onRightClicked: pageManager.enter(
+                                        Enums.Page.SupplyChainReception)
                 }
+
             }
 
             Components.MenuButton {

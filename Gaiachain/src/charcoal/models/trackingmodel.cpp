@@ -98,6 +98,9 @@ QVariant TrackingModel::data(const QModelIndex &index, int role) const
                            .arg(event.properties.value(Tags::webPlateNumber).toString());
             }
             break;
+            case Enums::SupplyChainAction::LocalReception:
+                name = tr("Bags sold at a local market");
+                break;
             case Enums::SupplyChainAction::Reception:
                 name = tr("Reception at storage facility");
                 break;
@@ -233,8 +236,8 @@ QVariantList TrackingModel::summaryForPlot(
                 tr("Ending date")
             },
             QVariantList {
-                dateString(beginningTimestamp),
-                dateString(endingTimestamp)
+                dateString(beginningTimestamp, true),
+                dateString(endingTimestamp, true)
             }
         },
         QString(), QString(), QString(), QString(), QString(),
@@ -334,8 +337,8 @@ QVariantList TrackingModel::summaryForHarvest(
                     tr("Ending date")
                 },
                 QVariantList {
-                    dateString(oven.carbonizationBeginning),
-                    dateString(oven.carbonizationEnding)
+                    dateString(oven.carbonizationBeginning, true),
+                    dateString(oven.carbonizationEnding, true)
                 }
             },
             QString(), QString(), QString(), QString(), QString(),
@@ -376,16 +379,79 @@ QVariantList TrackingModel::summaryForTransport(
     qint64 beginningTimestamp = -1;
     qint64 endingTimestamp = -1;
     QString plateNumber;
-    QVariantList receptionData;
 
-    for (const Event &event : events) {
+    result.append(utility.createSummaryItem(
+        tr("Transport ID"), entity.name, QString(), QString(),
+        m_transportHighlightColor, m_transportTextColor, m_transportTextColor,
+        Enums::DelegateType::Standard,
+        true));
+
+    QVector<Event> eventsAscending = events;
+    std::reverse(eventsAscending.begin(), eventsAscending.end());
+
+    for (const Event &event : qAsConst(eventsAscending)) {
         const Enums::SupplyChainAction action = CharcoalDbHelpers::actionById(
             m_connectionName, event.typeId);
+
+        Utility::SummaryValue value;
+        const QString bagNumberString(QString::number(event.qrCodes().size()));
 
         if (action == Enums::SupplyChainAction::LoadingAndTransport
             && beginningTimestamp == -1) {
             plateNumber = event.properties.value(Tags::webPlateNumber).toString();
             beginningTimestamp = event.date;
+
+            value.titles.append({
+                dateString(beginningTimestamp, true),
+                bagNumberString
+            });
+
+            value.values.append({
+                tr("Loading date"),
+                tr("Number of loaded bags")
+            });
+
+            value.icons.append({
+                QString(),
+                QString()
+            });
+
+            value.linkDestinationPages.append({
+                Enums::Page::InvalidPage,
+                Enums::Page::InvalidPage
+            });
+
+            value.linkDatas.append({
+                QVariant(),
+                QVariant()
+            });
+        }
+
+        if (action == Enums::SupplyChainAction::LocalReception) {
+            value.titles.append({
+                bagNumberString,
+                dateString(event.date, true)
+            });
+
+            value.values.append({
+                tr("Number of bags sold"),
+                tr("Selling date")
+            });
+
+            value.icons.append({
+                QString(),
+                QString()
+            });
+
+            value.linkDestinationPages.append({
+                Enums::Page::InvalidPage,
+                Enums::Page::InvalidPage
+            });
+
+            value.linkDatas.append({
+                QVariant(),
+                QVariant()
+            });
         }
 
         if (action == Enums::SupplyChainAction::Reception
@@ -416,64 +482,79 @@ QVariantList TrackingModel::summaryForTransport(
             const QString uploaded(tr("Uploaded"));
             const QString noPhoto(tr("No photo"));
 
-            const QString bagNumberString(QString::number(
-                CharcoalDbHelpers::bagCountInTransport(m_connectionName, entity.id)));
-
-            Utility::SummaryValue value;
-            value.titles = QStringList {
+            value.titles.append({
                 bagNumberString,
-                dateString(beginningTimestamp),
+                dateString(endingTimestamp, true)
+            });
+
+            value.values.append({
+                tr("Number of received bags"),
+                tr("Final reception date")
+            });
+
+            value.icons.append({
+                QString(),
+                QString()
+            });
+
+            value.linkDestinationPages.append({
+                Enums::Page::InvalidPage,
+                Enums::Page::InvalidPage
+            });
+
+            value.linkDatas.append({
+                QVariant(),
+                QVariant()
+            });
+
+            result.append(utility.createSummaryItem(
+                QString(), value.toList(),
+                QString(), QString(),
+                m_transportHighlightColor, m_transportTextColor, QColor("#000000"),
+                Enums::DelegateType::ColumnStack,
+                true));
+
+            value = Utility::SummaryValue();
+
+            value.titles.append({
                 QString(hasDocs? uploaded : noPhoto),
                 QString(hasRecs? uploaded : noPhoto)
-            };
+            });
 
-            value.values = QStringList {
-                tr("Number of bags"),
-                tr("Loading date"),
+            value.values.append({
                 tr("Documents"),
                 tr("Receipts")
-            };
+            });
 
-            value.icons = QStringList {
-                QString(),
-                QString(),
+            value.icons.append({
                 "image://tickmark/document-" + QString(hasDocs? "true" : "false"),
                 "image://tickmark/receipt-" + QString(hasRecs? "true" : "false")
-            };
+            });
 
-            value.linkDestinationPages = QList<Enums::Page>{
-                Enums::Page::InvalidPage,
-                Enums::Page::InvalidPage,
+            value.linkDestinationPages.append({
                 (hasDocs? Enums::Page::PhotoGallery : Enums::Page::InvalidPage),
                 (hasRecs? Enums::Page::PhotoGallery : Enums::Page::InvalidPage)
-            };
+            });
 
-            value.linkDatas = QVariantList {
-                QVariant(),
-                QVariant(),
+            value.linkDatas.append({
                 QVariantMap{ {"urls", docs} },
                 QVariantMap{ {"urls", recs} }
-            };
-
-            receptionData = value.toList();
+            });
         }
+
+        result.append(utility.createSummaryItem(
+            QString(), value.toList(),
+            QString(), QString(),
+            m_transportHighlightColor, m_transportTextColor, QColor("#000000"),
+            Enums::DelegateType::ColumnStack,
+            true));
     }
 
     result.append(utility.createSummaryItem(
-        tr("Transport ID"), entity.name, QString(), QString(),
-        m_transportHighlightColor, m_transportTextColor, m_transportTextColor,
-        Enums::DelegateType::Standard,
-        false));
-    result.append(utility.createSummaryItem(
-        QString(), receptionData,
-        QString(), QString(),
-        m_transportHighlightColor, m_transportTextColor, QColor("#000000"),
-        Enums::DelegateType::ColumnStack,
-        true));
-    result.append(utility.createSummaryItem(
         tr("Plate number"), plateNumber));
     result.append(utility.createSummaryItem(
-        tr("Reception at the storage facility"), dateString(endingTimestamp)));
+        tr("Reception at the storage facility"),
+        dateString(endingTimestamp, true)));
 
     return result;
 }
@@ -529,7 +610,7 @@ void TrackingModel::detailsReplyHandler(const QJsonDocument &reply)
     }
 }
 
-QString TrackingModel::dateString(const qint64 timestamp) const
+QString TrackingModel::dateString(const qint64 timestamp, const bool withTime) const
 {
     const auto dateTime = QDateTime::fromSecsSinceEpoch(timestamp);
 
@@ -537,7 +618,11 @@ QString TrackingModel::dateString(const qint64 timestamp) const
         return QString(Tags::noDateTime);
     }
 
-    return dateTime.toString(QStringLiteral("dd/MM/yyyy"));
+    if (withTime) {
+        return dateTime.toString(QStringLiteral("dd/MM/yyyy hh:mm:ss"));
+    } else {
+        return dateTime.toString(QStringLiteral("dd/MM/yyyy"));
+    }
 }
 
 /*!
