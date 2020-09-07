@@ -189,7 +189,7 @@ Pages.SupplyChainPage {
         placeholderText: Strings.scanQrCodeFrom.arg(Strings.sac.toUpperCase())
 
 
-        onClicked: pageManager.enter(Enums.Page.QRScanner, {
+        onWholeInputClicked: pageManager.enter(Enums.Page.QRScanner, {
                                          "title": title,
                                          "backSupplyChainPage": page,
                                          "popupText": Strings.attachQr.arg(Strings.sac.toUpperCase()) })
@@ -203,7 +203,7 @@ Pages.SupplyChainPage {
 
         iconSource: GStyle.plusImgUrl
 
-        onClicked: pageManager.enter(Enums.Page.SupplyChainAddHarvestId, { "firstEntry": typeof(lastHarvestData) === "undefined" })
+        onWholeInputClicked: pageManager.enter(Enums.Page.SupplyChainAddHarvestId, { "firstEntry": typeof(lastHarvestData) === "undefined" })
     }
 
     Repeater {

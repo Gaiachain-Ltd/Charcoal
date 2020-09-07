@@ -10,19 +10,6 @@ import "../headers" as Headers
 Headers.InputHeader {
     id: top
 
-    signal clicked()
-
     readOnly: true
-
-    MouseArea {
-        anchors {
-            fill: parent
-            topMargin: widgetX
-        }
-
-        onClicked: {
-            forceActiveFocus()
-            top.clicked()
-        }
-    }
+    wholeInputClickable: true
 }

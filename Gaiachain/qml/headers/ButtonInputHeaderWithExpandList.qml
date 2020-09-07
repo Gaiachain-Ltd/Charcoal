@@ -40,7 +40,7 @@ Item {
 
             onExpandedChanged: expandingAnimation.start()
 
-            onClicked: {
+            onWholeInputClicked: {
                 if (expandList.count) {
                     inputHeader.expanded = !inputHeader.expanded
                 }

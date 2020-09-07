@@ -153,6 +153,6 @@ SupplyChainPageBase {
         inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinateString) : gpsSource.errorMessage())
         iconSource: (gpsSource.validCoordinate ? GStyle.gpsOkImgUrl : GStyle.gpsFailedImgUrl)
 
-        onClicked: gpsSource.update()
+        onWholeInputClicked: gpsSource.update()
     }
 }
