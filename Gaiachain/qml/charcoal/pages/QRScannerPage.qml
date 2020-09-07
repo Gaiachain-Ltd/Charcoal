@@ -419,6 +419,12 @@ Pages.GPage {
 
                     visible: currentStatus === QRScannerPage.ManualScan
 
+                    onVisibleChanged: {
+                      if (visible) {
+                        clear()
+                      }
+                    }
+
                     onQrCodeChanged: currentQr = qrCode
                 }
 

@@ -26,6 +26,15 @@ RowLayout {
         }
     }
 
+    function clear() {
+      qrPart1.clear()
+      qrPart2.clear()
+      qrPart3.clear()
+      qrPart3.focus = false
+      qrPart2.focus = false
+      qrPart1.focus = true
+    }
+
     RegularExpressionValidator {
         id: qrValidator
         regularExpression: /[0-9A-Za-z]+/
