@@ -245,8 +245,7 @@ Pages.SupplyChainPageBase {
         helpText: Strings.carbonizationBeginningOvenDimensionsHelp
         enabled: ovenTypeComboBox.isTraditional
 
-        text: Strings.set + (ovenDimensions.volume() < 0?
-                                 "" : (" " + ovenDimensions.volume() + "m³"))
+        text: ovenDimensions.volume() < 0? Strings.set : (ovenDimensions.volume() + "m³")
         extraText: ""
         iconVisible: false
 
