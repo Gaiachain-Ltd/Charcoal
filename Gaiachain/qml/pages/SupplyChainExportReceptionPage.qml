@@ -68,7 +68,7 @@ Pages.SupplyChainPage {
         headerText: Strings.qrCode
         placeholderText: Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase())
 
-        onClicked: pageManager.enter(Enums.Page.QRScanner, {
+        onWholeInputClicked: pageManager.enter(Enums.Page.QRScanner, {
                                          "title": title,
                                          "backSupplyChainPage": page,
                                          "popupText": Strings.scanQrCodeFrom.arg(Strings.lot.toUpperCase()) })

@@ -605,7 +605,7 @@ Pages.GPage {
                 inputText: Strings.deleteAllScannedCodes
                 iconSource: GStyle.iconDeleteAll
 
-                onClicked: clearBagsPopup.open()
+                onWholeInputClicked: clearBagsPopup.open()
             }
 
             Components.Footer {

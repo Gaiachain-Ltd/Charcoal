@@ -293,7 +293,7 @@ Pages.SupplyChainPageBase {
         inputText: (gpsSource.validCoordinate ? Helper.formatCoordinate(gpsSource.coordinateString) : gpsSource.errorMessage())
         iconSource: (gpsSource.validCoordinate ? GStyle.gpsOkImgUrl : GStyle.gpsFailedImgUrl)
 
-        onClicked: if (isPausedEvent == false) gpsSource.update()
+        onWholeInputClicked: if (isPausedEvent == false) gpsSource.update()
     }
 }
 

@@ -27,6 +27,9 @@ Headers.GHeader {
     property alias showIcon: input.showIcon
     signal iconClicked
 
+    property alias wholeInputClickable: wholeInputMouseArea.enabled
+    signal wholeInputClicked
+
     property bool forceBoldValue: false
     property int valueFontSize: s(GStyle.inputPixelSize)
 
@@ -83,6 +86,13 @@ Headers.GHeader {
             }
 
             text: suffixText
+        }
+
+        MouseArea {
+          id: wholeInputMouseArea
+          anchors.fill: parent
+          enabled: false
+          onClicked: wholeInputClicked()
         }
     }
 }
