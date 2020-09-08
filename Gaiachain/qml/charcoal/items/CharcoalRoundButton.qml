@@ -13,13 +13,13 @@ RoundButton {
     icon.width: s(40)
 
     display: AbstractButton.IconOnly
+    font.capitalization: Font.AllUppercase
 
     palette.button: GStyle.backgroundColor
-    palette.buttonText: icon.source === GStyle.logoutImgUrl?
-                            GStyle.textPrimaryColor : "transparent"
+    palette.buttonText: GStyle.textPrimaryColor
 
     Rectangle {
-        color: "transparent"
+        color: GStyle.blank
         anchors.fill: parent
         radius: parent.radius
         border.width: 1
