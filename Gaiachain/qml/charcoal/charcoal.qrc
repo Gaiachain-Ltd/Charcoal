@@ -36,5 +36,6 @@
         <file>pages/QrMismatchSummaryPage.qml</file>
         <file>popups/ColumnButtonsPopup.qml</file>
         <file>headers/CharcoalButtonHeader.qml</file>
+        <file>items/CharcoalQrSectionInput.qml</file>
     </qresource>
 </RCC>

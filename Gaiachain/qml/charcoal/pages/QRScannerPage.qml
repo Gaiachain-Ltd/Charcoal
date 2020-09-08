@@ -411,13 +411,19 @@ Pages.GPage {
                 }
 
                 CharcoalItems.CharcoalQrInput {
-                    Layout.fillWidth: true
                     Layout.leftMargin: s(GStyle.bigMargin)
                     Layout.rightMargin: s(GStyle.bigMargin)
+                    Layout.fillWidth: true
 
                     id: manualInput
 
                     visible: currentStatus === QRScannerPage.ManualScan
+
+                    onVisibleChanged: {
+                      if (visible) {
+                        clear()
+                      }
+                    }
 
                     onQrCodeChanged: currentQr = qrCode
                 }
