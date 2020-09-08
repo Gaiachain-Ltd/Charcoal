@@ -104,6 +104,7 @@ QtObject {
     // supply chain pages
     property string search: tr.empty + qsTr("Search")
     property string proceed: tr.empty + qsTr("Proceed")
+    property string validate: tr.empty + qsTr("Validate")
 
     property string addActionErrorOffline: tr.empty + qsTr("Cannot reach the server. Please try again later.")
     property string addActionErrorUnknown: tr.empty + qsTr("Cannot add the action to the server.")
