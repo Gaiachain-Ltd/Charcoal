@@ -77,7 +77,6 @@ Items.GInput {
     }
 
     if (cursorPosition <= 0) {
-      focus = false
       previousInput.forceActiveFocus()
       previousInput.cursorPosition = previousInput.maximumLength
       return true
@@ -91,7 +90,6 @@ Items.GInput {
     }
 
     if (cursorPosition === maximumLength) {
-      focus = false
       nextInput.forceActiveFocus()
       nextInput.cursorPosition = 0
       return true
