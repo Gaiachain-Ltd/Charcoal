@@ -7,195 +7,84 @@ import "../../items" as Items
 import com.gaiachain.style 1.0
 import com.gaiachain.static 1.0
 
-RowLayout {
-    id: root
+Item {
+  id: root
 
-    readonly property int sectionLength: 4
-    readonly property string separator: "-"
-    readonly property real fontSize: s(GStyle.bigPixelSize)
-    readonly property int sectionWidth: s(fontSize * 4.2)
+  readonly property string separator: "-"
+  readonly property string qrCode: qrPart1.text + separator + qrPart2.text + separator + qrPart3.text
 
-    property string qrCode: qrPart1.text + separator + qrPart2.text + separator + qrPart3.text
+  height: qrPart1.height
 
-    height: fontSize * 2
-    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+  Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-    onVisibleChanged: {
-        if (visible) {
-            qrPart1.forceActiveFocus()
-        }
+  onVisibleChanged: {
+    if (visible) {
+      qrPart1.forceActiveFocus()
     }
+  }
 
-    function clear() {
-      qrPart1.clear()
-      qrPart2.clear()
-      qrPart3.clear()
-      qrPart3.focus = false
-      qrPart2.focus = false
-      qrPart1.focus = true
-    }
+  function clear() {
+    qrPart1.clear()
+    qrPart2.clear()
+    qrPart3.clear()
+    qrPart3.focus = false
+    qrPart2.focus = false
+    qrPart1.focus = true
+  }
 
-    RegularExpressionValidator {
-        id: qrValidator
-        regularExpression: /[0-9A-Za-z]+/
-    }
+  Rectangle {
+    id: borderRectangle
 
-    Component {
-        id: cursor
+    anchors.centerIn: parent
+    height: qrPart1.height
+    width: row.width
+    radius: s(GStyle.tinyMargin)
+    color: GStyle.blank
+    border.width: sr(GStyle.controlDefaultBorderWidth)
+    border.color: GStyle.inputBorderColor
 
-        Rectangle {
-            height: root.fontSize
-            width: 1
-            color: "#000000"
-        }
-    }
+    Row {
+      id: row
 
-    Component {
-        id: emptyCursor
+      anchors.centerIn: parent
+      height: parent.height
+      padding: 0
+      spacing: 0
 
-        Item {}
-    }
-
-    Items.GInput {
+      CharcoalQrSectionInput {
         id: qrPart1
-        Layout.fillWidth: true
-        Layout.maximumWidth: root.sectionWidth
-        font.pixelSize: root.fontSize
-        height: root.height
-        borderWidth: 0
-        padding: 0
-        maximumLength: root.sectionLength
-        horizontalAlignment: Qt.AlignRight
         nextInput: qrPart2
-        validator: qrValidator
-        focus: false
-        overwriteMode: true
-        cursorDelegate: focus? cursor : emptyCursor
+      }
 
-        Keys.onRightPressed: {
-            checkAndGoForward()
-            cursorPosition = cursorPosition + 1
-        }
-
-        onTextChanged: checkAndGoForward()
-
-        function checkAndGoBack() {
-            // nothing
-            return false
-        }
-
-        function checkAndGoForward() {
-            if (cursorPosition === maximumLength) {
-                focus = false
-                moveToNextInput()
-                qrPart2.cursorPosition = 0
-            }
-        }
-    }
-
-    Text {
+      Text {
+        id: spacerText
+        anchors.verticalCenter: parent.verticalCenter
         text: root.separator
-        font.pixelSize: root.fontSize
+        font.pixelSize: qrPart1.fontSize
+        font.family: GStyle.primaryFontFamily
         height: root.height
-    }
+        verticalAlignment: Qt.AlignVCenter
+      }
 
-    Items.GInput {
+      CharcoalQrSectionInput {
         id: qrPart2
-        Layout.fillWidth: true
-        Layout.maximumWidth: root.sectionWidth
-        font.pixelSize: root.fontSize
-        height: root.height
-        borderWidth: 0
-        padding: 0
-        maximumLength: root.sectionLength
-        horizontalAlignment: Qt.AlignHCenter
+        previousInput: qrPart1
         nextInput: qrPart3
-        validator: qrValidator
-        focus: false
-        overwriteMode: true
-        cursorDelegate: focus? cursor : emptyCursor
+      }
 
-        Keys.onLeftPressed: {
-            checkAndGoBack()
-            cursorPosition = cursorPosition - 1
-        }
-
-        Keys.onRightPressed: {
-            checkAndGoForward()
-            cursorPosition = cursorPosition + 1
-        }
-
-        onTextChanged: {
-            if (text.length === 0 && checkAndGoBack()) {
-                return
-            }
-
-            checkAndGoForward()
-        }
-
-        function checkAndGoBack() {
-            if (cursorPosition <= 0) {
-                focus = false
-                qrPart1.forceActiveFocus()
-                qrPart1.cursorPosition = qrPart1.maximumLength
-                return true
-            }
-            return false
-        }
-
-        function checkAndGoForward() {
-            if (cursorPosition === maximumLength) {
-                focus = false
-                moveToNextInput()
-                qrPart3.cursorPosition = 0
-           }
-        }
-    }
-
-    Text {
+      Text {
+        anchors.verticalCenter: parent.verticalCenter
         text: root.separator
-        font.pixelSize: root.fontSize
+        font.pixelSize: qrPart1.fontSize
+        font.family: GStyle.primaryFontFamily
         height: root.height
-    }
+        verticalAlignment: Qt.AlignVCenter
+      }
 
-    Items.GInput {
+      CharcoalQrSectionInput {
         id: qrPart3
-        Layout.fillWidth: true
-        Layout.maximumWidth: root.sectionWidth
-        font.pixelSize: root.fontSize
-        height: root.height
-        borderWidth: 0
-        padding: 0
-        maximumLength: root.sectionLength
-        horizontalAlignment: Qt.AlignLeft
-        validator: qrValidator
-        focus: false
-        overwriteMode: true
-        cursorDelegate: focus? cursor : emptyCursor
-
-        Keys.onLeftPressed: {
-            checkAndGoBack()
-            cursorPosition = cursorPosition - 1
-        }
-
-        onTextChanged: {
-            if (text.length === 0) {
-                checkAndGoBack()
-            }
-        }
-
-        function checkAndGoBack() {
-            if (cursorPosition <= 0) {
-                focus = false
-                qrPart2.forceActiveFocus()
-                qrPart2.cursorPosition = qrPart2.maximumLength
-                return true
-            }
-            return false
-        }
-
-        function checkAndGoForward() {
-            // Nothing
-        }
+        previousInput: qrPart2
+      }
     }
+  }
 }
