@@ -214,8 +214,8 @@ QtObject {
     property string plotUpdated: tr.empty + qsTr("Plot ID updated")
     property string harvestCreated: tr.empty + qsTr("Harvest ID created")
     property string harvestUpdated: tr.empty + qsTr("Harvest ID updated")
-    property string TransportCreated: tr.empty + qsTr("Transport ID created")
-    property string TransportUpdated: tr.empty + qsTr("Transport ID updated")
+    property string transportCreated: tr.empty + qsTr("Transport ID created")
+    property string transportUpdated: tr.empty + qsTr("Transport ID updated")
 
 
     // Charcoal - user info

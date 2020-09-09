@@ -76,7 +76,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.actionController.registerLoggingBeginning(
+        if (dataManager.actionController.registerLoggingBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     new Date,
@@ -85,9 +85,19 @@ Pages.SupplyChainPageBase {
                     parcelComboBox.currentText,
                     parcelComboBox.currentId,
                     villageComboBox.currentId,
-                    treeSpeciesComboBox.currentId)
-
-        pageManager.enter(Enums.Page.MainMenu)
+                    treeSpeciesComboBox.currentId))
+        {
+            pageManager.enterPageAndPopup(Enums.Page.MainMenu, {}, false,
+                                          Enums.Popup.Notification,
+                                          {
+                                              "text": Strings.plotCreated,
+                                              "backgroundColor": GStyle.okColor
+                                          })
+        }
+        else
+        {
+            pageManager.enter(Enums.Page.MainMenu)
+        }
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {

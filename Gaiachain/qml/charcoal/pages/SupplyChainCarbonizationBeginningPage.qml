@@ -152,7 +152,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.actionController.registerCarbonizationBeginning(
+        if (dataManager.actionController.registerCarbonizationBeginning(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     new Date,
@@ -162,9 +162,19 @@ Pages.SupplyChainPageBase {
                     plotIdComboBox.currentId,
                     ovenIdHeader.inputText,
                     ovenTypeComboBox.ovenIdNumber,
-                    ovenDimensions)
-
-        pageManager.enter(Enums.Page.MainMenu)
+                    ovenDimensions))
+        {
+            pageManager.enterPageAndPopup(Enums.Page.MainMenu, {}, false,
+                                          Enums.Popup.Notification,
+                                          {
+                                              "text": Strings.harvestCreated,
+                                              "backgroundColor": GStyle.okColor
+                                          })
+        }
+        else
+        {
+            pageManager.enter(Enums.Page.MainMenu)
+        }
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {

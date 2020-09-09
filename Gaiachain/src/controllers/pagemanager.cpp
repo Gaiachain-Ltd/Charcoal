@@ -226,6 +226,14 @@ bool PageManager::backTo(const Enums::Page page, QVariantMap properties, const b
     return true;
 }
 
+void PageManager::enterPageAndPopup(
+            const Enums::Page page, const QVariantMap &pageProperties, const bool immediate,
+            const Enums::Popup popup, const QVariantMap &popupProperties, const QString &id)
+{
+    enter(page, pageProperties, immediate);
+    openPopup(popup, popupProperties, id);
+}
+
 QString PageManager::getInitialPageUrl() const
 {
     return toFilePath(m_initialPage);
