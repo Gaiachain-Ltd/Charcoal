@@ -29,28 +29,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="894"/>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="948"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="904"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="958"/>
         <source>Transport ID is incorrect %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="903"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="913"/>
         <source>Reception type is incorrect %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="916"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="926"/>
         <source>Failed to insert local reception %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="957"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="967"/>
         <source>Transport type is incorrect %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="993"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="1003"/>
         <source>Failed to insert reception %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -412,7 +412,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="107"/>
         <source>Validate</source>
-        <translation type="unfinished"></translation>
+        <translation>Valider</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="109"/>
@@ -717,12 +717,12 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="193"/>
         <source>height A</source>
-        <translation type="unfinished"></translation>
+        <translation>hauteur A</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="194"/>
         <source>height B</source>
-        <translation type="unfinished"></translation>
+        <translation>hauteur B</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="197"/>
@@ -974,22 +974,22 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="273"/>
         <source>Width (A)</source>
-        <translation type="unfinished"></translation>
+        <translation>Largeur (A)</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="274"/>
         <source>Length (B)</source>
-        <translation type="unfinished"></translation>
+        <translation>Longueur (B)</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="275"/>
         <source>Height (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hauteur (C)</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="276"/>
         <source>Height (D)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hauteur (D)</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="279"/>
@@ -1337,12 +1337,12 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="390"/>
         <source>Scan a document</source>
-        <translation type="unfinished"></translation>
+        <translation>Scanner un document</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="391"/>
         <source>Scan a receipt</source>
-        <translation type="unfinished"></translation>
+        <translation>Scanner un reçu</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="393"/>
@@ -1357,12 +1357,12 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="395"/>
         <source>Keep the photo?</source>
-        <translation type="unfinished"></translation>
+        <translation>Conserver la photo?</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="396"/>
         <source>Keep the receipt?</source>
-        <translation type="unfinished"></translation>
+        <translation>Conserver le reçu?</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="398"/>
@@ -1372,12 +1372,12 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="399"/>
         <source>Document added</source>
-        <translation type="unfinished"></translation>
+        <translation>Document ajouté</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="400"/>
         <source>Receipt added</source>
-        <translation type="unfinished"></translation>
+        <translation>Reçu ajouté</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="402"/>
@@ -1392,12 +1392,12 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="404"/>
         <source>Add another document?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un autre document?</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="405"/>
         <source>Add another receipt?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un autre reçu?</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="406"/>
@@ -1655,7 +1655,7 @@ transport</translation>
     <message>
         <location filename="../src/charcoal/models/ovensmodel.cpp" line="89"/>
         <source>%1 - %2 m³</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/ovensmodel.cpp" line="90"/>
@@ -1678,7 +1678,7 @@ transport</translation>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="101"/>
         <source>%1 of %2</source>
-        <translation type="unfinished">%1 de %2</translation>
+        <translation>%1 de %2</translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="117"/>
@@ -1784,12 +1784,12 @@ transport</translation>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="327"/>
         <source>Height A</source>
-        <translation type="unfinished"></translation>
+        <translation>Hauteur A</translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="328"/>
         <source>Height B</source>
-        <translation type="unfinished"></translation>
+        <translation>Hauteur B</translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="348"/>

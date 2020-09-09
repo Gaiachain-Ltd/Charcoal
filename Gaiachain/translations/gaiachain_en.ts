@@ -6,53 +6,53 @@
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="234"/>
         <source>No active transport matching scanned bags has been found!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="308"/>
         <source>Could not check bags for transport %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="314"/>
         <source>Scanned QR codes do not match bags sent in transport</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="423"/>
         <source>Too many ovens (%1) are assotiated with this harvest!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="437"/>
         <source>Could not determine next oven letter for given harvest</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="894"/>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="948"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="904"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="958"/>
         <source>Transport ID is incorrect %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="903"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="913"/>
         <source>Reception type is incorrect %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="916"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="926"/>
         <source>Failed to insert local reception %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="957"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="967"/>
         <source>Transport type is incorrect %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/charcoal/models/actioncontroller.cpp" line="993"/>
+        <location filename="../src/charcoal/models/actioncontroller.cpp" line="1003"/>
         <source>Failed to insert reception %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -395,7 +395,7 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="107"/>
         <source>Validate</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="109"/>
@@ -700,12 +700,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="193"/>
         <source>height A</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="194"/>
         <source>height B</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="197"/>
@@ -755,42 +755,42 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="209"/>
         <source>Final reception</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="210"/>
         <source>Sell at the local market</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="213"/>
         <source>Plot ID created</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="214"/>
         <source>Plot ID updated</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="215"/>
         <source>Harvest ID created</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="216"/>
         <source>Harvest ID updated</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="217"/>
         <source>Transport ID created</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="218"/>
         <source>Transport ID updated</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="222"/>
@@ -860,7 +860,7 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="239"/>
         <source>All parcels in use or no parcels added in web panel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="241"/>
@@ -911,17 +911,17 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="251"/>
         <source>Number of trees cut</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="252"/>
         <source>Tap to add a tree being cut</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="253"/>
         <source>Total count of trees cut</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="254"/>
@@ -983,32 +983,32 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="271"/>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="272"/>
         <source>Set oven measurements</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="273"/>
         <source>Width (A)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="274"/>
         <source>Length (B)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="275"/>
         <source>Height (C)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="276"/>
         <source>Height (D)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="279"/>
@@ -1132,37 +1132,37 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="315"/>
         <source>Scan bags you want to sell at the local market</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="316"/>
         <source>Scan QR code from bags sold on the local market</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="317"/>
         <source>Numer of bags sold</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="318"/>
         <source>Number of bags left on truck</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="319"/>
         <source>Duplicated bag - at least one of the QR codes has already been scanned</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="322"/>
         <source>Number of bags received</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="323"/>
         <source>Total number of bags</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="324"/>
@@ -1217,12 +1217,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="339"/>
         <source>Missing bags</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="340"/>
         <source>Extra bags not found in transport</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="344"/>
@@ -1252,12 +1252,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="355"/>
         <source>Tap to add a tree being planted</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="356"/>
         <source>Total count of trees planted</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="357"/>
@@ -1362,12 +1362,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="390"/>
         <source>Scan a document</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="391"/>
         <source>Scan a receipt</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="393"/>
@@ -1382,12 +1382,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="395"/>
         <source>Keep the photo?</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="396"/>
         <source>Keep the receipt?</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="398"/>
@@ -1397,12 +1397,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="399"/>
         <source>Document added</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="400"/>
         <source>Receipt added</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="402"/>
@@ -1417,12 +1417,12 @@ Check your internet connection.</source>
     <message>
         <location filename="../qml/GStrings.qml" line="404"/>
         <source>Add another document?</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="405"/>
         <source>Add another receipt?</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="406"/>
@@ -1617,7 +1617,7 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/ovensmodel.cpp" line="89"/>
         <source>%1 - %2 m³</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/ovensmodel.cpp" line="90"/>
@@ -1640,17 +1640,17 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="101"/>
         <source>%1 of %2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="117"/>
         <source>&lt;small&gt;%1 bags are missing&lt;/small&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/actioncontroller.cpp" line="122"/>
         <source>&lt;small&gt;%1 bags are not from this transport&lt;/small&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1683,7 +1683,7 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="102"/>
         <source>Bags sold at a local market</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="105"/>
@@ -1746,12 +1746,12 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="327"/>
         <source>Height A</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="328"/>
         <source>Height B</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="348"/>
@@ -1791,17 +1791,17 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="411"/>
         <source>Number of loaded bags</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="437"/>
         <source>Number of bags sold</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="438"/>
         <source>Selling date</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="482"/>
@@ -1836,12 +1836,12 @@ transport</source>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="491"/>
         <source>Number of received bags</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="492"/>
         <source>Final reception date</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/charcoal/models/trackingmodel.cpp" line="554"/>
