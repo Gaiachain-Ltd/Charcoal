@@ -463,7 +463,7 @@ qreal ActionController::ovenVolume(const qreal width,
     return CharcoalDbHelpers::ovenVolume(width, length, height1, height2);
 }
 
-void ActionController::registerLoggingBeginning(
+bool ActionController::registerLoggingBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -491,13 +491,13 @@ void ActionController::registerLoggingBeginning(
 
     if (typeId == -1) {
         qWarning() << RED("Plot ID type not found!");
-        return;
+        return false;
     }
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
 
     if (insertEntity(&query, typeId, plotId, -1) == false) {
-        return;
+        return false;
     }
 
     // Then, insert a new Event under that Entity
@@ -507,7 +507,7 @@ void ActionController::registerLoggingBeginning(
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
-        return;
+        return false;
     }
 
     if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
@@ -519,7 +519,7 @@ void ActionController::registerLoggingBeginning(
                                  { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                              }))
     {
-        return;
+        return false;
     }
 
     // Update Parcels entry
@@ -530,13 +530,15 @@ void ActionController::registerLoggingBeginning(
         qWarning() << RED("Updating Parcel status has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery()
                    << parcelId;
-        return;
+        return false;
     }
 
     emit refreshLocalEvents();
+
+    return true;
 }
 
-void ActionController::registerLoggingEnding(
+bool ActionController::registerLoggingEnding(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -556,7 +558,7 @@ void ActionController::registerLoggingEnding(
 
     if (plotId == -1) {
         qWarning() << RED("Entity ID not found!");
-        return;
+        return false;
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
@@ -564,7 +566,7 @@ void ActionController::registerLoggingEnding(
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
-        return;
+        return false;
     }
 
     QSqlQuery query(QString(), db::Helpers::databaseConnection(m_connectionName));
@@ -576,13 +578,15 @@ void ActionController::registerLoggingEnding(
                                  { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                              }))
     {
-        return;
+        return false;
     }
 
     emit refreshLocalEvents();
+
+    return true;
 }
 
-void ActionController::registerCarbonizationBeginning(
+bool ActionController::registerCarbonizationBeginning(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -623,7 +627,7 @@ void ActionController::registerCarbonizationBeginning(
     if (query.exec() == false) {
         qWarning() << RED("Determining whether harvest already exists has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery();
-        return;
+        return false;
     }
 
     const bool alreadyPresent = query.next();
@@ -635,11 +639,11 @@ void ActionController::registerCarbonizationBeginning(
 
         if (typeId == -1) {
             qWarning() << RED("Harvest ID type not found!");
-            return;
+            return false;
         }
 
         if (insertEntity(&query, typeId, harvestId, parentEntityId) == false) {
-            return;
+            return false;
         }
     }
 
@@ -653,7 +657,7 @@ void ActionController::registerCarbonizationBeginning(
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
-        return;
+        return false;
     }
 
     // Get proper oven dimensions
@@ -683,7 +687,7 @@ void ActionController::registerCarbonizationBeginning(
     if (false == insertEvent(&query, entityId, eventTypeId, userId, timestamp,
                              eventDate, coordinate, properties))
     {
-        return;
+        return false;
     }
 
     // Insert new oven into Ovens table
@@ -705,13 +709,15 @@ void ActionController::registerCarbonizationBeginning(
     if (query.exec() == false) {
         qWarning() << RED("Inserting new oven has failed!")
                    << query.lastError().text() << "for query:" << query.lastQuery();
-        return;
+        return false;
     }
 
     emit refreshLocalEvents();
+
+    return true;
 }
 
-void ActionController::registerCarbonizationEnding(
+bool ActionController::registerCarbonizationEnding(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -731,7 +737,7 @@ void ActionController::registerCarbonizationEnding(
 
     if (harvestId == -1) {
         qWarning() << RED("Entity ID not found!");
-        return;
+        return false;
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
@@ -739,7 +745,7 @@ void ActionController::registerCarbonizationEnding(
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
-        return;
+        return false;
     }
 
     const int count = ovenIds.count();
@@ -759,7 +765,7 @@ void ActionController::registerCarbonizationEnding(
                                      { Tags::webEventDate, eventDate.toSecsSinceEpoch() }
                                  }))
         {
-            return;
+            return false;
         }
 
         uniqueTimestamp++;
@@ -774,14 +780,16 @@ void ActionController::registerCarbonizationEnding(
         if (query.exec() == false) {
             qWarning() << RED("Updating oven with carbonization ending event ID has failed!")
                        << query.lastError().text() << "for query:" << query.lastQuery();
-            return;
+            return false;
         }
     }
 
     emit refreshLocalEvents();
+
+    return true;
 }
 
-void ActionController::registerLoadingAndTransport(
+bool ActionController::registerLoadingAndTransport(
     const QGeoCoordinate &coordinate,
     const QDateTime &timestamp,
     const QDateTime &eventDate,
@@ -816,7 +824,7 @@ void ActionController::registerLoadingAndTransport(
 
     if (typeId == -1) {
         qWarning() << RED("Transport ID type not found!");
-        return;
+        return false;
     }
 
     const int eventTypeId(CharcoalDbHelpers::getEventTypeId(
@@ -824,7 +832,7 @@ void ActionController::registerLoadingAndTransport(
 
     if (eventTypeId == -1) {
         qWarning() << RED("Event Type ID not found!");
-        return;
+        return false;
     }
 
     const ContinueEvent existingEvent(CharcoalDbHelpers::getContinueEvent(
@@ -848,11 +856,11 @@ void ActionController::registerLoadingAndTransport(
                                  props,
                                  pauseEvent))
         {
-            return;
+            return false;
         }
     } else {
         if (insertEntity(&query, typeId, transportId, parentEntityId) == false) {
-            return;
+            return false;
         }
 
         // Then, insert a new Event under that Entity
@@ -863,11 +871,13 @@ void ActionController::registerLoadingAndTransport(
                                  props,
                                  pauseEvent))
         {
-            return;
+            return false;
         }
     }
 
     emit refreshLocalEvents();
+
+    return true;
 }
 
 bool ActionController::registerLocalMarketReception(

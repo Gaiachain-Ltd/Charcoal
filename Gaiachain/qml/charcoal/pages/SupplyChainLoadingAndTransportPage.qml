@@ -136,7 +136,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.actionController.registerLoadingAndTransport(
+        if (dataManager.actionController.registerLoadingAndTransport(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     isPausedEvent? dataManager.unusedHarvestIdsModelForTransport.timestamp()
@@ -150,9 +150,19 @@ Pages.SupplyChainPageBase {
                     deliveryDestinationComboBox.currentId,
                     scannedQrs,
                     shouldPause
-                    )
-
-        pageManager.enter(Enums.Page.MainMenu)
+                    ))
+        {
+            pageManager.enterPageAndPopup(Enums.Page.MainMenu, {}, false,
+                                          Enums.Popup.Notification,
+                                          {
+                                              "text": Strings.transportCreated,
+                                              "backgroundColor": GStyle.okColor
+                                          })
+        }
+        else
+        {
+            pageManager.enter(Enums.Page.MainMenu)
+        }
     }
 
     Rectangle {
