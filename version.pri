@@ -30,9 +30,9 @@ ANDROID_VERSION_NAME = "$$VERSION"
 ANDROID_VERSION_CODE = 6
 
 # add defines
-DEFINES += AppVersion='"\\\"$$APP_VERSION\\\""'
-DEFINES += AppName='"\\\"$$APP_NAME\\\""'
-DEFINES += AppDomain='"\\\"$$APP_DOMAIN\\\""'
+DEFINES += ApplicationVersion='"\\\"$$APP_VERSION\\\""'
+DEFINES += ApplicationName='"\\\"$$APP_NAME\\\""'
+DEFINES += AplicationpDomain='"\\\"$$APP_DOMAIN\\\""'
 DEFINES += CompanyName='"\\\"$$COMPANY_NAME\\\""'
 DEFINES += CompanyDomain='"\\\"$$COMPANY_DOMAIN\\\""'
 DEFINES += BuildDate=\\\"$$BUILD_DATE\\\"

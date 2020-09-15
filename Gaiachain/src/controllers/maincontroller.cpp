@@ -334,8 +334,8 @@ void MainController::onPermissionGranted(
 
     const auto androidPermission = Android::PermissionsHandler::Permission(permission);
     if (androidPermission == Android::PermissionsHandler::Permission::Storage) {
-        qDebug() << "Enabling log to file" << AppName;
-        MLog::instance()->enableLogToFile(AppName);
+        qDebug() << "Enabling log to file" << ApplicationName;
+        MLog::instance()->enableLogToFile(ApplicationName);
         qDebug() << "Enabled log to file" << MLog::instance()->currentLogPath();
     }
 

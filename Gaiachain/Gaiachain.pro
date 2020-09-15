@@ -227,7 +227,7 @@ include($$QZXING_PATH/QZXing.pri)
 DEFINES *= QT_USE_QSTRINGBUILDER
 
 msvc* {
-    QMAKE_CXXFLAGS += /WX
+    #QMAKE_CXXFLAGS += /WX
 
     lto {
         QMAKE_CXXFLAGS += /GL

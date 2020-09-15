@@ -72,10 +72,10 @@ android {
 
     win32 {
         exists($${OSSL_PATH}/*) {
-            LIBS += -L$${OSSL_PATH}/lib -lssl -lcrypto
+            LIBS += -L"$${OSSL_PATH}/lib" -llibssl -llibcrypto
             CONFIG += openssl
         }
     }
 }
 
-INCLUDEPATH += $${OSSL_PATH}/include
+INCLUDEPATH += "$${OSSL_PATH}/include"

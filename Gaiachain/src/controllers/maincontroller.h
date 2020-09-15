@@ -38,17 +38,17 @@ public:
 
     QString name() const
     {
-        return AppName;
+        return ApplicationName;
     }
 
     QString domain() const
     {
-        return AppDomain;
+        return AplicationpDomain;
     }
 
     QString version() const
     {
-        return AppVersion;
+        return ApplicationVersion;
     }
 
     QString commit() const

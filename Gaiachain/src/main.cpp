@@ -22,18 +22,18 @@ int main(int argc, char *argv[])
     qputenv("QT_ANDROID_ENABLE_WORKAROUND_TO_DISABLE_PREDICTIVE_TEXT", QByteArrayLiteral("1"));
 #endif
 
-    MLog::instance()->enableLogToFile(AppName);
+    MLog::instance()->enableLogToFile(ApplicationName);
 
     // Set up basic application data. Modify this to your needs
     QGuiApplication app(argc, argv);
-    app.setApplicationVersion(AppVersion);
+    app.setApplicationVersion(ApplicationVersion);
     app.setOrganizationName(CompanyName);
     app.setOrganizationDomain(CompanyDomain);
-    app.setApplicationName(AppName);
+    app.setApplicationName(ApplicationName);
     app.setWindowIcon(QIcon(":/ui/logoIcon"));
 
     qCInfo(coreMain) << "\nName:" << app.applicationName()
-                     << "\nApp domain:" << AppDomain
+                     << "\nApp domain:" << AplicationpDomain
                      << "\nFlavor:"
 #ifdef COCOA
                      << "Cocoa"

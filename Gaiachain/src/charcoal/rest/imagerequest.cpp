@@ -15,7 +15,7 @@ ImageRequest::ImageRequest(const QString &filePath, const QString &cachePath)
 
 void ImageRequest::setPath(const QString &path)
 {
-    Q_ASSERT_X(!path.isEmpty(), __PRETTY_FUNCTION__, "Path address not provided!");
+    Q_ASSERT_X(!path.isEmpty(), __func__, "Path address not provided!");
 
     mPath = path;
     mUrl.setUrl(SERVER_ADDRESS + mPath);

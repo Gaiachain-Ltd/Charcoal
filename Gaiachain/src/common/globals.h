@@ -29,6 +29,10 @@
     #define Q_OS_LINUX_DESKTOP 1
 #endif
 
+#ifdef Q_OS_WINDOWS
+    #define Q_OS_LINUX_DESKTOP 1
+#endif
+
 Q_DECLARE_LOGGING_CATEGORY(dataTypes)
 Q_DECLARE_LOGGING_CATEGORY(dataModels)
 Q_DECLARE_LOGGING_CATEGORY(dataRequests)
