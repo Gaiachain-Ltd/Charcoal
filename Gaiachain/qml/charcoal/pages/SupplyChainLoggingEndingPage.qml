@@ -17,7 +17,7 @@ Pages.SupplyChainPageBase {
     title: Strings.loggingEnding
 
     proceedButtonEnabled: (plotIdComboBox.currentText.length > 0
-                           && parseInt(numberOfTreesHeader.counterValue) > 0)
+                           && numberOfTreesHeader.counterValue.length > 0)
 
     Component.onCompleted: refreshData()
 
@@ -60,28 +60,16 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        if (dataManager.actionController.registerLoggingEnding(
+        dataManager.actionController.registerLoggingEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     new Date,
                     endingDateHeader.selectedDate,
                     repsIdInputHeader.inputText,
                     plotIdComboBox.currentId,
-                    numberOfTreesHeader.counterValue))
-        {
-            pageManager.enterPageAndPopup(Enums.Page.MainMenu, {}, false,
-                                          Enums.Popup.Notification,
-                                          {
-                                              "text": Strings.plotUpdated,
-                                              "backgroundColor": GStyle.okColor
-                                          })
-        }
-        else
-        {
-            pageManager.enter(Enums.Page.MainMenu)
-        }
+                    numberOfTreesHeader.counterValue)
 
-
+        pageManager.enter(Enums.Page.MainMenu)
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {

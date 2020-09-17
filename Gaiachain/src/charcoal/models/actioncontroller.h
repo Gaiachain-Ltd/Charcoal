@@ -148,7 +148,7 @@ public:
                                  const qreal height2,
                                  const qreal length) const;
 
-    Q_INVOKABLE bool registerLoggingBeginning(
+    Q_INVOKABLE void registerLoggingBeginning(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,
@@ -159,7 +159,7 @@ public:
         const int treeSpeciesId
         ) const;
 
-    Q_INVOKABLE bool registerLoggingEnding(
+    Q_INVOKABLE void registerLoggingEnding(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,
@@ -168,7 +168,7 @@ public:
         const int numberOfTrees
         ) const;
 
-    Q_INVOKABLE bool registerCarbonizationBeginning(
+    Q_INVOKABLE void registerCarbonizationBeginning(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,
@@ -180,7 +180,7 @@ public:
         const OvenDimensions &ovenDimensions
         ) const;
 
-    Q_INVOKABLE bool registerCarbonizationEnding(
+    Q_INVOKABLE void registerCarbonizationEnding(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,
@@ -189,7 +189,7 @@ public:
         const QVariantList &ovenIds
         ) const;
 
-    Q_INVOKABLE bool registerLoadingAndTransport(
+    Q_INVOKABLE void registerLoadingAndTransport(
         const QGeoCoordinate &coordinate,
         const QDateTime &timestamp,
         const QDateTime &eventDate,

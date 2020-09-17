@@ -78,14 +78,6 @@ public slots:
                 QVariantMap properties = QVariantMap{},
                 const bool immediate = false);
 
-    // Intermediate ground
-    void enterPageAndPopup(const Enums::Page page,
-                           const QVariantMap &pageProperties,
-                           const bool immediate,
-                           const Enums::Popup popup,
-                           const QVariantMap &popupProperties = QVariantMap{},
-                           const QString &id = {});
-
     // Popup managment
     void openPopup(const Enums::Popup popup,
                    QVariantMap properties = QVariantMap{},
