@@ -93,7 +93,7 @@ Pages.SupplyChainPageBase {
         pageManager.enter(Enums.Page.SupplyChainSummary, {
                               "supplyChainPage": this,
                               "summary": summary(),
-                              "proceedButtonText": Strings.validate
+                              "proceedButtonText": Strings.proceed
                           });
     }
 

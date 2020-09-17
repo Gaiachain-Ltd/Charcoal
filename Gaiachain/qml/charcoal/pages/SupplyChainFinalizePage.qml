@@ -25,7 +25,6 @@ Pages.SupplyChainPageBase {
     readonly property int defaultMargin: s(GStyle.middleBigMargin)
 
     title: Strings.summary
-    proceedButtonText: Strings.validate
 
     Component.onCompleted: refreshData()
 
