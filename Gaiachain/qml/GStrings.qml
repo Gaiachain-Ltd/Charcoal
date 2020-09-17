@@ -209,15 +209,6 @@ QtObject {
     property string finalReception: tr.empty + qsTr("Final reception")
     property string sellAtTheLocalMarket: tr.empty + qsTr("Sell at the local market")
 
-    // Charcoal - confirmations
-    property string plotCreated: tr.empty + qsTr("Plot ID created")
-    property string plotUpdated: tr.empty + qsTr("Plot ID updated")
-    property string harvestCreated: tr.empty + qsTr("Harvest ID created")
-    property string harvestUpdated: tr.empty + qsTr("Harvest ID updated")
-    property string TransportCreated: tr.empty + qsTr("Transport ID created")
-    property string TransportUpdated: tr.empty + qsTr("Transport ID updated")
-
-
     // Charcoal - user info
     property string userInfoPageTitle: tr.empty + qsTr("Malebi rep's ID details")
     property string userInfoName: tr.empty + qsTr("Name and surname")
@@ -387,22 +378,11 @@ QtObject {
     property string takePhotoReceiptInfoText: tr.empty + qsTr("Take a photo of the receipt")
     property string skip: tr.empty + qsTr("Skip")
     property string takeAPhoto: tr.empty + qsTr("Take a photo")
-    property string takeAPhotoDocument: tr.empty + qsTr("Scan a document")
-    property string takeAPhotoReceipt: tr.empty + qsTr("Scan a receipt")
-
     property string photoTaken: tr.empty + qsTr("Photo taken")
     property string uploadThis: tr.empty + qsTr("Upload this?")
-    property string keepThePhoto: tr.empty + qsTr("Keep the photo?")
-    property string keepTheReceipt: tr.empty + qsTr("Keep the receipt?")
-
     property string photoAdded: tr.empty + qsTr("Photo added")
-    property string photoAddedDocument: tr.empty + qsTr("Document added")
-    property string photoAddedReceipt: tr.empty + qsTr("Receipt added")
-
     property string photoDiscarded: tr.empty + qsTr("Photo discarded")
     property string addAnother: tr.empty + qsTr("Add another?")
-    property string addAnotherDocument: tr.empty + qsTr("Add another document?")
-    property string addAnotherReceipt: tr.empty + qsTr("Add another receipt?")
     property string cameraErrorString: tr.empty + qsTr("Camera error: %1")
 
     // Charcoal misc

@@ -1332,7 +1332,7 @@ Vérifiez votre connection internet.</translation>
     <message>
         <location filename="../qml/GStrings.qml" line="389"/>
         <source>Take a photo</source>
-        <translation>Scanner un reçu</translation>
+        <translation>Prendre une photo</translation>
     </message>
     <message>
         <location filename="../qml/GStrings.qml" line="390"/>

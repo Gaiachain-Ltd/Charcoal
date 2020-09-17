@@ -344,8 +344,7 @@ Pages.GPage {
                 }
 
                 CharcoalItems.CharcoalRoundButton {
-                    text: Strings.yes
-                    display: AbstractButton.TextOnly
+                    icon.source: GStyle.iconYesUrl
                     visible: (currentStatus === QRScannerPage.Proceed
                               || currentStatus === QRScannerPage.ManualScan)
 
@@ -360,8 +359,7 @@ Pages.GPage {
                 }
 
                 CharcoalItems.CharcoalRoundButton {
-                    text: Strings.no
-                    display: AbstractButton.TextOnly
+                    icon.source: GStyle.iconNoUrl
                     visible: (currentStatus === QRScannerPage.Proceed
                               || currentStatus === QRScannerPage.ManualScan)
 
@@ -406,9 +404,7 @@ Pages.GPage {
                     elide: Text.ElideNone
                     wrapMode: Text.WordWrap
                     color: parent.textColor
-                    visible: text.length > 2
-                             && (currentStatus !== QRScannerPage.Scanning)
-                             && (currentStatus !== QRScannerPage.Proceed)
+                    visible: text.length > 2 && (currentStatus !== QRScannerPage.Scanning)
                     font.capitalization: Font.AllUppercase
                     font.pixelSize: s(GStyle.bigPixelSize)
                     verticalAlignment: Text.AlignTop
@@ -653,7 +649,7 @@ Pages.GPage {
                                                     : Strings.no
 
         acceptButtonText: scannedBagsPopup.isRestore? Strings.restore
-                                                    : Strings.yes
+                                                    : Strings.save
 
         onRejected: {
             scannedQrs = []

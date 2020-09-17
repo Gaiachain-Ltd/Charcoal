@@ -45,21 +45,15 @@ Pages.GPage {
     property string headerText: {
         switch (currentStatus) {
         case TakeDocumentPicturesPage.Documents:
-            return Strings.takeAPhotoDocument
         case TakeDocumentPicturesPage.Receipts:
-            return Strings.takeAPhotoReceipt
+            return Strings.takeAPhoto
         case TakeDocumentPicturesPage.DocumentsConfirm:
         case TakeDocumentPicturesPage.ReceiptsConfirm:
             return Strings.photoTaken
         case TakeDocumentPicturesPage.DocumentsSummary:
-            if (photoAccepted) {
-                return Strings.photoAddedDocument
-            } else {
-                return Strings.photoDiscarded
-            }
         case TakeDocumentPicturesPage.ReceiptsSummary:
             if (photoAccepted) {
-                return Strings.photoAddedReceipt
+                return Strings.photoAdded
             } else {
                 return Strings.photoDiscarded
             }
@@ -71,13 +65,11 @@ Pages.GPage {
     property string valueText: {
         switch (currentStatus) {
         case TakeDocumentPicturesPage.DocumentsConfirm:
-            return Strings.keepThePhoto
         case TakeDocumentPicturesPage.ReceiptsConfirm:
-            return Strings.keepTheReceipt
+            return Strings.uploadThis
         case TakeDocumentPicturesPage.DocumentsSummary:
-            return Strings.addAnotherDocument
         case TakeDocumentPicturesPage.ReceiptsSummary:
-            return Strings.addAnotherReceipt
+            return Strings.addAnother
         default:
             return Strings.empty
         }
@@ -302,8 +294,7 @@ Pages.GPage {
                 }
 
                 CharcoalItems.CharcoalRoundButton {
-                    text: Strings.yes
-                    display: AbstractButton.TextOnly
+                    icon.source: GStyle.iconYesUrl
                     visible: (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
@@ -320,8 +311,7 @@ Pages.GPage {
                 }
 
                 CharcoalItems.CharcoalRoundButton {
-                    text: Strings.no
-                    display: AbstractButton.TextOnly
+                    icon.source: GStyle.iconNoUrl
                     visible: (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
