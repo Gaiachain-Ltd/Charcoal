@@ -151,7 +151,13 @@ ColumnLayout {
 
                     text: "0"
 
-                    onTextChanged: if (text.length === 0) text = 0
+                    onTextChanged: {
+                        if (text.length === 0) {
+                            text = 0
+                        }
+                    }
+
+                    inputMethodHints: Qt.ImhDigitsOnly | Qt.ImhNoPredictiveText
 
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignLeft
