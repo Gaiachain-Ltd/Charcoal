@@ -34,9 +34,9 @@ ColumnLayout {
 
         Layout.fillWidth: true
 
-        headerText: "Number of trees planted"
+        headerText: Strings.numberOfTreesCut
         helpButtonVisible: true
-        helpText: "Trees number help"
+        helpText: Strings.loggingEndingNumberOfTreesHelp
 
         function clear() {
             text = Strings.empty
@@ -73,7 +73,7 @@ ColumnLayout {
                     font.bold: root.highlighted || forceBoldValue
                     font.pixelSize: valueFontSize
 
-                    text: "Tap to add a tree being planted"
+                    text: Strings.tapToAddATreeBeingCut
 
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignLeft
@@ -87,7 +87,17 @@ ColumnLayout {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: counterTextWidget.text = parseInt(counterTextWidget.text) + 1
+                onClicked: {
+                    let current = parseInt(counterTextWidget.text, 10)
+
+                    if (current === NaN) {
+                        counterTextWidget.text = "0"
+                    }
+
+                    if (current >= 0) {
+                        counterTextWidget.text = current + 1
+                    }
+                }
             }
         }
     }
@@ -106,9 +116,9 @@ ColumnLayout {
             text = Strings.empty
         }
 
-        headerText: "Total count of trees planted"
+        headerText: Strings.totalCountOfTreesCut
         helpButtonVisible: true
-        helpText: "Total trees number help"
+        helpText: Strings.loggingEndingNumberOfTreesHelp
 
         widget: Rectangle {
             id: inputRectangle
@@ -141,6 +151,8 @@ ColumnLayout {
 
                     text: "0"
 
+                    onTextChanged: if (text.length === 0) text = 0
+
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
@@ -159,7 +171,7 @@ ColumnLayout {
                     Layout.maximumWidth: inputRectangle.height
                     width: inputRectangle.height
 
-                    color: "#FBE0E0"
+                    color: GStyle.minusSignBackgroundColor
                     radius: s(GStyle.buttonRadius)
 
                     border {
@@ -173,7 +185,7 @@ ColumnLayout {
 
                     Rectangle {
                         anchors.centerIn: parent
-                        color: "#D97F7F"
+                        color: GStyle.minusSignColor
                         height: s(4)
                         radius: s(2)
                         width: parent.width * .4
@@ -182,7 +194,12 @@ ColumnLayout {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            let current = parseInt(counterTextWidget.text)
+                            let current = parseInt(counterTextWidget.text, 10)
+
+                            if (current === NaN) {
+                                counterTextWidget.text = "0"
+                            }
+
                             if (current > 0) {
                                 counterTextWidget.text = current - 1
                             }
