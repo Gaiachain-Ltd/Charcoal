@@ -27,6 +27,9 @@ AbstractStyle {
 
     readonly property color notificationWarningColor: warningColor
 
+    readonly property color minusSignColor: "#D97F7F"
+    readonly property color minusSignBackgroundColor: "#FBE0E0"
+
     readonly property url submenuCarbonizationBeginningUrl: "qrc:/ui/submenuCarbonizationBeginning"
     readonly property url submenuCarbonizationEndingUrl: "qrc:/ui/submenuCarbonizationEnding"
     readonly property url submenuCarbonizationUrl: "qrc:/ui/submenuCarbonization"
