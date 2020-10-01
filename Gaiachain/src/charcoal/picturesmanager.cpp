@@ -126,6 +126,16 @@ QString PicturesManager::pictureTypeString(const PicturesManager::PictureType ty
 
 void PicturesManager::prepareDirectories() const
 {
+    if (QDir(m_base).exists() == false) {
+        QDir dir(m_base);
+        const QString folderName(dir.dirName());
+        dir.cdUp();
+        if (dir.mkdir(folderName) == false) {
+            qWarning() << RED("Could not create the path for local data!") << m_path;
+            return;
+        }
+    }
+
     if (QDir(m_path).exists() == false) {
         if (QDir(m_base).mkdir(m_picturesDir) == false) {
             qWarning() << RED("Could not create the path for pictures!") << m_path;
@@ -136,7 +146,7 @@ void PicturesManager::prepareDirectories() const
     const QString dir(m_savePath);
     if (QDir(dir).exists() == false) {
         if (QDir(m_path).mkdir(m_saveDir) == false) {
-            qWarning() << RED("Could not create the path for pictures!") << dir;
+            qWarning() << RED("Could not create the path for saved pictures!") << dir;
             return;
         }
     }
