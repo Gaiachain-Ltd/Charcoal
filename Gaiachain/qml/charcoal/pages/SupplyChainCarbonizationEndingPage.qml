@@ -81,7 +81,7 @@ Pages.SupplyChainPageBase {
     }
 
     function addAction() {
-        dataManager.actionController.registerCarbonizationEnding(
+        if (dataManager.actionController.registerCarbonizationEnding(
                     (gpsSource.coordinate? gpsSource.coordinate
                                          : QtPositioning.coordinate()),
                     new Date,
@@ -89,9 +89,19 @@ Pages.SupplyChainPageBase {
                     carbonizerIdInputHeader.inputText,
                     harvestIdComboBox.currentId,
                     ovenIdComboBox.ids
-                    )
-
-        pageManager.enter(Enums.Page.MainMenu)
+                    ))
+        {
+            pageManager.enterPageAndPopup(Enums.Page.MainMenu, {}, false,
+                                          Enums.Popup.Notification,
+                                          {
+                                              "text": Strings.harvestUpdated,
+                                              "backgroundColor": GStyle.okColor
+                                          })
+        }
+        else
+        {
+            pageManager.enter(Enums.Page.MainMenu)
+        }
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {
