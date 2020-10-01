@@ -61,6 +61,7 @@ AbstractStyle {
     readonly property url iconPhotoCameraGreenUrl: "qrc:/ui/iconPhotoCameraGreen"
     readonly property url iconPhotoCameraUrl: "qrc:/ui/iconPhotoCamera"
     readonly property url truckUrl: "qrc:/ui/truck"
+    readonly property url onOffButton: "qrc:/ui/onOffButton"
 
     readonly property url iconKeyboardUrl: "qrc:/ui/iconKeyboard"
     readonly property url iconListUrl: "qrc:/ui/iconList"

@@ -105,7 +105,8 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: s(GStyle.buttonImageSmallHeight)
 
-            source: GStyle.logoutImgUrl
+            source: (mainController.flavor === "cocoa")?
+                        GStyle.logoutImgUrl : GStyle.onOffButton
             visible: isOnHomePage
 
             onClicked: logout()
