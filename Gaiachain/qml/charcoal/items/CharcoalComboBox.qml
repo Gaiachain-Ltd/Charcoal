@@ -104,7 +104,8 @@ Items.GInput {
                     id: delegateItem
                     width: entriesList.width
                     height: layout.implicitHeight
-                    color: selection.includes(text)? "#eeeeee" : "transparent"
+                    color: selection.includes(text)? GStyle.neutralHighlightColor
+                                                   : GStyle.blank
 
                     ColumnLayout {
                         id: layout

@@ -45,6 +45,8 @@ QtObject {
     property color backgroundShadowMediumColor: "#99595959"
     property color backgroundDarkShadowColor: "#CC000000"
 
+    property color neutralHighlightColor: "#eeeeee"
+
     property color delegateHighlightColor: "#f2f2f2"
     property color fontHighlightColor: "#f2f2f2"
 

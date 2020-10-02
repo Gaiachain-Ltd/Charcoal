@@ -23,7 +23,7 @@ Rectangle {
 
     id: delegateItem
     height: layout.implicitHeight
-    color: selected? "#eeeeee" : "transparent"
+    color: selected? GStyle.neutralHighlightColor : GStyle.blank
 
     ColumnLayout {
         id: layout

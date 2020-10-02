@@ -126,7 +126,8 @@ Headers.GHeader {
                         id: delegateItem
                         width: entriesList.width
                         height: layout.implicitHeight
-                        color: comboBox.text.includes(text)? "#eeeeee" : "transparent"
+                        color: comboBox.text.includes(text)? GStyle.neutralHighlightColor
+                                                           : GStyle.blank
 
                         ColumnLayout {
                             id: layout

@@ -303,7 +303,13 @@ Pages.GPage {
 
                 CharcoalItems.CharcoalRoundButton {
                     text: Strings.yes
-                    display: AbstractButton.TextOnly
+                    icon.source: GStyle.iconYesUrl
+                    display: AbstractButton.TextBesideIcon
+                    width: 2 * height
+                    icon.height: s(20)
+                    icon.width: icon.height
+                    palette.buttonText: GStyle.okColor
+
                     visible: (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
@@ -321,7 +327,13 @@ Pages.GPage {
 
                 CharcoalItems.CharcoalRoundButton {
                     text: Strings.no
-                    display: AbstractButton.TextOnly
+                    icon.source: GStyle.iconNoUrl
+                    display: AbstractButton.TextBesideIcon
+                    width: 2 * height
+                    icon.height: s(20)
+                    icon.width: icon.height
+                    palette.buttonText: GStyle.errorColor
+
                     visible: (currentStatus === TakeDocumentPicturesPage.DocumentsConfirm
                               || currentStatus === TakeDocumentPicturesPage.ReceiptsConfirm)
 
