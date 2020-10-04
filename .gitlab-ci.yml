@@ -50,7 +50,7 @@ variables:
   - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
   #  CONFIG+=lto
   - $QT_PATH_DESKTOP/bin/qmake CONFIG+=$FLAVOR QMAKE_CC=gcc-9 QMAKE_CXX=g++-9 app_storage_password="$SECRET"
-  - make -j3
+  - make -j$(nproc)
   - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
 # Script below is shared between all Android builds
@@ -62,7 +62,7 @@ variables:
     - cp -r /home/projects/Gaiachain/dependencies/OpenSSL/OpenSSL $CI_PROJECT_DIR/Gaiachain/3rdparty/OpenSSL
     - $QT_PATH_ANDROID/bin/qmake CONFIG+=$FLAVOR $QMAKE_CONFIG ANDROID_ABIS=$ABIS app_storage_password="$SECRET"
     - cat Makefile
-    - make -j3
+    - make -j$(nproc)
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/Gaiachain/android-build
     - cd $CI_PROJECT_DIR
     - ls -la
