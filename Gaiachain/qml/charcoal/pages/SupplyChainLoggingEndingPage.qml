@@ -119,13 +119,8 @@ Pages.SupplyChainPageBase {
         id: numberOfTreesHeader
         Layout.fillWidth: true
 
-        plusHelpText: Strings.loggingEndingNumberOfTreesHelp
-        counterHelpText: Strings.loggingEndingNumberOfTreesHelp
-
-        plusHeaderText: Strings.numberOfTreesCut
-        plusButtonText: Strings.tapToAddATreeBeingCut
-
-        counterHeaderText: Strings.totalCountOfTreesCut
+        helpText: Strings.loggingEndingNumberOfTreesHelp
+        headerText: Strings.totalCountOfTreesCut
     }
 
     Common.PositionSourceHandler {

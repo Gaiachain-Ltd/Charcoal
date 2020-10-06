@@ -27,6 +27,7 @@ AbstractStyle {
 
     readonly property color notificationWarningColor: warningColor
 
+    readonly property color plusSignBackgroundColor: "#E0FBE0"
     readonly property color minusSignColor: "#D97F7F"
     readonly property color minusSignBackgroundColor: "#FBE0E0"
 

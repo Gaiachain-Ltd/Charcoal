@@ -106,13 +106,8 @@ Pages.SupplyChainPageBase {
         id: numberOfTreesHeader
         Layout.fillWidth: true
 
-        plusHelpText: Strings.replantationNumberOfTreesHelp
-        counterHelpText: Strings.replantationNumberOfTreesHelp
-
-        plusHeaderText: Strings.numberOfTreesPlanted
-        plusButtonText: Strings.tapToAddATreeBeingPlanted
-
-        counterHeaderText: Strings.totalCountOfTreesPlanted
+        helpText: Strings.replantationNumberOfTreesHelp
+        headerText: Strings.totalCountOfTreesPlanted
     }
 
     CharcoalHeaders.CharcoalComboBoxHeader {
