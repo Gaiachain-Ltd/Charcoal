@@ -21,21 +21,10 @@ Item {
         Items.GText {
             Layout.fillWidth: true
 
-            font {
-                pixelSize: s(GStyle.bigPixelSize)
-                bold: true
-            }
-
-            text: mainController.application.name
-        }
-
-        Items.GText {
-            Layout.fillWidth: true
-
             font.pixelSize: s(GStyle.titlePixelSize)
+            font.bold: true
 
-            text: "v%1:%2".arg(mainController.application.version)
-                          .arg(mainController.application.commit)
+            text: mainController.application.name + " v. " + mainController.application.version
         }
 
         Items.LayoutSeparator {
@@ -45,31 +34,22 @@ Item {
             Layout.fillWidth: true
 
             font.pixelSize: s(GStyle.titlePixelSize)
+            font.bold: true
 
-            text: "<a href=\"http://www.malebi.gaiachain.io\">www.malebi.gaiachain.io</a>"
-
-            linkColor: "#000000"
-
-            onLinkActivated: Qt.openUrlExternally(link)
+            text: "Go to website"
         }
 
         Items.GText {
             Layout.fillWidth: true
 
             font.pixelSize: s(GStyle.titlePixelSize)
+            font.bold: true
 
             text: "<a href=\"god@gaiachain.io\">god@gaiachain.io</a>"
 
             linkColor: "#000000"
 
             onLinkActivated: Qt.openUrlExternally(link)
-        }
-
-        Items.LayoutSeparator {
-        }
-
-        AboutGaiaDependency {
-            Layout.fillWidth: true
         }
 
         Items.LayoutSeparator {
@@ -83,6 +63,8 @@ Item {
 
             Layout.preferredHeight: 60
             Layout.fillWidth: true
+            Layout.topMargin: s(25)
+            Layout.bottomMargin: s(25)
 
             onClicked: {
                 console.log("Language switch clicked")
@@ -103,9 +85,7 @@ Item {
                 spacing: s(GStyle.buttonLetterSpacing)
 
                 Image {
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
 
                     source: row.manager.languages[row.currentIndex].icon
                 }
@@ -120,5 +100,21 @@ Item {
                 }
             }
         }
+
+        Items.LayoutSeparator {
+        }
+
+        Items.SvgImage
+        {
+            id: logoMilo
+
+            Layout.fillWidth: true
+            Layout.leftMargin: s(GStyle.bigMargin)
+            Layout.rightMargin: s(GStyle.bigMargin)
+
+            height: s(GStyle.logoHeight)
+            source: GStyle.logoMiloAboutUrl
+        }
+
     }
 }

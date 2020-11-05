@@ -56,37 +56,44 @@ GPage {
             bottomMargin: layout.margin
         }
 
-        spacing: s(GStyle.middleSmallMargin)
+        spacing: s(GStyle.middleMargin)
 
         Items.LayoutSpacer  // It is to keep keyboard working properly
         {
-            Layout.minimumHeight: logoImage.paintedHeight
-            preferredHeight: parent.height * 0.42 - 2 * layout.spacing   // remove spacing for LayoutSpacer
+            id: logoLayout
+            Layout.minimumHeight: top.height * 0.35
+            preferredHeight: parent.height * 0.37 - 2 * layout.spacing   // remove spacing for LayoutSpacer
             Layout.maximumHeight: preferredHeight
 
             Image {
                 id: logoBackground
                 source: GStyle.loginBackgroundUrl
-                anchors.fill: parent
-                //fillMode: Image.PreserveAspectFit
+                anchors.horizontalCenter: parent.horizontalCenter
+                // height - |y| = 35% top.height
+                y: -(height - top.height * 0.35)
+                width: top.width * 1.3
+                height: width * 0.7
             }
 
             Items.SvgImage
             {
                 id: logoImage
                 anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    topMargin: s(100)
                     left: parent.left
                     right: parent.right
-                    verticalCenter: parent.verticalCenter
                 }
 
-                height: s(GStyle.logoHeight)
-                source: GStyle.logoImgUrl
+                height: top.height * 0.25
+                source: GStyle.logoMalebiWhiteCharcoalUrl
                 DummyComponents.ServerStateChanger {}
             }
         }
 
-        Items.LayoutSpacer {}
+        Items.LayoutSpacer {
+            Layout.maximumHeight: s(GStyle.middleSmallMargin)
+        }
 
         Items.GInput
         {
@@ -135,11 +142,6 @@ GPage {
             }
         }
 
-        Items.LayoutSpacer {
-            preferredHeight: 5 * s(GStyle.middleMargin)
-            Layout.maximumHeight: preferredHeight
-        }
-
         Items.GButton
         {
             id: loginButton
@@ -182,9 +184,30 @@ GPage {
             }
         }
 
-        Items.LayoutSpacer {
-            preferredHeight: s(GStyle.bigMargin)
-            Layout.maximumHeight: preferredHeight
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.leftMargin: layout.margin
+            Layout.rightMargin: layout.margin
+            Layout.alignment: Qt.AlignHCenter
+            spacing: s(GStyle.bigMargin * 2)
+
+            Items.SvgImage
+            {
+                id: logoMilo
+
+                height: s(GStyle.logoHeight)
+                source: GStyle.logoMiloUrl
+                DummyComponents.ServerStateChanger {}
+            }
+
+            Items.SvgImage
+            {
+                id: logoGaia
+
+                height: s(GStyle.logoHeight)
+                source: GStyle.logoGaiaUrl
+                DummyComponents.ServerStateChanger {}
+            }
         }
     }
 }
