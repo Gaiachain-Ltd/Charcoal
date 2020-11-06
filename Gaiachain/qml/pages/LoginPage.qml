@@ -48,12 +48,12 @@ GPage {
 
     ColumnLayout
     {
+        id: layout
         property int margin: s(GStyle.bigMargin)
 
-        id: layout
         anchors {
             fill: parent
-            bottomMargin: layout.margin
+            bottomMargin: s(GStyle.hugeMargin)
         }
 
         spacing: s(GStyle.middleMargin)
@@ -69,8 +69,8 @@ GPage {
                 id: logoBackground
                 source: GStyle.loginBackgroundUrl
                 anchors.horizontalCenter: parent.horizontalCenter
-                // height - |y| = 35% top.height
-                y: -(height - top.height * 0.35)
+                // height - |y| = 33% top.height
+                y: -(height - top.height * 0.33)
                 width: top.width * 1.3
                 height: width * 0.7
             }
@@ -79,20 +79,20 @@ GPage {
             {
                 id: logoImage
                 anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    topMargin: s(100)
                     left: parent.left
                     right: parent.right
+                    bottom: parent.bottom
+                    bottomMargin: s(75)
                 }
 
-                height: top.height * 0.25
+                height: (top.height - Qt.inputMethod.keyboardRectangle.height) * 0.25
                 source: GStyle.logoMalebiWhiteCharcoalUrl
                 DummyComponents.ServerStateChanger {}
             }
         }
 
         Items.LayoutSpacer {
-            Layout.maximumHeight: s(GStyle.middleSmallMargin)
+            Layout.maximumHeight: top.height * 0.33 - logoLayout.height
         }
 
         Items.GInput

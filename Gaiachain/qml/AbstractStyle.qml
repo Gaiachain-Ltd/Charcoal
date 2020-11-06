@@ -126,9 +126,10 @@ QtObject {
     property url logoWhiteImgUrl: "qrc:/ui/logoWhite"
     property url logoImgUrl: logoBlackImgUrl
     property url logoIconImgUrl: "qrc:/ui/logoIcon"
-    property url logoMalebiWhiteCharcoalUrl: "qrc:/ui/logoMalebiWhiteCharcoalT"
+    property url logoMalebiWhiteCharcoalUrl: "qrc:/ui/logoMalebiWhiteCharcoalTrace"
     property url logoMalebiWhiteUrl: "qrc:/ui/logoMalebiWhite"
     property url logoMalebiUrl: "qrc:/ui/logoMalebi"
+    property url logoMalebiCharcoalTraceUrl: "qrc:/ui/logoMalebiCharcoalTrace"
     property url logoMiloUrl: "qrc:/ui/logoMilo"
     property url logoMiloAboutUrl: "qrc:/ui/logoMiloAbout"
     property url logoGaiaUrl: "qrc:/ui/logoGaia"

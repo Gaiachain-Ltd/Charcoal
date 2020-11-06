@@ -109,8 +109,7 @@ Item {
             id: logoMilo
 
             Layout.fillWidth: true
-            Layout.leftMargin: s(GStyle.bigMargin)
-            Layout.rightMargin: s(GStyle.bigMargin)
+            Layout.margins: s(GStyle.bigMargin)
 
             height: s(GStyle.logoHeight)
             source: GStyle.logoMiloAboutUrl
