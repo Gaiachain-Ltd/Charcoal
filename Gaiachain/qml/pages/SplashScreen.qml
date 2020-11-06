@@ -13,17 +13,27 @@ Items.GPanel
 {
     id: splashScreen
 
+    Component.onCompleted: stopTimer.start()
+
+    Timer
+    {
+        id: stopTimer
+        interval: 3000
+
+        onTriggered:{
+            splashScreen.opacity = 0.0
+            splashScreen.visible = false
+            splashScreen.parent.source = ""
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
         Items.SvgImage
         {
             id: logoImage
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-
+            Layout.alignment: Qt.AlignHCenter
             height: splashScreen.height * 0.35
             source: GStyle.logoMalebiCharcoalTraceUrl
         }
@@ -34,7 +44,6 @@ Items.GPanel
 
         RowLayout {
             Layout.fillWidth: true
-
             Layout.alignment: Qt.AlignHCenter
             spacing: s(GStyle.bigMargin * 2)
 
