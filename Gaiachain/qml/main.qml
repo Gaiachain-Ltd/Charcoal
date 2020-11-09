@@ -60,13 +60,5 @@ ApplicationWindow
         Behavior on height { NumberAnimation { duration: GStyle.keyboardAnimationDuration } }
     }
 
-    Loader {
-        id: splashLoader
-        anchors.fill: parent
-        source: "qrc:/pages/SplashScreen.qml"
-
-        active: !userManager.loggedIn
-    }
-
     onClosing: close.accepted = mainStackView.onClosingEvent()
 }

@@ -25,7 +25,7 @@ GPage {
     }
 
     property int logoHeight: 0
-    property bool keyboardVisible: Qt.inputMethod.keyboardRectangle.y > 0
+    property bool keyboardVisible: Qt.inputMethod.keyboardRectangle.height !== 0
     property bool openPage: true
 
 
@@ -33,6 +33,7 @@ GPage {
         if (openPage) {
             openPage = false
             logoHeight = top.height
+            logoHeightAnimation.enabled = true
         }
     }
 
@@ -97,9 +98,15 @@ GPage {
                     bottomMargin: s(top.height * 0.08)
                 }
 
-                height: logoHeight * (keyboardVisible ? 0.1 : 0.25)
-                Behavior on height { NumberAnimation { duration: GStyle.keyboardAnimationDuration } }
+                height: logoHeight * (keyboardVisible ? 0.1 : 0.22)
                 source: GStyle.logoMalebiWhiteCharcoalUrl
+
+                Behavior on height {
+                    id: logoHeightAnimation
+                    enabled: false
+                    NumberAnimation { duration: GStyle.keyboardAnimationDuration }
+                }
+
                 DummyComponents.ServerStateChanger {}
             }
         }
@@ -197,7 +204,8 @@ GPage {
             }
         }
 
-        RowLayout {
+        RowLayout
+        {
             Layout.fillWidth: true
             Layout.leftMargin: layout.margin
             Layout.rightMargin: layout.margin

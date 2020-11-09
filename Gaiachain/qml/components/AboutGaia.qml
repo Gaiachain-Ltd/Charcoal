@@ -45,7 +45,7 @@ Item {
             font.pixelSize: s(GStyle.titlePixelSize)
             font.bold: true
 
-            text: "<a href=\"god@gaiachain.io\">god@gaiachain.io</a>"
+            text: "delphineahoussi@gmail.com"
 
             linkColor: "#000000"
 
