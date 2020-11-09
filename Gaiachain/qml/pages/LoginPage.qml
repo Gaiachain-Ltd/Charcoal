@@ -24,6 +24,18 @@ GPage {
         return true // android back button will close app
     }
 
+    property int logoHeight: 0
+    property bool keyboardVisible: Qt.inputMethod.keyboardRectangle.y > 0
+    property bool openPage: true
+
+
+    onHeightChanged: {
+        if (openPage) {
+            openPage = false
+            logoHeight = top.height
+        }
+    }
+
     Settings {
         id: loginSettings
 
@@ -82,10 +94,11 @@ GPage {
                     left: parent.left
                     right: parent.right
                     bottom: parent.bottom
-                    bottomMargin: s(75)
+                    bottomMargin: s(top.height * 0.08)
                 }
 
-                height: (top.height - Qt.inputMethod.keyboardRectangle.height) * 0.25
+                height: logoHeight * (keyboardVisible ? 0.1 : 0.25)
+                Behavior on height { NumberAnimation { duration: GStyle.keyboardAnimationDuration } }
                 source: GStyle.logoMalebiWhiteCharcoalUrl
                 DummyComponents.ServerStateChanger {}
             }
