@@ -12,6 +12,8 @@ Item {
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
 
+    property int margin: s(GStyle.middleMargin)
+
     ColumnLayout {
         id: mainLayout
 
@@ -20,22 +22,12 @@ Item {
 
         Items.GText {
             Layout.fillWidth: true
-
-            font {
-                pixelSize: s(GStyle.bigPixelSize)
-                bold: true
-            }
-
-            text: mainController.application.name
-        }
-
-        Items.GText {
-            Layout.fillWidth: true
+            Layout.bottomMargin: margin
 
             font.pixelSize: s(GStyle.titlePixelSize)
+            font.bold: true
 
-            text: "v%1:%2".arg(mainController.application.version)
-                          .arg(mainController.application.commit)
+            text: mainController.application.name + " v. " + mainController.application.version
         }
 
         Items.LayoutSeparator {
@@ -43,33 +35,13 @@ Item {
 
         Items.GText {
             Layout.fillWidth: true
+            Layout.topMargin: margin
+            Layout.bottomMargin: margin
 
             font.pixelSize: s(GStyle.titlePixelSize)
+            font.bold: true
 
-            text: "<a href=\"http://www.malebi.gaiachain.io\">www.malebi.gaiachain.io</a>"
-
-            linkColor: "#000000"
-
-            onLinkActivated: Qt.openUrlExternally(link)
-        }
-
-        Items.GText {
-            Layout.fillWidth: true
-
-            font.pixelSize: s(GStyle.titlePixelSize)
-
-            text: "<a href=\"god@gaiachain.io\">god@gaiachain.io</a>"
-
-            linkColor: "#000000"
-
-            onLinkActivated: Qt.openUrlExternally(link)
-        }
-
-        Items.LayoutSeparator {
-        }
-
-        AboutGaiaDependency {
-            Layout.fillWidth: true
+            text: "delphineahoussi@gmail.com"
         }
 
         Items.LayoutSeparator {
@@ -83,6 +55,8 @@ Item {
 
             Layout.preferredHeight: 60
             Layout.fillWidth: true
+            Layout.topMargin: margin
+            Layout.bottomMargin: margin
 
             onClicked: {
                 console.log("Language switch clicked")
@@ -103,9 +77,7 @@ Item {
                 spacing: s(GStyle.buttonLetterSpacing)
 
                 Image {
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
 
                     source: row.manager.languages[row.currentIndex].icon
                 }
@@ -120,5 +92,20 @@ Item {
                 }
             }
         }
+
+        Items.LayoutSeparator {
+        }
+
+        Items.SvgImage
+        {
+            id: logoMilo
+
+            Layout.fillWidth: true
+            Layout.margins: s(GStyle.bigMargin)
+
+            height: s(GStyle.logoHeight)
+            source: GStyle.logoMiloAboutUrl
+        }
+
     }
 }

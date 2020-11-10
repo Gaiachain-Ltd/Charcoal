@@ -53,6 +53,13 @@
         <file alias="helpButton">ui/help-button.svg</file>
         <file alias="en">ui/en.png</file>
         <file alias="fr">ui/fr.png</file>
+        <file alias="logoMalebi">ui/logo-malebi.svg</file>
+        <file alias="logoMalebiWhite">ui/malebi-logo.svg</file>
+        <file alias="logoMilo">ui/milo.png</file>
+        <file alias="logoMalebiCharcoalTrace">ui/logo-malebi-charcoal-trace.png</file>
+        <file alias="logoGaia">ui/gaia.png</file>
+        <file alias="logoMiloAbout">ui/logo-milo.png</file>
+        <file alias="logoMalebiWhiteCharcoalTrace">ui/logo-malebi-white.svg</file>
     </qresource>
     <qresource prefix="/font">
         <file>fonts/PublicSans/PublicSans-Black.otf</file>

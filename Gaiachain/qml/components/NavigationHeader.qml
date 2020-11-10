@@ -70,7 +70,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: s(GStyle.buttonImageBigHeight)
 
-            source: GStyle.logoWhiteImgUrl
+            source: GStyle.logoMalebiWhiteUrl
             visible: logoVisible
 
             onClicked: {

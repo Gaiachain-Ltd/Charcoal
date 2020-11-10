@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle" >
-            <solid android:color="#667176"/>
-        </shape>
+    <item android:drawable="@drawable/logo_malebi"
+    android:top="100dp"
+    android:width="221.88dp"
+    android:height="228.6dp"
+    android:gravity="center | top">
     </item>
-    <item>
-         <bitmap android:src="@drawable/logo"
-        android:gravity="center" />
+    <item android:drawable="@drawable/milo"
+    android:width="129.98dp"
+    android:height="100.21dp"
+    android:left="40dp"
+    android:bottom="50dp"
+    android:gravity="bottom | left">
     </item>
+    <item android:drawable="@drawable/gaia"
+    android:width="140.5dp"
+    android:height="91.62dp"
+    android:right="40dp"
+    android:bottom="50dp"
+    android:gravity="bottom | right">
+</item>
 </layer-list>

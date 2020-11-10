@@ -117,5 +117,6 @@
         <file>headers/CollapsibleHeader.qml</file>
         <file>headers/BeginEndRowHeader.qml</file>
         <file>components/Summary.qml</file>
+        <file>pages/SplashScreen.qml</file>
     </qresource>
 </RCC>
