@@ -12,6 +12,8 @@ Item {
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
 
+    property int margin: s(GStyle.middleMargin)
+
     ColumnLayout {
         id: mainLayout
 
@@ -20,6 +22,7 @@ Item {
 
         Items.GText {
             Layout.fillWidth: true
+            Layout.bottomMargin: margin
 
             font.pixelSize: s(GStyle.titlePixelSize)
             font.bold: true
@@ -32,24 +35,13 @@ Item {
 
         Items.GText {
             Layout.fillWidth: true
-
-            font.pixelSize: s(GStyle.titlePixelSize)
-            font.bold: true
-
-            text: "Go to website"
-        }
-
-        Items.GText {
-            Layout.fillWidth: true
+            Layout.topMargin: margin
+            Layout.bottomMargin: margin
 
             font.pixelSize: s(GStyle.titlePixelSize)
             font.bold: true
 
             text: "delphineahoussi@gmail.com"
-
-            linkColor: "#000000"
-
-            onLinkActivated: Qt.openUrlExternally(link)
         }
 
         Items.LayoutSeparator {
@@ -63,8 +55,8 @@ Item {
 
             Layout.preferredHeight: 60
             Layout.fillWidth: true
-            Layout.topMargin: s(25)
-            Layout.bottomMargin: s(25)
+            Layout.topMargin: margin
+            Layout.bottomMargin: margin
 
             onClicked: {
                 console.log("Language switch clicked")
