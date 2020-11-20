@@ -1,15 +1,6 @@
-[Gaiachain](https://gaiachain.io/)
+# [GAIACHAIN](https://gaiachain.io/)
 
-Proof of concept v2 & Charcoal flavor.
-
-# Intro
-
-This is the second version of proof of concept application for Gaiachain project.
-Some more information about the project concept can be found on [the wiki page](https://redmine.milosolutions.com/projects/gaiachain-website/wiki).
-
-#### Second version info
-
-There is still lots of old code for previous version in the project. Slowly, with the implementation of new UI we will get rid of it.
+We employ blockchain and fintech to build traceability and payment solutions that maximize incentives while minimizing costs to forest restoration and conservation. We are developing a new open source application that addresses challenges related to payment distribution and efficiency in the context of PES (payment for ecological services) and sustainable supply chains. Stay tuned for updates and get in touch if you would like to learn more!
 
 ## Configuration
 
